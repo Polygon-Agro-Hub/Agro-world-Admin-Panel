@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 interface TaskList {
-  slavecropcalendardaysId: number;
+  
+  slavecropcalendardaysId: any;
   taskIndex : any;
   days: string;
   taskEnglish: string;
@@ -55,6 +57,42 @@ export class UserCropCalendarComponent {
           }
         }
       );
+  }
+
+  deleteCroptask(id: string): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.ongoingCultivationService.deleteUserCropTask(id).subscribe(
+          (data: any) => {
+            if (data) {
+              Swal.fire(
+                'Deleted!',
+                'The crop calendar item has been deleted.',
+                'success'
+              );
+              this.getchUserTaskList(this.cropCalendarId, this.userId);
+            }
+          },
+          (error) => {
+            console.log('Error', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the crop calendar.',
+              'error'
+            );
+          }
+        );
+      }
+    });
   }
 
 }

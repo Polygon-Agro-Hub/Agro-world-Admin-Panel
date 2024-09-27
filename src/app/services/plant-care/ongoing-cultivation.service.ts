@@ -42,4 +42,14 @@ export class OngoingCultivationService {
     return this.http.get(`${this.apiUrl}get-all-users-crop-task/${cropId}/${userId}`, { headers });
   }
 
+  deleteUserCropTask(id: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.delete<any>(`${this.apiUrl}delete-user-task/${id}`, {
+      headers,
+    });
+  }
+
 }

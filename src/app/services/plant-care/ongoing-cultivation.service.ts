@@ -52,4 +52,14 @@ export class OngoingCultivationService {
     });
   }
 
+
+  updateUserTaskStatus(id: number): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(`${this.apiUrl}edit-user-task-status/${id}`, {}, { headers});
+  }
+
 }

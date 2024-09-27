@@ -95,4 +95,25 @@ export class UserCropCalendarComponent {
     });
   }
 
+  updateStatus(id: number) {
+    this.ongoingCultivationService.updateUserTaskStatus(id).subscribe(
+      () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Status updated successfully!',
+        });
+        this.getchUserTaskList(this.cropCalendarId, this.userId);
+      },
+      (error) => {
+        console.error('Error updating status', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Unsuccess',
+          text: 'Error updating status',
+        });
+      }
+    );
+  }
+
 }

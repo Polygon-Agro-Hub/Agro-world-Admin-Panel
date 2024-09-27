@@ -1,0 +1,72 @@
+<div>
+    <button class="mb-5" onclick="history.back()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </button>
+    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-sm">
+        <div class="flex flex-col items-center mb-8">
+            <h3 class="flex">Farmer:
+                <p class="pl-3">{{this.name}}</p>
+            </h3>
+            <h3 class="flex">Category:
+                <p class="pl-3">{{this.category}}</p>
+            </h3>
+        </div>
+
+        <div *ngIf="!hasData" class="text-center py-8">
+            <p class="text-gray-500 text-lg">No data to display</p>
+        </div>
+
+
+        <div *ngIf="hasData" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 table-auto">
+                <thead>
+                    <tr>
+                        <th class="py-3 font-normal text-gray-500 text-left">Asset Name</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Brand</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Batch No.</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Volume/Weight</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Unit</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">No.of Units</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Unit Price</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Total Price</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Status</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of currentAsset" class="border-b">
+                        <td class="py-3">{{item.asset}}</td>
+                        <td class="px-4 py-3 text-center">{{item.brand}}</td>
+                        <td class="px-4 py-3 text-center">{{item.batchNum}}</td>
+                        <td class="px-4 py-3 text-center">{{item.volume}}</td>
+                        <td class="px-4 py-3 text-center">{{item.unit}}</td>
+                        <td class="px-4 py-3 text-center">{{item.numOfUnit}}</td>
+                        <td class="px-4 py-3 text-center">{{item.unitPrice}}</td>
+                        <td class="px-4 py-3 text-center">{{item.total}}</td>
+                        <td class="px-4 py-3 text-center">
+                            <div *ngIf="item.status == 'Under warrenty'">
+                                <span class="w-40 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
+                                    {{item.status}}
+                          </span>
+                            </div>
+                            <div *ngIf="item.status == 'Expired'">
+                                <span class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm">
+                                    {{item.status}}
+                          </span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewRecord(item.id, this.name, this.category, item.asset, item.unit)" >
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>  
+                            </svg>
+                        </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

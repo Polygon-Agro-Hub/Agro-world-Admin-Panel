@@ -1,0 +1,135 @@
+<div class="container shadow-gray-200 shadow-lg">
+    <button onclick="window.location.href='/collective-officer'" class="ml-5 mt-5">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </button>
+    <div class="h-[20px]"></div>
+    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl mb-6">Add Personal Details</h2>
+
+
+        <form [formGroup]="officerForm" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="flex justify-center pt-3 pb-9">
+                    <div class="relative">
+                        <img class="rounded-full w-60 h-60" src="https://images.pexels.com/photos/845457/pexels-photo-845457.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Profile Picture" />
+                        <span class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer">
+                            <img src="../../../assets/images/editIcon.png" alt="Edit Icon" class="w-16 h-16" />
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+
+                    <div>
+                        <label for="crop" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input formControlName="firstName" id="firstName" name="firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="variety" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input formControlName="lastName" id="lastName" name="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="phoNumOne" class="block text-sm font-medium text-gray-700">
+                            Phone Number - 1
+                        </label>
+                        <div class="mt-1 flex">
+                            <select id="countryCode" name="countryCode" class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5">
+                                <option value="+94">+94 (LK)</option>
+                                <option value="+1">+1 (US)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                            </select>
+                            <input formControlName="phoneNumber01" id="phoNumOne" name="phoNumOne" class="block w-full p-2 border border-gray-300 rounded-r-md" placeholder="Enter your phone number" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="phoNumTwo" class="block text-sm font-medium text-gray-700">
+                            Phone Number - 2
+                        </label>
+                        <div class="mt-1 flex">
+                            <select id="countryCode" name="countryCode" class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5">
+                                <option value="+94">+94 (LK)</option>
+                                <option value="+1">+1 (US)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                            </select>
+                            <input formControlName="phoneNumber02" id="phoNumTwo" name="phoNumTwo" class="block w-full p-2 border border-gray-300 rounded-r-md" placeholder="Enter your phone number" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="nic" class="block text-sm font-medium text-gray-700">NIC Number</label>
+                        <input formControlName="nic" id="nic" name="nic" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="nic" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input formControlName="email" type="email" id="nic" name="nic" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="house" class="block text-sm font-medium text-gray-700">House / Plot Number</label>
+                        <input formControlName="houseNumber" id="house" name="house" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="street" class="block text-sm font-medium text-gray-700">Street Name</label>
+                        <input formControlName="streetName" id="street" name="street" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="district" class="block text-sm font-medium text-gray-700">District</label>
+                        <input formControlName="district" id="district" name="district" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="provice" class="block text-sm font-medium text-gray-700">Province</label>
+                        <input formControlName="province" id="provice" name="provice" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                        <input formControlName="country" id="country" name="country" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+
+                    <div>
+                        <label for="languages" class="block text-sm font-medium text-gray-700">
+                              Preferred Languages
+                            </label>
+
+                        <div class="flex items-center space-x-4 mt-3">
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala" (change)="onCheckboxChange($event)">
+                                <label for="sinhala" class="text-gray-700">Sinhala</label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English" (change)="onCheckboxChange($event)">
+                                <label for="english" class="text-gray-700">English</label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil" (change)="onCheckboxChange($event)">
+                                <label for="tamil" class="text-gray-700">Tamil</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <div class="flex justify-end m-10">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">Next</button>
+            </div>
+        </form>
+
+    </div>
+</div>

@@ -1,0 +1,19 @@
+.profile-pic{
+    background-color: #fff;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%; /* Use 50% for a perfect circle */
+    
+
+  }
+
+
+  /* Custom Tailwind utility to hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

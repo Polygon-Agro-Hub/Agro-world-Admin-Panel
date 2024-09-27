@@ -1,0 +1,35 @@
+<div class="sidenav" [ngClass]="{'expanded': isExpanded}">
+  <div class="logo-container">
+    <img 
+      src="assets/images/logo.png" 
+      alt="Logo" 
+      class="logo-text w-16" 
+      *ngIf="!isExpanded" 
+      (click)="toggleSidenav()" 
+    />
+    <img 
+      src="assets/images/logo.png" 
+      alt="Logo" 
+      class="logo-text w-32" 
+      *ngIf="isExpanded" 
+      (click)="toggleSidenav()" 
+    />
+  </div>
+  
+    <ul class="sidenav-nav">
+      <li class="sidenav-nav-item" *ngFor="let data of navData">
+        <a class="sidenav-nav-link" [routerLink]="[data.RouterLink]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact:true}">
+          <i class="sidenav-link-icon" [class]="data.icon"></i>
+          <span class="sidenav-link-text" *ngIf="isExpanded">{{data.label}}</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="logout-container" (click)="logout()">
+      <i class="sidenav-link-icon fa-solid fa-sign-out-alt"></i>
+      <span class="sidenav-link-text" *ngIf="isExpanded">Logout</span>
+    </div>
+    
+  </div>

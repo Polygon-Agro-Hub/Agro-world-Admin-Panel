@@ -1,0 +1,67 @@
+<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
+
+<button class="mb-5" onclick="window.location.href='/plant-care/report-farmer-list'">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-sm">
+    <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+            <h2 class="text-lg font-normal text-gray-500">{{this.firstName}} {{this.lastName}}</h2>
+        </div>
+        
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200 table-auto">
+            <thead>
+                <tr>
+                   
+                    <th class="px-4 py-3 font-normal text-gray-500 text-left">Category</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 text-left">View</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+               <tr>
+                <th class="px-4 py-3 font-medium text-black text-left">Building and Infastructures</th>
+                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                    <button (click)="buildingCategory(this.userId)">
+                        <i class="fa-regular fa-file"></i>
+                    </button>
+                </th>
+               </tr>
+
+               <tr>
+                <th class="px-4 py-3 font-medium text-black text-left">Lands</th>
+                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                    <button (click)="landCategory(this.userId)">
+                        <i class="fa-regular fa-file"></i>
+                    </button>
+                </th>
+               </tr>
+
+               <tr>
+                <th class="px-4 py-3 font-medium text-black text-left">Machinery, Vehicles</th>
+                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                    <button (click)="machCategory(this.userId)">
+                        <i class="fa-regular fa-file"></i>
+                    </button>
+                </th>
+               </tr>
+
+               <tr>
+                <th class="px-4 py-3 font-medium text-black text-left">Tools & Equipments</th>
+                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                    <button (click)="toolsCategory(this.userId)">
+                        <i class="fa-regular fa-file"></i>
+                    </button>
+                </th>
+               </tr>
+            </tbody>
+        </table>
+        <!-- <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
+        </pagination-controls> -->
+    </div>
+</div>

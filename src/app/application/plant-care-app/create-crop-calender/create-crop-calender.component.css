@@ -1,0 +1,12 @@
+.mat-mdc-form-field {
+    display: flex;
+}
+
+
+/* mat-select {
+    background-color: #ffff;
+} */
+
+mat-form-field {
+    background-color: #ffff;
+}

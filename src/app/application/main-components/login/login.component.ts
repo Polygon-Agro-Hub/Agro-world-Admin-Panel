@@ -1,0 +1,83 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import Swal from 'sweetalert2';
+import { environment } from '../../../environment/environment';
+import { AuthService } from '../../../services/auth.service';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [FormsModule, HttpClientModule, CommonModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  showPassword: boolean = false;
+
+  loginObj: Login;
+
+  constructor(private authService: AuthService, private http: HttpClient, private router: Router){
+      this.loginObj = new Login();
+  }
+
+
+ onLogin(){
+  console.log("Successfully click the button");
+  // alert("login success");
+  // debugger;
+  this.authService.login(this.loginObj.email, this.loginObj.password).subscribe(
+
+    (res: any) => {
+      console.log('Market Price updated successfully', res);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Logged',
+        text: 'Successfully Logged In',
+      });
+      localStorage.setItem('Login Token : ', res.token);
+
+      localStorage.setItem('userName:', res.userName);
+      localStorage.setItem('userId:', res.userId);
+        localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
+        console.log("hi..",res.token);
+        console.log("hi..",res.userName);
+      this.router.navigate(['/steckholders']);
+    },
+    (error) => {
+      console.error('Error updating Market Price', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsuccessful',
+        text: 'Invalid username or password',
+      });
+    }
+
+
+
+);
+  
+ }
+
+  
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+}
+
+export class Login{
+  email: string;
+  password: string;
+  
+  constructor(){
+    this.email='';
+    this.password='';
+  }
+
+
+}

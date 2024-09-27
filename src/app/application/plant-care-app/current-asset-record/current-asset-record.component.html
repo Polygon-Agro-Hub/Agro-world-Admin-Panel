@@ -1,0 +1,66 @@
+<div>
+    <button class="mb-5" onclick="history.back()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </button>
+    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-sm">
+        <div class="flex flex-col items-center mb-8">
+            <h3 class="flex">Farmer:
+                <p class="pl-3">{{this.name}}</p>
+            </h3>
+            <h3 class="flex">Category:
+                <p class="pl-3">{{this.category}}</p>
+            </h3>
+            <h3 class="flex">Asset Name:
+                <p class="pl-3">{{this.asset}}</p>
+            </h3>
+        </div>
+
+        <div *ngIf="!hasData" class="text-center py-8">
+            <p class="text-gray-500 text-lg">No data to display</p>
+        </div>
+
+
+        <div *ngIf="hasData" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 table-auto">
+                <thead>
+                    <tr>
+                        <th class="py-3 font-normal text-gray-500 text-left"></th>
+                        <th class="py-3 font-normal text-gray-500 text-left">Number of units (+)</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Number of units (-)</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Unit</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Total</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Date</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of currentAssetRecord" class="border-b">
+                        <td class="py-3 text-green-700"> 
+                            <div class="overflow-x-auto">
+                                <!-- Show the down arrow if numOfMinUnit is 0 or null or undefined -->
+                                <i 
+                                  *ngIf="item.numOfMinUnit === '0.00'" 
+                                  class="fa-solid fa-arrow-trend-up"
+                                ></i>
+                          
+                                <!-- Show the up arrow if numOfMinUnit is greater than 0 -->
+                                <i 
+                                  *ngIf="item.numOfMinUnit !== '0.00' && item.numOfMinUnit != null" 
+                                  class="fa-solid fa-arrow-trend-down text-red-500"
+                                ></i>
+                              </div>
+                        </td>
+                        <td class="py-3 text-green-700">{{item.numOfPlusUnit}}</td>
+                        <td class="px-4 py-3 text-center text-red-700">{{item.numOfMinUnit}}</td>
+                        <td class="px-4 py-3 text-center">{{this.unit}}</td>
+                        <td class="px-4 py-3 text-center">{{item.totalPrice}}</td>
+                        <td class="px-4 py-3 text-center">{{item.createdAt}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

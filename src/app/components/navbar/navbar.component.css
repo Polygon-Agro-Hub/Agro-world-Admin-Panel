@@ -1,0 +1,204 @@
+/* Basic styles for the navbar */
+.navbar {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px 20px;
+  position: relative;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 1.5em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.navbar-item {
+  margin: 0 15px;
+  padding-top: 5px;
+  padding-right: 0px;
+}
+
+.navbar-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1em;
+}
+
+.navbar-link:hover {
+  text-decoration: underline;
+}
+
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.navbar-toggle-bar {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 3px 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #333;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .navbar-menu.show {
+    display: flex;
+  }
+
+  .navbar-item {
+    margin: 0px 0;
+  }
+
+  .navbar-toggle {
+    display: flex;
+  }
+}
+
+
+/*Toogle button*/
+/* ------------ VARIABLES ------------ */
+:root{
+    /* COLORS */
+    --color: #9176FF;
+    --dark-color: #2b2b2b;
+    --dark-icon-color: #fff;
+    --light-color: #f7f7f7;
+    --light-icon-color: #FFDE59;
+  }
+  
+  /* ------------ BASE ------------ */
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--light-color);
+  }
+  
+  /* -------------- BUTTON -------------- */
+  .btn{
+    background-color: #f8f9fa;
+    width: 5em;
+    height: 2em;
+    border-radius: 5em;
+    margin: 0.5em 0.1em 0 0.1em;
+  
+    box-shadow: inset 0 8px 60px rgba(0,0,0, .1),
+                inset 0 8px 8px rgba(0,0,0, .1),
+                inset 0 -4px 4px rgba(0,0,0, .1);
+  
+    position: relative;
+  
+    display: flex;
+    align-items: center;
+  
+    cursor: pointer;
+  }
+  
+  .btn__indicator{
+    background-color: #fff;
+    width: 3em;
+    height: 2em;
+    border-radius: 50%;
+  
+    position: absolute;
+  
+    box-shadow: 0 8px 40px rgba(0,0,0, .2);
+  
+    transition: transform .3s ease;
+  }
+  
+  .btn__icon-container{
+    width: 100%;
+    height: 100%;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn__icon{
+    color: var(--light-icon-color);
+    font-size: 1rem;
+  }
+  
+  /* -------------- ANIMATION ------------ */
+  .btn__icon.animated{
+    animation: spin 0.5s;
+  }
+  
+  @keyframes spin{
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* -------------- DARKMODE -------------- */
+  body.darkmode{
+    background-color: var(--dark-color);
+  }
+  
+  .darkmode .btn{
+    box-shadow: inset 0 8px 60px rgba(0,0,0, .3),
+                inset 8px 0 8px rgba(0,0,0, .3),
+                inset 0 -4px 4px rgba(0,0,0, .3);
+  }
+  
+  .darkmode .btn__indicator{
+    transform: translateX(7em);
+    background-color: var(--dark-color);
+    box-shadow: 0 8px 40px rgba(0,0,0, .3);
+  }
+  
+  .darkmode .btn__icon{
+    color: var(--dark-icon-color);
+  }
+  
+  /*Profile image*/
+  .profile-pic{
+    background-color: #fff;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%; /* Use 50% for a perfect circle */
+    
+
+  }
+
+  .user-name{
+    padding-top: 10px;
+    margin-left: 10px;
+
+  }

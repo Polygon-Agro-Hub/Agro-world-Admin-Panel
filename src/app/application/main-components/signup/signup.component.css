@@ -1,0 +1,27 @@
+
+.logo {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  @media (min-width: 768px) {
+    .logo {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      left: auto;
+      transform: none;
+    }
+  }
+
+  .mobile-header {
+    padding-top: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .mobile-header {
+      display: none;
+    }
+  }

@@ -1,0 +1,62 @@
+<button class="mb-5" onclick="window.location.href='/collective-officer-reort'">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div #contentToConvert>
+<div class="flex justify-between items-center mb-8">
+  <div class="flex items-center">
+    <h2 class="text-2xl font-normal text-gray-500">{{this.name}}'s Report</h2>
+  </div>
+  <div class="flex items-center">
+    <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/></svg>
+    </i>
+    <div>
+      <input
+        id="createdDateFilter"
+        type="date"
+        class="border-solid border-2 text-gray-500 focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center"
+        [(ngModel)]="createdDate"
+        (change)="onDateChange()"
+      />
+    </div>
+  </div>
+</div>
+
+<div *ngIf="chartOptions" class="pb-10">
+  <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '360px'}"></canvasjs-chart>
+</div>
+
+<table class="table-auto border-collapse w-full">
+  <thead>
+    <tr class="border-b">
+      <th class="px-4 py-2">Crop</th>
+      <th class="px-4 py-2">Grade A</th>
+      <th class="px-4 py-2">Grade B</th>
+      <th class="px-4 py-2">Grade C</th>
+      <th class="px-4 py-2">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entry of reportEntries">
+      <td class="border border-gray-300 p-2">{{ entry[0] }}</td>
+      <td class="border border-gray-300 p-2">{{ entry[1]['Grade A'] }}kg</td>
+      <td class="border border-gray-300 p-2">{{ entry[1]['Grade B'] }}kg</td>
+      <td class="border border-gray-300 p-2">{{ entry[1]['Grade C'] }}kg</td>
+      <td class="border border-gray-300 p-2">{{ entry[1]['Total'] }}kg</td>
+    </tr>
+  </tbody>
+</table>
+<div class="h-[25px]"></div>
+
+
+
+</div>
+<div class="flex justify-center">
+  <button (click)="downloadPDF()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+    Download PDF
+  </button>
+</div>
+
+<div class="h-[25px]"></div>

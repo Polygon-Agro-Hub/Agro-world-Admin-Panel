@@ -1,0 +1,59 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5" onclick="history.back()"> 
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+  
+
+
+
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-sm">
+    <div class="flex flex-col items-center justify-center mb-8">
+        <div class="flex items-center justify-center">
+            <h2 class="text-md font-normal text-gray-500 text-center">Farmer : {{this.fullName}}</h2>
+        </div>
+        <div class="flex items-center justify-center">
+            <h2 class="text-md font-normal text-gray-500 text-center">Category : {{this.category}}</h2>
+        </div>
+    </div>
+
+    <div *ngIf="!hasData" class="text-center py-8">
+        <p class="text-gray-500 text-lg">No data to display</p>
+    </div>
+    
+    <div *ngIf="hasData" class="overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200 table-auto">
+            <thead>
+                <tr>
+                    
+                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Extent</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Ownership</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 text-center">District</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Perennial Crops</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="
+            let item of fixedAssetB
+          ">
+                   
+                    
+                    <td class="px-4 py-3 text-center">
+                        {{ item.extentha }} ha, {{ item.extentac }} ac, {{ item.extentp }} p,
+                    </td>
+                    <td class="px-4 py-3 text-center">{{ item.ownership }}</td>
+                    <td class="px-4 py-3 text-center">{{ item.district }}</td>
+                    <td class="px-4 py-3 text-center">{{ item.perennialCrop }}</td>
+                 
+                    
+                    
+                    
+                    
+                </tr>
+            </tbody>
+        </table>
+        <!-- <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
+        </pagination-controls> -->
+    </div>
+</div>

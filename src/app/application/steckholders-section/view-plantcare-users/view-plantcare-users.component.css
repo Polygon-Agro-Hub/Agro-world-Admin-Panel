@@ -1,0 +1,7 @@
+.profile-pic {
+    background-color: #fff;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    /* Use 50% for a perfect circle */
+}

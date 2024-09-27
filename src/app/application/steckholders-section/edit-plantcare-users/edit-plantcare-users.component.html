@@ -1,0 +1,165 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+
+
+<button onclick="window.location.href='/plant-care/view-plantcare-users'">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+
+
+<div *ngIf="itemId != null">
+    
+    <div class="h-[20px]"></div>
+    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl text-center mb-6">Edit Plant Care Users</h2>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="flex justify-between pt-3 pb-9">
+                    <div class="w-5"></div>
+                    <!-- Profile picture preview -->
+                    <img
+                        class="profile-pic"
+                        [src]="imagePreview"
+                        alt="Profile Image"
+                        *ngIf="imagePreview"
+                        style="width: 100px; height: 100px; object-fit: cover"
+                    />
+                    <div class="w-5"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input formControlName="firstName" id="firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('firstName')!.invalid && (userForm.get('firstName')!.dirty || userForm.get('firstName')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('firstName')!.errors?.['required']">First name is required.</div>
+                            <div *ngIf="userForm.get('firstName')!.errors?.['pattern']">First name should only contain letters.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input formControlName="lastName" id="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('lastName')!.invalid && (userForm.get('lastName')!.dirty || userForm.get('lastName')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('lastName')!.errors?.['required']">Last name is required.</div>
+                            <div *ngIf="userForm.get('lastName')!.errors?.['pattern']">Last name should only contain letters.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>
+                            <div *ngIf="userForm.get('phoneNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="NICnumber" class="block text-sm font-medium text-gray-700">NIC Number</label>
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('NICnumber')!.invalid && (userForm.get('NICnumber')!.dirty || userForm.get('NICnumber')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">NIC number is required.</div>
+                            <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'v' or 'V').</div>
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div>
+                        <label for="profileImage" class="block text-sm font-medium text-gray-700">Profile Image</label>
+                        <input type="file" id="profileImage" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2" (click)="onCancel()">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<div *ngIf="itemId == null">
+    
+    <div class="h-[20px]"></div>
+    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl text-center mb-6">Add Plant Care User</h2>
+
+        <form [formGroup]="userForm" (ngSubmit)="onSubmitCreate()">
+            <div>
+                <div class="flex justify-between pt-3 pb-9">
+                    <div class="w-5"></div>
+                    <!-- Profile picture preview -->
+                    <img
+                        class="profile-pic"
+                        [src]="imagePreview"
+                        alt="Profile Image"
+                        *ngIf="imagePreview"
+                        style="width: 100px; height: 100px; object-fit: cover"
+                    />
+                    <div class="w-5"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                        <input formControlName="firstName" id="firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('firstName')!.invalid && (userForm.get('firstName')!.dirty || userForm.get('firstName')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('firstName')!.errors?.['required']">First name is required.</div>
+                            <div *ngIf="userForm.get('firstName')!.errors?.['pattern']">First name should only contain letters.</div>
+                        </div>
+                    </div>
+
+                    
+
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <input formControlName="lastName" id="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('lastName')!.invalid && (userForm.get('lastName')!.dirty || userForm.get('lastName')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('lastName')!.errors?.['required']">Last name is required.</div>
+                            <div *ngIf="userForm.get('lastName')!.errors?.['pattern']">Last name should only contain letters.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>
+                            <div *ngIf="userForm.get('phoneNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="NICnumber" class="block text-sm font-medium text-gray-700">NIC Number</label>
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <div *ngIf="userForm.get('NICnumber')!.invalid && (userForm.get('NICnumber')!.dirty || userForm.get('NICnumber')!.touched)" class="text-red-500 text-sm mt-1">
+                            <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">NIC number is required.</div>
+                            <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'v' or 'V').</div>
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div>
+                        <label for="profileImage" class="block text-sm font-medium text-gray-700">Profile Image</label>
+                        <input type="file" id="profileImage" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2" (click)="onCancel()">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

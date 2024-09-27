@@ -1,0 +1,146 @@
+<button class="mb-5" onclick="window.location.href='/admin-users'">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<!-- Main Container when itemId is null -->
+
+<div *ngIf="itemId == null">
+    <!-- Admin Users Form -->
+    <div class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl text-center mb-6">Create Admin User</h2>
+        <form [formGroup]="userForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <!-- User Name Input -->
+                <label for="userName" class="block text-sm font-medium text-gray-700">User Name</label>
+                <input id="userName" name="userName" formControlName="userName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <div *ngIf="userForm.get('userName')?.invalid && (userForm.get('userName')?.dirty || userForm.get('userName')?.touched)" class="text-red-500 text-sm mt-1">
+                    {{ getErrorMessage('userName') }}
+                </div>
+            </div>
+
+                <div>
+                  <!-- Email Input -->
+                  <label for="mail" class="block text-sm font-medium text-gray-700">Email</label>
+                  <input id="mail" name="mail" formControlName="mail" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                  <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" class="text-red-500 text-sm mt-1">
+                      {{ getErrorMessage('mail') }}
+                  </div>
+              </div>
+
+                <div>
+                    <!-- Role Input -->
+                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+            <option>SUPER_ADMIN</option>
+          </select>
+                </div>
+
+                <!-- <div>
+          
+          <button
+            class="flex items-center align-middle mt-5 px-4 py-2 bg-[#7B7777] text-white rounded-md hover:bg-[#615F5F] w-full text-center"
+            (click)="openPopup()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.232 5.232l-4-4m-2.414 2.414a2 2 0 000 2.828l10 10a2 2 0 002.828 0l2.414-2.414a2 2 0 000-2.828l-10-10a2 2 0 00-2.828 0L5.232 7.464a2 2 0 000 2.828l2.414 2.414m10.414-2.414L13.414 5.828m-6.414 0L5.828 3.414m0 0L2 7.242 4.172 9.414 7.242 6.344m2.828-2.828L7.414 3m0 0L3.586 6.828m0 0L6 9.414m-2.414 0L2 7m10.586 10.586L17 21m0 0l4.414-4.414M17 21l-2.828-2.828M2 14l6 6M14 2l6 6"
+              />
+            </svg>
+            Change Password
+          </button>
+        </div> -->
+
+        <div>
+          <!-- Password Input -->
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <div class="mt-1 block w-full p-2 border border-gray-300 rounded-md flex items-center">
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              formControlName="password"
+              name="password"
+              class="w-full border-none rounded-none focus:outline-none focus:border-none" 
+            />
+            <i *ngIf="!showPassword" class="fa-solid fa-eye cursor-pointer ml-2" (click)="togglePasswordVisibility()"></i>
+            <i *ngIf="showPassword" class="fa-solid fa-eye-slash cursor-pointer ml-2" (click)="togglePasswordVisibility()"></i>
+          </div>
+          <div *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)" class="text-red-500 text-sm mt-1">
+              {{ getErrorMessage('password') }}
+          </div>
+      </div>
+
+
+            </div>
+        </form>
+
+        <!-- Cancel and Save Buttons -->
+        <div class="flex justify-end mt-6">
+            <button type="button" class="px-4 py-2 bg-[#ECECEC] hover:bg-[#DFDDDD] rounded-md mr-2" (click)="onCancel()">
+        Cancel
+      </button>
+            <button type="submit" class="px-4 py-2 bg-[#8AC440] hover:bg-[#73C011] text-white rounded-md" (click)="createAdmin()"  [disabled]="userForm.invalid">
+        Save
+      </button>
+        </div>
+    </div>
+
+    <!-- Change Password Popup -->
+
+</div>
+<!-- Admin Users Form without Change Password Button when itemId is not null -->
+<div *ngIf="itemId != null">
+    <div class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl text-center mb-6">Edit Admin User</h2>
+        <form [formGroup]="userForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                
+
+                <div>
+                  <!-- User Name Input -->
+                  <label for="userName" class="block text-sm font-medium text-gray-700">User Name</label>
+                  <input id="userName" name="userName" formControlName="userName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                  <div *ngIf="userForm.get('userName')?.invalid && (userForm.get('userName')?.dirty || userForm.get('userName')?.touched)" class="text-red-500 text-sm mt-1">
+                      {{ getErrorMessage('userName') }}
+                  </div>
+              </div>
+
+              <div>
+                <!-- Email Input -->
+                <label for="mail" class="block text-sm font-medium text-gray-700">Email</label>
+                <input id="mail" name="mail" formControlName="mail" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" class="text-red-500 text-sm mt-1">
+                    {{ getErrorMessage('mail') }}
+                </div>
+            </div>
+                <div>
+                    <!-- Role Input -->
+                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+            <option>SUPER_ADMIN</option>
+          </select>
+                </div>
+            </div>
+        </form>
+
+        <!-- Cancel and Save Buttons -->
+        <div class="flex justify-end mt-6">
+            <button type="button" class="px-4 py-2 bg-[#ECECEC] hover:bg-[#DFDDDD] rounded-md mr-2" (click)="onCancel()">
+        Cancel
+      </button>
+            <button type="submit" class="px-4 py-2 bg-[#8AC440] hover:bg-[#73C011] text-white rounded-md" (click)="updateAdmin(this.itemId)">
+        Save
+      </button>
+        </div>
+    </div>
+</div>

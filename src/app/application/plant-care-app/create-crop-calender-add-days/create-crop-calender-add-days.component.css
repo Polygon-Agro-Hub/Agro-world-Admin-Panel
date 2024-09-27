@@ -1,0 +1,11 @@
+.button-container {
+    position: fixed; /* Fix the position */
+    bottom: 78px; /* Adjust based on your layout */
+    left: 50%; /* Center it horizontally */
+    transform: translateX(-331%); /* Adjust for centering */
+    background-color: white; /* Set a background color */
+    padding: 0px; /* Add some padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: add a shadow */
+    z-index: 1000; /* Ensure it is above other content */
+    
+}

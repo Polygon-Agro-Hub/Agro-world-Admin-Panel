@@ -1,0 +1,38 @@
+<div *ngIf="itemId === null">
+    <button onclick="window.location.href='plant-care/ongoing-cultivation'">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+    <div class="h-[20px]"></div>
+    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">User Crop Calendar</h2>
+
+        <div class="border-b mb-6">
+            <ul class="flex">
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
+                    Crop 01
+                </li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
+                    Crop 02
+                </li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
+                    Crop 03
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="selectedLanguage === 'english'">
+    </div>
+
+    <div *ngIf="selectedLanguage === 'sinhala'">
+      
+    </div>
+
+    <div *ngIf="selectedLanguage === 'tamil'">
+      
+     
+    </div>
+
+    
+  </div>
+</div>

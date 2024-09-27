@@ -1,0 +1,142 @@
+.sidenav {
+    width: 80px; /* Width when collapsed */
+  transition: width 0.3s ease;
+  height: 100vh;
+  background-color: #f8f9fa;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.sidenav.expanded {
+    width: 250px; /* Width when expanded */
+  }
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 0.938rem 0.938rem 0 0.938rem;
+    width: 100%;
+}
+
+.logo-container .logo {
+    background: #8AC440;
+    color: #fff;
+    text-align: center;
+    width: 3rem;
+    min-width: 3rem;
+    border-radius: 0.313rem;
+    font-size: 24px;
+    font-weight: 900;
+    cursor: pointer;
+    border: none;
+}
+
+.logo-container .logo-text {
+    margin-left: 0.25rem;
+    font-size: 24px;
+    font-weight: 700;
+    color: #8AC440;
+}
+
+.logo-container .btn-close {
+    margin-left: auto;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+}
+
+.logo-container .btn-close .fa-times {
+    color: #8AC440;
+    font-size: 24px;
+}
+
+.sidenav-collapsed {
+    width: 16.5625rem;
+}
+
+.sidenav-nav {
+    list-style: none;
+    padding: 0.938rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: calc(100% - 3.65rem);
+    cursor: pointer;
+}
+
+.sidenav-nav-item {
+    width: 100%;
+    margin-bottom: 0.625rem;
+}
+
+.sidenav-nav-link {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    color: #606060;
+    text-decoration: none;
+    border-radius: 0.625rem;
+    transition: all 0.3s ease;
+}
+
+.sidenav-link-icon {
+    font-size: 22px;
+    width: 2rem;
+    min-width: 2rem;
+    margin: 0 0.5rem;
+    text-align: center;
+}
+
+.sidenav-link-text {
+    margin-left: 1.5rem;
+}
+
+.sidenav-nav-item:hover .sidenav-nav-link {
+    background-color: #8AC440;
+    color: #fff;
+}
+
+.active{
+    background-color: #8AC440;
+}
+
+.active .sidenav-link-icon,
+.active .sidenav-link-text{
+    color: #fff;
+    font-weight: 600;
+}
+
+
+.logout-container {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    color: #606060;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.logout-container:hover {
+    background-color: #8AC440;
+    color: #fff;
+}
+
+.logout-container .sidenav-link-icon {
+    font-size: 22px;
+    width: 2rem;
+    min-width: 2rem;
+    margin: 0 0.5rem;
+    text-align: center;
+}
+
+.logout-container .sidenav-link-text {
+    margin-left: 1.5rem;
+}

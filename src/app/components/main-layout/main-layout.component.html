@@ -1,0 +1,12 @@
+<div class="layout-container">
+    <app-sidenav (onToggleSideNav)="onSidenavToggle($event)"></app-sidenav>
+
+    <div class="nav">
+      <div class="pl-60">
+        <app-navbar></app-navbar></div>
+    
+    <div class="content-container" [ngClass]="{'sidenav-expanded': isSidenavExpanded}">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  </div>

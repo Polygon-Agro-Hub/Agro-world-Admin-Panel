@@ -16,6 +16,15 @@ interface CultivationItems {
   CropDuration: string;
 }
 
+interface NewsItem {
+  cropName: string;
+  cropCalendar : number;
+  variety: string;
+  CultivationMethod: string;
+  NatureOfCultivation: string;
+  CropDuration: string;
+}
+
 
 @Component({
   selector: 'app-slave-crop-calendar',
@@ -25,7 +34,6 @@ interface CultivationItems {
   styleUrl: './slave-crop-calendar.component.css'
 })
 export class SlaveCropCalendarComponent {
-  selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   itemId: number | null = null;
   cultivtionItems: CultivationItems[] = [];
 
@@ -33,11 +41,10 @@ export class SlaveCropCalendarComponent {
   name: string = '';
   category: string = '';
   hasData: boolean = true; 
+  newsItems: NewsItem[] = [];
+  userId: any | null = null;
 
-  selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
-    this.selectedLanguage = lang;
-  }
-
+ 
   
 
   constructor(
@@ -52,20 +59,18 @@ export class SlaveCropCalendarComponent {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.cultivationId = params['cultivationId'] ? +params['id'] : null;      
+      this.cultivationId = params['cultivationId'] ? +params['cultivationId'] : null;  
+      this.userId = params['userId'] ? +params['userId'] : null;    
       console.log("This is the Id : ", this.cultivationId);
+      console.log("This is the user Id : ", this.userId);
     });
-    this.getCultivation(this.cultivationId);
+    this.fetchAllNews(this.cultivationId);
     
     
   }
 
 
-  viewTaskByUser() {
-    this.router.navigate(['assets/fixed-asset-category'], { 
-      // queryParams: { id, firstName, lastName} 
-    });
-  }
+
 
 
   getCultivation(id: any) {
@@ -83,6 +88,33 @@ export class SlaveCropCalendarComponent {
           }
         }
       );
+  }
+
+
+  fetchAllNews(id: number) {
+    this.ongoingCultivationService.getOngoingCultivationById(id)
+      .subscribe(
+        (data) => {
+          this.newsItems = data;
+        },
+        (error) => {
+          console.error('Error fetching ongoing cultivations:', error);
+          if (error.status === 401) {
+            // Handle unauthorized access (e.g., redirect to login)
+          }
+        }
+      );
+  }
+
+  viewTaskByUser(cropCalendarId: any, userId : any) {
+    if (cropCalendarId) {
+      this.router.navigate(['plant-care/view-crop-task-by-user/user-task-list'], { 
+        queryParams: { cropCalendarId, userId } 
+      });
+      console.log('Navigating with cultivationId:', cropCalendarId);
+    } else {
+      console.error('cultivationId is not defined:', cropCalendarId);
+    }
   }
 
 }

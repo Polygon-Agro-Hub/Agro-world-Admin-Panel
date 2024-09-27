@@ -14,6 +14,7 @@ import { OngoingCultivationService } from '../../../services/plant-care/ongoing-
 
 interface OngoingCultivationItem {
   cultivationId: number;
+  id : number;
   firstName: string;
   lastName: string;
   NICnumber: string;
@@ -154,12 +155,13 @@ export class OngoingCultivationComponent {
 
   
 
-  viewTaskByUser(cultivationId: any) {
+  viewTaskByUser(cultivationId: any, userId: any) {
     if (cultivationId) {
       this.router.navigate(['plant-care/view-crop-task-by-user'], { 
-        queryParams: { cultivationId } 
+        queryParams: { cultivationId, userId } 
       });
       console.log('Navigating with cultivationId:', cultivationId);
+      console.log('Navigating with cultivationId:', userId);
     } else {
       console.error('cultivationId is not defined:', cultivationId);
     }

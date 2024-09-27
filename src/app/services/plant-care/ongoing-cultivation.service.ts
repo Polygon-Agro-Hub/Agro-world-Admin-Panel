@@ -34,4 +34,12 @@ export class OngoingCultivationService {
     return this.http.get(`${this.apiUrl}get-ongoing-cultivation-by-id/${id}`, { headers });
   }
 
+  getUserTasks(cropId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get(`${this.apiUrl}get-all-users-crop-task/${cropId}/${userId}`, { headers });
+  }
+
 }

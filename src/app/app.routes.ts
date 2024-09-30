@@ -45,7 +45,6 @@ import { EditTaskComponent } from './application/plant-care-app/edit-task/edit-t
 import { PublicForumComponent } from './application/plant-care-app/public-forum/public-forum.component';
 import { UserCropCalendarComponent } from './application/plant-care-app/user-crop-calendar/user-crop-calendar.component';
 
-
 export const routes: Routes = [
   {
     path: '',
@@ -111,8 +110,8 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path:'plant-care/edit-crop-task/:id',
-        component:EditTaskComponent,
+        path: 'plant-care/edit-crop-task/:id',
+        component: EditTaskComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -165,15 +164,15 @@ export const routes: Routes = [
       },
       {
         path: 'collective-officer/personal',
-        component: CollectiveofficersPersonalComponent
+        component: CollectiveofficersPersonalComponent,
       },
       {
         path: 'collective-officer/company',
-        component: CollectiveofficersCompanyComponent
+        component: CollectiveofficersCompanyComponent,
       },
       {
         path: 'collective-officer/bank-details',
-        component: CollectiveofficersBankDetailsComponent
+        component: CollectiveofficersBankDetailsComponent,
       },
       {
         path: 'report/collective-officer-report/view/:id/:name',
@@ -219,17 +218,18 @@ export const routes: Routes = [
       {
         path: 'plant-care/current-assets-view',
         component: CurrentAssetsViewComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
       },
       {
         path: 'plant-care/report-farmer-current-assert/:userId/:name',
         component: ReportCurrentAssertsComponent,
         canActivate: [AuthGuard],
-      },
-      { path: 'plant-care/report-farmer-current-assert/record-view', 
+      },
+      {
+        path: 'plant-care/report-farmer-current-assert/record-view',
         component: CurrentAssetRecordComponent,
         canActivate: [AuthGuard],
-            },
+      },
       {
         path: 'plant-care/view-crop-task/:cropId',
         component: ViewCropTaskComponent,
@@ -239,6 +239,12 @@ export const routes: Routes = [
         path: 'plant-care/view-crop-task-by-user',
         component: SlaveCropCalendarComponent,
         // canActivate: [AuthGuard],
+      },
+
+      {
+        path: 'plant-care/public-forum',
+        component: PublicForumComponent,
+        canActivate: [AuthGuard],
       },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path

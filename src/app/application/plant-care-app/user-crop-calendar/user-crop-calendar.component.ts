@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
 interface TaskList {
-  
+  id: any;
   slavecropcalendardaysId: any;
   taskIndex : any;
   days: string;
@@ -114,6 +114,14 @@ export class UserCropCalendarComponent {
         });
       }
     );
+  }
+
+
+  editCropTask(id: any) {
+    this.router.navigate(['plant-care/view-crop-task-by-user/user-task-list/edit-user-task'], { 
+      queryParams: { id } 
+    });
+    console.log(id);
   }
 
 }

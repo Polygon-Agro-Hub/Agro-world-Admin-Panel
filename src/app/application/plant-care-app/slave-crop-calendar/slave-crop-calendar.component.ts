@@ -17,6 +17,7 @@ interface CultivationItems {
 }
 
 interface NewsItem {
+  id: any;
   cropName: string;
   cropCalendar : number;
   variety: string;
@@ -116,5 +117,7 @@ export class SlaveCropCalendarComponent {
       console.error('cultivationId is not defined:', cropCalendarId);
     }
   }
+
+  
 
 }

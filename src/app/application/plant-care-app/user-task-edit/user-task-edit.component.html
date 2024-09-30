@@ -1,0 +1,111 @@
+<div>
+    <button onclick="history.back()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </button>
+    <div class="h-[20px]"></div>
+    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
+        <div class="flex flex-col items-center">
+            <h3 class="flex mb-2">Index No :
+                <p class="ml-2 font-medium">{{taskItems.taskIndex}}</p>
+            </h3>
+            <h3 class="flex">Days :
+                <p class="ml-2">{{taskItems.days}}</p>
+            </h3>
+        </div>
+        <div class="border-b mb-6">
+            <ul class="flex">
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
+                    English
+                </li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
+                    Sinhala
+                </li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
+                    Tamil
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="selectedLanguage === 'english'">
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task English
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Type
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Category
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Description
+                </label> 
+                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+        </div>
+
+        <div *ngIf="selectedLanguage === 'sinhala'">
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Sinhala
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Type
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Category
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategorySinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Description
+                </label> 
+                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+        </div>
+
+        <div *ngIf="selectedLanguage === 'tamil'">
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Tamil
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Type
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Category
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Description
+                </label> 
+                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-6">
+            <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md" type="button">
+                Cancel
+            </button>
+            <div class="w-[20px] "></div>
+            <button class="px-4 py-2 bg-green-500 text-white rounded-md " type="button " (click)="updateTask()">
+                Save
+            </button>
+        </div>
+    </div>
+</div>

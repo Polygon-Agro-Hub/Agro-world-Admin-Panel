@@ -44,6 +44,7 @@ import { SlaveCropCalendarComponent } from './application/plant-care-app/slave-c
 import { EditTaskComponent } from './application/plant-care-app/edit-task/edit-task.component';
 import { PublicForumComponent } from './application/plant-care-app/public-forum/public-forum.component';
 import { UserCropCalendarComponent } from './application/plant-care-app/user-crop-calendar/user-crop-calendar.component';
+import { UserTaskEditComponent } from './application/plant-care-app/user-task-edit/user-task-edit.component';
 
 export const routes: Routes = [
   {
@@ -244,6 +245,11 @@ export const routes: Routes = [
       {
         path: 'plant-care/public-forum',
         component: PublicForumComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'plant-care/view-crop-task-by-user/user-task-list/edit-user-task',
+        component: UserTaskEditComponent,
         canActivate: [AuthGuard],
       },
 

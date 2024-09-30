@@ -111,6 +111,14 @@ export class CropCalendarService {
     return this.http.get<any>(`${this.apiUrl}get-crop-task/${id}`, { headers });
   }
 
+  getUserCropTaskBycropId(id: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<any>(`${this.apiUrl}get-slave-crop-task/${id}`, { headers });
+  }
+
   
 
   deleteCropTask(id: string) {
@@ -130,6 +138,18 @@ export class CropCalendarService {
 
     return this.http.post(
       `${this.apiUrl}edit-crop-task/${cropId}`,
+      formData,
+      { headers }
+    );
+  }
+
+  updateUserCropTask(cropId: string, formData: any) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+    });
+
+    return this.http.post(
+      `${this.apiUrl}edit-user-crop-task/${cropId}`,
       formData,
       { headers }
     );

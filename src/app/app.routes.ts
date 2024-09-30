@@ -252,6 +252,11 @@ export const routes: Routes = [
         component: UserTaskEditComponent,
         canActivate: [AuthGuard],
       },
+      {
+        path: 'plant-care/view-crop-task-by-user/user-task-list',
+        component: UserCropCalendarComponent,
+        canActivate: [AuthGuard],
+      },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path
     ],

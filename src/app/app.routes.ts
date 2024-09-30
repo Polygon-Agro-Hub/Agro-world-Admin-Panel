@@ -42,6 +42,7 @@ import { CurrentAssetRecordComponent } from './application/plant-care-app/curren
 import { ViewCropTaskComponent } from './application/plant-care-app/view-crop-task/view-crop-task.component';
 import { SlaveCropCalendarComponent } from './application/plant-care-app/slave-crop-calendar/slave-crop-calendar.component';
 import { EditTaskComponent } from './application/plant-care-app/edit-task/edit-task.component';
+import { PublicForumComponent } from './application/plant-care-app/public-forum/public-forum.component';
 import { UserCropCalendarComponent } from './application/plant-care-app/user-crop-calendar/user-crop-calendar.component';
 
 
@@ -238,11 +239,6 @@ export const routes: Routes = [
         path: 'plant-care/view-crop-task-by-user',
         component: SlaveCropCalendarComponent,
         // canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-crop-task-by-user/user-task-list',
-        component: UserCropCalendarComponent,
-        canActivate: [AuthGuard],
       },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path

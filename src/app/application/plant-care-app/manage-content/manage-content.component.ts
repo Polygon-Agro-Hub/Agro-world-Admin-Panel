@@ -102,6 +102,7 @@ export class ManageContentComponent implements OnInit {
         },
         (error) => {
           console.error('Error fetching news:', error);
+          this.isLoading = false;
           // Handle error...
         }
       );

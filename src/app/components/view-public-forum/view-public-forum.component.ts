@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ViewPublicForumComponent implements OnInit{
   psot:any;
   isDeleteVisible = false;
-  post:any;
+  post: any;
 
   constructor(
     private psotService: PublicforumService,

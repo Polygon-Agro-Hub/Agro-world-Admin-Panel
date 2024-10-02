@@ -7,6 +7,7 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 import Swal from 'sweetalert2';
 
 class CropTask {
+  'cropId':string;
   'taskIndex': string;
   'days': string;
   'taskEnglish': string;
@@ -77,7 +78,24 @@ export class ViewCropTaskComponent implements OnInit {
       }
     });
   }
+
   editCropTask(id: string) {
     this.router.navigate([`plant-care/edit-crop-task/${id}`]);
+  }
+
+  addNewTask(cropId:string, indexId:string){
+    Swal.fire({
+      text: 'Are you sure you want to add a new task?',
+      showCancelButton: true,
+      confirmButtonColor: '#8AC440',
+      cancelButtonColor: '#ECECEC',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+    }).then((result)=>{
+      if (result.isConfirmed) {
+        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}`])
+      }
+    })
+
   }
 }

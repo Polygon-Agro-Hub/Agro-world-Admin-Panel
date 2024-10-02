@@ -45,6 +45,7 @@ import { EditTaskComponent } from './application/plant-care-app/edit-task/edit-t
 import { PublicForumComponent } from './application/plant-care-app/public-forum/public-forum.component';
 import { UserCropCalendarComponent } from './application/plant-care-app/user-crop-calendar/user-crop-calendar.component';
 import { UserTaskEditComponent } from './application/plant-care-app/user-task-edit/user-task-edit.component';
+import { AddNewCropCalanderTaskComponent } from './application/plant-care-app/add-new-crop-calander-task/add-new-crop-calander-task.component';
 
 export const routes: Routes = [
   {
@@ -256,6 +257,11 @@ export const routes: Routes = [
         path: 'plant-care/view-crop-task-by-user/user-task-list',
         component: UserCropCalendarComponent,
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'plant-care/add-new-crop-task/:cropId/:indexId/:days',
+        component: AddNewCropCalanderTaskComponent,
+        // canActivate: [AuthGuard],
       },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path

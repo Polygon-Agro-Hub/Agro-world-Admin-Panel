@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+
 
 class CropTask {
   'taskIndex': string;
@@ -16,13 +18,14 @@ class CropTask {
 @Component({
   selector: 'app-view-crop-task',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule, FormsModule],
+  imports: [CommonModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-crop-task.component.html',
   styleUrl: './view-crop-task.component.css',
 })
 export class ViewCropTaskComponent implements OnInit {
   cropTask!: CropTask[];
   cropId!: string;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,11 +38,21 @@ export class ViewCropTaskComponent implements OnInit {
     this.fetchAllCropTask(this.cropId);
   }
 
-  fetchAllCropTask(id: string): void {
-    this.cropCalService.getAllCropTaskBycropId(id).subscribe((res) => {
-      console.log(res);
-      this.cropTask = res;
-    });
+
+  fetchAllCropTask(id: string) {
+    this.isLoading = true;
+    this.cropCalService.getAllCropTaskBycropId(id)
+      .subscribe(
+        (res) => {
+          this.cropTask = res;
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+          this.isLoading = false;
+          // Handle error...
+        }
+      );
   }
 
   deleteCroptask(id: string): void {

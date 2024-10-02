@@ -1,59 +1,49 @@
 <div class="flex flex-col md:flex-row justify-between items-center min-h-full box-border relative">
-  
+
     <div class="mobile-header w-full md:hidden flex flex-col items-center mb-6">
         <img src="assets/images/logo.png" alt="Logo" class="logo max-w-[150px] h-auto mb-4" />
         <div class="h-[50px]"></div>
-      </div>
-    
-  <div class="hidden md:block w-1/2 h-screen">
-    <img src="assets/images/login.png" alt="Signup Image" class="h-full w-full object-cover" />
-  </div>
+    </div>
 
-  <div class="w-full md:w-1/2 min-h-full flex flex-col items-center">
-    <div class="bg-white pl-6 md:pl-28 pr-6 md:pr-28 rounded-lg w-full flex flex-col items-center">
-        <img src="assets/images/logo.png" alt="Logo" class="hidden md:block absolute top-5 right-5 max-w-[150px] h-auto z-10" />
-      <p class="text-4xl font-semibold font-roboto mb-6 text-center">Log in</p>
-      <div class="p-4 border border-gray-300 rounded-lg w-full">
-        <div class="h-[20px]"></div>
-        <input type="name" [(ngModel)]="loginObj.email" id="email" placeholder="Username or Email" class="w-11/12 p-2 mb-4 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" />
-        <div class="h-[25px]"></div>
-        <div class="relative w-11/12 mb-4">
-          <input 
-            [type]="showPassword ? 'text' : 'password'" 
-            [(ngModel)]="loginObj.password" 
-            id="password" 
-            placeholder="Password" 
-            class="w-full p-2 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" 
-          />
-          <i *ngIf="showPassword===false"
-            class="fa-solid fa-eye absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" 
-            (click)="togglePasswordVisibility()">
+    <div class="hidden md:block w-1/2 h-screen">
+        <img src="assets/images/login.png" alt="Signup Image" class="h-full w-full object-cover" />
+    </div>
+
+    <div class="w-full md:w-1/2 min-h-full flex flex-col items-center">
+        <div class="bg-white pl-6 md:pl-28 pr-6 md:pr-28 rounded-lg w-full flex flex-col items-center">
+            <img src="assets/images/logo.png" alt="Logo" class="hidden md:block absolute top-5 right-5 max-w-[150px] h-auto z-10" />
+            <p class="text-4xl font-semibold font-roboto mb-6 text-center">Log in</p>
+            <div class="p-4 border border-gray-300 rounded-lg w-full">
+                <div class="h-[20px]"></div>
+                <input type="name" [(ngModel)]="loginObj.email" id="email" placeholder="Email" class="w-11/12 p-2 mb-4 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" />
+                <div class="h-[25px]"></div>
+                <div class="relative w-11/12 mb-4">
+                    <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="loginObj.password" id="password" placeholder="Password" class="w-full p-2 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" />
+                    <i *ngIf="showPassword===false" class="fa-solid fa-eye absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" (click)="togglePasswordVisibility()">
           </i>
-          <i *ngIf="showPassword===true"
-            class="fa-solid fa-eye-slash absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" 
-            (click)="togglePasswordVisibility()">
+                    <i *ngIf="showPassword===true" class="fa-solid fa-eye-slash absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" (click)="togglePasswordVisibility()">
           </i>
-        </div>
+                </div>
 
 
-        
-        
-        
-        <div class="h-[25px]"></div>
-        <div class="text-center w-full">
-          <button class="w-1/2 bg-gray-800 p-3 border border-gray-800 rounded-lg text-white font-bold cursor-pointer transition-colors duration-300 ease-in-out" type="button" (click)="onLogin()">
+
+
+
+                <div class="h-[25px]"></div>
+                <div class="text-center w-full">
+                    <button class="w-1/2 bg-gray-800 p-3 border border-gray-800 rounded-lg text-white font-bold cursor-pointer transition-colors duration-300 ease-in-out" type="button" (click)="onLogin()">
             Log in
           </button>
-          <div class="h-[20px]"></div>
-        </div>
-        <!-- <div class="text-center w-full">
+                    <div class="h-[20px]"></div>
+                </div>
+                <!-- <div class="text-center w-full">
           <a (onClick)="onLogin()" class="text-sm font-normal font-roboto mb-6 text-center">
             Forgot Password?
           </a>
         </div> -->
-      </div>
-      <div class="h-[20px]"></div>
-      <!-- <div class="p-4 border border-gray-300 rounded-xl w-full">
+            </div>
+            <div class="h-[20px]"></div>
+            <!-- <div class="p-4 border border-gray-300 rounded-xl w-full">
         <div class="text-center w-full">
           <p class="text-base font-light font-roboto mb-6 text-center">
             Don't have an account?
@@ -63,6 +53,6 @@
           </p>
         </div>
       </div> -->
+        </div>
     </div>
-  </div>
 </div>

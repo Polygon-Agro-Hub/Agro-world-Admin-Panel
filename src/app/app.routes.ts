@@ -259,7 +259,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'plant-care/add-new-crop-task/:cropId/:indexId/:days',
+        path: 'plant-care/add-new-crop-task/:cropId/:indexId',
         component: AddNewCropCalanderTaskComponent,
         // canActivate: [AuthGuard],
       },

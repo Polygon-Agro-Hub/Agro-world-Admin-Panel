@@ -154,6 +154,19 @@ export class CropCalendarService {
       { headers }
     );
   }
+
+
+  createNewCropTask(cropId: string, indexId:string ,formData: any) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+    });
+
+    return this.http.post(
+      `${this.apiUrl}add-new-task/${cropId}/${indexId}`,
+      formData,
+      { headers }
+    );
+  }
 }
 
 

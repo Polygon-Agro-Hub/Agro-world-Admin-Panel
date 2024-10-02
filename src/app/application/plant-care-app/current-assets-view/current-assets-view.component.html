@@ -30,7 +30,7 @@
                         <th class="px-4 py-3 font-normal text-gray-500 text-centser">No.of Units</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-centser">Unit Price</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-centser">Total Price</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Status</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 text-centser">Warranty Status</th>
                         <th class="px-4 py-3 font-normal text-gray-500 text-centser">Status</th>
                     </tr>
                 </thead>
@@ -39,13 +39,13 @@
                         <td class="py-3">{{item.asset}}</td>
                         <td class="px-4 py-3 text-center">{{item.brand}}</td>
                         <td class="px-4 py-3 text-center">{{item.batchNum}}</td>
-                        <td class="px-4 py-3 text-center">{{item.volume}}</td>
+                        <td class="px-4 py-3 text-center">{{item.unitVolume}}</td>
                         <td class="px-4 py-3 text-center">{{item.unit}}</td>
                         <td class="px-4 py-3 text-center">{{item.numOfUnit}}</td>
                         <td class="px-4 py-3 text-center">{{item.unitPrice}}</td>
                         <td class="px-4 py-3 text-center">{{item.total}}</td>
                         <td class="px-4 py-3 text-center">
-                            <div *ngIf="item.status == 'Under warrenty'">
+                            <div *ngIf="item.status == 'Under Warranty'">
                                 <span class="w-40 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
                                     {{item.status}}
                           </span>

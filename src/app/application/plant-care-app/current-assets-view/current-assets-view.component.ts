@@ -12,6 +12,7 @@ interface CurrentAssetsView{
   asset:any;
   brand:any;
   batchNum:any;
+  unitVolume: any;
   unit:any;
   volume:any;
   numOfUnit:any;

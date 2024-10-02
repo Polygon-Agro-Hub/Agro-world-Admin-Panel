@@ -39,20 +39,20 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
   ) {
     this.taskForm = this.fb.group({
-      cropId: [''],
-      days: [''],
-      taskTypeEnglish: [''],
-      taskTypeSinhala: [''],
-      taskTypeTamil: [''],
-      taskCategoryEnglish: [''],
-      taskCategorySinhala: [''],
-      taskCategoryTamil: [''],
-      taskEnglish: [''],
-      taskSinhala: [''],
-      taskTamil: [''],
-      taskDescriptionEnglish: [''],
-      taskDescriptionSinhala: [''],
-      taskDescriptionTamil: ['']
+      cropId: ['',[Validators.required]],
+      days: ['',[Validators.required]],
+      taskTypeEnglish: ['',[Validators.required]],
+      taskTypeSinhala: ['',[Validators.required]],
+      taskTypeTamil: ['',[Validators.required]],
+      taskCategoryEnglish: ['',[Validators.required]],
+      taskCategorySinhala: ['',[Validators.required]],
+      taskCategoryTamil: ['',[Validators.required]],
+      taskEnglish: ['',[Validators.required]],
+      taskSinhala: ['',[Validators.required]],
+      taskTamil: ['',[Validators.required]],
+      taskDescriptionEnglish: ['',[Validators.required]],
+      taskDescriptionSinhala: ['',[Validators.required]],
+      taskDescriptionTamil: ['',[Validators.required]]
     })
 
 

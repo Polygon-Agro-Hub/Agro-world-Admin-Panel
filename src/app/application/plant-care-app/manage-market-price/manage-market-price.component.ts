@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -39,6 +39,7 @@ interface Status {
     CalendarModule,
     LoadingSpinnerComponent
 ],
+  providers: [DatePipe],
   templateUrl: './manage-market-price.component.html',
   styleUrl: './manage-market-price.component.css',
   template: `

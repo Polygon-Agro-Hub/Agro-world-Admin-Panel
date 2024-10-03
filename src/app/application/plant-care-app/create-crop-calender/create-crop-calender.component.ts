@@ -41,7 +41,6 @@ import Swal from 'sweetalert2';
 
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
-import { log } from 'node:console';
 
 @Component({
   selector: 'app-create-crop-calender',
@@ -101,7 +100,6 @@ export class CreateCropCalenderComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient,
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService
   ) {
@@ -161,7 +159,6 @@ export class CreateCropCalenderComponent {
       this.cropCalendarService.createCropCalendar(formData).subscribe(
         (res: any) => {
           this.isLoading = false;
-          console.log('Crop calendar created successfully', res);
           this.cropId = res.cropId;
           if (this.cropId !== null) {
             this.openXlsxUploadDialog(this.cropId);
@@ -247,7 +244,7 @@ export class CreateCropCalenderComponent {
 
     this.cropCalendarService.uploadXlsxFile(cropId, file).subscribe(
       (res: any) => {
-        console.log('XLSX file uploaded successfully', res);
+        // console.log('XLSX file uploaded successfully', res);
         Swal.fire(
           'Success',
           'XLSX file uploaded and data inserted successfully',
@@ -293,9 +290,6 @@ export class CreateCropCalenderComponent {
             suitableAreas: selectedAreas,
           });
         }
-
-
-        console.log(this.cropCalender);
       },
       (error) => {
         console.error('Error fetching crop calendar', error);
@@ -338,7 +332,7 @@ export class CreateCropCalenderComponent {
     this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe(
       (res: any) => {
         this.isLoading = false;
-        console.log('Crop Calendar updated successfully', res);
+        // console.log('Crop Calendar updated successfully', res);
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -361,7 +355,6 @@ export class CreateCropCalenderComponent {
 
   onCancel(): void {
     // Handle cancel action (e.g., clear the form, navigate back, etc.)
-    console.log('Cancelled');
     this.selectedLanguage = 'english';
 
   }

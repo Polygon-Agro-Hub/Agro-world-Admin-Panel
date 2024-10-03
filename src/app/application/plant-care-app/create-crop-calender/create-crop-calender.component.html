@@ -30,7 +30,7 @@
 
 
       <div *ngIf="selectedLanguage === 'english'">
-        <div>
+        <div class="my-3">
           <label for="crop" class="block text-sm font-medium text-gray-700">Crop</label>
           <input formControlName="cropName" id="cropName" [(ngModel)]="createNewObj.cropName" name="cropName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="my-3">
           <label for="variety" class="block text-sm font-medium text-gray-700">Variety</label>
           <input formControlName="variety" id="variety" [(ngModel)]="createNewObj.variety" name="variety"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -52,7 +52,7 @@
           </div>
         </div>
 
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 my-3">
           <label for="specialNotes" class="block text-sm font-medium text-gray-700">Special Notes</label>
           <textarea formControlName="specialNotes" id="specialNotes" [(ngModel)]="createNewObj.SpecialNotes"
             name="specialNotes" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
@@ -65,7 +65,7 @@
       </div>
 
       <div *ngIf="selectedLanguage === 'sinhala'">
-        <div>
+        <div class="my-3">
           <label for="sinhalaCropName" class="block text-sm font-medium text-gray-700">Crop in Sinhala </label>
           <input formControlName="sinhalaCropName" id="sinhalaCropName" [(ngModel)]="createNewObj.sinhalaCropName"
             name="sinhalaCropName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -76,7 +76,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="my-3">
           <label for="sinhalaVariety" class="block text-sm font-medium text-gray-700">Variety in Sinhala</label>
           <input formControlName="sinhalaVariety" id="sinhalaVariety" [(ngModel)]="createNewObj.sinhalaVariety"
             name="sinhalaVariety" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -87,7 +87,7 @@
           </div>
         </div>
 
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 my-3">
           <label for="sinhalaSpecialNotes" class="block text-sm font-medium text-gray-700">Special Notes in
             Sinhala</label>
           <textarea formControlName="sinhalaSpecialNotes" id="sinhalaSpecialNotes"
@@ -102,7 +102,7 @@
       </div>
 
       <div *ngIf="selectedLanguage === 'tamil'">
-        <div>
+        <div class="my-3">
           <label for="tamilCropName" class="block text-sm font-medium text-gray-700">Crop in Tamil </label>
           <input formControlName="tamilCropName" id="tamilCropName" [(ngModel)]="createNewObj.tamilCropName"
             name="tamilCropName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -113,7 +113,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="my-3">
           <label for="tamilVariety" class="block text-sm font-medium text-gray-700">Variety in Tamil</label>
           <input formControlName="tamilVariety" id="tamilVariety" [(ngModel)]="createNewObj.tamilVariety"
             name="tamilVariety" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -124,7 +124,7 @@
           </div>
         </div>
 
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 my-2">
           <label for="tamilSpecialNotes" class="block text-sm font-medium text-gray-700">Special Notes in Tamil</label>
           <textarea formControlName="tamilSpecialNotes" id="tamilSpecialNotes"
             [(ngModel)]="createNewObj.tamilSpecialNotes" name="tamilSpecialNotes" rows="3"
@@ -138,7 +138,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-6">
-        <div>
+        <div class="my-3">
           <label for="cultivationMethod" class="block text-sm font-medium text-gray-700">Cultivation Method</label>
           <select formControlName="cultivationMethod" id="cultivationMethod"
             [(ngModel)]="createNewObj.CultivationMethod" name="cultivationMethod"
@@ -154,7 +154,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="my-3">
           <label for="natureOfCultivation" class="block text-sm font-medium text-gray-700">Nature of Cultivation</label>
           <select formControlName="natureOfCultivation" id="natureOfCultivation"
             [(ngModel)]="createNewObj.NatureOfCultivation" name="natureOfCultivation"
@@ -171,7 +171,7 @@
           </div> -->
         </div>
 
-        <div>
+        <div class="my-3"> 
           <label for="cropDuration" class="block text-sm font-medium text-gray-700">Crop Duration</label>
           <input type="number" min="0" step="1" formControlName="cropDuration" id="cropDuration" name="cropDuration"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -183,7 +183,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="my-3">
           <label for="cropCategory" class="block text-sm font-medium text-gray-700">Crop Category</label>
           <select formControlName="cropCategory" id="cropCategory" name="cropCategory"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
@@ -195,7 +195,7 @@
           </select>
         </div>
 
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 mt-3" >
           <label for="suitableAreas" class="block text-sm font-medium text-gray-700">Suitable Areas</label>
           <!-- <textarea formControlName="suitableAreas" id="suitableAreas" name="suitableAreas" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea> -->
           <mat-form-field>
@@ -289,19 +289,19 @@
       <form [formGroup]="cropForm" (ngSubmit)="updateCropCalender()">
 
         <div *ngIf="selectedLanguage === 'english'">
-          <div>
+          <div class="my-3">
             <label for="crop" class="block text-sm font-medium text-gray-700">Crop</label>
             <input formControlName="cropName" id="cropName" [(ngModel)]="cropCalender[0].cropName" name="cropName"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div>
+          <div class="my-3">
             <label for="variety" class="block text-sm font-medium text-gray-700">Variety</label>
             <input formControlName="variety" id="variety" [(ngModel)]="cropCalender[0].variety" name="variety"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div class="md:col-span-2">
+          <div class="md:col-span-2 my-3">
             <label for="specialNotes" class="block text-sm font-medium text-gray-700">Special Notes</label>
             <textarea formControlName="specialNotes" id="SpecialNotes" [(ngModel)]="cropCalender[0].SpecialNotes"
               name="pecialNotes" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
@@ -310,19 +310,19 @@
 
 
         <div *ngIf="selectedLanguage === 'sinhala'">
-          <div>
+          <div class="my-3">
             <label for="sinhalaCropName" class="block text-sm font-medium text-gray-700">Crop in Sinhala</label>
             <input formControlName="sinhalaCropName" id="sinhalaCropName" [(ngModel)]="cropCalender[0].sinhalaCropName" name="sinhalaCropName"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div>
+          <div class="my-3">
             <label for="sinhalaVariety" class="block text-sm font-medium text-gray-700">Variety in Sinhala</label>
             <input formControlName="sinhalaVariety" id="sinhalaVariety" [(ngModel)]="cropCalender[0].sinhalaVariety" name="sinhalaVariety"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div class="md:col-span-2">
+          <div class="md:col-span-2 my-3">
             <label for="sinhalaSpecialNotes" class="block text-sm font-medium text-gray-700">Special Notes in Sinhala</label>
             <textarea formControlName="sinhalaSpecialNotes" id="sinhalaSpecialNotes" [(ngModel)]="cropCalender[0].sinhalaSpecialNotes"
               name="sinhalaSpecialNotes" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
@@ -331,19 +331,19 @@
 
 
         <div *ngIf="selectedLanguage === 'tamil'">
-          <div>
+          <div class="my-3">
             <label for="tamilCropName" class="block text-sm font-medium text-gray-700">Crop in Sinhala</label>
             <input formControlName="tamilCropName" id="tamilCropName" [(ngModel)]="cropCalender[0].tamilCropName" name="tamilCropName"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div>
+          <div class="my-3">
             <label for="tamilVariety" class="block text-sm font-medium text-gray-700">Variety in Sinhala</label>
             <input formControlName="tamilVariety" id="tamilVariety" [(ngModel)]="cropCalender[0].tamilVariety" name="tamilVariety"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div class="md:col-span-2">
+          <div class="md:col-span-2 my-3">
             <label for="tamilSpecialNotes" class="block text-sm font-medium text-gray-700">Special Notes in Sinhala</label>
             <textarea formControlName="tamilSpecialNotes" id="tamilSpecialNotes" [(ngModel)]="cropCalender[0].tamilSpecialNotes"
               name="tamilSpecialNotes" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
@@ -353,7 +353,7 @@
 
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-6">
-          <div>
+          <div class="my-3">
             <label for="cultivationMethod" class="block text-sm font-medium text-gray-700">Cultivation Method</label>
             <select formControlName="cultivationMethod" id="cultivationMethod"
               [(ngModel)]="cropCalender[0].CultivationMethod" name="cultivationMethod"
@@ -364,7 +364,7 @@
             </select>
           </div>
 
-          <div>
+          <div class="my-3">
             <label for="natureOfCultivation" class="block text-sm font-medium text-gray-700">Nature of
               Cultivation</label>
             <select formControlName="natureOfCultivation" id="natureOfCultivation"
@@ -378,7 +378,7 @@
             </select>
           </div>
 
-          <div class="md:col-span-2">
+          <div class="md:col-span-2 my-3">
             <label for="cropDuration" class="block text-sm font-medium text-gray-700">Crop Duration</label>
             <input formControlName="cropDuration" id="cropDuration" [(ngModel)]="cropCalender[0].CropDuration"
               name="cropDuration" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
@@ -386,7 +386,7 @@
 
 
 
-          <div class="md:col-span-2">
+          <div class="md:col-span-2 my-3">
             <label for="suitableAreas" class="block text-sm font-medium text-gray-700">
               Suitable Areas
             </label>
@@ -401,7 +401,7 @@
           </div>
 
 
-          <div class="md:col-span-2 flex">
+          <div class="md:col-span-2 flex my-2">
             <label for="cropColor" class="block text-sm font-medium text-gray-700 pt-2">Color</label>
             <ngx-colors ngx-colors-trigger style="display: inline-block; margin:5px;" formControlName="cropColor"
               [(ngModel)]="cropCalender[0].cropColor"></ngx-colors>

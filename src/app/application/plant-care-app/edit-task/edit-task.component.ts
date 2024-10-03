@@ -116,6 +116,9 @@ export class EditTaskComponent implements OnInit {
     formData.append('taskCategoryEnglish', this.taskItems.taskCategoryEnglish);
     formData.append('taskCategorySinhala', this.taskItems.taskCategorySinhala);
     formData.append('taskCategoryTamil', this.taskItems.taskCategoryTamil);
+    formData.append('taskDescriptionEnglish', this.taskItems.taskDescriptionEnglish);
+    formData.append('taskDescriptionSinhala', this.taskItems.taskDescriptionSinhala);
+    formData.append('taskDescriptionTamil', this.taskItems.taskDescriptionTamil);
   
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,

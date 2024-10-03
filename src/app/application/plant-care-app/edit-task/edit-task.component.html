@@ -43,6 +43,11 @@
                     Task Category
                 </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
             </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Description
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'sinhala'">
@@ -61,6 +66,11 @@
                     Task Category
                 </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategorySinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
             </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Description
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'tamil'">
@@ -78,6 +88,11 @@
                 <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
                     Task Category
                 </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            </div>
+            <div class="mb-4">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                    Task Description
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
             </div>
         </div>
         <div class="flex justify-end mt-6">

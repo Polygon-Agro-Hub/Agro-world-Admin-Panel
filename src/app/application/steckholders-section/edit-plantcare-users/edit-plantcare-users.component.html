@@ -51,7 +51,7 @@
 
                     <div>
                         <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="+94 - XXXXXXXXX"/>
                         <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
@@ -60,7 +60,7 @@
 
                     <div>
                         <label for="NICnumber" class="block text-sm font-medium text-gray-700">NIC Number</label>
-                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="20XXXXXXXXXX  or  99XXXXXXXV"/>
                         <div *ngIf="userForm.get('NICnumber')!.invalid && (userForm.get('NICnumber')!.dirty || userForm.get('NICnumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">NIC number is required.</div>
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'v' or 'V').</div>
@@ -132,7 +132,7 @@
 
                     <div>
                         <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="+94 - XXXXXXXXX"/>
                         <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
@@ -141,7 +141,7 @@
 
                     <div>
                         <label for="NICnumber" class="block text-sm font-medium text-gray-700">NIC Number</label>
-                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="20XXXXXXXXXX  or  99XXXXXXXV" />
                         <div *ngIf="userForm.get('NICnumber')!.invalid && (userForm.get('NICnumber')!.dirty || userForm.get('NICnumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">NIC number is required.</div>
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'v' or 'V').</div>

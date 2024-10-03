@@ -10,7 +10,7 @@
 
 
 <div *ngIf="itemId != null">
-    
+
     <div class="h-[20px]"></div>
     <div class="mx-auto p-6 bg-white rounded-lg shadow-lg rounded-lg">
         <h2 class="text-2xl text-center mb-6">Edit Plant Care Users</h2>
@@ -20,13 +20,7 @@
                 <div class="flex justify-between pt-3 pb-9">
                     <div class="w-5"></div>
                     <!-- Profile picture preview -->
-                    <img
-                        class="profile-pic"
-                        [src]="imagePreview"
-                        alt="Profile Image"
-                        *ngIf="imagePreview"
-                        style="width: 100px; height: 100px; object-fit: cover"
-                    />
+                    <img class="profile-pic" [src]="imagePreview" alt="Profile Image" *ngIf="imagePreview" style="width: 100px; height: 100px; object-fit: cover" />
                     <div class="w-5"></div>
                 </div>
 
@@ -89,7 +83,7 @@
 
 
 <div *ngIf="itemId == null">
-    
+
     <div class="h-[20px]"></div>
     <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
         <h2 class="text-2xl text-center mb-6">Add Plant Care User</h2>
@@ -99,13 +93,7 @@
                 <div class="flex justify-between pt-3 pb-9">
                     <div class="w-5"></div>
                     <!-- Profile picture preview -->
-                    <img
-                        class="profile-pic"
-                        [src]="imagePreview"
-                        alt="Profile Image"
-                        *ngIf="imagePreview"
-                        style="width: 100px; height: 100px; object-fit: cover"
-                    />
+                    <img class="profile-pic" [src]="imagePreview" alt="Profile Image" *ngIf="imagePreview" style="width: 100px; height: 100px; object-fit: cover" />
                     <div class="w-5"></div>
                 </div>
 
@@ -119,7 +107,7 @@
                         </div>
                     </div>
 
-                    
+
 
                     <div>
                         <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
@@ -141,10 +129,10 @@
 
                     <div>
                         <label for="NICnumber" class="block text-sm font-medium text-gray-700">NIC Number</label>
-                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="99xxxxxxxxV or 2000xxxxxxxx" />
                         <div *ngIf="userForm.get('NICnumber')!.invalid && (userForm.get('NICnumber')!.dirty || userForm.get('NICnumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">NIC number is required.</div>
-                            <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'v' or 'V').</div>
+                            <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'V').</div>
                         </div>
                     </div>
 

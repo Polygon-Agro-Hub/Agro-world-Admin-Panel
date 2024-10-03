@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule  } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   HttpClientModule,
   HttpClient,
@@ -49,6 +49,7 @@ interface Status {
     FormsModule,
     CalendarModule
   ],
+  providers: [DatePipe],
   templateUrl: './manage-content.component.html',
   styleUrl: './manage-content.component.css',
   template: `

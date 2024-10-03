@@ -8,7 +8,7 @@
   
   .content-container {
     flex-grow: 1;
-    padding: 20px;
+    padding: 40px;
     transition: margin-left 0.3s ease;
     margin-left: 60px; /* Width of collapsed sidenav */;
     overflow-y: hidden;   /* Enable scrolling for content */
@@ -25,7 +25,7 @@
   }
   
   .content-container.sidenav-expanded {
-    margin-left: 250px; /* Width of expanded sidenav */
+    margin-left: 200px; /* Width of expanded sidenav */
   }
   
   @media (max-width: 768px) {

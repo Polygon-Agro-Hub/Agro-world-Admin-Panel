@@ -24,6 +24,7 @@ import Swal from 'sweetalert2';
 export class AddNewCropCalanderTaskComponent implements OnInit {
   isLoading = false;
   cropId!: string
+  userId!: string
   indexId!: string
   daysPrm!: string
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
@@ -61,6 +62,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   ngOnInit(): void {
     this.cropId = this.route.snapshot.params['cropId'];
     this.indexId = this.route.snapshot.params['indexId'];
+    this.userId = this.route.snapshot.params['userId'];
     this.daysPrm = this.route.snapshot.params['days']
   }
 
@@ -70,7 +72,9 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
   onSubmit() {
     console.log(this.cropId, this.indexId,)
-    this.cropCalendarService.createNewCropTask(this.cropId, this.indexId, this.cropTaskObj).subscribe(
+
+    if(this.userId==null){
+      this.cropCalendarService.createNewCropTask(this.cropId, this.indexId, this.cropTaskObj).subscribe(
       (res) => {
         if (res) {
           Swal.fire(
@@ -90,7 +94,36 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
         }
       }
     )
+  }else{this.cropCalendarService.createNewCropTaskU(this.cropId, this.indexId, this.userId,  this.cropTaskObj).subscribe(
+    (res) => {
+      if (res) {
+        Swal.fire(
+          'Success',
+          'New Crop Calander Task Added !',
+          'success'
+        );
 
+        this.back(this.cropId, this.userId)
+      }
+      else {
+        Swal.fire(
+          'Error',
+          'Error occor in adding task !',
+          'error'
+        );
+      }
+    }
+  )}
+  
+    
+
+  }
+
+  back(cropCalendarId: string, userId: string) {
+
+    this.router.navigate(['plant-care/view-crop-task-by-user/user-task-list'], { 
+      queryParams: { cropCalendarId, userId} 
+    });
   }
 
   onCancel(): void {

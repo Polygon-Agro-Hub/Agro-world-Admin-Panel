@@ -124,4 +124,46 @@ export class UserCropCalendarComponent {
     console.log(id);
   }
 
+
+  addNewTask(cropId: string, indexId: string, userId: string) {
+    const cancelButtonStyles = `
+      .custom-cancel-button {
+        color: #8b8989 !important;
+        transition: color 0.3s ease;
+      }
+      .custom-cancel-button:hover {
+        color: #ffffff !important; /* Change this to your desired hover color */
+      }
+    `;
+  
+    Swal.fire({
+      text: 'Are you sure you want to add a new task?',
+      showCancelButton: true,
+      confirmButtonColor: '#8AC440',
+      cancelButtonColor: '#ECECEC',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        cancelButton: 'custom-cancel-button'
+      },
+      didOpen: (popup) => {
+        // Add custom styles to the document
+        const styleElement = document.createElement('style');
+        styleElement.textContent = cancelButtonStyles;
+        document.head.appendChild(styleElement);
+      },
+      willClose: () => {
+        // Remove the custom styles when the dialog closes
+        const styleElement = document.querySelector('style:last-of-type');
+        if (styleElement) {
+          styleElement.remove();
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${userId}`]);
+      }
+    });
+  }
+
 }

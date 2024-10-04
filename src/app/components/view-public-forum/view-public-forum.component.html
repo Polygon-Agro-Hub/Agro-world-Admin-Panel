@@ -7,7 +7,7 @@
         <div class="flex items-center justify-between w-100">
             <div class="flex items-center justify-between gap-x-5 w-full">
                 <div class="flex items-center">
-                    <div class="rounded-full bg-gray-200 h-10 w-10 flex items-center justify-center overflow-hidden mx-5 my-5">
+                    <div class="rounded-full bg-gray-200 h-10 w-10 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer" (click)="viewUserProfile(postRcord.userId)">
                         <i class="fa-regular fa-user"></i>
                     </div>
                     <h3 class="text-lg font-medium">{{postRcord.heading}}</h3>

@@ -1,151 +1,87 @@
-<div>
-  <div class="h-16"></div>
-  <!-- Updated flex properties to justify-between for balanced spacing -->
-  <div class="flex justify-between items-center space-x-8 w-full px-4">
-    <div class="relative inline-block text-left">
-      <button
-        onclick="window.location.href='/plant-care/view-plantcare-users'"
-        type="button"
-        class="transition-shadow transition hover:scale-105 duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
+<div class="flex justify-center items-center">
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16">
+
+    <div class="flex justify-center">
+      <button onclick="window.location.href='/plant-care/view-plantcare-users'" type="button"
+        class="transition-shadow hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-full md:w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         <i class="fa-solid fa-seedling pr-3"></i>
         Plant Care
-        <svg
-          class="-mr-1 ml-2 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          aria-hidden="true">
+          <path fill-rule="evenodd"
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
 
-    <div class="relative inline-block text-left">
-      <button
-        onclick="window.location.href='/admin-users'"
-        type="button"
-        class="transition-shadow transition hover:scale-105 duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
+    <div class="flex justify-center">
+      <button onclick="window.location.href='/admin-users'" type="button"
+        class="transition-shadow hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-full md:w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         <i class="fa-solid fa-user-shield pr-3"></i>
         Admin Users
-        <svg
-          class="-mr-1 ml-2 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          aria-hidden="true">
+          <path fill-rule="evenodd"
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
 
-    <div class="relative inline-block text-left">
-      <button
-        onclick="window.location.href='/field-officer'"
-        type="button"
-        class="transition-shadow transition hover:scale-105 duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
+    <div class="flex justify-center">
+      <button onclick="window.location.href='/field-officer'" type="button"
+        class="transition-shadow hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-full md:w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         <i class="fa-solid fa-building-user pr-3"></i>
         Field Officers
-        <svg
-          class="-mr-1 ml-2 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          aria-hidden="true">
+          <path fill-rule="evenodd"
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
-  </div>
-  <div class="h-16"></div>
 
-  <!-- Second row of buttons with similar adjustments -->
-  <div class="flex justify-between items-center space-x-8 w-full px-4">
-    <div class="relative inline-block text-left">
-      <button
-        onclick="window.location.href='/collective-officer'"
-        type="button"
-        class="transition-shadow transition hover:scale-105 duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
+    <div class="flex justify-center">
+      <button onclick="window.location.href='/collective-officer'" type="button"
+        class="transition-shadow hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-full md:w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         <i class="fa-solid fa-users pr-3"></i>
         Collect Officers
-        <svg
-          class="-mr-1 ml-2 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          aria-hidden="true">
+          <path fill-rule="evenodd"
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
 
-    <div class="relative inline-block text-left">
-      <button
-        onclick="window.location.href='/market-place'"
-        type="button"
-        class="transition-shadow transition hover:scale-105 duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
+    <div class="flex justify-center">
+      <button onclick="window.location.href='/market-place'" type="button"
+        class="transition-shadow hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-full md:w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         <i class="fa-solid fa-shop pr-3"></i>
         Market Place
-        <svg
-          class="-mr-1 ml-2 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          aria-hidden="true">
+          <path fill-rule="evenodd"
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>
 
-    <div class="relative inline-block text-left">
-      <button
-        onclick="window.location.href='/plant-care'"
-        type="button"
-        class="transition-shadow transition hover:scale-105 duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
+    <div class="flex justify-center">
+      <button onclick="window.location.href='/plant-care'" type="button"
+        class="transition-shadow hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:bg-[#73C011] inline-flex items-center justify-center w-full md:w-64 h-11 px-4 py-2 text-sm font-medium text-white bg-[#8AC440] group-hover:bg-[#73C011] duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
         <i class="fa-solid fa-truck pr-3"></i>
         Transport
-        <svg
-          class="-mr-1 ml-2 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            fill-rule="evenodd"
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+          aria-hidden="true">
+          <path fill-rule="evenodd"
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+            clip-rule="evenodd" />
         </svg>
       </button>
     </div>

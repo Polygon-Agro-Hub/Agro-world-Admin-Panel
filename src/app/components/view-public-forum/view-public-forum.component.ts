@@ -26,6 +26,7 @@ export class ViewPublicForumComponent implements OnInit {
   post: any;
   userPrifile: any;
   replyMessage: string = '';
+  replyCount: any;
 
   constructor(
     private psotService: PublicforumService,
@@ -37,28 +38,28 @@ export class ViewPublicForumComponent implements OnInit {
 
   sendMessage() {
     if (!this.replyMessage.trim()) {
-        Swal.fire('Error!', 'Please enter a message.', 'error');
-        return;
+      Swal.fire('Error!', 'Please enter a message.', 'error');
+      return;
     }
 
     // Correcting the property name from 'if' to 'id'
     const replyData = {
-        id: this.postId,  // Changed from 'if' to 'id'
-        replyMessage: this.replyMessage,
+      id: this.postId, // Changed from 'if' to 'id'
+      replyMessage: this.replyMessage,
     };
 
     this.publicForumSrv.sendMessage(this.postId, replyData).subscribe(
-        (res) => {
-            Swal.fire('Success!', 'Your reply has been sent.', 'success');
-            this.fetchPostAllReply(this.postId);
-            this.replyMessage = '';
-        },
-        (error) => {
-            console.error('Error sending message:', error);
-            Swal.fire('Error!', 'There was an error sending your reply.', 'error');
-        }
+      (res) => {
+        Swal.fire('Success!', 'Your reply has been sent.', 'success');
+        this.fetchPostAllReply(this.postId);
+        this.replyMessage = '';
+      },
+      (error) => {
+        console.error('Error sending message:', error);
+        Swal.fire('Error!', 'There was an error sending your reply.', 'error');
+      }
     );
-}
+  }
 
   ngOnInit(): void {
     this.loadPosts();
@@ -107,6 +108,16 @@ export class ViewPublicForumComponent implements OnInit {
       },
       (error) => {
         console.log('Error: ', error);
+      }
+    );
+  }
+  fetchReplyCount(postId: number) {
+    this.publicForumSrv.getReplyCount(postId).subscribe(
+      (count) => {
+        this.replyCount[postId] = count;
+      },
+      (error) => {
+        console.error(`Error fetching reply count for post ${postId}:`, error);
       }
     );
   }

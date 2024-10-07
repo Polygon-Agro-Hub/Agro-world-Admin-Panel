@@ -1,12 +1,17 @@
-<div class="layout-container">
-    <app-sidenav (onToggleSideNav)="onSidenavToggle($event)"></app-sidenav>
+<div class="flex flex-row bg-gray-100 min-h-screen">
+  <!-- Side Navigation Component -->
+  <app-sidenav (onToggleSideNav)="onSidenavToggle($event)"></app-sidenav>
 
-    <div class="nav">
-      <div class="pl-60">
-        <app-navbar></app-navbar></div>
-    
-    <div class="content-container" [ngClass]="{'sidenav-expanded': isSidenavExpanded}">
+  <div class="flex-grow">
+    <!-- Navbar Section -->
+    <div class="pl-16 md:pl-64">
+      <app-navbar></app-navbar>
+    </div>
+
+    <!-- Content Section -->
+    <div [ngClass]="{ 'ml-48 md:ml-64': isSidenavExpanded, 'ml-16': !isSidenavExpanded }" 
+         class="transition-all duration-300 ease-in-out p-10 overflow-hidden h-auto">
       <router-outlet></router-outlet>
     </div>
   </div>
-  </div>
+</div>

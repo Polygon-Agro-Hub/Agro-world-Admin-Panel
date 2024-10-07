@@ -8,7 +8,7 @@ import { ThemeService } from '../../services/theme.service';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterModule, CommonModule, SidenavComponent, NavbarComponent ],
+  imports: [RouterModule, CommonModule, SidenavComponent, NavbarComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css'
 })

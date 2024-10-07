@@ -12,7 +12,7 @@
                     </div>
                     <h3 class="text-lg font-medium">{{postRcord.heading}}</h3>
                 </div>
-                <div class="flex items-end space-x-3 mx-5 relative">
+                <div *ngFor="let item of publiForum" class="flex items-end space-x-3 mx-5 relative">
                     <p class="text-sm text-gray-600  w-full">4 hr ago</p>
                     <div class="flex flex-col">
                         <button class="text-gray-500 hover:text-gray-700" (click)="toggleDeleteButton()">
@@ -44,13 +44,13 @@
     <hr>
     <div class="p-10 flex items-center space-x-2 w-full ">
         <div class="flex items-center border border-gray-300 rounded-lg p-2 w-full ">
-            <textarea type="text " placeholder="Write your message here... " class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 "></textarea>
+            <textarea [(ngModel)]="replyMessage" type="text " placeholder="Write your message here... " class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 "></textarea>
             <button class="text-gray-500 hover:text-gray-600 p-2 " id="file-upload-btn ">
         <i class=" fa fa-paperclip " style="font-size:25px; "></i>
     </button>
             <input id="file-upload " type="file " class="hidden " />
         </div>
-        <button class="ml-2 text-[#8ac440] hover:text-green-600 ">
+        <button class="ml-2 text-[#8ac440] hover:text-green-600 " (click)="sendMessage()">
             <i class="material-icons " style="font-size:36px ">send</i>
         </button>
     </div>

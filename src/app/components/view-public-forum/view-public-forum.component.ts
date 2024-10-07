@@ -25,6 +25,7 @@ export class ViewPublicForumComponent implements OnInit {
   isDeleteVisible = false;
   post: any;
   userPrifile: any;
+  replyMessage: string = '';
 
   constructor(
     private psotService: PublicforumService,
@@ -33,6 +34,31 @@ export class ViewPublicForumComponent implements OnInit {
     private publicForumSrv: PublicForumService,
     private userService: PlantcareUsersService
   ) {}
+
+  sendMessage() {
+    if (!this.replyMessage.trim()) {
+        Swal.fire('Error!', 'Please enter a message.', 'error');
+        return;
+    }
+
+    // Correcting the property name from 'if' to 'id'
+    const replyData = {
+        id: this.postId,  // Changed from 'if' to 'id'
+        replyMessage: this.replyMessage,
+    };
+
+    this.publicForumSrv.sendMessage(this.postId, replyData).subscribe(
+        (res) => {
+            Swal.fire('Success!', 'Your reply has been sent.', 'success');
+            this.fetchPostAllReply(this.postId);
+            this.replyMessage = '';
+        },
+        (error) => {
+            console.error('Error sending message:', error);
+            Swal.fire('Error!', 'There was an error sending your reply.', 'error');
+        }
+    );
+}
 
   ngOnInit(): void {
     this.loadPosts();

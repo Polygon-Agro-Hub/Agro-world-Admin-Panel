@@ -2,7 +2,6 @@
     width: 80px; /* Width when collapsed */
   transition: width 0.3s ease;
   height: 100vh;
-  background-color: #f8f9fa;
   position: fixed;
   top: 0;
   left: 0;
@@ -97,12 +96,12 @@
 }
 
 .sidenav-nav-item:hover .sidenav-nav-link {
-    background-color: #8AC440;
+    background-color: #FFFFFF33;
     color: #fff;
 }
 
 .active{
-    background-color: #8AC440;
+    background-color: #FFFFFF33;
 }
 
 .active .sidenav-link-icon,
@@ -125,7 +124,7 @@
 }
 
 .logout-container:hover {
-    background-color: #8AC440;
+    background-color: #FFFFFF33;
     color: #fff;
 }
 

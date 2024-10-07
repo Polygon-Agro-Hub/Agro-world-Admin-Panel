@@ -142,20 +142,7 @@ export class CreateCropCalenderComponent {
     }
 
     this.isLoading = true;
-    // console.log(formData.get('cropName'),formData.get('variety'), formData.get('CultivationMethod'), formData.get('NatureOfCultivation'), );
-    
-
-    // if (formData.get('cropName') === '' || formData.get('variety') === '' || formData.get('CultivationMethod') === '' || formData.get('NatureOfCultivation') === '' || formData.get('CropDuration') === '' || formData.get('SpecialNotes') === '' || formData.get('cropColor') === '' || formData.get('SuitableAreas') === '' || formData.get('image') === '') {
-    //   Swal.fire(
-    //     'Warning',
-    //     'All input fields must be filled!',
-    //     'warning'
-    //   );
-      
-    //   this.isLoading = false;
-    //   return
-    // }
-
+  
       this.cropCalendarService.createCropCalendar(formData).subscribe(
         (res: any) => {
           this.isLoading = false;
@@ -208,6 +195,7 @@ export class CreateCropCalenderComponent {
       showCancelButton: true,
       confirmButtonText: 'Upload',
       cancelButtonText: 'Skip',
+      allowOutsideClick: false,
       didOpen: () => {
         const fileInput = document.getElementById(
           'xlsx-file-input'
@@ -232,6 +220,7 @@ export class CreateCropCalenderComponent {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
       } else {
+        this.deleteCropCalender(this.cropId)
         console.log('XLSX upload skipped');
         // You can add any additional logic here for when the user skips the upload
       }
@@ -256,6 +245,21 @@ export class CreateCropCalenderComponent {
       (error: HttpErrorResponse) => {
         console.error('Error uploading XLSX file', error);
         let errorMessage = 'There was an error uploading the XLSX file';
+
+        this.cropCalendarService.deleteCropCalender(this.cropId)
+          .subscribe(
+            (data: any) => {
+              if(data){
+               
+              }
+             
+            },
+            (error) => {
+              console.error('Error deleting crop calendar:', error);
+            }
+          );
+
+
         if (error.error && typeof error.error === 'string') {
           errorMessage = error.error;
         }
@@ -382,6 +386,36 @@ export class CreateCropCalenderComponent {
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
+  }
+
+
+  deleteCropCalender(id: any) {
+  
+       
+        this.cropCalendarService.deleteCropCalender(id)
+          .subscribe(
+            (data: any) => {
+              if(data){
+                Swal.fire(
+                  'Deleted!',
+                  'Your uncomplete crop calender has been deleted',
+                  'success'
+                  
+                );
+                
+              }
+             
+            },
+            (error) => {
+              console.error('Error deleting crop calendar:', error);
+              Swal.fire(
+                'Error!',
+                'There was an error deleting the uncomplete crop calendar.',
+                'error'
+              );
+            }
+          );
+    
   }
 }
 

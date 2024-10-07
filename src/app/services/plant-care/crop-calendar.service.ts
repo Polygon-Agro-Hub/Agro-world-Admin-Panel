@@ -84,7 +84,7 @@ export class CropCalendarService {
     );
   }
 
-  deleteCropCalender(id: number): Observable<any> {
+  deleteCropCalender(id: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

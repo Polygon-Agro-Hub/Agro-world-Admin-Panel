@@ -14,7 +14,7 @@
               <div>
                 <!-- User Name Input -->
                 <label for="userName" class="block text-sm font-medium text-textLight dark:text-textDark">User Name</label>
-                <input id="userName" name="userName" formControlName="userName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" />
+                <input id="userName" name="userName" formControlName="userName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                 <div *ngIf="userForm.get('userName')?.invalid && (userForm.get('userName')?.dirty || userForm.get('userName')?.touched)" class="text-red-500 text-sm mt-1">
                     {{ getErrorMessage('userName') }}
                 </div>
@@ -23,7 +23,7 @@
                 <div>
                   <!-- Email Input -->
                   <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">Email</label>
-                  <input id="mail" name="mail" formControlName="mail" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" />
+                  <input id="mail" name="mail" formControlName="mail" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                   <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" class="text-red-500 text-sm mt-1">
                       {{ getErrorMessage('mail') }}
                   </div>
@@ -32,8 +32,9 @@
                 <div>
                     <!-- Role Input -->
                     <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Role</label>
-                    <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack">
+                    <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option>SUPER_ADMIN</option>
+            <option>ADMIN</option>
           </select>
                 </div>
 
@@ -47,7 +48,7 @@
               id="password" 
               formControlName="password"
               name="password"
-              class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack" 
+              class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
             />
             <i *ngIf="!showPassword" class="fa-solid fa-eye cursor-pointer ml-2" (click)="togglePasswordVisibility()" style="color: #4A90E2;"></i>
             <i *ngIf="showPassword" class="fa-solid fa-eye-slash cursor-pointer ml-2" (click)="togglePasswordVisibility()" style="color: #4A90E2;"></i>

@@ -1,19 +1,19 @@
 <!-- Main Container when itemId is null -->
 <div>
-    <button onclick="window.location.href='/steckholders'">
+    <button onclick="window.location.href='/steckholders'" class="text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
     <div class="h-[20px]"></div>
     <!-- Admin Users Form -->
-    <div class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl text-center mb-6">Admin Users</h2>
+    <div class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
+        <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">Admin Users</h2>
         <form [formGroup]="userForm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                     <!-- User Name Input -->
-                    <label for="userName" class="block text-sm font-medium text-gray-700">User Name</label>
-                    <input id="userName" name="userName" formControlName="userName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    <label for="userName" class="block text-sm font-medium text-textLight dark:text-textDark">User Name</label>
+                    <input id="userName" name="userName" formControlName="userName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                     <div *ngIf="userForm.get('userName')?.invalid && (userForm.get('userName')?.dirty || userForm.get('userName')?.touched)" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('userName') }}
                     </div>
@@ -21,8 +21,8 @@
 
                 <div>
                     <!-- Email Input -->
-                    <label for="mail" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input id="mail" name="mail" formControlName="mail" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">Email</label>
+                    <input id="mail" name="mail" formControlName="mail" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                     <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('mail') }}
                     </div>
@@ -30,13 +30,13 @@
 
                 <div>
                     <!-- Role Input -->
-                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label
+                    <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Role</label
           >
           <select
             id="role"
             name="role"
             formControlName="role"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           >
             <option>SUPER_ADMIN</option>
           </select>
@@ -72,14 +72,14 @@
     <div class="flex justify-end mt-6">
       <button
         type="button"
-        class="px-4 py-2 bg-[#ECECEC] hover:bg-[#DFDDDD] rounded-md mr-2"
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
         (click)="onCancel()"
       >
         Cancel
       </button>
       <button
         type="submit"
-        class="px-4 py-2 bg-[#8AC440] hover:bg-[#73C011] text-white rounded-md"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         (click)="updateMeAdmin()"
       >
         Save
@@ -93,18 +93,18 @@
     *ngIf="isPopupVisible"
   >
     <div
-      class="bg-white w-full max-w-3xl mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden"
+      class="bg-tileLight dark:bg-tileBlack w-full max-w-3xl mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden"
     >
       <form
         [formGroup]="changePasswordForm"
         (ngSubmit)="savePasswordChanges()"
-        class="bg-white w-full max-w-3xl mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden"
+        class="bg-tileLight dark:bg-tileBlack w-full max-w-3xl mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden"
       >
         <div class="flex justify-between items-center pb-3">
-          <div class="bg-white w-full rounded-lg">
+          <div class="bg-white w-full rounded-lg bg-tileLight dark:bg-tileBlack">
             <!-- Modal Title -->
-            <div class="flex justify-between items-center pb-3">
-              <h2 class="text-xl w-full font-bold text-center pt-5 pb-5">
+            <div class="flex justify-between items-center pb-3 bg-tileLight dark:bg-tileBlack">
+              <h2 class="text-xl w-full font-bold text-center pt-5 pb-5 text-textLight dark:text-textDark">
                 Change Password
               </h2>
               <button
@@ -129,15 +129,15 @@
             </div>
 
             <!-- Input Fields -->
-            <div class="space-y-4 mr-10 ml-5">
-              <div class="flex flex-col">
+            <div class="space-y-4 mr-10 ml-5 bg-tileLight dark:bg-tileBlack">
+              <div class="flex flex-col bg-tileLight dark:bg-tileBlack bg-tileLight dark:bg-tileBlack">
                 <label
-                  class="flex text-gray-700 w-52 justify-end items-center mb-1 mr-5"
+                  class="flex text-gray-700 w-52 justify-end items-center mb-1 mr-5 text-textLight dark:text-textDark"
                   for="current-password"
                 >Current Password</label>
                     <div class="mt-1 block w-full p-2 border border-gray-300 rounded-md flex items-center">
-                        <input [type]="showPassword1 ? 'text' : 'password'" id="current-password" formControlName="currentPassword" name="current-password" class="w-full border-none rounded-none focus:outline-none focus:border-none" />
-                        <i [class]="showPassword1 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="cursor-pointer ml-2" (click)="togglePasswordVisibility1()"></i>
+                        <input [type]="showPassword1 ? 'text' : 'password'" id="current-password" formControlName="currentPassword" name="current-password" class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                        <i [class]="showPassword1 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="cursor-pointer ml-2" (click)="togglePasswordVisibility1()" style="color: #4A90E2;"></i>
                     </div>
                     <div *ngIf="changePasswordForm.get('currentPassword')?.invalid && (changePasswordForm.get('currentPassword')?.dirty || changePasswordForm.get('currentPassword')?.touched)" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('currentPassword', changePasswordForm) }}
@@ -146,11 +146,11 @@
 
 
 
-                <div class="flex flex-col">
-                    <label class="flex text-gray-700 w-52 justify-end items-center mb-1 mr-5" for="new-password">New Password</label>
+                <div class="flex flex-col bg-tileLight dark:bg-tileBlack bg-tileLight dark:bg-tileBlack">
+                    <label class="flex text-gray-700 w-52 justify-end items-center mb-1 mr-5 text-textLight dark:text-textDark" for="new-password">New Password</label>
                     <div class="mt-1 block w-full p-2 border border-gray-300 rounded-md flex items-center">
-                        <input [type]="showPassword2 ? 'text' : 'password'" id="new-password" formControlName="newPassword" name="new-password" class="w-full border-none rounded-none focus:outline-none focus:border-none" />
-                        <i [class]="showPassword2 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="cursor-pointer ml-2" (click)="togglePasswordVisibility2()"></i>
+                        <input [type]="showPassword2 ? 'text' : 'password'" id="new-password" formControlName="newPassword" name="new-password" class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                        <i [class]="showPassword2 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="cursor-pointer ml-2" (click)="togglePasswordVisibility2()" style="color: #4A90E2;"></i>
                     </div>
                     <div *ngIf="changePasswordForm.get('newPassword')?.invalid && (changePasswordForm.get('newPassword')?.dirty || changePasswordForm.get('newPassword')?.touched)" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('newPassword', changePasswordForm) }}
@@ -161,11 +161,11 @@
 
 
 
-                <div class="flex flex-col">
-                    <label class="flex text-gray-700 w-52 justify-end items-center mb-1 mr-5" for="confirm-password">Confirm Password</label>
+                <div class="flex flex-col bg-tileLight dark:bg-tileBlack bg-tileLight dark:bg-tileBlack">
+                    <label class="flex text-gray-700 w-52 justify-end items-center mb-1 mr-5 text-textLight dark:text-textDark" for="confirm-password">Confirm Password</label>
                     <div class="mt-1 block w-full p-2 border border-gray-300 rounded-md flex items-center">
-                        <input [type]="showPassword3 ? 'text' : 'password'" id="confirm-password" formControlName="confirmPassword" name="confirm-password" class="w-full border-none rounded-none focus:outline-none focus:border-none" />
-                        <i [class]="showPassword3 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="cursor-pointer ml-2" (click)="togglePasswordVisibility3()"></i>
+                        <input [type]="showPassword3 ? 'text' : 'password'" id="confirm-password" formControlName="confirmPassword" name="confirm-password" class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                        <i [class]="showPassword3 ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="cursor-pointer ml-2" (click)="togglePasswordVisibility3()" style="color: #4A90E2;"></i>
                     </div>
                     <div *ngIf="changePasswordForm.get('confirmPassword')?.invalid && (changePasswordForm.get('confirmPassword')?.dirty || changePasswordForm.get('confirmPassword')?.touched)" class="text-red-500 text-sm mt-1">
                         {{ getErrorMessage('confirmPassword', changePasswordForm) }}
@@ -178,11 +178,11 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex justify-center space-x-4 mt-6 mb-6 mr-10">
-                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-200" (click)="closePopup()">
+            <div class="flex justify-center space-x-4 mt-6 mb-6 mr-10 bg-tileLight dark:bg-tileBlack">
+                <button class="px-4 py-2 bg-[#74788D] text-white rounded-md hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-200" (click)="closePopup()">
                 Cancel
               </button>
-                <button [disabled]="changePasswordForm.invalid" class="px-4 py-2 bg-[#8AC440] text-white rounded-md hover:bg-[#73C011] focus:outline-none focus:ring focus:ring-green-200" (click)="savePasswordChanges()">
+                <button [disabled]="changePasswordForm.invalid" class="px-4 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#73C011] focus:outline-none focus:ring focus:ring-green-200" (click)="savePasswordChanges()">
                 Save
               </button>
             </div>

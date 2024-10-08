@@ -36,6 +36,9 @@ export class AdminUsersComponent {
   itemsPerPage: number = 10;
   hasData: boolean = true; 
 
+  userId: number | null = null;
+  role : any= localStorage.getItem('role:');
+
   constructor(private http: HttpClient, private router: Router) {}
 
 
@@ -72,7 +75,10 @@ export class AdminUsersComponent {
   }
 
   ngOnInit() {
+    this.userId = Number(localStorage.getItem('userId:'));
+    console.log('jhj',this.userId);
     this.fetchAllAdmins(this.page, this.itemsPerPage);
+    
   }
 
   onPageChange(event: number) {

@@ -6,8 +6,8 @@
 
       <ul class="navbar-menu">
         <button (click)="toggleTheme()" class="flex items-center px-4 py-3 transition duration-150 ease-in-out">
-          <img *ngIf="getActiveTheme() === 'dark'" src="assets/icons/Sun.png" alt="Light Mode Icon" class="icon-class w-10">
-          <img *ngIf="getActiveTheme() === 'light'" src="assets/icons/Moon.png" alt="Dark Mode Icon" class="icon-class w-10">
+          <img *ngIf="isDarkTheme()" src="assets/icons/Sun.png" alt="Light Mode Icon" class="icon-class w-10">
+          <img *ngIf="!isDarkTheme()" src="assets/icons/Moon.png" alt="Dark Mode Icon" class="icon-class w-10">
            </button>
           <li 
           (click)="editMeAdminUser()"

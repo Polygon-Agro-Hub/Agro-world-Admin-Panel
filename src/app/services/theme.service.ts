@@ -5,34 +5,35 @@ import { Injectable } from '@angular/core';
 })
 export class ThemeService {
   private darkTheme: boolean = false;
+  private themeKey = 'selectedTheme';
 
-  constructor() { }
+  constructor() { this.applySavedTheme();}
 
-  toggleTheme1() {
-    this.darkTheme = !this.darkTheme;
-    if (this.darkTheme) {
-      document.body.classList.add('dark');
-      console.log('dark');
-    } else {
-      document.body.classList.remove('dark');
-      console.log('light');
-    }
-  }
+  
 
   toggleTheme() {
-    this.darkTheme = !this.darkTheme;
-    console.log('Button clicked, darkTheme:', this.darkTheme);  // Log the current theme state
-  
-    if (this.darkTheme) {
-      document.body.classList.add('dark');
-      console.log('dark mode activated');
-    } else {
-      document.body.classList.remove('dark');
-      console.log('light mode activated');
-    }
+    const currentTheme = this.getActiveTheme();
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    this.setTheme(newTheme);
   }
 
   getActiveTheme(): string {
-    return document.body.classList.contains('dark') ? 'dark' : 'light';
+    return localStorage.getItem(this.themeKey) || 'light';
+  }
+
+  setTheme(theme: string) {
+    localStorage.setItem(this.themeKey, theme);
+    this.applyTheme(theme);
+  }
+
+  private applyTheme(theme: string) {
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(theme);
+  }
+
+  // Apply saved theme on initialization
+  private applySavedTheme() {
+    const savedTheme = this.getActiveTheme();
+    this.applyTheme(savedTheme);
   }
 }

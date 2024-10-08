@@ -1,62 +1,28 @@
-<button class="mb-5" onclick="window.location.href='/steckholders'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/steckholders'">
         <i class="fa-solid fa-arrow-left"></i>
         Back
     </button>
 
 
 
-<button class="bg-lime-500 text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" onclick="window.location.href='admin-users/create-admin-user'">
+<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" onclick="window.location.href='admin-users/create-admin-user'">
         <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg> Add New
       </button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
 
-            <h2 class="text-2xl font-normal text-gray-500">All Admin Users</h2>
+            <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Admin Users</h2>
         </div>
         <div class="flex items-center">
-            <!-- <i class="mr-6 w-6 h-6 fill-current text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/></svg>
-          </i>
-            <div class="mr-8">
-
-                <label for="filter-by" class="mr-8  border-gray-500 text-gray-500">Filter By</label>
-                <button id="statusDropdownButton" data-dropdown-toggle="statusDropdown" class="border-solid border-2 border-gray-500 text-gray-500 focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center" type="button">
-                  Status 
-                  <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                  </svg>
-              </button>
-                <div id="statusDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div>
-                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="border-solid border-2  border-gray-500 text-gray-500 focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center" type="button">Date <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                </svg>
-                </button>
-            </div> -->
+            
         </div>
     </div>
 
     <div *ngIf="!hasData" class="text-center py-8">
-        <p class="text-gray-500 text-lg">No data to display</p>
+        <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
     </div>
 
 
@@ -65,10 +31,10 @@
             <thead>
                 <tr>
 
-                    <th class="py-3 font-normal text-gray-500 text-left">User Name</th>
-                    <th class="py-3 font-normal text-gray-500 text-left">Email</th>
-                    <th class="py-3 font-normal text-gray-500 text-left">Role</th>
-                    <th class="py-3 font-normal text-gray-500 text-left">Action</th>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">User Name</th>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Email</th>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Role</th>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,9 +48,9 @@
                   }
                     ">
 
-                    <td class="py-3">{{item.userName}}</td>
-                    <td class="py-3">{{item.mail}}</td>
-                    <td class="py-3">{{item.role}}</td>
+                    <td class="py-3 text-textLight dark:text-textDark">{{item.userName}}</td>
+                    <td class="py-3 text-textLight dark:text-textDark">{{item.mail}}</td>
+                    <td class="py-3 text-textLight dark:text-textDark">{{item.role}}</td>
 
 
 

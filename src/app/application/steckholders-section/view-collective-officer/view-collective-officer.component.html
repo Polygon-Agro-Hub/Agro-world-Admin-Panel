@@ -1,9 +1,9 @@
-<button class="mb-5" onclick="window.location.href='/steckholders'">
+<button class="mb-5" onclick="window.location.href='/steckholders'" class="mb-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 <button
-  class="bg-lime-500 text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   onclick="window.location.href='/collective-officer/personal'"
 >
   <svg
@@ -22,15 +22,15 @@
   </svg>
   Add New
 </button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-gray-500">Collection Officers</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Collection Officers</h2>
     </div>
     <div class="flex items-center">
-      <div class="mr-5">
+      <div class="mr-5 ">
         <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center"
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
           [options]="status"
           [checkmark]="true"
           optionLabel="name"
@@ -39,11 +39,11 @@
           (onChange)="applyFilters()"
         />
       </div>
-      <div class="flex items-center rounded-full bg-gray-100 px-4 py-2 w-96">
+      <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
         <input
           type="text"
           placeholder="Search.."
-          class="bg-transparent outline-none w-full text-gray-600"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
         />
         <button
           type="button"
@@ -91,23 +91,23 @@
       <thead>
         <tr>
           <th class="py-3 font-normal text-gray-500 text-left"></th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             First Name
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Last Name
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Company
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">Phone</th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">NIC</th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Phone</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">NIC</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Status
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center"></th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center"></th>
-          <th class="py-3 font-normal text-gray-500 text-left"></th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-left"></th>
         </tr>
       </thead>
       <tbody>
@@ -131,11 +131,11 @@
               height="50"
             />
           </td>
-          <td class="px-4 py-3 text-center">{{ item.firstName }}</td>
-          <td class="px-4 py-3 text-center">{{ item.lastName }}</td>
-          <td class="px-4 py-3 text-center">{{ item.companyName }}</td>
-          <td class="px-4 py-3 text-center">{{ item.phoneNumber01 }}</td>
-          <td class="px-4 py-3 text-center">{{ item.nic }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.firstName }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.lastName }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.companyName }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneNumber01 }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.nic }}</td>
           <!-- <td class="px-4 py-3 text-center">
             <div>
               <span
@@ -156,7 +156,7 @@
                   'w-24 h-19.5 inline-block font-medium rounded-md px-3 py-1 text-sm bg-red-100 text-red-500':
                     item.status === 'Rejected'
                 }"
-                class="w-24 h-19.5 inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer"
+                class="w-24 h-19.5 inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark"
                 (click)="openPopup(item)"
               >
                 {{ item.status }}

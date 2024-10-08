@@ -15,7 +15,12 @@ module.exports = {
         sideNavLight: '#FFFFFF',
         tileBlack: '#061E2C',
         tileLight: '#FFFFFF',
-        tileHover: '#14557C',
+        tileHoverDark: '#14557C',
+        tileHoverLight: '#e9e9e9',
+        iconCoverDark: '#123651',
+        iconCoverLight: '#CDDFEF66',
+        textDark: '#C4C4C4',
+        textLight: '#534E4E',
         navText:'#061E2C',
         darkModeBg: '#1a202c', // Custom background color for dark mode
         darkModeText: '#DFDFDF',

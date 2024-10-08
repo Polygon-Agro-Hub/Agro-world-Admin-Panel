@@ -18,51 +18,7 @@ export class NavbarComponent {
 
   
 
-  // ngAfterViewInit() {
-  //   const body :HTMLBodyElement | null = document.querySelector('body');
-  //   const btn = this.elementRef.nativeElement.querySelector('.btn');
-  //   const icon = this.elementRef.nativeElement.querySelector('.btn__icon');
-  //   const adminName = 'Admin Name';
-
-  //   function store(value:any){
-  //     localStorage.setItem('darkmode', value);
-  //   }
-
-  //   function load(){
-  //     const darkmode = localStorage.getItem('darkmode');
-      
-  //     if(!darkmode){
-  //       store(false);
-  //       icon.classList.add('fa-sun');
-  //     } else if(darkmode === 'true'){
-  //       body?.classList.add('darkmode');
-  //       icon.classList.add('fa-moon');
-  //     } else if(darkmode === 'false'){
-  //       icon.classList.add('fa-sun');
-  //     }
-  //   }
-
-  //   load();
-
-  //   btn.addEventListener('click', () => {
-  //     body?.classList.toggle('darkmode');
-  //     icon.classList.add('animated');
-      
-  //     store(body?.classList.contains('darkmode'));
-
-  //     if(body?.classList.contains('darkmode')){
-  //       icon.classList.remove('fa-sun');
-  //       icon.classList.add('fa-moon');
-  //     } else {
-  //       icon.classList.remove('fa-moon');
-  //       icon.classList.add('fa-sun');
-  //     }
-
-  //     setTimeout(() => {
-  //       icon.classList.remove('animated');
-  //     }, 500);
-  //   });
-  // }
+  
   navigateToCreateAdmin() {
     this.router.navigate(['/admin-users/create-admin-user']);
   }
@@ -75,8 +31,8 @@ export class NavbarComponent {
     this.themeService.toggleTheme(); // Call ThemeService to toggle dark/light mode
   }
 
-  getActiveTheme() {
-    return this.themeService.getActiveTheme();
+  isDarkTheme(): boolean {
+    return this.themeService.getActiveTheme() === 'dark';
   }
 
 

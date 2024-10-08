@@ -17,15 +17,8 @@ export class PublicForumService {
     chatId: number,
     replyData: { id: number; replyMessage: string }
   ): Observable<any> {
-    console.log('hi send msg url', `${this.apiUrl}send-message/${chatId}`);
+    console.log('send msg url', `${this.apiUrl}send-message/${chatId}`);
     return this.http.post(`${this.apiUrl}send-message/${chatId}`, replyData);
-  }
-  getReplyCount(postId: number): Observable<number> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
-    })
-
-    return this.http.get<number>(`${this.apiUrl}/${postId}`, { headers });
   }
   getAllPostReply(postId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -40,5 +33,12 @@ export class PublicForumService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.delete(`${this.apiUrl}delete-reply/${repId}`, { headers });
+  }
+
+  getreplyCount(chatId: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}get-count/${chatId}`, { headers });
   }
 }

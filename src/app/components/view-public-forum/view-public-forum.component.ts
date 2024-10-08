@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PublicForumService } from '../../services/plant-care/public-forum.service';
-import { error, log, profile } from 'console';
+import { count, error, log, profile } from 'console';
 import Swal from 'sweetalert2';
 import { PublicforumService } from '../../services/plant-care/publicforum.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlantcareUsersService } from '../../services/plant-care/plantcare-users.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-view-public-forum',
@@ -21,19 +22,18 @@ export class ViewPublicForumComponent implements OnInit {
   isPopupVisible = false;
   deletePopUpVisible = false;
   postId!: number;
-  psot: any;
+  postRcord!: any;
+  posts: any[] = [];
   isDeleteVisible = false;
   post: any;
   userPrifile: any;
   replyMessage: string = '';
-  replyCount: any;
+  replyCounts: { [chatId: number]: number } = {};
 
   constructor(
     private psotService: PublicforumService,
-    private route: ActivatedRoute,
     private router: Router,
-    private publicForumSrv: PublicForumService,
-    private userService: PlantcareUsersService
+    private publicForumSrv: PublicForumService
   ) {}
 
   sendMessage() {
@@ -59,12 +59,11 @@ export class ViewPublicForumComponent implements OnInit {
         Swal.fire('Error!', 'There was an error sending your reply.', 'error');
       }
     );
-  }
+  } 
 
   ngOnInit(): void {
     this.loadPosts();
     this.postId = 1;
-    this.fetchPostAllReply(this.postId);
   }
 
   loadPosts(): void {
@@ -108,16 +107,6 @@ export class ViewPublicForumComponent implements OnInit {
       },
       (error) => {
         console.log('Error: ', error);
-      }
-    );
-  }
-  fetchReplyCount(postId: number) {
-    this.publicForumSrv.getReplyCount(postId).subscribe(
-      (count) => {
-        this.replyCount[postId] = count;
-      },
-      (error) => {
-        console.error(`Error fetching reply count for post ${postId}:`, error);
       }
     );
   }

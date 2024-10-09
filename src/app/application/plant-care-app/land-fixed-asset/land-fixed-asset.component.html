@@ -44,7 +44,9 @@
                     </td>
                     <td class="px-4 py-3 text-center">{{ item.ownership }}</td>
                     <td class="px-4 py-3 text-center">{{ item.district }}</td>
-                    <td class="px-4 py-3 text-center">{{ item.perennialCrop }}</td>
+                    <td class="px-4 py-3 text-center">
+                        {{ item.perennialCrop === 0 ? 'No' : 'Yes' }}
+                    </td>
                  
                     
                     

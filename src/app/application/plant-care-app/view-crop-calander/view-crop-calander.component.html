@@ -1,43 +1,43 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5" onclick="window.location.href='/plant-care'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button class="bg-lime-500 text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   onclick="window.location.href='plant-care/create-crop-calender'">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
   Add New
 </button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-gray-500">All Crop Calenders</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Crop Calenders</h2>
     </div>
   </div>
 
   <div *ngIf="!hasData" class="text-center py-8">
-    <p class="text-gray-500 text-lg">No data to display</p>
+    <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
   </div>
 
 
   <div *ngIf="hasData" class="overflow-x-auto">
-    <table class="w-full divide-y divide-gray-200 table-auto">
+    <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
       <thead>
         <tr>
-          <th class="py-3 font-normal text-gray-500 text-left">Crop</th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Crop</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Variety
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Cultivation Method
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Nature of Cultivation
           </th>
-          <th class="px-4 py-3 font-normal text-gray-500 text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Duration
           </th>
         </tr>
@@ -51,13 +51,13 @@
                     currentPage: page,
                     totalItems: totalItems
                   }
-          " class="border-b">
-          <td class="py-3">{{ item.cropName }}</td>
-          <td class="px-4 py-3 text-center">{{ item.variety }}</td>
-          <td class="px-4 py-3 text-center">{{ item.CultivationMethod }}</td>
-          <td class="px-4 py-3 text-center">{{ item.NatureOfCultivation }}</td>
-          <td class="px-3 py-3 text-center">{{ item.CropDuration }}</td>
-          <td class="px-3 py-3 text-center">
+          " class="border-b border-gray-200 dark:border-[#4B555A]">
+          <td class="py-3 text-textLight dark:text-textDark">{{ item.cropName }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.variety }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.CultivationMethod }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.NatureOfCultivation }}</td>
+          <td class="px-3 py-3 text-center text-textLight dark:text-textDark">{{ item.CropDuration }}</td>
+          <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
 
 
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-8" (click)="ViewCroptask(item.id)">

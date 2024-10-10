@@ -23,7 +23,7 @@
                             </svg>
                           
                             <!-- Delete Button - Initially Hidden -->
-                            <div class="absolute hidden group-hover:block top-full mt-2 left-0">
+                            <div class="absolute hidden group-hover:flex justify-center items-center p-2 bg-white text-black shadow-xl  rounded-lg transition-all duration-300 mt-2 -right-10 w-32 h-10">
                               <div *ngFor="let item of publiForum">
                                 <button (click)="deletePost(item.id)" class="w-28 bg-white text-black font-medium py-2 px-4 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                   Delete

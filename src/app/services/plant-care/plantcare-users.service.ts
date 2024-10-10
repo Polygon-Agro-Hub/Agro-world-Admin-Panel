@@ -36,6 +36,9 @@ export interface FixedAsset {
   providedIn: 'root'
 })
 export class PlantcareUsersService {
+  getUserProfile(userId: number) {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = `${environment.API_BASE_URL}`;
   private token = `${environment.TOKEN}`;
 

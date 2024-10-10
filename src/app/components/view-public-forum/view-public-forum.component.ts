@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PublicForumService } from '../../services/plant-care/public-forum.service';
@@ -28,7 +28,9 @@ export class ViewPublicForumComponent implements OnInit {
   post: any;
   userPrifile: any;
   replyMessage: string = '';
-  replyCounts: { [chatId: number]: number } = {};
+  @Input() chatId!: number;
+  count!:any;
+  countReply!:ReplyCount[]
 
   constructor(
     private psotService: PublicforumService,
@@ -36,7 +38,7 @@ export class ViewPublicForumComponent implements OnInit {
     private publicForumSrv: PublicForumService
   ) {}
 
-  sendMessage() {
+  sendMessage(id:number) {
     if (!this.replyMessage.trim()) {
       Swal.fire('Error!', 'Please enter a message.', 'error');
       return;
@@ -48,7 +50,7 @@ export class ViewPublicForumComponent implements OnInit {
       replyMessage: this.replyMessage,
     };
 
-    this.publicForumSrv.sendMessage(this.postId, replyData).subscribe(
+    this.publicForumSrv.sendMessage(id, replyData).subscribe(
       (res) => {
         Swal.fire('Success!', 'Your reply has been sent.', 'success');
         this.fetchPostAllReply(this.postId);
@@ -63,15 +65,26 @@ export class ViewPublicForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPosts();
-    this.postId = 1;
+    this.getCount();
   }
 
   loadPosts(): void {
     this.psotService.getAllPosts().subscribe((data: any[]) => {
       this.post = data;
       console.log(this.post);
+    this.getCount();
+
     });
   }
+
+//   getPostbyId(postId:number):void{
+// this.psotService.getAllPosts(postId).subscribe(
+//   (res) =>{
+//     this.post = res;
+//   },
+//   (error) = 
+// )
+//   }
 
   viewUserProfile(userId: number) {
     this.router.navigate(['/plant-care/plant-care-user-profile'], {
@@ -82,10 +95,12 @@ export class ViewPublicForumComponent implements OnInit {
 
   toggleDeleteButton() {
     this.isDeleteVisible = !this.isDeleteVisible;
+    
   }
 
-  openPopup() {
+  openPopup(id:number) {
     this.isPopupVisible = true;
+    this.fetchPostAllReply(id)
   }
 
   closePopup() {
@@ -102,8 +117,8 @@ export class ViewPublicForumComponent implements OnInit {
   fetchPostAllReply(id: number) {
     this.publicForumSrv.getAllPostReply(id).subscribe(
       (res) => {
-        console.log(res);
         this.publiForum = res;
+        // console.log(this.publiForum.length);
       },
       (error) => {
         console.log('Error: ', error);
@@ -111,12 +126,52 @@ export class ViewPublicForumComponent implements OnInit {
     );
   }
 
+  deletePost(id:number){
+    console.log('delete id:', id);
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this post? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result)=>{
+      if(result.isConfirmed){
+        this.publicForumSrv.deletePublicForumPost(id).subscribe(
+          (res:any)=>{
+            if(res){
+              Swal.fire(
+                'Deleted!',
+                'The post has been deleted.',
+                'success'
+              );
+              this.isPopupVisible = true;
+              
+            }
+          },
+          (error)=>{
+            console.log('Error', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the post.',
+              'error'
+            )
+          }
+        )
+      }
+    });
+    
+  }
+
   deleteReply(id: number) {
     console.log('delete id:', id);
 
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
+      text: 'Do you really want to delete this reply message? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -149,6 +204,13 @@ export class ViewPublicForumComponent implements OnInit {
       }
     });
   }
+  getCount(){
+    this.publicForumSrv.getreplyCount().subscribe((data: any) => {
+      console.log(data);
+      
+      this.countReply = data
+    });
+  }
 }
 
 class PublicForum {
@@ -157,4 +219,10 @@ class PublicForum {
   'createdAt': string;
   'firstName': string;
   'lastName': string;
+}
+
+class ReplyCount{
+  'chatId' :number;
+  'replyCount':number;
+
 }

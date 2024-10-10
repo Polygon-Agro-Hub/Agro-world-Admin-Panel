@@ -12,13 +12,16 @@ export class PublicForumService {
   private token = `${environment.TOKEN}`;
 
   constructor(private http: HttpClient) {}
-
   sendMessage(
     chatId: number,
     replyData: { id: number; replyMessage: string }
   ): Observable<any> {
-    console.log('send msg url', `${this.apiUrl}send-message/${chatId}`);
-    return this.http.post(`${this.apiUrl}send-message/${chatId}`, replyData);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(`${this.apiUrl}send-message/${chatId}`, replyData, {
+      headers,
+    });
   }
   getAllPostReply(postId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -35,10 +38,17 @@ export class PublicForumService {
     return this.http.delete(`${this.apiUrl}delete-reply/${repId}`, { headers });
   }
 
-  getreplyCount(chatId: number) {
+  deletePublicForumPost(postId: number) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get(`${this.apiUrl}get-count/${chatId}`, { headers });
+    return this.http.delete(`${this.apiUrl}delete-post/${postId}`, { headers });
+  }
+
+  getreplyCount(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}get-count-reply`, { headers });
   }
 }

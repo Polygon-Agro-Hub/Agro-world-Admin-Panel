@@ -14,7 +14,7 @@ interface FixedBuildingAsset {
   extentp: any;
   ownership: string;
   district: string;
-  perennialCrop: string;
+  perennialCrop: any;
   createdAt: any;
 
 }

@@ -5,7 +5,7 @@
 
 
 
-<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" onclick="window.location.href='admin-users/create-admin-user'">
+<button *ngIf="role == 'SUPER_ADMIN'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" onclick="window.location.href='admin-users/create-admin-user'">
         <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg> Add New
@@ -34,29 +34,21 @@
                     <th class="py-3 font-normal text-textLight dark:text-textDark text-left">User Name</th>
                     <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Email</th>
                     <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Role</th>
-                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Action</th>
+                    <th *ngIf="role == 'SUPER_ADMIN'" class="py-3 font-normal text-textLight dark:text-textDark text-left">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="
-                        let item of adminUsers
-              | paginate
-                : {
-                    itemsPerPage: itemsPerPage,
-                    currentPage: page,
-                    totalItems: totalItems
-                  }
-                    ">
-
+                <ng-container *ngFor="let item of adminUsers | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }">
+                    <tr *ngIf="item.id !== 1 && item.id !== userId">
                     <td class="py-3 text-textLight dark:text-textDark">{{item.userName}}</td>
                     <td class="py-3 text-textLight dark:text-textDark">{{item.mail}}</td>
-                    <td class="py-3 text-textLight dark:text-textDark">{{item.role}}</td>
+                    <td  class="py-3 text-textLight dark:text-textDark">{{item.role}}</td>
 
 
 
 
 
-                    <td class="py-3">
+                    <td *ngIf="role == 'SUPER_ADMIN'" class="py-3">
                         <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editAdminUser(item.id)">
                             <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                 <title>pen-to-square</title>
@@ -71,6 +63,7 @@
                         </button>
                     </td>
                 </tr>
+            </ng-container>
 
             </tbody>
         </table>

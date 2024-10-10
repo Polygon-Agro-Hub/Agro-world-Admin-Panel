@@ -46,6 +46,7 @@ import { PublicForumComponent } from './application/plant-care-app/public-forum/
 import { UserCropCalendarComponent } from './application/plant-care-app/user-crop-calendar/user-crop-calendar.component';
 import { UserTaskEditComponent } from './application/plant-care-app/user-task-edit/user-task-edit.component';
 import { AddNewCropCalanderTaskComponent } from './application/plant-care-app/add-new-crop-calander-task/add-new-crop-calander-task.component';
+import { ViewUserProfileComponent } from './application/steckholders-section/view-user-profile/view-user-profile.component';
 
 export const routes: Routes = [
   {
@@ -262,6 +263,11 @@ export const routes: Routes = [
         path: 'plant-care/add-new-crop-task/:cropId/:indexId/:userId',
         component: AddNewCropCalanderTaskComponent,
         // canActivate: [AuthGuard],
+      },
+      {
+        path: 'plant-care/plant-care-user-profile',
+        component: ViewUserProfileComponent,
+        // canActivate:[AuthGuard]
       },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path

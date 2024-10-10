@@ -26,4 +26,8 @@ export class PublicforumService {
     });
     return this.http.get<any[]>(`${this.apiUrl}get-post/`, {headers});
   }
+
+  // getUserProfile(userId: number): Observable<any>{
+  //   return this.http.get<any>(`${this.apiUrl}/${userId}`);
+  // }
 }

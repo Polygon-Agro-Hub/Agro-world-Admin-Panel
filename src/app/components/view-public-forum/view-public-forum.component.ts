@@ -118,6 +118,7 @@ export class ViewPublicForumComponent implements OnInit {
     this.publicForumSrv.getAllPostReply(id).subscribe(
       (res) => {
         this.publiForum = res;
+        console.log(res);
         // console.log(this.publiForum.length);
       },
       (error) => {

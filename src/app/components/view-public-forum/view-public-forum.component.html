@@ -88,7 +88,8 @@
         <div class="overflow-y-auto h-auto p-2">
             <div class="px-12">
                 <div *ngFor="let item of publiForum">
-                    <p class="text-lg text-[#8AC440] underline">{{item.firstName}} {{item.lastName}}</p>
+                    <p class="text-lg text-[#8AC440] underline" *ngIf="!item.firstName">Agro World Admin</p>
+                    <p class="text-lg text-[#8AC440] underline" *ngIf="item.firstName">{{item.firstName}} {{item.lastName}}</p>
                     <div class="flex flex-row py-2">
                         <div class="bg-gray-200 px-4 py-1 text-lg rounded-[8px]">{{item.replyMessage}}
                             <p class="text-end ml-8 text-sm">{{ item.createdAt | date: 'shortTime' }}</p>

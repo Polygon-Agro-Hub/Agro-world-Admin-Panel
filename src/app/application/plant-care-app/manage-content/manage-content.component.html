@@ -2,9 +2,9 @@
 
 <div *ngIf="!isLoading">
     <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40" *ngIf="isPopupVisible">
-        <div class="bg-white w-full max-w-3xl mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden">
+        <div class="bg-tileLight dark:bg-tileBlack w-full max-w-3xl mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden">
             <div class="flex justify-between items-center border-b pb-3">
-                <h2 class="text-lg font-semibold">NEWS TITLE 1</h2>
+                <h2 class="text-lg font-semibold text-textLight dark:text-textDark">Selected News</h2>
                 <button class="text-textLight dark:text-textDark hover:text-gray-700" (click)="closePopup()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -13,7 +13,7 @@
             </div>
 
             <!-- Scrollable content area -->
-            <div class="overflow-y-auto max-h-96 p-2">
+            <div class="overflow-y-auto max-h-screen p-2 bg-tileLight dark:bg-tileBlack scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
                 <div class="flex justify-center my-4">
                     <img [src]="newsItems[0].image" alt="Market Price Image" class="max-w-full h-auto rounded-lg shadow-lg" />
                 </div>
@@ -22,8 +22,8 @@
                     <hr class="border-t-2 border-gray-300 my-4">
 
                     <div class="text-sm mt-2">
-                        <h3 class="text-md font-semibold mb-2 text-center">{{newsItems[0].titleEnglish}}</h3>
-                        <div [innerHTML]="safeHtmlDescriptionEnglish"></div>
+                        <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark">{{newsItems[0].titleEnglish}}</h3>
+                        <div [innerHTML]="safeHtmlDescriptionEnglish" class="text-textLight dark:text-textDark"></div>
                     </div>
                 </div>
                 <div class="h-[35px]"></div>
@@ -32,8 +32,8 @@
                     <hr class="border-t-2 border-gray-300 my-4">
 
                     <div class="text-sm mt-2">
-                        <h3 class="text-md font-semibold mb-2 text-center">{{newsItems[0].titleSinhala}}</h3>
-                        <div [innerHTML]="safeHtmlDescriptionSinhala"></div>
+                        <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark">{{newsItems[0].titleSinhala}}</h3>
+                        <div [innerHTML]="safeHtmlDescriptionSinhala" class="text-textLight dark:text-textDark"></div>
                     </div>
                 </div>
                 <div class="h-[35px]"></div>
@@ -41,8 +41,8 @@
                     <div class="text-md text-textLight dark:text-textDark">News in Tamil</div>
                     <div class="text-sm mt-2">
                         <hr class="border-t-2 border-gray-300 my-4">
-                        <h3 class="text-md font-semibold mb-2 text-center">{{newsItems[0].titleTamil}}</h3>
-                        <div [innerHTML]="safeHtmlDescriptionTamil"></div>
+                        <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark">{{newsItems[0].titleTamil}}</h3>
+                        <div [innerHTML]="safeHtmlDescriptionTamil" class="text-textLight dark:text-textDark"></div>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
         </div>
 
         <div *ngIf="hasData" class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 table-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
                 <thead>
                     <tr>
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Title</th>
@@ -112,7 +112,7 @@
                         itemsPerPage:itemsPerPage,
                         currentPage:page,
                         totalItems:totalItems
-                    }" class="border-b">
+                    }" class="border-b border-gray-200 dark:border-[#4B555A]">
                         <td class="py-3 dark:text-textDark text-centser">
                             {{ item.titleEnglish.length > 15 ? (item.titleEnglish | slice:0:35) + '.......' : item.titleEnglish }}
                           </td>

@@ -39,8 +39,8 @@
         "google-libphonenumber": "^3.2.38",
         "highlight.js": "^11.9.0",
         "katex": "^0.16.10",
-        "ngx-colors": "^3.6.0",
         "ng2-charts": "^6.0.1",
+        "ngx-colors": "^3.6.0",
         "ngx-pagination": "^6.0.3",
         "ngx-quill": "^25.3.2",
         "ngx-spinner": "^17.0.0",
@@ -51,6 +51,7 @@
         "quill-mention": "^6.0.1",
         "rxjs": "~7.8.0",
         "sweetalert2": "^11.12.4",
+        "tailwind-scrollbar": "^3.1.0",
         "tslib": "^2.6.3",
         "xlsx": "^0.18.5",
         "zone.js": "~0.14.3"

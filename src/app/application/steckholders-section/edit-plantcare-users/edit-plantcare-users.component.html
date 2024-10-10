@@ -2,7 +2,7 @@
 
 
 
-<button onclick="window.location.href='/plant-care/view-plantcare-users'" class="text-textLight dark:text-textDark">
+<button onclick="window.location.href='/plant-care/view-plantcare-users'" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left "></i>
     Back
 </button>
@@ -100,7 +100,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark text-left">First Name</label>
-                        <input formControlName="firstName" id="firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" />
+                        <input formControlName="firstName" id="firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                         <div *ngIf="userForm.get('firstName')!.invalid && (userForm.get('firstName')!.dirty || userForm.get('firstName')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('firstName')!.errors?.['required']">First name is required.</div>
                             <div *ngIf="userForm.get('firstName')!.errors?.['pattern']">First name should only contain letters.</div>
@@ -111,7 +111,7 @@
 
                     <div>
                         <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Last Name</label>
-                        <input formControlName="lastName" id="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" />
+                        <input formControlName="lastName" id="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                         <div *ngIf="userForm.get('lastName')!.invalid && (userForm.get('lastName')!.dirty || userForm.get('lastName')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('lastName')!.errors?.['required']">Last name is required.</div>
                             <div *ngIf="userForm.get('lastName')!.errors?.['pattern']">Last name should only contain letters.</div>
@@ -120,7 +120,7 @@
 
                     <div>
                         <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Phone Number</label>
-                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" placeholder="+94 - XXXXXXXXX"/>
+                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" placeholder="+94 - XXXXXXXXX"/>
                         <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
@@ -129,7 +129,7 @@
 
                     <div>
                         <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark text-left">NIC Number</label>
-                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" placeholder="20XXXXXXXXXX  or  99XXXXXXXV" />
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" placeholder="20XXXXXXXXXX  or  99XXXXXXXV" />
                         <div *ngIf="userForm.get('NICnumber')!.invalid && (userForm.get('NICnumber')!.dirty || userForm.get('NICnumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">NIC number is required.</div>
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'V').</div>
@@ -139,7 +139,7 @@
                     <!-- Image Upload -->
                     <div>
                         <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Profile Image</label>
-                        <input type="file" id="profileImage" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack" />
+                        <input type="file" id="profileImage" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                     </div>
                 </div>
             </div>

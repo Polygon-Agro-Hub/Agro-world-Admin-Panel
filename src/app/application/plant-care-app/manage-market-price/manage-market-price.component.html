@@ -1,10 +1,10 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40" *ngIf="isPopupVisible">
-    <div class="bg-white w-full max-w-3xl mx-auto rounded-lg shadow-lg p-6 max-h-screen">
+    <div class="bg-tileLight dark:bg-tileBlack w-full max-w-3xl mx-auto rounded-lg shadow-lg p-6 max-h-screen">
         <!-- Header -->
         <div class="flex justify-between items-center border-b pb-3">
-            <h2 class="text-2xl font-bold text-center w-full">Market-price</h2>
+            <h2 class="text-2xl font-bold text-center w-full text-textLight dark:text-textDark">Market-price</h2>
             <button class="text-gray-500 hover:text-gray-700" (click)="closePopup()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,21 +24,21 @@
         </div>
 
         <!-- Scrollable content area -->
-        <div class="overflow-y-auto max-h-96 p-4">
+        <div class="overflow-y-auto max-h-screen p-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800" >
             <div class="flex justify-center my-4">
                 <img [src]="marketPriceItems[0].image" alt="Market Price Image" class="max-w-full h-auto rounded-lg shadow-lg" />
             </div>
 
             <!-- Market Price in English -->
             <div>
-                <div class="text-md text-gray-500">Market Price in English</div>
+                <div class="text-md text-textLight dark:text-textDark">Market Price in English</div>
                 <hr class="border-t-2 border-gray-300 my-4" />
 
                 <div class="text-sm mt-2">
-                    <h3 class="text-lg font-semibold mb-2">
+                    <h3 class="text-lg font-semibold mb-2 text-textLight dark:text-textDark">
                         {{marketPriceItems[0].titleEnglish}}
                     </h3>
-                    <p>{{ marketPriceItems[0].descriptionEnglish }}</p>
+                    <p class="text-textLight dark:text-textDark">{{ marketPriceItems[0].descriptionEnglish }}</p>
                 </div>
             </div>
 
@@ -47,14 +47,14 @@
 
             <!-- Market Price in Sinhala -->
             <div>
-                <div class="text-md text-gray-500">Market Price in Sinhala</div>
+                <div class="text-md text-textLight dark:text-textDark">Market Price in Sinhala</div>
                 <hr class="border-t-2 border-gray-300 my-4" />
 
                 <div class="text-sm mt-2">
-                    <h3 class="text-lg font-semibold mb-2">
+                    <h3 class="text-lg font-semibold mb-2 text-textLight dark:text-textDark">
                         {{ marketPriceItems[0].titleSinhala }}
                     </h3>
-                    <p>{{ marketPriceItems[0].descriptionSinhala }}</p>
+                    <p class="text-textLight dark:text-textDark">{{ marketPriceItems[0].descriptionSinhala }}</p>
                 </div>
             </div>
 
@@ -63,14 +63,14 @@
 
             <!-- Market Price in Tamil -->
             <div>
-                <div class="text-md text-gray-500">Market Price in Tamil</div>
+                <div class="text-md text-textLight dark:text-textDark">Market Price in Tamil</div>
                 <hr class="border-t-2 border-gray-300 my-4" />
 
                 <div class="text-sm mt-2">
-                    <h3 class="text-lg font-semibold mb-2">
+                    <h3 class="text-lg font-semibold mb-2 text-textLight dark:text-textDark">
                         {{ marketPriceItems[0].titleTamil }}
                     </h3>
-                    <p>{{ marketPriceItems[0].descriptionTamil }}</p>
+                    <p class="text-textLight dark:text-textDark">{{ marketPriceItems[0].descriptionTamil }}</p>
                 </div>
             </div>
 
@@ -79,12 +79,13 @@
 
             <!-- Price Section -->
             <div>
-                <div class="text-md text-gray-500">Price</div>
+                <div class="text-md text-textLight dark:text-textDark">Price</div>
                 <hr class="border-t-2 border-gray-300 my-4" />
 
                 <div class="text-sm mt-2">
-                    <p>{{ marketPriceItems[0].price }}</p>
+                    <p class="text-textLight dark:text-textDark">Rs : {{ marketPriceItems[0].price }}</p>
                 </div>
+                <div class="h-[80px]"></div>
             </div>
         </div>
     </div>
@@ -92,14 +93,14 @@
 
 
 <div class="overflow-hidden">
-    <button class="mb-5" onclick="window.location.href='/plant-care'">
+    <button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center">
-                <h2 class="text-2xl font-normal text-gray-500">All Market Price</h2>
+                <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Market Price</h2>
             </div>
             <div class="flex items-center">
                 <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -110,11 +111,11 @@
           </svg>
         </i>
                 <div class="mr-8">
-                    <label for="filter-by" class="mr-8 border-gray-500 text-gray-500">Filter By</label
+                    <label for="filter-by" class="mr-8 border-gray-500 text-textLight dark:text-textDark">Filter By</label
           >
          
 
-          <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center"
+          <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
             [options]="status"
             [(ngModel)]="statusFilter"
             optionLabel="name"
@@ -126,7 +127,7 @@
         <div>
          
         <div>
-          <input [(ngModel)]="createdDateFilter" (change)="applyFilters()" id="createdDateFilter" type="date" class="border-solid border-2 text-gray-500 focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center"/>
+          <input [(ngModel)]="createdDateFilter" (change)="applyFilters()" id="createdDateFilter" type="date" class="border-solid border-2 text-gray-500 focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]"/>
         </div>
         </div>
       </div>
@@ -137,17 +138,17 @@
   </div>
 
     <div *ngIf="hasData">
-      <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
         <thead>
           <tr>
-            <th class="py-3 font-normal text-gray-500 text-left">Title</th>
-            <th class="px-4 py-3 font-normal text-gray-500 text-centser">
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Title</th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
               View / Hide
             </th>
-            <th class="px-4 py-3 font-normal text-gray-500 text-centser">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
               Status
             </th>
-            <th class="px-4 py-3 font-normal text-gray-500 text-centser">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
               Date
             </th>
           </tr>
@@ -163,9 +164,9 @@
                       totalItems: totalItems
                     }
             "
-           class="border-b">
-            <td class="py-3">{{ item.titleEnglish }}</td>
-            <td class="px-4 py-3 text-center">
+           class="border-b border-gray-200 dark:border-[#4B555A]">
+            <td class="py-3 text-textLight dark:text-textDark">{{ item.titleEnglish }}</td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="openPopup(item.id)"
@@ -203,7 +204,7 @@
                 </span>
               </div>
             </td>
-            <td class="px-4 py-3 text-center">{{ item.createdAt  | date: 'yyyy-MM-dd' }}</td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.createdAt  | date: 'yyyy-MM-dd' }}</td>
             <td class="px-4 py-3 text-center">
               <button
                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"

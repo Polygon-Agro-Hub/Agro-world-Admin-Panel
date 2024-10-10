@@ -61,7 +61,7 @@
 
 
     <div *ngIf="hasData" class="overflow-x-auto">
-        <table class="w-full divide-y divide-gray-200 table-auto">
+        <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
             <thead>
                 <tr>
                     <th class="py-3 font-normal text-textLight dark:text-textDark text-left"></th>
@@ -79,7 +79,8 @@
                     currentPage: page,
                     totalItems: totalItems
                   }
-          ">
+          " class="border-b border-gray-200 dark:border-[#4B555A]"
+          >
                     <td class="py-3">
                         <img class="profile-pic" [src]="item.profileImage" />
                     </td>

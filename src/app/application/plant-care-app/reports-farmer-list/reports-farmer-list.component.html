@@ -1,19 +1,19 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5" onclick="window.location.href='/plant-care'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
 
 
-<p class="text-black text-xl my-8">
+<p class="text-xl my-8 text-textLight dark:text-textDark">
     Farmer List
 </p>
 
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-end items-center mb-8">
         <div class="flex justify-center items-end mr-8">
-            <div class="flex items-center rounded-full bg-gray-100 px-4 py-2 w-96">
+            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
                 <input type="text" placeholder="Search.." class="bg-transparent outline-none w-full text-gray-600"
                     [(ngModel)]="searchNIC" />
                 <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -39,12 +39,12 @@
         <table class="w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-left">First Name</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-start">Last Name</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Phone</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">NIC</th>
-                    <th class="px-3 py-3 font-normal text-gray-500 text-center">Current</th>
-                    <th class="px-3 py-3 font-normal text-gray-500 text-center">Fixed</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">First Name</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start">Last Name</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Phone</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">NIC</th>
+                    <th class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center">Current</th>
+                    <th class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center">Fixed</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,15 +58,15 @@
                   }
           ">
 
-                    <td class="px-4 py-3 text-start">
+                    <td class="px-4 py-3 text-start text-textLight dark:text-textDark">
                         {{ item.firstName }}
                     </td>
-                    <td class="px-4 py-3 text-start">
+                    <td class="px-4 py-3 text-start text-textLight dark:text-textDark">
                         {{ item.lastName }}
 
                     </td>
-                    <td class="px-4 py-3 text-center">{{ item.phoneNumber }}</td>
-                    <td class="px-4 py-3 text-center">{{ item.NICnumber }}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneNumber }}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.NICnumber }}</td>
                     <td class="px-3 py-3 text-center">
                         <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCurrentAsset(item.id,item.firstName,item.lastName)">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,18 +1,18 @@
 <div>
-    <button class="mb-5" onclick="history.back()">
+    <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
         <i class="fa-solid fa-arrow-left"></i>
         Back
     </button>
-    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex flex-col items-center mb-8">
-            <h3 class="flex">Farmer:
-                <p class="pl-3">{{this.name}}</p>
+            <h3 class="flex dark:text-textDark">Farmer:
+                <p class="pl-3 dark:text-textDark">{{this.name}}</p>
             </h3>
-            <h3 class="flex">Category:
-                <p class="pl-3">{{this.category}}</p>
+            <h3 class="flex dark:text-textDark">Category:
+                <p class="pl-3 dark:text-textDark">{{this.category}}</p>
             </h3>
-            <h3 class="flex">Asset Name:
-                <p class="pl-3">{{this.asset}}</p>
+            <h3 class="flex dark:text-textDark">Asset Name:
+                <p class="pl-3 dark:text-textDark">{{this.asset}}</p>
             </h3>
         </div>
 
@@ -26,11 +26,11 @@
                 <thead>
                     <tr>
                         <th class="py-3 font-normal text-gray-500 text-left"></th>
-                        <th class="py-3 font-normal text-gray-500 text-left">Number of units (+)</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Number of units (-)</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Unit</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Total</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 text-center">Date</th>
+                        <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">Number of units (+)</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Number of units (-)</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Unit</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Total</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Date</th>
 
                     </tr>
                 </thead>
@@ -53,9 +53,9 @@
                         </td>
                         <td class="py-3 text-green-700">{{item.numOfPlusUnit}}</td>
                         <td class="px-4 py-3 text-center text-red-700">{{item.numOfMinUnit}}</td>
-                        <td class="px-4 py-3 text-center">{{this.unit}}</td>
-                        <td class="px-4 py-3 text-center">{{item.totalPrice}}</td>
-                        <td class="px-4 py-3 text-center">{{item.createdAt}}</td>
+                        <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center ">{{this.unit}}</td>
+                        <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{item.totalPrice}}</td>
+                        <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{item.createdAt}}</td>
                     </tr>
 
                 </tbody>

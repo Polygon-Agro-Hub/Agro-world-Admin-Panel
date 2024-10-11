@@ -1,27 +1,27 @@
 <div>
-    <button onclick="history.back()">
+    <button class="text-textLight dark:text-textDark" onclick="history.back()">
         <i class="fa-solid fa-arrow-left"></i>
         Back
     </button>
     <div class="h-[20px]"></div>
-    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-md">
         <div class="flex flex-col items-center">
-            <h3 class="flex mb-2">Index No :
-                <p class="ml-2 font-medium">{{taskItems.taskIndex}}</p>
+            <h3 class="flex mb-2 text-textLight dark:text-textDark">Index No :
+                <p class="ml-2 font-medium text-textLight dark:text-textDark">{{taskItems.taskIndex}}</p>
             </h3>
-            <h3 class="flex">Days :
-                <p class="ml-2">{{taskItems.days}}</p>
+            <h3 class="flex text-textLight dark:text-textDark">Days :
+                <p class="ml-2 text-textLight dark:text-textDark">{{taskItems.days}}</p>
             </h3>
         </div>
-        <div class="border-b mb-6">
+        <div class="mb-6 bg-tileLight dark:bg-tileBlack">
             <ul class="flex">
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
                     English
                 </li>
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
                     Sinhala
                 </li>
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{ 'border-green-500': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
                     Tamil
                 </li>
             </ul>
@@ -29,73 +29,73 @@
 
         <div *ngIf="selectedLanguage === 'english'">
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task English
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Type
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Category
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Description
                 </label> 
-                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'sinhala'">
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Sinhala
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Type
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Category
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategorySinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategorySinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Description
                 </label> 
-                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'tamil'">
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Tamil
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Type
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskTypeTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-mdtext-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Category
-                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskCategoryTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">
+                <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                     Task Description
                 </label> 
-                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
         </div>
         <div class="flex justify-end mt-6">
@@ -103,7 +103,7 @@
                 Cancel
             </button>
             <div class="w-[20px] "></div>
-            <button class="px-4 py-2 bg-green-500 text-white rounded-md " type="button " (click)="updateTask()">
+            <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md " type="button " (click)="updateTask()">
                 Save
             </button>
         </div>

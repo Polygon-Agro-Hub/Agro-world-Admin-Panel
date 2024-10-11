@@ -1,15 +1,15 @@
 <!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
 
-<button class="mb-5" onclick="window.location.href='/plant-care/report-farmer-list'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care/report-farmer-list'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 
 
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-            <h2 class="text-lg font-normal text-gray-500">{{this.firstName}} {{this.lastName}}</h2>
+            <h2 class="text-lg font-normal text-gray-500 dark:text-textDark">{{this.firstName}} {{this.lastName}}</h2>
         </div>
         
     </div>
@@ -18,15 +18,15 @@
             <thead>
                 <tr>
                    
-                    <th class="px-4 py-3 font-normal text-gray-500 text-left">Category</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-left">View</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">Category</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">View</th>
                     
                 </tr>
             </thead>
             <tbody>
                <tr>
-                <th class="px-4 py-3 font-medium text-black text-left">Building and Infastructures</th>
-                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Building and Infastructures</th>
+                <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
                     <button (click)="buildingCategory(this.userId)">
                         <i class="fa-regular fa-file"></i>
                     </button>
@@ -34,8 +34,8 @@
                </tr>
 
                <tr>
-                <th class="px-4 py-3 font-medium text-black text-left">Lands</th>
-                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Lands</th>
+                <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
                     <button (click)="landCategory(this.userId)">
                         <i class="fa-regular fa-file"></i>
                     </button>
@@ -43,8 +43,8 @@
                </tr>
 
                <tr>
-                <th class="px-4 py-3 font-medium text-black text-left">Machinery, Vehicles</th>
-                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Machinery, Vehicles</th>
+                <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
                     <button (click)="machCategory(this.userId)">
                         <i class="fa-regular fa-file"></i>
                     </button>
@@ -52,8 +52,8 @@
                </tr>
 
                <tr>
-                <th class="px-4 py-3 font-medium text-black text-left">Tools & Equipments</th>
-                <th class="px-4 py-3 font-normal text-gray-700 text-left">
+                <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Tools & Equipments</th>
+                <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
                     <button (click)="toolsCategory(this.userId)">
                         <i class="fa-regular fa-file"></i>
                     </button>

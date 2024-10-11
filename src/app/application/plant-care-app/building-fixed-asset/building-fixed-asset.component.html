@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5" onclick="history.back()"> 
+<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"> 
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -8,18 +8,18 @@
 
 
 
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex flex-col items-center justify-center mb-8">
         <div class="flex items-center justify-center">
-            <h2 class="text-md font-normal text-gray-500 text-center">Farmer : {{this.fullName}}</h2>
+            <h2 class="text-md font-normal text-gray-500 dark:text-textDark text-center">Farmer : {{this.fullName}}</h2>
         </div>
         <div class="flex items-center justify-center">
-            <h2 class="text-md font-normal text-gray-500 text-center">Category : {{this.category}}</h2>
+            <h2 class="text-md font-normal text-gray-500 dark:text-textDark text-center">Category : {{this.category}}</h2>
         </div>
     </div>
 
     <div *ngIf="!hasData" class="text-center py-8">
-        <p class="text-gray-500 text-lg">No data to display</p>
+        <p class="text-gray-500 dark:text-textDark text-lg">No data to display</p>
     </div>
     
     <div *ngIf="hasData" class="overflow-x-auto">
@@ -27,11 +27,11 @@
             <thead>
                 <tr>
                     
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Type</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Floor Area</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">Ownership</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">General Condition</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-center">District</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Type</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Floor Area</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Ownership</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">General Condition</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,11 +40,11 @@
           ">
                    
                     
-                    <td class="px-4 py-3 text-center">{{ item.type }}</td>
-                    <td class="px-4 py-3 text-center">{{ item.floorArea }}</td>
-                    <td class="px-4 py-3 text-center">{{ item.ownership }}</td>
-                    <td class="px-4 py-3 text-center">{{ item.generalCondition }}</td>
-                    <td class="px-4 py-3 text-center">{{ item.district }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.type }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.floorArea }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.ownership }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.generalCondition }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.district }}</td>
                     
                     
                     

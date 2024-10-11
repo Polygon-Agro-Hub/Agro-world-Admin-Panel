@@ -2,7 +2,7 @@
 
 
 
-<button onclick="window.location.href='/plant-care/public-forum'">
+<button class="text-textLight dark:text-textDark" onclick="window.location.href='/plant-care/public-forum'">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -11,8 +11,8 @@
 
 <div>
     <div class="h-[20px]"></div>
-    <div class="mx-auto p-6 bg-white rounded-lg shadow-lg ">
-        <h2 class="text-2xl text-center mb-6">Plant Care User Profile</h2>
+    <div class="mx-auto p-6 bg-white dark:bg-tileBlack  rounded-lg shadow-lg ">
+        <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">Plant Care User Profile</h2>
 
 
         <div>
@@ -25,22 +25,22 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label for="firstName" class="flex text-sm justify-center font-medium text-gray-700">{{this.firstName}}</label>
+                    <label for="firstName" class="flex text-sm justify-center font-medium text-gray-700 dark:text-textDark">{{this.firstName}}</label>
                     <!-- <input [value]="userForm.get('firstName')?.value" formControlName="firstName" id="firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md border-none" readonly/> -->
                 </div>
 
                 <div>
-                    <label for="lastName" class="flex justify-center text-sm font-medium text-gray-700">{{this.lastName}}</label>
+                    <label for="lastName" class="flex justify-center text-sm font-medium text-gray-700 dark:text-textDark">{{this.lastName}}</label>
                     <!-- <input formControlName="lastName" id="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md border-none" readonly/> -->
                 </div>
 
                 <div>
-                    <label for="phoneNumber" class="flex justify-center text-sm font-medium text-gray-700">{{this.phoneNumber}}</label>
+                    <label for="phoneNumber" class="flex justify-center text-sm font-medium text-gray-700 dark:text-textDark">{{this.phoneNumber}}</label>
                     <!-- <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md border-none" readonly/> -->
                 </div>
 
                 <div>
-                    <label for="NICnumber" class="flex justify-center text-sm font-medium text-gray-700">{{this.NICnumber}}</label>
+                    <label for="NICnumber" class="flex justify-center text-sm font-medium text-gray-700 dark:text-textDark">{{this.NICnumber}}</label>
                     <!-- <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md border-none" readonly/> -->
                 </div>
             </div>

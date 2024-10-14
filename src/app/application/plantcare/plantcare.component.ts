@@ -15,13 +15,31 @@ export class PlantcareComponent {
 
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;
+    if(this.popupVisibleMarketPrice=true){
+      this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
+    }
+    if(this.popupVisibleCropCalender = true){
+      this.popupVisibleCropCalender = !this.popupVisibleCropCalender;
+    }
   }
 
   togglePopupMarketPrice() {
     this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
+    if(this.popupVisibleNews=true){
+      this.popupVisibleNews = !this.popupVisibleNews;
+    }
+    if(this.popupVisibleCropCalender = true){
+      this.popupVisibleCropCalender = !this.popupVisibleCropCalender;
+    }
   }
 
   togglePopupCropCalender(){
     this.popupVisibleCropCalender = !this.popupVisibleCropCalender;
+    if(this.popupVisibleNews=true){
+      this.popupVisibleNews = !this.popupVisibleNews;
+    }
+    if(this.popupVisibleMarketPrice = true){
+      this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
+    }
   }
 }

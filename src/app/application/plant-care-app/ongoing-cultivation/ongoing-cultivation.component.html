@@ -1,12 +1,12 @@
-<button class="mb-5" onclick="window.location.href='/plant-care'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
 
-            <h2 class="text-2xl font-normal text-gray-500">Ongoing Cultivation</h2>
+            <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">Ongoing Cultivation</h2>
         </div>
         <div class="flex items-center">
             <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -14,8 +14,8 @@
         </i>
 
             <div class="mr-8">
-                <div class="flex items-center rounded-full bg-gray-100 px-4 py-2 w-96">
-                    <input type="text" placeholder="Search by NIC..." class="bg-transparent outline-none w-full text-gray-600" [(ngModel)]="searchNIC" />
+                <div class="flex items-center rounded-full bg-gray-100 px-4 py-2 w-96 dark:bg-[#272F45]">
+                    <input type="text" placeholder="Search by NIC..." class="bg-transparent outline-none w-full text-gray-600 dark:text-textDark" [(ngModel)]="searchNIC" />
                     <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="searchCultivations()">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,10 +62,10 @@
         <table class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
-                    <th class="py-3 font-normal text-gray-500 text-left">First Name</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-centser">Last Name</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-centser">NIC</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 text-centser">Cultivations</th>
+                    <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">First Name</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Last Name</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">NIC</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Cultivations</th>
 
                 </tr>
             </thead>
@@ -80,9 +80,9 @@
                               totalItems: totalItems
                             }
                     ">
-                    <td class="py-3">{{item.firstName}}</td>
-                    <td class="px-4 py-3 text-center">{{item.lastName}}</td>
-                    <td class="px-4 py-3 text-center">{{item.NICnumber}}</td>
+                    <td class="py-3 dark:text-textDark">{{item.firstName}}</td>
+                    <td class="px-4 py-3 dark:text-textDark text-center">{{item.lastName}}</td>
+                    <td class="px-4 py-3 dark:text-textDark text-center">{{item.NICnumber}}</td>
                     
                     <td class="px-4 py-3 text-center">
                       <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewTaskByUser(item.cultivationId, item.id)">

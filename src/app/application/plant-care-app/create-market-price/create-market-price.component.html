@@ -1,55 +1,55 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="itemId === null">
-    <button onclick="window.location.href='/plant-care'">
+    <button onclick="window.location.href='/plant-care'" class="mb-5 text-textLight dark:text-textDark">
       <i class="fa-solid fa-arrow-left"></i>
       Back
     </button>
     <div class="h-[20px]"></div>
-    <div class="mx-auto p-6 bg-white rounded-lg shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-6 text-center">Market Price</h2>
+    <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark">Market Price</h2>
 
-        <div class="border-b mb-6">
+        <div class=" mb-6">
             <ul class="flex">
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{'border-green-500': selectedLanguage === 'english'}" (click)="selectLanguage('english')">English</li>
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{'border-green-500': selectedLanguage === 'sinhala'}" (click)="selectLanguage('sinhala')">Sinhala</li>
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{'border-green-500': selectedLanguage === 'tamil'}" (click)="selectLanguage('tamil')">Tamil</li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{'border-[#3980C0]': selectedLanguage === 'english'}" (click)="selectLanguage('english')">English</li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{'border-[#3980C0]': selectedLanguage === 'sinhala'}" (click)="selectLanguage('sinhala')">Sinhala</li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{'border-[#3980C0]': selectedLanguage === 'tamil'}" (click)="selectLanguage('tamil')">Tamil</li>
             </ul>
         </div>
 
         <div *ngIf="selectedLanguage === 'english'">
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">Add Title</label>
-                <input type="text" id="titleEnglish" [(ngModel)]="createMarketObj.titleEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Add Title</label>
+                <input type="text" id="titleEnglish" [(ngModel)]="createMarketObj.titleEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
             <div class="mb-4">
-                <label for="descriptionEnglish" class="block text-sm font-medium text-gray-700">Add Description</label>
-                <textarea id="descriptionEnglish" [(ngModel)]="createMarketObj.descriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56"></textarea>
+                <label for="descriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Add Description</label>
+                <textarea id="descriptionEnglish" [(ngModel)]="createMarketObj.descriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
             </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'sinhala'">
             <div class="mb-4">
-                <label for="titleSinhala" class="block text-sm font-medium text-gray-700">Add Title in Sinhala</label>
-                <input type="text" id="titleSinhala" [(ngModel)]="createMarketObj.titleSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <label for="titleSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Add Title in Sinhala</label>
+                <input type="text" id="titleSinhala" [(ngModel)]="createMarketObj.titleSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-mdtext-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
             <div class="mb-4">
-                <label for="descriptionSinhala" class="block text-sm font-medium text-gray-700">Add Description in Sinhala</label>
-                <textarea id="descriptionSinhala" [(ngModel)]="createMarketObj.descriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56"></textarea>
+                <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Add Description in Sinhala</label>
+                <textarea id="descriptionSinhala" [(ngModel)]="createMarketObj.descriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
             </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'tamil'">
             <div class="mb-4">
-                <label for="titleTamil" class="block text-sm font-medium text-gray-700">Add Title in Tamil</label>
-                <input type="text" id="titleTamil" [(ngModel)]="createMarketObj.titleTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <label for="titleTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add Title in Tamil</label>
+                <input type="text" id="titleTamil" [(ngModel)]="createMarketObj.titleTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
             <div class="mb-4">
-                <label for="descriptionTamil" class="block text-sm font-medium text-gray-700">Add Description in Tamil</label>
-                <textarea id="descriptionTamil" [(ngModel)]="createMarketObj.descriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56"></textarea>
+                <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add Description in Tamil</label>
+                <textarea id="descriptionTamil" [(ngModel)]="createMarketObj.descriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
             </div>
         </div>
 
@@ -57,10 +57,10 @@
         <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
         <!-- Button -->
-        <button class="flex items-center text-gray-800" (click)="triggerFileInput()">
+        <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput()">
         Add Image
-        <span class="flex justify-center items-center w-6 h-6 ml-2 border border-green-500 rounded text-green-500 font-bold">
-          +
+        <span class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-textLight dark:text-textDark font-bold">
+            <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
         </span>
       </button>
         <div *ngIf="selectedFileName" class="mt-2 text-green-500">
@@ -73,14 +73,14 @@
         <div class="h-[35px]"></div>
 
         <div class="mb-4">
-            <label for="titleTamil" class="block text-sm font-medium text-gray-700">Add Price</label>
-            <input type="number" min="0" id="price" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" [(ngModel)]="createMarketObj.price" />
+            <label for="titleTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add Price</label>
+            <input type="number" min="0" id="price" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [(ngModel)]="createMarketObj.price" />
         </div>
 
         <div class="flex justify-end mt-6">
-            <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md" type="button" (click)="onCancel()">Cancel</button>
+            <button class="px-4 py-2 bg-[#74788D] text-white rounded-md" type="button" (click)="onCancel()">Cancel</button>
             <div class="w-[20px]"></div>
-            <button class="px-4 py-2 bg-green-500 text-white rounded-md" type="button" (click)="createMarketPrice()">Save</button>
+            <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md" type="button" (click)="createMarketPrice()">Save</button>
         </div>
     </div>
 </div>
@@ -90,70 +90,70 @@
 
 
 <div *ngIf="itemId != null">
-    <button onclick="window.location.href='/plant-care/manage-market-price'">
+    <button onclick="window.location.href='/plant-care/manage-market-price'" class="mb-5 text-textLight dark:text-textDark">
       <i class="fa-solid fa-arrow-left"></i>
       Back
     </button>
     <div class="h-[20px]"></div>
-    <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-6 text-center">Edit Market Price</h2>
+    <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark">Edit Market Price</h2>
 
-        <div class="border-b mb-6">
+        <div class="mb-6">
             <ul class="flex">
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{'border-green-500': selectedLanguage === 'english'}" (click)="selectLanguage('english')">English</li>
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{'border-green-500': selectedLanguage === 'sinhala'}" (click)="selectLanguage('sinhala')">Sinhala</li>
-                <li class="cursor-pointer py-2 px-4 text-center border-b-2" [ngClass]="{'border-green-500': selectedLanguage === 'tamil'}" (click)="selectLanguage('tamil')">Tamil</li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{'border-[#3980C0]': selectedLanguage === 'english'}" (click)="selectLanguage('english')">English</li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{'border-[#3980C0]': selectedLanguage === 'sinhala'}" (click)="selectLanguage('sinhala')">Sinhala</li>
+                <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark" [ngClass]="{'border-[#3980C0]': selectedLanguage === 'tamil'}" (click)="selectLanguage('tamil')">Tamil</li>
             </ul>
         </div>
 
         <div *ngIf="selectedLanguage === 'english'">
             <div class="mb-4">
-                <label for="titleEnglish" class="block text-sm font-medium text-gray-700">Add Title</label>
-                <input type="text" id="titleEnglish" [(ngModel)]="newsItems[0].titleEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Add Title</label>
+                <input type="text" id="titleEnglish" [(ngModel)]="newsItems[0].titleEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             </div>
 
             <div class="mb-4">
-                <label for="descriptionEnglish" class="block text-sm font-medium text-gray-700">Add Description</label>
-                <textarea id="descriptionEnglish" [(ngModel)]="newsItems[0].descriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56"></textarea>
+                <label for="descriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Add Description</label>
+                <textarea id="descriptionEnglish" [(ngModel)]="newsItems[0].descriptionEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></textarea>
             </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'sinhala'">
             <div class="mb-4">
-                <label for="titleSinhala" class="block text-sm font-medium text-gray-700">Add Title in Sinhala</label>
-                <input type="text" id="titleSinhala" [(ngModel)]="newsItems[0].titleSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <label for="titleSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Add Title in Sinhala</label>
+                <input type="text" id="titleSinhala" [(ngModel)]="newsItems[0].titleSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             </div>
 
             <div class="mb-4">
-                <label for="descriptionSinhala" class="block text-sm font-medium text-gray-700">Add Description in Sinhala</label>
-                <textarea id="descriptionSinhala" [(ngModel)]="newsItems[0].descriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56"></textarea>
+                <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Add Description in Sinhala</label>
+                <textarea id="descriptionSinhala" [(ngModel)]="newsItems[0].descriptionSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" ></textarea>
             </div>
         </div>
 
         <div *ngIf="selectedLanguage === 'tamil'">
             <div class="mb-4">
-                <label for="titleTamil" class="block text-sm font-medium text-gray-700">Add Title in Tamil</label>
-                <input type="text" id="titleTamil" [(ngModel)]="newsItems[0].titleTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                <label for="titleTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add Title in Tamil</label>
+                <input type="text" id="titleTamil" [(ngModel)]="newsItems[0].titleTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             </div>
 
             <div class="mb-4">
-                <label for="descriptionTamil" class="block text-sm font-medium text-gray-700">Add Description in Tamil</label>
-                <textarea id="descriptionTamil" [(ngModel)]="newsItems[0].descriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56"></textarea>
+                <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add Description in Tamil</label>
+                <textarea id="descriptionTamil" [(ngModel)]="newsItems[0].descriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md h-56 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></textarea>
             </div>
         </div>
 
         <!-- Hidden file input -->
         <div class="mb-4" *ngIf="!newsItems[0]?.image && !selectedFile">
-            <button class="flex items-center text-gray-800" (click)="triggerFileInput()">
+            <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput()">
               Add New Image
-              <span class="flex justify-center items-center w-6 h-6 ml-2 border border-green-500 rounded text-green-500 font-bold">
+              <span class="flex justify-center items-center w-6 h-6 ml-2 border border-green-500 rounded text-textLight dark:text-textDark">
                 +
               </span>
             </button>
           </div>
           
           <div *ngIf="newsItems[0]?.image || selectedFile" class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Image Preview</label>
+            <label class="block text-sm font-medium text-textLight dark:text-textDark">Image Preview</label>
             <div class="w-full h-72 mt-2 content-center flex justify-center border relative">
               <img
                 [src]="selectedFile ? (selectedImage || '') : newsItems[0].image"
@@ -177,14 +177,14 @@
         <div class="h-[35px]"></div>
 
         <div class="mb-4">
-            <label for="titleTamil" class="block text-sm font-medium text-gray-700">Add Price</label>
-            <input type="number" min="0" id="price" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" [(ngModel)]="newsItems[0].price" />
+            <label for="titleTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add Price</label>
+            <input type="number" min="0" id="price" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" [(ngModel)]="newsItems[0].price" />
         </div>
 
         <div class="flex justify-end mt-6">
-            <button class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md" type="button">Cancel</button>
+            <button class="px-4 py-2 bg-[#74788D] text-white rounded-md" type="button">Cancel</button>
             <div class="w-[20px]"></div>
-            <button class="px-4 py-2 bg-green-500 text-white rounded-md" type="button" (click)="updateMarketPrice()">Save</button>
+            <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md" type="button" (click)="updateMarketPrice()">Save</button>
         </div>
     </div>
 </div>

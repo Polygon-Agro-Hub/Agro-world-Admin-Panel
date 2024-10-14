@@ -74,10 +74,19 @@ editorConfig: AngularEditorConfig = {
   defaultFontName: '',
   defaultFontSize: '',
   fonts: [
-    { class: 'arial', name: 'Arial' },
-    { class: 'times-new-roman', name: 'Times New Roman' },
-    { class: 'calibri', name: 'Calibri' },
-    { class: 'comic-sans-ms', name: 'Comic Sans MS' },
+    {class: 'arial', name: 'Arial'},
+    {class: 'times-new-roman', name: 'Times New Roman'},
+    {class: 'calibri', name: 'Calibri'},
+    {class: 'comic-sans-ms', name: 'Comic Sans MS'},
+    {class: 'georgia', name: 'Georgia'},
+    {class: 'verdana', name: 'Verdana'},
+    {class: 'helvetica', name: 'Helvetica'},
+    {class: 'fm-abaya', name: 'FM Abhaya'},   // Sinhala font
+    {class: 'iskoola-pota', name: 'Iskoola Pota'}, // Sinhala font
+    {class: 'abhaya-libre', name: 'Abhaya Libre'}, // Sinhala font
+    {class: 'latha', name: 'Latha'}, // Tamil font
+    {class: 'baloo-tamil', name: 'Baloo Tamil'}, // Tamil font
+    {class: 'bamini', name: 'Bamini'} // Tamil font
   ],
   customClasses: [
     {

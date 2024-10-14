@@ -97,6 +97,8 @@ export class ViewCropTaskComponent implements OnInit {
   }
 
   addNewTask(cropId:string, indexId:string){
+    console.log("New task",cropId,indexId);
+    
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
@@ -106,7 +108,8 @@ export class ViewCropTaskComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result)=>{
       if (result.isConfirmed) {
-        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}`])
+        const uid = null;
+        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${uid}`])
       }
     })
 

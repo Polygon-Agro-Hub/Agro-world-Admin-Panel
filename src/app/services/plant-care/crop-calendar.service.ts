@@ -126,6 +126,8 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
 
+    // console.log(id,taskId,"-----Task_____");
+    
     return this.http.delete<any>(`${this.apiUrl}delete-crop-task/${id}`, {
       headers,
     });

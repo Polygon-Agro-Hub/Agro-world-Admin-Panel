@@ -17,6 +17,7 @@ export class SidenavComponent implements OnInit {
   @Output() onToggleSideNav: EventEmitter<boolean> = new EventEmitter();
   isExpanded = false;
   screenWidth = 0;
+  isLeftButtonVisible: boolean = true;
   navData = navbarData;
 
   constructor(
@@ -40,9 +41,14 @@ export class SidenavComponent implements OnInit {
       this.onToggleSideNav.emit(this.isExpanded);
     }
   }
+  
+  redirectToPage(): void {
+    this.router.navigateByUrl('/steckholders'); // Use your desired route here
+  }
 
   toggleSidenav(): void {
     this.isExpanded = !this.isExpanded;
+    this.isLeftButtonVisible = !this.isLeftButtonVisible;
     this.onToggleSideNav.emit(this.isExpanded);
   }
 

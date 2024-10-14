@@ -152,13 +152,6 @@
     </div>
 
     <div class="flex justify-end mt-6">
-      <button
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md"
-        type="button"
-        (click)="onCancel()"
-      >
-        Cancel
-      </button>
       <div class="w-[20px]"></div>
       <button
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
@@ -337,9 +330,6 @@
             <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
             <div class="flex justify-end mt-6">
-                <button class="px-4 py-2 bg-[#74788D] text-white rounded-md" type="button" (click)="onCancel()">
-        Cancel
-      </button>
                 <div class="w-[20px]"></div>
                 <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md" type="button" (click)="updateNews()">
         Save

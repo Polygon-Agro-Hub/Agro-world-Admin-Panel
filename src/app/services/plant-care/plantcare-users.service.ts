@@ -79,6 +79,20 @@ export class PlantcareUsersService {
     return this.http.get<any>(url, { headers });
   }
 
+
+  uploadUserXlsxFile(file: File): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${this.apiUrl}upload-user-xlsx`, formData, {
+      headers,
+    });
+  }
+
   // getToolFixedAssetsById(id: number): Observable<FixedAsset[]> {
   //   const token = localStorage.getItem('Login Token : ');
   //   const headers = new HttpHeaders({

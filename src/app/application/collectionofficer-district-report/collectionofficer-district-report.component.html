@@ -1,8 +1,8 @@
-<button class="mb-5" onclick="window.location.href='/reports'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/reports'">
     <i class="fa-solid fa-arrow-left"></i> Back
   </button>
   
-  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white shadow-sm">
+  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack  shadow-lg rounded-lg">
     <div class="flex justify-end items-center mb-8">
       <div class="flex items-center">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -14,7 +14,7 @@
   
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl w-auto h-8 items-center"
+            styleClass="border border-2 rounded-xl w-auto h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
             [options]="districts"
             [checkmark]="true"
             optionLabel="name"
@@ -30,7 +30,7 @@
   
     <div class="flex items-center justify-center">
       <div>
-        <h2 class="text-2xl font-normal text-gray-500">District Reports</h2>
+        <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">District Reports</h2>
       </div>
     </div>
   
@@ -43,11 +43,11 @@
       <table class="w-full text-sm text-center rtl:text-right border-[2px]">
         <thead class="text-xs border-[2px]">
           <tr>
-            <th scope="col" class="px-6 py-3 border-[2px]">Crop</th>
-            <th scope="col" class="px-6 py-3 border-[2px]">Grade A</th>
-            <th scope="col" class="px-6 py-3 border-[2px]">Grade B</th>
-            <th scope="col" class="px-6 py-3 border-[2px]">Grade C</th>
-            <th scope="col" class="px-6 py-3 border-[2px]">Total</th>
+            <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Crop</th>
+            <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Grade A</th>
+            <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Grade B</th>
+            <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Grade C</th>
+            <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Total</th>
           </tr>
         </thead>
         <tbody>

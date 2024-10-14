@@ -38,6 +38,8 @@ export class LoginComponent {
         icon: 'success',
         title: 'Logged',
         text: 'Successfully Logged In',
+        showConfirmButton: false,
+        timer: 1500
       });
       localStorage.setItem('Login Token : ', res.token);
 

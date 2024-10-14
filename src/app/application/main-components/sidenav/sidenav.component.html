@@ -3,17 +3,19 @@
     <img 
       src="assets/images/logo.png" 
       alt="Logo" 
-      class="logo-text w-16" 
+      class="logo-text w-16 cursor-pointer" 
       *ngIf="!isExpanded" 
-      (click)="toggleSidenav()" 
+      onclick="window.location.href='/steckholders'"
     />
     <img 
       src="assets/images/logo.png" 
       alt="Logo" 
-      class="logo-text w-32" 
+      class="logo-text w-32 cursor-pointer" 
       *ngIf="isExpanded" 
-      (click)="toggleSidenav()" 
+      onclick="window.location.href='/steckholders'"
     />
+    <i class="flex justify-end text-white fa-solid fa-angle-right inset-y-0 right-0 w-full cursor-pointer" *ngIf="!isLeftButtonVisible" (click)="toggleSidenav()" ></i>
+    <i class="flex justify-end text-white fa-solid fa-angle-left inset-y-0 right-0 w-full cursor-pointer"  (click)="toggleSidenav()"></i>
   </div>
   
     <ul class="sidenav-nav">

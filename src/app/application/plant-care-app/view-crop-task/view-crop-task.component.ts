@@ -56,7 +56,7 @@ export class ViewCropTaskComponent implements OnInit {
       );
   }
 
-  deleteCroptask(id: string): void {
+  deleteCroptask(id: string, cropId:string, indexId:string): void {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
@@ -68,7 +68,7 @@ export class ViewCropTaskComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.cropCalService.deleteCropTask(id).subscribe(
+        this.cropCalService.deleteCropTask(id, cropId, indexId).subscribe(
           (data: any) => {
             if (data) {
               Swal.fire(
@@ -97,6 +97,8 @@ export class ViewCropTaskComponent implements OnInit {
   }
 
   addNewTask(cropId:string, indexId:string){
+    // console.log("New task",cropId,indexId);
+    
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
@@ -106,7 +108,8 @@ export class ViewCropTaskComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result)=>{
       if (result.isConfirmed) {
-        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}`])
+        const uid = null;
+        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${uid}`])
       }
     })
 

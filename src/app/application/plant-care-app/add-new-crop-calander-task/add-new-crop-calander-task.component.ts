@@ -71,9 +71,9 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.cropId, this.indexId,)
+    console.log("onsubmit:",this.cropId, this.indexId,this.userId)
 
-    if(this.userId==null){
+    if(this.userId=="null"){
       this.cropCalendarService.createNewCropTask(this.cropId, this.indexId, this.cropTaskObj).subscribe(
       (res) => {
         if (res) {

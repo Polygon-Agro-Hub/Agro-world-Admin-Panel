@@ -44,7 +44,7 @@
                     </div>
 
                     <div>
-                        <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Phone Number</label>
+                        <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Mobile Number</label>
                         <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" placeholder="+94 - XXXXXXXXX"/>
                         <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>
@@ -118,7 +118,7 @@
                     </div>
 
                     <div>
-                        <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Phone Number</label>
+                        <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Mobile Number</label>
                         <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" placeholder="+94 - XXXXXXXXX"/>
                         <div *ngIf="userForm.get('phoneNumber')!.invalid && (userForm.get('phoneNumber')!.dirty || userForm.get('phoneNumber')!.touched)" class="text-red-500 text-sm mt-1">
                             <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">Phone number is required.</div>

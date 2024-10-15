@@ -29,6 +29,11 @@ interface Admin {
   storedCurrentPassword: string | null;
 }
 
+interface Roles {
+  id: number;
+  role: string;
+}
+
 @Component({
   selector: 'app-create-admin-user',
   standalone: true,
@@ -43,6 +48,7 @@ export class CreateAdminUserComponent implements OnInit {
 
   isPopupVisible = false;
   showPassword: boolean = false;
+  rolesList: any[] = [];
 
   userForm: FormGroup;
 
@@ -65,7 +71,40 @@ export class CreateAdminUserComponent implements OnInit {
       this.itemId = params['id'] ? +params['id'] : null;
       console.log('Received item ID:', this.itemId);
     });
-    this.getAdminById(this.itemId);
+    if(this.itemId){
+      this.getAdminById(this.itemId);
+    }
+    
+    this.getAllRoles();
+  }
+
+  getAllRoles() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    
+    this.http
+      .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          
+          this.rolesList = response.roles;
+          console.log(response);
+
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+          
+          // Handle error...
+        }
+      );
   }
 
   singleWordValidator(control: AbstractControl): ValidationErrors | null {

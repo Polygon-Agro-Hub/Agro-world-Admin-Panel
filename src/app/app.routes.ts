@@ -47,6 +47,7 @@ import { UserCropCalendarComponent } from './application/plant-care-app/user-cro
 import { UserTaskEditComponent } from './application/plant-care-app/user-task-edit/user-task-edit.component';
 import { AddNewCropCalanderTaskComponent } from './application/plant-care-app/add-new-crop-calander-task/add-new-crop-calander-task.component';
 import { ViewUserProfileComponent } from './application/steckholders-section/view-user-profile/view-user-profile.component';
+import { CollectionAllViewComponent } from './application/collection-center/collection-all-view/collection-all-view.component';
 
 export const routes: Routes = [
   {
@@ -267,6 +268,11 @@ export const routes: Routes = [
       {
         path: 'plant-care/plant-care-user-profile',
         component: ViewUserProfileComponent,
+        // canActivate:[AuthGuard]
+      },
+      {
+        path: 'collection-hub/view-collection-centers',
+        component: CollectionAllViewComponent,
         // canActivate:[AuthGuard]
       },
 

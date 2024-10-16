@@ -18,6 +18,7 @@ interface OngoingCultivationItem {
   firstName: string;
   lastName: string;
   NICnumber: string;
+  CropCount: string;
 }
 
 interface NewsItem {
@@ -64,6 +65,8 @@ export class OngoingCultivationComponent {
     this.ongoingCultivationService.fetchAllOngoingCultivations(page, limit, this.searchNIC )
       .subscribe(
         (response) => {
+          console.log("____ONgoing Cultivation_____",response);
+          
           this.ongoingCultivation = response.items;
           this.hasData = this.ongoingCultivation.length > 0;
           this.totalItems = response.total;

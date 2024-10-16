@@ -65,6 +65,7 @@
                     <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">First Name</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Last Name</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">NIC</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Crop Count</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Cultivations</th>
 
                 </tr>
@@ -83,6 +84,7 @@
                     <td class="py-3 dark:text-textDark">{{item.firstName}}</td>
                     <td class="px-4 py-3 dark:text-textDark text-center">{{item.lastName}}</td>
                     <td class="px-4 py-3 dark:text-textDark text-center">{{item.NICnumber}}</td>
+                    <td class="px-4 py-3 dark:text-textDark text-center">{{item.CropCount}}</td>
                     
                     <td class="px-4 py-3 text-center">
                       <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewTaskByUser(item.cultivationId, item.id)">

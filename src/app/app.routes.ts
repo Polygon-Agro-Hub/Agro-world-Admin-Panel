@@ -161,7 +161,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'collective-officer-reort',
+        path: 'reports/collective-officer-report',
         component: CollectionOfficerReportComponent,
         canActivate: [AuthGuard],
       },
@@ -183,7 +183,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'collective-officer/district-report',
+        path: 'reports/collective-officer/district-report',
         component: CollectionofficerDistrictReportComponent,
         canActivate: [AuthGuard],
       },

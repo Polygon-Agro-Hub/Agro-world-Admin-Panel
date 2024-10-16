@@ -15,10 +15,10 @@
             <p class="text-4xl font-semibold font-roboto mb-6 text-center">Log in</p>
             <div class="p-4 border border-gray-300 rounded-lg w-full">
                 <div class="h-[20px]"></div>
-                <input type="name" [(ngModel)]="loginObj.email" id="email" placeholder="Email" class="w-11/12 p-2 mb-4 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" />
+                <input type="name" [(ngModel)]="loginObj.email" id="email" placeholder="Email" class="w-11/12 p-2 mb-4 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" (keydown.enter)="onLogin()" />
                 <div class="h-[25px]"></div>
                 <div class="relative w-11/12 mb-4">
-                    <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="loginObj.password" id="password" placeholder="Password" class="w-full p-2 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" />
+                    <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="loginObj.password" id="password" placeholder="Password" class="w-full p-2 border-b-2 border-gray-400 rounded-none focus:outline-none focus:border-gray-500" (keydown.enter)="onLogin()"/>
                     <i *ngIf="showPassword===false" class="fa-solid fa-eye absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" (click)="togglePasswordVisibility()">
           </i>
                     <i *ngIf="showPassword===true" class="fa-solid fa-eye-slash absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" (click)="togglePasswordVisibility()">

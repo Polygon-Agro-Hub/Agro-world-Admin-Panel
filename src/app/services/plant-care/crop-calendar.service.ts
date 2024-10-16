@@ -121,12 +121,12 @@ export class CropCalendarService {
 
   
 
-  deleteCropTask(id: string) {
+  deleteCropTask(id: string, cropId:string, indexId:string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-
-    return this.http.delete<any>(`${this.apiUrl}delete-crop-task/${id}`, {
+        
+    return this.http.delete<any>(`${this.apiUrl}delete-crop-task/${id}/${cropId}/${indexId}`, {
       headers,
     });
   }

@@ -33,8 +33,7 @@
                     <!-- Role Input -->
                     <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Role</label>
                     <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-            <option>SUPER_ADMIN</option>
-            <option>ADMIN</option>
+            <option *ngFor="let role of rolesList" [value]="role.id">{{ role.role }}</option>
           </select>
                 </div>
 
@@ -98,13 +97,16 @@
                     {{ getErrorMessage('mail') }}
                 </div>
             </div>
-                <div>
-                    <!-- Role Input -->
-                    <label for="role" class="block text-sm font-medium text-gray-700 text-textLight dark:text-textDark">Role</label>
-                    <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-            <option>SUPER_ADMIN</option>
-          </select>
-                </div>
+            <div>
+              <!-- Role Input -->
+              <label for="role" class="block text-sm font-medium text-gray-700 text-textLight dark:text-textDark">
+                Role
+              </label>
+              <select id="role" name="role" formControlName="role" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                <option *ngFor="let role of rolesList" [value]="role.id">{{ role.role }}</option>
+              </select>
+            </div>
+            
             </div>
         </form>
 

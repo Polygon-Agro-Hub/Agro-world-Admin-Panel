@@ -80,7 +80,7 @@ export class CollectionOfficerReportComponent {
   navigateToReport(id: number, name: string) {
     if (id) {
       const url = this.router.serializeUrl(
-        this.router.createUrlTree(['/report/collective-officer-report/view', id, name])
+        this.router.createUrlTree(['/reports/collective-officer-report/view', id, name])
       );
       window.open(url, '_blank'); // Opens the page in a new tab
     } else {

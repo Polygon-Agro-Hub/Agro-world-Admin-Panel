@@ -147,7 +147,7 @@ export class ReportsFarmerListComponent {
   }
 
   viewFixedAsset(id: number, firstName: string, lastName: string) {
-    this.router.navigate(['assets/fixed-asset-category'], { 
+    this.router.navigate(['plant-care/assets/fixed-asset-category'], { 
       queryParams: { id, firstName, lastName} 
     });
   }

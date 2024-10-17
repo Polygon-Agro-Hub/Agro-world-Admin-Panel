@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
 import { SignupComponent } from './application/main-components/signup/signup.component';
 import { ForgoPasswordComponent } from './application/main-components/forgo-password/forgo-password.component';
@@ -21,14 +22,12 @@ import { ViewPlantcareUsersComponent } from './application/steckholders-section/
 import { EditPlantcareUsersComponent } from './application/steckholders-section/edit-plantcare-users/edit-plantcare-users.component';
 import { AdminUsersComponent } from './application/steckholders-section/admin-users/admin-users.component';
 import { CreateAdminUserComponent } from './application/steckholders-section/create-admin-user/create-admin-user.component';
-import { AuthGuard } from './guards/auth-guard.service';
 import { ViewCollectiveOfficerComponent } from './application/steckholders-section/view-collective-officer/view-collective-officer.component';
 import { CollectionOfficerReportComponent } from './application/report-section/collection-officer-report/collection-officer-report.component';
 import { CollectionOfficerReportViewComponent } from './application/collection-officer-app/collection-officer-report-view/collection-officer-report-view.component';
 import { CollectiveofficersPersonalComponent } from './application/collection-officer-app/collectiveofficers-personal/collectiveofficers-personal.component';
 import { CollectiveofficersCompanyComponent } from './application/collection-officer-app/collectiveofficers-company/collectiveofficers-company.component';
 import { CollectiveofficersBankDetailsComponent } from './application/collection-officer-app/collectiveofficers-bank-details/collectiveofficers-bank-details.component';
-
 import { CollectionofficerDistrictReportComponent } from './application/collectionofficer-district-report/collectionofficer-district-report.component';
 import { EditAdminMeUserComponent } from './application/main-components/edit-admin-me-user/edit-admin-me-user.component';
 import { ReportsFarmerListComponent } from './application/plant-care-app/reports-farmer-list/reports-farmer-list.component';
@@ -55,221 +54,238 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
+
+
   { path: 'login', component: LoginComponent },
+
+  
+
+
   {
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'signup', component: SignupComponent, canActivate: [AuthGuard] },
-      {
-        path: 'forgot-password',
-        component: ForgoPasswordComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'steckholders',
-        component: SteckholdersComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care',
-        component: PlantcareComponent,
-        canActivate: [AuthGuard],
-      },
-      { path: 'reports', component: ReportComponent, canActivate: [AuthGuard] },
-      {
-        path: 'field-officer',
-        component: FieldofficersComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'market-place',
-        component: MarketplaceComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/manage-content',
-        component: ManageContentComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/ongoing-cultivation',
-        component: OngoingCultivationComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-crop-calender',
-        component: ViewCropCalanderComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/create-news',
-        component: CreateNewsComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/create-crop-calender',
-        component: CreateCropCalenderComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/edit-crop-task/:id',
-        component: EditTaskComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/create-crop-calender/add-days',
-        component: CreateCropCalenderAddDaysComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/add-block-words',
-        component: AddBlockWordsComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/create-market-price',
-        component: CreateMarketPriceComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/manage-market-price',
-        component: ManageMarketPriceComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'admin-users',
-        component: AdminUsersComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'admin-users/create-admin-user',
-        component: CreateAdminUserComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-plantcare-users',
-        component: ViewPlantcareUsersComponent,
-      },
-      {
-        path: 'plant-care/edit-plantcare-users',
-        component: EditPlantcareUsersComponent,
-      },
-      {
-        path: 'collective-officer',
-        component: ViewCollectiveOfficerComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'reports/collective-officer-report',
-        component: CollectionOfficerReportComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'collective-officer/personal',
-        component: CollectiveofficersPersonalComponent,
-      },
-      {
-        path: 'collective-officer/company',
-        component: CollectiveofficersCompanyComponent,
-      },
-      {
-        path: 'collective-officer/bank-details',
-        component: CollectiveofficersBankDetailsComponent,
-      },
-      {
-        path: 'report/collective-officer-report/view/:id/:name',
-        component: CollectionOfficerReportViewComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'reports/collective-officer/district-report',
-        component: CollectionofficerDistrictReportComponent,
-        canActivate: [AuthGuard],
-      },
+
       {
         path: 'admin-users/edit-admin-me-user',
         component: EditAdminMeUserComponent,
         canActivate: [AuthGuard],
       },
-      {
-        path: 'plant-care/report-farmer-list',
-        component: ReportsFarmerListComponent,
-        canActivate: [AuthGuard],
-      },
 
-      {
-        path: 'assets/fixed-asset-category',
-        component: FixedAssetCategoryComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'assets/fixed-asset-category/building-fixed-asset',
-        component: BuildingFixedAssetComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'assets/fixed-asset-category/land-fixed-asset',
-        component: LandFixedAssetComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'assets/fixed-asset-category/machinary&tools-fixed-asset',
-        component: MachToolsFixeedAssetsComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/current-assets-view',
-        component: CurrentAssetsViewComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/report-farmer-current-assert/:userId/:name',
-        component: ReportCurrentAssertsComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/report-farmer-current-assert/record-view',
-        component: CurrentAssetRecordComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-crop-task/:cropId',
-        component: ViewCropTaskComponent,
-        // canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-crop-task-by-user',
-        component: SlaveCropCalendarComponent,
-        // canActivate: [AuthGuard],
-      },
+      { path: 'plant-care',
+        children: [
+          {
+            path: '',
+            component: PlantcareComponent,
+          },
+          {
+            path: 'create-news',
+            component: CreateNewsComponent,
+          },
+          {
+            path: 'manage-content',
+            component: ManageContentComponent,
+          },
+          {
+            path: 'create-market-price',
+            component: CreateMarketPriceComponent,
+          },
+          {
+            path: 'manage-market-price',
+            component: ManageMarketPriceComponent,
+          },
+          {
+            path: 'create-crop-calender',
+            component: CreateCropCalenderComponent,
+          },
+          {
+            path: 'view-crop-calender',
+            component: ViewCropCalanderComponent,
+          },
+          {
+            path: 'view-crop-task/:cropId',
+            component: ViewCropTaskComponent,
+          },
+          {
+            path: 'edit-crop-task/:id',
+            component: EditTaskComponent,
+          },
+          {
+            path: 'public-forum',
+            component: PublicForumComponent,
+          },
+          {
+            path: 'ongoing-cultivation',
+            component: OngoingCultivationComponent,
+          },
+          {
+            path: 'view-crop-task-by-user',
+            component: SlaveCropCalendarComponent,
+          },
+          {
+            path: 'view-crop-task-by-user/user-task-list/edit-user-task',
+            component: UserTaskEditComponent,
+          },
+          {
+            path: 'view-crop-task-by-user/user-task-list',
+            component: UserCropCalendarComponent,
+          },
+          {
+            path: 'report-farmer-list',
+            component: ReportsFarmerListComponent,
+          },
+          {
+            path: 'report-farmer-current-assert/:userId/:name',
+            component: ReportCurrentAssertsComponent,
+          },
+          {
+            path: 'current-assets-view',
+            component: CurrentAssetsViewComponent,
+          },
+          {
+            path: 'report-farmer-current-assert/record-view',
+            component: CurrentAssetRecordComponent,
+          },
+          {
+            path: 'assets/fixed-asset-category',
+            component: FixedAssetCategoryComponent,
+          },
+          {
+            path: 'assets/fixed-asset-category/building-fixed-asset',
+            component: BuildingFixedAssetComponent,
+          },
+          {
+            path: 'assets/fixed-asset-category/land-fixed-asset',
+            component: LandFixedAssetComponent,
+          },
+          {
+            path: 'assets/fixed-asset-category/machinary&tools-fixed-asset',
+            component: MachToolsFixeedAssetsComponent,
+          },
+          {
+            path: 'add-new-crop-task/:cropId/:indexId/:userId',
+            component: AddNewCropCalanderTaskComponent,
+          },
+          {
+            path: 'add-block-words',
+            component: AddBlockWordsComponent,
+          },
+          
+        ]
+       },
 
-      {
-        path: 'plant-care/public-forum',
-        component: PublicForumComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-crop-task-by-user/user-task-list/edit-user-task',
-        component: UserTaskEditComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/view-crop-task-by-user/user-task-list',
-        component: UserCropCalendarComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/add-new-crop-task/:cropId/:indexId/:userId',
-        component: AddNewCropCalanderTaskComponent,
-        // canActivate: [AuthGuard],
-      },
-      {
-        path: 'plant-care/plant-care-user-profile',
-        component: ViewUserProfileComponent,
-        // canActivate:[AuthGuard]
-      },
+
+       { path: 'reports',
+        children: [
+          {
+            path: '',
+            component: ReportComponent,
+          },
+          {
+            path: 'collective-officer-report',
+            component: CollectionOfficerReportComponent,
+          },
+          {
+            path: 'collective-officer-report/view/:id/:name',
+            component: CollectionOfficerReportViewComponent,
+          },
+          {
+            path: 'collective-officer/district-report',
+            component: CollectionofficerDistrictReportComponent,
+          },
+        ]
+        },
+
+
+
+        { path: 'steckholders',
+          children: [
+            {
+              path: '',
+              component: SteckholdersComponent,
+            },
+            { path: 'farmers',
+              children: [
+                {
+                  path: '',
+                  component: ViewPlantcareUsersComponent,
+                },
+                {
+                  path: 'edit-plantcare-users',
+                  component: EditPlantcareUsersComponent,
+                },
+               
+              ]
+              },
+
+              { path: 'admin',
+                children: [
+                  {
+                    path: '',
+                    component: AdminUsersComponent,
+                  },
+                  {
+                    path: 'create-admin-user',
+                    component: CreateAdminUserComponent,
+                    canActivate: [AuthGuard],
+                  },
+                 
+                ]
+                },
+
+              { path: 'collective-officer',
+                children: [
+                  {
+                    path: '',
+                    component: ViewCollectiveOfficerComponent,
+                  },
+                  {
+                    path: 'personal',
+                    component: CollectiveofficersPersonalComponent,
+                  },
+                  {
+                    path: 'company',
+                    component: CollectiveofficersCompanyComponent,
+                  },
+                  {
+                    path: 'bank-details',
+                    component: CollectiveofficersBankDetailsComponent,
+                  },
+                  
+                ]
+                },
+          ]
+          },
+
+
+        { path: 'field-officer',
+            children: [
+              {
+                path: '',
+                component: FieldofficersComponent,
+              },
+              
+            ]
+        },
+
+        { path: 'market-place',
+              children: [
+                {
+                  path: '',
+                  component: MarketplaceComponent,
+              },
+                
+          ]
+        },
+
+
+       
+
+    
+      
+      
+      
       {
         path: 'collection-hub/view-collection-centers',
         component: CollectionAllViewComponent,

@@ -42,25 +42,25 @@ export class FixedAssetCategoryComponent {
 
 
   buildingCategory(id: number) {
-    this.router.navigate(['assets/fixed-asset-category/building-fixed-asset'], { 
+    this.router.navigate(['plant-care/assets/fixed-asset-category/building-fixed-asset'], { 
       queryParams: { id, category: 'Building and Infrastructures' , fullName: this.fullName} 
     });
   }
 
   landCategory(id: number) {
-    this.router.navigate(['assets/fixed-asset-category/land-fixed-asset'], { 
+    this.router.navigate(['plant-care/assets/fixed-asset-category/land-fixed-asset'], { 
       queryParams: { id, category: 'Land', fullName: this.fullName } 
     });
   }
 
   machCategory(id: number) {
-    this.router.navigate(['assets/fixed-asset-category/machinary&tools-fixed-asset'], { 
+    this.router.navigate(['plant-care/assets/fixed-asset-category/machinary&tools-fixed-asset'], { 
       queryParams: { id, category: 'Machinery and Vehicles', fullName: this.fullName } 
     });
   }
 
   toolsCategory(id: number) {
-    this.router.navigate(['assets/fixed-asset-category/machinary&tools-fixed-asset'], { 
+    this.router.navigate(['plant-care/assets/fixed-asset-category/machinary&tools-fixed-asset'], { 
       queryParams: { id, category: 'Tools and Equipments', fullName: this.fullName } 
     });
   }

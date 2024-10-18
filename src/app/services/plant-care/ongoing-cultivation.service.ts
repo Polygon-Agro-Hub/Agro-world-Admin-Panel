@@ -42,12 +42,12 @@ export class OngoingCultivationService {
     return this.http.get(`${this.apiUrl}get-all-users-crop-task/${cropId}/${userId}`, { headers });
   }
 
-  deleteUserCropTask(id: string) {
+  deleteUserCropTask(id: string, cropId: any, index: any, userId: any) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete<any>(`${this.apiUrl}delete-user-task/${id}`, {
+    return this.http.delete<any>(`${this.apiUrl}delete-user-task/${id}/${cropId}/${index}/${userId}`, {
       headers,
     });
   }

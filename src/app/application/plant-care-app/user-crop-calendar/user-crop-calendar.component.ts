@@ -13,6 +13,7 @@ interface TaskList {
   days: string;
   taskEnglish: string;
   status: string;
+  cropCalendarId: any;
 }
 
 @Component({
@@ -59,7 +60,7 @@ export class UserCropCalendarComponent {
       );
   }
 
-  deleteCroptask(id: string): void {
+  deleteCroptask(id: string, cropId: any, index: any): void {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
@@ -71,7 +72,7 @@ export class UserCropCalendarComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.ongoingCultivationService.deleteUserCropTask(id).subscribe(
+        this.ongoingCultivationService.deleteUserCropTask(id, cropId, index, this.userId).subscribe(
           (data: any) => {
             if (data) {
               Swal.fire(

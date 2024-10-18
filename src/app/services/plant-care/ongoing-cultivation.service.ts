@@ -34,12 +34,17 @@ export class OngoingCultivationService {
     return this.http.get(`${this.apiUrl}get-ongoing-cultivation-by-id/${id}`, { headers });
   }
 
-  getUserTasks(cropId: number, userId: number): Observable<any> {
+
+  getUserTasks(
+    cropId: number, userId: number,  page: number = 1, limit: number = 10
+  ): Observable<{ items: any[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-
-    return this.http.get(`${this.apiUrl}get-all-users-crop-task/${cropId}/${userId}`, { headers });
+    return this.http.get<{ items: any[]; total: number }>(
+      `${this.apiUrl}get-all-users-crop-task/${cropId}/${userId}?page=${page}&limit=${limit}`,
+      { headers }
+    );
   }
 
   deleteUserCropTask(id: string, cropId: any, index: any, userId: any) {

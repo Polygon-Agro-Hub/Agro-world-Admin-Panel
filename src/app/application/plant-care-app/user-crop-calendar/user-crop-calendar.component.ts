@@ -5,6 +5,7 @@ import { OngoingCultivationService } from '../../../services/plant-care/ongoing-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 interface TaskList {
   id: any;
@@ -19,7 +20,7 @@ interface TaskList {
 @Component({
   selector: 'app-user-crop-calendar',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule,  NgxPaginationModule,],
   templateUrl: './user-crop-calendar.component.html',
   styleUrl: './user-crop-calendar.component.css'
 })
@@ -27,6 +28,10 @@ export class UserCropCalendarComponent {
   cropCalendarId: any | null = null;
   userId: any | null = null;
   taskList: TaskList[] = [];
+  page: number = 1;
+  totalItems: number = 0;
+  itemsPerPage: number = 10;
+  isLoading = true;
 
   constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router,  private route: ActivatedRoute,) {}
 
@@ -44,21 +49,30 @@ export class UserCropCalendarComponent {
     
   }
 
-  getchUserTaskList(cropId: number, userId : number) {
-    this.ongoingCultivationService.getUserTasks(cropId, userId)
+
+  getchUserTaskList(cropId: number, userId: number, page: number = 1, limit: number = this.itemsPerPage) {
+    console.log('Fetching tasks for page:', page); 
+    this.page = page;
+    this.ongoingCultivationService.getUserTasks(cropId, userId, page, limit)
       .subscribe(
         (data) => {
-          this.taskList = data;
-          console.log(this.taskList);
+          this.isLoading = false;
+          this.taskList = data.items;
+          
+          this.totalItems = data.total;
         },
         (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
-          if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
-          }
+          console.error('Error fetching tasks:', error);
+          this.isLoading = false;
         }
       );
   }
+
+  onPageChange(event: number) {
+    this.page = event; // Set the current page to the event value
+    this.getchUserTaskList(this.cropCalendarId, this.userId, this.page, this.itemsPerPage); // Fetch the data for the selected page
+  }
+  
 
   deleteCroptask(id: string, cropId: any, index: any): void {
     Swal.fire({

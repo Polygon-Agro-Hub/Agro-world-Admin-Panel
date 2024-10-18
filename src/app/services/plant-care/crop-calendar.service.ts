@@ -93,12 +93,13 @@ export class CropCalendarService {
     });
   }
 
-  getAllCropTaskBycropId(id: string) {
+  getAllCropTaskBycropId(id: string, page: number = 1,limit: number = 10) {
+    
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-all-crop-task/${id}`, {
+    return this.http.get<any>(`${this.apiUrl}get-all-crop-task/${id}?page=${page}&limit=${limit}`, {
       headers,
     });
   }

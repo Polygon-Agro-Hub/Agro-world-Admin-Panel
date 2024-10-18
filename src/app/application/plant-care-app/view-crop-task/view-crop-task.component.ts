@@ -28,6 +28,11 @@ export class ViewCropTaskComponent implements OnInit {
   cropId!: string;
   isLoading = true;
 
+  page: number = 1;
+  totalItems: number = 0;
+  itemsPerPage: number = 10;
+  hasData: boolean = true;  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -36,17 +41,20 @@ export class ViewCropTaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.cropId = this.route.snapshot.params['cropId'];
-    this.fetchAllCropTask(this.cropId);
+    this.fetchAllCropTask();
   }
 
 
-  fetchAllCropTask(id: string) {
+  fetchAllCropTask(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.cropCalService.getAllCropTaskBycropId(id)
+    this.page = page;
+    this.cropCalService.getAllCropTaskBycropId(this.cropId, page, limit)
       .subscribe(
         (res) => {
-          this.cropTask = res;
+          this.cropTask = res.results;
           this.isLoading = false;
+          this.hasData = this.cropTask.length > 0;
+          this.totalItems = res.total;
         },
         (error) => {
           console.error('Error fetching news:', error);
@@ -76,7 +84,7 @@ export class ViewCropTaskComponent implements OnInit {
                 'The crop calendar item has been deleted.',
                 'success'
               );
-              this.fetchAllCropTask(this.cropId);
+              this.fetchAllCropTask();
             }
           },
           (error) => {
@@ -114,4 +122,12 @@ export class ViewCropTaskComponent implements OnInit {
     })
 
   }
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllCropTask(this.page, this.itemsPerPage); // Include itemsPerPage
+  }
+
+
+
 }

@@ -26,7 +26,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let task of cropTask">
+                <tr *ngFor="let task of cropTask | paginate :
+                {
+                    itemsPerPage:itemsPerPage,
+                    currentPage:page,
+                    totalItems:totalItems
+                }">
                     <td class="px-4 py-3 text-center">
                         <button class="w-6 h-6 mr-3 text-textLight dark:text-textDark hover:text-[#83aefd]" (click)="addNewTask(task.cropId,task.taskIndex)">
                             <i class="fa-solid fa-arrow-down-short-wide" style="color: #4A90E2;"></i>
@@ -64,6 +69,10 @@
         </table>
 
     </div>
+    <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+      [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+      [screenReaderCurrentLabel]="'Youre on page'">
+    </pagination-controls>
 
 </div>
 

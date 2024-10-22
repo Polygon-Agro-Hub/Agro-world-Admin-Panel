@@ -1,146 +1,217 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  onclick="window.location.href='/plant-care'"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
 </button>
-<div *ngFor="let postRcord of post" class="bg-white dark:bg-tileBlack rounded-lg shadow-md w-100 mx-auto mb-5">
-    <div class="p-4">
-        <div class="flex items-center justify-between w-100">
-            <div class="flex items-center justify-between gap-x-5 w-full">
-                <div class="flex items-center">
-                    <div class="rounded-full bg-gray-200 h-10 w-10 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer"
-                        (click)="viewUserProfile(postRcord.userId)">
-                        <i class="fa-regular fa-user"></i>
-                    </div>
-                    <h3 class="text-lg font-medium dark:text-textDark">{{postRcord.heading}}</h3>
-                </div>
-                <div  class="flex items-end space-x-3 mx-5 relative">
-                    <p class="text-sm text-gray-600  w-full">4 hr ago</p>
-                    <div class="flex flex-col">
-                        <div class="relative flex flex-col text-gray-500 hover:text-gray-700 group">
-                            <!-- Three Dots Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                            </svg>
-                          
-                            <!-- Delete Button - Initially Hidden -->
-                            <div class="absolute hidden group-hover:flex justify-center items-center p-2 text-black shadow-xl  rounded-lg transition-all duration-300 mt-2 -right-10 w-32 h-10">
-                              <div *ngFor="let item of publiForum">
-                                <button (click)="deletePost(item.id)" class="w-28 bg-white text-black font-medium py-2 px-4 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                </div>
-            </div>
+<div
+  *ngFor="let postRcord of post"
+  class="bg-white dark:bg-tileBlack rounded-lg shadow-md w-100 mx-auto mb-5"
+>
+  <div class="p-4">
+    <div class="flex items-center justify-between w-100">
+      <div class="flex items-center justify-between gap-x-5 w-full">
+        <div class="flex items-center">
+          <div
+            class="rounded-full bg-gray-200 h-10 w-10 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer"
+            (click)="viewUserProfile(postRcord.userId)"
+          >
+            <i class="fa-regular fa-user"></i>
+          </div>
+          <h3 class="text-lg font-medium dark:text-textDark">
+            {{ postRcord.heading }}
+          </h3>
         </div>
-        <div class="flex justify-center my-5 ">
-            <div class="flex w-96 h-96 justify-center">
-                <img *ngIf="postRcord.postimage" [src]="postRcord.postimage" alt="Post Image">
+        <div class="flex items-end space-x-3 mx-5">
+          <p class="text-sm text-gray-600 w-full">4 hr ago</p>
+          <div class="flex flex-col">
+            <div
+              class="relative flex flex-col text-gray-500 hover:text-gray-700 group"
+            >
+              <i class="fa-solid fa-ellipsis-vertical dark:text-textDark"></i>
+
+              <div
+                class="absolute hidden group-hover:flex justify-center items-center p-2 text-black shadow-xl rounded-lg transition-all duration-300 mt-2 -right-10 w-32 h-10"
+              >
+                  <button
+                    class="dark:text-textDark"
+                    (click)="deletePost(postRcord.id)"
+                  >
+                    Delete Post
+                  </button>
+              </div>
             </div>
+          </div>
         </div>
-        <div class="flex flex-col justify-center mx-5 my-10">
-            <p class="dark:text-textDark">{{postRcord.message}}</p>
-            <div class="flex justify-end my-5 cursor-pointer text-cyan-700">
-                <span class="flex"> 
-                    <div *ngFor="let i of countReply">
-                        <p *ngIf="i.chatId === postRcord.id">{{i.replyCount}}</p>
-                    </div>
-                    <button class="ml-2" (click)="openPopup(postRcord.id)"> Replies</button>
-                </span>
-                
-            </div>
-        </div>
+      </div>
     </div>
-    <hr>
-    <div class="p-10 flex items-center space-x-2 w-full ">
-        <div class="flex items-center border border-gray-300 rounded-lg p-2 w-full dark:bg-[#272F45] dark:border-none">
-            <textarea [(ngModel)]="replyMessage" type="text " placeholder="Write your message here... "
-                class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark "></textarea>
-            <button class="text-gray-500 hover:text-gray-600 p-2 " id="file-upload-btn ">
-                <i class=" fa fa-paperclip " style="font-size:25px; "></i>
-            </button>
-            <input id="file-upload " type="file " class="hidden " />
-        </div>
-        <button class="ml-2 text-[#8ac440] hover:text-green-600 " (click)="sendMessage(postRcord.id)">
-            <i class="material-icons " style="font-size:36px ">send</i>
-        </button>
+    <div class="flex justify-center my-5">
+      <div class="flex w-96 h-96 justify-center">
+        <img
+          *ngIf="postRcord.postimage"
+          [src]="postRcord.postimage"
+          alt="Post Image"
+        />
+      </div>
     </div>
+    <div class="flex flex-col justify-center mx-5 my-10">
+      <p class="dark:text-textDark">{{ postRcord.message }}</p>
+      <div class="flex justify-end my-5 cursor-pointer text-cyan-700">
+        <span class="flex">
+          <div *ngFor="let i of countReply">
+            <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }}</p>
+          </div>
+          <button class="ml-2" (click)="openPopup(postRcord.id)">
+            Replies
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="p-10 flex items-center space-x-2 w-full">
+    <div
+      class="flex items-center border border-gray-300 rounded-lg p-2 w-full dark:bg-[#272F45] dark:border-none"
+    >
+      <textarea
+        [(ngModel)]="replyMessage"
+        type="text "
+        placeholder="Write your message here... "
+        class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark"
+      ></textarea>
+      <button
+        class="text-gray-500 hover:text-gray-600 p-2"
+        id="file-upload-btn "
+      >
+        <i class="fa fa-paperclip" style="font-size: 25px"></i>
+      </button>
+      <input id="file-upload " type="file " class="hidden" />
+    </div>
+    <button
+      class="ml-2 text-[#8ac440] hover:text-green-600"
+      (click)="sendMessage(postRcord.id)"
+    >
+      <i class="material-icons" style="font-size: 36px">send</i>
+    </button>
+  </div>
 </div>
 
-
-
-
-<div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40" *ngIf="isPopupVisible">
-    <div class="bg-white w-full max-w-4xl mx-auto dark:bg-tileBlack rounded-lg shadow-lg p-2 max-h-screen overflow-hidden">
-        <div class="flex justify-between items-center border-b pb-3">
-            <h2 class="text-lg font-semibold py-2 px-8"></h2>
-            <button class="text-gray-500 hover:text-gray-700" (click)="closePopup()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- Scrollable content area -->
-        <div class="overflow-y-auto h-auto p-2">
-            <div class="px-12">
-                <div *ngFor="let item of publiForum">
-                    <p class="text-lg text-blue-500 underline" *ngIf="!item.firstName">Plant Care Admin</p>
-                    <p class="text-lg text-blue-500 underline" *ngIf="item.firstName">{{item.firstName}} {{item.lastName}}</p>
-                    <div class="flex flex-row py-2">
-                        <div class="bg-gray-200 dark:bg-[#272F45] dark:text-textDark px-4 py-1 text-lg rounded-[8px]">{{item.replyMessage}}
-                            <p class="text-end ml-8 text-sm dark:text-textDark">{{ item.createdAt | date: 'shortTime' }}</p>
-                        </div>
-                        <div class="relative flex justify-center items-center mx-5 group">
-                            <!-- SVG Icon -->
-                            <i class="fa-solid fa-ellipsis dark:text-textDark"></i>
-
-                            <!-- Delete Button (hidden by default, shown on hover) -->
-                            <div
-                                class="absolute hidden group-hover:flex justify-center items-center p-2 bg-white text-black dark:bg-[#272F45] shadow-xl  rounded-lg transition-all duration-300 -right-44 w-48">
-                                <button class=" dark:text-textDark" (click)="deleteReply(item.id)">Delete Comment</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="border-1 border-gray-500 my-4">
-
-            <div class="px-12">
-                <div class="flex flex-row border-t-gray-600">
-                    <div class="flex flex-row w-full">
-                        <div class="flex relative w-full">
-                            <textarea [(ngModel)]="replyMessage" rows="4" cols="5" placeholder="Comment here..."
-                                class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"></textarea>
-                            <div class="absolute right-3 top-3 flex items-center">
-                                <i class="fa-solid fa-paperclip dark:text-textDark"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-center items-center p-5 ml-8" (click)="sendMessage(postRcord.id)">
-                        <svg viewBox="0 0 24 24" fill="none" class="h-8 w-8 text-gray-400 "
-                            xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path
-                                    d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z"
-                                    stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
+<div
+  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40"
+  *ngIf="isPopupVisible"
+>
+  <div
+    class="bg-white w-full max-w-4xl mx-auto dark:bg-tileBlack rounded-lg shadow-lg p-2 max-h-screen overflow-hidden"
+  >
+    <div class="flex justify-between items-center border-b pb-3">
+      <h2 class="text-lg font-semibold py-2 px-8"></h2>
+      <button class="text-gray-500 hover:text-gray-700" (click)="closePopup()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
     </div>
+
+    <!-- Scrollable content area -->
+    <div class="overflow-y-auto h-auto p-2">
+      <div class="px-12">
+        <div *ngFor="let item of publiForum">
+          <p class="text-lg text-blue-500 underline" *ngIf="!item.firstName">
+            Plant Care Admin
+          </p>
+          <p class="text-lg text-blue-500 underline" *ngIf="item.firstName">
+            {{ item.firstName }} {{ item.lastName }}
+          </p>
+          <div class="flex flex-row py-2">
+            <div
+              class="bg-gray-200 dark:bg-[#272F45] dark:text-textDark px-4 py-1 text-lg rounded-[8px]"
+            >
+              {{ item.replyMessage }}
+              <p class="text-end ml-8 text-sm dark:text-textDark">
+                {{ item.createdAt | date : "shortTime" }}
+              </p>
+            </div>
+            <div class="relative flex justify-center items-center mx-5 group">
+              <!-- SVG Icon -->
+              <i class="fa-solid fa-ellipsis dark:text-textDark"></i>
+
+              <!-- Delete Button (hidden by default, shown on hover) -->
+              <div
+                class="absolute hidden group-hover:flex justify-center items-center p-2 bg-white text-black dark:bg-[#272F45] shadow-xl rounded-lg transition-all duration-300 -right-44 w-48"
+              >
+                <button
+                  class="dark:text-textDark"
+                  (click)="deleteReply(item.id)"
+                >
+                  Delete Comment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-1 border-gray-500 my-4" />
+
+      <div class="px-12">
+        <div class="flex flex-row border-t-gray-600">
+          <div class="flex flex-row w-full">
+            <div class="flex relative w-full">
+              <textarea
+                [(ngModel)]="replyMessage"
+                rows="4"
+                cols="5"
+                placeholder="Comment here..."
+                class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"
+              ></textarea>
+              <div class="absolute right-3 top-3 flex items-center">
+                <i class="fa-solid fa-paperclip dark:text-textDark"></i>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex justify-center items-center p-5 ml-8"
+            (click)="sendMessage(postRcord.id)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              class="h-8 w-8 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z"
+                  stroke="#000000"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- delete popup -->

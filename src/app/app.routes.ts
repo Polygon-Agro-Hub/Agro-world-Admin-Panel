@@ -47,6 +47,7 @@ import { UserTaskEditComponent } from './application/plant-care-app/user-task-ed
 import { AddNewCropCalanderTaskComponent } from './application/plant-care-app/add-new-crop-calander-task/add-new-crop-calander-task.component';
 import { ViewUserProfileComponent } from './application/steckholders-section/view-user-profile/view-user-profile.component';
 import { CollectionAllViewComponent } from './application/collection-center/collection-all-view/collection-all-view.component';
+import { ViewCurrentMarketPriceComponent } from './application/market-price/view-current-market-price/view-current-market-price.component';
 
 export const routes: Routes = [
   {
@@ -58,7 +59,7 @@ export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
 
-  
+
 
 
   {
@@ -73,7 +74,8 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
 
-      { path: 'plant-care',
+      {
+        path: 'plant-care',
         children: [
           {
             path: '',
@@ -171,12 +173,13 @@ export const routes: Routes = [
             path: 'add-block-words',
             component: AddBlockWordsComponent,
           },
-          
+
         ]
-       },
+      },
 
 
-       { path: 'reports',
+      {
+        path: 'reports',
         children: [
           {
             path: '',
@@ -195,97 +198,107 @@ export const routes: Routes = [
             component: CollectionofficerDistrictReportComponent,
           },
         ]
-        },
+      },
 
 
 
-        { path: 'steckholders',
-          children: [
-            {
-              path: '',
-              component: SteckholdersComponent,
-            },
-            { path: 'farmers',
-              children: [
-                {
-                  path: '',
-                  component: ViewPlantcareUsersComponent,
-                },
-                {
-                  path: 'edit-plantcare-users',
-                  component: EditPlantcareUsersComponent,
-                },
-               
-              ]
-              },
-
-              { path: 'admin',
-                children: [
-                  {
-                    path: '',
-                    component: AdminUsersComponent,
-                  },
-                  {
-                    path: 'create-admin-user',
-                    component: CreateAdminUserComponent,
-                    canActivate: [AuthGuard],
-                  },
-                 
-                ]
-                },
-
-              { path: 'collective-officer',
-                children: [
-                  {
-                    path: '',
-                    component: ViewCollectiveOfficerComponent,
-                  },
-                  {
-                    path: 'personal',
-                    component: CollectiveofficersPersonalComponent,
-                  },
-                  {
-                    path: 'company',
-                    component: CollectiveofficersCompanyComponent,
-                  },
-                  {
-                    path: 'bank-details',
-                    component: CollectiveofficersBankDetailsComponent,
-                  },
-                  
-                ]
-                },
-          ]
+      {
+        path: 'steckholders',
+        children: [
+          {
+            path: '',
+            component: SteckholdersComponent,
           },
-
-
-        { path: 'field-officer',
+          {
+            path: 'farmers',
             children: [
               {
                 path: '',
-                component: FieldofficersComponent,
+                component: ViewPlantcareUsersComponent,
               },
-              
+              {
+                path: 'edit-plantcare-users',
+                component: EditPlantcareUsersComponent,
+              },
+
             ]
-        },
+          },
 
-        { path: 'market-place',
-              children: [
-                {
-                  path: '',
-                  component: MarketplaceComponent,
+          {
+            path: 'admin',
+            children: [
+              {
+                path: '',
+                component: AdminUsersComponent,
               },
-                
-          ]
-        },
+              {
+                path: 'create-admin-user',
+                component: CreateAdminUserComponent,
+                canActivate: [AuthGuard],
+              },
+
+            ]
+          },
+
+          {
+            path: 'collective-officer',
+            children: [
+              {
+                path: '',
+                component: ViewCollectiveOfficerComponent,
+              },
+              {
+                path: 'personal',
+                component: CollectiveofficersPersonalComponent,
+              },
+              {
+                path: 'company',
+                component: CollectiveofficersCompanyComponent,
+              },
+              {
+                path: 'bank-details',
+                component: CollectiveofficersBankDetailsComponent,
+              },
+
+            ]
+          },
+        ]
+      },
 
 
-       
+      {
+        path: 'field-officer',
+        children: [
+          {
+            path: '',
+            component: FieldofficersComponent,
+          },
 
-    
-      
-      
-      
+        ]
+      },
+
+      {
+        path: 'market-place',
+        children: [
+          {
+            path: '',
+            component: MarketplaceComponent,
+          },
+          {
+            path: 'view-current-price',
+            component: ViewCurrentMarketPriceComponent,
+          },
+
+        ]
+      },
+
+
+
+
+
+
+
+
       {
         path: 'collection-hub/view-collection-centers',
         component: CollectionAllViewComponent,

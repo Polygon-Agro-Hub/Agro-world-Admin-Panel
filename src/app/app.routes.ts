@@ -48,6 +48,7 @@ import { AddNewCropCalanderTaskComponent } from './application/plant-care-app/ad
 import { ViewUserProfileComponent } from './application/steckholders-section/view-user-profile/view-user-profile.component';
 import { CollectionAllViewComponent } from './application/collection-center/collection-all-view/collection-all-view.component';
 import { ViewCurrentMarketPriceComponent } from './application/market-price/view-current-market-price/view-current-market-price.component';
+import { MarketPriceBulkDeleteComponent } from './application/market-price/market-price-bulk-delete/market-price-bulk-delete.component';
 
 export const routes: Routes = [
   {
@@ -287,6 +288,10 @@ export const routes: Routes = [
           {
             path: 'view-current-price',
             component: ViewCurrentMarketPriceComponent,
+          },
+          {
+            path: 'delete-bulk-price',
+            component: MarketPriceBulkDeleteComponent,
           },
 
         ]

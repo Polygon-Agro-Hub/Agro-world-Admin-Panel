@@ -49,6 +49,7 @@ import { ViewUserProfileComponent } from './application/steckholders-section/vie
 import { CollectionAllViewComponent } from './application/collection-center/collection-all-view/collection-all-view.component';
 import { ViewCurrentMarketPriceComponent } from './application/market-price/view-current-market-price/view-current-market-price.component';
 import { MarketPriceBulkDeleteComponent } from './application/market-price/market-price-bulk-delete/market-price-bulk-delete.component';
+import { MarketPriceBulkUploadComponent } from './application/market-price/market-price-bulk-upload/market-price-bulk-upload.component';
 
 export const routes: Routes = [
   {
@@ -292,6 +293,10 @@ export const routes: Routes = [
           {
             path: 'delete-bulk-price',
             component: MarketPriceBulkDeleteComponent,
+          },
+          {
+            path: 'price-bulk-upload',
+            component: MarketPriceBulkUploadComponent,
           },
 
         ]

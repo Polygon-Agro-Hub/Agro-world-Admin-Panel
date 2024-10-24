@@ -1,0 +1,53 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/market-place'">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex justify-start items-center mb-8">
+        <h2 class="text-2xl font-normal text-center text-textLight dark:text-textDark">Upload CSV</h2>
+    </div>
+
+    <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+            <input type="date"
+                class="border-solid border-2 text-gray-500 dark:text-[#4B555A] focus:ring-4 focus:outline-none font-normal rounded-lg px-6 py-2 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]" />
+        </div>
+        <div class="flex items-center">
+            <input type="time"
+                class="border-solid border-2 text-gray-500 focus:ring-4 focus:outline-none font-normal rounded-lg px-8 py-2 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]" />
+        </div>
+        <div class="flex items-center">
+            <input type="time"
+                class="border-solid border-2 text-gray-500 focus:ring-4 focus:outline-none font-normal rounded-lg px-8 py-2 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]" />
+        </div>
+    </div>
+
+    <!-- Wrapping div that occupies full height and width -->
+    <div class="flex justify-center items-center mt-6">
+        <div
+            class="bg-[#EBF5FF] flex flex-col justify-center items-center py-10 px-72 border-[2px] border-[#0090FF] rounded-lg border-dashed">
+            <div>
+                <i class="fa-solid fa-cloud-arrow-up text-[100px] text-gray-400"></i>
+            </div>
+            <div>
+                <p class="text-2xl text-[#0090FF] font-semibold mt-5">Select a CSV file to upload</p>
+            </div>
+            <div>
+                <p class="text-lg text-[#0090FF]">or drag and drop it here</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="flex justify-end mt-12">
+        <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md">
+            Cancel
+        </button>
+        <button class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">
+            Save
+        </button>
+    </div>
+</div>

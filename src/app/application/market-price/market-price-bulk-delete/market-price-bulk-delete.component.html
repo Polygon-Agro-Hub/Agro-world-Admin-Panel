@@ -1,0 +1,60 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/market-place'">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex justify-start items-center mb-8">
+        <h2 class="text-2xl font-normal text-center text-textLight dark:text-textDark">Uploaded Files</h2>
+    </div>
+
+    <!-- <div *ngIf="!hasData" class="text-center py-8">
+    <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+  </div> -->
+
+
+    <div class="overflow-x-auto">
+        <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
+        <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
+            <thead>
+                <tr>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+                        File Name
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Date
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Starts
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Ends
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-gray-200 dark:border-[#4B555A]">
+                    <td class="py-3 text-textLight dark:text-textDark">A_2024_10_21_1.csv</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">2024/10/21</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">8:00 AM</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">14:00 PM</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                            </svg>
+                        </button>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

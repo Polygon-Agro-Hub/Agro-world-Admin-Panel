@@ -41,7 +41,7 @@
 
 
                     <td class="px-4 py-3 text-green-500 text-center">
-                        <div *ngIf="task.status == 'Completed'">
+                        <div *ngIf="task.status == 'completed'">
                           <span
                             class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
                             (click)="updateStatus(task.slavecropcalendardaysId)"
@@ -49,7 +49,7 @@
                             {{ task.status }}
                           </span>
                         </div>
-                        <div *ngIf="task.status != 'Completed'">
+                        <div *ngIf="task.status != 'completed'">
                           <span
                             class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
                             (click)="updateStatus(task.slavecropcalendardaysId)"

@@ -45,7 +45,7 @@
                         <td class="px-4 py-3 dark:text-textDark text-center">{{item.unitPrice}}</td>
                         <td class="px-4 py-3 dark:text-textDark text-center">{{item.total}}</td>
                         <td class="px-4 py-3 dark:text-textDark text-center">
-                            <div *ngIf="item.status == 'Under Warranty'">
+                            <div *ngIf="item.status == 'Still valid'">
                                 <span class="w-40 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
                                     {{item.status}}
                           </span>

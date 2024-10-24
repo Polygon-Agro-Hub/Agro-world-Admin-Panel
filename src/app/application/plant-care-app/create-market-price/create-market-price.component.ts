@@ -158,9 +158,9 @@ export class CreateMarketPriceComponent {
     formData.append('titleEnglish', this.isEnglishOnly(this.createMarketObj.titleEnglish));
     formData.append('titleSinhala', this.isSinhalaAndNumberOnly(this.createMarketObj.titleSinhala));
     formData.append('titleTamil', this.isTamilAndNumberOnly(this.createMarketObj.titleTamil));
-    formData.append('descriptionEnglish', this.isEnglishOnly(this.createMarketObj.descriptionEnglish));
-    formData.append('descriptionSinhala', this.isSinhalaAndNumberOnly(this.createMarketObj.descriptionSinhala));
-    formData.append('descriptionTamil', this.isTamilAndNumberOnly(this.createMarketObj.descriptionTamil));
+    // formData.append('descriptionEnglish', this.isEnglishOnly(this.createMarketObj.descriptionEnglish));
+    // formData.append('descriptionSinhala', this.isSinhalaAndNumberOnly(this.createMarketObj.descriptionSinhala));
+    // formData.append('descriptionTamil', this.isTamilAndNumberOnly(this.createMarketObj.descriptionTamil));
     formData.append('status', this.createMarketObj.status);
     formData.append('price', this.createMarketObj.price);
     formData.append('createdBy', this.createMarketObj.createdBy);
@@ -172,7 +172,7 @@ export class CreateMarketPriceComponent {
       'Authorization': `Bearer ${token}`
     });
 
-    if(formData.get('titleEnglish')==='' || formData.get('titleSinhala')==='' || formData.get('titleTamil')==='' || formData.get('descriptionEnglish')==='' || formData.get('descriptionSinhala')==='' || formData.get('descriptionTamil')===''){
+    if(formData.get('titleEnglish')==='' || formData.get('titleSinhala')==='' || formData.get('titleTamil')==='' ){
       return;
     }else{
       this.isLoading = true;
@@ -269,9 +269,9 @@ export class CreateMarketPriceComponent {
     formData.append('titleEnglish', this.isEnglishOnly(this.newsItems[0].titleEnglish));
     formData.append('titleSinhala', this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala));
     formData.append('titleTamil', this.isTamilAndNumberOnly(this.newsItems[0].titleTamil));
-    formData.append('descriptionEnglish', this.isEnglishOnly(this.newsItems[0].descriptionEnglish));
-    formData.append('descriptionSinhala', this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala));
-    formData.append('descriptionTamil', this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil));
+    // formData.append('descriptionEnglish', this.isEnglishOnly(this.newsItems[0].descriptionEnglish));
+    // formData.append('descriptionSinhala', this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala));
+    // formData.append('descriptionTamil', this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil));
     formData.append('price', this.newsItems[0].price);
   
     if (this.selectedFile) {

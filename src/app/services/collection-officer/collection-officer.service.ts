@@ -15,11 +15,11 @@ export class CollectionOfficerService {
 
   constructor(private http: HttpClient) {}
 
-  createCollectiveOfficer(formData: FormData): Observable<any> {
+  createCollectiveOfficer(person:any , bank:any, company:any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${this.apiUrl}collection-officer/create-collection-officer`, formData, {
+    return this.http.post(`${this.apiUrl}collection-officer/create-collection-officer`, {officerData:person, companyData:company, bankData:bank}, {
       headers,
     });
   }

@@ -50,6 +50,8 @@ import { CollectionAllViewComponent } from './application/collection-center/coll
 import { ViewCurrentMarketPriceComponent } from './application/market-price/view-current-market-price/view-current-market-price.component';
 import { MarketPriceBulkDeleteComponent } from './application/market-price/market-price-bulk-delete/market-price-bulk-delete.component';
 import { MarketPriceBulkUploadComponent } from './application/market-price/market-price-bulk-upload/market-price-bulk-upload.component';
+import { CollectionHubComponent } from './application/collection-hub/collection-hub.component';
+import { ViewComplainComponent } from './application/view-complain/view-complain.component';
 
 export const routes: Routes = [
   {
@@ -58,18 +60,13 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
 
-
   { path: 'login', component: LoginComponent },
-
-
-
 
   {
     path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-
       {
         path: 'admin-users/edit-admin-me-user',
         component: EditAdminMeUserComponent,
@@ -175,10 +172,8 @@ export const routes: Routes = [
             path: 'add-block-words',
             component: AddBlockWordsComponent,
           },
-
-        ]
+        ],
       },
-
 
       {
         path: 'reports',
@@ -199,10 +194,8 @@ export const routes: Routes = [
             path: 'collective-officer/district-report',
             component: CollectionofficerDistrictReportComponent,
           },
-        ]
+        ],
       },
-
-
 
       {
         path: 'steckholders',
@@ -222,8 +215,7 @@ export const routes: Routes = [
                 path: 'edit-plantcare-users',
                 component: EditPlantcareUsersComponent,
               },
-
-            ]
+            ],
           },
 
           {
@@ -238,8 +230,7 @@ export const routes: Routes = [
                 component: CreateAdminUserComponent,
                 canActivate: [AuthGuard],
               },
-
-            ]
+            ],
           },
 
           {
@@ -261,12 +252,10 @@ export const routes: Routes = [
                 path: 'bank-details',
                 component: CollectiveofficersBankDetailsComponent,
               },
-
-            ]
+            ],
           },
-        ]
+        ],
       },
-
 
       {
         path: 'field-officer',
@@ -275,8 +264,7 @@ export const routes: Routes = [
             path: '',
             component: FieldofficersComponent,
           },
-
-        ]
+        ],
       },
 
       {
@@ -298,16 +286,8 @@ export const routes: Routes = [
             path: 'price-bulk-upload',
             component: MarketPriceBulkUploadComponent,
           },
-
-        ]
+        ],
       },
-
-
-
-
-
-
-
 
       {
         path: 'collection-hub/view-collection-centers',
@@ -316,6 +296,20 @@ export const routes: Routes = [
       },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path
+      {
+        path: 'collection-hub',
+        children: [
+          { path: '', component: CollectionHubComponent },
+          {
+            path: 'view-collection-centers',
+            component: CollectionAllViewComponent,
+          },
+          {
+            path: 'view-complains',
+            component:ViewComplainComponent,
+          }
+        ],
+      },
     ],
   },
 ];

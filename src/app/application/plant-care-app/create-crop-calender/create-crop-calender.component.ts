@@ -95,6 +95,7 @@ export class CreateCropCalenderComponent {
   selectedFileName: string | null = null;
   selectedImage: string | ArrayBuffer | null = null;
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
+  selectedPage:'pageOne' | 'pageTwo' = 'pageOne'
   
 
   constructor(
@@ -360,6 +361,7 @@ export class CreateCropCalenderComponent {
   onCancel(): void {
     // Handle cancel action (e.g., clear the form, navigate back, etc.)
     this.selectedLanguage = 'english';
+    this.selectedPage = 'pageOne'
 
   }
 
@@ -386,6 +388,11 @@ export class CreateCropCalenderComponent {
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
+  }
+
+
+  nextForm(page: 'pageOne' | 'pageTwo') {
+    this.selectedPage = page;
   }
 
 

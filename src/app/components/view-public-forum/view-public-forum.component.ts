@@ -21,6 +21,7 @@ export class ViewPublicForumComponent implements OnInit {
   publiForum!: PublicForum[];
   isPopupVisible = false;
   deletePopUpVisible = false;
+  deletePostVisible = false
   postId!: number;
   postRcord!: any;
   posts: any[] = [];
@@ -105,6 +106,14 @@ export class ViewPublicForumComponent implements OnInit {
 
   closePopup() {
     this.isPopupVisible = false;
+  }
+
+  openDeletePostPopup(){
+    this.deletePopUpVisible = true;
+  }
+
+  closeDeletePostPopup(){
+    this.deletePopUpVisible = true;
   }
 
   openDeletePopUp() {

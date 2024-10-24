@@ -15,7 +15,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   officerForm: FormGroup;
   officerId: number | null = null;
   selectedFile: File | null = null;
-  languages:string[]=['Sinhala','English','Tamil']
+  languages:string[]=['Sinhala','English','Tamil'];
+  selectedPage:'pageOne' | 'pageTwo' = 'pageOne'
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -67,17 +68,21 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       this.collectionOfficerService.createCollectiveOfficer(this.officerForm.value).subscribe(
         (res:any)=>{
           this.officerId = res.officerId;
-          Swal.fire({
-            title: 'Success',
-            text: "Collective Officer Created Successfully",
-            icon: "success",
-          })
+          // Swal.fire({
+          //   title: 'Success',
+          //   text: "Collective Officer Created Successfully",
+          //   icon: "success",
+          // })
         },
         (error: any) => {
-          Swal.fire('Error', 'There was an error creating collective officer', 'error');
+          // Swal.fire('Error', 'There was an error creating collective officer', 'error');
         }
       );
     }
+  }
+
+  nextForm(page: 'pageOne' | 'pageTwo') {
+    this.selectedPage = page;
   }
 
   ngOnInit(): void {}

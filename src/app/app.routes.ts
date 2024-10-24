@@ -52,6 +52,7 @@ import { MarketPriceBulkDeleteComponent } from './application/market-price/marke
 import { MarketPriceBulkUploadComponent } from './application/market-price/market-price-bulk-upload/market-price-bulk-upload.component';
 import { CollectionHubComponent } from './application/collection-hub/collection-hub.component';
 import { ViewComplainComponent } from './application/view-complain/view-complain.component';
+import { ViewSelectedComplainComponent } from './application/view-selected-complain/view-selected-complain.component';
 
 export const routes: Routes = [
   {
@@ -307,6 +308,10 @@ export const routes: Routes = [
           {
             path: 'view-complains',
             component:ViewComplainComponent,
+          },
+          {
+            path: 'view-selected-complain/:id',
+            component: ViewSelectedComplainComponent
           }
         ],
       },

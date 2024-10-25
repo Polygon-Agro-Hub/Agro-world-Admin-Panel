@@ -12,11 +12,21 @@ export class MarketPriceService {
 
   constructor(private http: HttpClient) { }
 
-  getAllMarketPrice():Observable<any>{
+  getAllMarketPrice(crop:any):Observable<any>{
+    console.log(crop);
+    
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-market-prices`)
+    return this.http.get<any>(`${this.apiUrl}get-market-prices?crop=${crop}`,{headers})
+  }
+
+  getAllCropName():Observable<any>{
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}get-all-crop-name`)
+
   }
 }

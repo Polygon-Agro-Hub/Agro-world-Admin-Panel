@@ -15,6 +15,20 @@
         <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
     </div>
 
+    <div class="flex flex-row">
+        <div>
+            <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+            [options]="crops"
+             optionLabel="cropName" 
+            [(ngModel)]="selectedCrop"
+            [showClear]="true"
+            placeholder="Crop"
+            (onChange)="applyFiltersCrop()"
+          />
+        </div>
+    </div>
+
     <!-- <div *ngIf="!hasData" class="text-center py-8">
     <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
   </div> -->

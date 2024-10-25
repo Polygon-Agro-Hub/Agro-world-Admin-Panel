@@ -12,7 +12,7 @@
         <h2 class="text-2xl font-normal text-center text-textLight dark:text-textDark">Current Market Prices</h2>
     </div>
     <div class="flex justify-center items-center mb-8">
-        <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">08:00 AM to 12:00 PM</h3>
+        <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
     </div>
 
     <!-- <div *ngIf="!hasData" class="text-center py-8">
@@ -25,32 +25,36 @@
         <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
             <thead>
                 <tr>
-                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg">
                         Crop Name
                     </th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
                         Variety
                     </th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
                         Qulity
                     </th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
                         Price ( per 1 Kg )
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="border-b border-gray-200 dark:border-[#4B555A]">
+                <tr 
+                class="border-b border-gray-200 dark:border-[#4B555A]"
+                *ngFor="let item of market"
+                
+                >
                     <!-- | paginate
           : {
               itemsPerPage: itemsPerPage,
               currentPage: page,
               totalItems: totalItems
             } -->
-                    <td class="py-3 text-textLight dark:text-textDark">jjdj dkdk</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">dcsc</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">sjsk</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">sjsk</td>
+                    <td class="py-3 text-textLight dark:text-textDark">{{item.cropName}}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.variety}}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.grade}}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.price}}</td>
                 </tr>
             </tbody>
         </table>

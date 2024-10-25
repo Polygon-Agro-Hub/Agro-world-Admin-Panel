@@ -19,4 +19,16 @@ export class MarketPriceService {
 
     return this.http.get<any>(`${this.apiUrl}get-market-prices`)
   }
+
+
+  bulkUploadingMarketPrice(formData: FormData): Observable<any> {
+    console.log(formData);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(`${environment.API_URL}market-price/upload-market-price-xlsx`, formData, {
+      headers,
+    });
+    
+  }
 }

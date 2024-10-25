@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
+import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
+import { MarketPriceService } from '../../../services/market-price/market-price.service';
 
 @Component({
   selector: 'app-market-price-bulk-upload',
@@ -31,7 +33,7 @@ export class MarketPriceBulkUploadComponent {
   endTime: string = ''; // to store end time
   createdBy : any= localStorage.getItem('userId:');
   
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private marketPriceService: MarketPriceService) {}
 
  
 
@@ -92,7 +94,8 @@ export class MarketPriceBulkUploadComponent {
       formData.append('file', this.selectedFile);
 
       // Send the file to the backend
-      this.http.post(`${environment.API_BASE_URL}upload-market-price-xlsx`, formData).subscribe({
+      // this.http.post(`${environment.API_BASE_URL}market-price/upload-market-price-xlsx`, formData)
+      this.marketPriceService.bulkUploadingMarketPrice(formData).subscribe({
         next: (response: any) => {
           this.isLoading = false;
           this.successMessage = 'File uploaded successfully!';

@@ -4,78 +4,109 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+
 @Component({
   selector: 'app-collectiveofficers-personal',
   standalone: true,
   imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
   templateUrl: './collectiveofficers-personal.component.html',
-  styleUrls: ['./collectiveofficers-personal.component.css'], // Fixed `styleUrls`
+  styleUrls: ['./collectiveofficers-personal.component.css'],
 })
 export class CollectiveofficersPersonalComponent implements OnInit {
   officerForm: FormGroup;
   officerId: number | null = null;
   selectedFile: File | null = null;
-  languages:string[]=['Sinhala','English','Tamil'];
-  selectedPage:'pageOne' | 'pageTwo' = 'pageOne'
+  languages: string[] = ['Sinhala', 'English', 'Tamil'];
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  personalData: Personal = new Personal();
+  bankData: Bank = new Bank();
+  companyData: Company = new Company();
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
     private fb: FormBuilder
   ) {
     this.officerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstNameEnglish: ['', Validators.required],
+      firstNameSinhala: ['', Validators.required],
+      firstNameTamil: ['', Validators.required],
+      lastNameEnglish: ['', Validators.required],
+      lastNameSinhala: ['', Validators.required],
+      lastNameTamil: ['', Validators.required],
+      phoneNumber01Code: ['', Validators.required],
       phoneNumber01: ['', Validators.required],
-      phoneNumber02: [''],
+      phoneNumber02Code: ['', Validators.required],
+      phoneNumber02: ['', Validators.required],
       nic: ['', Validators.required],
-      email:['', Validators.required],
+      email: ['', Validators.required],
       houseNumber: ['', Validators.required],
       streetName: ['', Validators.required],
+      city: ['', Validators.required],
       district: ['', Validators.required],
       province: ['', Validators.required],
       country: ['', Validators.required],
-      image: [''],
+      accHolderName: ['', Validators.required],
+      accNumber: ['', Validators.required],
+      bankName: ['', Validators.required],
+      branchName: ['', Validators.required],
+      companyNameEnglish: ['', Validators.required],
+      companyNameSinhala: ['', Validators.required],
+      companyNameTamil: ['', Validators.required],
+      jobRole: ['', Validators.required],
+      IRMname: ['', Validators.required],
+      companyEmail: ['', Validators.required],
+      assignedDistrict: ['', Validators.required],
+      employeeType: ['', Validators.required],
       languages: this.fb.array([]),
     });
   }
 
-  onCheckboxChange(event: any){
-    const languagesArray: FormArray = this.officerForm.get('languages')as FormArray;
-
-    if(event.target.checked){
-      languagesArray.push(new FormControl(event.target.value));
-    }else{
-      const index = languagesArray.controls.findIndex(x => x.value === event.target.value);
-      languagesArray.removeAt(index);
+  onCheckboxChange(lang: string, event: any) {
+    // If the checkbox is checked, add the language to the string; if unchecked, remove it
+    if (event.target.checked) {
+      if (this.personalData.languages) {
+        // Add the language if it's not already in the string
+        if (!this.personalData.languages.includes(lang)) {
+          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
+        }
+      } else {
+        this.personalData.languages = lang;
+      }
+    } else {
+      // Remove the language from the string if the checkbox is unchecked
+      const languagesArray = this.personalData.languages.split(',');
+      const index = languagesArray.indexOf(lang);
+      if (index !== -1) {
+        languagesArray.splice(index, 1);
+      }
+      this.personalData.languages = languagesArray.join(',');
     }
   }
 
   onSubmit() {
+    console.log(this.personalData); // Logs the personal data with updated languages
+    console.log(this.bankData);
+    console.log(this.companyData);
+
     const formValue = this.officerForm.value;
-    if(formValue.languages && Array.isArray(formValue.languages)){
-      formValue.languages = formValue.languages.join(',');
-    }
-    console.log(formValue);
-    
+
     const formData = new FormData();
-    if(this.officerForm.value){
-      const officerData = this.officerForm.value
-      for (const key in officerData){
-        if(officerData.hasOwnProperty(key)){
+    if (this.officerForm.value) {
+      const officerData = this.officerForm.value;
+      for (const key in officerData) {
+        if (officerData.hasOwnProperty(key)) {
           formData.append(key, officerData[key]);
         }
       }
-      this.collectionOfficerService.createCollectiveOfficer(this.officerForm.value).subscribe(
-        (res:any)=>{
+
+      // Send the officer data using the service
+      this.collectionOfficerService.createCollectiveOfficer(this.personalData, this.bankData, this.companyData).subscribe(
+        (res: any) => {
           this.officerId = res.officerId;
-          // Swal.fire({
-          //   title: 'Success',
-          //   text: "Collective Officer Created Successfully",
-          //   icon: "success",
-          // })
+          Swal.fire('Success', 'Collective Officer Created Successfully', 'success');
         },
         (error: any) => {
-          // Swal.fire('Error', 'There was an error creating collective officer', 'error');
+          Swal.fire('Error', 'There was an error creating the collective officer', 'error');
         }
       );
     }
@@ -88,16 +119,44 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   ngOnInit(): void {}
 }
 
-export class CreateOfficer {
-  firstName: string = '';
-  lastName: string = '';
-  phoneNumber01: string = '';
-  phoneNumber02: string = '';
-  nic: string = '';
-  email:string='';
-  houseNumber: string = '';
-  streetName: string = '';
-  district: string = '';
-  province: string = '';
-  country: string = '';
+class Personal {
+  firstNameEnglish!: string;
+  firstNameSinhala!: string;
+  firstNameTamil!: string;
+  lastNameEnglish!: string;
+  lastNameSinhala!: string;
+  lastNameTamil!: string;
+  phoneNumber01Code!: string;
+  phoneNumber01!: string;
+  phoneNumber02Code!: string;
+  phoneNumber02!: string;
+  nic!: string;
+  email!: string;
+  password!: string;
+  passwordUpdated!: string;
+  houseNumber!: string;
+  streetName!: string;
+  city!: string;
+  district!: string;
+  province!: string;
+  country!: string;
+  languages: string = '';  // Updated to handle language as a comma-separated string
+}
+
+class Bank {
+  accHolderName!: string;
+  accNumber!: string;
+  bankName!: string;
+  branchName!: string;
+}
+
+class Company {
+  companyNameEnglish!: string;
+  companyNameSinhala!: string;
+  companyNameTamil!: string;
+  jobRole: string = 'Collection Officer'
+  IRMname!: string;
+  companyEmail!: string;
+  assignedDistrict!: string;
+  employeeType!: string;
 }

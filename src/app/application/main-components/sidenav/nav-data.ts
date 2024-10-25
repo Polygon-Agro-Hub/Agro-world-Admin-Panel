@@ -22,6 +22,11 @@ export const navbarData = [
         label :  'Fieldofficers'
     },
     {
+        RouterLink:'collection-hub',
+        icon : 'fa-solid fa-warehouse',
+        label : 'Collection Hub'
+    },
+    {
         RouterLink : 'market-place',
         icon : 'fa-solid fa-shop',
         label :  'Marketplace'

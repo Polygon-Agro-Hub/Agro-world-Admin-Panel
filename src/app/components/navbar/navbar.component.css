@@ -42,7 +42,7 @@
 .navbar-toggle {
   display: none;
   flex-direction: column;
-  cursor: pointer;
+
 }
 
 .navbar-toggle-bar {
@@ -123,7 +123,7 @@
     display: flex;
     align-items: center;
   
-    cursor: pointer;
+    
   }
   
   .btn__indicator{

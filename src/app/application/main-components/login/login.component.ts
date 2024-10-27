@@ -25,6 +25,10 @@ export class LoginComponent {
       this.loginObj = new Login();
   }
 
+  ngOnInit() {
+    localStorage.removeItem('Login Token : ');
+  }
+
 
  onLogin(){
   console.log("Successfully click the button");

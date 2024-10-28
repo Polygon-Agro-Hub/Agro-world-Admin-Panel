@@ -30,13 +30,17 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   selectedViraity:any = '';
   viraity!:Viraity[]
 
+  page: number = 1;
+  totalItems: number = 0;
+  itemsPerPage: number = 10;
+
 
   constructor(private marketSrv: MarketPriceService) {
     this.currentDate = new Date().toLocaleDateString();
   }
 
   ngOnInit(): void {
-    this.fetchAllMarketPrices();
+    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
     this.getAllCrop();
     this.viraity=[
       { id: '1', Vgrade: 'A' },
@@ -51,11 +55,13 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   }
 
 
-  fetchAllMarketPrices() {
-    this.marketSrv.getAllMarketPrice(this.selectedCrop?.cropName, this.selectedViraity?.Vgrade).subscribe(
+  fetchAllMarketPrices(page: number = 1, limit: number = this.itemsPerPage) {
+    this.page = page;
+    this.marketSrv.getAllMarketPrice(page,limit, this.selectedCrop?.cropName, this.selectedViraity?.Vgrade).subscribe(
       (res) => {
-        this.market = res
-        // console.log(res);
+        this.market = res.results
+        this.totalItems=res.total
+        console.log(res);
 
       },
       (error) => {
@@ -80,11 +86,16 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   }
 
   applyFiltersCrop() {
-    this.fetchAllMarketPrices();
+    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
   }
 
   applyFiltersVerity(){
-    this.fetchAllMarketPrices()
+    this.fetchAllMarketPrices(this.page, this.itemsPerPage)
+  }
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
   }
 
 }

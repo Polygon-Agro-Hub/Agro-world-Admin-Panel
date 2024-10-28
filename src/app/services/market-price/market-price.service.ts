@@ -12,14 +12,24 @@ export class MarketPriceService {
 
   constructor(private http: HttpClient) { }
 
-  getAllMarketPrice(crop:any):Observable<any>{
+  getAllMarketPrice(crop:any, grade:any):Observable<any>{
     console.log(crop);
     
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-market-prices?crop=${crop}`,{headers})
+    let url = `${this.apiUrl}get-market-prices?`
+
+    if(crop){
+      url+=`&crop=${crop}`
+    }
+
+    if(grade){
+      url+=`&grade=${grade}`
+    }
+
+    return this.http.get<any>(url,{headers})
   }
 
   getAllCropName():Observable<any>{

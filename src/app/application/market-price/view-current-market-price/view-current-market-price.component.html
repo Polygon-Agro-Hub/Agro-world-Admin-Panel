@@ -11,9 +11,9 @@
     <div class="flex justify-center items-center mb-2">
         <h2 class="text-2xl font-normal text-center text-textLight dark:text-textDark">Current Market Prices</h2>
     </div>
-    <div class="flex justify-center items-center mb-8">
+    <!-- <div class="flex justify-center items-center mb-8">
         <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
-    </div>
+    </div> -->
 
     <div class="flex flex-row">
         <div>
@@ -25,6 +25,18 @@
             [showClear]="true"
             placeholder="Crop"
             (onChange)="applyFiltersCrop()"
+          />
+        </div>
+
+        <div class="mx-6">
+            <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+            [options]="viraity"
+             optionLabel="Vgrades" 
+            [(ngModel)]="selectedViraity"
+            [showClear]="true"
+            placeholder="Grade"
+            (onChange)="applyFiltersVerity()"
           />
         </div>
     </div>

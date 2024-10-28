@@ -25,7 +25,10 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   currentDate: string;
   market: MarketPrice[] = []
   selectedCrop: any = '';
-  crops: Crop[] = [];
+  crops!: Crop[];
+
+  selectedViraity:any = '';
+  viraity!:Viraity[]
 
 
   constructor(private marketSrv: MarketPriceService) {
@@ -35,6 +38,12 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAllMarketPrices();
     this.getAllCrop();
+    this.viraity=[
+      { id: '1', Vgrade: 'A' },
+      { id: '2', Vgrade: 'B' },
+      { id: '3', Vgrade: 'C' },
+      { id: '4', Vgrade: 'D' }
+    ]
   }
 
   formatDateTime(date: Date): string {
@@ -43,7 +52,7 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
 
 
   fetchAllMarketPrices() {
-    this.marketSrv.getAllMarketPrice(this.selectedCrop?.cropName).subscribe(
+    this.marketSrv.getAllMarketPrice(this.selectedCrop?.cropName, this.selectedViraity?.Vgrade).subscribe(
       (res) => {
         this.market = res
         // console.log(res);
@@ -74,6 +83,10 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     this.fetchAllMarketPrices();
   }
 
+  applyFiltersVerity(){
+    this.fetchAllMarketPrices()
+  }
+
 }
 
 class MarketPrice {
@@ -90,4 +103,9 @@ class MarketPrice {
 class Crop {
   id!: string
   cropName!: string
+}
+
+class Viraity{
+  id!:string
+  Vgrade!:string
 }

@@ -78,7 +78,12 @@
 
                 <div class="mr-5">
 
-                    <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [options]="status" [(ngModel)]="statusFilter" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Select a Status" (onChange)="applyFilters()" />
+                    <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]" 
+                    [options]="status" [(ngModel)]="statusFilter" 
+                    [checkmark]="true" optionLabel="name" 
+                    [showClear]="true" 
+                    placeholder="Select a Status" 
+                    (onChange)="applyFilters()" />
                 </div>
 
 

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MarketPriceService {
-  private apiUrl = `${environment.API_BASE_URL}`;
+  private apiUrl = `${environment.API_URL}`;
   private token = `${environment.TOKEN}`;
 
   constructor(private http: HttpClient) { }
@@ -19,7 +19,7 @@ export class MarketPriceService {
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}get-market-prices?page=${page}&limit=${limit}`
+    let url = `${this.apiUrl}market-price/get-market-prices?page=${page}&limit=${limit}`
 
     if(crop){
       url+=`&crop=${crop}`
@@ -36,7 +36,7 @@ export class MarketPriceService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
-    return this.http.get<any>(`${this.apiUrl}get-all-crop-name`)
+    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`)
 
   }
 

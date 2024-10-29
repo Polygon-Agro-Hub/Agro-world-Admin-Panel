@@ -53,6 +53,7 @@ import { MarketPriceBulkUploadComponent } from './application/market-price/marke
 import { CollectionHubComponent } from './application/collection-hub/collection-hub.component';
 import { ViewComplainComponent } from './application/view-complain/view-complain.component';
 import { ViewSelectedComplainComponent } from './application/view-selected-complain/view-selected-complain.component';
+import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
 
 export const routes: Routes = [
   {
@@ -194,6 +195,10 @@ export const routes: Routes = [
           {
             path: 'collective-officer/district-report',
             component: CollectionofficerDistrictReportComponent,
+          },
+          {
+            path: 'payment-slip-report',
+            component: PaymentSlipReportComponent,
           },
         ],
       },

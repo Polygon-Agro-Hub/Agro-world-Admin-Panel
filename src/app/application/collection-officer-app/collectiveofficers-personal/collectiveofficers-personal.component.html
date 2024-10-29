@@ -24,49 +24,78 @@
                     </div>
                 </div>
 
-                <div class="mb-6">
+                <!-- <div class="mb-6">
                     <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                         Preferred Languages
                     </label>
 
                     <div class="flex items-center space-x-4 mt-3">
                         <div class="flex items-center space-x-2">
-                          <input
-                            class="w-5 h-5"
-                            type="checkbox"
-                            id="sinhala"
-                            name="languages"
-                            value="Sinhala"
-                            (change)="onCheckboxChange('Sinhala', $event)"
-                          />
-                          <label for="sinhala" class="text-gray-700">Sinhala</label>
+                            <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+                                (change)="onCheckboxChange('Sinhala', $event)" />
+                            <label for="sinhala" class="text-gray-700">Sinhala</label>
                         </div>
                         <div class="flex items-center space-x-2">
-                          <input
-                            class="w-5 h-5"
-                            type="checkbox"
-                            id="english"
-                            name="languages"
-                            value="English"
-                            (change)="onCheckboxChange('English', $event)"
-                          />
-                          <label for="english" class="text-gray-700">English</label>
+                            <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English"
+                                (change)="onCheckboxChange('English', $event)" />
+                            <label for="english" class="text-gray-700">English</label>
                         </div>
                         <div class="flex items-center space-x-2">
-                          <input
-                            class="w-5 h-5"
-                            type="checkbox"
-                            id="tamil"
-                            name="languages"
-                            value="Tamil"
-                            (change)="onCheckboxChange('Tamil', $event)"
-                          />
-                          <label for="tamil" class="text-gray-700">Tamil</label>
+                            <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil"
+                                (change)="onCheckboxChange('Tamil', $event)" />
+                            <label for="tamil" class="text-gray-700">Tamil</label>
                         </div>
-                      </div>
+                    </div>
 
-                </div>
+                </div> -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                    <div>
+                        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Collection Center Name
+                        </label>
+                        <select
+                            formControlName="centerId"
+                            id="centerId"
+                            [(ngModel)]="personalData.centerId"
+                            name="centerId"
+                            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                            <option
+                                *ngFor="let center of collectionCenterData"
+                                [value]="center.id"
+                                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+                            >
+                                {{ center.centerName }}
+                            </option>
+                        </select>
+                    </div>
+                    
+
+
+                    <div>
+                        <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Preferred Languages
+                        </label>
+
+                        <div class="flex items-center space-x-4 mt-3">
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+                                    (change)="onCheckboxChange('Sinhala', $event)" />
+                                <label for="sinhala" class="text-gray-700">Sinhala</label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English"
+                                    (change)="onCheckboxChange('English', $event)" />
+                                <label for="english" class="text-gray-700">English</label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil"
+                                    (change)="onCheckboxChange('Tamil', $event)" />
+                                <label for="tamil" class="text-gray-700">Tamil</label>
+                            </div>
+                        </div>
+                    </div>
 
                     <div>
                         <label for="firstNameEnglish"
@@ -142,7 +171,7 @@
                             Phone Number - 2
                         </label>
                         <div class="mt-1 flex">
-                            <select id="phoneNumber02Code" name="phoneNumber02Code" formControlName="phoneNumber02Code" 
+                            <select id="phoneNumber02Code" name="phoneNumber02Code" formControlName="phoneNumber02Code"
                                 [(ngModel)]="personalData.phoneNumber02Code"
                                 class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
                                 <option value="+94">+94 (LK)</option>
@@ -167,7 +196,8 @@
                     <div>
                         <label for="email"
                             class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
-                        <input formControlName="email" type="email" id="email" name="nic" [(ngModel)]="personalData.email"
+                        <input formControlName="email" type="email" id="email" name="nic"
+                            [(ngModel)]="personalData.email"
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                     </div>
 
@@ -261,9 +291,11 @@
 
 
                 <div class="pb-6">
-                    <label for="jobrole" class="block text-sm font-medium text-gray-700 dark:text-textDark">Job Role</label>
+                    <label for="jobrole" class="block text-sm font-medium text-gray-700 dark:text-textDark">Job
+                        Role</label>
                     <input id="jobrole" value="Collection Officer"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" disabled />
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                        disabled />
                 </div>
 
                 <div class="pb-6">

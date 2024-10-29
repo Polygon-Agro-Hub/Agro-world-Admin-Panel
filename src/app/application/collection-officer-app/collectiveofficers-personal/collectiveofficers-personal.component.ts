@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 
 @Component({
   selector: 'app-collectiveofficers-personal',
@@ -21,15 +22,18 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   personalData: Personal = new Personal();
   bankData: Bank = new Bank();
   companyData: Company = new Company();
+  collectionCenterData:CollectionCenter[]=[]
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private collectionCenterSrv: CollectionCenterService
   ) {
     this.officerForm = this.fb.group({
       firstNameEnglish: ['', Validators.required],
       firstNameSinhala: ['', Validators.required],
       firstNameTamil: ['', Validators.required],
+      centerId: ['', Validators.required],
       lastNameEnglish: ['', Validators.required],
       lastNameSinhala: ['', Validators.required],
       lastNameTamil: ['', Validators.required],
@@ -116,7 +120,17 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.selectedPage = page;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getAllCollectionCetnter()
+  }
+
+  getAllCollectionCetnter(){
+    this.collectionCenterSrv.getAllCollectionCenter().subscribe(
+      (res)=>{        
+        this.collectionCenterData = res
+      }
+    )
+  }
 }
 
 class Personal {
@@ -140,7 +154,8 @@ class Personal {
   district!: string;
   province!: string;
   country!: string;
-  languages: string = '';  // Updated to handle language as a comma-separated string
+  languages: string = ''; 
+  centerId!: string
 }
 
 class Bank {
@@ -159,4 +174,10 @@ class Company {
   companyEmail!: string;
   assignedDistrict!: string;
   employeeType!: string;
+}
+
+class CollectionCenter {
+  id!:number
+  centerName!:string
+
 }

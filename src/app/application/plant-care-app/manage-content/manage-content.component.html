@@ -118,7 +118,9 @@
                         <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">View / Hide
                         </th>
                         <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">Status</th>
-                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">Date</th>
+                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">Publish Date</th>
+                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">Expire Date</th>
+                        <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">Created Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -158,8 +160,9 @@
                                 </span>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-center dark:text-textDark text-centser">{{ item.createdAt | date:
-                            'yyyy-MM-dd'}}</td>
+                        <td class="px-4 py-3 text-center dark:text-textDark text-centser">{{ item.createdAt | date: 'yyyy-MM-dd'}}</td>
+                        <td class="px-4 py-3 text-center dark:text-textDark text-centser">{{ item.publishDate | date: 'yyyy-MM-dd'}}</td>
+                        <td class="px-4 py-3 text-center dark:text-textDark text-centser">{{ item.expireDate | date: 'yyyy-MM-dd'}}</td>
                         <td class="px-4 py-3 text-center">
                             <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
                                 (click)="editNews(item.id)">

@@ -14,9 +14,15 @@ export class CollectionHubComponent {
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
+    if(this.popupVisibleComplains=true){
+      this.popupVisibleComplains = !this.popupVisibleComplains;
+    }
   }
 
   togglePopupComplains(){
     this.popupVisibleComplains = !this.popupVisibleComplains;
+    if(this.popupVisibleCollectionCenter = true){
+      this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
+    }
   }
 }

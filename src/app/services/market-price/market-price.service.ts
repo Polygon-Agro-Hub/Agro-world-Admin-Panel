@@ -12,12 +12,32 @@ export class MarketPriceService {
 
   constructor(private http: HttpClient) { }
 
-  getAllMarketPrice():Observable<any>{
+  getAllMarketPrice(page:number, limit:number, crop:any, grade:any):Observable<any>{
+    console.log(crop);
+    
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-market-prices`)
+    let url = `${this.apiUrl}get-market-prices?page=${page}&limit=${limit}`
+
+    if(crop){
+      url+=`&crop=${crop}`
+    }
+
+    if(grade){
+      url+=`&grade=${grade}`
+    }
+
+    return this.http.get<any>(url,{headers})
+  }
+
+  getAllCropName():Observable<any>{
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}get-all-crop-name`)
+
   }
 
 
@@ -26,7 +46,7 @@ export class MarketPriceService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${environment.API_URL}market-price/upload-market-price-xlsx`, formData, {
+    return this.http.post(`${environment.API_BASE_URL}market-price/upload-market-price-xlsx`, formData, {
       headers,
     });
     

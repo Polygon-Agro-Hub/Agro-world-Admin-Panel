@@ -28,6 +28,8 @@ interface NewsItem {
   descriptionTamil: string;
   status: string;
   image: string;
+  publishDate: string;
+  expireDate: string;
   createdAt: string;
 }
 

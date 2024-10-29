@@ -14,13 +14,14 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
 import { NewsService } from '../../../services/plant-care/news.service';
 import { log } from 'console';
 import { environment } from '../../../environment/environment';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-
-
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface NewsItem {
   id: number;
@@ -31,6 +32,8 @@ interface NewsItem {
   descriptionSinhala: string;
   descriptionTamil: string;
   status: string;
+  publishDate: string;
+  expireDate: string;
   createdAt: string;
   image: string;
 }
@@ -38,7 +41,14 @@ interface NewsItem {
 @Component({
   selector: 'app-create-news',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule, AngularEditorModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
+    AngularEditorModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './create-news.component.html',
   styleUrls: ['./create-news.component.css'],
 })
@@ -51,80 +61,80 @@ export class CreateNewsComponent {
   newsItems: NewsItem[] = [];
   selectedFileName: string | null = null;
   selectedImage: string | ArrayBuffer | null = null;
-htmlContent: any;
-isSinhalaValid: boolean = true;
-isEnglishValid: boolean = true;
-isTamilValid: boolean = true;
-isLoading = false;
+  htmlContent: any;
+  isSinhalaValid: boolean = true;
+  isEnglishValid: boolean = true;
+  isTamilValid: boolean = true;
+  isLoading = false;
+  createDate: string = '';
+  expireDate: string = '';
 
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '300px',
+    minHeight: '300px',
+    maxHeight: 'auto',
+    width: 'auto',
+    minWidth: '0',
+    translate: 'yes',
+    enableToolbar: true,
+    showToolbar: true,
+    placeholder: 'Enter text here...',
+    defaultParagraphSeparator: '',
+    defaultFontName: '',
+    defaultFontSize: '',
+    fonts: [
+      { class: 'arial', name: 'Arial' },
+      { class: 'times-new-roman', name: 'Times New Roman' },
+      { class: 'calibri', name: 'Calibri' },
+      { class: 'comic-sans-ms', name: 'Comic Sans MS' },
+      { class: 'georgia', name: 'Georgia' },
+      { class: 'verdana', name: 'Verdana' },
+      { class: 'helvetica', name: 'Helvetica' },
+      { class: 'fm-abaya', name: 'FM Abhaya' }, // Sinhala font
+      { class: 'iskoola-pota', name: 'Iskoola Pota' }, // Sinhala font
+      { class: 'abhaya-libre', name: 'Abhaya Libre' }, // Sinhala font
+      { class: 'latha', name: 'Latha' }, // Tamil font
+      { class: 'baloo-tamil', name: 'Baloo Tamil' }, // Tamil font
+      { class: 'bamini', name: 'Bamini' }, // Tamil font
+    ],
+    customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText',
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
 
-editorConfig: AngularEditorConfig = {
-  editable: true,
-  spellcheck: true,
-  height: '300px',
-  minHeight: '300px',
-  maxHeight: 'auto',
-  width: 'auto',
-  minWidth: '0',
-  translate: 'yes',
-  enableToolbar: true,
-  showToolbar: true,
-  placeholder: 'Enter text here...',
-  defaultParagraphSeparator: '',
-  defaultFontName: '',
-  defaultFontSize: '',
-  fonts: [
-    {class: 'arial', name: 'Arial'},
-    {class: 'times-new-roman', name: 'Times New Roman'},
-    {class: 'calibri', name: 'Calibri'},
-    {class: 'comic-sans-ms', name: 'Comic Sans MS'},
-    {class: 'georgia', name: 'Georgia'},
-    {class: 'verdana', name: 'Verdana'},
-    {class: 'helvetica', name: 'Helvetica'},
-    {class: 'fm-abaya', name: 'FM Abhaya'},   // Sinhala font
-    {class: 'iskoola-pota', name: 'Iskoola Pota'}, // Sinhala font
-    {class: 'abhaya-libre', name: 'Abhaya Libre'}, // Sinhala font
-    {class: 'latha', name: 'Latha'}, // Tamil font
-    {class: 'baloo-tamil', name: 'Baloo Tamil'}, // Tamil font
-    {class: 'bamini', name: 'Bamini'} // Tamil font
-  ],
-  customClasses: [
-    {
-      name: 'quote',
-      class: 'quote',
-    },
-    {
-      name: 'redText',
-      class: 'redText',
-    },
-    {
-      name: 'titleText',
-      class: 'titleText',
-      tag: 'h1',
-    },
-  ],
-  
-  uploadWithCredentials: false,
-  sanitize: false,
-  toolbarPosition: 'top',
-  toolbarHiddenButtons: [
-  ['insertImage',
-    'backgroundColor',
-    'customClasses',
-    'link',
-    'unlink',
-    'insertVideo',
-    'insertHorizontalRule',
-    'toggleEditorMode',
-    'indent',
-    'outdent',
-    'insertUnorderedList',
-    'insertOrderedList',
-  ],
-  ],
-};
-
-
+    uploadWithCredentials: false,
+    sanitize: false,
+    toolbarPosition: 'top',
+    toolbarHiddenButtons: [
+      [
+        'insertImage',
+        'backgroundColor',
+        'customClasses',
+        'link',
+        'unlink',
+        'insertVideo',
+        'insertHorizontalRule',
+        'toggleEditorMode',
+        'indent',
+        'outdent',
+        'insertUnorderedList',
+        'insertOrderedList',
+      ],
+    ],
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -142,26 +152,25 @@ editorConfig: AngularEditorConfig = {
   //   this.isSinhalaValid = sinhalaRegex.test(inputValue);
   // }
 
-
   // validateEnglish(event: any) {
   //   const englishRegex = /^[A-Za-z\s]+$/; // Regex for English characters
   //   const inputValue = event.target.value;
-  
+
   //   // Check if the input matches the English regex
   //   this.isEnglishValid = englishRegex.test(inputValue);
   // }
-  
+
   // validateTamil(event: any) {
   //   const tamilRegex = /^[\u0B80-\u0BFF\s]+$/; // Unicode range for Tamil characters
   //   const inputValue = event.target.value;
-  
+
   //   // Check if the input matches the Tamil regex
   //   this.isTamilValid = tamilRegex.test(inputValue);
   // }
 
-
   isEnglishOnly(input: string): string {
-    const englishRegex = /^[\u0041-\u005A\u0061-\u007A\u0030-\u0039\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
+    const englishRegex =
+      /^[\u0041-\u005A\u0061-\u007A\u0030-\u0039\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
     // if(!englishRegex.test(input)){
     //   Swal.fire({
     //     icon: 'error',
@@ -171,14 +180,14 @@ editorConfig: AngularEditorConfig = {
     //   return '';
 
     // }
-    return input
+    return input;
   }
-
 
   isSinhalaAndNumberOnly(input: string): string {
     // Regular expression for Sinhala characters and numbers
-    const sinhalaAndNumberRegex = /^[\u0D80-\u0DFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
-    
+    const sinhalaAndNumberRegex =
+      /^[\u0D80-\u0DFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
+
     // if (!sinhalaAndNumberRegex.test(input)) {
     //   Swal.fire({
     //     icon: 'error',
@@ -191,7 +200,8 @@ editorConfig: AngularEditorConfig = {
   }
 
   isTamilAndNumberOnly(input: string): string {
-    const tamilRegex = /^[\u0B80-\u0BFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
+    const tamilRegex =
+      /^[\u0B80-\u0BFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
     // if (!tamilRegex.test(input )) {
     //   Swal.fire({
     //     icon: 'error',
@@ -207,36 +217,53 @@ editorConfig: AngularEditorConfig = {
     console.log('clicked');
     console.log(this.createNewsObj);
 
-      
     const formData = new FormData();
-    formData.append('titleEnglish', this.isEnglishOnly(this.createNewsObj.titleEnglish));
-    formData.append('titleSinhala', this.isSinhalaAndNumberOnly(this.createNewsObj.titleSinhala));
-    formData.append('titleTamil', this.isTamilAndNumberOnly(this.createNewsObj.titleTamil));
+    formData.append(
+      'titleEnglish',
+      this.isEnglishOnly(this.createNewsObj.titleEnglish)
+    );
+    formData.append(
+      'titleSinhala',
+      this.isSinhalaAndNumberOnly(this.createNewsObj.titleSinhala)
+    );
+    formData.append(
+      'titleTamil',
+      this.isTamilAndNumberOnly(this.createNewsObj.titleTamil)
+    );
     formData.append(
       'descriptionEnglish',
       this.isEnglishOnly(this.createNewsObj.descriptionEnglish)
-      
     );
     formData.append(
       'descriptionSinhala',
       this.isSinhalaAndNumberOnly(this.createNewsObj.descriptionSinhala)
     );
-    formData.append('descriptionTamil', this.isTamilAndNumberOnly(this.createNewsObj.descriptionTamil));
+    formData.append(
+      'descriptionTamil',
+      this.isTamilAndNumberOnly(this.createNewsObj.descriptionTamil)
+    );
     formData.append('status', this.createNewsObj.status);
+    formData.append('publishDate', this.createNewsObj.publishDate);
+    formData.append('expireDate', this.createNewsObj.expireDate);
     formData.append('createdBy', this.createNewsObj.createdBy);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
 
+    if (
+      formData.get('titleEnglish') === '' ||
+      formData.get('descriptionEnglish') === '' ||
+      formData.get('titleSinhala') === '' ||
+      formData.get('descriptionSinhala') === '' ||
+      formData.get('titleTamil') === '' ||
+      formData.get('descriptionTamil') === ''
+    ) {
+      console.log('language does not match');
 
-    if(formData.get('titleEnglish')==='' || formData.get('descriptionEnglish')==='' || formData.get('titleSinhala')==='' || formData.get('descriptionSinhala')==='' || formData.get('titleTamil')==='' || formData.get('descriptionTamil')==='' ){
-      console.log("language does not match");
-      
-      return
-    }else{
-    this.isLoading = true;
-    this.newsService.createNews(formData)
-      .subscribe(
+      return;
+    } else {
+      this.isLoading = true;
+      this.newsService.createNews(formData).subscribe(
         (res: any) => {
           this.isLoading = false;
           console.log('News created successfully', res);
@@ -249,8 +276,7 @@ editorConfig: AngularEditorConfig = {
           this.selectedFile = null;
           this.selectedImage = null;
           this.selectedLanguage = 'english';
-          this.router.navigate(['/plant-care/manage-content'])
-          
+          this.router.navigate(['/plant-care/manage-content']);
         },
         (error) => {
           this.isLoading = false;
@@ -265,9 +291,7 @@ editorConfig: AngularEditorConfig = {
         }
       );
     }
-    
   }
-
 
   onCancel() {
     this.createNewsObj = new CreateNews();
@@ -287,7 +311,7 @@ editorConfig: AngularEditorConfig = {
     fileInput.click();
   }
 
-  onFileSelected(event: any):void {
+  onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
       console.log('Selected file:', file);
@@ -295,7 +319,7 @@ editorConfig: AngularEditorConfig = {
       this.selectedFileName = file.name;
 
       const reader = new FileReader();
-      reader.onload = (e)=>{
+      reader.onload = (e) => {
         this.selectedImage = e.target?.result as string | ArrayBuffer;
       };
       reader.readAsDataURL(file);
@@ -311,22 +335,19 @@ editorConfig: AngularEditorConfig = {
   }
 
   getNewsById(id: any) {
-
     this.newsService.getNewsById(id).subscribe(
-        (data) => {
-          this.newsItems = data;
-          console.log(this.newsItems);
-        },
-        (error) => {
-          console.error('Error fetching news:', error);
-          if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
-          }
+      (data) => {
+        this.newsItems = data;
+        console.log(this.newsItems);
+      },
+      (error) => {
+        console.error('Error fetching news:', error);
+        if (error.status === 401) {
+          // Handle unauthorized access (e.g., redirect to login)
         }
-      );
+      }
+    );
   }
-
-
 
   updateNews() {
     const token = localStorage.getItem('Login Token : ');
@@ -334,26 +355,46 @@ editorConfig: AngularEditorConfig = {
       console.error('No token found');
       return;
     }
-  
+
     const formData = new FormData();
-    formData.append('titleEnglish', this.isEnglishOnly(this.newsItems[0].titleEnglish));
-    formData.append('titleSinhala', this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala));
-    formData.append('titleTamil', this.isTamilAndNumberOnly(this.newsItems[0].titleTamil));
-    formData.append('descriptionEnglish', this.isEnglishOnly(this.newsItems[0].descriptionEnglish));
-    formData.append('descriptionSinhala', this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala));
-    formData.append('descriptionTamil', this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil));
-  
-  
+    formData.append(
+      'titleEnglish',
+      this.isEnglishOnly(this.newsItems[0].titleEnglish)
+    );
+    formData.append(
+      'titleSinhala',
+      this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala)
+    );
+    formData.append(
+      'titleTamil',
+      this.isTamilAndNumberOnly(this.newsItems[0].titleTamil)
+    );
+    formData.append(
+      'descriptionEnglish',
+      this.isEnglishOnly(this.newsItems[0].descriptionEnglish)
+    );
+    formData.append(
+      'descriptionSinhala',
+      this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala)
+    );
+    formData.append(
+      'descriptionTamil',
+      this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil)
+    );
+    formData.append('publishDate', this.newsItems[0].publishDate);
+    formData.append('expireDate' , this.newsItems[0].expireDate);
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-  
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
-  
+
     this.isLoading = true;
-    this.http.put(`${environment.API_BASE_URL}edit-news/${this.itemId}`, formData, { headers })
+    this.http
+      .put(`${environment.API_BASE_URL}edit-news/${this.itemId}`, formData, {
+        headers,
+      })
       .subscribe(
         (res: any) => {
           console.log('Market Price updated successfully', res);
@@ -381,10 +422,7 @@ editorConfig: AngularEditorConfig = {
     if (this.newsItems[0]) {
       this.newsItems[0].image = '';
     }
-  
-    }
-
-  
+  }
 }
 
 export class CreateNews {
@@ -394,6 +432,9 @@ export class CreateNews {
   descriptionEnglish: string = '';
   descriptionSinhala: string = '';
   descriptionTamil: string = '';
+  publishDate: string = '';
+  expireDate: string = '';
   status: string = 'Draft';
+
   createdBy: any = localStorage.getItem('userId:');
 }

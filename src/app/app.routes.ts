@@ -54,6 +54,7 @@ import { CollectionHubComponent } from './application/collection-hub/collection-
 import { ViewComplainComponent } from './application/view-complain/view-complain.component';
 import { ViewSelectedComplainComponent } from './application/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
+import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
 
 export const routes: Routes = [
   {
@@ -298,6 +299,11 @@ export const routes: Routes = [
       {
         path: 'collection-hub/view-collection-centers',
         component: CollectionAllViewComponent,
+        // canActivate:[AuthGuard]
+      },
+      {
+        path:'collection-hub/add-collection-center',
+        component: AddCollectionCenterComponent
         // canActivate:[AuthGuard]
       },
 

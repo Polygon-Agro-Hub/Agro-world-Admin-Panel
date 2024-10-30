@@ -3,15 +3,25 @@ import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+interface centerData{
+  id: number;
+  regCode: string;
+  centerName: string;
+  contact01: string;
+  contact02: string;
+  buildingNumber: string;
+  street: string
+  district: string;
+  province: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CollectionCenterService {
   private apiUrl = `${environment.API_BASE_URL}`;
   private token = `${environment.TOKEN}`;
-
   constructor(private http: HttpClient) {}
-
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
@@ -31,6 +41,16 @@ export class CollectionCenterService {
     return this.http.delete(`${this.apiUrl}delete-collection-center/${id}`, {
       headers,
     });
+  }
+
+  createCollectionCenter(centerData: centerData):Observable<any>{
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    })
+    return this.http.post(`${this.apiUrl}add-collection-center'`, centerData,{
+      headers,
+    })
   }
 
 }

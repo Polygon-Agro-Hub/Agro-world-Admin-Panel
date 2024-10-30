@@ -1,6 +1,6 @@
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/collection-hub'"
+  onclick="window.location.href='/collection-hub/view-complains'"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -10,16 +10,16 @@
 >
   <div>
     <div class="text-center mb-4">
-      <p class="text-sm text-gray-600 dark:text-textDark">Ref No : 868768688</p>
+      <p class="text-sm text-gray-600 dark:text-textDark">Ref No : {{complain.refNo}}</p>
       <p class="text-sm text-gray-600 dark:text-textDark">
-        Preferred Language: <span class="font-semibold">Sinhala</span>
+        Preferred Language: <span class="font-semibold">{{complain.language}}</span>
       </p>
-      <p class="text-sm text-gray-600 dark:text-textDark">Received: 2024/10/24 at 11.55 AM</p>
+      <p class="text-sm text-gray-600 dark:text-textDark">Received: {{complain.createdAt}}</p>
     </div>
 
     <div class="flex flex-row mb-6 justify-between">
       <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark">Complain</label>
-      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" rows="4">
+      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" rows="4" [value]="complain.complain" disabled>
       </textarea>
     </div>
 
@@ -32,6 +32,7 @@
           type="text"
           value=""
           class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          disabled
         />
       </div>
       <div class="flex flex-row justify-between">
@@ -42,6 +43,7 @@
           type="text"
           value=""
           class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          disabled
         />
       </div>
     </div>
@@ -54,7 +56,8 @@
         <input
           type="text"
           value=""
-          class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" [value]="complain.officerName"
+          disabled
         />
       </div>
       <div class="flex flex-row justify-between">
@@ -64,7 +67,8 @@
         <input
           type="text"
           value=""
-          class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" [value]="complain.officerPhone"
+          disabled
         />
       </div>
     </div>
@@ -78,6 +82,8 @@
           type="text"
           value=""
           class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          [value]="complain.farmerName"
+          disabled
         />
       </div>
       <div class="flex flex-row justify-between">
@@ -88,6 +94,8 @@
           type="text"
           value=""
           class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          [value]="complain.farmerPhone"
+          disabled
         />
       </div>
     </div>

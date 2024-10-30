@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CollectionCenterService } from '../../services/collection-center/collection-center.service';
@@ -9,82 +9,77 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-view-complain',
   standalone: true,
   imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule],
+  providers: [DatePipe], // Provide DatePipe for date formatting
   templateUrl: './view-complain.component.html',
-  styleUrl: './view-complain.component.css'
+  styleUrls: ['./view-complain.component.css']
 })
 export class ViewComplainComponent implements OnInit {
-  // status: any[] | undefined;
   statusFilter: any;
   hasData: boolean = true;
-  complainsData!: Complain[]
+  complainsData!: Complain[];
 
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
 
   filterStatus: any = '';
-  status!: Status[]
-
-
+  status!: Status[];
 
   constructor(
-    private complainSrv: CollectionCenterService
+    private complainSrv: CollectionCenterService,
+    private datePipe: DatePipe // Inject DatePipe
   ) { }
 
-
-
   ngOnInit(): void {
-    this.fetchAllComplain(this.page, this.itemsPerPage)
+    this.fetchAllComplain(this.page, this.itemsPerPage);
     this.status = [
       { id: 1, type: "Answered" },
-      { id: 1, type: "Closed" },
-      { id: 1, type: "Not Answered" },
-    ]
+      { id: 2, type: "Closed" },
+      { id: 3, type: "Not Answered" },
+    ];
   }
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
-
-
     this.complainSrv.getAllComplain(page, limit, this.filterStatus?.type).subscribe(
       (res) => {
-        this.complainsData = res.results
-        this.totalItems = res.total
-        console.log(res);
-
+        // Map response data to ensure createdAt is in a readable date format
+        this.complainsData = res.results.map((item: any) => ({
+          ...item,
+          createdAt: this.datePipe.transform(item.createdAt, 'yyyy-MM-dd') // Convert date format
+        }));
+        this.totalItems = res.total;
       },
       (error) => {
-        console.log("Error: ", error)
+        console.log("Error: ", error);
       }
-    )
+    );
   }
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllComplain(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
-
 }
 
+// Define interfaces for response data
 class Complain {
-  id!: String
-  refNo!: String
-  status!: String
-  officerName!: String
-  farmerName!: String
-  officerPhone!: String
-  farmerPhone!: String
-  complain!: String
-  language!: String
-  createdAt!: String
+  id!: string;
+  refNo!: string;
+  status!: string;
+  officerName!: string;
+  farmerName!: string;
+  officerPhone!: string;
+  farmerPhone!: string;
+  complain!: string;
+  language!: string;
+  createdAt!: string;
 }
-
 
 class Status {
-  id!: number
-  type!: string
-
+  id!: number;
+  type!: string;
 }

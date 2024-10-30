@@ -53,4 +53,14 @@ export class CollectionCenterService {
     })
   }
 
+  getAllComplain(page: number, limit: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}get-all-complains?page=${page}&limit=${limit}`, {
+      headers,
+    });
+  }
+
 }

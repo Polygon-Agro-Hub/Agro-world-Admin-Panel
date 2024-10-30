@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { CollectionCenterService } from '../../services/collection-center/collection-center.service';
+import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 

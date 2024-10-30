@@ -51,8 +51,8 @@ import { ViewCurrentMarketPriceComponent } from './application/market-price/view
 import { MarketPriceBulkDeleteComponent } from './application/market-price/market-price-bulk-delete/market-price-bulk-delete.component';
 import { MarketPriceBulkUploadComponent } from './application/market-price/market-price-bulk-upload/market-price-bulk-upload.component';
 import { CollectionHubComponent } from './application/collection-hub/collection-hub.component';
-import { ViewComplainComponent } from './application/view-complain/view-complain.component';
-import { ViewSelectedComplainComponent } from './application/view-selected-complain/view-selected-complain.component';
+import { ViewComplainComponent } from './application/collection-center/view-complain/view-complain.component';
+import { ViewSelectedComplainComponent } from './application/collection-center/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
 

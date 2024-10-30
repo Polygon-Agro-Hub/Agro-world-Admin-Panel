@@ -4,6 +4,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-complain',
@@ -25,9 +26,12 @@ export class ViewComplainComponent implements OnInit {
   filterStatus: any = '';
   status!: Status[];
 
+  searchText: string = '';
+
   constructor(
     private complainSrv: CollectionCenterService,
-    private datePipe: DatePipe // Inject DatePipe
+    private datePipe: DatePipe,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -40,7 +44,7 @@ export class ViewComplainComponent implements OnInit {
   }
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
-    this.complainSrv.getAllComplain(page, limit, this.filterStatus?.type).subscribe(
+    this.complainSrv.getAllComplain(page, limit, this.filterStatus?.type, this.searchText).subscribe(
       (res) => {
         // Map response data to ensure createdAt is in a readable date format
         this.complainsData = res.results.map((item: any) => ({
@@ -63,6 +67,22 @@ export class ViewComplainComponent implements OnInit {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
+
+  searchComplain(){
+    this.page=1;
+    this.fetchAllComplain(this.page, this.itemsPerPage);
+  }
+
+  clearSearch(): void {
+    this.searchText = '';
+    this.fetchAllComplain(this.page, this.itemsPerPage);
+  }
+
+  navigateSelectComplain(id:string){
+    this.router.navigate([`/collection-hub/view-selected-complain/${id}`])
+  }
+
+
 }
 
 // Define interfaces for response data

@@ -53,7 +53,7 @@ export class CollectionCenterService {
     })
   }
 
-  getAllComplain(page: number, limit: number, status:String): Observable<any> {
+  getAllComplain(page: number, limit: number, status:String, searchText:string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -63,6 +63,10 @@ export class CollectionCenterService {
 
     if(status){
       url+=`&status=${status}`
+    }
+
+    if(searchText){
+      url+=`&searchText=${searchText}`
     }
     
     return this.http.get(url, {

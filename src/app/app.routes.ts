@@ -198,7 +198,7 @@ export const routes: Routes = [
             component: CollectionofficerDistrictReportComponent,
           },
           {
-            path: 'payment-slip-report',
+            path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
           },
         ],

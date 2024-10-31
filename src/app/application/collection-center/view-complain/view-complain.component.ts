@@ -46,6 +46,8 @@ export class ViewComplainComponent implements OnInit {
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
     this.complainSrv.getAllComplain(page, limit, this.filterStatus?.type, this.searchText).subscribe(
       (res) => {
+        console.log(res.results);
+        
         // Map response data to ensure createdAt is in a readable date format
         this.complainsData = res.results.map((item: any) => ({
           ...item,
@@ -92,8 +94,6 @@ class Complain {
   status!: string;
   officerName!: string;
   farmerName!: string;
-  officerPhone!: string;
-  farmerPhone!: string;
   complain!: string;
   language!: string;
   createdAt!: string;

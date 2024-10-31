@@ -46,7 +46,7 @@ export class MarketPriceService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${environment.API_BASE_URL}market-price/upload-market-price-xlsx`, formData, {
+    return this.http.post(`${environment.API_URL}market-price/upload-market-price-xlsx`, formData, {
       headers,
     });
     

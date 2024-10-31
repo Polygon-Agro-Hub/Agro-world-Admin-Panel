@@ -62,7 +62,7 @@ export class MarketPriceBulkDeleteComponent {
     });
   
     this.http.get<{items: marketxl[], total: number}>(
-      `${environment.API_BASE_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`, 
+      `${environment.API_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`, 
       { headers }
     ).subscribe(
       (response) => {
@@ -104,7 +104,7 @@ export class MarketPriceBulkDeleteComponent {
           'Authorization': `Bearer ${token}`
         });
   
-        this.http.delete(`${environment.API_BASE_URL}market-price/delete-xl-file/${id}`, { headers }).subscribe(
+        this.http.delete(`${environment.API_URL}market-price/delete-xl-file/${id}`, { headers }).subscribe(
           (data: any) => {
             console.log('Admin deleted successfully');
             Swal.fire(

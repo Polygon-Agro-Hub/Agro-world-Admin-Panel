@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MarketPriceService {
-  private apiUrl = `${environment.API_BASE_URL}`;
+  private apiUrl = `${environment.API_URL}`;
   private token = `${environment.TOKEN}`;
 
   constructor(private http: HttpClient) { }

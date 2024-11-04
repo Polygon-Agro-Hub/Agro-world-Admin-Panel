@@ -55,6 +55,7 @@ import { ViewComplainComponent } from './application/view-complain/view-complain
 import { ViewSelectedComplainComponent } from './application/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
+import { FarmerListReportComponent } from './application/report-section/farmer-list-report/farmer-list-report.component';
 
 export const routes: Routes = [
   {
@@ -201,6 +202,10 @@ export const routes: Routes = [
             path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
           },
+          {
+            path: 'farmer-list-report/:id',
+            component: FarmerListReportComponent,
+          }
         ],
       },
 

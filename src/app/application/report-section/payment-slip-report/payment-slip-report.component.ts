@@ -27,16 +27,7 @@ export class PaymentSlipReportComponent {
   ngOnInit(): void {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
-    // this.route.queryParams.subscribe((params) => {
-    //   this.officerId = +params['officerId'];
-    //   if (this.officerId) {
-    //     console.log(this.officerId );
-        
-    //     this.loadPayments();
-    //   }
-    // });
     this.officerId = this.route.snapshot.params['id']
-    console.log(this.officerId);
     this.loadPayments()
   }
 

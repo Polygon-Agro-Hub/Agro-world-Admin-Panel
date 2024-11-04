@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CollectionService } from '../../../services/collection.service';
 
-
 interface OngoingCultivationItem {
   id: number;
   firstName: string;
@@ -20,13 +19,18 @@ interface OngoingCultivationItem {
   district: string;
 }
 
-
 @Component({
   selector: 'app-collection-officer-report',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, NgxPaginationModule, DropdownModule, FormsModule],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    NgxPaginationModule,
+    DropdownModule,
+    FormsModule,
+  ],
   templateUrl: './collection-officer-report.component.html',
-  styleUrl: './collection-officer-report.component.css'
+  styleUrl: './collection-officer-report.component.css',
 })
 export class CollectionOfficerReportComponent {
   ongoingCultivation: OngoingCultivationItem[] = [];
@@ -36,18 +40,18 @@ export class CollectionOfficerReportComponent {
   itemsPerPage: number = 10;
   searchNIC: string = '';
 
-
-  constructor(private collectionoOfficer: CollectionService, private router: Router) {}
-
+  constructor(
+    private collectionoOfficer: CollectionService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-
-
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
-    this.collectionoOfficer.fetchAllCollectionOfficer(page, limit, this.searchNIC )
+    this.collectionoOfficer
+      .fetchAllCollectionOfficer(page, limit, this.searchNIC)
       .subscribe(
         (response) => {
           this.ongoingCultivation = response.items;
@@ -80,16 +84,19 @@ export class CollectionOfficerReportComponent {
   navigateToReport(id: number, name: string) {
     if (id) {
       const url = this.router.serializeUrl(
-        this.router.createUrlTree(['/reports/collective-officer-report/view', id, name])
+        this.router.createUrlTree([
+          '/reports/collective-officer-report/view',
+          id,
+          name,
+        ])
       );
       window.open(url, '_blank'); // Opens the page in a new tab
     } else {
       console.error('ID is missing');
     }
   }
-  
-  
 
-
-
+  navigateToPaymentSlipReport(id: number) {
+    this.router.navigate([`/reports/payment-slip-report/${id}`]);
+  }
 }

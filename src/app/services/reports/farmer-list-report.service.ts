@@ -14,6 +14,8 @@ export class FarmerListReportService {
   constructor(private http:HttpClient) { }
 
   getFarmerListReport(officerID: number):Observable<any>{
+    console.log('officerId success', officerID);
+    
     return this.http.get<any[]>(
       `${this.apiUrl}/farmer-list-report?officerID=${officerID}`
     )

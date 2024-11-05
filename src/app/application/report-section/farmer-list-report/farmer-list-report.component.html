@@ -5,112 +5,224 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="text-gray-500 dark:text-textDark">
-        Date: {{ todayDate }}
+<div
+  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+>
+  <div class="text-gray-500 dark:text-textDark">Date: {{ todayDate }}</div>
+  <div class="flex justify-between items-center mb-8 mt-5">
+    <div class="flex items-center">
+      <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
+        Personal Details
+      </h2>
     </div>
-    <div class="flex justify-between items-center mb-8 mt-5">
-        <div class="flex items-center">
-            <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
-                Personal Details
-            </h2>
-        </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-collapse border border-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            First Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Last Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            NIC Number
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Phone Number
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Address
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex justify-between items-center mb-5 mt-8">
+    <div class="flex items-center">
+      <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
+        Bank Details
+      </h2>
     </div>
-    <div class="overflow-x-auto">
-        <table class="min-w-full border-collapse border border-gray-200 table-auto">
-            <thead>
-                <tr>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">First Name</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Last Name</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">NIC Number</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Phone Number</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Address</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-            </tbody>
-        </table>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Account Number
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Account Holder’s Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Bank Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Branch Name
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex justify-between items-center mb-5 mt-8">
+    <div class="flex items-center">
+      <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
+        Crop Details
+      </h2>
     </div>
-    <div class="flex justify-between items-center mb-5 mt-8">
-        <div class="flex items-center">
-            <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
-                Bank Details
-            </h2>
-        </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Crop Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Variety
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Unit Price (A)
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Quantity
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Unit Price (B)
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Quantity
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Unit Price (C)
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Quantity
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Total (Rs.)
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          ></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-gray-500 dark:text-textDark mt-8">Full Total (Rs.) :</div>
+  <div class="flex justify-center mt-8">
+    <div class="flex flex-col justify-center mr-5">
+      <div class="border border-gray-200 w-32 h-32">
+        <img src="" alt="" />
+      </div>
+      <p class="text-gray-500 dark:text-textDark mt-3">Farmer’s QR Code</p>
     </div>
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
-            <thead>
-                <tr>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Account Number</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Account Holder’s Name</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Bank Name</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Branch Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-            </tbody>
-        </table>
+    <div class="flex flex-col justify-center ml-5">
+      <div class="border border-gray-200 w-32 h-32">
+        <img src="" alt="" />
+      </div>
+      <p class="text-gray-500 dark:text-textDark mt-3">Officer’s QR Code</p>
     </div>
-    <div class="flex justify-between items-center mb-5 mt-8">
-        <div class="flex items-center">
-            <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
-                Crop Details
-            </h2>
-        </div>
-    </div>
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
-            <thead>
-                <tr>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Crop Name</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Variety</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Unit Price (A)</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Quantity</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Unit Price (B)</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Quantity</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Unit Price (C)</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Quantity</th>
-                    <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">Total (Rs.)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-                <tr class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"></tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="text-gray-500 dark:text-textDark mt-8">
-        Full Total (Rs.) :
-    </div>
-    <div class="flex justify-center mt-8">
-        <div class="flex flex-col justify-center mr-5">
-            <div class="border border-gray-200 w-32 h-32">
-              <img src="" alt="">  
-            </div>
-            <p class="text-gray-500 dark:text-textDark mt-3">Farmer’s QR Code</p>
-        </div>
-        <div class="flex flex-col justify-center ml-5">
-            <div class="border border-gray-200 w-32 h-32">
-                <img src="" alt="">
-            </div>
-        <p class="text-gray-500 dark:text-textDark mt-3">Officer’s QR Code</p>
-        </div>
-    </div>
+  </div>
 </div>

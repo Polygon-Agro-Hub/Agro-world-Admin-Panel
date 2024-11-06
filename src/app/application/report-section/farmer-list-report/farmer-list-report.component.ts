@@ -16,7 +16,7 @@ export class FarmerListReportComponent {
   todayDate!: string;
   officerId!: number;
   farmerList: FarmerList = new FarmerList();
-  total!:number
+  total!: number;
 
   constructor(
     private farmerListReportService: FarmerListReportService,
@@ -27,21 +27,20 @@ export class FarmerListReportComponent {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
     this.officerId = this.route.snapshot.params['id'];
+    this.loadFarmerList();
   }
 
   loadFarmerList() {
-    this.farmerListReportService
-      .getFarmerListReport(this.officerId)
-      .subscribe((response) => {
+    this.farmerListReportService.getFarmerListReport(this.officerId).subscribe(
+      (response) => {
         console.log(response);
 
         this.farmerList = response.items;
-        this.total = response.total;      
       },
-      (error)=>{
-        console.error('Error fetching payments:',error);
+      (error) => {
+        console.error('Error fetching payments:', error);
       }
-);
+    );
   }
 }
 
@@ -49,16 +48,13 @@ class FarmerList {
   farmerFirstName!: string;
   farmerLastName!: string;
   farmerNIC!: string;
+  farmerPhoneNumber!: string;
   totalPaymentAmount!: string;
   officerFirstName!: string;
   officerLastName!: string;
   officerPhone1!: string;
   officerPhone2!: string;
   officerEmail!: string;
-  officerBankAccountHolder!: string;
-  officerAccountNumber!: string;
-  officerBankName!: string;
-  officerBranchName!: string;
   cropName!: string;
   unitPriceA!: string;
   weightA!: string;
@@ -69,4 +65,9 @@ class FarmerList {
   unitPriceB!: string;
   unitPriceC!: string;
   paymentDate!: string;
+  farmerBankAccountHolder!: string;
+  farmerAccountNumber!: string;
+  farmerBankName!: string;
+  farmerBranchName!: string;
+  farmerAddress!: string;
 }

@@ -43,12 +43,14 @@ export class CollectionCenterService {
     });
   }
 
-  createCollectionCenter(centerData: centerData):Observable<any>{
+  createCollectionCenter(centerData: any):Observable<any>{
+    console.log(centerData);
+    
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.post(`${this.apiUrl}add-collection-center'`, centerData,{
+    return this.http.post(`${this.apiUrl}create-collection-center`, centerData,{
       headers,
     })
   }

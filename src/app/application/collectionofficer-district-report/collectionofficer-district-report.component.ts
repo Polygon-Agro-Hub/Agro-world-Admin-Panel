@@ -5,6 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CollectionOfficerReportService } from '../../services/collection-officer/collection-officer-report.service';
 import { CommonModule } from '@angular/common';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import jsPDF from 'jspdf';
 
 interface IdistrictReport {
   cropName: string,
@@ -22,15 +23,14 @@ interface IdistrictReport {
   styleUrls: ['./collectionofficer-district-report.component.css']
 })
 export class CollectionofficerDistrictReportComponent implements OnInit {
-  districts: any[] = []; 
+  districts: any[] = [];
   selectedDistrict: any = { name: 'Colombo', code: 'COL' };
   reportDetails: IdistrictReport[] = [];
   chartOptions: any;
-  
-  constructor(private collectionOfficerSrv: CollectionOfficerReportService) {}
+
+  constructor(private collectionOfficerSrv: CollectionOfficerReportService) { }
 
   ngOnInit(): void {
-    // Initialize district options
     this.districts = [
       { name: 'Ampara', code: 'AMP' },
       { name: 'Anuradhapura', code: 'ANU' },
@@ -59,24 +59,21 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       { name: 'Vavuniya', code: 'VAV' }
     ];
 
-    // Fetch report details for the default selected district
     this.fetchAllDistrictReportDetails(this.selectedDistrict.name);
   }
 
-  // Fetch report details based on selected district
   fetchAllDistrictReportDetails(district: string) {
     console.log("Fetching report for district:", district);
     this.collectionOfficerSrv.getDistrictReport(district).subscribe((response) => {
       console.log(response);
       this.reportDetails = response;
-      this.updateChart(); // Update chart with new data
+      this.updateChart();
     },
-    (error) => {
-      console.log('Error: ', error);
-    });
+      (error) => {
+        console.log('Error: ', error);
+      });
   }
 
-  // Apply filter when the user selects a new district
   applyFilters() {
     if (this.selectedDistrict) {
       console.log('Filtering by district:', this.selectedDistrict.name);
@@ -86,7 +83,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     }
   }
 
-  // Group report details by crop and quality
   groupByCrop(reportDetails: IdistrictReport[]) {
     const groupedReports: any[] = [];
 
@@ -108,11 +104,9 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     return groupedReports;
   }
 
-  // Update chart with new data
   updateChart() {
     const groupedData = this.groupByCrop(this.reportDetails);
-    
-    // Prepare data for the chart
+
     const gradeAData = groupedData
       .filter(crop => crop.gradeA)
       .map((crop) => ({
@@ -137,7 +131,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         color: "#3DE188"
       }));
 
-    // Chart options for CanvasJS
     this.chartOptions = {
       animationEnabled: true,
       axisX: {
@@ -170,4 +163,68 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       ]
     };
   }
+
+  exportToPDF() {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const startX = 30;
+    const startY = 30;
+    const barHeight = 10;
+    const gap = 20;
+    const chartWidth = 140;
+  
+    doc.setFontSize(14);
+    doc.text(`${this.selectedDistrict.name} - Stacked Bar Chart`, 105, 15, { align: 'center' });
+  
+    const groupedData = this.groupByCrop(this.reportDetails);
+    const colors = {
+      gradeA: "#FF9263",
+      gradeB: "#5F75E9",
+      gradeC: "#3DE188"
+    };
+    const maxWeight = Math.max(...groupedData.map(crop => crop.totalWeight));
+    let currentY = startY;
+  
+    groupedData.forEach((crop) => {
+      let currentX = startX;
+      const labelYOffset = currentY + barHeight / 2 + 3;
+  
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(crop.cropName, startX - 20, labelYOffset);
+  
+      (['A', 'B', 'C'] as const).forEach((grade) => {
+        const gradeKey = `grade${grade}` as 'gradeA' | 'gradeB' | 'gradeC';
+        const gradeData = crop[gradeKey];
+  
+        if (gradeData) {
+          const barWidth = (parseFloat(gradeData.totWeight) / maxWeight) * chartWidth;
+          doc.setFillColor(colors[gradeKey]);
+          doc.rect(currentX, currentY, barWidth, barHeight, 'F');
+  
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(8);
+          doc.text(
+            `${gradeData.totWeight} kg`,
+            currentX + barWidth / 2,
+            currentY + barHeight / 2 + 3,
+            { align: 'center' }
+          );
+          currentX += barWidth;
+        }
+      });
+  
+      currentY += gap;
+    });
+  
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.text("Total Weight (Kg)", startX + chartWidth / 2, currentY + 10, { align: 'center' });
+  
+    doc.save(`${this.selectedDistrict.name}_Report_StackedBarChart.pdf`);
+  }
+  
+
+
+
+
 }

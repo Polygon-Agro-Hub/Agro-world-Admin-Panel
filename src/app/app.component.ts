@@ -9,7 +9,7 @@ import { SidenavComponent } from './application/main-components/sidenav/sidenav.
 import { HeaderComponent } from './application/main-components/header/header.component';
 import { DashboardComponent } from './application/main-components/dashboard/dashboard.component';
 import { FieldofficersComponent } from './application/fieldofficers/fieldofficers.component';
-import { MarketplaceComponent } from './application/marketplace/marketplace.component';
+// import { MarketplaceComponent } from './application/marketplace/marketplace.component';
 import { ReportComponent } from './application/report-section/report/report.component';
 import { SteckholdersComponent } from './application/steckholders-section/steckholders/steckholders.component';
 
@@ -24,7 +24,7 @@ interface SideNavToggle {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, SidenavComponent, PlantcareComponent, HeaderComponent, DashboardComponent, FieldofficersComponent, MarketplaceComponent, ReportComponent, SteckholdersComponent, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, SidenavComponent, PlantcareComponent, HeaderComponent, DashboardComponent, FieldofficersComponent, ReportComponent, SteckholdersComponent, NavbarComponent],
   template: `<router-outlet></router-outlet>`,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

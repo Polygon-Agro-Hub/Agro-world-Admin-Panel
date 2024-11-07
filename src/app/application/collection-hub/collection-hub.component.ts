@@ -22,6 +22,7 @@ export class CollectionHubComponent {
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
+    this.popupVisibleMarketPrice = false
     if(this.popupVisibleComplains=true){
       this.popupVisibleComplains = !this.popupVisibleComplains;
     }
@@ -29,6 +30,7 @@ export class CollectionHubComponent {
 
   togglePopupComplains(){
     this.popupVisibleComplains = !this.popupVisibleComplains;
+    this.popupVisibleMarketPrice = false
     if(this.popupVisibleCollectionCenter = true){
       this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
     }
@@ -36,6 +38,8 @@ export class CollectionHubComponent {
 
   togglePopupMarketPrice() {
     this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice
+    this.popupVisibleComplains =false
+    this.popupVisibleCollectionCenter =false
   }
 
   downloadTemplate1() {

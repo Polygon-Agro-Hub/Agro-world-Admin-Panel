@@ -1,37 +1,47 @@
 <div class="sidenav bg-[#061E2C]" [ngClass]="{'expanded': isExpanded}">
   <div class="logo-container">
-    <img 
-      src="assets/images/logo.png" 
-      alt="Logo" 
-      class="logo-text w-16 cursor-pointer" 
-      *ngIf="!isExpanded" 
-      onclick="window.location.href='/steckholders'"
-    />
-    <img 
-      src="assets/images/logo.png" 
-      alt="Logo" 
-      class="logo-text w-32 cursor-pointer" 
-      *ngIf="isExpanded" 
-      onclick="window.location.href='/steckholders'"
-    />
-    <i class="flex justify-end text-white fa-solid fa-angle-right inset-y-0 right-0 w-full cursor-pointer" *ngIf="!isLeftButtonVisible" (click)="toggleSidenav()" ></i>
-    <i class="flex justify-end text-white fa-solid fa-angle-left inset-y-0 right-0 w-full cursor-pointer"  (click)="toggleSidenav()"></i>
+    <img src="assets/images/logo.png" alt="Logo" class="logo-text w-16 cursor-pointer" *ngIf="!isExpanded"
+      onclick="window.location.href='/steckholders'" />
+    <img src="assets/images/logo.png" alt="Logo" class="logo-text w-32 cursor-pointer" *ngIf="isExpanded"
+      onclick="window.location.href='/steckholders'" />
+    <i class="flex justify-end text-white fa-solid fa-angle-right inset-y-0 right-0 w-full cursor-pointer"
+      *ngIf="!isLeftButtonVisible" (click)="toggleSidenav()"></i>
+    <i class="flex justify-end text-white fa-solid fa-angle-left inset-y-0 right-0 w-full cursor-pointer"
+      (click)="toggleSidenav()"></i>
   </div>
-  
-    <ul class="sidenav-nav">
-      <li class="sidenav-nav-item" *ngFor="let data of navData">
-        <a class="sidenav-nav-link" [routerLink]="[data.RouterLink]"
-           routerLinkActive="active"
-           [routerLinkActiveOptions]="{exact:false}">
-          <i class="sidenav-link-icon" [class]="data.icon"></i>
-          <span class="sidenav-link-text" *ngIf="isExpanded">{{data.label}}</span>
-        </a>
-      </li>
-    </ul>
 
-    <div class="logout-container" (click)="logout()">
-      <i class="sidenav-link-icon fa-solid fa-sign-out-alt"></i>
-      <span class="sidenav-link-text" *ngIf="isExpanded">Logout</span>
-    </div>
-    
+  <ul class="sidenav-nav">
+    <li class="sidenav-nav-item" *ngFor="let data of navData">
+      <a class="sidenav-nav-link" [routerLink]="[data.RouterLink]" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact:false}">
+        <i class="sidenav-link-icon" [class]="data.icon"></i>
+        <span class="sidenav-link-text" *ngIf="isExpanded">{{data.label}}</span>
+      </a>
+    </li>
+
+    <li class="sidenav-nav-item">
+      <a class="sidenav-nav-link" (click)="popupMarket()" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact:false}">
+        <i class="sidenav-link-icon" [class]="'fa-solid fa-shop'"></i>
+        <span class="sidenav-link-text" *ngIf="isExpanded">Market-Place</span>
+      </a>
+      <div *ngIf="ispopupMarketPrice" class="hover:bg-[#FFFFFF33] rounded-b-lg">
+        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20" onclick="window.location.href='/market'">
+          <i  class="fa-solid fa-shop text-white text-lg"></i>
+          <p class="text-white text-lg ml-10">Market</p>
+        </div>
+        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20" onclick="window.location.href='/market/action'">
+          <i  class="fa-solid fa-shop text-white text-lg"></i>
+          <p class="text-white text-lg ml-10">Market</p>
+        </div>
+
+      </div>
+    </li>
+  </ul>
+
+  <div class="logout-container" (click)="logout()">
+    <i class="sidenav-link-icon fa-solid fa-sign-out-alt"></i>
+    <span class="sidenav-link-text" *ngIf="isExpanded">Logout</span>
   </div>
+
+</div>

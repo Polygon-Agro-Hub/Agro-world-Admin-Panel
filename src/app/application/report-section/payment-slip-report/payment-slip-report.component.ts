@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { PaymentSlipReportService } from '../../../services/reports/payment-slip-report.service';
-import { response, Router } from 'express';
-import { ActivatedRoute } from '@angular/router';
-import { subscribe } from 'diagnostics_channel';
+
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-slip-report',
@@ -22,7 +21,7 @@ export class PaymentSlipReportComponent {
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
     private route: ActivatedRoute,
-    private router:Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -47,11 +46,13 @@ export class PaymentSlipReportComponent {
         }
       );
   }
+  navigateToFamerListReport(id: number) {
+    this.router.navigate([`/reports/farmer-list-report/${id}`]);
+  }
 }
 
-
-
 class Payment {
+  id!: number;
   farmerFirstName!: string;
   farmerLastName!: string;
   farmerNIC!: string;

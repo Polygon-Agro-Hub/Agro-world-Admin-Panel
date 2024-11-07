@@ -13,8 +13,9 @@ import { response } from 'express';
   styleUrl: './farmer-list-report.component.css',
 })
 export class FarmerListReportComponent {
+  fullTotal: number = 0;
   todayDate!: string;
-  officerId!: number;
+  famerID!: number;
   farmerList: FarmerList = new FarmerList();
   total!: number;
 
@@ -26,12 +27,12 @@ export class FarmerListReportComponent {
   ngOnInit(): void {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
-    this.officerId = this.route.snapshot.params['id'];
+    this.famerID = this.route.snapshot.params['userId'];
     this.loadFarmerList();
   }
 
   loadFarmerList() {
-    this.farmerListReportService.getFarmerListReport(this.officerId).subscribe(
+    this.farmerListReportService.getFarmerListReport(this.famerID).subscribe(
       (response) => {
         console.log(response);
 
@@ -64,6 +65,7 @@ class FarmerList {
   weightC!: string;
   unitPriceB!: string;
   unitPriceC!: string;
+  qty!: string;
   paymentDate!: string;
   farmerBankAccountHolder!: string;
   farmerAccountNumber!: string;

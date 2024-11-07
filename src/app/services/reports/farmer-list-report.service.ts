@@ -4,20 +4,19 @@ import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FarmerListReportService {
-
   private apiUrl = `${environment.API_BASE_URL}`;
   private token = `${environment.TOKEN}`;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getFarmerListReport(officerID: number):Observable<any>{
-    console.log('officerId success', officerID);
-    
+  getFarmerListReport(famerID: number): Observable<any> {
+    console.log('famer Id success', famerID);
+
     return this.http.get<any[]>(
-      `${this.apiUrl}/farmer-list-report?officerID=${officerID}`
-    )
+      `${this.apiUrl}/farmer-list-report?userId=${famerID}`
+    );
   }
 }

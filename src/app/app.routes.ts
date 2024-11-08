@@ -54,6 +54,7 @@ import { ViewComplainComponent } from './application/collection-center/view-comp
 import { ViewSelectedComplainComponent } from './application/collection-center/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
+import { FarmerListReportComponent } from './application/report-section/farmer-list-report/farmer-list-report.component';
 import { CollectionOfficerProvinceReportComponent } from './application/report-section/collection-officer-province-report/collection-officer-province-report.component';
 import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/market-place-dashbord.component';
 import { MarketPlaceActionsComponent } from './application/marketplace/market-place-actions/market-place-actions.component';
@@ -203,6 +204,10 @@ export const routes: Routes = [
             path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
           },
+          {
+            path: 'farmer-list-report/:id',
+            component: FarmerListReportComponent,
+          }
           {
             path: 'collective-officer/province-report',
             component: CollectionOfficerProvinceReportComponent,

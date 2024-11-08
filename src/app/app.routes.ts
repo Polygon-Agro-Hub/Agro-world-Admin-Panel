@@ -207,7 +207,7 @@ export const routes: Routes = [
           {
             path: 'farmer-list-report/:id',
             component: FarmerListReportComponent,
-          }
+          },
           {
             path: 'collective-officer/province-report',
             component: CollectionOfficerProvinceReportComponent,

@@ -128,5 +128,20 @@ export class ViewCropGroupComponent {
       }
     });
   }
+
+
+
+  viewVarieties(varietyList: string[]) {
+    const varietyListHtml = varietyList.length > 0 
+      ? varietyList.map(variety => `<li>${variety}</li>`).join('') 
+      : 'No varieties';
+  
+    Swal.fire({
+      title: 'Varieties',
+      html: varietyListHtml,
+      confirmButtonText: 'Close'
+    });
+  }
+  
   
 }

@@ -94,7 +94,7 @@ export class CreateCropGroupComponent {
           response.message,
           'success'
         );
-        // this.router.navigate(['/success-route']); 
+        this.router.navigate(['/plant-care/view-crop-group']);
       },
       error: (error) => {
         console.error('Error creating crop group:', error);

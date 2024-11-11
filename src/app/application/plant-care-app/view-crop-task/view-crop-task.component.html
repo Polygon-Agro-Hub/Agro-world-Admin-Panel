@@ -23,6 +23,8 @@
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Index</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Days</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Task</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Image</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +44,30 @@
                     <td class="pl-20 py-3 text-left text-textLight dark:text-textDark">
                         {{ task.taskEnglish.length > 40 ? (task.taskEnglish | slice:0:35) + '.......' : task.taskEnglish }}
                     </td>
-                    <td></td>
+                   
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.imageLink; else noImage">
+                          <a :href="task.imageLink" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-image text-blue-600 hover:text-blue-800"></i>
+                          </a>
+                        </ng-container>
+                        <ng-template #noImage>
+                          No image
+                        </ng-template>
+                      </td>
+
+                      <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.videoLink; else noVideo">
+                          <a :href="task.videoLink" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
+                          </a>
+                        </ng-container>
+                        <ng-template #noVideo>
+                          No video
+                        </ng-template>
+                      </td>
+                      
+                    
 
                     <td class="px-4 py-3 text-center">
                         <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editCropTask(task.id)">

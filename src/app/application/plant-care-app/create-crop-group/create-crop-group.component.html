@@ -15,13 +15,13 @@
     <div class="space-y-4">
     <!-- Crop Name -->
     <div>
-      <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Englis</label>
+      <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By English</label>
       <input
         type="text"
         id="cropName"
         [(ngModel)]="cropGroup.cropNameEnglish"
         name="cropName"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
       />
     </div>
@@ -33,7 +33,7 @@
         id="cropName"
         [(ngModel)]="cropGroup.cropNameSinahala"
         name="cropName"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
       />
     </div>
@@ -45,7 +45,7 @@
         id="cropName"
         [(ngModel)]="cropGroup.cropNameTamil"
         name="cropName"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
       />
     </div>
@@ -57,7 +57,7 @@
         id="parentCategory"
         [(ngModel)]="cropGroup.parentCategory"
         name="parentCategory"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
       >
         <option value="" disabled>Select Category</option>
@@ -72,7 +72,7 @@
           <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
             Add Image
             <span
-              class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-green-500 font-bold">
+              class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
               <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
             </span>
           </button>
@@ -99,7 +99,7 @@
     <!-- Buttons -->
     <div class="flex justify-end space-x-4 mt-6">
       <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-      <button type="submit" (click)="onSubmit()" class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md">Save</button>
+      <button type="submit" (click)="onSubmit()" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
     </div>
   </div>
  

@@ -5,12 +5,21 @@ import { environment } from '../../environment/environment';
 
 export interface NewCropCalender {
   id: number;
-  cropName: string;
-  variety: string;
-  CultivationMethod: string;
-  NatureOfCultivation: string;
-  CropDuration: string;
+  cropNameEnglish: string;
+  varietyEnglish: string;
+  category: string;
+  methodEnglish: string;
+  natOfCulEnglish: string;
+  cropDuration: string;
   createdAt: string;
+}
+
+export interface NewCropGroup {
+  id: number;
+  cropNameEnglish: string;
+  category: string;
+  varietyCount: number;
+  varietyList: string[];
 }
 
 @Injectable({
@@ -23,6 +32,16 @@ export class CropCalendarService {
   constructor(private http: HttpClient) {}
 
   // Create Crop Calendar
+  createCropGroup(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(`${this.apiUrl}create-crop-group`, formData, {
+      headers,
+    });
+  }
+
+
   createCropCalendar(formData: FormData): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -84,11 +103,34 @@ export class CropCalendarService {
     );
   }
 
+  fetchAllCropGroups(
+    page: number = 1,
+    limit: number = 10
+  ): Observable<{ items: NewCropGroup[]; total: number }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<{ items: NewCropGroup[]; total: number }>(
+      `${this.apiUrl}get-all-crop-groups?page=${page}&limit=${limit}`,
+      { headers }
+    );
+  }
+
   deleteCropCalender(id: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.delete(`${this.apiUrl}delete-crop/${id}`, {
+      headers,
+    });
+  }
+
+
+  deleteCropGroup(id: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete(`${this.apiUrl}delete-crop-group/${id}`, {
       headers,
     });
   }

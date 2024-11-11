@@ -1,17 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  HttpClient,
-  HttpClientModule,
-  HttpHeaders,
-} from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-
-import { response } from 'express';
+import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 
 
 interface NewCropCalender {
@@ -24,20 +18,29 @@ interface NewCropCalender {
   cropDuration: string;
   createdAt: string;
 }
+
+interface NewCropGroup {
+  id: number;
+  cropNameEnglish: string;
+  category: string;
+  varietyCount: number;
+  varietyList: string[];
+}
+
+
 @Component({
-  selector: 'app-view-crop-calander',
+  selector: 'app-view-crop-group',
   standalone: true,
-  imports: [
-    HttpClientModule,
+  imports: [HttpClientModule,
     CommonModule,
     LoadingSpinnerComponent,
-    NgxPaginationModule,
-  ],
-  templateUrl: './view-crop-calander.component.html',
-  styleUrl: './view-crop-calander.component.css',
+    NgxPaginationModule,],
+  templateUrl: './view-crop-group.component.html',
+  styleUrl: './view-crop-group.component.css'
 })
-export class ViewCropCalanderComponent implements OnInit {
+export class ViewCropGroupComponent {
   newCropCalender: NewCropCalender[] = [];
+  newCropGroup: NewCropGroup[] = [];
   selectedCrop: any = null;
   isLoading = true;
 
@@ -46,21 +49,26 @@ export class ViewCropCalanderComponent implements OnInit {
   itemsPerPage: number = 10;
   hasData: boolean = true;  
 
+
   constructor(private cropCalendarService: CropCalendarService, private http: HttpClient, private router: Router) {}
 
+
   ngOnInit() {
-    this.fetchAllCropCalenders();
+    this.fetchAllCropGroups();
   }
 
-  fetchAllCropCalenders(page: number = 1, limit: number = this.itemsPerPage) {
+
+
+  fetchAllCropGroups(page: number = 1, limit: number = this.itemsPerPage) {
     console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
-    this.cropCalendarService.fetchAllCropCalenders(page, limit)
+    this.cropCalendarService.fetchAllCropGroups(page, limit)
       .subscribe(
         (data) => {
           this.isLoading = false;
-          this.newCropCalender = data.items;
-          this.hasData = this.newCropCalender.length > 0;
+          this.newCropGroup = data.items;
+          console.log(this.newCropGroup);
+          this.hasData = this.newCropGroup.length > 0;
           this.totalItems = data.total;
         },
         (error) => {
@@ -72,13 +80,19 @@ export class ViewCropCalanderComponent implements OnInit {
       );
   }
 
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllCropGroups(this.page, this.itemsPerPage); // Include itemsPerPage
+  }
+
+ 
 
   deleteCropCalender(id: any) {
   
 
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop calendar item? This action cannot be undone.',
+      text: 'Do you really want to delete this crop group item? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -88,25 +102,25 @@ export class ViewCropCalanderComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
        
-        this.cropCalendarService.deleteCropCalender(id)
+        this.cropCalendarService.deleteCropGroup(id)
           .subscribe(
             (data: any) => {
               if(data){
                 Swal.fire(
                   'Deleted!',
-                  'The crop calendar item has been deleted.',
+                  'The crop group item has been deleted.',
                   'success'
                   
                 );
-                this.fetchAllCropCalenders();
+                this.fetchAllCropGroups();
               }
              
             },
             (error) => {
-              console.error('Error deleting crop calendar:', error);
+              console.error('Error deleting crop group:', error);
               Swal.fire(
                 'Error!',
-                'There was an error deleting the crop calendar.',
+                'There was an error deleting the crop group.',
                 'error'
               );
             }
@@ -114,19 +128,5 @@ export class ViewCropCalanderComponent implements OnInit {
       }
     });
   }
-
-  editCropCalender(id: number) {
-    this.router.navigate(['/plant-care/create-crop-calender'], {
-      queryParams: { id },
-    });
-  }
-
-  onPageChange(event: number) {
-    this.page = event;
-    this.fetchAllCropCalenders(this.page, this.itemsPerPage); // Include itemsPerPage
-  }
-
-  ViewCroptask(id:number){
-    this.router.navigate([`plant-care/view-crop-task/${id}`])
-  }
+  
 }

@@ -55,6 +55,8 @@ import { ViewComplainComponent } from './application/collection-center/view-comp
 import { ViewSelectedComplainComponent } from './application/collection-center/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
+import { CreateCropGroupComponent } from './application/plant-care-app/create-crop-group/create-crop-group.component';
+import { ViewCropGroupComponent } from './application/plant-care-app/view-crop-group/view-crop-group.component';
 
 export const routes: Routes = [
   {
@@ -174,6 +176,14 @@ export const routes: Routes = [
           {
             path: 'add-block-words',
             component: AddBlockWordsComponent,
+          },
+          {
+            path: 'create-crop-group',
+            component: CreateCropGroupComponent,
+          },
+          {
+            path: 'view-crop-group',
+            component: ViewCropGroupComponent,
           },
         ],
       },

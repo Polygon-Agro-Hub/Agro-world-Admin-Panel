@@ -3,11 +3,12 @@ import { DashbordFirstRowComponent } from '../dashbord-components/dashbord-first
 import { DashbordAreaChartComponent } from '../dashbord-components/dashbord-area-chart/dashbord-area-chart.component';
 import { DashbordPieChartComponent } from '../dashbord-components/dashbord-pie-chart/dashbord-pie-chart.component';
 import { DashbordSecondRowComponent } from '../dashbord-components/dashbord-second-row/dashbord-second-row.component';
+import { DashbordTableComponent } from '../dashbord-components/dashbord-table/dashbord-table.component';
 
 @Component({
   selector: 'app-market-place-dashbord',
   standalone: true,
-  imports: [DashbordFirstRowComponent, DashbordAreaChartComponent, DashbordPieChartComponent, DashbordSecondRowComponent],
+  imports: [DashbordFirstRowComponent, DashbordAreaChartComponent, DashbordPieChartComponent, DashbordSecondRowComponent, DashbordTableComponent],
   templateUrl: './market-place-dashbord.component.html',
   styleUrl: './market-place-dashbord.component.css'
 })

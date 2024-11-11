@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { PaymentSlipReportService } from '../../../services/reports/payment-slip-report.service';
-import { response } from 'express';
-import { ActivatedRoute } from '@angular/router';
-import { subscribe } from 'diagnostics_channel';
+
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment-slip-report',
@@ -21,23 +20,24 @@ export class PaymentSlipReportComponent {
 
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
-    this.officerId = this.route.snapshot.params['id']
-    this.loadPayments()
+    this.officerId = this.route.snapshot.params['id'];
+    this.loadPayments();
   }
 
-  loadPayments(){
+  loadPayments() {
     this.paymentSlipReportService
       .getPaymentSlipReport(this.officerId)
       .subscribe(
         (response) => {
           console.log(response);
-          
+
           this.payments = response.items;
           this.total = response.total;
         },
@@ -46,9 +46,13 @@ export class PaymentSlipReportComponent {
         }
       );
   }
+  navigateToFamerListReport(id: number) {
+    this.router.navigate([`/reports/farmer-list-report/${id}`]);
+  }
 }
 
 class Payment {
+  id!: number;
   farmerFirstName!: string;
   farmerLastName!: string;
   farmerNIC!: string;

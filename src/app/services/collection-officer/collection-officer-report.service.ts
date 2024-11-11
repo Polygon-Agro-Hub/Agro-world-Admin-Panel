@@ -11,6 +11,14 @@ interface IdistrictReport{
   totWeight: string
 }
 
+interface IProvinceReport{
+  cropName: string,
+  quality: string,
+  province: string,
+  totPrice: string,
+  totWeight: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,5 +33,11 @@ export class CollectionOfficerReportService {
     console.log("service District:",district);
     
     return this.http.get<IdistrictReport[]>(`${this.apiUrl}collection-officer/district-report/${district}`)
+  }
+
+  getProvinceReport(province:any):Observable<IProvinceReport[]>{
+    console.log("service District:",province);
+    
+    return this.http.get<IProvinceReport[]>(`${this.apiUrl}collection-officer/province-report/${province}`)
   }
 }

@@ -7,7 +7,6 @@ import { PlantcareComponent } from './application/plantcare/plantcare.component'
 import { SteckholdersComponent } from './application/steckholders-section/steckholders/steckholders.component';
 import { ReportComponent } from './application/report-section/report/report.component';
 import { FieldofficersComponent } from './application/fieldofficers/fieldofficers.component';
-import { MarketplaceComponent } from './application/marketplace/marketplace.component';
 import { ManageContentComponent } from './application/plant-care-app/manage-content/manage-content.component';
 import { OngoingCultivationComponent } from './application/plant-care-app/ongoing-cultivation/ongoing-cultivation.component';
 import { ViewCropCalanderComponent } from './application/plant-care-app/view-crop-calander/view-crop-calander.component';
@@ -55,6 +54,10 @@ import { ViewComplainComponent } from './application/collection-center/view-comp
 import { ViewSelectedComplainComponent } from './application/collection-center/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
+import { FarmerListReportComponent } from './application/report-section/farmer-list-report/farmer-list-report.component';
+import { CollectionOfficerProvinceReportComponent } from './application/report-section/collection-officer-province-report/collection-officer-province-report.component';
+import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/market-place-dashbord.component';
+import { MarketPlaceActionsComponent } from './application/marketplace/market-place-actions/market-place-actions.component';
 import { CreateCropGroupComponent } from './application/plant-care-app/create-crop-group/create-crop-group.component';
 import { ViewCropGroupComponent } from './application/plant-care-app/view-crop-group/view-crop-group.component';
 
@@ -211,6 +214,14 @@ export const routes: Routes = [
             path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
           },
+          {
+            path: 'farmer-list-report/:id',
+            component: FarmerListReportComponent,
+          },
+          {
+            path: 'collective-officer/province-report',
+            component: CollectionOfficerProvinceReportComponent,
+          },
         ],
       },
 
@@ -289,7 +300,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            component: MarketplaceComponent,
+            component: MarketPlaceDashbordComponent,
           },
           {
             path: 'view-current-price',
@@ -336,6 +347,20 @@ export const routes: Routes = [
           }
         ],
       },
+
+      {
+        path: 'market',
+        children: [
+          {
+            path: '',
+            component: MarketPlaceDashbordComponent,
+          },
+          {
+            path: 'action',
+            component: MarketPlaceActionsComponent,
+          },
+        ]
+      }
     ],
   },
 ];

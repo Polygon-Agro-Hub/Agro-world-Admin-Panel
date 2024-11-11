@@ -1,0 +1,277 @@
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  onclick="window.location.href='/reports/payment-slip-report/:id'"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div
+  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+>
+  <div class="text-gray-500 dark:text-textDark">Date: {{ todayDate }}</div>
+  <div class="flex justify-between items-center mb-8 mt-5">
+    <div class="flex items-center">
+      <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
+        Personal Details
+      </h2>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-collapse border border-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            First Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Last Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            NIC Number
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Phone Number
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Address
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerFirstName }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerLastName }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerNIC }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerPhoneNumber }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerAddress }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex justify-between items-center mb-5 mt-8">
+    <div class="flex items-center">
+      <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
+        Bank Details
+      </h2>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Account Number
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Account Holder’s Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Bank Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Branch Name
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerAccountNumber }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerBankAccountHolder }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerBankName }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.farmerBranchName }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex justify-between items-center mb-5 mt-8">
+    <div class="flex items-center">
+      <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
+        Crop Details
+      </h2>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Crop Name
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Variety
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Unit Price (A)
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Quantity
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Unit Price (B)
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Quantity
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Unit Price (C)
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Quantity
+          </th>
+          <th
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            Total (Rs.)
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.cropName }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.cropVariety }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.unitPriceA }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.qty }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.unitPriceB }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.qty }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.unitPriceC }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.qty }}
+          </td>
+          <td
+            class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
+          >
+            {{ farmerList.totalPaymentAmount }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-gray-500 dark:text-textDark mt-8">
+    Full Total (Rs.) : {{ farmerList.totalPaymentAmount }}
+  </div>
+  <div class="flex justify-center mt-8">
+    <div class="flex flex-col justify-center mr-5">
+      <div class="border border-gray-200 w-32 h-32">
+        <img [src]="farmerList.paymentImage" alt="Farmer QR Code" />
+      </div>
+      <p class="text-gray-500 dark:text-textDark mt-3">Farmer’s QR Code</p>
+    </div>
+    <div class="flex flex-col justify-center ml-5">
+      <div class="border border-gray-200 w-32 h-32">
+        <img [src]="" alt="" />
+      </div>
+      <p class="text-gray-500 dark:text-textDark mt-3">Officer’s QR Code</p>
+    </div>
+  </div>
+  <div class="flex flex-col justify-center">
+    <div class="flex justify-center">
+      <button
+        type="submit"
+        class="px-6 py-2 mt-10 mb-10 bg-[#3980C0] text-white rounded-md"
+      >
+        <i class="fa-solid fa-download mr-2"></i>
+        Download
+      </button>
+    </div>
+  </div>
+</div>

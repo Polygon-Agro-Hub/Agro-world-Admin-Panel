@@ -1,0 +1,64 @@
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/reports'">
+    <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack  shadow-lg rounded-lg">
+    <div class="flex justify-end items-center mb-8">
+        <div class="flex items-center">
+            <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path
+                        d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+                </svg>
+            </i>
+
+            <div class="mr-5">
+                <p-dropdown
+                    styleClass="border border-2 rounded-xl w-auto h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+                    [options]="province" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Province"
+                    [(ngModel)]="selectedProvince" (onChange)="applyFilters()">
+                </p-dropdown>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-center">
+        <div>
+            <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">Province Reports</h2>
+        </div>
+    </div>
+
+    <!-- Corrected canvasjs-chart tag -->
+    <div class="pt-16">
+        <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md pt-20">
+        <table class="w-full text-sm text-center rtl:text-right border-[2px]">
+            <thead class="text-xs border-[2px]">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Crop</th>
+                    <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Grade A</th>
+                    <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Grade B</th>
+                    <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Grade C</th>
+                    <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let crop of groupByCrop(reportDetails)">
+                    <td class="px-6 py-3 border-[2px]">{{ crop.cropName }}</td>
+                    <td class="px-6 py-3 border-[2px]">{{ crop.gradeA ? crop.gradeA.totWeight + 'kg' : '-' }}</td>
+                    <td class="px-6 py-3 border-[2px]">{{ crop.gradeB ? crop.gradeB.totWeight + 'kg' : '-' }}</td>
+                    <td class="px-6 py-3 border-[2px]">{{ crop.gradeC ? crop.gradeC.totWeight + 'kg' : '-' }}</td>
+                    <td class="px-6 py-3 border-[2px]">{{ crop.totalWeight }}kg</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex justify-center items-center my-10">
+        <button class="bg-[#8AC440] px-6 py-3 rounded-lg text-white text-lg" (click)="exportToPDF()"> <i
+                class="fa-solid fa-download px-1"></i> Download</button>
+
+    </div>
+</div>

@@ -1,72 +1,57 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
-import { CollectionOfficerReportService } from '../../services/collection-officer/collection-officer-report.service';
-import { CommonModule } from '@angular/common';
-import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { CollectionOfficerReportService } from '../../../services/collection-officer/collection-officer-report.service';
 import jsPDF from 'jspdf';
 
-interface IdistrictReport {
+interface IProvinceReport {
   cropName: string,
   quality: string,
-  district: string,
+  province: string,
   totPrice: string,
   totWeight: string
 }
 
 @Component({
-  selector: 'app-collectionofficer-district-report',
+  selector: 'app-collection-officer-province-report',
   standalone: true,
   imports: [DropdownModule, NgxPaginationModule, FormsModule, CommonModule, CanvasJSAngularChartsModule],
-  templateUrl: './collectionofficer-district-report.component.html',
-  styleUrls: ['./collectionofficer-district-report.component.css']
+  templateUrl: './collection-officer-province-report.component.html',
+  styleUrl: './collection-officer-province-report.component.css'
 })
-export class CollectionofficerDistrictReportComponent implements OnInit {
-  districts: any[] = [];
-  selectedDistrict: any = { name: 'Colombo', code: 'COL' };
-  reportDetails: IdistrictReport[] = [];
+export class CollectionOfficerProvinceReportComponent implements OnInit {
+  province: any[] = []
+  selectedProvince: any = { name: 'Western', code: 'WEST' }
+  reportDetails: IProvinceReport[] = [];
   chartOptions: any;
 
   constructor(private collectionOfficerSrv: CollectionOfficerReportService) { }
 
+
   ngOnInit(): void {
-    this.districts = [
-      { name: 'Ampara', code: 'AMP' },
-      { name: 'Anuradhapura', code: 'ANU' },
-      { name: 'Badulla', code: 'BAD' },
-      { name: 'Batticaloa', code: 'BAT' },
-      { name: 'Colombo', code: 'COL' },
-      { name: 'Galle', code: 'GAL' },
-      { name: 'Gampaha', code: 'GAM' },
-      { name: 'Hambantota', code: 'HAM' },
-      { name: 'Jaffna', code: 'JAF' },
-      { name: 'Kalutara', code: 'KAL' },
-      { name: 'Kandy', code: 'KAN' },
-      { name: 'Kegalle', code: 'KEG' },
-      { name: 'Kilinochchi', code: 'KIL' },
-      { name: 'Kurunegala', code: 'KUR' },
-      { name: 'Mannar', code: 'MAN' },
-      { name: 'Matale', code: 'MAT' },
-      { name: 'Matara', code: 'MTR' },
-      { name: 'Moneragala', code: 'MON' },
-      { name: 'Mullaitivu', code: 'MUL' },
-      { name: 'Nuwara Eliya', code: 'NUE' },
-      { name: 'Polonnaruwa', code: 'POL' },
-      { name: 'Puttalam', code: 'PUT' },
-      { name: 'Ratnapura', code: 'RAT' },
-      { name: 'Trincomalee', code: 'TRI' },
-      { name: 'Vavuniya', code: 'VAV' }
+    this.province = [
+      { name: 'Western', code: 'WEST' },
+      { name: 'Central', code: 'CENT' },
+      { name: 'Southern', code: 'SOUTH' },
+      { name: 'Northern', code: 'NORTH' },
+      { name: 'Eastern', code: 'EAST' },
+      { name: 'North Western', code: 'NW' },
+      { name: 'North Central', code: 'NC' },
+      { name: 'Uva', code: 'UVA' },
+      { name: 'Sabaragamuwa', code: 'SAB' }
     ];
 
-    this.fetchAllDistrictReportDetails(this.selectedDistrict.name);
+    this.fetchAllProvinceReportDetails(this.selectedProvince.name)
+
   }
 
-  fetchAllDistrictReportDetails(district: string) {
-    console.log("Fetching report for district:", district);
-    this.collectionOfficerSrv.getDistrictReport(district).subscribe((response) => {
+  fetchAllProvinceReportDetails(province: string) {
+    this.collectionOfficerSrv.getProvinceReport(province).subscribe((response) => {
       console.log(response);
-      this.reportDetails = response;
+      this.reportDetails = response
       this.updateChart();
     },
       (error) => {
@@ -74,16 +59,17 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       });
   }
 
+
   applyFilters() {
-    if (this.selectedDistrict) {
-      console.log('Filtering by district:', this.selectedDistrict.name);
-      this.fetchAllDistrictReportDetails(this.selectedDistrict.name);
+    if (this.selectedProvince) {
+      console.log('Filtering by district:', this.selectedProvince.name);
+      this.fetchAllProvinceReportDetails(this.selectedProvince.name);
     } else {
       console.log('No district selected');
     }
   }
 
-  groupByCrop(reportDetails: IdistrictReport[]) {
+  groupByCrop(reportDetails: IProvinceReport[]) {
     const groupedReports: any[] = [];
 
     reportDetails.forEach((report) => {
@@ -172,9 +158,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     const gap = 20;
     const chartWidth = 140;
   
+    // Title
     doc.setFontSize(14);
-    doc.text(`${this.selectedDistrict.name} - Stacked Bar Chart`, 105, 15, { align: 'center' });
+    doc.text(`${this.selectedProvince.name} - Province Report`, 105, 15, { align: 'center' });
   
+    // Chart
     const groupedData = this.groupByCrop(this.reportDetails);
     const colors = {
       gradeA: "#FF9263",
@@ -215,11 +203,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   
       currentY += gap;
     });
-  
+    
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
-    doc.text("Total Weight (Kg)", startX + chartWidth / 2, currentY + 10, { align: 'center' });
-
+    doc.text("Total Weight (Kg)", startX + chartWidth / 2, currentY + 5, { align: 'center' });
+  
     const tableStartY = currentY + 20; 
     const cellPadding = 5;
     const cellHeight = 8;
@@ -256,11 +244,10 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       rowY += cellHeight;
     });
   
-    doc.save(`${this.selectedDistrict.name}_Report_StackedBarChart.pdf`);
+    // Save PDF
+    doc.save(`${this.selectedProvince.name}_Province_Report.pdf`);
   }
   
-
-
 
 
 }

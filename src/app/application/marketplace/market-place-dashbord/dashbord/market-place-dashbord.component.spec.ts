@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarketPlaceDashbordComponent } from './market-place-dashbord.component';
+import { MarketPlaceDashbordComponent } from '../market-place-dashbord.component';
 
 describe('MarketPlaceDashbordComponent', () => {
   let component: MarketPlaceDashbordComponent;

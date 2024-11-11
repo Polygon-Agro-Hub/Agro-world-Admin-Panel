@@ -56,7 +56,7 @@ import { PaymentSlipReportComponent } from './application/report-section/payment
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
 import { FarmerListReportComponent } from './application/report-section/farmer-list-report/farmer-list-report.component';
 import { CollectionOfficerProvinceReportComponent } from './application/report-section/collection-officer-province-report/collection-officer-province-report.component';
-import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/market-place-dashbord.component';
+import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/dashbord/market-place-dashbord.component';
 import { MarketPlaceActionsComponent } from './application/marketplace/market-place-actions/market-place-actions.component';
 
 export const routes: Routes = [

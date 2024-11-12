@@ -130,15 +130,15 @@ export class FarmerListReportComponent {
 
     doc.text(`Full Total (Rs.): ${this.farmerList.totalPaymentAmount}`, 5, 160, { align: 'left' });
 
-    const qrCodeImage = this.farmerList.paymentImage;  // Assuming this is a base64 image or URL
-    const qrWidth = 40;
-    const qrHeight = 40;
-    const qrX = 160;
-    const qrY = 180;
+    // const qrCodeImage = this.farmerList.paymentImage;  // Assuming this is a base64 image or URL
+    // const qrWidth = 40;
+    // const qrHeight = 40;
+    // const qrX = 160;
+    // const qrY = 180;
   
-    if (qrCodeImage) {
-      doc.addImage(qrCodeImage, 'PNG', qrX, qrY, qrWidth, qrHeight);  // Make sure the format is correct ('PNG', 'JPEG')
-    }
+    // if (qrCodeImage) {
+    //   doc.addImage(qrCodeImage, 'PNG', qrX, qrY, qrWidth, qrHeight);  // Make sure the format is correct ('PNG', 'JPEG')
+    // }
 
     doc.save('Farmer_Details_Report.pdf');
    }

@@ -263,15 +263,17 @@
       <p class="text-gray-500 dark:text-textDark mt-3">Officer’s QR Code</p>
     </div>
   </div>
-  <div class="flex flex-col justify-center">
-    <div class="flex justify-center">
-      <button
-        type="submit"
-        class="px-6 py-2 mt-10 mb-10 bg-[#3980C0] text-white rounded-md"
-      >
-        <i class="fa-solid fa-download mr-2"></i>
-        Download
-      </button>
-    </div>
+</div>
+
+<div class="flex flex-col justify-center">
+  <div class="flex justify-center">
+    <button
+      (click)="downloadPDF()"
+      type="submit"
+      class="px-6 py-2 mt-10 mb-10 bg-[#3980C0] text-white rounded-md"
+    >
+      <i class="fa-solid fa-download mr-2"></i>
+      Download
+    </button>
   </div>
 </div>

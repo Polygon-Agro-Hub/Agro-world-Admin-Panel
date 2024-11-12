@@ -1,0 +1,161 @@
+<div class="flex flex-row justify-between items-center mb-6">
+    <p class="text-lg text-black font-semibold">Add Product</p>
+    <div>
+        <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2">Cancel</button>
+        <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2">Save</button>
+    </div>
+
+</div>
+<div class="flex flex-row justify-between">
+    <div class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[60%]">
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Display Name *</label>
+            <input type="text"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Crop *</label>
+            <select
+                class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                <option>option1</option>
+                <option>option1</option>
+                <option>option1</option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Variety *</label>
+            <select
+                class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                <option>option1</option>
+                <option>option1</option>
+                <option>option1</option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Price *</label>
+            <div class="flex items-center space-x-4 mt-3">
+                <div class="flex items-center space-x-2">
+                    <input class="w-5 h-5" type="radio" id="sinhala" name="employeeType" value="With Discount" />
+                    <label class="block text-sm font-medium text-gray-700 dark:text-textDark">With Discount</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input class="w-5 h-5" type="radio" value="No Discount" />
+                    <label for="english" class="block text-sm font-medium text-gray-700 dark:text-textDark">No
+                        Discount</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Display Type *</label>
+            <select
+                class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                <option selected></option>
+                <option>With Discount and Actual Price</option>
+                <option>With Actual Price and Sale Price</option>
+                <option>With Actual Price,Sale Price and Discount</option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Discount Percentage *</label>
+            <input type="number" min="0.0"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Actual Price *</label>
+            <input type="number" min="0.0"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Sale Price *</label>
+            <input type="number" min="0.0"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div class="mb-6">
+            <label class="text-[#534E4E]">Sale Price *</label>
+            <section>
+                <mat-form-field class="w-[100%]">
+                    <mat-label>tags</mat-label>
+                    <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords"
+                        [(ngModel)]="templateKeywords">
+                        @for (keyword of templateKeywords(); track keyword) {
+                        <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
+                            {{keyword}}
+                            <button matChipRemove aria-label="'remove template form' + keyword">
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                        }
+                    </mat-chip-grid>
+                    <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+                        (matChipInputTokenEnd)="addTemplateKeyword($event)" />
+                </mat-form-field>
+            </section>
+
+        </div>
+
+    </div>
+
+    <div class="flex flex-col px-6 py-3 mx-6 w-[40%]">
+        <div class="rounded-lg shadow-lg px-12 py-6">
+            <p class="text-lg text-black font-medium">Preview</p>
+
+            <div
+                class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
+                <div class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
+                    style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%);">
+                    <p class="text-white ">2%</p>
+                    <p class="text-white ">off</p>
+                </div>
+
+
+                <img src="../../../../assets/images/login.png" alt="Green Capsicum"
+                    class="w-full h-32 object-cover px-4 py-2 mt-8">
+                <p class="text-lg text-black my-2">Green Capcicum</p>
+                <p class="text-lg text-[#00957D] my-1">Rs.200.00</p>
+                <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
+                    <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
+                    <p class="text-lg text-gray-300">Add to Cart</p>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
+            <p class="text-lg text-balck font-medium mb-5">Quantity</p>
+            <div class="my-3">
+                <label class="text-lg text-[#534E4E]">Default Unit Type *</label>
+                <select
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                    <option selected></option>
+                    <option>Kg</option>
+                    <option>g</option>
+                </select>
+            </div>
+
+            <div class="my-3">
+                <label class="text-lg text-[#534E4E]">Starting Value *</label>
+                <input type="number" min="0.0"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <div class="my-3">
+                <label class="text-lg text-[#534E4E]">Increase/Decrease by *</label>
+                <input type="number" min="0.0"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>

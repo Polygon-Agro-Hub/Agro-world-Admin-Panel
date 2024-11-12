@@ -19,7 +19,7 @@ export class SidenavComponent implements OnInit {
   screenWidth = 0;
   isLeftButtonVisible: boolean = true;
   navData = navbarData;
-  ispopupMarketPrice = true
+  ispopupMarketPrice = false
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object  , private router: Router) {}

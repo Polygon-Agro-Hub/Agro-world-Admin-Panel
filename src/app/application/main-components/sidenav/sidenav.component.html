@@ -25,14 +25,16 @@
         <i class="sidenav-link-icon" [class]="'fa-solid fa-shop'"></i>
         <span class="sidenav-link-text" *ngIf="isExpanded">Market-Place</span>
       </a>
-      <div *ngIf="ispopupMarketPrice" class="hover:bg-[#FFFFFF33] rounded-b-lg">
-        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20" onclick="window.location.href='/market'">
-          <i  class="fa-solid fa-shop text-white text-lg"></i>
-          <p class="text-white text-lg ml-10">Market</p>
+      <div *ngIf="ispopupMarketPrice" class="bg-[#FFFFFF33] rounded-b-lg">
+        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20"
+          onclick="window.location.href='/market'">
+          <div class="w-5"></div>
+          <p class="text-white ml-10">Dashbord</p>
         </div>
-        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20" onclick="window.location.href='/market/action'">
-          <i  class="fa-solid fa-shop text-white text-lg"></i>
-          <p class="text-white text-lg ml-10">Market</p>
+        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20"
+          onclick="window.location.href='/market/action'">
+          <div class="w-5"></div>
+          <p class="text-white ml-10">Action</p>
         </div>
 
       </div>

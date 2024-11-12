@@ -1,0 +1,65 @@
+<p class="text-[#4B5563] text-xl font-semibold mx-5 my-5">Recent Orders</p>
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-4">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-right">
+                    INVOICE NO
+                </th>
+                <th scope="col" class="px-6 py-3 text-left">
+                    ORDER TIME
+                </th>
+                <th scope="col" class="px-6 py-3 text-left">
+                    CUSTOMER NAME
+                </th>
+                <th scope="col" class="px-6 py-3 text-left">
+                    METHOD
+                </th>
+                <th scope="col" class="px-6 py-3 text-left">
+                    AMOUNT
+                </th>
+                <th scope="col" class="px-6 py-3 text-center">
+                    STATUS
+                </th>
+                <th scope="col" class="px-6 py-3 text-center">
+                    INVOICE
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" *ngFor="let item of orderObj">
+                <th scope="row" class="font-normal text-gray-900 dark:text-white text-center">
+                   {{item.invoiceNo}}
+                </th>
+                <td class="px-6 py-4 text-left">
+                    {{item.time}}
+                </td>
+                <td class="px-6 py-4 text-left">
+                    {{item.cname}}
+                </td>
+                <td class="px-6 py-4 text-left">
+                    {{item.method}}
+                </td>
+                <td class="px-6 py-4 text-left">
+                    {{item.amount}}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <div *ngIf="item.status ==='Delivered'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">
+                        {{item.status}}
+                    </div>
+                    <div *ngIf="item.status ==='Processing'" class="bg-[#CFE1FF] px-3 py-2 text-[#3B82F6] rounded-xl">
+                        {{item.status}}
+                    </div>
+                    <div *ngIf="item.status ==='Assigned'" class="bg-[#F8FFA6] px-3 py-2 text-[#A8A100] rounded-xl">
+                        {{item.status}}
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <i class="fa-solid fa-file-invoice-dollar text-3xl text-center"></i>
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+</div>

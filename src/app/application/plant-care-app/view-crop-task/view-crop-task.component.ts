@@ -13,6 +13,8 @@ class CropTask {
   'taskIndex': string;
   'days': string;
   'taskEnglish': string;
+  'imageLink' : string;
+  'videoLink': string;
   'id': string;
 }
 
@@ -128,6 +130,7 @@ export class ViewCropTaskComponent implements OnInit {
     this.fetchAllCropTask(this.page, this.itemsPerPage); // Include itemsPerPage
   }
 
-
+  
+  
 
 }

@@ -56,8 +56,10 @@ import { PaymentSlipReportComponent } from './application/report-section/payment
 import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
 import { FarmerListReportComponent } from './application/report-section/farmer-list-report/farmer-list-report.component';
 import { CollectionOfficerProvinceReportComponent } from './application/report-section/collection-officer-province-report/collection-officer-province-report.component';
-import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/market-place-dashbord.component';
+import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/dashbord/market-place-dashbord.component';
 import { MarketPlaceActionsComponent } from './application/marketplace/market-place-actions/market-place-actions.component';
+import { CreateCropGroupComponent } from './application/plant-care-app/create-crop-group/create-crop-group.component';
+import { ViewCropGroupComponent } from './application/plant-care-app/view-crop-group/view-crop-group.component';
 
 export const routes: Routes = [
   {
@@ -177,6 +179,14 @@ export const routes: Routes = [
           {
             path: 'add-block-words',
             component: AddBlockWordsComponent,
+          },
+          {
+            path: 'create-crop-group',
+            component: CreateCropGroupComponent,
+          },
+          {
+            path: 'view-crop-group',
+            component: ViewCropGroupComponent,
           },
         ],
       },

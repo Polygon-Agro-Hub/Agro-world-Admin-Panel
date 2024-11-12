@@ -11,27 +11,28 @@ import {
   HttpClient,
   HttpClientModule,
   HttpErrorResponse,
+  HttpHeaders,
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NgxColorsModule } from 'ngx-colors';
 
+
+
 interface NewCropCalender {
   id: number;
-  cropName: string;
-  sinhalaCropName: string;
-  tamilCropName: string;
-  variety: string;
-  sinhalaVariety: string;
-  tamilVariety: string;
-  CultivationMethod: string;
-  NatureOfCultivation: string;
-  CropDuration: string;
+  cropGroupId : any;
+  varietyEnglish: string;
+  varietySinhala: string;
+  varietyTamil: string;
+  methodEnglish: string;
+  natOfCulEnglish: string;
+  cropDuration: string;
   createdAt: string;
-  SpecialNotes: string;
-  sinhalaSpecialNotes: string;
-  tamilSpecialNotes: string;
+  specialNotesEnglish: string;
+  specialNotesSinhala: string;
+  specialNotesTamil: string;
   cropColor: string;
-  SuitableAreas: string;
+  suitableAreas: string;
   image: string;
 }
 
@@ -41,6 +42,7 @@ import Swal from 'sweetalert2';
 
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-create-crop-calender',
@@ -96,26 +98,25 @@ export class CreateCropCalenderComponent {
   selectedImage: string | ArrayBuffer | null = null;
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   selectedPage:'pageOne' | 'pageTwo' = 'pageOne'
+  groupList: any[] = [];
   
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private cropCalendarService: CropCalendarService
+    private cropCalendarService: CropCalendarService,
+    private http: HttpClient,
   ) {
     // Initialize the form with FormBuilder
     this.cropForm = this.fb.group({
-      cropName: ['',[Validators.required]],
-      sinhalaCropName: ['',[Validators.required]],
-      tamilCropName: ['',[Validators.required]],
+      groupId:['',[Validators.required]],
       variety: ['',[Validators.required]],
       sinhalaVariety: ['',[Validators.required]],
       tamilVariety: ['',[Validators.required]],
       cultivationMethod: ['',[Validators.required]],
       natureOfCultivation: ['',[Validators.required]],
       cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      cropCategory: ['',[Validators.required]],
       specialNotes: ['',[Validators.required]],
       sinhalaSpecialNotes: ['',[Validators.required]],
       tamilSpecialNotes: ['',[Validators.required]],
@@ -277,6 +278,7 @@ export class CreateCropCalenderComponent {
     if (this.cropId!=null) {
       this.getCropCalenderById(this.cropId);
     }
+    this.getAllRoles();
   }
 
   getCropCalenderById(id: any) {
@@ -285,11 +287,12 @@ export class CreateCropCalenderComponent {
       (data) => {
         this.cropCalender = data;
         this.isLoading = false;
+        console.log(data);
 
 
 
-        if (this.cropCalender[0]?.SuitableAreas) {
-          const selectedAreas = this.cropCalender[0].SuitableAreas.split(', ').map(area => area.trim());
+        if (this.cropCalender[0]?.suitableAreas) {
+          const selectedAreas = this.cropCalender[0].suitableAreas.split(', ').map(area => area.trim());
           // Set the parsed array as the default value for the suitableAreas form control
           this.cropForm.patchValue({
             suitableAreas: selectedAreas,
@@ -315,20 +318,20 @@ export class CreateCropCalenderComponent {
       formValue.suitableAreas = formValue.suitableAreas.join(', ');
     }
     const formData = new FormData();
-    formData.append('cropName', this.cropCalender[0].cropName);
-    formData.append('sinhalaCropName', this.cropCalender[0].sinhalaCropName);
-    formData.append('tamilCropName', this.cropCalender[0].tamilCropName);
-    formData.append('variety', this.cropCalender[0].variety);
-    formData.append('sinhalaVariety', this.cropCalender[0].sinhalaVariety);
-    formData.append('tamilVariety', this.cropCalender[0].tamilVariety);
-    formData.append('CultivationMethod', this.cropCalender[0].CultivationMethod);
-    formData.append('NatureOfCultivation', this.cropCalender[0].NatureOfCultivation);
-    formData.append('CropDuration', this.cropCalender[0].CropDuration);
-    formData.append('SpecialNotes', this.cropCalender[0].SpecialNotes);
-    formData.append('sinhalaSpecialNotes', this.cropCalender[0].sinhalaSpecialNotes);
-    formData.append('tamilSpecialNotes', this.cropCalender[0].tamilSpecialNotes);
-    formData.append('SuitableAreas', formValue.suitableAreas);
+    formData.append('groupId', this.cropCalender[0].cropGroupId );
+    formData.append('varietyEnglish', this.cropCalender[0].varietyEnglish);
+    formData.append('varietySinhala', this.cropCalender[0].varietySinhala);
+    formData.append('varietyTamil', this.cropCalender[0].varietyTamil);
+    formData.append('methodEnglish', this.cropCalender[0].methodEnglish);
+    formData.append('natOfCulEnglish', this.cropCalender[0].natOfCulEnglish);
+    formData.append('cropDuration', this.cropCalender[0].cropDuration);
+    formData.append('specialNotesEnglish', this.cropCalender[0].specialNotesEnglish);
+    formData.append('specialNotesSinhala', this.cropCalender[0].specialNotesSinhala);
+    formData.append('specialNotesTamil', this.cropCalender[0].specialNotesTamil);
+    formData.append('suitableAreas', formValue.suitableAreas);
     formData.append('cropColor', this.cropCalender[0].cropColor);
+
+    console.log(formData);
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -423,6 +426,36 @@ export class CreateCropCalenderComponent {
             }
           );
     
+  }
+
+
+  getAllRoles() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    
+    this.http
+      .get<any>(`${environment.API_BASE_URL}crop-groups`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          
+          this.groupList = response.groups;
+          console.log(response);
+
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+          
+          // Handle error...
+        }
+      );
   }
 }
 

@@ -17,6 +17,9 @@
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Index</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Days</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Task</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Image</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video</th>
+                
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Status</th>
                 </tr>
             </thead>
@@ -37,6 +40,30 @@
                     <td class="px-4 py-3 text-textLight dark:text-textDark text-center">{{task.taskIndex}}</td>
                     <td class="px-4 py-3 text-textLight dark:text-textDark text-center">{{task.days}}</td>
                     <td class="px-4 py-3 text-textLight dark:text-textDark text-center">{{task.taskEnglish}}</td>
+
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.imageLink; else noImage">
+                          <a [attr.href]="task.imageLink" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-image text-blue-600 hover:text-blue-800"></i>
+                          </a>
+                        </ng-container>
+                        <ng-template #noImage>
+                          No image
+                        </ng-template>
+                      </td>
+
+                      
+
+                      <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.videoLink; else noVideo">
+                          <a [attr.href]="task.videoLink" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
+                          </a>
+                        </ng-container>
+                        <ng-template #noVideo>
+                          No video
+                        </ng-template>
+                      </td>
                     
 
 
@@ -58,6 +85,8 @@
                           </span>
                         </div>
                       </td>
+
+                      
 
 
                     <td class="px-4 py-3 text-center">

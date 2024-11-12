@@ -9,11 +9,12 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 
 interface CultivationItems {
+  id: any;
   cropName: string;
   variety: string;
-  CultivationMethod: string;
-  NatureOfCultivation: string;
-  CropDuration: string;
+  cultivationMethod: string;
+  natureOfCultivation: string;
+  cropDuration: string;
 }
 
 interface NewsItem {
@@ -21,9 +22,9 @@ interface NewsItem {
   cropName: string;
   cropCalendar : number;
   variety: string;
-  CultivationMethod: string;
-  NatureOfCultivation: string;
-  CropDuration: string;
+  cultivationMethod: string;
+  natureOfCultivation: string;
+  cropDuration: string;
 }
 
 
@@ -97,6 +98,7 @@ export class SlaveCropCalendarComponent {
       .subscribe(
         (data) => {
           this.newsItems = data;
+          console.log(data);
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);

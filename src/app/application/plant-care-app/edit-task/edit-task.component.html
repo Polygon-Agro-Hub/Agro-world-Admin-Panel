@@ -95,6 +95,27 @@
                 </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
         </div>
+
+        <hr class="border-[2px] border-gray-400 my-10" />
+
+        <div class="mb-4">
+            <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+                Number of required images
+            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.reqImages" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div class="mb-4">
+            <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+                Image Link
+            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.imageLink" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div class="mb-4">
+            <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+                Video Link
+            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.videoLink" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
         <div class="flex justify-end mt-6">
             <div class="w-[20px] "></div>
             <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md " type="button " (click)="updateTask()">

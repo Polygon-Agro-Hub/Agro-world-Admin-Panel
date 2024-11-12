@@ -53,8 +53,12 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       taskTamil: ['',[Validators.required]],
       taskDescriptionEnglish: ['',[Validators.required]],
       taskDescriptionSinhala: ['',[Validators.required]],
-      taskDescriptionTamil: ['',[Validators.required]]
+      taskDescriptionTamil: ['',[Validators.required]],
+      reqImages: ['',[Validators.required]],
+      imageLink: ['',[Validators.required]],
+      videoLink: ['',[Validators.required]]
     })
+
 
 
   }
@@ -151,4 +155,7 @@ class Croptask {
   "taskDescriptionEnglish": string
   "taskDescriptionSinhala": string
   "taskDescriptionTamil": string
+  "reqImages": string
+  "imageLink": string
+  "videoLink": string
 }

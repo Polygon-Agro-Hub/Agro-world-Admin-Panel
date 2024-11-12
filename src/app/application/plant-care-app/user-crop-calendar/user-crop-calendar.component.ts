@@ -13,6 +13,8 @@ interface TaskList {
   taskIndex : any;
   days: string;
   taskEnglish: string;
+  imageLink : string;
+  videoLink: string;
   status: string;
   cropCalendarId: any;
 }

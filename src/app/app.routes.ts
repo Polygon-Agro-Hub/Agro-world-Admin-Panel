@@ -61,6 +61,7 @@ import { MarketPlaceActionsComponent } from './application/marketplace/market-pl
 import { CreateCropGroupComponent } from './application/plant-care-app/create-crop-group/create-crop-group.component';
 import { ViewCropGroupComponent } from './application/plant-care-app/view-crop-group/view-crop-group.component';
 import { MarketAddProductComponent } from './application/marketplace/market-add-product/market-add-product.component';
+import { ViewProductsListComponent } from './application/marketplace/view-products-list/view-products-list.component';
 
 export const routes: Routes = [
   {
@@ -364,6 +365,10 @@ export const routes: Routes = [
             path: 'add-product',
             component: MarketAddProductComponent,
           },
+          {
+            path: 'view-products-list',
+            component: ViewProductsListComponent,
+          }
         ]
       }
     ],

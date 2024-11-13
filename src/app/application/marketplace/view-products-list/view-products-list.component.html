@@ -76,38 +76,61 @@
   </div>
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200 table-auto">
-        <thead>
-            <tr>
-                <th class="py-3 font-normal text-gray-500 text-left">Display Name</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Crop</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Variety</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Display</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Discount(%)</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Actual</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Sale</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Unit</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Start Value</th>
-                <th class="py-3 font-normal text-gray-500 text-center">Change By</th>
-                <th class="py-3 font-normal text-gray-500 text-center"></th>
-                <th class="py-3 font-normal text-gray-500 text-center"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="py-3"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
-                <td class="px-4 py-3 text-center">
-                    <button
+      <thead>
+        <tr>
+          <th class="py-3 font-normal text-gray-500 text-left">Display Name</th>
+          <th class="py-3 font-normal text-gray-500 text-center">Crop</th>
+          <th class="py-3 font-normal text-gray-500 text-center">Variety</th>
+          <th class="py-3 font-normal text-gray-500 text-center">Display</th>
+          <th class="py-3 font-normal text-gray-500 text-center">
+            Discount(%)
+          </th>
+          <th class="py-3 font-normal text-gray-500 text-center">Actual</th>
+          <th class="py-3 font-normal text-gray-500 text-center">Sale</th>
+          <th class="py-3 font-normal text-gray-500 text-center">Unit</th>
+          <th class="py-3 font-normal text-gray-500 text-center">
+            Start Value
+          </th>
+          <th class="py-3 font-normal text-gray-500 text-center">Change By</th>
+          <th class="py-3 font-normal text-gray-500 text-center"></th>
+          <th class="py-3 font-normal text-gray-500 text-center"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of viewProductList">
+          <td class="py-3">
+            {{ item.itemDisplayName }}
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.cropNameEnglish }}
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.cropVarietyEnglish }}
+          </td>
+          <td
+            class="px-4 py-3 text-center text-textLight dark:text-textDark"
+          ></td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.itemDiscountedPrice }}
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.itemNormalPrice }}
+          </td>
+          <td
+            class="px-4 py-3 text-center text-textLight dark:text-textDark"
+          ></td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.unitType }}
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.startValue }}
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ item.changeby }}
+          </td>
+          <td class="px-4 py-3 text-center">
+            <button
               class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
-              
             >
               <svg
                 fill="currentColor"
@@ -121,11 +144,9 @@
                 ></path>
               </svg>
             </button>
-                </td>
-                <td class="px-4 py-3 text-center">
-                    <button
-              class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
-            >
+          </td>
+          <td class="px-4 py-3 text-center">
+            <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]">
               <svg
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,9 +164,9 @@
                 />
               </svg>
             </button>
-                </td>
-            </tr>
-        </tbody>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>

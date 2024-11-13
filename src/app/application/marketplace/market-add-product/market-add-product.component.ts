@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
-import { CommonModule } from '@angular/common';  // Importing CommonModule
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-market-add-product',
@@ -25,23 +25,24 @@ import { CommonModule } from '@angular/common';  // Importing CommonModule
 export class MarketAddProductComponent implements OnInit {
   readonly templateKeywords = signal<string[]>([]);
   announcer = inject(LiveAnnouncer);
-  productObj:MarketPrice = new MarketPrice()
+  productObj: MarketPrice = new MarketPrice();
 
-  cropsObj: Crop[] = []
+  cropsObj: Crop[] = [];
+  selectedVarieties!: Variety[];
+  isVerityVisible = false
+  constructor(private marketSrv: MarketPlaceService) { }
 
-  constructor(
-    private marketSrv: MarketPlaceService
-  ) { }
 
   ngOnInit(): void {
     this.getAllCropVerity();
+    this.calculeSalePrice();
   }
 
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
         this.cropsObj = res;
-        console.log(res);
+        console.log("Crops fetched successfully:", res);
       },
       (error) => {
         console.log("Error: Crop variety fetching issue", error);
@@ -49,8 +50,35 @@ export class MarketAddProductComponent implements OnInit {
     );
   }
 
-  onSubmit(){
+  onCropChange() {
+    const sample = this.cropsObj.filter(crop => crop.cropId === +this.productObj.selectId); 
 
+    console.log("Filtered crops:", sample);
+
+    if (sample.length > 0) {
+      this.selectedVarieties = sample[0].variety; 
+      console.log("Selected crop varieties:", this.selectedVarieties);
+      this.isVerityVisible = true
+    } else {
+      console.log("No crop found with selectId:", this.productObj.selectId);
+    }
+  }
+
+  calculeSalePrice(){
+    this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice /100;
+    console.log(this.productObj.salePrice);
+  }
+
+  onCancel(){
+    this.productObj = new MarketPrice();
+    this.selectedVarieties = [];
+    this.isVerityVisible = false;
+    this.templateKeywords.update(() => []);
+  }
+
+  onSubmit() {
+    // Handle form submission
+    console.log("Form submitted:", this.productObj);
   }
 
   removeTemplateKeyword(keyword: string) {
@@ -85,13 +113,16 @@ class Crop {
 }
 
 class MarketPrice {
-  cropId!:number
-  displayName!:string
-  normalPrice!:string
-  discountedPrice!:string
-  promo!:string
+  cropName!: string;
+  variety!: string;
+  displayName!: string;
+  normalPrice: number = 0;
+  discountedPrice: number = 0;
+  promo: boolean = false;
 
-  cropName!:String
+  selectId!: number;
+  displaytype!:string
+  salePrice:number = 0
 }
 
 class Variety {

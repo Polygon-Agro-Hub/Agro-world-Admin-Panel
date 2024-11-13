@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-market-add-product',
@@ -29,9 +30,9 @@ export class MarketAddProductComponent implements OnInit {
 
   cropsObj: Crop[] = [];
   selectedVarieties!: Variety[];
-  isVerityVisible = false
-  constructor(private marketSrv: MarketPlaceService) { }
+  isVerityVisible = false;
 
+  constructor(private marketSrv: MarketPlaceService) { }
 
   ngOnInit(): void {
     this.getAllCropVerity();
@@ -51,34 +52,83 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onCropChange() {
-    const sample = this.cropsObj.filter(crop => crop.cropId === +this.productObj.selectId); 
+    const sample = this.cropsObj.filter(crop => crop.cropId === +this.productObj.selectId);
 
     console.log("Filtered crops:", sample);
 
     if (sample.length > 0) {
-      this.selectedVarieties = sample[0].variety; 
+      this.selectedVarieties = sample[0].variety;
       console.log("Selected crop varieties:", this.selectedVarieties);
-      this.isVerityVisible = true
+      this.isVerityVisible = true;
     } else {
       console.log("No crop found with selectId:", this.productObj.selectId);
     }
   }
 
-  calculeSalePrice(){
-    this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice /100;
+  calculeSalePrice() {
+    this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice / 100;
     console.log(this.productObj.salePrice);
   }
 
-  onCancel(){
+  onCancel() {
     this.productObj = new MarketPrice();
     this.selectedVarieties = [];
     this.isVerityVisible = false;
     this.templateKeywords.update(() => []);
+    this.updateTags();
+  }
+
+  private updateTags() {
+    this.productObj.tags = this.templateKeywords().join(', ');
   }
 
   onSubmit() {
-    // Handle form submission
+    this.updateTags();
+    console.log(this.productObj.promo);
+    
+
+    if (this.productObj.promo) {
+      if (!this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby || !this.productObj.discountedPrice || !this.productObj.salePrice) {
+        Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+        return;
+      }
+    }else {
+      if (!this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby) {
+        Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+        return;
+      }
+    }
+
+    this.marketSrv.createProduct(this.productObj).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire('Success', 'Product Created Successfully', 'success');
+          this.onCancel();
+        } else {
+          Swal.fire('Error', 'Product Creation Failed', 'error');
+        }
+      },
+      (error) => {
+        console.error("Product creation error:", error);
+        Swal.fire('Error', 'An error occurred while creating the product', 'error');
+      }
+    );
     console.log("Form submitted:", this.productObj);
+  }
+
+  addTemplateKeyword(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.templateKeywords.update(keywords => {
+        const updatedKeywords = [...keywords, value];
+        this.updateTags(); // Update tags after adding a keyword
+        return updatedKeywords;
+      });
+      this.announcer.announce(`added ${value} to template form`);
+    }
+
+    event.chipInput!.clear();
   }
 
   removeTemplateKeyword(keyword: string) {
@@ -89,20 +139,10 @@ export class MarketAddProductComponent implements OnInit {
       }
 
       keywords.splice(index, 1);
+      this.updateTags(); // Update tags after removing a keyword
       this.announcer.announce(`removed ${keyword} from template form`);
       return [...keywords];
     });
-  }
-
-  addTemplateKeyword(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.templateKeywords.update(keywords => [...keywords, value]);
-      this.announcer.announce(`added ${value} to template form`);
-    }
-
-    event.chipInput!.clear();
   }
 }
 
@@ -114,15 +154,19 @@ class Crop {
 
 class MarketPrice {
   cropName!: string;
-  variety!: string;
+  variety!: number;
   displayName!: string;
   normalPrice: number = 0;
   discountedPrice: number = 0;
   promo: boolean = false;
+  unitType!: string;
+  startValue!: number;
+  changeby!: number;
+  tags: string = ''; // Initialize tags as an empty string
 
   selectId!: number;
-  displaytype!:string
-  salePrice:number = 0
+  displaytype!: string;
+  salePrice: number = 0;
 }
 
 class Variety {

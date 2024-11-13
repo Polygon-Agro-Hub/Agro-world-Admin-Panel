@@ -20,4 +20,17 @@ export class MarketPlaceService {
     let url = `${this.apiUrl}market-place/get-crop-category`;
     return this.http.get<any>(url, { headers });
   }
+
+
+  createProduct(Data: any): Observable<any> {
+    console.log("add marketttttt");
+    
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}market-place/add-market-product`, Data, {
+      headers,
+    });
+  }
 }

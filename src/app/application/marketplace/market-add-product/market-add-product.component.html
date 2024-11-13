@@ -4,7 +4,7 @@
         <p class="text-lg text-black font-semibold">Add Product</p>
         <div>
             <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">Cancel</button>
-            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit">Save</button>
+            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">Save</button>
         </div>
 
     </div>
@@ -15,7 +15,7 @@
 
             <div class="mb-6">
                 <label class="text-[#534E4E]">Display Name *</label>
-                <input type="text" [(ngModel)]="productObj.cropName" id="cropName" name="cropName"
+                <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" 
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
@@ -40,7 +40,7 @@
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [(ngModel)]="productObj.variety">
                     <option selected disabled>--- Select Variety ---</option>
-                    <option *ngFor="let variety of selectedVarieties" [value]="variety.varietyEnglish">
+                    <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
                         {{ variety.varietyEnglish }}
                     </option>
                 </select>
@@ -144,7 +144,7 @@
 
                 <div
                     class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
-                    <div *ngIf="productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D'" class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
+                    <div *ngIf="productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D'" class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
                         style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%);">
                         <p *ngIf="productObj.discountedPrice === 0" class="text-white ">#%</p>
                         <p *ngIf="productObj.discountedPrice !== 0" class="text-white ">{{productObj.discountedPrice}}%</p>
@@ -172,22 +172,23 @@
                 <div class="my-3">
                     <label class="text-lg text-[#534E4E]">Default Unit Type *</label>
                     <select
+                        id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
                         class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
                         <option selected></option>
-                        <option>Kg</option>
-                        <option>g</option>
+                        <option value="Kg">Kg</option>
+                        <option value="g">g</option>
                     </select>
                 </div>
 
                 <div class="my-3">
                     <label class="text-lg text-[#534E4E]">Starting Value *</label>
-                    <input type="number" min="0.0"
+                    <input type="number" min="0.0" id="startValue" name="startValue" [(ngModel)]="productObj.startValue"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="my-3">
                     <label class="text-lg text-[#534E4E]">Increase/Decrease by *</label>
-                    <input type="number" min="0.0"
+                    <input type="number" min="0.0" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 

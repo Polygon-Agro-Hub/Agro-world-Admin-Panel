@@ -38,7 +38,7 @@
                 <label class="text-[#534E4E]">Variety *</label>
                 <select id="variety" name="variety"
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                    [(ngModel)]="productObj.variety">
+                    [(ngModel)]="productObj.variety" (change)="selectVerityImage()">
                     <option selected disabled>--- Select Variety ---</option>
                     <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
                         {{ variety.varietyEnglish }}
@@ -152,13 +152,13 @@
                     </div>
 
 
-                    <img src="../../../../assets/images/login.png" alt="Green Capsicum"
-                        class="w-full h-32 object-cover px-4 py-2 mt-8">
+                    <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8">
+
                     <p class="text-lg text-black my-2">Green Capcicum</p>
 
                     <p *ngIf="(productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D') && productObj.salePrice !== 0" class="text-[#00957D] my-1 line-through">Rs.{{productObj.normalPrice}}.00</p>
                     <p *ngIf="productObj.salePrice === 0" class="text-xl text-[#00957D] my-1">Rs.0.00</p>
-                    <p *ngIf="productObj.salePrice !== 0" class="text-xl text-[#00957D] my-1">Rs. {{productObj.salePrice}}.00</p>
+                    <p *ngIf="productObj.salePrice !== 0" class="text-xl text-[#00957D] my-1">Rs. {{productObj.salePrice}}</p>
                     <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
                         <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
                         <p class="text-lg text-gray-300 mx-3">Add to Cart</p>

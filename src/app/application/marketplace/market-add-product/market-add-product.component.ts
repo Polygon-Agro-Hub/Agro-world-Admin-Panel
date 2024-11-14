@@ -31,6 +31,7 @@ export class MarketAddProductComponent implements OnInit {
   cropsObj: Crop[] = [];
   selectedVarieties!: Variety[];
   isVerityVisible = false;
+  selectedImage!:any
 
   constructor(private marketSrv: MarketPlaceService) { }
 
@@ -64,6 +65,15 @@ export class MarketAddProductComponent implements OnInit {
       console.log("No crop found with selectId:", this.productObj.selectId);
     }
   }
+
+  selectVerityImage(){
+    const sample = this.selectedVarieties.filter(verity => verity.id === +this.productObj.variety);
+    console.log(sample[0].image);
+    this.selectedImage = sample[0].image
+    
+    
+  }  
+  
 
   calculeSalePrice() {
     this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice / 100;
@@ -172,5 +182,6 @@ class MarketPrice {
 class Variety {
   id!: number;
   varietyEnglish!: string;
-  image!:any[]
+  image!:any
 }
+

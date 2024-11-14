@@ -122,7 +122,7 @@ export class MarketAddProductComponent implements OnInit {
     if (value) {
       this.templateKeywords.update(keywords => {
         const updatedKeywords = [...keywords, value];
-        this.updateTags(); // Update tags after adding a keyword
+        this.updateTags();
         return updatedKeywords;
       });
       this.announcer.announce(`added ${value} to template form`);
@@ -139,7 +139,7 @@ export class MarketAddProductComponent implements OnInit {
       }
 
       keywords.splice(index, 1);
-      this.updateTags(); // Update tags after removing a keyword
+      this.updateTags();
       this.announcer.announce(`removed ${keyword} from template form`);
       return [...keywords];
     });
@@ -162,7 +162,7 @@ class MarketPrice {
   unitType!: string;
   startValue!: number;
   changeby!: number;
-  tags: string = ''; // Initialize tags as an empty string
+  tags: string = '';
 
   selectId!: number;
   displaytype!: string;
@@ -172,4 +172,5 @@ class MarketPrice {
 class Variety {
   id!: number;
   varietyEnglish!: string;
+  image!:any[]
 }

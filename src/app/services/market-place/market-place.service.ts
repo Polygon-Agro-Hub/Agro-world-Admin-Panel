@@ -23,8 +23,7 @@ export class MarketPlaceService {
 
 
   createProduct(Data: any): Observable<any> {
-    console.log("add marketttttt");
-    
+ 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

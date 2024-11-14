@@ -1,0 +1,165 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+
+  <button onclick="window.location.href='/plant-care'" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+  <div class="h-[20px]"></div>
+
+
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2 class="text-xl font-semibold text-center mb-4">ADD CROP VARIETY</h2>
+
+  
+    <div class="space-y-4">
+    <!-- Crop Name -->
+    <form [formGroup]="cropForm" (ngSubmit)="onSubmit()" >
+    <div>
+        
+        <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark">Crop Name</label>
+        <select id="groupId"
+        formControlName="groupId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+        <option value="">Select a crop</option>
+        <option *ngFor="let group of groupList" [value]="group.id">
+          {{ group.cropNameEnglish }}
+        </option>
+        </select>
+    </div>
+
+    <hr class="border-[2px] border-gray-400 my-10" />
+
+    
+    <div>
+      <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700">Variety Name By English</label>
+      <input
+        type="text"
+        id="varietyNameEnglish"
+        formControlName="varietyNameEnglish"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+        required
+      />
+    </div>
+
+    <div class="md:col-span-2 my-3">
+        <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description
+          (in English)</label>
+        <textarea id="descriptionEnglish"
+        formControlName="descriptionEnglish" 
+          name="descriptionEnglish" rows="3"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+        <!-- <div
+          *ngIf="cropForm.get('descriptionEnglish')!.invalid && (cropForm.get('descriptionEnglish')!.dirty || cropForm.get('descriptionEnglish')!.touched)"
+          class="text-red-500 text-sm mt-1">
+          <div *ngIf="cropForm.get('descriptionEnglish')!.errors?.['required']">Special Notes is required</div>
+        </div> -->
+      </div>
+
+    <hr class="border-[2px] border-gray-400 my-10" />
+
+    <div>
+        <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700">Variety Name By Sinhala</label>
+        <input
+          type="text"
+          id="varietyNameSinhala"
+          formControlName="varietyNameSinhala"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          required
+        />
+      </div>
+  
+      <div class="md:col-span-2 my-3">
+        <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Description
+          (in Sinhala)</label>
+        <textarea id="descriptionSinhala"
+        formControlName="descriptionSinhala"
+          name="descriptionSinhala" rows="3"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+        <!-- <div
+          *ngIf="cropForm.get('descriptionSinhala')!.invalid && (cropForm.get('descriptionSinhala')!.dirty || cropForm.get('descriptionSinhala')!.touched)"
+          class="text-red-500 text-sm mt-1">
+          <div *ngIf="cropForm.get('descriptionSinhala')!.errors?.['required']">Special Notes is required</div>
+        </div> -->
+      </div>
+
+      
+      <hr class="border-[2px] border-gray-400 my-10" />
+
+
+
+      <div>
+        <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700">Variety Name By Tamil</label>
+        <input
+          type="varietyNameTamil"
+          id="varietyNameTamil"
+          formControlName="varietyNameTamil"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          required
+        />
+      </div>
+  
+      <div class="md:col-span-2 my-3">
+        <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
+          (in Tamil)</label>
+        <textarea id="descriptionTamil"
+        formControlName="descriptionTamil"
+          name="descriptionTamil" rows="3"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+        <!-- <div
+          *ngIf="cropForm.get('descriptionTamil')!.invalid && (cropForm.get('descriptionTamil')!.dirty || cropForm.get('descriptionTamil')!.touched)"
+          class="text-red-500 text-sm mt-1">
+          <div *ngIf="cropForm.get('descriptionTamil')!.errors?.['required']">Special Notes is required</div>
+        </div> -->
+      </div>
+
+      
+      <hr class="border-[2px] border-gray-400 my-10" />
+
+
+
+
+
+
+
+    
+
+    <!-- Add Image -->
+    <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+
+          <!-- Button -->
+          <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
+            Add Image
+            <span
+              class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
+              <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
+            </span>
+          </button>
+
+
+          <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
+            {{selectedFileName}}
+            <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
+              <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain">
+            </div>
+          </div>
+
+    <!-- Add Background Color -->
+    <div class="flex items-center space-x-4">
+      <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
+      <ngx-colors 
+        ngx-colors-trigger 
+        formControlName="bgColor"
+        (colorChange)="onColorChange($event)"
+        style="display: inline-block; margin:5px;">
+      </ngx-colors>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end space-x-4 mt-6">
+      <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
+      <button type="submit"  class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+    </div>
+</form>
+  </div>
+ 
+</div>

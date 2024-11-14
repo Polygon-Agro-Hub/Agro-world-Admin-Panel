@@ -39,16 +39,7 @@ export class CreateCropGroupComponent {
     private cropCalendarService: CropCalendarService
   ) {}
 
-  // onFileSelected(event: Event) {
-  //   const file = (event.target as HTMLInputElement).files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       this.imagePreview = reader.result;
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
+ 
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];

@@ -99,6 +99,7 @@ export class CreateCropCalenderComponent {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   selectedPage:'pageOne' | 'pageTwo' = 'pageOne'
   groupList: any[] = [];
+  varietyList: any[] = [];
   
 
   constructor(
@@ -110,19 +111,11 @@ export class CreateCropCalenderComponent {
   ) {
     // Initialize the form with FormBuilder
     this.cropForm = this.fb.group({
-      groupId:['',[Validators.required]],
-      variety: ['',[Validators.required]],
-      sinhalaVariety: ['',[Validators.required]],
-      tamilVariety: ['',[Validators.required]],
+      varietyId:['',[Validators.required]],
       cultivationMethod: ['',[Validators.required]],
       natureOfCultivation: ['',[Validators.required]],
       cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      specialNotes: ['',[Validators.required]],
-      sinhalaSpecialNotes: ['',[Validators.required]],
-      tamilSpecialNotes: ['',[Validators.required]],
       suitableAreas: ['',[Validators.required]],
-      cropColor: ['',[Validators.required]],
-      image: ['',[Validators.required]],
     });
   }
 
@@ -279,6 +272,7 @@ export class CreateCropCalenderComponent {
       this.getCropCalenderById(this.cropId);
     }
     this.getAllRoles();
+    
   }
 
   getCropCalenderById(id: any) {
@@ -319,17 +313,10 @@ export class CreateCropCalenderComponent {
     }
     const formData = new FormData();
     formData.append('groupId', this.cropCalender[0].cropGroupId );
-    formData.append('varietyEnglish', this.cropCalender[0].varietyEnglish);
-    formData.append('varietySinhala', this.cropCalender[0].varietySinhala);
-    formData.append('varietyTamil', this.cropCalender[0].varietyTamil);
     formData.append('methodEnglish', this.cropCalender[0].methodEnglish);
     formData.append('natOfCulEnglish', this.cropCalender[0].natOfCulEnglish);
     formData.append('cropDuration', this.cropCalender[0].cropDuration);
-    formData.append('specialNotesEnglish', this.cropCalender[0].specialNotesEnglish);
-    formData.append('specialNotesSinhala', this.cropCalender[0].specialNotesSinhala);
-    formData.append('specialNotesTamil', this.cropCalender[0].specialNotesTamil);
     formData.append('suitableAreas', formValue.suitableAreas);
-    formData.append('cropColor', this.cropCalender[0].cropColor);
 
     console.log(formData);
 
@@ -368,35 +355,7 @@ export class CreateCropCalenderComponent {
 
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.selectedFileName = file.name;
-      this.cropForm.get('image')?.updateValueAndValidity(); // Update form validity
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImage = e.target?.result as string | ArrayBuffer;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  triggerFileInput(event: Event): void {
-    event.preventDefault();
-    const fileInput = document.getElementById('imageUpload') as HTMLElement;
-    fileInput.click();
-  }
-
-  selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
-    this.selectedLanguage = lang;
-  }
-
-
-  nextForm(page: 'pageOne' | 'pageTwo') {
-    this.selectedPage = page;
-  }
+  
 
 
   deleteCropCalender(id: any) {
@@ -440,7 +399,7 @@ export class CreateCropCalenderComponent {
     });
     
     this.http
-      .get<any>(`${environment.API_BASE_URL}crop-groups`, {
+      .get<any>(`${environment.API_URL}crop-calendar/crop-groups`, {
         headers,
       })
       .subscribe(
@@ -457,20 +416,46 @@ export class CreateCropCalenderComponent {
         }
       );
   }
+
+
+  getAllVarities(event: Event) {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const selectElement = event.target as HTMLSelectElement;  // Cast to HTMLSelectElement
+  const cropGroupId = selectElement.value;
+    
+    this.http
+      .get<any>(`${environment.API_URL}crop-calendar/crop-variety/${cropGroupId}`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          
+          this.varietyList = response.varieties;
+          console.log(response);
+
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+          
+          // Handle error...
+        }
+      );
+  }
 }
 
 export class CreateCrop {
-  cropName: string = '';
-  sinhalaCropName: string = '';
-  tamilCropName: string = '';
-  variety: string = '';
-  sinhalaVariety: string = '';
-  tamilVariety: string = '';
-  CultivationMethod: string = '';
-  NatureOfCultivation: string = '';
-  CropDuration: string = '';
-  SpecialNotes: string = '';
-  sinhalaSpecialNotes: string = '';
-  tamilSpecialNotes: string = '';
-  SuitableAreas: string = '';
+  varietyId: string = '';
+  cultivationMethod: string = '';
+  natureOfCultivation: string = '';
+  cropDuration: string = '';
+  suitableAreas: string = '';
+ 
 }

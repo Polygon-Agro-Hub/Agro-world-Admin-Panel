@@ -1,0 +1,199 @@
+<form (ngSubmit)="onSubmit()">
+    <!-- save button -->
+    <div class="flex flex-row justify-between items-center mb-6">
+        <p class="text-lg text-black font-semibold">Add Product</p>
+        <div>
+            <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">Cancel</button>
+            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">Save</button>
+        </div>
+
+    </div>
+
+    <div class="flex flex-row justify-between">
+        <!-- form component -->
+        <div class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[60%]">
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Display Name *</label>
+                <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" 
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <!-- Crop Selection -->
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Crop *</label>
+                <select id="selectId" name="selectId"
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [(ngModel)]="productObj.selectId" (change)="onCropChange()">
+                    <option selected disabled value="">--- Select Crop ---</option>
+                    <option *ngFor="let cropItem of cropsObj" [value]="cropItem.cropId">
+                        {{ cropItem.cropNameEnglish }}
+                    </option>
+                </select>
+            </div>
+
+
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Variety *</label>
+                <select id="variety" name="variety"
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [(ngModel)]="productObj.variety" (change)="selectVerityImage()">
+                    <option selected disabled>--- Select Variety ---</option>
+                    <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
+                        {{ variety.varietyEnglish }}
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Price *</label>
+                <div class="flex items-center space-x-4 mt-3">
+                    <div class="flex items-center space-x-2">
+                        <!-- With Discount Radio Button -->
+                        <input 
+                          class="w-5 h-5" 
+                          type="radio" 
+                          id="withDiscount" 
+                          name="priceType" 
+                          [(ngModel)]="productObj.promo" 
+                          [value]="true" 
+                        />
+                        <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                          With Discount
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <!-- No Discount Radio Button -->
+                        <input 
+                          class="w-5 h-5" 
+                          type="radio" 
+                          id="noDiscount" 
+                          name="priceType" 
+                          [(ngModel)]="productObj.promo" 
+                          [value]="false" 
+                        />
+                        <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                          No Discount
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            
+
+            <div class="mb-6" *ngIf="productObj.promo">
+                <label class="text-[#534E4E]">Display Type *</label>
+                <select id="displaytype" name="displaytype"  [(ngModel)]="productObj.displaytype"
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                    <option selected></option>
+                    <option value="D&AP">With Discount and Actual Price</option>
+                    <option value="AP&SP">With Actual Price and Sale Price</option>
+                    <option value="AP&SP&D">With Actual Price,Sale Price and Discount</option>
+                </select>
+            </div>
+
+            <div class="mb-6" *ngIf="productObj.promo">
+                <label class="text-[#534E4E]">Discount Percentage *</label>
+                <input type="number" min="0.0" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Actual Price *</label>
+                <input type="number" min="0.0" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()" [(ngModel)]="productObj.normalPrice"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <div class="mb-6" *ngIf="productObj.promo">
+                <label class="text-[#534E4E]">Sale Price *</label>
+                <input type="number" min="0.0" id="salePrice"  [value]="productObj.salePrice" 
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" disabled/>
+            </div>
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Tags *</label>
+                <section>
+                    <mat-form-field class="w-[100%]">
+                        <mat-label>tags</mat-label>
+                        <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords"
+                            [(ngModel)]="templateKeywords">
+                            @for (keyword of templateKeywords(); track keyword) {
+                            <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
+                                {{keyword}}
+                                <button matChipRemove aria-label="'remove template form' + keyword">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip-row>
+                            }
+                        </mat-chip-grid>
+                        <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+                            (matChipInputTokenEnd)="addTemplateKeyword($event)" />
+                    </mat-form-field>
+                </section>
+
+            </div>
+
+        </div>
+
+        <div class="flex flex-col px-6 py-3 mx-6 w-[40%]">
+            <!-- cart items -->
+            <div class="rounded-lg shadow-lg px-12 py-6">
+                <p class="text-lg text-black font-medium">Preview</p>
+
+                <div
+                    class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
+                    <div *ngIf="productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D'" class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
+                        style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%);">
+                        <p *ngIf="productObj.discountedPrice === 0" class="text-white ">#%</p>
+                        <p *ngIf="productObj.discountedPrice !== 0" class="text-white ">{{productObj.discountedPrice}}%</p>
+                        <p class="text-white ">off</p>
+                    </div>
+
+
+                    <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8">
+
+                    <p class="text-lg text-black my-2">Green Capcicum</p>
+
+                    <p *ngIf="(productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D') && productObj.salePrice !== 0" class="text-[#00957D] my-1 line-through">Rs.{{productObj.normalPrice}}.00</p>
+                    <p *ngIf="productObj.salePrice === 0" class="text-xl text-[#00957D] my-1">Rs.0.00</p>
+                    <p *ngIf="productObj.salePrice !== 0" class="text-xl text-[#00957D] my-1">Rs. {{productObj.salePrice}}</p>
+                    <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
+                        <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
+                        <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
+                <p class="text-lg text-balck font-medium mb-5">Quantity</p>
+                <div class="my-3">
+                    <label class="text-lg text-[#534E4E]">Default Unit Type *</label>
+                    <select
+                        id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
+                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                        <option selected></option>
+                        <option value="Kg">Kg</option>
+                        <option value="g">g</option>
+                    </select>
+                </div>
+
+                <div class="my-3">
+                    <label class="text-lg text-[#534E4E]">Starting Value *</label>
+                    <input type="number" min="0.0" id="startValue" name="startValue" [(ngModel)]="productObj.startValue"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="my-3">
+                    <label class="text-lg text-[#534E4E]">Increase/Decrease by *</label>
+                    <input type="number" min="0.0" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>

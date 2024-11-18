@@ -21,6 +21,7 @@ import { NgxColorsModule } from 'ngx-colors';
 interface NewCropCalender {
   id: number;
   cropGroupId : any;
+  varietyId: any;
   varietyEnglish: string;
   varietySinhala: string;
   varietyTamil: string;
@@ -312,7 +313,7 @@ export class CreateCropCalenderComponent {
       formValue.suitableAreas = formValue.suitableAreas.join(', ');
     }
     const formData = new FormData();
-    formData.append('groupId', this.cropCalender[0].cropGroupId );
+    formData.append('varietyId', this.cropCalender[0].varietyId );
     formData.append('methodEnglish', this.cropCalender[0].methodEnglish);
     formData.append('natOfCulEnglish', this.cropCalender[0].natOfCulEnglish);
     formData.append('cropDuration', this.cropCalender[0].cropDuration);

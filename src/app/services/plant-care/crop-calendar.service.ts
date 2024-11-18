@@ -6,10 +6,10 @@ import { environment } from '../../environment/environment';
 export interface NewCropCalender {
   id: number;
   cropNameEnglish: string;
-  varietyEnglish: string;
+  varietyNameEnglish: string;
   category: string;
-  methodEnglish: string;
-  natOfCulEnglish: string;
+  method: string;
+  natOfCul: string;
   cropDuration: string;
   createdAt: string;
 }
@@ -123,7 +123,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ items: NewCropCalender[]; total: number }>(
-      `${this.apiUrl}get-all-crop-calender?page=${page}&limit=${limit}`,
+      `${this.url}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`,
       { headers }
     );
   }

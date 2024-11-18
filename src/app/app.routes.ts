@@ -63,6 +63,7 @@ import { ViewCropGroupComponent } from './application/plant-care-app/view-crop-g
 import { MarketAddProductComponent } from './application/marketplace/market-add-product/market-add-product.component';
 import { ViewProductsListComponent } from './application/marketplace/view-products-list/view-products-list.component';
 import { CreateVarietyComponent } from './application/plant-care-app/create-variety/create-variety.component';
+import { ViewVarietyComponent } from './application/plant-care-app/view-variety/view-variety.component';
 
 export const routes: Routes = [
   {
@@ -194,6 +195,10 @@ export const routes: Routes = [
           {
             path: 'create-crop-variety',
             component: CreateVarietyComponent,
+          },
+          {
+            path: 'view-crop-variety',
+            component: ViewVarietyComponent,
           },
         ],
       },

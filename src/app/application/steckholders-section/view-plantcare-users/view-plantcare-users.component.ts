@@ -95,6 +95,7 @@ export class ViewPlantcareUsersComponent {
         (response) => {
           this.isLoading = false;
           this.plantCareUser = response.items;
+          console.log(this.plantCareUser);
           this.hasData = this.plantCareUser.length > 0;
           this.totalItems = response.total;
         },

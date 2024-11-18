@@ -1,11 +1,11 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care/view-crop-group'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-  onclick="window.location.href='plant-care/create-crop-group'">
+  onclick="window.location.href='plant-care/create-crop-variety'">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
@@ -14,7 +14,7 @@
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Crop Groups</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{this.name}} Varities</h2>
     </div>
   </div>
 
@@ -28,53 +28,30 @@
       <thead>
         <tr>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-            crop
+            index
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-            Num of Varieties
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            Variety
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-            Category
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            Image
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-            Varieties
-          </th>
+         
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="
-            let item of newCropGroup
-              | paginate
-                : {
-                    itemsPerPage: itemsPerPage,
-                    currentPage: page,
-                    totalItems: totalItems
-                  }
-          " class="border-b border-gray-200 dark:border-[#4B555A]">
-          <td class="py-3 text-textLight dark:text-textDark">{{ item.cropNameEnglish }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.varietyCount || 0 }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.category }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <ul>
-              <li *ngFor="let variety of item.varietyList">
-                {{ variety }}
-              </li>
-            </ul>
-          </td>
+        <tr *ngFor="let item of newCropGroup; let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
+          <td class="py-3 text-textLight dark:text-textDark text-center">{{ i + 1 }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.varietyNameEnglish }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark"> <img class="profile-pic  text-center" [src]="item.image" /></td>
+          
           
           <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
             
 
-            <button class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700" (click)="Varieties(item.id, item.cropNameEnglish)">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round" />
-              </svg>
-          </button>
+           
 
-            <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editCropGroup(item.id)"
+            <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
                                 >
                                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -97,9 +74,6 @@
       </tbody>
     </table>
 
-    <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-      [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-      [screenReaderCurrentLabel]="'Youre on page'">
-    </pagination-controls>
+    
   </div>
 </div>

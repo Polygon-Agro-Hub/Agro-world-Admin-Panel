@@ -1,6 +1,8 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 
+<!-- Creating Area -->
+<div *ngIf="this.itemId==null">
   <button onclick="window.location.href='/plant-care'" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
@@ -103,4 +105,121 @@
     </div>
   </div>
  
+</div>
+
+</div>
+
+
+
+
+
+
+
+<!-- Editing Area -->
+
+<div *ngIf="this.itemId!=null">
+  <button onclick="window.location.href='/plant-care'" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+  <div class="h-[20px]"></div>
+
+
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2 class="text-xl font-semibold text-center mb-4">EDIT CROP GROUP</h2>
+
+  
+    <div class="space-y-4">
+    <!-- Crop Name -->
+    <div>
+      <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By English</label>
+      <input
+        type="text"
+        id="cropNameEnglish"
+        [(ngModel)]="cropGroup.cropNameEnglish"
+        name="cropNameEnglish"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Sinhala</label>
+      <input
+        type="text"
+        id="cropNameSinhala"
+          [(ngModel)]="cropGroup.cropNameSinahala"
+          name="cropNameSinhala"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Tamil</label>
+      <input
+        type="text"
+        id="cropNameTamil"
+          [(ngModel)]="cropGroup.cropNameTamil"
+          name="cropNameTamil"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+        required
+      />
+    </div>
+
+    <!-- Select Parent Category -->
+    <div>
+      <label for="parentCategory" class="block text-sm font-medium text-gray-700">Select Parent Category</label>
+      <select
+        id="parentCategory"
+        [(ngModel)]="cropGroup.parentCategory"
+        name="parentCategory"
+        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+        required
+      >
+        <option value="" disabled>Select Category</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+
+    <!-- Add Image -->
+    <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+
+          <!-- Button -->
+          <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
+            Add Image
+            <span
+              class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
+              <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
+            </span>
+          </button>
+
+
+          <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
+            {{selectedFileName}}
+            <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
+              <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain">
+            </div>
+          </div>
+
+    <!-- Add Background Color -->
+    <div class="flex items-center space-x-4">
+      <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
+      <ngx-colors 
+        ngx-colors-trigger 
+        [(ngModel)]="cropGroup.bgColor" 
+        (colorChange)="onColorChange($event)"
+        style="display: inline-block; margin:5px;">
+      </ngx-colors>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end space-x-4 mt-6">
+      <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
+      <button type="submit" (click)="onSubmit()" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+    </div>
+  </div>
+ 
+</div>
+
 </div>

@@ -130,18 +130,15 @@ export class ViewCropGroupComponent {
   }
 
 
-
-  viewVarieties(varietyList: string[]) {
-    const varietyListHtml = varietyList.length > 0 
-      ? varietyList.map(variety => `<li>${variety}</li>`).join('') 
-      : 'No varieties';
-  
-    Swal.fire({
-      title: 'Varieties',
-      html: varietyListHtml,
-      confirmButtonText: 'Close'
-    });
+  Varieties(id: number, name: any) {
+    this.router.navigate(['/plant-care/view-crop-variety'], { queryParams: { id, name } });
   }
+
+
+  editCropGroup(id: number) {
+    this.router.navigate(['/plant-care/create-crop-group'], { queryParams: { id } });
+  }
+
   
   
 }

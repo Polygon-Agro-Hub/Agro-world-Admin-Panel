@@ -29,6 +29,8 @@ export class CreateCropGroupComponent {
     selectedFileName: string | null = null;
     selectedImage: string | ArrayBuffer | null = null;
     selectedFile: File | null = null;
+
+    itemId: number | null = null;
   
 
   constructor(
@@ -38,6 +40,40 @@ export class CreateCropGroupComponent {
     private router: Router,
     private cropCalendarService: CropCalendarService
   ) {}
+
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.itemId = params['id'] ? +params['id'] : null;
+      console.log('Received item ID:', this.itemId);
+  
+      if (this.itemId) {
+        // Fetch crop group details for editing
+        this.isLoading = true;
+        this.cropCalendarService.getCropGroupById(this.itemId).subscribe({
+          next: (response: any) => {
+            this.cropGroup = {
+              cropNameEnglish: response.groups[0].cropNameEnglish,
+              cropNameSinahala: response.groups[0].cropNameSinhala,
+              cropNameTamil: response.groups[0].cropNameTamil,
+              parentCategory: response.groups[0].category,
+              bgColor: response.groups[0].bgColor,
+            };
+            if (response.groups[0].image) {
+              this.selectedImage = response.groups[0].image; // Base64 image
+              this.selectedFileName = "Existing Image";
+            }
+            this.isLoading = false;
+          },
+          error: (error) => {
+            console.error('Error fetching crop group details:', error);
+            this.isLoading = false;
+          },
+        });
+      }
+    });
+  }
+
 
  
 
@@ -57,47 +93,96 @@ export class CreateCropGroupComponent {
   }
 
 
+  // onSubmit() {
+  //   if (!this.selectedFile) {
+  //     alert('Please select an image file.');
+  //     return;
+  //   }
+
+  //   this.isLoading = true;
+
+  //   // Create FormData object
+  //   const formData = new FormData();
+  //   formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
+  //   formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);  // Adjust as needed
+  //   formData.append('cropNameTamil', this.cropGroup.cropNameTamil);    // Adjust as needed
+  //   formData.append('category', this.cropGroup.parentCategory);
+  //   formData.append('bgColor', this.cropGroup.bgColor);
+  //   formData.append('image', this.selectedFile);  // The key should match backend's expected field name
+
+  //   // Send POST request to backend
+  //   this.cropCalendarService.createCropGroup(formData).subscribe({
+  //     next: (response: any) => {
+  //       console.log(formData);
+  //       console.log('Crop group created successfully:', response);
+  //       this.isLoading = false;
+  //       Swal.fire(
+  //         'Success',
+  //         response.message,
+  //         'success'
+  //       );
+  //       this.router.navigate(['/plant-care/view-crop-group']);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error creating crop group:', error);
+  //       this.isLoading = false;
+  //       Swal.fire(
+  //         'Error',
+  //         error,
+  //         'error'
+  //       );
+  //     }
+  //   });
+  // }
+
+
+
   onSubmit() {
-    if (!this.selectedFile) {
-      alert('Please select an image file.');
-      return;
-    }
-
     this.isLoading = true;
-
+  
     // Create FormData object
     const formData = new FormData();
-    formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
-    formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);  // Adjust as needed
-    formData.append('cropNameTamil', this.cropGroup.cropNameTamil);    // Adjust as needed
-    formData.append('category', this.cropGroup.parentCategory);
-    formData.append('bgColor', this.cropGroup.bgColor);
-    formData.append('image', this.selectedFile);  // The key should match backend's expected field name
-
-    // Send POST request to backend
-    this.cropCalendarService.createCropGroup(formData).subscribe({
-      next: (response: any) => {
-        console.log(formData);
-        console.log('Crop group created successfully:', response);
-        this.isLoading = false;
-        Swal.fire(
-          'Success',
-          response.message,
-          'success'
-        );
-        this.router.navigate(['/plant-care/view-crop-group']);
-      },
-      error: (error) => {
-        console.error('Error creating crop group:', error);
-        this.isLoading = false;
-        Swal.fire(
-          'Error',
-          error,
-          'error'
-        );
-      }
-    });
+    if (this.cropGroup.cropNameEnglish) formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
+    if (this.cropGroup.cropNameSinahala) formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);
+    if (this.cropGroup.cropNameTamil) formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
+    if (this.cropGroup.parentCategory) formData.append('category', this.cropGroup.parentCategory);
+    if (this.cropGroup.bgColor) formData.append('bgColor', this.cropGroup.bgColor);
+    if (this.selectedFile) formData.append('image', this.selectedFile); // Only include if a new file is selected
+  
+    if (this.itemId) {
+      // Update existing crop group
+      console.log('hii',formData)
+      this.cropCalendarService.updateCropGroup(this.itemId, formData).subscribe({
+        next: (response: any) => {
+          console.log('Crop group updated successfully:', response);
+          this.isLoading = false;
+          Swal.fire('Success', response.message, 'success');
+          this.router.navigate(['/plant-care/view-crop-group']);
+        },
+        error: (error) => {
+          console.error('Error updating crop group:', error);
+          this.isLoading = false;
+          Swal.fire('Error', error, 'error');
+        },
+      });
+    } else {
+      // Create new crop group
+      this.cropCalendarService.createCropGroup(formData).subscribe({
+        next: (response: any) => {
+          console.log('Crop group created successfully:', response);
+          this.isLoading = false;
+          Swal.fire('Success', response.message, 'success');
+          this.router.navigate(['/plant-care/view-crop-group']);
+        },
+        error: (error) => {
+          console.error('Error creating crop group:', error);
+          this.isLoading = false;
+          Swal.fire('Error', error, 'error');
+        },
+      });
+    }
   }
+  
 
   onCancel() {
     // Reset form or navigate away
@@ -113,6 +198,46 @@ export class CreateCropGroupComponent {
 
   onColorChange(event: any): void {
     this.cropGroup.bgColor = event.color.hex;
+  }
+
+
+
+
+  updateCropGroup() {
+    if (!this.selectedFile && !this.selectedImage) {
+      alert('Please select an image file.');
+      return;
+    }
+  
+    this.isLoading = true;
+  
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
+    formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala); // Adjust as needed
+    formData.append('cropNameTamil', this.cropGroup.cropNameTamil);     // Adjust as needed
+    formData.append('category', this.cropGroup.parentCategory);
+    formData.append('bgColor', this.cropGroup.bgColor);
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile); // Include only if a new file is selected
+    }
+  console.log('hiiii',formData);
+    // Send PUT request to backend
+    if (this.itemId !== null) {
+    this.cropCalendarService.updateCropGroup(this.itemId, formData).subscribe({
+      next: (response: any) => {
+        console.log('Crop group updated successfully:', response);
+        this.isLoading = false;
+        Swal.fire('Success', response.message, 'success');
+        this.router.navigate(['/plant-care/view-crop-group']);
+      },
+      error: (error) => {
+        console.error('Error updating crop group:', error);
+        this.isLoading = false;
+        Swal.fire('Error', error, 'error');
+      },
+    });
+  }
   }
   
 

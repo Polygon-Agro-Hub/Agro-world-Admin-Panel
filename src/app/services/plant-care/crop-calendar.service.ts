@@ -22,6 +22,21 @@ export interface NewCropGroup {
   varietyList: string[];
 }
 
+interface NewVarietyGroup {
+  id: number;
+  cropGroupId : string;
+  varietyNameEnglish: string;
+  varietyNameSinhala: string;
+  varietyNameTamil: string;
+  descriptionEnglish: string;
+  descriptionSinhala: string;
+  descriptionTamil: string;
+  image: string;
+  bgColor: string;
+  createdAt: string;
+
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -232,6 +247,47 @@ export class CropCalendarService {
       { headers }
     );
   }
+
+
+  getVarietiesByGroup(cropGroupId: any): Observable<{ groups: NewVarietyGroup[]; }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<{ groups: NewVarietyGroup[] }>(
+      `${this.url}crop-calendar/crop-variety-by-group/${cropGroupId}`,
+      { headers }
+    );
+  }
+
+
+
+
+  deleteCropVariety(id: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete(`${this.url}crop-calendar/delete-crop-variety/${id}`, {
+      headers,
+    });
+  }
+
+  getCropGroupById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.url}crop-calendar/crop-group-by-id/${id}`, {headers});
+  }
+
+
+  updateCropGroup(id: number, data: FormData) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.put(`${this.url}crop-calendar/update-crop-group/${id}`, data, {headers});
+  }
+
+
+  
 }
 
 

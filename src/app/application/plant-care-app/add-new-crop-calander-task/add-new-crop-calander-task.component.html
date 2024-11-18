@@ -182,15 +182,17 @@
 
 
       <div class="md:col-span-2 my-3 px-12">
-        <label for="days" class="block text-sm font-medium text-gray-700">Days</label>
-        <input type="number" min="0" formControlName="days" id="days" [(ngModel)]="cropTaskObj.days"
-          name="days" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
-        <!-- <div
-          *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
-          class="text-red-500 text-sm mt-1">
-          <div *ngIf="cropForm.get('specialNotes')!.errors?.['required']">Special Notes is required</div>
-        </div> -->
+        <label for="startingDate" class="block text-sm font-medium text-gray-700">Starting Date</label>
+        <input
+          type="date"
+          formControlName="startingDate"
+          id="startingDate"
+          [(ngModel)]="cropTaskObj.startingDate"
+          name="startingDate"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+        />
       </div>
+      
 
       <div class="md:col-span-2 my-3 px-12">
         <label for="reqImages" class="block text-sm font-medium text-gray-700">Number of required images</label>
@@ -215,7 +217,7 @@
       </div>
 
       <div class="md:col-span-2 my-3 px-12">
-        <label for="videoLink" class="block text-sm font-medium text-gray-700">Video Link</label>
+        <label for="videoLink" class="block text-sm font-medium text-gray-700">Video Linkkkkk</label>
         <input min="0" formControlName="videoLink" id="videoLink" [(ngModel)]="cropTaskObj.videoLink"
           name="videoLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
         <!-- <div

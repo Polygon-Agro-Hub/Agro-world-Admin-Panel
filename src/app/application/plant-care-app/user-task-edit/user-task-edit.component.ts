@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 class CropTask {
   'id':number;
   'taskIndex': string;
+  'startingDate': any;
   'days': string;
   'taskTypeEnglish': string;
   'taskTypeSinhala': string;
@@ -26,6 +27,9 @@ class CropTask {
   'taskDescriptionEnglish': string;
   'taskDescriptionSinhala': string;
   'taskDescriptionTamil': string;
+  'reqImages': any;
+  'videoLink':any;
+  'imageLink':any;
 }
 
 @Component({
@@ -74,6 +78,7 @@ export class UserTaskEditComponent {
         
         this.taskItems = data;
         console.log('Task Items:', this.taskItems);
+        this.taskItems.startingDate = this.formatDate(this.taskItems.startingDate);
       },
       (error) => {
         console.error('Error fetching task:', error);
@@ -103,6 +108,11 @@ export class UserTaskEditComponent {
     formData.append('taskCategoryEnglish', this.taskItems.taskCategoryEnglish);
     formData.append('taskCategorySinhala', this.taskItems.taskCategorySinhala);
     formData.append('taskCategoryTamil', this.taskItems.taskCategoryTamil);
+    formData.append('startingDate', this.taskItems.startingDate);
+    formData.append('reqImages', this.taskItems.reqImages);
+    formData.append('imageLink', this.taskItems.imageLink);
+    formData.append('videoLink', this.taskItems.videoLink);
+  
   
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
@@ -110,7 +120,12 @@ export class UserTaskEditComponent {
   
     console.log('FormData:', formData);
   
-    this.taskService.updateUserCropTask(this.id, this.taskItems).subscribe(
+    const taskData = {
+      ...this.taskItems,
+      startingDate: this.formatDate(this.taskItems.startingDate) // Ensure proper date format
+    };
+
+    this.taskService.updateUserCropTask(this.id, taskData).subscribe(
       (res: any) => {
         console.log('Task updated successfully', res);
         Swal.fire({
@@ -128,6 +143,13 @@ export class UserTaskEditComponent {
         });
       }
     );
+  }
+
+
+  formatDate(date: any): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Ensure format 'yyyy-MM-dd'
   }
 
 

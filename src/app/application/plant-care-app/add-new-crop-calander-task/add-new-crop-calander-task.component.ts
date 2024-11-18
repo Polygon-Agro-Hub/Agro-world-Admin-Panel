@@ -26,7 +26,8 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   cropId!: string
   userId!: string
   indexId!: string
-  daysPrm!: string
+  onCulscropID !: string
+  startingDate!: string
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   taskForm: FormGroup;
   cropTaskObj: Croptask = new Croptask();
@@ -41,7 +42,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   ) {
     this.taskForm = this.fb.group({
       cropId: ['',[Validators.required]],
-      days: ['',[Validators.required]],
+      startingDate: ['',[Validators.required]],
       taskTypeEnglish: ['',[Validators.required]],
       taskTypeSinhala: ['',[Validators.required]],
       taskTypeTamil: ['',[Validators.required]],
@@ -67,7 +68,9 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     this.cropId = this.route.snapshot.params['cropId'];
     this.indexId = this.route.snapshot.params['indexId'];
     this.userId = this.route.snapshot.params['userId'];
-    this.daysPrm = this.route.snapshot.params['days']
+    this.onCulscropID  = this.route.snapshot.params['onCulscropID '];
+    console.log('hiiiii',this.onCulscropID);
+    
   }
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
@@ -98,7 +101,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
         }
       }
     )
-  }else{this.cropCalendarService.createNewCropTaskU(this.cropId, this.indexId, this.userId,  this.cropTaskObj).subscribe(
+  }else{this.cropCalendarService.createNewCropTaskU(this.cropId, this.indexId, this.userId,  this.cropTaskObj, this.onCulscropID).subscribe(
     (res) => {
       if (res) {
         Swal.fire(
@@ -142,7 +145,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
 class Croptask {
   "cropId": string
-  "days": string
+  "startingDate": string
   "taskTypeEnglish": string
   "taskTypeSinhala": string
   "taskTypeTamil": string

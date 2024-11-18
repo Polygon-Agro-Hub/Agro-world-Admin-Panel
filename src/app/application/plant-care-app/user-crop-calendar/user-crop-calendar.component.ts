@@ -11,7 +11,7 @@ interface TaskList {
   id: any;
   slavecropcalendardaysId: any;
   taskIndex : any;
-  days: string;
+  startingDate: string;
   taskEnglish: string;
   imageLink : string;
   videoLink: string;
@@ -29,6 +29,7 @@ interface TaskList {
 export class UserCropCalendarComponent {
   cropCalendarId: any | null = null;
   userId: any | null = null;
+  onCulscropID : any | null = null;
   taskList: TaskList[] = [];
   page: number = 1;
   totalItems: number = 0;
@@ -41,7 +42,8 @@ export class UserCropCalendarComponent {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.cropCalendarId = params['cropCalendarId'] ? +params['cropCalendarId'] : null; 
-      this.userId = params['userId'] ? +params['userId'] : null;     
+      this.userId = params['userId'] ? +params['userId'] : null;
+      this.onCulscropID  = params['onCulscropID'] ? +params['onCulscropID'] : null;   
       console.log("This is the crop calendar Id : ", this.cropCalendarId);
       console.log("This is the user Id : ", this.userId);
     });
@@ -178,7 +180,7 @@ export class UserCropCalendarComponent {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${userId}`]);
+        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`]);
       }
     });
   }

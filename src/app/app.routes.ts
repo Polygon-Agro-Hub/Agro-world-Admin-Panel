@@ -368,7 +368,7 @@ export const routes: Routes = [
           {
             path: 'view-products-list',
             component: ViewProductsListComponent,
-          }
+          },
         ]
       }
     ],

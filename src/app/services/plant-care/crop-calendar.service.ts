@@ -166,7 +166,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-all-crop-task/${id}?page=${page}&limit=${limit}`, {
+    return this.http.get<any>(`${this.url}crop-calendar/get-all-crop-task/${id}?page=${page}&limit=${limit}`, {
       headers,
     });
   }

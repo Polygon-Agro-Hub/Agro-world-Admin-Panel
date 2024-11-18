@@ -12,12 +12,16 @@ export class ViewProductListService {
 
   constructor(private http: HttpClient) {}
 
-  getProductList(): Observable<any> {
+  getProductList(page: number, limit: number, searchVariety: string = ''): Observable<any> {
+    const token = localStorage.getItem('Login Token : ');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     let url = `${this.apiUrl}market-place/get-market-items`;
+    if(searchVariety){
+      url +=`&cropVarietyEnglish=${searchVariety}`
+    }
     return this.http.get<any>(url, { headers });
   }
 }

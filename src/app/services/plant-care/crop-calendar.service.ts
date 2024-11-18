@@ -27,6 +27,7 @@ export interface NewCropGroup {
 })
 export class CropCalendarService {
   private apiUrl = `${environment.API_BASE_URL}`;
+  private url = `${environment.API_URL}`;
   private token = `${environment.TOKEN}`;
 
   constructor(private http: HttpClient) {}
@@ -36,7 +37,16 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${this.apiUrl}create-crop-group`, formData, {
+    return this.http.post(`${this.url}crop-calendar/create-crop-group`, formData, {
+      headers,
+    });
+  }
+
+  createCropVariety(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(`${this.url}crop-calendar/create-crop-variety`, formData, {
       headers,
     });
   }
@@ -46,7 +56,7 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${this.apiUrl}admin-add-crop-calender`, formData, {
+    return this.http.post(`${this.url}crop-calendar/admin-add-crop-calender`, formData, {
       headers,
     });
   }
@@ -85,7 +95,7 @@ export class CropCalendarService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post(`${this.apiUrl}upload-xlsx/${cropId}`, formData, {
+    return this.http.post(`${this.url}crop-calendar/upload-xlsx/${cropId}`, formData, {
       headers,
     });
   }
@@ -111,7 +121,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ items: NewCropGroup[]; total: number }>(
-      `${this.apiUrl}get-all-crop-groups?page=${page}&limit=${limit}`,
+      `${this.url}crop-calendar/get-all-crop-groups?page=${page}&limit=${limit}`,
       { headers }
     );
   }
@@ -130,7 +140,7 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.delete(`${this.apiUrl}delete-crop-group/${id}`, {
+    return this.http.delete(`${this.url}crop-calendar/delete-crop-group/${id}`, {
       headers,
     });
   }

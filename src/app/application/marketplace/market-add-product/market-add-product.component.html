@@ -4,7 +4,7 @@
         <p class="text-lg text-black font-semibold">Add Product</p>
         <div>
             <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">Cancel</button>
-            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit">Save</button>
+            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">Save</button>
         </div>
 
     </div>
@@ -15,7 +15,7 @@
 
             <div class="mb-6">
                 <label class="text-[#534E4E]">Display Name *</label>
-                <input type="text" [(ngModel)]="productObj.cropName" id="cropName" name="cropName"
+                <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" 
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
@@ -38,9 +38,9 @@
                 <label class="text-[#534E4E]">Variety *</label>
                 <select id="variety" name="variety"
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                    [(ngModel)]="productObj.variety">
+                    [(ngModel)]="productObj.variety" (change)="selectVerityImage()">
                     <option selected disabled>--- Select Variety ---</option>
-                    <option *ngFor="let variety of selectedVarieties" [value]="variety.varietyEnglish">
+                    <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
                         {{ variety.varietyEnglish }}
                     </option>
                 </select>
@@ -144,7 +144,7 @@
 
                 <div
                     class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
-                    <div *ngIf="productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D'" class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
+                    <div *ngIf="productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D'" class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
                         style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%);">
                         <p *ngIf="productObj.discountedPrice === 0" class="text-white ">#%</p>
                         <p *ngIf="productObj.discountedPrice !== 0" class="text-white ">{{productObj.discountedPrice}}%</p>
@@ -152,13 +152,13 @@
                     </div>
 
 
-                    <img src="../../../../assets/images/login.png" alt="Green Capsicum"
-                        class="w-full h-32 object-cover px-4 py-2 mt-8">
+                    <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8">
+
                     <p class="text-lg text-black my-2">Green Capcicum</p>
 
                     <p *ngIf="(productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D') && productObj.salePrice !== 0" class="text-[#00957D] my-1 line-through">Rs.{{productObj.normalPrice}}.00</p>
                     <p *ngIf="productObj.salePrice === 0" class="text-xl text-[#00957D] my-1">Rs.0.00</p>
-                    <p *ngIf="productObj.salePrice !== 0" class="text-xl text-[#00957D] my-1">Rs. {{productObj.salePrice}}.00</p>
+                    <p *ngIf="productObj.salePrice !== 0" class="text-xl text-[#00957D] my-1">Rs. {{productObj.salePrice}}</p>
                     <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
                         <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
                         <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
@@ -172,22 +172,23 @@
                 <div class="my-3">
                     <label class="text-lg text-[#534E4E]">Default Unit Type *</label>
                     <select
+                        id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
                         class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
                         <option selected></option>
-                        <option>Kg</option>
-                        <option>g</option>
+                        <option value="Kg">Kg</option>
+                        <option value="g">g</option>
                     </select>
                 </div>
 
                 <div class="my-3">
                     <label class="text-lg text-[#534E4E]">Starting Value *</label>
-                    <input type="number" min="0.0"
+                    <input type="number" min="0.0" id="startValue" name="startValue" [(ngModel)]="productObj.startValue"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="my-3">
                     <label class="text-lg text-[#534E4E]">Increase/Decrease by *</label>
-                    <input type="number" min="0.0"
+                    <input type="number" min="0.0" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 

@@ -20,21 +20,12 @@ import { NgxColorsModule } from 'ngx-colors';
 
 interface NewCropCalender {
   id: number;
-  cropGroupId : any;
-  varietyId: any;
-  varietyEnglish: string;
-  varietySinhala: string;
-  varietyTamil: string;
-  methodEnglish: string;
-  natOfCulEnglish: string;
+  method : any;
+  natOfCul: any;
   cropDuration: string;
   createdAt: string;
-  specialNotesEnglish: string;
-  specialNotesSinhala: string;
-  specialNotesTamil: string;
-  cropColor: string;
   suitableAreas: string;
-  image: string;
+
 }
 
 import { MatSelectModule } from '@angular/material/select';
@@ -313,11 +304,11 @@ export class CreateCropCalenderComponent {
       formValue.suitableAreas = formValue.suitableAreas.join(', ');
     }
     const formData = new FormData();
-    formData.append('varietyId', this.cropCalender[0].varietyId );
-    formData.append('methodEnglish', this.cropCalender[0].methodEnglish);
-    formData.append('natOfCulEnglish', this.cropCalender[0].natOfCulEnglish);
+    formData.append('method', this.cropCalender[0].method );
+    formData.append('natOfCul', this.cropCalender[0].natOfCul);
     formData.append('cropDuration', this.cropCalender[0].cropDuration);
     formData.append('suitableAreas', formValue.suitableAreas);
+
 
     console.log(formData);
 

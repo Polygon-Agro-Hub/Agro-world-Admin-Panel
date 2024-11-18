@@ -277,7 +277,7 @@
               <label for="cultivationMethod"
                 class="block text-sm font-medium text-textLight dark:text-textDark">Cultivation Method</label>
               <select formControlName="cultivationMethod" id="cultivationMethod"
-                [(ngModel)]="cropCalender[0].methodEnglish" name="cultivationMethod"
+                [(ngModel)]="cropCalender[0].method" name="cultivationMethod"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
                 <option value="" disabled selected>Select method</option>
                 <option value="Open Field">Open Field</option>
@@ -291,7 +291,7 @@
                 of
                 Cultivation</label>
               <select formControlName="natureOfCultivation" id="natureOfCultivation"
-                [(ngModel)]="cropCalender[0].natOfCulEnglish" name="natureOfCultivation"
+                [(ngModel)]="cropCalender[0].natOfCul" name="natureOfCultivation"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
                 <option value="" disabled selected>Select nature</option>
                 <option value="Conventional Farming">Conventional Farming</option>

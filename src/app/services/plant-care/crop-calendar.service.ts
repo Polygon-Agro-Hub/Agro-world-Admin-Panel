@@ -95,7 +95,7 @@ export class CropCalendarService {
     });
 
     return this.http.put(
-      `${this.apiUrl}edit-cropcalender/${cropId}`,
+      `${this.url}crop-calendar/edit-cropcalender/${cropId}`,
       formData,
       { headers }
     );

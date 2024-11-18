@@ -136,7 +136,7 @@
       <input
         type="text"
         id="cropNameEnglish"
-        [(ngModel)]="cropGroup.cropNameEnglish"
+        [(ngModel)]="newsItems[0].cropNameEnglish"
         name="cropNameEnglish"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
@@ -148,7 +148,7 @@
       <input
         type="text"
         id="cropNameSinhala"
-          [(ngModel)]="cropGroup.cropNameSinahala"
+          [(ngModel)]="newsItems[0].cropNameSinhala"
           name="cropNameSinhala"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
@@ -160,7 +160,7 @@
       <input
         type="text"
         id="cropNameTamil"
-          [(ngModel)]="cropGroup.cropNameTamil"
+          [(ngModel)]="newsItems[0].cropNameTamil"
           name="cropNameTamil"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
@@ -172,7 +172,7 @@
       <label for="parentCategory" class="block text-sm font-medium text-gray-700">Select Parent Category</label>
       <select
         id="parentCategory"
-        [(ngModel)]="cropGroup.parentCategory"
+        [(ngModel)]="newsItems[0].category"
         name="parentCategory"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
         required
@@ -198,7 +198,7 @@
           <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
             {{selectedFileName}}
             <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
-              <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain">
+              <img [src]="selectedFile ? selectedImage || '' : newsItems[0].image" alt="Crop Image" class="max-w-full w-auto object-contain">
             </div>
           </div>
 
@@ -207,7 +207,7 @@
       <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
       <ngx-colors 
         ngx-colors-trigger 
-        [(ngModel)]="cropGroup.bgColor" 
+        [(ngModel)]="newsItems[0].bgColor" 
         (colorChange)="onColorChange($event)"
         style="display: inline-block; margin:5px;">
       </ngx-colors>
@@ -216,7 +216,7 @@
     <!-- Buttons -->
     <div class="flex justify-end space-x-4 mt-6">
       <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-      <button type="submit" (click)="onSubmit()" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+      <button type="submit" (click)="updateNews()" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
     </div>
   </div>
  

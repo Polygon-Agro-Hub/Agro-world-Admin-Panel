@@ -18,7 +18,7 @@ interface CultivationItems {
 }
 
 interface NewsItem {
-  id: any;
+  ongoingCultivationId: any;
   cropName: string;
   cropCalendar : number;
   variety: string;
@@ -109,12 +109,13 @@ export class SlaveCropCalendarComponent {
       );
   }
 
-  viewTaskByUser(cropCalendarId: any, userId : any) {
+  viewTaskByUser(cropCalendarId: any, userId : any, onCulscropID: any ) {
     if (cropCalendarId) {
       this.router.navigate(['plant-care/view-crop-task-by-user/user-task-list'], { 
-        queryParams: { cropCalendarId, userId } 
+        queryParams: { cropCalendarId, userId, onCulscropID } 
       });
       console.log('Navigating with cultivationId:', cropCalendarId);
+      console.log('ish:', onCulscropID);
     } else {
       console.error('cultivationId is not defined:', cropCalendarId);
     }

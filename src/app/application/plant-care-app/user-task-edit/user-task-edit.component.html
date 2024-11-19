@@ -93,11 +93,65 @@
             </div>
             <div class="mb-4">
                 <label for="titleEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                    Task Description
+                    Task Descriptionnnnn
                 </label> 
                 <input type="text" id="titleEnglish" [(ngModel)]="taskItems.taskDescriptionTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
         </div>
+
+        <hr class="border-[2px] border-gray-400 my-10" />
+
+
+        <div class="md:col-span-2 my-3">
+            <label for="startingDate" class="block text-sm font-medium text-gray-700">Starting Date </label>
+        
+            <input
+            type="date"
+            id="startingDate"
+            [(ngModel)]="taskItems.startingDate "
+            name="startingDate"
+            [value]="taskItems.startingDate"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          />
+          
+          </div>
+
+          <div class="md:col-span-2 my-3">
+            <label for="reqImages" class="block text-sm font-medium text-gray-700">Number of required images</label>
+            <input type="number" min="0"  id="reqImages" [(ngModel)]="taskItems.reqImages"
+              name="reqImages" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+            <!-- <div
+              *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
+              class="text-red-500 text-sm mt-1">
+              <div *ngIf="cropForm.get('specialNotes')!.errors?.['required']">Special Notes is required</div>
+            </div> -->
+          </div>
+
+
+          <div class="md:col-span-2 my-3">
+            <label for="imageLink" class="block text-sm font-medium text-gray-700">Image Link</label>
+            <input  min="0"  id="imageLink" [(ngModel)]="taskItems.imageLink"
+              name="imageLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+            <!-- <div
+              *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
+              class="text-red-500 text-sm mt-1">
+              <div *ngIf="cropForm.get('specialNotes')!.errors?.['required']">Special Notes is required</div>
+            </div> -->
+          </div>
+    
+          <div class="md:col-span-2 my-3">
+            <label for="videoLink" class="block text-sm font-medium text-gray-700">Video Link</label>
+            <input min="0" id="videoLink" [(ngModel)]="taskItems.videoLink"
+              name="videoLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+            <!-- <div
+              *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
+              class="text-red-500 text-sm mt-1">
+              <div *ngIf="cropForm.get('specialNotes')!.errors?.['required']">Special Notes is required</div>
+            </div> -->
+          </div>
+    
+
+
         <div class="flex justify-end mt-6">
             <div class="w-[20px] "></div>
             <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md " type="button " (click)="updateTask()">

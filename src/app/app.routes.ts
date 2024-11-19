@@ -177,7 +177,7 @@ export const routes: Routes = [
             component: MachToolsFixeedAssetsComponent,
           },
           {
-            path: 'add-new-crop-task/:cropId/:indexId/:userId',
+            path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',
             component: AddNewCropCalanderTaskComponent,
           },
           {

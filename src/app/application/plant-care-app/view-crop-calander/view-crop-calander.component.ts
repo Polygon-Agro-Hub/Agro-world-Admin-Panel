@@ -17,10 +17,10 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 interface NewCropCalender {
   id: number;
   cropNameEnglish: string;
-  varietyEnglish: string;
+  varietyNameEnglish: string;
   category: string;
-  methodEnglish: string;
-  natOfCulEnglish: string;
+  method: string;
+  natOfCul: string;
   cropDuration: string;
   createdAt: string;
 }

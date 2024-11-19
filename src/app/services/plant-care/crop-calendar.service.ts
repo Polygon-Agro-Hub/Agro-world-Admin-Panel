@@ -6,10 +6,10 @@ import { environment } from '../../environment/environment';
 export interface NewCropCalender {
   id: number;
   cropNameEnglish: string;
-  varietyEnglish: string;
+  varietyNameEnglish: string;
   category: string;
-  methodEnglish: string;
-  natOfCulEnglish: string;
+  method: string;
+  natOfCul: string;
   cropDuration: string;
   createdAt: string;
 }
@@ -105,7 +105,7 @@ export class CropCalendarService {
     });
 
     return this.http.put(
-      `${this.apiUrl}edit-cropcalender/${cropId}`,
+      `${this.url}crop-calendar/edit-cropcalender/${cropId}`,
       formData,
       { headers }
     );
@@ -137,7 +137,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ items: NewCropCalender[]; total: number }>(
-      `${this.apiUrl}get-all-crop-calender?page=${page}&limit=${limit}`,
+      `${this.url}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`,
       { headers }
     );
   }
@@ -181,12 +181,9 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(
-      `${this.apiUrl}get-all-crop-task/${id}?page=${page}&limit=${limit}`,
-      {
-        headers,
-      }
-    );
+    return this.http.get<any>(`${this.url}crop-calendar/get-all-crop-task/${id}?page=${page}&limit=${limit}`, {
+      headers,
+    });
   }
 
   getCropTaskBycropId(id: string) {
@@ -254,18 +251,13 @@ export class CropCalendarService {
     );
   }
 
-  createNewCropTaskU(
-    cropId: string,
-    indexId: string,
-    userId: string,
-    formData: any
-  ) {
+  createNewCropTaskU(cropId: string, indexId:string, userId: string ,formData: any, onCulscropID: any) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
     });
 
     return this.http.post(
-      `${this.apiUrl}add-new-task-user/${cropId}/${indexId}/${userId}`,
+      `${this.apiUrl}add-new-task-user/${cropId}/${indexId}/${userId}/${onCulscropID}`,
       formData,
       { headers }
     );

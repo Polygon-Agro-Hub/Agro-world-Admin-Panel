@@ -64,6 +64,7 @@ import { MarketAddProductComponent } from './application/marketplace/market-add-
 import { ViewProductsListComponent } from './application/marketplace/view-products-list/view-products-list.component';
 import { CreateVarietyComponent } from './application/plant-care-app/create-variety/create-variety.component';
 import { ViewVarietyComponent } from './application/plant-care-app/view-variety/view-variety.component';
+import { AddCoupenComponent } from './application/marketplace/add-coupen/add-coupen.component';
 
 export const routes: Routes = [
   {
@@ -378,6 +379,10 @@ export const routes: Routes = [
           {
             path: 'view-products-list',
             component: ViewProductsListComponent,
+          },
+          {
+            path: 'add-coupen',
+            component: AddCoupenComponent,
           },
         ]
       }

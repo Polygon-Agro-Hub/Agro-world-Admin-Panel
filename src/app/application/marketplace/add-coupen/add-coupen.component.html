@@ -1,0 +1,116 @@
+<form (ngSubmit)="onSubmit()">
+    <!-- save button -->
+    <div class="flex flex-row justify-between items-center mb-6">
+        <p class="text-lg text-black font-semibold">Add a Coupon</p>
+        <div>
+            <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
+                (click)="onCancel()">Cancel</button>
+            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit">Save</button>
+        </div>
+    </div>
+
+    <div class="flex flex-row justify-between">
+        <div class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[60%]">
+
+            <div class="mb-8">
+                <label class="text-[#534E4E]">Code</label>
+                <input type="text" id="code" name="code" [(ngModel)]="coupenObj.code"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <div class="mb-16">
+                <label class="text-[#534E4E]">Type</label>
+                <div class="flex items-center space-x-4 mt-3">
+                    <div class="flex items-center space-x-2">
+                        <!-- With Discount Radio Button -->
+                        <input class="w-5 h-5" type="radio" id="type" name="type" [value]="'Percentage'"
+                            [(ngModel)]="coupenObj.type" />
+                        <label for="Percentage" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Percentage
+                        </label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input class="w-5 h-5" type="radio" id="type" name="type" [value]="'Fixed Amount'"
+                            [(ngModel)]="coupenObj.type" />
+                        <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Fixed Amount
+                        </label>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <input class="w-5 h-5" type="radio" id="type" name="type" [(ngModel)]="coupenObj.type"
+                            [value]="'Free Delivary'" />
+                        <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Free Delivary
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Discount Persentage</label>
+                <input type="number" id="percentage" name="percentage" [(ngModel)]="coupenObj.percentage" min="0"
+                    max="100"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+
+            <div class="flex flex-row mb-6">
+                <input type="checkbox" id="checkLimit" name="checkLimit" [(ngModel)]="coupenObj.checkLimit"
+                    [value]="true"
+                    class=" mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150" />
+
+                <label for="chekLimit" class="text-[#534E4E]">
+                    Set Price Limit (ex : This Coupon valid only for more than Rs.5000 Orders)
+                </label>
+            </div>
+
+        </div>
+
+        <div class="flex flex-col px-6 py-3 mx-6 w-[40%]">
+            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
+                <label class="text-black font-semibold">Status</label>
+                <div class="flex items-center space-x-2 my-5">
+                    <!-- With Discount Radio Button -->
+                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="true"
+                        [(ngModel)]="coupenObj.status" />
+                    <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                        Enabled
+                    </label>
+                </div>
+
+                <div class="flex items-center space-x-2 my-5">
+                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="false"
+                        [(ngModel)]="coupenObj.status" />
+                    <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                        Disabled
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
+                <label class="text-black font-semibold">Shedule</label>
+                <p class="text-[#838383] text-sm mt-2 mb-5">Settings to limit the coupon expiration date.</p>
+
+                <div class="mb-6">
+                    <label class="text-black font-medium">Start Date</label>
+                    <input type="date" id="startDate" name="startDate" [(ngModel)]="coupenObj.startDate"
+                        (change)="checkStartDate()"
+                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="mb-6">
+                    <label class="text-black font-medium">Expire Date</label>
+                    <input type="date" id="endDate" name="endDate" [(ngModel)]="coupenObj.endDate"
+                        (change)="(checkExpireDate())"
+                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</form>

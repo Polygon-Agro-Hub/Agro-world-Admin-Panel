@@ -32,4 +32,15 @@ export class MarketPlaceService {
       headers,
     });
   }
+
+  createCoupen(Data: any): Observable<any> {
+ 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}market-place/create-coupen`, Data, {
+      headers,
+    });
+  }
 }

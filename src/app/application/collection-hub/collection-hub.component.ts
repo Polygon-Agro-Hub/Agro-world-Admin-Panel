@@ -43,12 +43,47 @@ export class CollectionHubComponent {
   }
 
   downloadTemplate1() {
-    const apiUrl = 'http://localhost:3000/api/market-price/download/market_price_format.xlsx';
-    window.location.href = apiUrl;
-    Swal.fire({
-      icon: 'success',
-      title: 'Downloaded',
-      text: 'Please check the download folder',
-    });
+    const apiUrl = 'http://localhost:3000/api/market-price/download-crop-data';
+  
+    // Trigger the download
+    fetch(apiUrl, {
+      method: 'GET',
+    })
+      .then(response => {
+        if (response.ok) {
+          // Create a blob for the Excel file
+          return response.blob();
+        } else {
+          throw new Error('Failed to download the file');
+        }
+      })
+      .then(blob => {
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+  
+        // Create a temporary anchor element to trigger the download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'CropData.xlsx'; // Default file name
+        a.click();
+  
+        // Revoke the URL after the download is triggered
+        window.URL.revokeObjectURL(url);
+  
+        // Show success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Downloaded',
+          text: 'Please check your downloads folder',
+        });
+      })
+      .catch(error => {
+        // Handle errors
+        Swal.fire({
+          icon: 'error',
+          title: 'Download Failed',
+          text: error.message,
+        });
+      });
   }
 }

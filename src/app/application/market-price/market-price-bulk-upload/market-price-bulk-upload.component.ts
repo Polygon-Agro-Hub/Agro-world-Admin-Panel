@@ -88,9 +88,6 @@ export class MarketPriceBulkUploadComponent {
       const formData = new FormData();
       formData.append('xlName', this.selectedFile.name);
       formData.append('createdBy', this.createdBy);
-      formData.append('date', this.date);
-      formData.append('startTime', this.startTime);
-      formData.append('endTime', this.endTime);
       formData.append('file', this.selectedFile);
 
       // Send the file to the backend

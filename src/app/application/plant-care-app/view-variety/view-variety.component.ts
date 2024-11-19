@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -7,10 +7,9 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-
 interface NewCropGroup {
   id: number;
-  cropGroupId : string;
+  cropGroupId: string;
   varietyNameEnglish: string;
   varietyNameSinhala: string;
   varietyNameTamil: string;
@@ -20,15 +19,20 @@ interface NewCropGroup {
   image: string;
   bgColor: string;
   createdAt: string;
-
 }
 
 @Component({
   selector: 'app-view-variety',
   standalone: true,
-  imports: [LoadingSpinnerComponent, HttpClientModule, CommonModule, LoadingSpinnerComponent, NgxPaginationModule,],
+  imports: [
+    LoadingSpinnerComponent,
+    HttpClientModule,
+    CommonModule,
+    LoadingSpinnerComponent,
+    NgxPaginationModule,
+  ],
   templateUrl: './view-variety.component.html',
-  styleUrl: './view-variety.component.css'
+  styleUrl: './view-variety.component.css',
 })
 export class ViewVarietyComponent {
   newCropGroup: NewCropGroup[] = [];
@@ -37,9 +41,12 @@ export class ViewVarietyComponent {
   itemId: number | null = null;
   name!: string;
 
-
-  constructor(private cropCalendarService: CropCalendarService, private http: HttpClient, private router: Router, private route: ActivatedRoute,) {}
-
+  constructor(
+    private cropCalendarService: CropCalendarService,
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -47,33 +54,28 @@ export class ViewVarietyComponent {
       this.name = params['name'];
       console.log('Received item ID:', this.itemId);
     });
-    this.getAllVarietiesByGroup(this.itemId)
+    this.getAllVarietiesByGroup(this.itemId);
   }
-
-
 
   getAllVarietiesByGroup(id: any) {
-   
-    this.cropCalendarService.getVarietiesByGroup(id)
-      .subscribe(
-        (data) => {
+    this.cropCalendarService.getVarietiesByGroup(id).subscribe(
+      (data) => {
+        this.isLoading = false;
+        this.newCropGroup = data.groups;
+        console.log(this.newCropGroup);
+        this.hasData = this.newCropGroup.length > 0;
+      },
+      (error) => {
+        console.error('Error fetch news:', error);
+        if (error.status === 401) {
           this.isLoading = false;
-          this.newCropGroup = data.groups;
-          console.log(this.newCropGroup);
-          this.hasData = this.newCropGroup.length > 0;
-        },
-        (error) => {
-          console.error('Error fetch news:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
         }
-      );
+      }
+    );
   }
 
-
   deleteCropCalender(id: any) {
-      Swal.fire({
+    Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop variety item? This action cannot be undone.',
       icon: 'warning',
@@ -84,32 +86,33 @@ export class ViewVarietyComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-       
-        this.cropCalendarService.deleteCropVariety(id)
-          .subscribe(
-            (data: any) => {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'The crop variety item has been deleted.',
-                  'success'
-                  
-                );
-                this.getAllVarietiesByGroup(this.itemId);
-              }
-             
-            },
-            (error) => {
-              console.error('Error deleting crop variety:', error);
+        this.cropCalendarService.deleteCropVariety(id).subscribe(
+          (data: any) => {
+            if (data) {
               Swal.fire(
-                'Error!',
-                'There was an error deleting the crop variety.',
-                'error'
+                'Deleted!',
+                'The crop variety item has been deleted.',
+                'success'
               );
+              this.getAllVarietiesByGroup(this.itemId);
             }
-          );
+          },
+          (error) => {
+            console.error('Error deleting crop variety:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the crop variety.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
 
+  editVarity(id: number) {
+    this.router.navigate(['/plant-care/create-crop-variety'], {
+      queryParams: { id },
+    });
+  }
 }

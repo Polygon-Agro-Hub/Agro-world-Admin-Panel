@@ -18,22 +18,21 @@ import { DropdownModule } from 'primeng/dropdown';
     FormsModule,
   ],
   templateUrl: './view-current-market-price.component.html',
-  styleUrl: './view-current-market-price.component.css'
+  styleUrl: './view-current-market-price.component.css',
 })
 export class ViewCurrentMarketPriceComponent implements OnInit {
   isLoading = false;
   currentDate: string;
-  market: MarketPrice[] = []
-  selectedCrop: any = '';
+  market: MarketPrice[] = [];
+  selectedCrop: Crop | null = null; // Updated for type safety
   crops!: Crop[];
 
-  selectedViraity:any = '';
-  viraity!:Viraity[]
+  selectedGrade: Viraity | null = null; // Updated for type safety
+  grades!: Viraity[];
 
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-
 
   constructor(private marketSrv: MarketPriceService) {
     this.currentDate = new Date().toLocaleDateString();
@@ -41,82 +40,86 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllMarketPrices(this.page, this.itemsPerPage);
-    this.getAllCrop();
-    this.viraity=[
+    this.getAllCrops();
+
+    this.grades = [
       { id: '1', Vgrade: 'A' },
       { id: '2', Vgrade: 'B' },
-      { id: '3', Vgrade: 'C' },
-      { id: '4', Vgrade: 'D' }
-    ]
+      { id: '3', Vgrade: 'C' }
+    ];
   }
-
-  formatDateTime(date: Date): string {
-    return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-
 
   fetchAllMarketPrices(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
-    this.marketSrv.getAllMarketPrice(page,limit, this.selectedCrop?.cropName, this.selectedViraity?.Vgrade).subscribe(
-      (res) => {
-        this.market = res.results
-        this.totalItems=res.total
-        console.log(res);
 
+    const cropId = this.selectedCrop?.id || ''; // Pass cropGroupId if selected
+    const grade = this.selectedGrade?.Vgrade || ''; // Pass grade if selected
+
+    this.marketSrv.getAllMarketPrice(page, limit, cropId, grade).subscribe(
+      (res) => {
+        this.market = res.results;
+        this.totalItems = res.total;
+        console.log('Market Prices:', res);
       },
       (error) => {
         console.error('Error fetching market price:', error);
         Swal.fire(
           'Error!',
-          'There was an error fetching market price.',
+          'There was an error fetching market prices.',
           'error'
         );
       }
-    )
+    );
   }
 
-  getAllCrop() {
+  getAllCrops() {
     this.marketSrv.getAllCropName().subscribe(
       (res) => {
         this.crops = res;
-        console.log(res);
-
+        console.log('Crops:', res);
+      },
+      (error) => {
+        console.error('Error fetching crops:', error);
+        Swal.fire(
+          'Error!',
+          'There was an error fetching crops.',
+          'error'
+        );
       }
-    )
+    );
   }
 
   applyFiltersCrop() {
     this.fetchAllMarketPrices(this.page, this.itemsPerPage);
   }
 
-  applyFiltersVerity(){
-    this.fetchAllMarketPrices(this.page, this.itemsPerPage)
+  applyFiltersGrade() {
+    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
   }
 
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllMarketPrices(this.page, this.itemsPerPage);
   }
-
 }
 
 class MarketPrice {
-  id!: string
-  cropName!: string
-  variety!: string
-  grade!: string
-  price!: string
-  date!: string
-  startTime!: Date
-  endTime!: Date
+  id!: string;
+  cropName!: string;
+  varietyName!: string;
+  grade!: string;
+  price!: string;
+  date!: string;
+  startTime!: Date;
+  endTime!: Date;
 }
 
 class Crop {
-  id!: string
-  cropName!: string
+  id!: string; // Updated to match `cropGroupId`
+  cropNameEnglish!: string;
 }
 
-class Viraity{
-  id!:string
-  Vgrade!:string
+class Viraity {
+  id!: string;
+  Vgrade!: string;
 }

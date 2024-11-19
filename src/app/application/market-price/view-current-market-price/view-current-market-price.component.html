@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/market-place'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/collection-hub'">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -18,15 +18,16 @@
     <div class="flex flex-row my-5">
         <div>
             <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-                [options]="crops" optionLabel="cropName" [(ngModel)]="selectedCrop" [showClear]="true"
+                [options]="crops" optionLabel="cropNameEnglish" [(ngModel)]="selectedCrop" [showClear]="true"
                 placeholder="Crop" (onChange)="applyFiltersCrop()" />
         </div>
 
         <div class="mx-6">
             <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-                [options]="viraity" optionLabel="Vgrade" [(ngModel)]="selectedViraity" [showClear]="true"
-                placeholder="Grade" (onChange)="applyFiltersVerity()" />
+                [options]="grades" optionLabel="Vgrade" [(ngModel)]="selectedGrade" [showClear]="true"
+                placeholder="Grade" (onChange)="applyFiltersGrade()" />
         </div>
+        
     </div>
 
     <!-- <div *ngIf="!hasData" class="text-center py-8">
@@ -62,7 +63,7 @@
                   }">
 
                     <td class="py-3 text-textLight dark:text-textDark">{{item.cropName}}</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.variety}}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.varietyName}}</td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.grade}}</td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.price}}</td>
                 </tr>

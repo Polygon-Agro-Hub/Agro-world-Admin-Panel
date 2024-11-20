@@ -47,4 +47,6 @@ class Complain {
   complain!: string;
   language!: string;
   createdAt!: string;
+  CollectionContact!:string;
+  centerName!:string;
 }

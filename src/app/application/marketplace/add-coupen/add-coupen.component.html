@@ -72,7 +72,7 @@
                 <label class="text-black font-semibold">Status</label>
                 <div class="flex items-center space-x-2 my-5">
                     <!-- With Discount Radio Button -->
-                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="true"
+                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="'Enabled'"
                         [(ngModel)]="coupenObj.status" />
                     <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                         Enabled
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="flex items-center space-x-2 my-5">
-                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="false"
+                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="'Disabled'"
                         [(ngModel)]="coupenObj.status" />
                     <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                         Disabled

@@ -97,7 +97,7 @@ class Coupen {
   code!: string;
   type!: string;
   percentage!: string;
-  status: boolean = false;
+  status: string = 'Disabled';
   startDate!: string;
   endDate!: string;
   checkLimit: boolean = false;

@@ -17,14 +17,14 @@ export class AddCollectionCenterComponent {
   collectionCenterForm: FormGroup;
   centerData: CollectionCenter = new CollectionCenter();
 
-  constructor(private fb: FormBuilder, private collectionCenterService: CollectionCenterService,  private router: Router) {
+  constructor(private fb: FormBuilder, private collectionCenterService: CollectionCenterService, private router: Router) {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', Validators.required],
       centerName: ['', Validators.required],
-      contact01: ['', Validators.required],
+      contact01: ['', Validators.required, Validators.maxLength(10),Validators.minLength(10)],
       contact01Code: ['+94', Validators.required],
-      contact02: [''],
-      contact02Code: ['+94'],
+      contact02: ['', Validators.required, Validators.maxLength(10),Validators.minLength(10)],
+      contact02Code: ['+94', Validators.required],
       buildingNumber: ['', Validators.required],
       street: ['', Validators.required],
       district: ['', Validators.required],
@@ -32,15 +32,108 @@ export class AddCollectionCenterComponent {
     });
   }
 
+  ProvinceData = [
+    {
+      province: "Western",
+      district: [
+        { districtName: "Colombo" },
+        { districtName: "Kalutara" },
+        { districtName: "Gampaha" }
+      ]
+    },
+    {
+      province: "Central",
+      district: [
+        { districtName: "Kandy" },
+        { districtName: "Matale" },
+        { districtName: "Nuwara Eliya" }
+      ]
+    },
+    {
+      province: "Southern",
+      district: [
+        { districtName: "Galle" },
+        { districtName: "Matara" },
+        { districtName: "Hambantota" }
+      ]
+    },
+    {
+      province: "Northern",
+      district: [
+        { districtName: "Jaffna" },
+        { districtName: "Mannar" },
+        { districtName: "Vavuniya" },
+        { districtName: "Kilinochchi" },
+        { districtName: "Mulaitivu" }
+      ]
+    },
+    {
+      province: "Eastern",
+      district: [
+        { districtName: "Batticaloa" },
+        { districtName: "Ampara" },
+        { districtName: "Trincomalee" }
+      ]
+    },
+    {
+      province: "Uva",
+      district: [
+        { districtName: "Badulla" },
+        { districtName: "Moneragala" }
+      ]
+    },
+    {
+      province: "North Western",
+      district: [
+        { districtName: "Kurunegala" },
+        { districtName: "Puttalam" }
+      ]
+    },
+    {
+      province: "North Central",
+      district: [
+        { districtName: "Anuradhapura" },
+        { districtName: "Polonnaruwa" }
+      ]
+    },
+    {
+      province: "Sabaragamuwa",
+      district: [
+        { districtName: "Ratnapura" },
+        { districtName: "Kegalle" }
+      ]
+    },
+    
+  ]
+
   onSubmit() {
+    if (this.collectionCenterForm.invalid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please fill in all required fields.'
+      });
+      return;
+    }
+
     this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
 
     this.collectionCenterService.createCollectionCenter(this.centerData).subscribe(
       (res) => {
+        console.log(res);
+
         if (res.status) {
           Swal.fire('Success', 'Collection Center Created Successfully', 'success');
+          this.router.navigate(['/collection-hub/view-collection-centers']);
+        } else {
+          if (res.message === "This RegCode allrady exist!" ) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: 'This RegCode already exists!'
+            });
+          }
         }
-        this.router.navigate(['/collection-hub/view-collection-centers'])
       },
       (error) => {
         console.log("Error:", error);
@@ -49,7 +142,6 @@ export class AddCollectionCenterComponent {
   }
 }
 
-// Define CollectionCenter model
 class CollectionCenter {
   regCode!: string;
   centerName!: string;
@@ -62,3 +154,6 @@ class CollectionCenter {
   district!: string;
   province!: string;
 }
+
+;
+

@@ -159,7 +159,7 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.delete(`${this.apiUrl}delete-crop/${id}`, {
+    return this.http.delete(`${this.url}crop-calendar/delete-crop/${id}`, {
       headers,
     });
   }

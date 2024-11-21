@@ -53,7 +53,6 @@ export class ViewCollectiveOfficerComponent {
   companyArr: Company[] = []
 
   constructor(
-    private http: HttpClient,
     private router: Router,
     private collectionService: CollectionService
   ) { }
@@ -153,7 +152,6 @@ export class ViewCollectiveOfficerComponent {
   openPopup(item: any) {
     this.isPopupVisible = true;
 
-    // Generate the table HTML dynamically
     let tableHtml = `
       <div class="container mx-auto">
         <h1 class="text-center text-2xl font-bold mb-4">${item.firstName}</h1>
@@ -245,6 +243,17 @@ export class ViewCollectiveOfficerComponent {
         this.companyArr = res
       }
     )
+  }
+
+  onSearch(){
+    console.log();
+    
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+  offSearch(){
+    this.searchNIC =''
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
 }

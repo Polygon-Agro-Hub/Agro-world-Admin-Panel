@@ -296,6 +296,15 @@ export class CropCalendarService {
     });
   }
 
+  getCropVarietyById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.url}crop-calendar/crop-variety-by-id/${id}`, {
+      headers,
+    });
+  }
+
   updateCropGroup(id: number, data: FormData) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

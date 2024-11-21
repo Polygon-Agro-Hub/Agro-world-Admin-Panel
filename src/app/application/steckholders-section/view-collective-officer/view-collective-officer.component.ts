@@ -16,10 +16,10 @@ import { environment } from '../../../environment/environment';
 interface CollectionOfficers {
   id: number;
   image: string;
-  firstName: string;
-  lastName: string;
+  firstNameEnglish: string;
+  lastNameEnglish: string;
   phoneNumber01: string;
-  companyName: string;
+  companyNameEnglish: string;
   nic: string;
   status: string;
   created_at: string;

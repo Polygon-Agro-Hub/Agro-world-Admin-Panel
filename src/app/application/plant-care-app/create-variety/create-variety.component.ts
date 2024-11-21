@@ -20,6 +20,20 @@ import { environment } from '../../../environment/environment';
 import { MatSelectModule } from '@angular/material/select';
 import { response } from 'express';
 
+
+interface NewsItem {
+  varietyNameEnglish: string;
+  varietyNameSinhala: string;
+  varietyNameTamil: string;
+  descriptionEnglish: string;
+  descriptionSinhala: string;
+  descriptionTamil: string;
+  bgColor: string;
+  image: string;
+
+}
+
+
 @Component({
   selector: 'app-create-variety',
   standalone: true,
@@ -56,6 +70,7 @@ export class CreateVarietyComponent implements OnInit {
   imagePreview: string | ArrayBuffer | null = null
 
   itemId: number | null = null;
+  newsItems: NewsItem[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -98,28 +113,44 @@ export class CreateVarietyComponent implements OnInit {
       console.log('Recived item ID:', this.itemId);
       
       if(this.itemId){
-        this.cropCalendarService.getVarietiesByGroup(this.itemId).subscribe({
-          next: (response:any)=>{
-            this.cropVarity = {
-              cropGroupId: response.groups[0].cropGroupId,
-              varietyNameEnglish: response.groups[0].varietyEnglish,
-              varietyNameSinhala: response.groups[0].varietySinhala,
-              varietyNameTamil: response.groups[0].varietyTamil,
-              descriptionEnglish: response.groups[0].descriptionEnglish,
-              descriptionSinhala: response.groups[0].descriptionSinhala,
-              descriptionTamil: response.groups[0].descriptionTamil,
-              bgColor: response.groups[0].bgColor,
-            };
-            if(response.groups[0].image){
-              this.selectedImage = response.group[0].image;
+        // this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
+        //   next: (response:any)=>{
+        //     this.cropVarity = {
+        //       cropGroupId: response.groups[0].cropGroupId,
+        //       varietyNameEnglish: response.groups[0].varietyEnglish,
+        //       varietyNameSinhala: response.groups[0].varietySinhala,
+        //       varietyNameTamil: response.groups[0].varietyTamil,
+        //       descriptionEnglish: response.groups[0].descriptionEnglish,
+        //       descriptionSinhala: response.groups[0].descriptionSinhala,
+        //       descriptionTamil: response.groups[0].descriptionTamil,
+        //       bgColor: response.groups[0].bgColor,
+        //     };
+        //     if(response.groups[0].image){
+        //       this.selectedImage = response.group[0].image;
+        //       this.selectedFileName = "Existing Image";
+        //     }
+        //   },
+        //   error:(error)=>{
+        //     console.error('Error fetching crop group details:', error);
+            
+        //   }
+        // })
+
+        this.isLoading = true;
+        this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
+          next: (response: any) => {
+            this.newsItems = response.groups;
+            if (response.groups[0].image) {
+              this.selectedImage = response.groups[0].image; // Base64 image
               this.selectedFileName = "Existing Image";
             }
+            this.isLoading = false;
           },
-          error:(error)=>{
+          error: (error) => {
             console.error('Error fetching crop group details:', error);
-            
-          }
-        })
+            this.isLoading = false;
+          },
+        });
       }
 
     })
@@ -265,37 +296,64 @@ export class CreateVarietyComponent implements OnInit {
       });
   }
 
-  updateVarity() {
-    if (!this.selectedFile && !this.selectedImage) {
-      alert('Please select an image file.');
+  updateNews() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
       return;
     }
-
+  
+    if (!this.newsItems || this.newsItems.length === 0) {
+      console.error('News items are empty');
+      return;
+    }
+  
+    const newsItem = this.newsItems[0]; // Assuming you want to update the first item
+  
     const formData = new FormData();
-    formData.append('cropGroupId', this.cropVarity.cropGroupId);
-    formData.append('varietyNameEnglish', this.cropVarity.varietyNameEnglish);
-    formData.append('varietyNameSinhala', this.cropVarity.varietyNameSinhala);
-    formData.append('varietyNameTamil', this.cropVarity.varietyNameTamil);
-    formData.append('descriptionEnglish', this.cropVarity.descriptionEnglish);
-    formData.append('descriptionSinhala', this.cropVarity.descriptionSinhala);
-    formData.append('descriptionTamil', this.cropVarity.descriptionTamil);
-    formData.append('bgColor', this.cropVarity.bgColor);
-    if(this.selectedFile){
+    formData.append('varietyNameEnglish', newsItem.varietyNameEnglish || '');
+    formData.append('varietyNameSinhala', newsItem.varietyNameSinhala || '');
+    formData.append('varietyNameTamil', newsItem.varietyNameTamil || '');
+    formData.append('descriptionEnglish', newsItem.descriptionEnglish || '');
+    formData.append('descriptionSinhala', newsItem.descriptionSinhala || '');
+    formData.append('descriptionTamil', newsItem.descriptionTamil || '');
+    formData.append('bgColor', newsItem.bgColor || '');
+  
+    if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-    console.log('This is formdata', formData);
-    if(this.itemId !== null){
-      this.cropCalendarService.updateVariety(this.itemId, formData).subscribe({
-        next:(response:any)=>{
-          console.log('Crop Varity updated successfully:', response);
-        Swal.fire('Success', response.message, 'success');
-        this.router.navigate(['/plant-care/view-crop-variety'])
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    this.isLoading = true;
+    this.http
+      .put(
+        `${environment.API_URL}crop-calendar/update-crop-variety/${this.itemId}`,
+        formData,
+        { headers }
+      )
+      .subscribe(
+        (res: any) => {
+          console.log('Market Price updated successfully', res);
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Market Price updated successfully!',
+          });
+          this.router.navigate(['/plant-care/view-crop-group']);
         },
-        error:(error)=>{
-          console.error('Error updating crop varity', error);
-          Swal.fire('Error', error, 'error');
+        (error) => {
+          console.error('Error updating news', error);
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: 'Error updating news',
+          });
         }
-      })
-    }
+      );
   }
 }

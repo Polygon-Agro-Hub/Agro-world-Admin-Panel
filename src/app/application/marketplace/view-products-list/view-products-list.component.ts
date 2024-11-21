@@ -122,15 +122,15 @@ export class ViewProductsListComponent {
 }
 
 class ProductList {
-  itemId!: number;
+  id!:number;
   cropId!: number;
-  itemDisplayName!: string;
-  itemNormalPrice!: number;
-  itemDiscountedPrice!: number;
-  itemPromo!: number;
-  unitType!: string;
+  cropNameEnglish!:string;
+  displayName!: string;
+  method!: string
+  varietyNameEnglish!: string
+  discountedPrice!: number
   startValue!: number;
+  promo!: number;
+  unitType!: string;
   changeby!: number;
-  cropVarietyEnglish!: string;
-  cropNameEnglish!: string;
 }

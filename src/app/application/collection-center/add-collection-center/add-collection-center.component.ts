@@ -16,14 +16,16 @@ import { Router } from '@angular/router';
 export class AddCollectionCenterComponent {
   collectionCenterForm: FormGroup;
   centerData: CollectionCenter = new CollectionCenter();
+  selectProvince: string = ''
+  selectedDistrict: any = []
 
   constructor(private fb: FormBuilder, private collectionCenterService: CollectionCenterService, private router: Router) {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', Validators.required],
       centerName: ['', Validators.required],
-      contact01: ['', Validators.required, Validators.maxLength(10),Validators.minLength(10)],
+      contact01: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],
       contact01Code: ['+94', Validators.required],
-      contact02: ['', Validators.required, Validators.maxLength(10),Validators.minLength(10)],
+      contact02: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],
       contact02Code: ['+94', Validators.required],
       buildingNumber: ['', Validators.required],
       street: ['', Validators.required],
@@ -103,7 +105,7 @@ export class AddCollectionCenterComponent {
         { districtName: "Kegalle" }
       ]
     },
-    
+
   ]
 
   onSubmit() {
@@ -126,7 +128,7 @@ export class AddCollectionCenterComponent {
           Swal.fire('Success', 'Collection Center Created Successfully', 'success');
           this.router.navigate(['/collection-hub/view-collection-centers']);
         } else {
-          if (res.message === "This RegCode allrady exist!" ) {
+          if (res.message === "This RegCode allrady exist!") {
             Swal.fire({
               icon: 'error',
               title: 'Failed',
@@ -140,6 +142,22 @@ export class AddCollectionCenterComponent {
       }
     );
   }
+
+  onProvinceChange() {
+    const sample = this.ProvinceData.filter(crop => crop.province === this.selectProvince);
+
+    console.log("Filtered crops:", sample);
+
+    if (sample.length > 0) {
+      this.selectedDistrict = sample[0].district;
+      console.log("Selected crop varieties:", this.selectedDistrict);
+      // this.isVerityVisible = true;
+    } else {
+      console.log("No crop found with selectId:", this.ProvinceData);
+    }
+  }
+
+
 }
 
 class CollectionCenter {

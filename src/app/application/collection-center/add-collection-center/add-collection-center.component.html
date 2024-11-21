@@ -114,7 +114,7 @@
       <!-- Province -->
       <div>
         <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-        <select formControlName="province" id="province" name="province"
+        <select formControlName="province" id="province" name="province" [(ngModel)]="selectProvince" (change)="onProvinceChange()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" >
           <option selected disabled>-- select --</option>
           <option *ngFor="let item of ProvinceData" [value]="item.province">{{item.province}}</option>
@@ -129,8 +129,11 @@
       <!-- District -->
       <div>
         <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-        <input formControlName="district" id="district" name="district"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <select formControlName="district" id="district" name="district"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" >
+          <option selected disabled>-- select --</option>
+          <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}</option>
+        </select>
         <div
           *ngIf="collectionCenterForm.get('district')?.invalid && (collectionCenterForm.get('district')?.dirty || collectionCenterForm.get('district')?.touched)"
           class="text-red-500 text-sm mt-1">

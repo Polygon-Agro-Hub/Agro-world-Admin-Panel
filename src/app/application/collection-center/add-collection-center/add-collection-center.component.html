@@ -1,96 +1,149 @@
 <button onclick="window.location.href='/collection-hub'" class="ml-5 text-textLight dark:text-textDark">
-    <i class="fa-solid fa-arrow-left"></i> Back
-  </button>
-  
-  <div class="h-[20px]"></div>
-  
-  <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Add Collection Center</h2>
-    
-    <form [formGroup]="collectionCenterForm" (ngSubmit)="onSubmit()">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-  
-        <!-- Registration Code -->
-        <div>
-          <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
-          <input formControlName="regCode" id="regCode" name="regCode" 
-                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
+<div class="h-[20px]"></div>
+
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Add Collection Center</h2>
+
+  <form [formGroup]="collectionCenterForm" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+      <!-- Registration Code -->
+      <div>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <input formControlName="regCode" id="regCode" name="regCode"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          required />
+        <div
+          *ngIf="collectionCenterForm.get('regCode')?.invalid && (collectionCenterForm.get('regCode')?.dirty || collectionCenterForm.get('regCode')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          regCode is required
         </div>
-  
-        <!-- Collection Center Name -->
-        <div>
-          <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center Name</label>
-          <input formControlName="centerName" id="centerName" name="centerName" 
-                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        </div>
-  
-        <!-- Contact Number 01 -->
-        <div>
-          <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number 01</label>
-          <div class="mt-1 flex">
-            <select formControlName="contact01Code" id="contact01Code" 
-                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
-            </select>
-            <input formControlName="contact01" id="contact01" name="contact01" 
-                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
-                   placeholder="Enter your phone number" />
-          </div>
-        </div>
-  
-        <!-- Contact Number 02 -->
-        <div>
-          <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number 02</label>
-          <div class="mt-1 flex">
-            <select formControlName="contact02Code" id="contact02Code" 
-                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
-            </select>
-            <input formControlName="contact02" id="contact02" name="contact02" 
-                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
-                   placeholder="Enter your phone number" />
-          </div>
-        </div>
-  
-        <!-- Building Number -->
-        <div>
-          <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building Number</label>
-          <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" 
-                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        </div>
-  
-        <!-- Street Name -->
-        <div>
-          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
-          <input formControlName="street" id="street" name="street" 
-                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        </div>
-  
-        <!-- District -->
-        <div>
-          <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-          <input formControlName="district" id="district" name="district" 
-                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        </div>
-  
-        <!-- Province -->
-        <div>
-          <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-          <input formControlName="province" id="province" name="province" 
-                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        </div>
-  
       </div>
-  
+
+      <!-- Collection Center Name -->
+      <div>
+        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center
+          Name</label>
+        <input formControlName="centerName" id="centerName" name="centerName"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div
+          *ngIf="collectionCenterForm.get('centerName')?.invalid && (collectionCenterForm.get('centerName')?.dirty || collectionCenterForm.get('centerName')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          Center Name is required
+        </div>
+      </div>
+
+      <!-- Contact Number 01 -->
+      <div>
+        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
+          01</label>
+        <div class="mt-1 flex">
+          <select formControlName="contact01Code" id="contact01Code"
+            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+            <option value="+94">+94 (LK)</option>
+            <option value="+1">+1 (US)</option>
+            <option value="+44">+44 (UK)</option>
+            <option value="+91">+91 (India)</option>
+          </select>
+          <div class="flex flex-col">
+            <input type="number" formControlName="contact01" id="contact01" name="contact01"
+              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              placeholder="Enter your phone number" />
+            <div
+              *ngIf="collectionCenterForm.get('contact01')?.invalid && (collectionCenterForm.get('contact01')?.dirty || collectionCenterForm.get('contact01')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Contact number 1 is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Number 02 -->
+      <div>
+        <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
+          02</label>
+        <div class="mt-1 flex">
+          <select formControlName="contact02Code" id="contact02Code"
+            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+            <option value="+94">+94 (LK)</option>
+            <option value="+1">+1 (US)</option>
+            <option value="+44">+44 (UK)</option>
+            <option value="+91">+91 (India)</option>
+          </select>
+          <div class="flex flex-col">
+            <input type="number" formControlName="contact02" id="contact02" name="contact02"
+              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              placeholder="Enter your phone number" />
+            <div
+              *ngIf="collectionCenterForm.get('contact02')?.invalid && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Contact number 2 is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Building Number -->
+      <div>
+        <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building
+          Number</label>
+        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div
+          *ngIf="collectionCenterForm.get('buildingNumber')?.invalid && (collectionCenterForm.get('buildingNumber')?.dirty || collectionCenterForm.get('buildingNumber')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          Building number is required
+        </div>
+      </div>
+
+      <!-- Street Name -->
+      <div>
+        <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
+        <input formControlName="street" id="street" name="street"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div
+          *ngIf="collectionCenterForm.get('street')?.invalid && (collectionCenterForm.get('street')?.dirty || collectionCenterForm.get('street')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          Street is required
+        </div>
+      </div>
+
+      <!-- Province -->
+      <div>
+        <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
+        <select formControlName="province" id="province" name="province" [(ngModel)]="selectProvince" (change)="onProvinceChange()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" >
+          <option selected disabled>-- select --</option>
+          <option *ngFor="let item of ProvinceData" [value]="item.province">{{item.province}}</option>
+        </select>
+        <div
+          *ngIf="collectionCenterForm.get('province')?.invalid && (collectionCenterForm.get('province')?.dirty || collectionCenterForm.get('province')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          Province is required
+        </div>
+      </div>
+
+      <!-- District -->
+      <div>
+        <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+        <select formControlName="district" id="district" name="district"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" >
+          <option selected disabled>-- select --</option>
+          <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}</option>
+        </select>
+        <div
+          *ngIf="collectionCenterForm.get('district')?.invalid && (collectionCenterForm.get('district')?.dirty || collectionCenterForm.get('district')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          District is required
+        </div>
+      </div>
+
       <div class="flex justify-end m-10">
         <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Save</button>
       </div>
-    </form>
-  </div>
-  
+    </div>
+  </form>
+</div>

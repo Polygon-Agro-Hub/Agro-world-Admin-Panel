@@ -32,14 +32,13 @@
                     <!-- Role Input -->
                     <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Role</label
           >
-          <select
+          <input
             id="role"
             name="role"
-            formControlName="role"
+            [value]="'SUPER_ADMIN'"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
-            <option>SUPER_ADMIN</option>
-          </select>
+            disabled
+          />
         </div>
 
         <div>

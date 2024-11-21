@@ -123,15 +123,13 @@ export class CreateNewsComponent {
         'insertImage',
         'backgroundColor',
         'customClasses',
-        'link',
-        'unlink',
         'insertVideo',
         'insertHorizontalRule',
         'toggleEditorMode',
         'indent',
         'outdent',
-        'insertUnorderedList',
-        'insertOrderedList',
+        'fontSize',
+        'heading'
       ],
     ],
   };

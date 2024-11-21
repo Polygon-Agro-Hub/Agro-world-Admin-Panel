@@ -95,7 +95,7 @@ export class ViewCollectiveOfficerComponent {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
-  deleteCollectionOfficer(id: any) {
+  deleteCollectionOfficer(id: number) {
     const token = localStorage.getItem('Login Token : ');
     if (!token) {
       console.error('No token found');
@@ -113,36 +113,33 @@ export class ViewCollectiveOfficerComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-
-        this.http
-          .delete(
-            `${environment.API_BASE_URL}delete-collection-officer/${id}`,
-            {
-              headers,
-            }
-          )
-          .subscribe(
-            (data: any) => {
+        this.collectionService.deleteOfficer(id).subscribe(
+          (data) => {
+            if (data.status) {
               console.log('Collection Officer deleted successfully');
               Swal.fire(
                 'Deleted!',
                 'The Collection Officer has been deleted.',
                 'success'
               );
-              this.fetchAllCollectionOfficer();
-            },
-            (error) => {
-              console.error('Error deleting news:', error);
+              this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+            } else {
               Swal.fire(
                 'Error!',
                 'There was an error deleting the news item.',
                 'error'
               );
             }
-          );
+          },
+          (error) => {
+            console.error('Error deleting news:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the news item.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
@@ -179,8 +176,8 @@ export class ViewCollectiveOfficerComponent {
           .getElementById('approveButton')
           ?.addEventListener('click', () =>
             this.collectionService.ChangeStatus(item.id, "Approved").subscribe(
-              (res)=>{
-                if(res.status){
+              (res) => {
+                if (res.status) {
                   Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -189,7 +186,7 @@ export class ViewCollectiveOfficerComponent {
                     timer: 3000
                   });
                   this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                }else{
+                } else {
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -205,8 +202,8 @@ export class ViewCollectiveOfficerComponent {
           .getElementById('rejectButton')
           ?.addEventListener('click', () =>
             this.collectionService.ChangeStatus(item.id, "Rejected").subscribe(
-              (res)=>{
-                if(res.status){
+              (res) => {
+                if (res.status) {
                   Swal.fire({
                     icon: 'success',
                     title: 'Success!',
@@ -215,7 +212,7 @@ export class ViewCollectiveOfficerComponent {
                     timer: 3000
                   });
                   this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                }else{
+                } else {
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -244,11 +241,12 @@ export class ViewCollectiveOfficerComponent {
   getAllcompany() {
     this.collectionService.getCompanyNames().subscribe(
       (res) => {
-        console.log("company:",res);
+        console.log("company:", res);
         this.companyArr = res
       }
     )
   }
+
 }
 
 

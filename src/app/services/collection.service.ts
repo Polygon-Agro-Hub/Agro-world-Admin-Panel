@@ -50,4 +50,14 @@ export class CollectionService {
     let url = `${this.apiUrl}collection-officer/update-status/${id}/${status}`;
     return this.http.get<any>(url, { headers });
   }
+
+
+  deleteOfficer(id:number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    let url = `${this.apiUrl}collection-officer/delete-officer/${id}`;
+    return this.http.delete<any>(url, { headers });
+  }
 }

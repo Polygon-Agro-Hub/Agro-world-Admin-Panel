@@ -23,6 +23,7 @@ interface CollectionOfficers {
   nic: string;
   status: string;
   created_at: string;
+  centerName: string;
 }
 
 @Component({
@@ -46,20 +47,26 @@ export class ViewCollectiveOfficerComponent {
   searchNIC: string = '';
   isPopupVisible = false;
 
+  status!: Company[];
+  statusFilter: any = '';
+
+  companyArr: Company[] = []
+
   constructor(
-    private http: HttpClient,
     private router: Router,
     private collectionService: CollectionService
-  ) {}
+  ) { }
 
   fetchAllCollectionOfficer(
     page: number = 1,
     limit: number = this.itemsPerPage
   ) {
     this.collectionService
-      .fetchAllCollectionOfficer(page, limit, this.searchNIC)
+      .fetchAllCollectionOfficer(page, limit, this.searchNIC, this.statusFilter?.id)
       .subscribe(
         (response) => {
+          console.log(response);
+
           this.collectionOfficers = response.items;
           this.totalItems = response.total;
           console.log(this.collectionOfficers);
@@ -75,6 +82,7 @@ export class ViewCollectiveOfficerComponent {
 
   ngOnInit() {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+    this.getAllcompany()
   }
 
   onPageChange(event: number) {
@@ -83,12 +91,10 @@ export class ViewCollectiveOfficerComponent {
   }
 
   applyFilters() {
-    throw new Error('Method not implemented.');
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
-  status: any;
-  statusFilter: any = "'";
 
-  deleteCollectionOfficer(id: any) {
+  deleteCollectionOfficer(id: number) {
     const token = localStorage.getItem('Login Token : ');
     if (!token) {
       console.error('No token found');
@@ -106,36 +112,33 @@ export class ViewCollectiveOfficerComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-
-        this.http
-          .delete(
-            `${environment.API_BASE_URL}delete-collection-officer/${id}`,
-            {
-              headers,
-            }
-          )
-          .subscribe(
-            (data: any) => {
+        this.collectionService.deleteOfficer(id).subscribe(
+          (data) => {
+            if (data.status) {
               console.log('Collection Officer deleted successfully');
               Swal.fire(
                 'Deleted!',
                 'The Collection Officer has been deleted.',
                 'success'
               );
-              this.fetchAllCollectionOfficer();
-            },
-            (error) => {
-              console.error('Error deleting news:', error);
+              this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+            } else {
               Swal.fire(
                 'Error!',
                 'There was an error deleting the news item.',
                 'error'
               );
             }
-          );
+          },
+          (error) => {
+            console.error('Error deleting news:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the news item.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
@@ -149,7 +152,6 @@ export class ViewCollectiveOfficerComponent {
   openPopup(item: any) {
     this.isPopupVisible = true;
 
-    // Generate the table HTML dynamically
     let tableHtml = `
       <div class="container mx-auto">
         <h1 class="text-center text-2xl font-bold mb-4">${item.firstName}</h1>
@@ -171,12 +173,54 @@ export class ViewCollectiveOfficerComponent {
         document
           .getElementById('approveButton')
           ?.addEventListener('click', () =>
-            this.updateStatus(item, 'Approved')
+            this.collectionService.ChangeStatus(item.id, "Approved").subscribe(
+              (res) => {
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The collection was approved successfully.',
+                    showConfirmButton: false,
+                    timer: 3000
+                  });
+                  this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000
+                  });
+                }
+              }
+            )
           );
         document
           .getElementById('rejectButton')
           ?.addEventListener('click', () =>
-            this.updateStatus(item, 'Rejected')
+            this.collectionService.ChangeStatus(item.id, "Rejected").subscribe(
+              (res) => {
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The collection was Rejected .',
+                    showConfirmButton: false,
+                    timer: 3000
+                  });
+                  this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000
+                  });
+                }
+              }
+            )
           );
       },
     });
@@ -191,4 +235,31 @@ export class ViewCollectiveOfficerComponent {
     );
     this.isPopupVisible = false;
   }
+
+  getAllcompany() {
+    this.collectionService.getCompanyNames().subscribe(
+      (res) => {
+        console.log("company:", res);
+        this.companyArr = res
+      }
+    )
+  }
+
+  onSearch(){
+    console.log();
+    
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+  offSearch(){
+    this.searchNIC =''
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+}
+
+
+class Company {
+  id!: string;
+  companyNameEnglish!: string
 }

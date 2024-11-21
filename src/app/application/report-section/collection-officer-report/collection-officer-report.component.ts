@@ -51,7 +51,7 @@ export class CollectionOfficerReportComponent {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
     this.collectionoOfficer
-      .fetchAllCollectionOfficer(page, limit, this.searchNIC)
+      .fetchAllCollectionOfficer(page, limit, this.searchNIC,'')
       .subscribe(
         (response) => {
           this.ongoingCultivation = response.items;
@@ -60,7 +60,6 @@ export class CollectionOfficerReportComponent {
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
           if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
           }
         }
       );

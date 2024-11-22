@@ -76,7 +76,7 @@ export class ViewProductsListComponent {
     }
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
 
     Swal.fire({
@@ -119,17 +119,30 @@ export class ViewProductsListComponent {
       }
     });
   }
+
+  calculateSalePrice(actual: number, precentage: number): number {
+    return actual - actual * (precentage / 100);
+  }
+
+  checkDiscount(price: number): string {
+    if (price > 0) {
+      return '% Actual, Sales';
+    } else {
+      return 'Actual, Sales';
+    }
+  }
 }
 
 class ProductList {
-  id!:number;
+  id!: number;
   cropId!: number;
-  cropNameEnglish!:string;
+  cropNameEnglish!: string;
   displayName!: string;
-  method!: string
-  varietyNameEnglish!: string
-  discountedPrice!: number
+  method!: string;
+  varietyNameEnglish!: string;
+  discountedPrice: number = -1;
   startValue!: number;
+  normalPrice!: number;
   promo!: number;
   unitType!: string;
   changeby!: number;

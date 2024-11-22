@@ -50,7 +50,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\+94\d{9}$/)]],
-      NICnumber: ['', [Validators.required, Validators.pattern(/^(\d{12}|\d{10}[V])$/)]],
+      NICnumber: ['', [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[V])$/)]],
       profileImage: [''],
     });
   }
@@ -246,7 +246,7 @@ export class EditPlantcareUsersComponent implements OnInit {
               console.error('Error fetching user data:', error);
               Swal.fire(
                 'Error!',
-                'There was an error creating the plant care user.',
+                'Profile image is required. Only image files are allowed (jpg, png, gif)',
                 'error'
               );
             }

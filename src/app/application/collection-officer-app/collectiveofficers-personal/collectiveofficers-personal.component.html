@@ -4,7 +4,7 @@
     Back
 </button>
 <div class="h-[20px]"></div>
-<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+<div *ngIf="this.itemId == null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
 
 
 
@@ -24,30 +24,6 @@
                     </div>
                 </div>
 
-                <!-- <div class="mb-6">
-                    <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                        Preferred Languages
-                    </label>
-
-                    <div class="flex items-center space-x-4 mt-3">
-                        <div class="flex items-center space-x-2">
-                            <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala"
-                                (change)="onCheckboxChange('Sinhala', $event)" />
-                            <label for="sinhala" class="text-gray-700">Sinhala</label>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English"
-                                (change)="onCheckboxChange('English', $event)" />
-                            <label for="english" class="text-gray-700">English</label>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil"
-                                (change)="onCheckboxChange('Tamil', $event)" />
-                            <label for="tamil" class="text-gray-700">Tamil</label>
-                        </div>
-                    </div>
-
-                </div> -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
                     <div>
@@ -388,5 +364,404 @@
 
 
     </form>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div *ngIf="this.itemId != null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+
+
+
+    
+        <div *ngIf="selectedPage === 'pageOne'">
+            <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Edit Personal Details</h2>
+            <div>
+                <div class="flex justify-center pt-3 pb-9">
+                    <div class="relative">
+                        <img class="rounded-full w-60 h-60"
+                            src="https://images.pexels.com/photos/845457/pexels-photo-845457.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                            alt="Profile Picture" />
+                        <span
+                            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer">
+                            <img src="../../../assets/images/editIcon.png" alt="Edit Icon" class="w-16 h-16" />
+                        </span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                    <div>
+                        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Collection Center Name
+                        </label>
+                        <select
+                           
+                            id="centerId"
+                            [(ngModel)]="officer.collectionOfficer.centerId" 
+                            name="centerId"
+                            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                            <option
+                                *ngFor="let center of collectionCenterData"
+                                [value]="center.id"
+                                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+                            >
+                                {{ center.centerName }}
+                            </option>
+                        </select>
+                    </div>
+                    
+
+
+                    <div>
+                        <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Preferred Languages
+                        </label>
+
+                        <div class="flex items-center space-x-4 mt-3">
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+                                    (change)="onCheckboxChange('Sinhala', $event)" />
+                                <label for="sinhala" class="text-gray-700">Sinhala</label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English"
+                                    (change)="onCheckboxChange('English', $event)" />
+                                <label for="english" class="text-gray-700">English</label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil"
+                                    (change)="onCheckboxChange('Tamil', $event)" />
+                                <label for="tamil" class="text-gray-700">Tamil</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="firstNameEnglish"
+                            class="block text-sm font-medium text-gray-700 dark:text-textDark">First
+                            Name (in English)</label>
+                            <input id="collectionOfficer"
+                            [(ngModel)]="officer.collectionOfficer.firstNameEnglish" 
+                            name="firstNameEnglish"
+                            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                     
+                    </div>
+
+                    <div>
+                        <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last
+                            Name (in English)</label>
+                        <input  id="lastName" name="lastName"
+                        [(ngModel)]="officer.collectionOfficer.lastNameEnglish" 
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First
+                            Name (in Sinhala)</label>
+                        <input  id="firstName" name="firstName"
+                        [(ngModel)]="officer.collectionOfficer.firstNameSinhala" 
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last
+                            Name (in Sinhala)</label>
+                        <input id="lastName" name="lastName"
+                        [(ngModel)]="officer.collectionOfficer.lastNameSinhala" 
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First
+                            Name (in Tamil)</label>
+                        <input id="firstName" name="firstName"
+                        [(ngModel)]="officer.collectionOfficer.firstNameTamil" 
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last
+                            Name (in Tamil)</label>
+                        <input id="lastName" name="lastName"
+                            [(ngModel)]="officer.collectionOfficer.lastNameTamil"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Phone Number - 1
+                        </label>
+                        <div class="mt-1 flex">
+                            <select id="phoneNumber01Code" name="phoneNumber01Code"
+                                [(ngModel)]="officer.collectionOfficer.phoneNumber01"
+                                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                                <option value="+94">+94 (LK)</option>
+                                <option value="+1">+1 (US)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                            </select>
+                            <input id="phoneNumber01" name="phoneNumber01" type="number"
+                            [(ngModel)]="officer.collectionOfficer.phoneNumber01"
+                                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                                placeholder="Enter your phone number" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                            Phone Number - 2
+                        </label>
+                        <div class="mt-1 flex">
+                            <select id="phoneNumber02Code" name="phoneNumber02Code"
+                            [(ngModel)]="officer.collectionOfficer.phoneNumber02"
+                                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                                <option value="+94">+94 (LK)</option>
+                                <option value="+1">+1 (US)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                            </select>
+                            <input id="phoneNumber02" name="phoneNumber02" type="number"
+                            [(ngModel)]="officer.collectionOfficer.phoneNumber02"
+                                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                                placeholder="Enter your phone number" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC
+                            Number</label>
+                        <input id="nic" name="nic" [(ngModel)]="officer.collectionOfficer.nic"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="email"
+                            class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
+                        <input type="email" id="email" name="nic"
+                        [(ngModel)]="officer.collectionOfficer.email"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House /
+                            Plot Number</label>
+                        <input id="houseNumber" name="houseNumber"
+                        [(ngModel)]="officer.collectionOfficer.address.houseNumber"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street
+                            Name</label>
+                        <input id="streetName" name="streetName"
+                        [(ngModel)]="officer.collectionOfficer.address.streetName"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="city"
+                            class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+                        <input id="city" name="city"  [(ngModel)]="officer.collectionOfficer.address.city"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="district"
+                            class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+                        <input id="district" name="district"
+                        [(ngModel)]="officer.collectionOfficer.address.district"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="provice"
+                            class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
+                        <input id="province" name="province"
+                        [(ngModel)]="officer.collectionOfficer.address.province"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                    <div>
+                        <label for="country"
+                            class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+                        <input id="country" name="country"  [(ngModel)]="officer.collectionOfficer.address.country"
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end m-10">
+                    <button (click)="nextForm('pageOne')" type="button"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Back</button>
+                    <button (click)="nextForm('pageTwo')" type="button"
+                        class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Submit</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div *ngIf="selectedPage === 'pageTwo'">
+            <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Add Company Details</h2>
+            <div>
+                <div class="pb-6">
+                    <label for="companyNameEnglish"
+                        class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name (in
+                        English)</label>
+                    <input id="companyNameEnglish" name="companyNameEnglish" formControlName="companyNameEnglish"
+                        [(ngModel)]="companyData.companyNameEnglish"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="companyNameSinhala"
+                        class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name (in
+                        Sinhala)</label>
+                    <input id="companyNameSinhala" name="companyNameSinhala" formControlName="companyNameSinhala"
+                        [(ngModel)]="companyData.companyNameSinhala"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="companyNameTamil"
+                        class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name (in
+                        Tamil)</label>
+                    <input id="companyNameTamil" name="companyNameTamil" formControlName="companyNameTamil"
+                        [(ngModel)]="companyData.companyNameTamil"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+
+                <div class="pb-6">
+                    <label for="jobrole" class="block text-sm font-medium text-gray-700 dark:text-textDark">Job
+                        Role</label>
+                    <input id="jobrole" value="Collection Officer"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                        disabled />
+                </div>
+
+                <div class="pb-6">
+                    <label for="IRMname" class="block text-sm font-medium text-gray-700 dark:text-textDark">Name of the
+                        immediate
+                        reporting manager</label>
+                    <input id="IRMname" name="IRMname" formControlName="IRMname" [(ngModel)]="companyData.IRMname"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="companyEmail" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email
+                        of the company /
+                        manager</label>
+                    <input id="companyEmail" name="companyEmail" formControlName="companyEmail" type="email"
+                        [(ngModel)]="companyData.companyEmail"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="assignedDistrict"
+                        class="block text-sm font-medium text-gray-700 dark:text-textDark">District assigned to</label>
+                    <input id="assignedDistrict" name="assignedDistrict" formControlName="assignedDistrict"
+                        [(ngModel)]="companyData.assignedDistrict"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+
+                <div>
+                    <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                        Staff employee type
+                    </label>
+
+                    <div class="flex items-center space-x-4 mt-3">
+                        <div class="flex items-center space-x-2">
+                            <input class="w-5 h-5" type="radio" id="sinhala" name="employeeType" value="Permanent"
+                                formControlName="employeeType" [(ngModel)]="companyData.employeeType">
+                            <label for="sinhala"
+                                class="block text-sm font-medium text-gray-700 dark:text-textDark">Permanent</label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input class="w-5 h-5" type="radio" id="employeeType" name="employeeType" value="Temporary"
+                                formControlName="employeeType" [(ngModel)]="companyData.employeeType">
+                            <label for="english"
+                                class="block text-sm font-medium text-gray-700 dark:text-textDark">Temporary</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">Add Bank Details</h2>
+                <div class="pb-6">
+                    <label for="accHolderName"
+                        class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s Name</label>
+                    <input id="accHolderName" name="accHolderName" formControlName="accHolderName"
+                        [(ngModel)]="bankData.accHolderName"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
+                        Number</label>
+                    <input id="accNumber" name="accNumber" formControlName="accNumber" [(ngModel)]="bankData.accNumber"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank
+                        Name</label>
+                    <input id="bankName" name="bankName" formControlName="bankName" [(ngModel)]="bankData.bankName"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+
+                <div class="pb-6">
+                    <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
+                        Name</label>
+                    <input id="branchName" name="branchName" formControlName="branchName"
+                        [(ngModel)]="bankData.branchName"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+            </div>
+
+            <div class="flex justify-end m-10">
+                <button (click)="nextForm('pageOne')" type="button"
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Back</button>
+                <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Submit</button>
+            </div>
+        </div>
+
+
+
+    
 
 </div>

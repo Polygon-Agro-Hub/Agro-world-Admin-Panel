@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
+import { ActivatedRoute } from '@angular/router';
+
+
+
+
+
+
 
 @Component({
   selector: 'app-collectiveofficers-personal',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule],
   templateUrl: './collectiveofficers-personal.component.html',
   styleUrls: ['./collectiveofficers-personal.component.css'],
 })
@@ -23,11 +30,56 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   bankData: Bank = new Bank();
   companyData: Company = new Company();
   collectionCenterData:CollectionCenter[]=[]
+  itemId: number | null = null;
+  isLoading = false;
+  officer: { collectionOfficer: { centerId:any, firstNameEnglish: string,firstNameSinhala: string, firstNameTamil : string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address:{houseNumber: string, streetName : string, city: string, district: string, province: string, country: string}, languages:string }, companyDetails: {companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, IRMname: string, companyEmail: string, assignedDistrict: string , employeeType: string}, bankDetails: {accHolderName: string, accNumber: string, bankName: string, branchName: string}} = {
+    collectionOfficer: {
+      centerId: '',
+      firstNameEnglish: '',
+      firstNameSinhala: '',
+      firstNameTamil: '',
+      lastNameEnglish:'',
+      lastNameSinhala: '',
+      lastNameTamil: '',
+      phoneNumber01: '',
+      phoneNumber02: '',
+      image: '',
+      QRcode: '',
+      nic: '',
+      email: '',
+      address: {
+        houseNumber: '',
+        streetName: '',
+        city: '',
+        district: '',
+        province: '',
+        country: ''
+      },
+      languages: ''
+    },
+    companyDetails: {
+      companyNameEnglish:'',
+      companyNameSinhala: '',
+      companyNameTamil: '',
+      jobRole: '',
+      IRMname: '',
+      companyEmail: '',
+      assignedDistrict: '',
+      employeeType: ''
+    },
+    bankDetails: {
+      accHolderName: '',
+      accNumber: '',
+      bankName: '',
+      branchName: '',
+    }
+  };
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
     private fb: FormBuilder,
-    private collectionCenterSrv: CollectionCenterService
+    private collectionCenterSrv: CollectionCenterService,
+    private route: ActivatedRoute
   ) {
     this.officerForm = this.fb.group({
       firstNameEnglish: ['', Validators.required],
@@ -121,7 +173,27 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.itemId = params['id'] ? +params['id'] : null;
+      console.log('Received item ID:', this.itemId);
+    });
     this.getAllCollectionCetnter()
+
+    if(this.itemId){
+       
+      this.isLoading = true;
+      this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
+        next: (response: any) => {
+          this.officer = response.officerData;
+          
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error fetching crop group details:', error);
+          this.isLoading = false;
+        },
+      });
+    }
   }
 
   getAllCollectionCetnter(){

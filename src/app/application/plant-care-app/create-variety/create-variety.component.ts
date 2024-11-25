@@ -174,6 +174,18 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   onSubmit() {
+    const cropValues = this.cropForm.value
+    if(!cropValues.groupId || !cropValues.varietyNameEnglish|| !cropValues.varietyNameSinhala|| !cropValues.varietyNameTamil|| !cropValues.descriptionEnglish|| !cropValues.descriptionSinhala|| !cropValues.descriptionTamil|| !cropValues.bgColor){
+      Swal.fire(
+        'warning',
+        'pleace fill all input feilds',
+        'warning'
+      );
+      return;
+
+    }
+
+
     if (!this.selectedFile) {
       Swal.fire('Error', 'Please select an image file.', 'error');
       return;

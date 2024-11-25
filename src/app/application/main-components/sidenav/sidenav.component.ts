@@ -1,4 +1,12 @@
-import { Component, Output, EventEmitter, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  OnInit,
+  HostListener,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { navbarData } from './nav-data';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -19,11 +27,13 @@ export class SidenavComponent implements OnInit {
   screenWidth = 0;
   isLeftButtonVisible: boolean = true;
   navData = navbarData;
-  ispopupMarketPrice = false
+  ispopupMarketPrice = false;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object  , private router: Router) {}
-  
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private router: Router
+  ) {}
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     if (isPlatformBrowser(this.platformId)) {
@@ -42,7 +52,7 @@ export class SidenavComponent implements OnInit {
       this.onToggleSideNav.emit(this.isExpanded);
     }
   }
-  
+
   redirectToPage(): void {
     this.router.navigateByUrl('/steckholders'); // Use your desired route here
   }
@@ -57,23 +67,26 @@ export class SidenavComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       // Remove the login token from localStorage
       localStorage.removeItem('Login Token : ');
-  
+
       // Show a logout confirmation
       Swal.fire({
-        icon: 'success',
+        icon: 'warning',
         title: 'Logged Out',
-        text: 'You have been successfully logged out.',
-      }).then(() => {
-        // Redirect to the login page after confirmation
-        this.router.navigateByUrl('/login');
+        text: 'Are you sure, you want to logged out.',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to the login page after confirmation
+          this.router.navigateByUrl('/login');
+        }
       });
     }
   }
 
-  popupMarket(){
-    this.ispopupMarketPrice = !this.ispopupMarketPrice
+  popupMarket() {
+    this.ispopupMarketPrice = !this.ispopupMarketPrice;
   }
-
-
-  
 }

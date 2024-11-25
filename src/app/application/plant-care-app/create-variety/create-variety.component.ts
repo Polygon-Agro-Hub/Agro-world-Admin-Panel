@@ -113,29 +113,7 @@ export class CreateVarietyComponent implements OnInit {
       console.log('Recived item ID:', this.itemId);
       
       if(this.itemId){
-        // this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
-        //   next: (response:any)=>{
-        //     this.cropVarity = {
-        //       cropGroupId: response.groups[0].cropGroupId,
-        //       varietyNameEnglish: response.groups[0].varietyEnglish,
-        //       varietyNameSinhala: response.groups[0].varietySinhala,
-        //       varietyNameTamil: response.groups[0].varietyTamil,
-        //       descriptionEnglish: response.groups[0].descriptionEnglish,
-        //       descriptionSinhala: response.groups[0].descriptionSinhala,
-        //       descriptionTamil: response.groups[0].descriptionTamil,
-        //       bgColor: response.groups[0].bgColor,
-        //     };
-        //     if(response.groups[0].image){
-        //       this.selectedImage = response.group[0].image;
-        //       this.selectedFileName = "Existing Image";
-        //     }
-        //   },
-        //   error:(error)=>{
-        //     console.error('Error fetching crop group details:', error);
-            
-        //   }
-        // })
-
+       
         this.isLoading = true;
         this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
           next: (response: any) => {

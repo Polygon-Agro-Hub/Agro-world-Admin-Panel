@@ -144,7 +144,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   editCollectionOfficer(id: number) {
-    this.router.navigate(['/collection-officers/create-collection-officers'], {
+    this.router.navigate(['/steckholders/collective-officer/personal'], {
       queryParams: { id },
     });
   }

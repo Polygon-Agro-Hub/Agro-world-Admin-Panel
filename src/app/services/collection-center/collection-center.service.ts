@@ -86,4 +86,15 @@ export class CollectionCenterService {
     });
   }
 
+
+
+  getOfficerReportById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}collection-officer-by-id/${id}`, {
+      headers,
+    });
+  }
+
 }

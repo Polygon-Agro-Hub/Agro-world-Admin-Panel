@@ -207,8 +207,21 @@ export class CreateCropGroupComponent {
 
   onCancel() {
     // Reset form or navigate away
-    console.log('Cancelled');
-    this.router.navigate(['/plant-care']);
+    // this.router.navigate(['/plant-care']);
+    this.cropGroup = {
+      cropNameEnglish: '',
+      cropNameSinahala: '',
+      cropNameTamil: '',
+      parentCategory: '',
+      bgColor: '',
+    };
+    Swal.fire({
+      icon: 'info',
+      title: 'Cancelled',
+      text: 'Form has been cleared!',
+      timer: 2000,
+      showConfirmButton: false,
+    });
   }
 
   triggerFileInput(event: Event): void {

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environment/environment';
 
 
 
@@ -79,7 +80,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     private collectionOfficerService: CollectionOfficerService,
     private fb: FormBuilder,
     private collectionCenterSrv: CollectionCenterService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
   ) {
     this.officerForm = this.fb.group({
       firstNameEnglish: ['', Validators.required],
@@ -203,6 +206,85 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       }
     )
   }
+
+
+
+  updateOfficerDetails() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+  
+    if (!this.officer) {
+      console.error('Officer details are empty');
+      return;
+    }
+  
+    // Create request body directly from the officer object
+    const requestBody = {
+      centerId: this.officer.collectionOfficer.centerId,
+      firstNameEnglish: this.officer.collectionOfficer.firstNameEnglish,
+      lastNameEnglish: this.officer.collectionOfficer.lastNameEnglish,
+      firstNameSinhala: this.officer.collectionOfficer.firstNameSinhala,
+      lastNameSinhala: this.officer.collectionOfficer.lastNameSinhala,
+      firstNameTamil: this.officer.collectionOfficer.firstNameTamil,
+      lastNameTamil: this.officer.collectionOfficer.lastNameTamil,
+      nic: this.officer.collectionOfficer.nic,
+      email: this.officer.collectionOfficer.email,
+      houseNumber: this.officer.collectionOfficer.address.houseNumber,
+      streetName: this.officer.collectionOfficer.address.streetName,
+      city: this.officer.collectionOfficer.address.city,
+      district: this.officer.collectionOfficer.address.district,
+      province: this.officer.collectionOfficer.address.province,
+      country: this.officer.collectionOfficer.address.country,
+      companyNameEnglish: this.officer.companyDetails.companyNameEnglish,
+      companyNameSinhala: this.officer.companyDetails.companyNameSinhala,
+      companyNameTamil: this.officer.companyDetails.companyNameTamil,
+      IRMname: this.officer.companyDetails.IRMname,
+      companyEmail: this.officer.companyDetails.companyEmail,
+      assignedDistrict: this.officer.companyDetails.assignedDistrict,
+      employeeType: this.officer.companyDetails.employeeType,
+      accHolderName: this.officer.bankDetails.accHolderName,
+      accNumber: this.officer.bankDetails.accNumber,
+      bankName: this.officer.bankDetails.bankName,
+      branchName: this.officer.bankDetails.branchName
+    };
+   
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'  // Add this header
+    });
+  
+    this.isLoading = true;
+    this.http
+      .put(
+        `${environment.API_BASE_URL}update-officer-details/${this.itemId}`,
+        requestBody,  // Send JSON directly instead of FormData
+        { headers }
+      )
+      .subscribe(
+        (res: any) => {
+          console.log('Collection Officer details updated successfully', res);
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Collection Officer details updated successfully!'
+          });
+          this.router.navigate(['/collection-officer/view']); // Update this to your correct route
+        },
+        (error) => {
+          console.error('Error updating collection officer details', error);
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: 'Error updating collection officer details'
+          });
+        }
+      );
+}
 }
 
 class Personal {

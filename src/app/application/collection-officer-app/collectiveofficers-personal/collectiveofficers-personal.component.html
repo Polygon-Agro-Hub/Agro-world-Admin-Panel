@@ -521,7 +521,7 @@
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                     </div>
 
-                    <div>
+                    <!-- <div>
                         <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                             Phone Number - 1
                         </label>
@@ -539,9 +539,9 @@
                                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                                 placeholder="Enter your phone number" />
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div>
+                    <!-- <div>
                         <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                             Phone Number - 2
                         </label>
@@ -559,7 +559,7 @@
                                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                                 placeholder="Enter your phone number" />
                         </div>
-                    </div>
+                    </div> -->
 
                     <div>
                         <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC
@@ -626,9 +626,9 @@
 
                 <div class="flex justify-end m-10">
                     <button (click)="nextForm('pageOne')" type="button"
-                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Back</button>
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Cancel</button>
                     <button (click)="nextForm('pageTwo')" type="button"
-                        class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Submit</button>
+                        class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Next</button>
                 </div>
 
             </div>
@@ -641,8 +641,8 @@
                     <label for="companyNameEnglish"
                         class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name (in
                         English)</label>
-                    <input id="companyNameEnglish" name="companyNameEnglish" formControlName="companyNameEnglish"
-                        [(ngModel)]="companyData.companyNameEnglish"
+                    <input id="companyNameEnglish" name="companyNameEnglish" 
+                    [(ngModel)]="officer.companyDetails.companyNameEnglish"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
@@ -650,8 +650,8 @@
                     <label for="companyNameSinhala"
                         class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name (in
                         Sinhala)</label>
-                    <input id="companyNameSinhala" name="companyNameSinhala" formControlName="companyNameSinhala"
-                        [(ngModel)]="companyData.companyNameSinhala"
+                    <input id="companyNameSinhala" name="companyNameSinhala"
+                    [(ngModel)]="officer.companyDetails.companyNameSinhala"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
@@ -659,8 +659,8 @@
                     <label for="companyNameTamil"
                         class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name (in
                         Tamil)</label>
-                    <input id="companyNameTamil" name="companyNameTamil" formControlName="companyNameTamil"
-                        [(ngModel)]="companyData.companyNameTamil"
+                    <input id="companyNameTamil" name="companyNameTamil" 
+                    [(ngModel)]="officer.companyDetails.companyNameTamil"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
@@ -677,7 +677,7 @@
                     <label for="IRMname" class="block text-sm font-medium text-gray-700 dark:text-textDark">Name of the
                         immediate
                         reporting manager</label>
-                    <input id="IRMname" name="IRMname" formControlName="IRMname" [(ngModel)]="companyData.IRMname"
+                    <input id="IRMname" name="IRMname" [(ngModel)]="officer.companyDetails.IRMname"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
@@ -685,16 +685,16 @@
                     <label for="companyEmail" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email
                         of the company /
                         manager</label>
-                    <input id="companyEmail" name="companyEmail" formControlName="companyEmail" type="email"
-                        [(ngModel)]="companyData.companyEmail"
+                    <input id="companyEmail" name="companyEmail"  type="email"
+                    [(ngModel)]="officer.companyDetails.companyEmail"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="pb-6">
                     <label for="assignedDistrict"
                         class="block text-sm font-medium text-gray-700 dark:text-textDark">District assigned to</label>
-                    <input id="assignedDistrict" name="assignedDistrict" formControlName="assignedDistrict"
-                        [(ngModel)]="companyData.assignedDistrict"
+                    <input id="assignedDistrict" name="assignedDistrict"
+                        [(ngModel)]="officer.companyDetails.assignedDistrict"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
@@ -707,13 +707,13 @@
                     <div class="flex items-center space-x-4 mt-3">
                         <div class="flex items-center space-x-2">
                             <input class="w-5 h-5" type="radio" id="sinhala" name="employeeType" value="Permanent"
-                                formControlName="employeeType" [(ngModel)]="companyData.employeeType">
+                                [(ngModel)]="officer.companyDetails.employeeType">
                             <label for="sinhala"
                                 class="block text-sm font-medium text-gray-700 dark:text-textDark">Permanent</label>
                         </div>
                         <div class="flex items-center space-x-2">
                             <input class="w-5 h-5" type="radio" id="employeeType" name="employeeType" value="Temporary"
-                                formControlName="employeeType" [(ngModel)]="companyData.employeeType">
+                             [(ngModel)]="officer.companyDetails.employeeType">
                             <label for="english"
                                 class="block text-sm font-medium text-gray-700 dark:text-textDark">Temporary</label>
                         </div>
@@ -725,30 +725,30 @@
                 <div class="pb-6">
                     <label for="accHolderName"
                         class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s Name</label>
-                    <input id="accHolderName" name="accHolderName" formControlName="accHolderName"
-                        [(ngModel)]="bankData.accHolderName"
+                    <input id="accHolderName" name="accHolderName"
+                    [(ngModel)]="officer.bankDetails.accHolderName"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="pb-6">
                     <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
                         Number</label>
-                    <input id="accNumber" name="accNumber" formControlName="accNumber" [(ngModel)]="bankData.accNumber"
+                    <input id="accNumber" name="accNumber" [(ngModel)]="officer.bankDetails.accNumber"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="pb-6">
                     <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank
                         Name</label>
-                    <input id="bankName" name="bankName" formControlName="bankName" [(ngModel)]="bankData.bankName"
+                    <input id="bankName" name="bankName" [(ngModel)]="officer.bankDetails.bankName"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="pb-6">
                     <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
                         Name</label>
-                    <input id="branchName" name="branchName" formControlName="branchName"
-                        [(ngModel)]="bankData.branchName"
+                    <input id="branchName" name="branchName"
+                    [(ngModel)]="officer.bankDetails.branchName"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
             </div>
@@ -756,7 +756,7 @@
             <div class="flex justify-end m-10">
                 <button (click)="nextForm('pageOne')" type="button"
                     class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Back</button>
-                <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Submit</button>
+                <button type="submit" (click)="updateOfficerDetails()" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Submit</button>
             </div>
         </div>
 

@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PaymentSlipReportComponent {
   todayDate!: string;
-  payments: Payment = new Payment();
+  payments!: Payment[];
   officerId!: number;
   total!: number;
 
@@ -56,7 +56,7 @@ class Payment {
   farmerFirstName!: string;
   farmerLastName!: string;
   farmerNIC!: string;
-  paymentTotal!: string;
+  totalPaymentAmount!: string;
   officerFirstName!: string;
   officerLastName!: string;
   paymentDate!: string;

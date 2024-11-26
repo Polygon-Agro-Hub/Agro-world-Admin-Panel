@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { environment } from '../../../environment/environment';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 declare var html2pdf: any;
 
@@ -22,7 +23,7 @@ interface CropReport {
 @Component({
   selector: 'app-collection-officer-report-view',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, CanvasJSAngularChartsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent],
   templateUrl: './collection-officer-report-view.component.html',
   styleUrl: './collection-officer-report-view.component.css'
 })
@@ -31,8 +32,11 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   id: string | null = null;
   name: string | null = null;
   createdDate: string = new Date().toISOString().split('T')[0];
+  
   reportData: CropReport = {};
   chartOptions: any;
+  loadingChart = true;
+  loadingTable = true;
 
 
 
@@ -48,8 +52,13 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id');
       this.name = params.get('name');
-      this.fetchReport();
+      
     });
+
+    setTimeout(() => {
+      this.fetchReport();
+      
+    }, 1000);
   }
 
   fetchReport(): void {
@@ -58,6 +67,8 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
     });
+    this.loadingChart = true;
+    this.loadingTable = true;
     
     const url = `${environment.API_BASE_URL}collection-officer/get-collection-officer-report/${this.id}/${this.createdDate}`;
   
@@ -66,6 +77,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       .subscribe(
         (data) => {
           this.reportData = data;
+          this.loadingTable = false;
           this.updateChartOptions();
           console.log('Report data:', this.reportData);
         },
@@ -141,15 +153,25 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     };
   
     console.log('Updated chartOptions:', this.chartOptions);
+    this.loadingChart = false;
   
     // Trigger change detection
     this.cdr.detectChanges();
   }
 
+ 
+
   onDateChange(): void {
-    this.fetchReport();
     
-  }
+    setTimeout(() => {
+      this.fetchReport();
+      
+    }, 1000);
+    
+    
+    
+}
+
 
   get reportEntries(): [string, { 'Grade A': number; 'Grade B': number; 'Grade C': number; 'Total': number }][] {
     return Object.entries(this.reportData);

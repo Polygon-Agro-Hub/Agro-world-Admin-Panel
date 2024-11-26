@@ -1,4 +1,4 @@
-<button class="mb-5" onclick="window.location.href='/collective-officer-reort'">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/reports/collective-officer-report'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -6,7 +6,7 @@
 <div #contentToConvert>
 <div class="flex justify-between items-center mb-8">
   <div class="flex items-center">
-    <h2 class="text-2xl font-normal text-gray-500">{{this.name}}'s Report</h2>
+    <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{this.name}}'s Report</h2>
   </div>
   <div class="flex items-center">
     <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -24,30 +24,42 @@
   </div>
 </div>
 
-<div *ngIf="chartOptions" class="pb-10">
-  <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '360px'}"></canvasjs-chart>
+<div *ngIf="loadingChart; else chartContent" class="flex justify-center items-center h-48">
+  <app-loading-spinner></app-loading-spinner>
 </div>
 
-<table class="table-auto border-collapse w-full">
-  <thead>
-    <tr class="border-b">
-      <th class="px-4 py-2">Crop</th>
-      <th class="px-4 py-2">Grade A</th>
-      <th class="px-4 py-2">Grade B</th>
-      <th class="px-4 py-2">Grade C</th>
-      <th class="px-4 py-2">Total</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let entry of reportEntries">
-      <td class="border border-gray-300 p-2">{{ entry[0] }}</td>
-      <td class="border border-gray-300 p-2">{{ entry[1]['Grade A'] }}kg</td>
-      <td class="border border-gray-300 p-2">{{ entry[1]['Grade B'] }}kg</td>
-      <td class="border border-gray-300 p-2">{{ entry[1]['Grade C'] }}kg</td>
-      <td class="border border-gray-300 p-2">{{ entry[1]['Total'] }}kg</td>
-    </tr>
-  </tbody>
-</table>
+<ng-template #chartContent>
+  <div *ngIf="chartOptions" class="pb-10">
+    <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '360px'}"></canvasjs-chart>
+  </div>
+</ng-template>
+
+<div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<ng-template #tableContent>
+  <table class="table-auto border-collapse w-full">
+    <thead>
+      <tr class="border-b">
+        <th class="px-4 py-2 text-textLight dark:text-textDark">Crop</th>
+        <th class="px-4 py-2 text-textLight dark:text-textDark">Grade A</th>
+        <th class="px-4 py-2 text-textLight dark:text-textDark">Grade B</th>
+        <th class="px-4 py-2 text-textLight dark:text-textDark">Grade C</th>
+        <th class="px-4 py-2 text-textLight dark:text-textDark">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entry of reportEntries">
+        <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[0] }}</td>
+        <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Grade A'] }}kg</td>
+        <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Grade B'] }}kg</td>
+        <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Grade C'] }}kg</td>
+        <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Total'] }}kg</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
 <div class="h-[25px]"></div>
 
 

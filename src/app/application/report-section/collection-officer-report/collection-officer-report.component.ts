@@ -81,19 +81,23 @@ export class CollectionOfficerReportComponent {
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
+  // navigateToReport(id: number, name: string) {
+  //   if (id) {
+  //     const url = this.router.serializeUrl(
+  //       this.router.createUrlTree([
+  //         '/reports/collective-officer-report/view',
+  //         id,
+  //         name,
+  //       ])
+  //     );
+  //     window.open(url, '_blank'); // Opens the page in a new tab
+  //   } else {
+  //     console.error('ID is missing');
+  //   }
+  // }
+
   navigateToReport(id: number, name: string) {
-    if (id) {
-      const url = this.router.serializeUrl(
-        this.router.createUrlTree([
-          '/reports/collective-officer-report/view',
-          id,
-          name,
-        ])
-      );
-      window.open(url, '_blank'); // Opens the page in a new tab
-    } else {
-      console.error('ID is missing');
-    }
+    this.router.navigate([`/reports/collective-officer-report/view/${id}/${name}`]);
   }
 
   navigateToPaymentSlipReport(id: number) {

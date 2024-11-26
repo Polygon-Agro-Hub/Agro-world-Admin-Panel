@@ -94,9 +94,14 @@
             Officer Name
           </th>
           <th
-            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
           >
             Company
+          </th>
+          <th
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+          >
+            Center Name
           </th>
           <th
             class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
@@ -138,10 +143,13 @@
           "
         >
           <td class="py-3 text-gray-500 dark:text-textDark text-left">
-            {{ item.firstName }}
+            {{ item.firstNameEnglish }}
           </td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-            {{ item.companyName }}
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
+            {{ item.companyNameEnglish }}
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
+            {{ item.centerName }}
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
             {{ item.phoneNumber01 }}
@@ -155,7 +163,7 @@
           <td class="px-4 py-3 text-center">
             <button
               class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-              (click)="navigateToReport(item.id, item.firstName)"
+              (click)="navigateToReport(item.id, item.firstNameEnglish)"
             >
               <i class="fa-regular fa-file"></i>
             </button>

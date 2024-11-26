@@ -227,30 +227,51 @@ export class EditPlantcareUsersComponent implements OnInit {
           formData.append('image', this.selectedImage);
         }
         this.isLoading = true;
-        this.http
-          .post(
-            `${environment.API_BASE_URL}create-plantcare-user`, formData,{ headers })
-          .subscribe(
-            (data) => {
-              this.isLoading = false;
-              this.userForm.patchValue(data);
-              Swal.fire(
-                'User Created!',
-                'plant care user created.',
-                'success'
-              );
-              this.loadUserData(this.itemId!);
-            },
-            (error) => {
-              this.isLoading = false;
-              console.error('Error fetching user data:', error);
-              Swal.fire(
-                'Error!',
-                'Profile image is required. Only image files are allowed (jpg, png, gif)',
-                'error'
-              );
-            }
-          );
+this.http
+  .post(
+    `${environment.API_BASE_URL}create-plantcare-user`,
+    formData,
+    { headers }
+  )
+  .subscribe(
+    (data: any) => {
+      this.isLoading = false;
+      this.userForm.patchValue(data);
+      Swal.fire(
+        'User Created!',
+        'Plant care user has been successfully created.',
+        'success'
+      );
+      this.loadUserData(this.itemId!);
+    },
+    (error) => {
+      this.isLoading = false;
+      console.error('Error creating user:', error);
+
+      // Check for duplicate error
+      if (error.status === 409) {
+        Swal.fire(
+          'Error!',
+          'Profile image is required. Only image files are allowed (jpg, png, gif).',
+          'error'
+        );
+      } else if (error.status === 400) {
+        Swal.fire(
+          'Error!',
+          'Phone number or NIC number already exists.',
+          'error'
+        );
+        
+      } else {
+        Swal.fire(
+          'Error!',
+          'An unexpected error occurred while creating the plant care user.',
+          'error'
+        );
+      }
+    }
+  );
+
       }
     });
     } else {

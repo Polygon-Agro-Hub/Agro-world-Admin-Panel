@@ -24,6 +24,11 @@
               {{ group.cropNameEnglish }}
             </option>
           </select>
+          <div
+            *ngIf="cropForm.get('groupId')!.invalid && (cropForm.get('groupId')!.dirty || cropForm.get('groupId')!.touched)"
+            class="text-red-500 text-sm mt-1">
+            <div *ngIf="cropForm.get('groupId')!.errors?.['required']">Crop name is required</div>
+          </div>
         </div>
 
         <hr class="border-[2px] border-gray-400 my-10" />
@@ -35,6 +40,11 @@
           <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
             required />
+          <div
+            *ngIf="cropForm.get('varietyNameEnglish')!.invalid && (cropForm.get('varietyNameEnglish')!.dirty || cropForm.get('varietyNameEnglish')!.touched)"
+            class="text-red-500 text-sm mt-1">
+            <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['required']">English Verity name is required</div>
+          </div>
         </div>
 
         <div class="md:col-span-2 my-3">
@@ -42,11 +52,11 @@
             (in English)</label>
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish" name="descriptionEnglish" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <!-- <div
+          <div
             *ngIf="cropForm.get('descriptionEnglish')!.invalid && (cropForm.get('descriptionEnglish')!.dirty || cropForm.get('descriptionEnglish')!.touched)"
             class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('descriptionEnglish')!.errors?.['required']">Special Notes is required</div>
-          </div> -->
+            <div *ngIf="cropForm.get('descriptionEnglish')!.errors?.['required']">English Description is required</div>
+          </div>
         </div>
 
         <hr class="border-[2px] border-gray-400 my-10" />
@@ -57,6 +67,11 @@
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
             required />
+          <div
+            *ngIf="cropForm.get('varietyNameSinhala')!.invalid && (cropForm.get('varietyNameSinhala')!.dirty || cropForm.get('varietyNameSinhala')!.touched)"
+            class="text-red-500 text-sm mt-1">
+            <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']">Sinhala variety name is required</div>
+          </div>
         </div>
 
         <div class="md:col-span-2 my-3">
@@ -65,11 +80,11 @@
             (in Sinhala)</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala" name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <!-- <div
+          <div
             *ngIf="cropForm.get('descriptionSinhala')!.invalid && (cropForm.get('descriptionSinhala')!.dirty || cropForm.get('descriptionSinhala')!.touched)"
             class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('descriptionSinhala')!.errors?.['required']">Special Notes is required</div>
-          </div> -->
+            <div *ngIf="cropForm.get('descriptionSinhala')!.errors?.['required']">Sinhala description is required</div>
+          </div>
         </div>
 
 
@@ -82,6 +97,11 @@
           <input type="varietyNameTamil" id="varietyNameTamil" formControlName="varietyNameTamil"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
             required />
+          <div
+            *ngIf="cropForm.get('varietyNameTamil')!.invalid && (cropForm.get('varietyNameTamil')!.dirty || cropForm.get('varietyNameTamil')!.touched)"
+            class="text-red-500 text-sm mt-1">
+            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['required']">Tamil variety name is required</div>
+          </div>
         </div>
 
         <div class="md:col-span-2 my-3">
@@ -89,11 +109,11 @@
             (in Tamil)</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil" name="descriptionTamil" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <!-- <div
+          <div
             *ngIf="cropForm.get('descriptionTamil')!.invalid && (cropForm.get('descriptionTamil')!.dirty || cropForm.get('descriptionTamil')!.touched)"
             class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('descriptionTamil')!.errors?.['required']">Special Notes is required</div>
-          </div> -->
+            <div *ngIf="cropForm.get('descriptionTamil')!.errors?.['required']">Tamil discription is required</div>
+          </div>
         </div>
 
 
@@ -133,6 +153,11 @@
           <ngx-colors ngx-colors-trigger formControlName="bgColor" (colorChange)="onColorChange($event)"
             style="display: inline-block; margin:5px;">
           </ngx-colors>
+          <div
+            *ngIf="cropForm.get('bgColor')!.invalid && (cropForm.get('bgColor')!.dirty || cropForm.get('bgColor')!.touched)"
+            class="text-red-500 text-sm mt-1">
+            <div *ngIf="cropForm.get('bgColor')!.errors?.['required']">Background color is required</div>
+          </div>
         </div>
 
         <!-- Buttons -->
@@ -190,7 +215,8 @@
       <div class="md:col-span-2 my-3">
         <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description
           (in English)</label>
-        <textarea id="descriptionEnglish" name="descriptionEnglish" rows="3" [(ngModel)]="newsItems[0].descriptionEnglish"
+        <textarea id="descriptionEnglish" name="descriptionEnglish" rows="3"
+          [(ngModel)]="newsItems[0].descriptionEnglish"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
         <!-- <div
             *ngIf="cropForm.get('descriptionEnglish')!.invalid && (cropForm.get('descriptionEnglish')!.dirty || cropForm.get('descriptionEnglish')!.touched)"
@@ -212,7 +238,8 @@
       <div class="md:col-span-2 my-3">
         <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Description
           (in Sinhala)</label>
-        <textarea id="descriptionSinhala" name="descriptionSinhala" rows="3" [(ngModel)]="newsItems[0].descriptionSinhala"
+        <textarea id="descriptionSinhala" name="descriptionSinhala" rows="3"
+          [(ngModel)]="newsItems[0].descriptionSinhala"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
         <!-- <div
             *ngIf="cropForm.get('descriptionSinhala')!.invalid && (cropForm.get('descriptionSinhala')!.dirty || cropForm.get('descriptionSinhala')!.touched)"
@@ -279,10 +306,7 @@
       <!-- Add Background Color -->
       <div class="flex items-center space-x-4">
         <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
-        <ngx-colors 
-          ngx-colors-trigger 
-          [(ngModel)]="newsItems[0].bgColor" 
-          (colorChange)="onColorChange($event)"
+        <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
           style="display: inline-block; margin:5px;">
         </ngx-colors>
       </div>
@@ -291,7 +315,8 @@
       <div class="flex justify-end space-x-4 mt-6">
         <button type="button" (click)="onCancel()"
           class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-        <button type="submit" (click)="updateNews()" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+        <button type="submit" (click)="updateNews()"
+          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
       </div>
     </div>
 

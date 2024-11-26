@@ -114,6 +114,14 @@ export class CreateCropCalenderComponent {
   onSubmit() {
 
     const formValue = this.cropForm.value;
+    if(!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.cropDuration || !formValue.suitableAreas){
+      Swal.fire(
+        'warning',
+        'pleace fill all input feilds',
+        'warning'
+      );
+      return;
+    }
 
     if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
       formValue.suitableAreas = formValue.suitableAreas.join(', ');
@@ -341,9 +349,18 @@ export class CreateCropCalenderComponent {
 
 
   onCancel(): void {
-    // Handle cancel action (e.g., clear the form, navigate back, etc.)
-    this.selectedLanguage = 'english';
-    this.selectedPage = 'pageOne'
+    // this.selectedLanguage = 'english';
+    // this.selectedPage = 'pageOne'
+    this.cropForm.reset();
+    Swal.fire({
+      icon: 'info',
+      title: 'Cancelled',
+      text: 'Form has been cleared!',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    
+
 
   }
 

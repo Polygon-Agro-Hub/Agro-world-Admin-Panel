@@ -1,6 +1,6 @@
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/reports/collective-officer-report'"
+  onclick="window.location.href='/reports'"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -79,7 +79,7 @@
   </div>
   <div class="flex items-center flex-col">
     <h2 class="text-xl text-textLight dark:text-textDark">
-      {{ payments.officerFirstName }} {{ payments.officerLastName }}
+      {{ payments[0].officerFirstName }} {{ payments[0].officerLastName }}
     </h2>
     <p class="text-lg text-textLight dark:text-textDark">On {{ todayDate }}</p>
   </div>
@@ -117,23 +117,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let item of payments">
           <td class="py-3 dark:text-textDark">
-            {{ payments.farmerFirstName }}
+            {{ item.farmerFirstName }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ payments.farmerLastName }}
+            {{ item.farmerLastName }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ payments.farmerNIC }}
+            {{ item.farmerNIC }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ payments.paymentTotal }}
+            {{ item.totalPaymentAmount }}
           </td>
           <td class="text-center">
             <button
               class="w-5 h-5 text-blue-500 hover:text-blue-700"
-              (click)="navigateToFamerListReport(payments.id)"
+              (click)="navigateToFamerListReport(item.id)"
             >
               <svg
                 viewBox="0 0 24 24"

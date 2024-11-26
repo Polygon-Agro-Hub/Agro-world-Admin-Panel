@@ -24,9 +24,15 @@
         [(ngModel)]="cropGroup.cropNameEnglish"
         name="cropName"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-        required
+        #cropEngNameInput="ngModel"
       />
+      <div
+        *ngIf="cropEngNameInput.touched && !cropGroup.cropNameEnglish"
+        class="text-red-500 text-sm mt-1">
+        <div>English crop name is required</div>
+      </div>
     </div>
+    
 
     <div>
       <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Sinhala</label>
@@ -36,8 +42,13 @@
         [(ngModel)]="cropGroup.cropNameSinahala"
         name="cropName"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-        required
+        #cropSinNameInput="ngModel"
       />
+      <div
+        *ngIf="cropSinNameInput.touched && !cropGroup.cropNameSinahala"
+        class="text-red-500 text-sm mt-1">
+        <div>Sinhala crop name is required</div>
+      </div>
     </div>
 
     <div>
@@ -48,8 +59,13 @@
         [(ngModel)]="cropGroup.cropNameTamil"
         name="cropName"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-        required
+        #cropTamilNameInput="ngModel"
       />
+      <div
+        *ngIf="cropTamilNameInput.touched && !cropGroup.cropNameTamil"
+        class="text-red-500 text-sm mt-1">
+        <div>Tamil crop name is required</div>
+      </div>
     </div>
 
     <!-- Select Parent Category -->
@@ -60,11 +76,17 @@
         [(ngModel)]="cropGroup.parentCategory"
         name="parentCategory"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-        required
+        #parentCategoryInput="ngModel"
+        
       >
         <option value="" disabled>Select Category</option>
         <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
       </select>
+      <div
+        *ngIf="parentCategoryInput.touched && !cropGroup.parentCategory"
+        class="text-red-500 text-sm mt-1">
+        <div>Parent category is required</div>
+      </div>
     </div>
 
     <!-- Add Image -->
@@ -94,8 +116,15 @@
         ngx-colors-trigger 
         [(ngModel)]="cropGroup.bgColor" 
         (colorChange)="onColorChange($event)"
-        style="display: inline-block; margin:5px;">
+        style="display: inline-block; margin:5px;"
+        #bgColorInput="ngModel"
+        >
       </ngx-colors>
+      <div
+        *ngIf="bgColorInput.touched && !cropGroup.bgColor"
+        class="text-red-500 text-sm mt-1">
+        <div>Background color is required</div>
+      </div>
     </div>
 
     <!-- Buttons -->

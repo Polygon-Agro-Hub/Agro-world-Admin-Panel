@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,11 +13,11 @@ export class PaymentSlipReportService {
   constructor(private http: HttpClient) {}
 
   getPaymentSlipReport(officerID: number): Observable<any> {
-    console.log('officerId success', officerID);
-
-    // Update the URL to use the /farmer-payments endpoint
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
     return this.http.get<any[]>(
-      `${this.apiUrl}/farmer-payments?officerId=${officerID}`
+      `${this.apiUrl}/farmer-payments?officerId=${officerID}` ,{headers}
     );
   }
 }

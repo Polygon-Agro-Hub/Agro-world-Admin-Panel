@@ -10,13 +10,14 @@ import { CollectionService } from '../../../services/collection.service';
 
 interface OngoingCultivationItem {
   id: number;
-  firstName: string;
+  firstNameEnglish: string;
   lastName: string;
-  companyName: string;
+  companyNameEnglish: string;
   phoneNumber01: string;
   nic: string;
   status: string;
   district: string;
+  centerName:string
 }
 
 @Component({

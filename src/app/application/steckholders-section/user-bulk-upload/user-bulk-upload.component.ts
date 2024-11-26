@@ -105,25 +105,22 @@ export class UserBulkUploadComponent {
   
         if (response.existingUsers && response.existingUsers.length > 0) {
           // Download existing users as an Excel file
-          // this.downloadExcel(response.existingUsers, 'existing_users.xlsx');
+          this.downloadExcel(response.existingUsers, 'existing_users.xlsx');
           this.existingUsers = response.existingUsers;
   
           Swal.fire({
             icon: 'warning',
             title: 'User Redundancy!',
             html: `
-              <p>Please note: These user profiles with redundancy errors were not uploaded.</p>
-              <br/>
-              <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}</p>
+            <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
+             <br/>
+            <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}<p/>
+              
               <br/>
               <hr></hr>
               <br/>
-              <div style="text-align: right;">
-                <button id="download-btn" style="padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                  Download Existing Users
-                </button>
-              </div>
-              <br/><br/><br/>
+              <p style="text-align: right;">File with existing users downloaded.</p>
+              <br/>
               <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
                 <thead>
                   <tr>
@@ -138,7 +135,7 @@ export class UserBulkUploadComponent {
                     <tr>
                       <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
                       <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+                       <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
                       <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
                     </tr>
                   `).join('')}
@@ -147,21 +144,11 @@ export class UserBulkUploadComponent {
               <br/>
               <p style="text-align: left;">Successfully added <b>${response.newUsersInserted}</b> new users.</p>
               <p style="text-align: left;">Found <b>${response.existingUsers.length}</b> existing users:</p>
+              
             `,
             width: '80%',
             confirmButtonText: 'Close & Go Back',
-            didOpen: () => {
-              // Add event listener to the download button
-              const downloadBtn = document.getElementById('download-btn');
-              if (downloadBtn) {
-                downloadBtn.addEventListener('click', () => {
-                  this.downloadExcel(this.existingUsers, 'existing_users.xlsx');
-                });
-              }
-            }
           });
-          
-          
           
         } else {
           Swal.fire({

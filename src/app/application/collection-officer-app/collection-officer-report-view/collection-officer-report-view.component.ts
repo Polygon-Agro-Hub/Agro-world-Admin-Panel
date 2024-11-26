@@ -105,10 +105,10 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         title: "Weight (Kg)",
         includeZero: true
       },
-      toolTip: {
-        shared: true,
-        content: "<strong>{label}</strong><br/>Total: {y} Kg<br/>Grade A: {gradeA} Kg<br/>Grade B: {gradeB} Kg<br/>Grade C: {gradeC} Kg"
-      },
+      // toolTip: {
+      //   shared: true,
+      //   content: "<strong>{label}</strong><br/>Total: {y} Kg<br/>Grade A: {gradeA} Kg<br/>Grade B: {gradeB} Kg<br/>Grade C: {gradeC} Kg"
+      // },
       legend: {
         verticalAlign: "top"
       },

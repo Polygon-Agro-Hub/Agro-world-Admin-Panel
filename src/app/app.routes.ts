@@ -65,6 +65,7 @@ import { ViewProductsListComponent } from './application/marketplace/view-produc
 import { CreateVarietyComponent } from './application/plant-care-app/create-variety/create-variety.component';
 import { ViewVarietyComponent } from './application/plant-care-app/view-variety/view-variety.component';
 import { AddCoupenComponent } from './application/marketplace/add-coupen/add-coupen.component';
+import { UserBulkUploadComponent } from './application/steckholders-section/user-bulk-upload/user-bulk-upload.component';
 
 export const routes: Routes = [
   {
@@ -255,6 +256,10 @@ export const routes: Routes = [
               {
                 path: 'edit-plantcare-users',
                 component: EditPlantcareUsersComponent,
+              },
+              {
+                path: 'upload-farmers',
+                component: UserBulkUploadComponent,
               },
             ],
           },

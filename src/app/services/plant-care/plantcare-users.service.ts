@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../environment/environment';
 
 
@@ -80,25 +80,38 @@ export class PlantcareUsersService {
   }
 
 
-  uploadUserXlsxFile(file: File): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post(`${this.apiUrl}upload-user-xlsx`, formData, {
-      headers,
-    });
-  }
-
-  // getToolFixedAssetsById(id: number): Observable<FixedAsset[]> {
-  //   const token = localStorage.getItem('Login Token : ');
+  // uploadUserXlsxFile(file: File): Observable<any> {
   //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`,
+  //     Authorization: `Bearer ${this.token}`,
   //   });
 
-  //   return this.http.get<FixedAsset[]>(`${this.apiUrl}get-tool-fixed-assets-by-id/${id}`, { headers });
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+
+  //   return this.http.post(`${this.apiUrl}upload-user-xlsx`, formData, {
+  //     headers,
+  //   });
   // }
+
+  uploadUserXlsxFile(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}upload-user-xlsx`, formData, {
+      responseType: 'json',
+      observe: 'body'
+    }).pipe(
+      catchError(error => {
+        // Check if the error response is an Excel file
+        if (error.status === 409 && error.error instanceof ArrayBuffer) {
+          // Return the file buffer for download
+          return new Observable(observer => {
+            observer.next(error.error);
+            observer.complete();
+          });
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  
+
 }

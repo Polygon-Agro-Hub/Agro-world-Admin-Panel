@@ -3,12 +3,15 @@ import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-interface IdistrictReport{
-  cropName: string,
-  quality: string,
-  district: string,
-  totPrice: string,
-  totWeight: string
+interface IdistrictReport {
+  cropName: string
+  district: string
+  qtyA: number
+  qtyB: number
+  qtyC: number
+  priceA: number
+  priceB: number
+  priceC: number
 }
 
 interface IProvinceReport{

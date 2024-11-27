@@ -15,11 +15,14 @@ interface IdistrictReport {
 }
 
 interface IProvinceReport{
-  cropName: string,
-  quality: string,
-  province: string,
-  totPrice: string,
-  totWeight: string
+  cropName: string
+  district: string
+  qtyA: number
+  qtyB: number
+  qtyC: number
+  priceA: number
+  priceB: number
+  priceC: number
 }
 
 @Injectable({

@@ -8,6 +8,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 declare var html2pdf: any;
 
@@ -111,7 +113,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       animationEnabled: true,
       exportEnabled: true,
       title: {
-        text: "Crop Report by Grade"
+        text: `Crop Report by Grade ${this.createdDate}`
       },
       axisY: {
         title: "Weight (Kg)",
@@ -185,20 +187,30 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   }
 
   downloadPDF(): void {
-    if (!this.contentToConvert) {
-      console.error('Content to convert is not available');
-      return;
-    }
-
-    const element = this.contentToConvert.nativeElement;
-    const options = {
-      margin: 10,
-      filename: `${this.name}_report_${this.createdDate}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().from(element).set(options).save();
+    const element = this.contentToConvert.nativeElement; // Get the content element to convert
+    const pdf = new jsPDF('p', 'mm', 'a4'); // Initialize jsPDF with A4 page size
+    const margin = 10; // Margin for the content in the PDF
+  
+    // Calculate available width and height for content in A4 size
+    const pageWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+    const pageHeight = pdf.internal.pageSize.getHeight() - margin * 2;
+  
+    html2canvas(element, { scale: 2 }).then((canvas) => {
+      const imageWidth = canvas.width;
+      const imageHeight = canvas.height;
+  
+      // Scale the content to fit within the PDF page
+      const scaleFactor = Math.min(pageWidth / imageWidth, pageHeight / imageHeight);
+      const outputWidth = imageWidth * scaleFactor;
+      const outputHeight = imageHeight * scaleFactor;
+  
+      const imgData = canvas.toDataURL('image/png'); // Convert canvas to image data
+      pdf.addImage(imgData, 'PNG', margin, margin, outputWidth, outputHeight);
+  
+      // Trigger download
+      pdf.save(`Crop_Report_${this.createdDate}.pdf`);
+    }).catch((error) => {
+      console.error('Error generating PDF:', error);
+    });
   }
 }

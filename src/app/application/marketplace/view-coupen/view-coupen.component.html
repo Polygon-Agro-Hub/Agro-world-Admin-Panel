@@ -1,0 +1,148 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/market/action'">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+    onclick="window.location.href='/market/add-coupen'">
+    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+    </svg>
+    Add New
+</button>
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+            <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Coupons</h2>
+        </div>
+        <div class="flex items-center">
+            <div class="mr-8">
+                <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+                    [options]="" optionLabel="name" [showClear]="true" placeholder="Type" />
+            </div>
+            <div class="mr-8">
+                <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+                    [options]="" optionLabel="name" [showClear]="true" placeholder="Status" />
+            </div>
+            <div>
+
+                <div>
+                    <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80">
+                        <input type="text" placeholder="Search.."
+                            class="bg-transparent outline-none w-full text-gray-600" />
+                        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                            (click)="searchPlantCareUsers()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                            </svg>
+                        </button>
+                        <button type="button" (click)="clearSearch()"
+                            class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="hasData" class="text-center py-8">
+        <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+    </div>
+    <div *ngIf="checkDelete" class="flex flex-col items-start">
+        <button
+            class="border border-[#D16D6A] border-spacing-1 rounded-lg px-2 py-1 transition duration-300 ease-in-out w-36">
+            <div class="flex flex-row items-center mx-3">
+                <i class="fa-solid fa-trash-can text-lg text-[#D16D6A]"></i>
+                <p class=" text-[#D16D6A] ml-3">Delete All</p>
+            </div>
+        </button>
+    </div>
+
+
+    <div *ngIf="!hasData" class="overflow-x-auto">
+        <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto mb-4">
+            <thead>
+                <tr>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+                        <input type="checkbox" class="w-5 h-5 my-4 mx-3" [(ngModel)]="checkDelete" [value]="true" />
+                    </th>
+                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Code</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Type
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Discount
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Status
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Start Date
+                    </th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        Expire Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of coupenObj | paginate: {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: page,
+                    totalItems: totalItems
+                  } " class="border-b border-gray-200 dark:border-[#4B555A]">
+                    <td class="py-3 text-textLight dark:text-textDark"></td>
+                    <td class="py-3 text-textLight dark:text-textDark">{{item.code}}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.type}}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <div *ngIf="item.percentage > 0">{{item.percentage}}</div>
+                        <div *ngIf="!(item.percentage > 0)">Free</div>
+                    </td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <div *ngIf="item.status === 'Enabled'" class="bg-[#BBFFC6] text-[#308233] px-4 py-2 rounded-lg">
+                            {{item.status}}</div>
+                        <div *ngIf="item.status === 'Finished'"
+                            class="bg-[#FFB9B7] text-[#D16D6A] px-4 py-2 rounded-lg">{{item.status}}</div>
+                        <div *ngIf="item.status === 'Disabled'"
+                            class="bg-[#F8FFA6] text-[#A8A100] px-4 py-2 rounded-lg">{{item.status}}</div>
+                    </td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.startDate | date: 'yyyy-MM-dd'}}</td>
+                    <td class="px-3 py-3 text-center text-textLight dark:text-textDark">{{ item.endDate | date: 'yyyy-MM-dd'}}</td>
+                    <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+
+                        <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]">
+                            <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <title>pen-to-square</title>
+                                <path
+                                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'">
+        </pagination-controls>
+    </div>
+</div>

@@ -119,16 +119,16 @@
       <tbody>
         <tr *ngFor="let item of payments">
           <td class="py-3 dark:text-textDark">
-            {{ item.farmerFirstName }}
+            {{ item.firstName }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ item.farmerLastName }}
+            {{ item.lastName }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ item.farmerNIC }}
+            {{ item.NICnumber }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ item.totalPaymentAmount }}
+            {{ item.total }}
           </td>
           <td class="text-center">
             <button

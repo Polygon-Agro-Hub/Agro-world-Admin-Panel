@@ -53,10 +53,10 @@ export class PaymentSlipReportComponent {
 
 class Payment {
   id!: number;
-  farmerFirstName!: string;
-  farmerLastName!: string;
-  farmerNIC!: string;
-  totalPaymentAmount!: string;
+  firstName!: string;
+  lastName!: string;
+  NICnumber!: string;
+  total!: string;
   officerFirstName!: string;
   officerLastName!: string;
   paymentDate!: string;

@@ -66,6 +66,7 @@ import { CreateVarietyComponent } from './application/plant-care-app/create-vari
 import { ViewVarietyComponent } from './application/plant-care-app/view-variety/view-variety.component';
 import { AddCoupenComponent } from './application/marketplace/add-coupen/add-coupen.component';
 import { UserBulkUploadComponent } from './application/steckholders-section/user-bulk-upload/user-bulk-upload.component';
+import { ViewCoupenComponent } from './application/marketplace/view-coupen/view-coupen.component';
 
 export const routes: Routes = [
   {
@@ -388,6 +389,10 @@ export const routes: Routes = [
           {
             path: 'add-coupen',
             component: AddCoupenComponent,
+          },
+          {
+            path: 'view-coupen',
+            component: ViewCoupenComponent,
           },
         ]
       }

@@ -20,6 +20,7 @@ interface centerData{
 })
 export class CollectionCenterService {
   private apiUrl = `${environment.API_BASE_URL}`;
+  private api = `${environment.API_URL}`;
   private token = `${environment.TOKEN}`;
   constructor(private http: HttpClient) {}
 
@@ -95,6 +96,24 @@ export class CollectionCenterService {
     return this.http.get(`${this.apiUrl}collection-officer-by-id/${id}`, {
       headers,
     });
+  }
+
+
+
+  getAllCollectionCenterPage(page: number, limit: number, searchItem: string = ''): Observable<any> {
+    console.log(page,limit,searchItem);
+    
+    const token = localStorage.getItem('Login Token : ');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    let url = `${this.apiUrl}get-all-centerpage?page=${page}&limit=${limit}`;
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
   }
 
 }

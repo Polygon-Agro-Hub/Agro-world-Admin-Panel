@@ -8,6 +8,19 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
+
+interface CollectionCenter {
+  id: number;
+  regCode: string;
+  centerName: string;
+  contact01: string;
+  contact02: string;
+  buildingNumber: string;
+  street: string;
+  district: string;
+  province: string;
+}
+
 @Component({
   selector: 'app-collection-all-view',
   standalone: true,
@@ -26,6 +39,12 @@ export class CollectionAllViewComponent implements OnInit {
   filteredCollection!: CollectionCenter[];
   districts: string[] = []; // Array to hold the districts
   selectedDistrict: string | null = null; // Store the selected district
+  searchItem: string = '';
+  page: number = 1;
+  itemsPerPage: number = 10;
+  isLoading = false;
+  totalItems: number = 0;
+  hasData: boolean = true;  
 
   constructor(
     private router: Router,
@@ -33,36 +52,58 @@ export class CollectionAllViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchAllCollectionCenter();
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  fetchAllCollectionCenter() {
-    this.collectionService.getAllCollectionCenter().subscribe(
-      (res) => {
-        console.log(res);
-        this.collectionObj = res;
-        this.filteredCollection = res; // Initially show all items
-        this.extractDistricts(); // Extract districts for the dropdown
-      },
-      (error) => {
-        console.log("Error occurred in fetching collection center data:", error);
-      }
-    );
+  // fetchAllCollectionCenterww(page: number = 1, limit: number = this.itemsPerPage) {
+  //   this.collectionService.getAllCollectionCenterPage(page, limit, this.searchItem).subscribe(
+  //     (response) => {
+  //       console.log(response);
+  //       this.isLoading = false;
+  //       this.collectionObj = response.items;
+  //       this.hasData = this.collectionObj.length > 0;
+  //       this.totalItems = response.total;
+        
+  //     },
+  //     (error) => {
+  //       console.log("Error occurred in fetching collection center data:", error);
+  //     }
+  //   );
+  // }
+
+  fetchAllCollectionCenter(page: number = this.page, limit: number = this.itemsPerPage, searchItem?: string) {
+    this.isLoading = true;
+    this.collectionService.getAllCollectionCenterPage(page, limit, searchItem)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.collectionObj = response.items;
+          console.log(this.collectionObj);
+          this.hasData = this.collectionObj.length > 0;
+          this.totalItems = response.total;
+        },
+        (error) => {
+          console.error('Error fetching market prices:', error);
+          if (error.status === 401) {
+            // Handle unauthorized access (e.g., redirect to login)
+          }
+        }
+      );
   }
 
-  extractDistricts() {
-    // Extract unique districts from the collectionObj
-    const uniqueDistricts = new Set(this.collectionObj.map(item => item.district));
-    this.districts = Array.from(uniqueDistricts);
-  }
+  // extractDistricts() {
+  //   // Extract unique districts from the collectionObj
+  //   const uniqueDistricts = new Set(this.collectionObj.map(item => item.district));
+  //   this.districts = Array.from(uniqueDistricts);
+  // }
 
-  applyFilters() {
-    if (this.selectedDistrict) {
-      this.filteredCollection = this.collectionObj.filter(item => item.district === this.selectedDistrict);
-    } else {
-      this.filteredCollection = this.collectionObj; // Reset if no district is selected
-    }
-  }
+  // applyFilters() {
+  //   if (this.selectedDistrict) {
+  //     this.filteredCollection = this.collectionObj.filter(item => item.district === this.selectedDistrict);
+  //   } else {
+  //     this.filteredCollection = this.collectionObj; // Reset if no district is selected
+  //   }
+  // }
 
   deleteCollectionCenter(id: number) {
     Swal.fire({
@@ -99,16 +140,34 @@ export class CollectionAllViewComponent implements OnInit {
       }
     });
   }
+
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage); // Include itemsPerPage
+  }
+
+
+  searchPlantCareUsers() {
+    this.page = 1;
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage, this.searchItem);
+  }
+
+
+  clearSearch(): void {
+    this.searchItem = '';
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
 }
 
-class CollectionCenter {
-  id!: number;
-  regCode!: string;
-  centerName!: string;
-  contact01!: string;
-  contact02!: string;
-  buildingNumber!: string;
-  street!: string;
-  district!: string;
-  province!: string;
-}
+// class CollectionCenter {
+//   id!: number;
+//   regCode!: string;
+//   centerName!: string;
+//   contact01!: string;
+//   contact02!: string;
+//   buildingNumber!: string;
+//   street!: string;
+//   district!: string;
+//   province!: string;
+// }

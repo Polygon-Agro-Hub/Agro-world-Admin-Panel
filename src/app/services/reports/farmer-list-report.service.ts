@@ -16,7 +16,7 @@ export class FarmerListReportService {
     console.log('famer Id success', famerID);
 
     return this.http.get<any[]>(
-      `${this.apiUrl}/farmer-list-report?userId=${famerID}`
+      `${this.apiUrl}/farmer-list-report/${famerID}`
     );
   }
 }

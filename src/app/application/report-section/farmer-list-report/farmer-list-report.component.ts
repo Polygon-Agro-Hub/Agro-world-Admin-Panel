@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { response } from 'express';
 import jsPDF from 'jspdf';
 
-
 @Component({
   selector: 'app-farmer-list-report',
   standalone: true,
@@ -29,6 +28,7 @@ export class FarmerListReportComponent {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.famerID);
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
     this.famerID = this.route.snapshot.params['userId'];
@@ -36,11 +36,11 @@ export class FarmerListReportComponent {
   }
 
   loadFarmerList() {
-    this.farmerListReportService.getFarmerListReport(this.famerID).subscribe(
+    this.farmerListReportService.getFarmerListReport(4).subscribe(
       (response) => {
         console.log(response);
 
-        this.farmerList = response.items;
+        this.farmerList = response;
       },
       (error) => {
         console.error('Error fetching payments:', error);
@@ -80,7 +80,6 @@ export class FarmerListReportComponent {
       currentY += cellHeight;
 
       data.forEach((row, index) => {
-
         doc.rect(startX, currentY - cellHeight, cellWidths[index], cellHeight);
 
         doc.text(row[1], startX + 2, currentY - 3);
@@ -92,11 +91,11 @@ export class FarmerListReportComponent {
     doc.setFontSize(10);
     doc.text('Personal Details', 5, 40);
     const personalDetails = [
-      ['First Name', this.farmerList.farmerFirstName],
-      ['Last Name', this.farmerList.farmerLastName],
-      ['NIC Number', this.farmerList.farmerNIC],
-      ['Phone Number', this.farmerList.farmerPhoneNumber],
-      ['Address', this.farmerList.farmerAddress],
+      ['First Name', this.farmerList.firstName],
+      ['Last Name', this.farmerList.lastName],
+      ['NIC Number', this.farmerList.NICnumber],
+      ['Phone Number', this.farmerList.phoneNumber],
+      ['Address', this.farmerList.address],
     ];
     const personalCellWidths = [30, 30, 30, 30, 80];
     drawTable(doc, 5, 55, personalDetails, personalCellWidths);
@@ -104,71 +103,75 @@ export class FarmerListReportComponent {
     const nextTableStartY = 55 + cellHeight * 2 + 10;
     doc.text('Bank Details', 5, nextTableStartY);
     const bankDetails = [
-      ['Account Number', this.farmerList.farmerAccountNumber],
-      ['Account Holder’s Name', this.farmerList.farmerBankAccountHolder],
-      ['Bank Name', this.farmerList.farmerBankName],
-      ['Branch Name', this.farmerList.farmerBranchName],
+      ['Account Number', this.farmerList.accNumber],
+      ['Account Holder’s Name', this.farmerList.accHolderName],
+      ['Bank Name', this.farmerList.bankName],
+      ['Branch Name', this.farmerList.branchName],
     ];
-    const bankCellWidths = [35, 45, 45, 45]; 
+    const bankCellWidths = [35, 45, 45, 45];
     drawTable(doc, 5, nextTableStartY + 15, bankDetails, bankCellWidths);
 
     const nextCropTableStartY = nextTableStartY + cellHeight * 1 + 30;
     doc.text('Crop Details', 5, nextCropTableStartY);
-    const cropDetails = [
-      ['Crop Name', this.farmerList.cropName],
-      ['Variety', this.farmerList.cropVariety],
-      ['Unit Price (A)', this.farmerList.unitPriceA],
-      ['Quantity', this.farmerList.qty],
-      ['Unit Price (B)', this.farmerList.unitPriceB],
-      ['Quantity', this.farmerList.qty],
-      ['Unit Price (C)', this.farmerList.unitPriceC],
-      ['Quantity', this.farmerList.qty],
-      ['Total (Rs.) ', this.farmerList.totalPaymentAmount],
-    ];
+    const cropDetails = this.farmerList.crops.map((crop) => [
+      ['Crop Name', crop.cropNameEnglish],
+      ['Variety', crop.varietyNameEnglish],
+      ['Unit Price (A)', crop.gradeAprice],
+      ['Quantity (A)', crop.gradeAquan],
+      ['Unit Price (B)', crop.gradeBprice],
+      ['Quantity (B)', crop.gradeBquan],
+      ['Unit Price (C)', crop.gradeCprice],
+      ['Quantity (C)', crop.gradeCquan],
+    ]);
+    
+    console.log(cropDetails);
+    
     const cropCellWidths = [25, 25, 25, 18, 25, 18, 25, 18, 20];
     drawTable(doc, 5, nextCropTableStartY + 15, cropDetails, cropCellWidths);
 
-    doc.text(`Full Total (Rs.): ${this.farmerList.totalPaymentAmount}`, 5, 160, { align: 'left' });
+    doc.text(
+      `Full Total (Rs.): `,
+      5,
+      160,
+      { align: 'left' }
+    );
 
     // const qrCodeImage = this.farmerList.paymentImage;  // Assuming this is a base64 image or URL
     // const qrWidth = 40;
     // const qrHeight = 40;
     // const qrX = 160;
     // const qrY = 180;
-  
+
     // if (qrCodeImage) {
     //   doc.addImage(qrCodeImage, 'PNG', qrX, qrY, qrWidth, qrHeight);  // Make sure the format is correct ('PNG', 'JPEG')
     // }
 
     doc.save('Farmer_Details_Report.pdf');
-   }
+  }
 }
 
 class FarmerList {
-  farmerFirstName!: string;
-  farmerLastName!: string;
-  farmerNIC!: string;
-  farmerPhoneNumber!: string;
-  totalPaymentAmount!: string;
-  officerFirstName!: string;
-  officerLastName!: string;
-  officerPhone1!: string;
-  officerPhone2!: string;
-  officerEmail!: string;
-  cropName!: string;
-  unitPriceA!: string;
-  weightA!: string;
-  paymentImage!: string;
-  cropVariety!: string;
-  weightB!: string;
-  weightC!: string;
-  unitPriceB!: string;
-  unitPriceC!: string;
-  qty!: string;
-  paymentDate!: string;
-  farmerBankAccountHolder!: string;
-  farmerAccountNumber!: string;
-  farmerBankName!: string;
-  farmerBranchName!: string;
-  farmerAddress!: string;
+  id!: number;
+  firstName!: string;
+  lastName!: string;
+  NICnumber!: string;
+  phoneNumber!: string;
+  farmerQr!: string;
+  address!: string;
+  accNumber!: string;
+  accHolderName!: string;
+  bankName!: string;
+  branchName!: string;
+  crops!:FarmerCrop[]
+}
+
+class FarmerCrop {
+  gradeAprice!: string;
+  gradeBprice!: string;
+  gradeCprice!: string;
+  gradeAquan!: string;
+  gradeBquan!: string;
+  gradeCquan!: string;
+  varietyNameEnglish!: string;
+  cropNameEnglish!:string;
 }

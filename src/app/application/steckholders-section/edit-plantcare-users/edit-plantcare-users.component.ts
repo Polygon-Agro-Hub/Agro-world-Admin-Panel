@@ -112,6 +112,18 @@ export class EditPlantcareUsersComponent implements OnInit {
     if (this.userForm.valid) {
       console.log('this is the form values.....', this.userForm.value);
 
+      if(this.selectedImage){
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if(!validImageTypes.includes(this.selectedImage.type)){
+          Swal.fire({
+            title: 'Invalid File!',
+            text: 'Please upload a valid image file (jpg, png, gif).',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+          return;
+        }
+      }
     // Handle authentication token
     const token = localStorage.getItem('Login Token : ');
     if (!token) {
@@ -155,7 +167,9 @@ export class EditPlantcareUsersComponent implements OnInit {
                 'Updated!',
                 'plant care user has been updated.',
                 'success'
-              );
+              ).then(()=>{
+                this.router.navigate(['/steckholders/farmers'])
+              });
               this.loadUserData(this.itemId!);
             },
             (error) => {
@@ -181,20 +195,25 @@ export class EditPlantcareUsersComponent implements OnInit {
   }
 
   onCancel() {
-    // Handle cancel action (e.g., clear the form, navigate back, etc.)
-    console.log('Cancelled');
+    location.reload();
   }
-
-
-
- 
-
-
 
   onSubmitCreate() {
     if (this.userForm.valid) {
       console.log('this is the form values.....', this.userForm.value);
 
+      if(this.selectedImage){
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if(!validImageTypes.includes(this.selectedImage.type)){
+          Swal.fire({
+            title: 'Invalid File!',
+            text: 'Please upload a valid image file (jpg, png, gif).',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+          return;
+        }
+      }
     // Handle authentication token
     const token = localStorage.getItem('Login Token : ');
     if (!token) {
@@ -241,7 +260,9 @@ this.http
         'User Created!',
         'Plant care user has been successfully created.',
         'success'
-      );
+      ).then(()=>{
+        this.router.navigate(['/steckholders/farmers'])
+      });
       this.loadUserData(this.itemId!);
     },
     (error) => {

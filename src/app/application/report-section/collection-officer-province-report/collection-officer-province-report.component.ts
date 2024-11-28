@@ -8,11 +8,14 @@ import { CollectionOfficerReportService } from '../../../services/collection-off
 import jsPDF from 'jspdf';
 
 interface IProvinceReport {
-  cropName: string,
-  quality: string,
-  province: string,
-  totPrice: string,
-  totWeight: string
+  cropName: string
+  district: string
+  qtyA: number
+  qtyB: number
+  qtyC: number
+  priceA: number
+  priceB: number
+  priceC: number
 }
 
 @Component({
@@ -48,15 +51,23 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
 
   }
 
-  fetchAllProvinceReportDetails(province: string) {
-    this.collectionOfficerSrv.getProvinceReport(province).subscribe((response) => {
-      console.log(response);
-      this.reportDetails = response
-      this.updateChart();
-    },
+  fetchAllProvinceReportDetails(district: string) {
+    console.log(district);
+    
+    this.collectionOfficerSrv.getProvinceReport(district).subscribe(
+      (response) => {
+        this.reportDetails = response.map((item) => ({
+          ...item,
+          qtyA: Number(item.qtyA) || 0,
+          qtyB: Number(item.qtyB) || 0,
+          qtyC: Number(item.qtyC) || 0,
+        }));
+        this.updateChart()
+      },
       (error) => {
         console.log('Error: ', error);
-      });
+      }
+    );
   }
 
 
@@ -69,79 +80,54 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     }
   }
 
-  groupByCrop(reportDetails: IProvinceReport[]) {
-    const groupedReports: any[] = [];
-
-    reportDetails.forEach((report) => {
-      const existingCrop = groupedReports.find((r) => r.cropName === report.cropName);
-
-      if (existingCrop) {
-        existingCrop[`grade${report.quality}`] = report;
-        existingCrop.totalWeight += parseFloat(report.totWeight);
-      } else {
-        groupedReports.push({
-          cropName: report.cropName,
-          [`grade${report.quality}`]: report,
-          totalWeight: parseFloat(report.totWeight)
-        });
-      }
-    });
-
-    return groupedReports;
-  }
-
   updateChart() {
-    const groupedData = this.groupByCrop(this.reportDetails);
+    const gradeAData = this.reportDetails.map((crop) => ({
+      label: crop.cropName,
+      y: crop.qtyA || 0,
+      color: "#FF9263"
+    }));
 
-    const gradeAData = groupedData
-      .filter(crop => crop.gradeA)
-      .map((crop) => ({
-        label: crop.cropName,
-        y: parseFloat(crop.gradeA.totWeight),
-        color: "#FF9263"
-      }));
+    const gradeBData = this.reportDetails.map((crop) => ({
+      label: crop.cropName,
+      y: crop.qtyB || 0,
+      color: "#5F75E9"
+    }));
 
-    const gradeBData = groupedData
-      .filter(crop => crop.gradeB)
-      .map((crop) => ({
-        label: crop.cropName,
-        y: parseFloat(crop.gradeB.totWeight),
-        color: "#5F75E9"
-      }));
-
-    const gradeCData = groupedData
-      .filter(crop => crop.gradeC)
-      .map((crop) => ({
-        label: crop.cropName,
-        y: parseFloat(crop.gradeC.totWeight),
-        color: "#3DE188"
-      }));
+    const gradeCData = this.reportDetails.map((crop) => ({
+      label: crop.cropName,
+      y: crop.qtyC || 0,
+      color: "#3DE188"
+    }));
 
     this.chartOptions = {
       animationEnabled: true,
+      theme: "light2",
+      title: {
+        text: `${this.selectedProvince.name} - Crop Weights`
+      },
       axisX: {
-        title: 'Crops',
+        title: "Crops",
         reversed: true
       },
       axisY: {
-        title: 'Total Weight (Kg)',
+        title: "Total Weight (Kg)",
         includeZero: true
       },
       data: [
         {
-          type: 'stackedBar',
+          type: "stackedBar",
           name: "Grade A",
           showInLegend: true,
           dataPoints: gradeAData
         },
         {
-          type: 'stackedBar',
+          type: "stackedBar",
           name: "Grade B",
           showInLegend: true,
           dataPoints: gradeBData
         },
         {
-          type: 'stackedBar',
+          type: "stackedBar",
           name: "Grade C",
           showInLegend: true,
           dataPoints: gradeCData
@@ -152,47 +138,68 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
 
   exportToPDF() {
     const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
     const startX = 30;
     const startY = 30;
     const barHeight = 10;
-    const gap = 20;
+    const gap = 15;
     const chartWidth = 140;
-  
-    // Title
-    doc.setFontSize(14);
-    doc.text(`${this.selectedProvince.name} - Province Report`, 105, 15, { align: 'center' });
-  
-    // Chart
-    const groupedData = this.groupByCrop(this.reportDetails);
+    const titleFontSize = 14;
+    const contentFontSize = 10;
     const colors = {
       gradeA: "#FF9263",
       gradeB: "#5F75E9",
       gradeC: "#3DE188"
     };
+
+    // Title
+    doc.setFontSize(titleFontSize);
+    doc.text(`${this.selectedProvince.name} - Crop Grade Report`, pageWidth / 2, 20, { align: 'center' });
+
+    // Ensure reportDetails is populated
+    if (!this.reportDetails || this.reportDetails.length === 0) {
+      doc.setFontSize(contentFontSize);
+      doc.text("No data available to display.", startX, startY);
+      doc.save(`${this.selectedProvince.name}_Report.pdf`);
+      return;
+    }
+
+    // Calculate total weights and group data for visualization
+    const groupedData = this.reportDetails.map((crop) => ({
+      cropName: crop.cropName,
+      gradeA: crop.qtyA || 0,
+      gradeB: crop.qtyB || 0,
+      gradeC: crop.qtyC || 0,
+      totalWeight: (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0)
+    }));
+
     const maxWeight = Math.max(...groupedData.map(crop => crop.totalWeight));
+
+    // Draw chart bars for each crop
     let currentY = startY;
-  
     groupedData.forEach((crop) => {
       let currentX = startX;
       const labelYOffset = currentY + barHeight / 2 + 3;
-  
-      doc.setFontSize(10);
+
+      // Crop Name Label
+      doc.setFontSize(contentFontSize);
       doc.setTextColor(0, 0, 0);
       doc.text(crop.cropName, startX - 20, labelYOffset);
-  
-      (['A', 'B', 'C'] as const).forEach((grade) => {
+
+      // Draw bars for each grade
+      (['A', 'B', 'C'] as const).forEach((grade, idx) => {
         const gradeKey = `grade${grade}` as 'gradeA' | 'gradeB' | 'gradeC';
-        const gradeData = crop[gradeKey];
-  
-        if (gradeData) {
-          const barWidth = (parseFloat(gradeData.totWeight) / maxWeight) * chartWidth;
+        const gradeWeight = crop[gradeKey];
+        if (gradeWeight > 0) {
+          const barWidth = (gradeWeight / maxWeight) * chartWidth;
           doc.setFillColor(colors[gradeKey]);
           doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-  
+
+          // Display weight inside the bar
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(8);
           doc.text(
-            `${gradeData.totWeight} kg`,
+            `${gradeWeight} kg`,
             currentX + barWidth / 2,
             currentY + barHeight / 2 + 3,
             { align: 'center' }
@@ -200,54 +207,51 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
           currentX += barWidth;
         }
       });
-  
+
       currentY += gap;
     });
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    doc.text("Total Weight (Kg)", startX + chartWidth / 2, currentY + 5, { align: 'center' });
-  
-    const tableStartY = currentY + 20; 
+
+    // Draw table header
+    const tableStartY = currentY + 20;
     const cellPadding = 5;
     const cellHeight = 8;
     const tableColWidths = [50, 30, 30, 30, 30];
     let rowY = tableStartY;
-  
 
     const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
-    doc.setFontSize(10);
+    doc.setFontSize(contentFontSize);
     doc.setTextColor(0, 0, 0);
     headers.forEach((header, index) => {
       const cellX = startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-      doc.rect(cellX, rowY, tableColWidths[index], cellHeight); 
+      doc.rect(cellX, rowY, tableColWidths[index], cellHeight); // Draw header cell
       doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 3);
     });
-  
+
     rowY += cellHeight;
-  
+
+    // Draw table rows
     groupedData.forEach((crop) => {
       const cropValues = [
         crop.cropName,
-        crop.gradeA ? `${crop.gradeA.totWeight} kg` : '-',
-        crop.gradeB ? `${crop.gradeB.totWeight} kg` : '-',
-        crop.gradeC ? `${crop.gradeC.totWeight} kg` : '-',
+        crop.gradeA ? `${crop.gradeA} kg` : '-',
+        crop.gradeB ? `${crop.gradeB} kg` : '-',
+        crop.gradeC ? `${crop.gradeC} kg` : '-',
         `${crop.totalWeight} kg`
       ];
-  
+
       cropValues.forEach((value, index) => {
         const cellX = startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-        doc.rect(cellX, rowY, tableColWidths[index], cellHeight); 
+        doc.rect(cellX, rowY, tableColWidths[index], cellHeight); // Draw data cell
         doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 3);
       });
-  
+
       rowY += cellHeight;
     });
-  
-    // Save PDF
-    doc.save(`${this.selectedProvince.name}_Province_Report.pdf`);
+
+    // Save the PDF
+    doc.save(`${this.selectedProvince.name}_CropGradeReport.pdf`);
   }
-  
+
 
 
 }

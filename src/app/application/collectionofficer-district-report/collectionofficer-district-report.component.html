@@ -51,12 +51,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let crop of groupByCrop(reportDetails)">
+          <tr *ngFor="let crop of reportDetails">
             <td class="px-6 py-3 border-[2px]">{{ crop.cropName }}</td>
-            <td class="px-6 py-3 border-[2px]">{{ crop.gradeA ? crop.gradeA.totWeight + 'kg' : '-' }}</td>
-            <td class="px-6 py-3 border-[2px]">{{ crop.gradeB ? crop.gradeB.totWeight + 'kg' : '-' }}</td>
-            <td class="px-6 py-3 border-[2px]">{{ crop.gradeC ? crop.gradeC.totWeight + 'kg' : '-' }}</td>
-            <td class="px-6 py-3 border-[2px]">{{ crop.totalWeight }}kg</td>
+            <td class="px-6 py-3 border-[2px]">{{ crop.qtyA ? crop.qtyA + 'kg' : '-' }}</td>
+            <td class="px-6 py-3 border-[2px]">{{ crop.qtyB ? crop.qtyB + 'kg' : '-' }}</td>
+            <td class="px-6 py-3 border-[2px]">{{ crop.qtyC ? crop.qtyC+ 'kg' : '-' }}</td>
+            <td class="px-6 py-3 border-[2px]">{{ crop.qtyA + crop.qtyB + crop.qtyC }}kg</td>
           </tr>
         </tbody>
       </table>

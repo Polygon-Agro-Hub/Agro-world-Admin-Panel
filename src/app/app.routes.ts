@@ -67,6 +67,7 @@ import { ViewVarietyComponent } from './application/plant-care-app/view-variety/
 import { AddCoupenComponent } from './application/marketplace/add-coupen/add-coupen.component';
 import { UserBulkUploadComponent } from './application/steckholders-section/user-bulk-upload/user-bulk-upload.component';
 import { ViewCoupenComponent } from './application/marketplace/view-coupen/view-coupen.component';
+import { EditCollectionCenterComponent } from './application/collection-center/edit-collection-center/edit-collection-center.component';
 
 export const routes: Routes = [
   {
@@ -363,6 +364,10 @@ export const routes: Routes = [
           {
             path: 'view-selected-complain/:id',
             component: ViewSelectedComplainComponent
+          },
+          {
+            path: 'update-collection-center/:id',
+            component: EditCollectionCenterComponent
           }
         ],
       },

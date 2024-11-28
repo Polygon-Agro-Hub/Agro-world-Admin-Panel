@@ -44,12 +44,12 @@ export class CollectionAllViewComponent implements OnInit {
   itemsPerPage: number = 10;
   isLoading = false;
   totalItems: number = 0;
-  hasData: boolean = true;  
+  hasData: boolean = true;
 
   constructor(
     private router: Router,
     private collectionService: CollectionCenterService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -63,7 +63,7 @@ export class CollectionAllViewComponent implements OnInit {
   //       this.collectionObj = response.items;
   //       this.hasData = this.collectionObj.length > 0;
   //       this.totalItems = response.total;
-        
+
   //     },
   //     (error) => {
   //       console.log("Error occurred in fetching collection center data:", error);
@@ -157,6 +157,10 @@ export class CollectionAllViewComponent implements OnInit {
   clearSearch(): void {
     this.searchItem = '';
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  navigateEdit(id: number) {
+    this.router.navigate([`/collection-hub/update-collection-center/${id}`])
   }
 }
 

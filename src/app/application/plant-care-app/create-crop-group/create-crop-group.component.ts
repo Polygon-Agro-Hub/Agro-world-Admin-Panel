@@ -134,15 +134,23 @@ export class CreateCropGroupComponent {
     // Send POST request to backend
     this.cropCalendarService.createCropGroup(formData).subscribe({
       next: (response: any) => {
-        console.log(formData);
-        console.log('Crop group created successfully:', response);
-        this.isLoading = false;
-        Swal.fire(
-          'Success',
-          response.message,
-          'success'
-        );
-        this.router.navigate(['/plant-care/view-crop-group']);
+        if (response.status) {
+          this.isLoading = false;
+          Swal.fire(
+            'Success',
+            response.message,
+            'success'
+          );
+          this.router.navigate(['/plant-care/view-crop-group']);
+        }else{
+          this.isLoading = false;
+          Swal.fire(
+            'Unsuccess',
+            response.message,
+            'error'
+          );
+        }
+
       },
       error: (error) => {
         console.error('Error creating crop group:', error);

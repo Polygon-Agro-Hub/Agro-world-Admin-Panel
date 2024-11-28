@@ -78,7 +78,7 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.contact01 }}</td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.contact02 }}</td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button class="text-blue-400 hover:text-blue-700">
+              <button class="text-blue-400 hover:text-blue-700" (click)="navigateEdit(item.id)">
                 <i class="fa-solid fa-pen-to-square fa-xl"></i>
               </button>
             </td>

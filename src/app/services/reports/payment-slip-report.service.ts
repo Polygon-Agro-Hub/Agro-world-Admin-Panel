@@ -12,12 +12,12 @@ export class PaymentSlipReportService {
 
   constructor(private http: HttpClient) {}
 
-  getPaymentSlipReport(officerID: number): Observable<any> {
+  getPaymentSlipReport(page: number, limit: number, officerID: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<any[]>(
-      `${this.apiUrl}/farmer-payments?officerId=${officerID}` ,{headers}
+      `${this.apiUrl}/farmer-payments/${officerID}?page=${page}&limit=${limit}` ,{headers}
     );
   }
 }

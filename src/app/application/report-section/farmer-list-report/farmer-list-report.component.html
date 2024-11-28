@@ -1,6 +1,6 @@
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/reports/payment-slip-report/:id'"
+  onclick="history.back()"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -72,7 +72,7 @@
           <td
             class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
           >
-            {{ farmerList.address }}
+            {{ farmerList.houseNo }} , {{ farmerList.streetName }} , {{ farmerList.city }}
           </td>
         </tr>
       </tbody>
@@ -196,7 +196,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let crop of farmerList.crops">
+        <tr *ngFor="let crop of this.cropList">
           <td
             class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
           >
@@ -240,14 +240,14 @@
           <td
             class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
           >
-          
+          {{ crop.gradeAprice * crop.gradeAquan + crop.gradeBprice * crop.gradeBquan + crop.gradeCprice * crop.gradeCquan}}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="text-gray-500 dark:text-textDark mt-8">
-    Full Total (Rs.) : 
+    Full Total (Rs.) : {{ getTotal() }}
   </div>
   <div class="flex justify-center mt-8">
     <div class="flex flex-col justify-center mr-5">
@@ -268,7 +268,7 @@
 <div class="flex flex-col justify-center">
   <div class="flex justify-center">
     <button
-      (click)="downloadPDF()"
+      
       type="submit"
       class="px-6 py-2 mt-10 mb-10 bg-[#3980C0] text-white rounded-md"
     >

@@ -12,11 +12,11 @@ export class FarmerListReportService {
 
   constructor(private http: HttpClient) {}
 
-  getFarmerListReport(famerID: number): Observable<any> {
+  getFarmerListReport(famerID: number, userId: number): Observable<any> {
     console.log('famer Id success', famerID);
 
     return this.http.get<any[]>(
-      `${this.apiUrl}/farmer-list-report/${famerID}`
+      `${this.apiUrl}/farmer-list-report/${famerID}/${userId}`
     );
   }
 }

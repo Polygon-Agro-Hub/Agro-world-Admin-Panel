@@ -229,7 +229,7 @@ export const routes: Routes = [
             component: PaymentSlipReportComponent,
           },
           {
-            path: 'farmer-list-report/:id',
+            path: 'farmer-list-report',
             component: FarmerListReportComponent,
           },
           {

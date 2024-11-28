@@ -74,6 +74,12 @@ export class UserBulkUploadComponent {
     } else {
       this.errorMessage = 'Invalid file type. Please upload a CSV or XLSX file.';
       this.selectedFile = null;
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File Type',
+        text: 'Please upload a CSV or XLSX file.',
+        confirmButtonText: 'OK'
+      })
     }
   }
 

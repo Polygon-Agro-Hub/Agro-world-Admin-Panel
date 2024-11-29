@@ -38,6 +38,7 @@ export class FarmerListReportComponent {
       this.itemId = params['id'] ? +params['id'] : null;
       this.userId = params['id'] ? +params['userId'] : null;
       console.log('Received item ID:', this.itemId);
+      console.log('Received user ID:', this.userId);
     });
     this.loadFarmerList();
   }
@@ -68,107 +69,119 @@ export class FarmerListReportComponent {
     }, 0);
   }
   
-  // downloadPDF() {
-  //   const doc = new jsPDF();
+  downloadPDF() {
+    const doc = new jsPDF();
+  
+    // Set Document Title
+    doc.setFontSize(14);
+    doc.text('Farmer Report', 105, 10, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 20, { align: 'center' });
+  
+    let yPosition = 30;
+  
+    // Personal Details Section
+    doc.setFontSize(12);
+    doc.text('Personal Details', 10, yPosition);
+    yPosition += 10;
+  
+    doc.setFontSize(10);
+    doc.text(`First Name: ${this.farmerList.firstName}`, 10, yPosition);
+    doc.text(`Last Name: ${this.farmerList.lastName}`, 100, yPosition);
+    yPosition += 6;
+    doc.text(`NIC Number: ${this.farmerList.NICnumber}`, 10, yPosition);
+    doc.text(`Phone Number: ${this.farmerList.phoneNumber}`, 100, yPosition);
+    yPosition += 6;
+    doc.text(
+      `Address: ${this.farmerList.houseNo}, ${this.farmerList.streetName}, ${this.farmerList.city}`,
+      10,
+      yPosition
+    );
+    yPosition += 10;
+  
+    // Bank Details Section
+    doc.setFontSize(12);
+    doc.text('Bank Details', 10, yPosition);
+    yPosition += 10;
+  
+    doc.setFontSize(10);
+    doc.text(`Account Number: ${this.farmerList.accNumber}`, 10, yPosition);
+    doc.text(`Account Holder’s Name: ${this.farmerList.accHolderName}`, 100, yPosition);
+    yPosition += 6;
+    doc.text(`Bank Name: ${this.farmerList.bankName}`, 10, yPosition);
+    doc.text(`Branch Name: ${this.farmerList.branchName}`, 100, yPosition);
+    yPosition += 10;
+  
+    // Crop Details Section
+    doc.setFontSize(12);
+    doc.text('Crop Details', 10, yPosition);
+    yPosition += 10;
+  
+    // Table Headers
+    const headers = [
+      'Crop Name',
+      'Variety',
+      'Unit Price (A)',
+      'Quantity (A)',
+      'Unit Price (B)',
+      'Quantity (B)',
+      'Unit Price (C)',
+      'Quantity (C)',
+      'Total (Rs.)',
+    ];
+    const colWidths = [30, 25, 25, 20, 25, 20, 25, 20, 30];
+  
+    // Draw Table Header
+    headers.forEach((header, index) => {
+      doc.text(header, 10 + colWidths.slice(0, index).reduce((a, b) => a + b, 0), yPosition);
+    });
+    yPosition += 6;
+  
+    // Draw Table Rows
+    this.cropList.forEach((crop) => {
+      const row = [
+        crop.cropNameEnglish,
+        crop.varietyNameEnglish,
+        crop.gradeAprice.toString(),
+        crop.gradeAquan.toString(),
+        crop.gradeBprice.toString(),
+        crop.gradeBquan.toString(),
+        crop.gradeCprice.toString(),
+        crop.gradeCquan.toString(),
+        (
+          crop.gradeAprice * crop.gradeAquan +
+          crop.gradeBprice * crop.gradeBquan +
+          crop.gradeCprice * crop.gradeCquan
+        ).toFixed(2),
+      ];
+  
+      row.forEach((cell, index) => {
+        doc.text(
+          cell,
+          10 + colWidths.slice(0, index).reduce((a, b) => a + b, 0),
+          yPosition
+        );
+      });
+      yPosition += 6;
+  
+      // Check for page break
+      if (yPosition > 280) {
+        doc.addPage();
+        yPosition = 10;
+      }
+    });
+  
+    // Full Total
+    yPosition += 10;
+    doc.setFontSize(12);
+    doc.text(`Full Total (Rs.): ${this.getTotal().toFixed(2)}`, 10, yPosition);
+  
+    // Save PDF
+    doc.save('Farmer_Details_Report.pdf');
+  }
+  
 
-  //   doc.setFontSize(14);
-  //   doc.text('Farmer Report', 105, 20, { align: 'center' });
-  //   doc.text(`Date: ${this.todayDate}`, 105, 30, { align: 'center' });
-
-  //   const cellHeight = 10;
-
-  //   const drawTable = (
-  //     doc: jsPDF,
-  //     startX: number,
-  //     startY: number,
-  //     data: any[],
-  //     cellWidths: number[]
-  //   ) => {
-  //     let currentY = startY;
-
-  //     data.forEach((row, index) => {
-  //       doc.setFontSize(10);
-  //       doc.setLineWidth(0.2);
-
-  //       doc.rect(startX, currentY - cellHeight, cellWidths[index], cellHeight);
-
-  //       doc.text(row[0], startX + 2, currentY - 3);
-
-  //       startX += cellWidths[index];
-  //     });
-
-  //     startX -= cellWidths.reduce((acc, width) => acc + width, 0);
-  //     currentY += cellHeight;
-
-  //     data.forEach((row, index) => {
-  //       doc.rect(startX, currentY - cellHeight, cellWidths[index], cellHeight);
-
-  //       doc.text(row[1], startX + 2, currentY - 3);
-
-  //       startX += cellWidths[index];
-  //     });
-  //   };
-
-  //   doc.setFontSize(10);
-  //   doc.text('Personal Details', 5, 40);
-  //   const personalDetails = [
-  //     ['First Name', this.farmerList.firstName],
-  //     ['Last Name', this.farmerList.lastName],
-  //     ['NIC Number', this.farmerList.NICnumber],
-  //     ['Phone Number', this.farmerList.phoneNumber],
-  //     ['Address', this.farmerList.address],
-  //   ];
-  //   const personalCellWidths = [30, 30, 30, 30, 80];
-  //   drawTable(doc, 5, 55, personalDetails, personalCellWidths);
-
-  //   const nextTableStartY = 55 + cellHeight * 2 + 10;
-  //   doc.text('Bank Details', 5, nextTableStartY);
-  //   const bankDetails = [
-  //     ['Account Number', this.farmerList.accNumber],
-  //     ['Account Holder’s Name', this.farmerList.accHolderName],
-  //     ['Bank Name', this.farmerList.bankName],
-  //     ['Branch Name', this.farmerList.branchName],
-  //   ];
-  //   const bankCellWidths = [35, 45, 45, 45];
-  //   drawTable(doc, 5, nextTableStartY + 15, bankDetails, bankCellWidths);
-
-  //   const nextCropTableStartY = nextTableStartY + cellHeight * 1 + 30;
-  //   doc.text('Crop Details', 5, nextCropTableStartY);
-  //   const cropDetails = this.farmerList.crops.map((crop) => [
-  //     ['Crop Name', crop.cropNameEnglish],
-  //     ['Variety', crop.varietyNameEnglish],
-  //     ['Unit Price (A)', crop.gradeAprice],
-  //     ['Quantity (A)', crop.gradeAquan],
-  //     ['Unit Price (B)', crop.gradeBprice],
-  //     ['Quantity (B)', crop.gradeBquan],
-  //     ['Unit Price (C)', crop.gradeCprice],
-  //     ['Quantity (C)', crop.gradeCquan],
-  //   ]);
-    
-  //   console.log(cropDetails);
-    
-  //   const cropCellWidths = [25, 25, 25, 18, 25, 18, 25, 18, 20];
-  //   drawTable(doc, 5, nextCropTableStartY + 15, cropDetails, cropCellWidths);
-
-  //   doc.text(
-  //     `Full Total (Rs.): `,
-  //     5,
-  //     160,
-  //     { align: 'left' }
-  //   );
-
-  //   // const qrCodeImage = this.farmerList.paymentImage;  // Assuming this is a base64 image or URL
-  //   // const qrWidth = 40;
-  //   // const qrHeight = 40;
-  //   // const qrX = 160;
-  //   // const qrY = 180;
-
-  //   // if (qrCodeImage) {
-  //   //   doc.addImage(qrCodeImage, 'PNG', qrX, qrY, qrWidth, qrHeight);  // Make sure the format is correct ('PNG', 'JPEG')
-  //   // }
-
-  //   doc.save('Farmer_Details_Report.pdf');
-  // }
+  
 }
 
 class FarmerList {

@@ -11,7 +11,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Collection Officer Reports
+        Collection Officerzzz Reports
       </h2>
     </div>
     <div class="flex items-center">
@@ -143,7 +143,7 @@
           "
         >
           <td class="py-3 text-gray-500 dark:text-textDark text-left">
-            {{ item.firstNameEnglish }}
+            {{ item.firstNameEnglish }}{{item.lastNameEnglish}}
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
             {{ item.companyNameEnglish }}
@@ -171,7 +171,7 @@
           <td class="px-4 py-3 text-center">
             <button
               class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-              (click)="navigateToPaymentSlipReport(item.id)"
+              (click)="navigateToPaymentSlipReport(item.id, item.firstNameEnglish, item.lastNameEnglish)"
             >
               <i class="fa-regular fa-file"></i>
             </button>

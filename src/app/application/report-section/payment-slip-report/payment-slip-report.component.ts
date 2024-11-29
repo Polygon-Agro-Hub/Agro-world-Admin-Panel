@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {  Component } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { PaymentSlipReportService } from '../../../services/reports/payment-slip-report.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-payment-slip-report',
   standalone: true,
-  imports: [CommonModule, CalendarModule, NgxPaginationModule, LoadingSpinnerComponent],
+  imports: [CommonModule, CalendarModule, NgxPaginationModule, LoadingSpinnerComponent, FormsModule],
   templateUrl: './payment-slip-report.component.html',
   styleUrl: './payment-slip-report.component.css',
 })
@@ -21,6 +22,13 @@ export class PaymentSlipReportComponent {
   page: number = 1;
   itemsPerPage: number = 10;
   isLoading = false;
+  createdDate: string = new Date().toISOString().split('T')[0];
+  isTableVisible: boolean = true;
+  hasData: boolean = true; 
+  searchNIC: string = '';
+
+  firstName: string = '';
+  lastName: string = '';
 
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
@@ -32,29 +40,38 @@ export class PaymentSlipReportComponent {
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
     this.officerId = this.route.snapshot.params['id'];
+    this.route.queryParams.subscribe((params) => {
+      this.firstName = params['firstName'] ? params['firstName'] : '';
+      this.lastName = params['lastName'] ? params['lastName'] : '';
+      
+    });
     this.loadPayments();
   }
 
   loadPayments(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
+    this.payments = []; // Reset payments array
+    this.total = 0;  
+    this.isTableVisible = false; 
+  
     this.paymentSlipReportService
-      .getPaymentSlipReport(page, limit ,this.officerId)
+      .getPaymentSlipReport(page, limit ,this.officerId, this.createdDate, this.searchNIC)
       .subscribe(
         (response) => {
           console.log(response);
           this.isLoading = false;
-
           this.payments = response.items;
           this.total = response.total;
+          this.hasData = this.payments.length > 0;
         },
         (error) => {
           console.error('Error fetching payments:', error);
         }
       );
+
+   
   }
-  // navigateToFamerListReport(id: number) {
-  //   this.router.navigate([`/reports/farmer-list-report/${id}`]);
-  // }
+
 
   navigateToFamerListReport(id: number, userId: number) {
     this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId } });
@@ -64,6 +81,29 @@ export class PaymentSlipReportComponent {
     this.page = event;
     this.loadPayments(this.page, this.itemsPerPage); // Include itemsPerPage
   }
+
+  onDateChange(): void {
+    this.payments = []; 
+    this.total = 0;
+    this.isTableVisible = false; 
+    setTimeout(() => {
+      this.loadPayments();
+    }, 1000);
+}
+
+
+
+searchPlantCareUsers() {
+  this.page = 1;
+  this.loadPayments();
+}
+
+clearSearch(): void {
+  this.searchNIC = '';
+  this.loadPayments();
+}
+
+
 }
 
 class Payment {

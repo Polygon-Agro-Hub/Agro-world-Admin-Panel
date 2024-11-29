@@ -11,6 +11,7 @@ import { CollectionService } from '../../../services/collection.service';
 interface OngoingCultivationItem {
   id: number;
   firstNameEnglish: string;
+  lastNameEnglish:string;
   lastName: string;
   companyNameEnglish: string;
   phoneNumber01: string;
@@ -57,6 +58,7 @@ export class CollectionOfficerReportComponent {
         (response) => {
           this.ongoingCultivation = response.items;
           this.totalItems = response.total;
+          console.log(this.ongoingCultivation)
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
@@ -100,7 +102,7 @@ export class CollectionOfficerReportComponent {
     this.router.navigate([`/reports/collective-officer-report/view/${id}/${name}`]);
   }
 
-  navigateToPaymentSlipReport(id: number) {
-    this.router.navigate([`/reports/payment-slip-report/${id}`]);
+  navigateToPaymentSlipReport(id: number, firstName : string , lastName : string) {
+    this.router.navigate([`/reports/payment-slip-report/${id}`], { queryParams: { firstName, lastName } });
   }
 }

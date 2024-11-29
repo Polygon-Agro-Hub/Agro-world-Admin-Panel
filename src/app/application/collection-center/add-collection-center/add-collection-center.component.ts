@@ -158,6 +158,23 @@ export class AddCollectionCenterComponent {
   }
 
 
+  onCancel() {
+    Swal.fire({
+      icon: 'info',
+      title: 'Cancelled',
+      text: 'Form has been cleared!',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  
+    this.collectionCenterForm.reset();
+  
+    this.selectedDistrict = [];
+    this.selectProvince = '';
+  }
+  
+
+
 }
 
 class CollectionCenter {

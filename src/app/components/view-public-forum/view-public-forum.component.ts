@@ -30,16 +30,17 @@ export class ViewPublicForumComponent implements OnInit {
   userPrifile: any;
   replyMessage: string = '';
   @Input() chatId!: number;
-  count!:any;
-  countReply!:ReplyCount[]
+  count!: any;
+  countReply!: ReplyCount[]
+  hasData: boolean =false
 
   constructor(
     private psotService: PublicforumService,
     private router: Router,
     private publicForumSrv: PublicForumService
-  ) {}
+  ) { }
 
-  sendMessage(id:number) {
+  sendMessage(id: number) {
     if (!this.replyMessage.trim()) {
       Swal.fire('Error!', 'Please enter a message.', 'error');
       return;
@@ -62,7 +63,7 @@ export class ViewPublicForumComponent implements OnInit {
         Swal.fire('Error!', 'There was an error sending your reply.', 'error');
       }
     );
-  } 
+  }
 
   ngOnInit(): void {
     this.loadPosts();
@@ -72,20 +73,23 @@ export class ViewPublicForumComponent implements OnInit {
   loadPosts(): void {
     this.psotService.getAllPosts().subscribe((data: any[]) => {
       this.post = data;
+      if(data.length > 0){
+        this.hasData = true
+      }
       console.log(this.post);
-    this.getCount();
+      this.getCount();
 
     });
   }
 
-//   getPostbyId(postId:number):void{
-// this.psotService.getAllPosts(postId).subscribe(
-//   (res) =>{
-//     this.post = res;
-//   },
-//   (error) = 
-// )
-//   }
+  //   getPostbyId(postId:number):void{
+  // this.psotService.getAllPosts(postId).subscribe(
+  //   (res) =>{
+  //     this.post = res;
+  //   },
+  //   (error) = 
+  // )
+  //   }
 
   viewUserProfile(userId: number) {
     this.router.navigate(['/plant-care/plant-care-user-profile'], {
@@ -96,10 +100,10 @@ export class ViewPublicForumComponent implements OnInit {
 
   toggleDeleteButton() {
     this.isDeleteVisible = !this.isDeleteVisible;
-    
+
   }
 
-  openPopup(id:number) {
+  openPopup(id: number) {
     this.isPopupVisible = true;
     this.fetchPostAllReply(id)
   }
@@ -108,11 +112,11 @@ export class ViewPublicForumComponent implements OnInit {
     this.isPopupVisible = false;
   }
 
-  openDeletePostPopup(){
+  openDeletePostPopup() {
     this.deletePopUpVisible = true;
   }
 
-  closeDeletePostPopup(){
+  closeDeletePostPopup() {
     this.deletePopUpVisible = true;
   }
 
@@ -136,7 +140,7 @@ export class ViewPublicForumComponent implements OnInit {
     );
   }
 
-  deletePost(id:number){
+  deletePost(id: number) {
     console.log('delete id:', id);
 
     Swal.fire({
@@ -148,21 +152,21 @@ export class ViewPublicForumComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
-    }).then((result)=>{
-      if(result.isConfirmed){
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.publicForumSrv.deletePublicForumPost(id).subscribe(
-          (res:any)=>{
-            if(res){
+          (res: any) => {
+            if (res) {
               Swal.fire(
                 'Deleted!',
                 'The post has been deleted.',
                 'success'
               );
               this.isPopupVisible = true;
-              
+
             }
           },
-          (error)=>{
+          (error) => {
             console.log('Error', error);
             Swal.fire(
               'Error!',
@@ -173,7 +177,7 @@ export class ViewPublicForumComponent implements OnInit {
         )
       }
     });
-    
+
   }
 
   deleteReply(id: number) {
@@ -214,10 +218,10 @@ export class ViewPublicForumComponent implements OnInit {
       }
     });
   }
-  getCount(){
+  getCount() {
     this.publicForumSrv.getreplyCount().subscribe((data: any) => {
       console.log(data);
-      
+
       this.countReply = data
     });
   }
@@ -231,8 +235,8 @@ class PublicForum {
   'lastName': string;
 }
 
-class ReplyCount{
-  'chatId' :number;
-  'replyCount':number;
+class ReplyCount {
+  'chatId': number;
+  'replyCount': number;
 
 }

@@ -42,6 +42,7 @@ export class CreateCropGroupComponent {
   selectedFileName: string | null = null;
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
+  selectUpdateName!:string
 
   itemId: number | null = null;
 
@@ -68,6 +69,8 @@ export class CreateCropGroupComponent {
         this.cropCalendarService.getCropGroupById(this.itemId).subscribe({
           next: (response: any) => {
             this.newsItems = response.groups;
+            this.selectUpdateName = response.groups[0].cropNameEnglish
+            
             if (response.groups[0].image) {
               this.selectedImage = response.groups[0].image; // Base64 image
               this.selectedFileName = "Existing Image";
@@ -142,7 +145,7 @@ export class CreateCropGroupComponent {
             'success'
           );
           this.router.navigate(['/plant-care/view-crop-group']);
-        }else{
+        } else {
           this.isLoading = false;
           Swal.fire(
             'Unsuccess',
@@ -178,6 +181,21 @@ export class CreateCropGroupComponent {
       parentCategory: '',
       bgColor: '',
     };
+    Swal.fire({
+      icon: 'info',
+      title: 'Cancelled',
+      text: 'Form has been cleared!',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  }
+
+  onCancelUpdate() {
+    // Reset form or navigate away
+    // this.router.navigate(['/plant-care']);
+
+    this.ngOnInit();
+
     Swal.fire({
       icon: 'info',
       title: 'Cancelled',
@@ -241,6 +259,16 @@ export class CreateCropGroupComponent {
 
 
   updateNews() {
+
+    if (!this.newsItems[0].cropNameEnglish || !this.newsItems[0].cropNameSinhala || !this.newsItems[0].cropNameTamil || !this.newsItems[0].bgColor) {
+      Swal.fire(
+        'warning',
+        'pleace fill all input feilds',
+        'warning'
+      );
+      return;
+    }
+
     const token = localStorage.getItem('Login Token : ');
     if (!token) {
       console.error('No token found');
@@ -270,22 +298,32 @@ export class CreateCropGroupComponent {
     });
 
     this.isLoading = true;
+
+
     this.http
       .put(
-        `${environment.API_URL}crop-calendar/update-crop-group/${this.itemId}`,
+        `${environment.API_URL}crop-calendar/update-crop-group/${this.itemId}/${this.selectUpdateName}`,
         formData,
         { headers }
       )
       .subscribe(
         (res: any) => {
-          console.log('Market Price updated successfully', res);
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Market Price updated successfully!',
-          });
-          this.router.navigate(['/plant-care/view-crop-group']);
+          if (res.status) {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Market Price updated successfully!',
+            });
+            this.router.navigate(['/plant-care/view-crop-group']);
+          } else {
+            this.isLoading = false;
+            Swal.fire(
+              'Unsuccess',
+              res.message,
+              'error'
+            );
+          }
         },
         (error) => {
           console.error('Error updating news', error);

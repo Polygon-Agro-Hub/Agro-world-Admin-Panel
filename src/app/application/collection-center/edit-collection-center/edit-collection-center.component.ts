@@ -106,23 +106,26 @@ export class EditCollectionCenterComponent implements OnInit {
   ];
 
   onSubmit() {
-    this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.collectionCenterID , this.existRegCode).subscribe(
+    this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.collectionCenterID, this.existRegCode).subscribe(
       (res) => {
         if (res?.status) {
           Swal.fire('Success', 'Collection Center updated Successfully', 'success');
           this.router.navigate(['/collection-hub/view-collection-centers']);
-        } else if (res?.message === "This RegCode already exists!") {
-          Swal.fire({
-            icon: 'error',
-            title: 'Failed',
-            text: 'This RegCode already exists!'
-          });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An unexpected error occurred.'
-          });
+          if (res?.message === "This RegCode already exists!") {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: 'This RegCode already exists!'
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'This RegCode already exists!'
+            });
+          }
+          
         }
       },
       (error) => {
@@ -165,6 +168,20 @@ export class EditCollectionCenterComponent implements OnInit {
       (error) => console.error("Error fetching collection center:", error)
     );
   }
+
+
+  onCancel() {
+    Swal.fire({
+      icon: 'info',
+      title: 'Cancelled',
+      text: 'Changes have been discarded!',
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
+    this.fetchCollectionCenter();
+  }
+
 }
 
 class CollectionCenter {

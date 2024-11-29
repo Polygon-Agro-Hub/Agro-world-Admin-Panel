@@ -5,7 +5,7 @@
 <div class="h-[20px]"></div>
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Add Collection Center</h2>
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Update Collection Center</h2>
 
     <form (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -105,11 +105,14 @@
                 <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street
                     Name</label>
                 <input id="street" name="street" [value]="centerFetchData.street" [(ngModel)]="centerFetchData.street"
-                    #streetInput="ngModel"
+                    #streetInput="ngModel" pattern="^[a-zA-Z]*$"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 <div *ngIf="streetInput.touched && !centerFetchData.street" class="text-red-500 text-sm mt-1">
                     <div>Street is required</div>
                 </div>
+                <div *ngIf="streetInput.touched && streetInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character & Numers</div>
+                  </div>
             </div>
 
             <!-- Province -->
@@ -142,10 +145,10 @@
                     <div>district is required</div>
                 </div>
             </div>
-
-            <div class="flex justify-end m-10">
-                <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Save</button>
-            </div>
+        </div>
+        <div class="flex justify-end m-10">
+            <div type="submit" class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md" (click)="onCancel()">Cancel</div>
+            <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">Save</button>
         </div>
     </form>
 </div>

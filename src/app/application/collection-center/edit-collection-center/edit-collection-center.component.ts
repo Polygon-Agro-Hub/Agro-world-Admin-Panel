@@ -111,18 +111,21 @@ export class EditCollectionCenterComponent implements OnInit {
         if (res?.status) {
           Swal.fire('Success', 'Collection Center updated Successfully', 'success');
           this.router.navigate(['/collection-hub/view-collection-centers']);
-        } else if (res?.message === "This RegCode already exists!") {
-          Swal.fire({
-            icon: 'error',
-            title: 'Failed',
-            text: 'This RegCode already exists!'
-          });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An unexpected error occurred.'
-          });
+          if (res?.message === "This RegCode already exists!") {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: 'This RegCode already exists!'
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'This RegCode already exists!'
+            });
+          }
+          
         }
       },
       (error) => {

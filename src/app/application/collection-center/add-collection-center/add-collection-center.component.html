@@ -34,6 +34,11 @@
           class="text-red-500 text-sm mt-1">
           Center Name is required
         </div>
+        <div *ngIf="collectionCenterForm.get('centerName')?.hasError('containsNumbers') && 
+            (collectionCenterForm.get('centerName')?.dirty || collectionCenterForm.get('centerName')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          Center name cannot contain numbers.
+        </div>
       </div>
 
       <!-- Contact Number 01 -->
@@ -109,13 +114,19 @@
           class="text-red-500 text-sm mt-1">
           Street is required
         </div>
+        <div *ngIf="collectionCenterForm.get('street')?.hasError('containsNumbers') && 
+            (collectionCenterForm.get('street')?.dirty || collectionCenterForm.get('street')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          Street name cannot contain numbers.
+        </div>
       </div>
 
       <!-- Province -->
       <div>
         <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-        <select formControlName="province" id="province" name="province" [(ngModel)]="selectProvince" (change)="onProvinceChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" >
+        <select formControlName="province" id="province" name="province" [(ngModel)]="selectProvince"
+          (change)="onProvinceChange()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
           <option selected disabled>-- select --</option>
           <option *ngFor="let item of ProvinceData" [value]="item.province">{{item.province}}</option>
         </select>
@@ -130,7 +141,7 @@
       <div>
         <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
         <select formControlName="district" id="district" name="district"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" >
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
           <option selected disabled>-- select --</option>
           <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}</option>
         </select>
@@ -141,7 +152,7 @@
         </div>
       </div>
 
-      
+
     </div>
     <div class="flex justify-end items-end m-10">
       <div class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md cursor-pointer" (click)="onCancel()">Cancel</div>

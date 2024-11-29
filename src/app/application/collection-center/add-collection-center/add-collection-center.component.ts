@@ -22,16 +22,22 @@ export class AddCollectionCenterComponent {
   constructor(private fb: FormBuilder, private collectionCenterService: CollectionCenterService, private router: Router) {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', Validators.required],
-      centerName: ['', Validators.required],
-      contact01: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],
+      centerName: ['', [Validators.required, this.noNumbersValidator]],      contact01: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],
       contact01Code: ['+94', Validators.required],
       contact02: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],
       contact02Code: ['+94', Validators.required],
       buildingNumber: ['', Validators.required],
-      street: ['', Validators.required],
-      district: ['', Validators.required],
+      street: ['', [Validators.required, this.noNumbersValidator]],      district: ['', Validators.required],
       province: ['', Validators.required]
     });
+  }
+
+  noNumbersValidator(control: any) {
+    const regex = /^[A-Za-z\s]*$/; // Allows only letters and spaces
+    if (control.value && !regex.test(control.value)) {
+      return { containsNumbers: true }; // Validation fails
+    }
+    return null; // Validation passes
   }
 
   ProvinceData = [

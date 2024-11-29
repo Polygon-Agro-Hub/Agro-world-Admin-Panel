@@ -11,7 +11,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Collection Officerzzz Reports
+        Collection Officer Reports
       </h2>
     </div>
     <div class="flex items-center">
@@ -33,7 +33,7 @@
                 <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="NIC" (onChange)="applyFilters()" />
             </div> -->
       <div
-        class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-44"
+        class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
       >
         <input
           type="text"
@@ -143,7 +143,7 @@
           "
         >
           <td class="py-3 text-gray-500 dark:text-textDark text-left">
-            {{ item.firstNameEnglish }}{{item.lastNameEnglish}}
+            {{ item.firstNameEnglish }}
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
             {{ item.companyNameEnglish }}

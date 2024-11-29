@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/reports'"
+  onclick="history.back()"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -116,7 +116,7 @@
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
           >
-            Total(Rs.)
+            Bill Id
           </th>
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
@@ -138,7 +138,7 @@
             {{ item.NICnumber }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ item.total }}
+            {{ item.id }}
           </td>
           <td class="text-center">
             <button

@@ -30,16 +30,19 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   personalData: Personal = new Personal();
   bankData: Bank = new Bank();
   companyData: Company = new Company();
-  collectionCenterData:CollectionCenter[]=[]
+  collectionCenterData: CollectionCenter[] = []
   itemId: number | null = null;
   isLoading = false;
-  officer: { collectionOfficer: { centerId:any, firstNameEnglish: string,firstNameSinhala: string, firstNameTamil : string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address:{houseNumber: string, streetName : string, city: string, district: string, province: string, country: string}, languages:string }, companyDetails: {companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, IRMname: string, companyEmail: string, assignedDistrict: string , employeeType: string}, bankDetails: {accHolderName: string, accNumber: string, bankName: string, branchName: string}} = {
+  selectedFileName!:string
+  selectedImage: string | ArrayBuffer | null = null;
+
+  officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
     collectionOfficer: {
       centerId: '',
       firstNameEnglish: '',
       firstNameSinhala: '',
       firstNameTamil: '',
-      lastNameEnglish:'',
+      lastNameEnglish: '',
       lastNameSinhala: '',
       lastNameTamil: '',
       phoneNumber01: '',
@@ -59,7 +62,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       languages: ''
     },
     companyDetails: {
-      companyNameEnglish:'',
+      companyNameEnglish: '',
       companyNameSinhala: '',
       companyNameTamil: '',
       jobRole: '',
@@ -117,6 +120,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       assignedDistrict: ['', Validators.required],
       employeeType: ['', Validators.required],
       languages: this.fb.array([]),
+      image: [null, [Validators.required]],
+
     });
   }
 
@@ -158,7 +163,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         }
       }
 
-      // Send the officer data using the service
+      // this.personalData.image = this.selectedFile
+
       this.collectionOfficerService.createCollectiveOfficer(this.personalData, this.bankData, this.companyData).subscribe(
         (res: any) => {
           this.officerId = res.officerId;
@@ -182,13 +188,13 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     });
     this.getAllCollectionCetnter()
 
-    if(this.itemId){
-       
+    if (this.itemId) {
+
       this.isLoading = true;
       this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
         next: (response: any) => {
           this.officer = response.officerData;
-          
+
           this.isLoading = false;
         },
         error: (error) => {
@@ -199,9 +205,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
-  getAllCollectionCetnter(){
+  getAllCollectionCetnter() {
     this.collectionCenterSrv.getAllCollectionCenter().subscribe(
-      (res)=>{        
+      (res) => {
         this.collectionCenterData = res
       }
     )
@@ -215,12 +221,12 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       console.error('No token found');
       return;
     }
-  
+
     if (!this.officer) {
       console.error('Officer details are empty');
       return;
     }
-  
+
     // Create request body directly from the officer object
     const requestBody = {
       centerId: this.officer.collectionOfficer.centerId,
@@ -250,12 +256,12 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       bankName: this.officer.bankDetails.bankName,
       branchName: this.officer.bankDetails.branchName
     };
-   
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'  // Add this header
     });
-  
+
     this.isLoading = true;
     this.http
       .put(
@@ -284,7 +290,41 @@ export class CollectiveofficersPersonalComponent implements OnInit {
           });
         }
       );
-}
+  }
+
+  triggerFileInput(event: Event): void {
+    event.preventDefault();
+    const fileInput = document.getElementById('imageUpload');
+    fileInput?.click();
+  }
+
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        return;
+      }
+  
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        return;
+      }
+  
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      // this.officerForm.patchValue({ image: file });
+  
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedImage = e.target.result; // Set selectedImage to the base64 string or URL
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  }
+  
 }
 
 class Personal {
@@ -308,8 +348,9 @@ class Personal {
   district!: string;
   province!: string;
   country!: string;
-  languages: string = ''; 
+  languages: string = '';
   centerId!: string
+  image!:any
 }
 
 class Bank {
@@ -331,7 +372,7 @@ class Company {
 }
 
 class CollectionCenter {
-  id!:number
-  centerName!:string
+  id!: number
+  centerName!: string
 
 }

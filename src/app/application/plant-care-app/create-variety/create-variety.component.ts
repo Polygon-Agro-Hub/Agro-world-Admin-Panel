@@ -51,7 +51,7 @@ interface NewsItem {
 export class CreateVarietyComponent implements OnInit {
 
   cropVarity = {
-    cropGroupId:'',
+    cropGroupId: '',
     varietyNameEnglish: '',
     varietyNameSinhala: '',
     varietyNameTamil: '',
@@ -108,12 +108,12 @@ export class CreateVarietyComponent implements OnInit {
 
   ngOnInit() {
     this.getAllCropGroups();
-    this.route.queryParams.subscribe((params)=>{
+    this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
       console.log('Recived item ID:', this.itemId);
-      
-      if(this.itemId){
-       
+
+      if (this.itemId) {
+
         this.isLoading = true;
         this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
           next: (response: any) => {
@@ -175,7 +175,7 @@ export class CreateVarietyComponent implements OnInit {
 
   onSubmit() {
     const cropValues = this.cropForm.value
-    if(!cropValues.groupId || !cropValues.varietyNameEnglish|| !cropValues.varietyNameSinhala|| !cropValues.varietyNameTamil|| !cropValues.descriptionEnglish|| !cropValues.descriptionSinhala|| !cropValues.descriptionTamil|| !cropValues.bgColor){
+    if (!cropValues.groupId || !cropValues.varietyNameEnglish || !cropValues.varietyNameSinhala || !cropValues.varietyNameTamil || !cropValues.descriptionEnglish || !cropValues.descriptionSinhala || !cropValues.descriptionTamil || !cropValues.bgColor) {
       Swal.fire(
         'warning',
         'pleace fill all input feilds',
@@ -204,22 +204,31 @@ export class CreateVarietyComponent implements OnInit {
 
     this.cropCalendarService.createCropVariety(formData).subscribe({
       next: (response: any) => {
-        this.isLoading = false;
-        Swal.fire({
-          title: 'Success',
-          text: response.message || 'Crop variety created successfully!',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        }).then(() => {
-          this.router.navigate(['/plant-care/view-crop-group']);
-        });
+        if (response.status) {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Success',
+            text: response.message || 'Crop variety created successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            this.router.navigate(['/plant-care/view-crop-group']);
+          });
+        } else {
+          this.isLoading = false;
+          Swal.fire(
+            'Unsuccess',
+            response.message,
+            'error'
+          );
+        }
       },
       error: (error) => {
         this.isLoading = false;
         Swal.fire(
           'Error',
           error.error?.message ||
-            'An error occurred while creating the crop variety.',
+          'An error occurred while creating the crop variety.',
           'error'
         );
       },
@@ -292,14 +301,14 @@ export class CreateVarietyComponent implements OnInit {
       console.error('No token found');
       return;
     }
-  
+
     if (!this.newsItems || this.newsItems.length === 0) {
       console.error('News items are empty');
       return;
     }
-  
+
     const newsItem = this.newsItems[0]; // Assuming you want to update the first item
-  
+
     const formData = new FormData();
     formData.append('varietyNameEnglish', newsItem.varietyNameEnglish || '');
     formData.append('varietyNameSinhala', newsItem.varietyNameSinhala || '');
@@ -308,15 +317,15 @@ export class CreateVarietyComponent implements OnInit {
     formData.append('descriptionSinhala', newsItem.descriptionSinhala || '');
     formData.append('descriptionTamil', newsItem.descriptionTamil || '');
     formData.append('bgColor', newsItem.bgColor || '');
-  
+
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-  
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-  
+
     this.isLoading = true;
     this.http
       .put(

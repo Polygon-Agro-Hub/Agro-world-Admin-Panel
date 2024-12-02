@@ -19,6 +19,8 @@ interface PlantCareUser {
   NICnumber: string;
   profileImage: string;
   created_at: string;
+  district: string;
+  membership: string;
 }
 
 @Component({
@@ -51,9 +53,46 @@ export class EditPlantcareUsersComponent implements OnInit {
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\+94\d{9}$/)]],
       NICnumber: ['', [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[V])$/)]],
+      district: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      membership: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       profileImage: [''],
     });
   }
+
+
+
+  district = [
+        { districtName: "Colombo" },
+        { districtName: "Kalutara" },
+        { districtName: "Gampaha" },
+        { districtName: "Kandy" },
+        { districtName: "Matale" },
+        { districtName: "Nuwara Eliya" },
+        { districtName: "Galle" },
+        { districtName: "Matara" },
+        { districtName: "Hambantota" },
+        { districtName: "Jaffna" },
+        { districtName: "Mannar" },
+        { districtName: "Vavuniya" },
+        { districtName: "Kilinochchi" },
+        { districtName: "Mulaitivu" },
+        { districtName: "Batticaloa" },
+        { districtName: "Ampara" },
+        { districtName: "Trincomalee" },
+        { districtName: "Badulla" },
+        { districtName: "Moneragala" },
+        { districtName: "Kurunegala" },
+        { districtName: "Puttalam" },
+        { districtName: "Anuradhapura" },
+        { districtName: "Polonnaruwa" },
+  ]
+
+
+  membership = [
+    { membershipName: "Silver" },
+    { membershipName: "Gold" },
+    { membershipName: "Diamond" },
+]
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -151,6 +190,8 @@ export class EditPlantcareUsersComponent implements OnInit {
         formData.append('lastName', this.userForm.get('lastName')?.value);
         formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value);
         formData.append('NICnumber', this.userForm.get('NICnumber')?.value);
+        formData.append('district', this.userForm.get('district')?.value);
+        formData.append('membership', this.userForm.get('membership')?.value);
 
         if (this.selectedImage) {
           formData.append('image', this.selectedImage);
@@ -241,6 +282,9 @@ export class EditPlantcareUsersComponent implements OnInit {
         formData.append('lastName', this.userForm.get('lastName')?.value);
         formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value);
         formData.append('NICnumber', this.userForm.get('NICnumber')?.value);
+        formData.append('district', this.userForm.get('district')?.value);
+        formData.append('membership', this.userForm.get('membership')?.value);
+
 
         if (this.selectedImage) {
           formData.append('image', this.selectedImage);

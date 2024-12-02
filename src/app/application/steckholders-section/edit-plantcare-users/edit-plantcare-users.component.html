@@ -61,6 +61,44 @@
                         </div>
                     </div>
 
+
+
+
+
+                    <div>
+                        <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+                        <select formControlName="district" id="district" name="district" 
+                          
+                          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                          <option selected disabled>-- select --</option>
+                          <option *ngFor="let item of district" [value]="item.districtName">{{item.districtName}}</option>
+                        </select>
+                        <div
+                          *ngIf="userForm.get('district')?.invalid && (userForm.get('district')?.dirty || userForm.get('district')?.touched)"
+                          class="text-red-500 text-sm mt-1">
+                          district is required
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership</label>
+                        <select formControlName="membership" id="membership" name="membership" 
+                          
+                          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                          <option selected disabled>-- select --</option>
+                          <option *ngFor="let item of membership" [value]="item.membershipName">{{item.membershipName}}</option>
+                        </select>
+                        <div
+                          *ngIf="userForm.get('membership')?.invalid && (userForm.get('membership')?.dirty || userForm.get('membership')?.touched)"
+                          class="text-red-500 text-sm mt-1">
+                          membership is required
+                        </div>
+                      </div>
+
+
+
+                      
+
                     <!-- Image Upload -->
                     <div>
                         <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark">Profile Image</label>
@@ -135,6 +173,51 @@
                             <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">Please enter a valid NIC number (12 digits or 10 digits followed by 'V').</div>
                         </div>
                     </div>
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                        <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+                        <select formControlName="district" id="district" name="district" 
+                          
+                          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                          <option selected disabled>-- select --</option>
+                          <option *ngFor="let item of district" [value]="item.districtName">{{item.districtName}}</option>
+                        </select>
+                        <div
+                          *ngIf="userForm.get('district')?.invalid && (userForm.get('district')?.dirty || userForm.get('district')?.touched)"
+                          class="text-red-500 text-sm mt-1">
+                          district is required
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership</label>
+                        <select formControlName="membership" id="membership" name="membership" 
+                          
+                          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                          <option selected disabled>-- select --</option>
+                          <option *ngFor="let item of membership" [value]="item.membershipName">{{item.membershipName}}</option>
+                        </select>
+                        <div
+                          *ngIf="userForm.get('membership')?.invalid && (userForm.get('membership')?.dirty || userForm.get('membership')?.touched)"
+                          class="text-red-500 text-sm mt-1">
+                          membership is required
+                        </div>
+                      </div>
+
+
+
+
+
+
 
                     <!-- Image Upload -->
                     <div>

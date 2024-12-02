@@ -10,6 +10,9 @@ import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { CalendarModule } from 'primeng/calendar';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import Swal from 'sweetalert2';
 
 declare var html2pdf: any;
 
@@ -25,7 +28,7 @@ interface CropReport {
 @Component({
   selector: 'app-collection-officer-report-view',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, HttpClientModule, FormsModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent, CalendarModule, FloatLabelModule],
   templateUrl: './collection-officer-report-view.component.html',
   styleUrl: './collection-officer-report-view.component.css'
 })
@@ -165,14 +168,28 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
   onDateChange(): void {
     
-    setTimeout(() => {
-      this.fetchReport();
+      console.log(this.createdDate);
+    if (this.createdDate === '') {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Please select a date',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        // Set today's date to createdDate after the user presses OK
+        this.createdDate = new Date().toISOString().split('T')[0];
+        // Call fetchReport after setting the date
+        this.fetchReport();
+        
+      });
+    } else {
       
-    }, 1000);
-    
-    
-    
-}
+        this.fetchReport();
+      
+    }
+  
+  }
+  
 
 
   get reportEntries(): [string, { 'Grade A': number; 'Grade B': number; 'Grade C': number; 'Total': number }][] {

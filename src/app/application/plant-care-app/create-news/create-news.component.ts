@@ -245,7 +245,19 @@ export class CreateNewsComponent {
     formData.append('expireDate', this.createNewsObj.expireDate);
     formData.append('createdBy', this.createNewsObj.createdBy);
     if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
+      const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
+  
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        });
+        this.selectedFile = null; // Clear the invalid file
+        return; // Stop further execution
+      } else {
+        formData.append('image', this.selectedFile);
+      }
     }
 
     if (
@@ -382,6 +394,20 @@ export class CreateNewsComponent {
     formData.append('publishDate', this.newsItems[0].publishDate);
     formData.append('expireDate' , this.newsItems[0].expireDate);
     if (this.selectedFile) {
+      const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
+    
+      // Validate the image type
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        });
+        this.selectedFile = null; // Clear the invalid file
+        return; // Stop further execution
+      }
+    
+      // Append the file to the form data if valid
       formData.append('image', this.selectedFile);
     }
     const headers = new HttpHeaders({

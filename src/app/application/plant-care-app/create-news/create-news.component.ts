@@ -335,17 +335,31 @@ export class CreateNewsComponent {
   getNewsById(id: any) {
     this.newsService.getNewsById(id).subscribe(
       (data) => {
+        // Convert dates to 'YYYY-MM-DD'
+        data.forEach((newsItem: any) => {
+          if (newsItem.publishDate) {
+            newsItem.publishDate = this.formatDate(newsItem.publishDate);
+          }
+          if (newsItem.expireDate) {
+            newsItem.expireDate = this.formatDate(newsItem.expireDate);
+          }
+        });
         this.newsItems = data;
         console.log(this.newsItems);
       },
       (error) => {
         console.error('Error fetching news:', error);
-        if (error.status === 401) {
-          // Handle unauthorized access (e.g., redirect to login)
-        }
+        // if (error.status === 401) {
+        // }
       }
     );
   }
+  
+  formatDate(date: string): string {
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Extract 'YYYY-MM-DD'
+  }
+  
 
   updateNews() {
     const token = localStorage.getItem('Login Token : ');

@@ -63,6 +63,9 @@
 
         <!-- Cancel and Save Buttons -->
         <div class="flex justify-end mt-6">
+          <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
+            Cancel
+          </button>
             <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()"  [disabled]="userForm.invalid">
         Save
       </button>

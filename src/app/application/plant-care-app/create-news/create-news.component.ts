@@ -245,7 +245,19 @@ export class CreateNewsComponent {
     formData.append('expireDate', this.createNewsObj.expireDate);
     formData.append('createdBy', this.createNewsObj.createdBy);
     if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
+      const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
+  
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        });
+        this.selectedFile = null; // Clear the invalid file
+        return; // Stop further execution
+      } else {
+        formData.append('image', this.selectedFile);
+      }
     }
 
     if (
@@ -298,6 +310,17 @@ export class CreateNewsComponent {
     this.selectedLanguage = 'english';
     console.log('Form cleared');
     Swal.fire('Form cleared', '', 'info');
+  }
+
+  onCancel2() {
+    this.createNewsObj = new CreateNews();
+    this.selectedFile = null;
+    this.selectedImage = null;
+    this.selectedLanguage = 'english';
+    console.log('Form cleared');
+    Swal.fire('Form cleared', '', 'info').then(()=>{
+      this.router.navigate(['/plant-care/manage-content']);
+    });
   }
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
@@ -382,6 +405,20 @@ export class CreateNewsComponent {
     formData.append('publishDate', this.newsItems[0].publishDate);
     formData.append('expireDate' , this.newsItems[0].expireDate);
     if (this.selectedFile) {
+      const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
+    
+      // Validate the image type
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        });
+        this.selectedFile = null; // Clear the invalid file
+        return; // Stop further execution
+      }
+    
+      // Append the file to the form data if valid
       formData.append('image', this.selectedFile);
     }
     const headers = new HttpHeaders({

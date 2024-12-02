@@ -245,7 +245,19 @@ export class CreateNewsComponent {
     formData.append('expireDate', this.createNewsObj.expireDate);
     formData.append('createdBy', this.createNewsObj.createdBy);
     if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
+      const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
+  
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        });
+        this.selectedFile = null; // Clear the invalid file
+        return; // Stop further execution
+      } else {
+        formData.append('image', this.selectedFile);
+      }
     }
 
     if (
@@ -300,6 +312,17 @@ export class CreateNewsComponent {
     Swal.fire('Form cleared', '', 'info');
   }
 
+  onCancel2() {
+    this.createNewsObj = new CreateNews();
+    this.selectedFile = null;
+    this.selectedImage = null;
+    this.selectedLanguage = 'english';
+    console.log('Form cleared');
+    Swal.fire('Form cleared', '', 'info').then(()=>{
+      this.router.navigate(['/plant-care/manage-content']);
+    });
+  }
+
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }
@@ -335,17 +358,31 @@ export class CreateNewsComponent {
   getNewsById(id: any) {
     this.newsService.getNewsById(id).subscribe(
       (data) => {
+        // Convert dates to 'YYYY-MM-DD'
+        data.forEach((newsItem: any) => {
+          if (newsItem.publishDate) {
+            newsItem.publishDate = this.formatDate(newsItem.publishDate);
+          }
+          if (newsItem.expireDate) {
+            newsItem.expireDate = this.formatDate(newsItem.expireDate);
+          }
+        });
         this.newsItems = data;
         console.log(this.newsItems);
       },
       (error) => {
         console.error('Error fetching news:', error);
-        if (error.status === 401) {
-          // Handle unauthorized access (e.g., redirect to login)
-        }
+        // if (error.status === 401) {
+        // }
       }
     );
   }
+  
+  formatDate(date: string): string {
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Extract 'YYYY-MM-DD'
+  }
+  
 
   updateNews() {
     const token = localStorage.getItem('Login Token : ');
@@ -382,6 +419,20 @@ export class CreateNewsComponent {
     formData.append('publishDate', this.newsItems[0].publishDate);
     formData.append('expireDate' , this.newsItems[0].expireDate);
     if (this.selectedFile) {
+      const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
+    
+      // Validate the image type
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        });
+        this.selectedFile = null; // Clear the invalid file
+        return; // Stop further execution
+      }
+    
+      // Append the file to the form data if valid
       formData.append('image', this.selectedFile);
     }
     const headers = new HttpHeaders({

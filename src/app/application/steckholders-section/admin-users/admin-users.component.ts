@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { environment } from '../../../environment/environment';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface AdminUsers {
   id: number;
@@ -17,7 +18,7 @@ interface AdminUsers {
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, NgxPaginationModule],
+  imports: [CommonModule, HttpClientModule, NgxPaginationModule, DropdownModule],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.css',
   template: `
@@ -34,7 +35,12 @@ export class AdminUsersComponent {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
+  searchNIC: string = '';
   hasData: boolean = true; 
+
+  status!: Rol[]
+  statusFilter: any = '';
+  roleArr: Rol[] = []
 
   userId: number | null = null;
   role : any= localStorage.getItem('role:');
@@ -136,6 +142,23 @@ export class AdminUsersComponent {
   editAdminUser(id: number) {
     this.router.navigate(['steckholders/admin/create-admin-user'], { queryParams: { id } });
   }
-  
 
+  applyFilter(){
+    this.fetchAllAdmins(this.page, this.itemsPerPage);
+  }
+
+  onSearch(){
+    this.fetchAllAdmins(this.page, this.itemsPerPage);
+  }
+  
+  offSearch(){
+    this.searchNIC=''
+    this.fetchAllAdmins(this.page, this.itemsPerPage);
+  }
+
+}
+
+class Rol{
+  id!:number;
+  role!:string;
 }

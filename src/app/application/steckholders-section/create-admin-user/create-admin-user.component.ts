@@ -109,6 +109,12 @@ export class CreateAdminUserComponent implements OnInit {
 
   singleWordValidator(control: AbstractControl): ValidationErrors | null {
     const hasSpace = /\s/.test(control.value);
+    const hasNumber = /\d/.test(control.value)
+
+    if(hasNumber){
+      return{containsNumber: true};
+    }
+
     return hasSpace ? { 'singleWord': true } : null;
   }
 
@@ -144,6 +150,9 @@ export class CreateAdminUserComponent implements OnInit {
     }
     if (control?.hasError('singleWord')) {
       return 'Username must be a single word (no spaces allowed)';
+    }
+    if(control?.hasError('containsNumber')){
+      return 'Username cannot contain numbers';
     }
     return '';
   }

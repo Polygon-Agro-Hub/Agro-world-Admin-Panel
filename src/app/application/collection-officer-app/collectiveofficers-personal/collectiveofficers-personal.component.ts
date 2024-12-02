@@ -33,8 +33,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   collectionCenterData: CollectionCenter[] = []
   itemId: number | null = null;
   isLoading = false;
-  selectedFileName!:string
+  selectedFileName!: string
   selectedImage: string | ArrayBuffer | null = null;
+  lastID!: string
 
   officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
     collectionOfficer: {
@@ -169,6 +170,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         (res: any) => {
           this.officerId = res.officerId;
           Swal.fire('Success', 'Collective Officer Created Successfully', 'success');
+          this.router.navigate(['/steckholders/collective-officer'])
         },
         (error: any) => {
           Swal.fire('Error', 'There was an error creating the collective officer', 'error');
@@ -203,6 +205,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         },
       });
     }
+
+    this.getLastID('COO');
+    console.log(this.companyData.empId);
+    
   }
 
   getAllCollectionCetnter() {
@@ -306,17 +312,17 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         Swal.fire('Error', 'File size should not exceed 5MB', 'error');
         return;
       }
-  
+
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
         Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
         return;
       }
-  
+
       this.selectedFile = file;
       this.selectedFileName = file.name;
       // this.officerForm.patchValue({ image: file });
-  
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedImage = e.target.result; // Set selectedImage to the base64 string or URL
@@ -324,7 +330,43 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       reader.readAsDataURL(file); // Read the file as a data URL
     }
   }
-  
+
+  EpmloyeIdCreate() {
+  let rolePrefix: string;
+
+  if (this.companyData.jobRole === 'Collection Center Head') {
+    rolePrefix = 'CCH';
+  } else if (this.companyData.jobRole === 'Collection Center Manager') {
+    rolePrefix = 'CCM';
+  } else if (this.companyData.jobRole === 'Customer Officer') {
+    rolePrefix = 'CUO';
+  } else {
+    rolePrefix = 'COO';
+  }
+
+  this.getLastID(rolePrefix).then((lastId) => {
+    this.companyData.empId = rolePrefix + lastId;
+    console.log(this.companyData.empId);
+  });
+}
+
+getLastID(role: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    this.collectionCenterSrv.getForCreateId(role).subscribe(
+      (res) => {
+        this.lastID = res.result.empId;
+        const lastId = res.result.empId;
+        resolve(lastId); // Resolve the Promise with the empId
+      },
+      (error) => {
+        console.error('Error fetching last ID:', error);
+        reject(error);
+      }
+    );
+  });
+}
+
+
 }
 
 class Personal {
@@ -350,7 +392,7 @@ class Personal {
   country!: string;
   languages: string = '';
   centerId!: string
-  image!:any
+  image!: any
 }
 
 class Bank {
@@ -365,6 +407,7 @@ class Company {
   companyNameSinhala!: string;
   companyNameTamil!: string;
   jobRole: string = 'Collection Officer'
+  empId!: string
   IRMname!: string;
   companyEmail!: string;
   assignedDistrict!: string;

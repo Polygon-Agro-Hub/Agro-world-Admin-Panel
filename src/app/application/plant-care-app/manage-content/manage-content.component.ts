@@ -97,11 +97,13 @@ export class ManageContentComponent implements OnInit {
     this.page = page;
     this.newsService.fetchAllNews(page, limit, this.statusFilter?.code, this.createdDateFilter)
       .subscribe(
-        (response) => {
+        (response:any) => {
           this.newsItems = response.items;
-          this.hasData = this.newsItems.length > 0;
           this.totalItems = response.total;
           this.isLoading = false;
+          if(response.length > 0){
+            this.hasData = false
+          }
         },
         (error) => {
           console.error('Error fetching news:', error);

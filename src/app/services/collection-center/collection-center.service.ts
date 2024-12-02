@@ -139,4 +139,16 @@ export class CollectionCenterService {
     })
   }
 
+
+  getForCreateId(role: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}get-last-emp-id/${role}`, {
+      headers,
+    });
+  }
+
+
 }

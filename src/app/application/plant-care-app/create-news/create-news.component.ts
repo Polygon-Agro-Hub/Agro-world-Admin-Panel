@@ -312,6 +312,17 @@ export class CreateNewsComponent {
     Swal.fire('Form cleared', '', 'info');
   }
 
+  onCancel2() {
+    this.createNewsObj = new CreateNews();
+    this.selectedFile = null;
+    this.selectedImage = null;
+    this.selectedLanguage = 'english';
+    console.log('Form cleared');
+    Swal.fire('Form cleared', '', 'info').then(()=>{
+      this.router.navigate(['/plant-care/manage-content']);
+    });
+  }
+
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }

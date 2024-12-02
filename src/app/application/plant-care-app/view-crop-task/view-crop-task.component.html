@@ -60,7 +60,7 @@
 
                       <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                         <ng-container *ngIf="task.videoLink; else noVideo">
-                          <a :href="task.videoLink" target="_blank" rel="noopener noreferrer">
+                          <a [attr.href]="task.videoLink" target="_blank" rel="noopener noreferrer">
                             <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
                           </a>
                         </ng-container>

@@ -45,6 +45,12 @@
     </div>
   </ng-template>
   
+
+  <div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+
+  <ng-template #tableContent>
     <div class="relative overflow-x-auto shadow-md pt-20">
       <table class="w-full text-sm text-center rtl:text-right border-[2px]">
         <thead class="text-xs border-[2px]">
@@ -67,6 +73,7 @@
         </tbody>
       </table>
     </div>
+  </ng-template>
 
     <div class="flex justify-center items-center my-10">
       <button class="bg-[#8AC440] px-6 py-3 rounded-lg text-white text-lg" (click)="exportToPDF()"> <i class="fa-solid fa-download px-1"></i> Download</button>

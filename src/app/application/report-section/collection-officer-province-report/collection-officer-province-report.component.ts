@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
 import { CollectionOfficerReportService } from '../../../services/collection-officer/collection-officer-report.service';
 import jsPDF from 'jspdf';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 interface IProvinceReport {
   cropName: string
@@ -21,7 +22,7 @@ interface IProvinceReport {
 @Component({
   selector: 'app-collection-officer-province-report',
   standalone: true,
-  imports: [DropdownModule, NgxPaginationModule, FormsModule, CommonModule, CanvasJSAngularChartsModule],
+  imports: [DropdownModule, NgxPaginationModule, FormsModule, CommonModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent],
   templateUrl: './collection-officer-province-report.component.html',
   styleUrl: './collection-officer-province-report.component.css'
 })
@@ -30,6 +31,8 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
   selectedProvince: any = { name: 'Western', code: 'WEST' }
   reportDetails: IProvinceReport[] = [];
   chartOptions: any;
+  loadingChart = true;
+  loadingTable = true;
 
   constructor(private collectionOfficerSrv: CollectionOfficerReportService) { }
 
@@ -53,6 +56,8 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
 
   fetchAllProvinceReportDetails(district: string) {
     console.log(district);
+    this.loadingChart = true;
+    this.loadingTable = true;
     
     this.collectionOfficerSrv.getProvinceReport(district).subscribe(
       (response) => {
@@ -62,6 +67,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
           qtyB: Number(item.qtyB) || 0,
           qtyC: Number(item.qtyC) || 0,
         }));
+        this.loadingTable = false;
         this.updateChart()
       },
       (error) => {
@@ -81,6 +87,9 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
   }
 
   updateChart() {
+
+    this.chartOptions = null;
+
     const gradeAData = this.reportDetails.map((crop) => ({
       label: crop.cropName,
       y: crop.qtyA || 0,
@@ -134,6 +143,8 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
         }
       ]
     };
+
+    this.loadingChart = false;
   }
 
   exportToPDF() {

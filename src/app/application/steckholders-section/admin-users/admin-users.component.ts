@@ -6,19 +6,20 @@ import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { environment } from '../../../environment/environment';
 import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 
 interface AdminUsers {
   id: number;
   mail: string;
   userName: string;
   role: string;
-  created_at: string; 
+  created_at: string;
 }
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, NgxPaginationModule, DropdownModule],
+  imports: [CommonModule, HttpClientModule, NgxPaginationModule, DropdownModule, FormsModule],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.css',
   template: `
@@ -36,20 +37,21 @@ export class AdminUsersComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchNIC: string = '';
-  hasData: boolean = true; 
+  hasData: boolean = true;
 
-  status!: Rol[]
+  status!: Roles[]
   statusFilter: any = '';
-  roleArr: Rol[] = []
+  roleArr: Roles[] = [];
+
+  searchText: string = '';
 
   userId: number | null = null;
-  role : any= localStorage.getItem('role:');
+  role: any = localStorage.getItem('role:');
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
 
   fetchAllAdmins(page: number = 1, limit: number = this.itemsPerPage) {
-    console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
     const token = localStorage.getItem('Login Token : ');
     if (!token) {
@@ -59,14 +61,23 @@ export class AdminUsersComponent {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  
-    this.http.get<{items: AdminUsers[], total: number}>(
-      `${environment.API_BASE_URL}get-all-admin-users?page=${page}&limit=${limit}`, 
+
+    let url = `${environment.API_BASE_URL}get-all-admin-users?page=${page}&limit=${limit}`
+
+    if(this.statusFilter.role){
+      url += `&role=${this.statusFilter.id}`
+    }
+
+    if(this.searchText){
+      url += `&search=${this.searchText}`
+    }
+
+
+    this.http.get<{ items: AdminUsers[], total: number }>(
+      url,
       { headers }
     ).subscribe(
       (response) => {
-        console.log('Received items:', response.items); // Debug log
-        console.log('Total items:', response.total); // Debug log
         this.adminUsers = response.items;
         this.hasData = this.adminUsers.length > 0;
         this.totalItems = response.total;
@@ -82,15 +93,15 @@ export class AdminUsersComponent {
 
   ngOnInit() {
     this.userId = Number(localStorage.getItem('userId:'));
-    console.log('jhj',this.userId);
     this.fetchAllAdmins(this.page, this.itemsPerPage);
-    
+    this.getAllRoles()
+
   }
 
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllAdmins(this.page, this.itemsPerPage); // Include itemsPerPage
-}
+  }
 
 
   deleteAdminUser(id: any) {
@@ -99,7 +110,7 @@ export class AdminUsersComponent {
       console.error('No token found');
       return;
     }
-  
+
     Swal.fire({
       title: 'Are you sure?',
       text: "Do you really want to delete this Admin? This action cannot be undone.",
@@ -114,7 +125,7 @@ export class AdminUsersComponent {
         const headers = new HttpHeaders({
           'Authorization': `Bearer ${token}`
         });
-  
+
         this.http.delete(`${environment.API_BASE_URL}delete-admin-user/${id}`, { headers }).subscribe(
           (data: any) => {
             console.log('Admin deleted successfully');
@@ -143,22 +154,46 @@ export class AdminUsersComponent {
     this.router.navigate(['steckholders/admin/create-admin-user'], { queryParams: { id } });
   }
 
-  applyFilter(){
+  applyFilter() {
     this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
 
-  onSearch(){
+  onSearch() {
     this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
-  
-  offSearch(){
-    this.searchNIC=''
+
+  offSearch() {
+    this.searchText = ''
     this.fetchAllAdmins(this.page, this.itemsPerPage);
+  }
+
+  getAllRoles() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http
+      .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          this.roleArr = response.roles;
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+        }
+      );
   }
 
 }
 
-class Rol{
-  id!:number;
-  role!:string;
+class Roles {
+  id!: number;
+  role!: string;
 }

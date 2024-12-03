@@ -68,7 +68,7 @@ export class FarmerListReportComponent {
                     (crop.gradeCprice * crop.gradeCquan);
     }, 0);
   }
-  
+
   downloadPDF() {
     const doc = new jsPDF();
   
@@ -80,45 +80,109 @@ export class FarmerListReportComponent {
   
     let yPosition = 30;
   
-    // Personal Details Section
+    // Utility Function to Center Text in a Cell
+    const centerText = (doc: jsPDF, text: string, x: number, width: number, y: number) => {
+      const textWidth = doc.getTextWidth(text);
+      const xCentered = x + (width - textWidth) / 2;
+      doc.text(text, xCentered, y);
+    };
+  
+    // Utility Function to Draw Table Grid
+    const drawGrid = (doc: jsPDF, x: number, y: number, widths: number[], rows: number) => {
+      let xPos = x;
+      let yPos = y;
+      const totalWidth = widths.reduce((sum, width) => sum + width, 0);
+  
+      // Draw vertical lines
+      doc.line(xPos, yPos, xPos, yPos + rows * 6);
+      widths.forEach((width) => {
+        xPos += width;
+        doc.line(xPos, yPos, xPos, yPos + rows * 6);
+      });
+  
+      // Draw horizontal lines
+      for (let i = 0; i <= rows; i++) {
+        doc.line(x, yPos, x + totalWidth, yPos);
+        yPos += 6;
+      }
+    };
+  
+    // Personal Details Table
     doc.setFontSize(12);
     doc.text('Personal Details', 10, yPosition);
     yPosition += 10;
   
-    doc.setFontSize(10);
-    doc.text(`First Name: ${this.farmerList.firstName}`, 10, yPosition);
-    doc.text(`Last Name: ${this.farmerList.lastName}`, 100, yPosition);
-    yPosition += 6;
-    doc.text(`NIC Number: ${this.farmerList.NICnumber}`, 10, yPosition);
-    doc.text(`Phone Number: ${this.farmerList.phoneNumber}`, 100, yPosition);
-    yPosition += 6;
-    doc.text(
-      `Address: ${this.farmerList.houseNo}, ${this.farmerList.streetName}, ${this.farmerList.city}`,
-      10,
-      yPosition
-    );
-    yPosition += 10;
+    doc.setFontSize(9); // Small font size for tables
+    const personalHeaders = ['First Name', 'Last Name', 'NIC Number', 'Phone Number', 'Address'];
+    const personalColWidths = [30, 30, 40, 40, 50];
+    const personalRow = [
+      this.farmerList.firstName,
+      this.farmerList.lastName,
+      this.farmerList.NICnumber,
+      this.farmerList.phoneNumber,
+      `${this.farmerList.houseNo}, ${this.farmerList.streetName}, ${this.farmerList.city}`,
+    ];
   
-    // Bank Details Section
+    // Draw Table Headers
+    drawGrid(doc, 10, yPosition, personalColWidths, 1); // Header Grid
+    let xPosition = 10;
+    personalHeaders.forEach((header, index) => {
+      centerText(doc, header, xPosition, personalColWidths[index], yPosition + 4);
+      xPosition += personalColWidths[index];
+    });
+  
+    yPosition += 6;
+  
+    // Draw Table Row
+    drawGrid(doc, 10, yPosition, personalColWidths, 1); // Row Grid
+    xPosition = 10;
+    personalRow.forEach((cell, index) => {
+      centerText(doc, cell, xPosition, personalColWidths[index], yPosition + 4);
+      xPosition += personalColWidths[index];
+    });
+    yPosition += 20;
+  
+    // Bank Details Table
     doc.setFontSize(12);
     doc.text('Bank Details', 10, yPosition);
     yPosition += 10;
   
-    doc.setFontSize(10);
-    doc.text(`Account Number: ${this.farmerList.accNumber}`, 10, yPosition);
-    doc.text(`Account Holder’s Name: ${this.farmerList.accHolderName}`, 100, yPosition);
-    yPosition += 6;
-    doc.text(`Bank Name: ${this.farmerList.bankName}`, 10, yPosition);
-    doc.text(`Branch Name: ${this.farmerList.branchName}`, 100, yPosition);
-    yPosition += 10;
+    doc.setFontSize(9);
+    const bankHeaders = ['Account Number', 'Account Holder', 'Bank Name', 'Branch Name'];
+    const bankColWidths = [40, 50, 50, 50];
+    const bankRow = [
+      this.farmerList.accNumber,
+      this.farmerList.accHolderName,
+      this.farmerList.bankName,
+      this.farmerList.branchName,
+    ];
   
-    // Crop Details Section
+    // Draw Table Headers
+    drawGrid(doc, 10, yPosition, bankColWidths, 1); // Header Grid
+    xPosition = 10;
+    bankHeaders.forEach((header, index) => {
+      centerText(doc, header, xPosition, bankColWidths[index], yPosition + 4);
+      xPosition += bankColWidths[index];
+    });
+  
+    yPosition += 6;
+  
+    // Draw Table Row
+    drawGrid(doc, 10, yPosition, bankColWidths, 1); // Row Grid
+    xPosition = 10;
+    bankRow.forEach((cell, index) => {
+      centerText(doc, cell, xPosition, bankColWidths[index], yPosition + 4);
+      xPosition += bankColWidths[index];
+    });
+    yPosition += 20;
+  
+    // Crop Details Table
     doc.setFontSize(12);
     doc.text('Crop Details', 10, yPosition);
     yPosition += 10;
   
-    // Table Headers
-    const headers = [
+    doc.setFontSize(8);
+    const cropHeaders = [
       'Crop Name',
       'Variety',
       'Unit Price (A)',
@@ -129,16 +193,21 @@ export class FarmerListReportComponent {
       'Quantity (C)',
       'Total (Rs.)',
     ];
-    const colWidths = [30, 25, 25, 20, 25, 20, 25, 20, 30];
+    const cropColWidths = [20, 37, 19, 19, 19, 19, 19, 19, 19];
   
-    // Draw Table Header
-    headers.forEach((header, index) => {
-      doc.text(header, 10 + colWidths.slice(0, index).reduce((a, b) => a + b, 0), yPosition);
+    // Draw Table Headers
+    drawGrid(doc, 10, yPosition, cropColWidths, 1); // Header Grid
+    xPosition = 10;
+    cropHeaders.forEach((header, index) => {
+      centerText(doc, header, xPosition, cropColWidths[index], yPosition + 4);
+      xPosition += cropColWidths[index];
     });
+  
     yPosition += 6;
   
     // Draw Table Rows
     this.cropList.forEach((crop) => {
+      drawGrid(doc, 10, yPosition, cropColWidths, 1); // Row Grid
       const row = [
         crop.cropNameEnglish,
         crop.varietyNameEnglish,
@@ -155,12 +224,10 @@ export class FarmerListReportComponent {
         ).toFixed(2),
       ];
   
+      xPosition = 10;
       row.forEach((cell, index) => {
-        doc.text(
-          cell,
-          10 + colWidths.slice(0, index).reduce((a, b) => a + b, 0),
-          yPosition
-        );
+        centerText(doc, cell, xPosition, cropColWidths[index], yPosition + 4);
+        xPosition += cropColWidths[index];
       });
       yPosition += 6;
   
@@ -179,8 +246,6 @@ export class FarmerListReportComponent {
     // Save PDF
     doc.save('Farmer_Details_Report.pdf');
   }
-  
-
   
 }
 

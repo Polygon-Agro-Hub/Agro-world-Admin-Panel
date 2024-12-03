@@ -6,6 +6,7 @@ import { CollectionOfficerReportService } from '../../services/collection-office
 import { CommonModule } from '@angular/common';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import jsPDF from 'jspdf';
+import { LoadingSpinnerComponent } from "../../components/loading-spinner/loading-spinner.component";
 
 interface IdistrictReport {
   cropName: string
@@ -21,7 +22,7 @@ interface IdistrictReport {
 @Component({
   selector: 'app-collectionofficer-district-report',
   standalone: true,
-  imports: [DropdownModule, NgxPaginationModule, FormsModule, CommonModule, CanvasJSAngularChartsModule],
+  imports: [DropdownModule, NgxPaginationModule, FormsModule, CommonModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent],
   templateUrl: './collectionofficer-district-report.component.html',
   styleUrls: ['./collectionofficer-district-report.component.css']
 })
@@ -30,6 +31,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   selectedDistrict: any = { name: 'Colombo', code: 'COL' };
   reportDetails: IdistrictReport[] = [];
   chartOptions: any;
+  loadingChart = true;
+  loadingTable = true;
 
   constructor(private collectionOfficerSrv: CollectionOfficerReportService) { }
 
@@ -57,7 +60,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       { name: 'Nuwara Eliya', code: 'NUE' },
       { name: 'Polonnaruwa', code: 'POL' },
       { name: 'Puttalam', code: 'PUT' },
-      { name: 'Ratnapura', code: 'RAT' },
+      { name: 'Rathnapura', code: 'RAT' },
       { name: 'Trincomalee', code: 'TRI' },
       { name: 'Vavuniya', code: 'VAV' }
     ];
@@ -67,6 +70,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
 
   fetchAllDistrictReportDetails(district: string) {
     console.log("Fetching report for district:", district);
+    this.loadingChart = true;
+    this.loadingTable = true;
     this.collectionOfficerSrv.getDistrictReport(district).subscribe(
       (response) => {
         console.log('Raw response:', response);
@@ -76,6 +81,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
           qtyB: Number(item.qtyB) || 0,
           qtyC: Number(item.qtyC) || 0,
         }));
+        this.loadingTable = false;
         this.updateChart()
         console.log('Processed reportDetails:', this.reportDetails);
       },
@@ -154,6 +160,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         }
       ]
     };
+    this.loadingChart = false;
   }
   
 

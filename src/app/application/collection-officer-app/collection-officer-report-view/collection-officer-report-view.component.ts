@@ -6,13 +6,14 @@ import { ActivatedRoute } from '@angular/router';
 
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
-import { environment } from '../../../environment/environment';
+
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { CalendarModule } from 'primeng/calendar';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environment/environment';
 
 declare var html2pdf: any;
 

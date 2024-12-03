@@ -34,10 +34,16 @@
       </div>
     </div>
   
+
+    <div *ngIf="loadingChart; else chartContent" class="flex justify-center items-center h-48">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
     <!-- Corrected canvasjs-chart tag -->
+    <ng-template #chartContent>
     <div class="pt-16">
       <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
     </div>
+  </ng-template>
   
     <div class="relative overflow-x-auto shadow-md pt-20">
       <table class="w-full text-sm text-center rtl:text-right border-[2px]">

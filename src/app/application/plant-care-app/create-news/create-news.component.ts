@@ -169,16 +169,15 @@ export class CreateNewsComponent {
   isEnglishOnly(input: string): string {
     const englishRegex =
       /^[\u0041-\u005A\u0061-\u007A\u0030-\u0039\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
-    // if(!englishRegex.test(input)){
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Unsuccess',
-    //     text: 'It allows English letters, numbers, and common symbols only!',
-    //   });
-    //   return '';
+      const onlyNumbersRegex = /^[0-9]+$/;
 
-    // }
-    return input;
+      if(onlyNumbersRegex.test(input)){
+        return 'Title cannot be just numbers.';
+      }
+      if(englishRegex.test(input)){
+        return '';
+      }
+      return 'Title must be in English.';
   }
 
   isSinhalaAndNumberOnly(input: string): string {

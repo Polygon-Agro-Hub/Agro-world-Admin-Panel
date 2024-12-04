@@ -82,6 +82,16 @@ export class MarketPlaceService {
     let url = `${this.apiUrl}market-place/delete-all-coupen`;
     return this.http.delete(url, { headers });
   }
+
+
+  getProuctCropVerity(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    let url = `${this.apiUrl}market-place/get-product-category`;
+    return this.http.get<any>(url, { headers });
+  }
 }
 
 

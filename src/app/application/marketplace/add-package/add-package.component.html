@@ -1,0 +1,176 @@
+<form>
+    <!-- save button -->
+    <div class="flex flex-row justify-between items-center mb-6">
+        <p class="text-lg text-black font-semibold">Add a Coupon</p>
+        <div>
+            <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
+                (click)="onCancel()">Cancel</button>
+            <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit">Save</button>
+        </div>
+    </div>
+
+    <div class="flex flex-row justify-between">
+        <div class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[70%]">
+
+            <div class="mb-8">
+                <label class="text-[#534E4E]">Display Package Name *</label>
+                <input type="text" id="name" name="name" [(ngModel)]="packageObj.name"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <hr class="mb-8 border-[1px]">
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Crop *</label>
+                <select id="selectId" name="selectId"
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [(ngModel)]="inputPackageObj.cID" (change)="onCropChange()">
+                    <option selected disabled value="">--- Select Crop ---</option>
+                    <option *ngFor="let cropItem of cropObj" [value]="cropItem.cropId">
+                        {{ cropItem.cropNameEnglish }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Variety (Display Name) *</label>
+                <select id="variety" name="variety" [(ngModel)]="inputPackageObj.mpItemId" (change)="onPriceChange()"
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                    <option selected disabled>--- Select Variety ---</option>
+                    <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
+                        {{ variety.displayName }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="flex flex-row items-center mb-6">
+                <div class="w-[90%]">
+                    <label class="text-[#534E4E]">Quantity *</label>
+                    <input type="number" id="priceLimit" name="priceLimit" min="0"
+                        [(ngModel)]="this.inputPackageObj.quantity"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+                </div>
+                <div class="flex justify-center items-center mt-6">
+                    <select class="bg-[#D9D9D9] py-3 px-3 rounded-lg mx-4 cursor-pointer"
+                        [(ngModel)]="inputPackageObj.qtytype">
+                        <option selected disabled>...</option>
+                        <option value="Kg">Kg</option>
+                        <option value="g">g</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Actual Price *</label>
+                <input type="text" id="priceLimit" name="priceLimit" [value]="selectedPrice?.normalPrice" disabled
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <div class="mb-6">
+                <label class="text-[#534E4E]">Discount *</label>
+                <input type="text" id="priceLimit" name="priceLimit" [value]="selectedPrice?.discountedPrice" disabled
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+
+            <div class="flex justify-center items-center">
+                <div class="text-white text-lg bg-[#3980C0] py-3 px-7 rounded-lg cursor-pointer" (click)="onAdd()">Add
+                </div>
+            </div>
+
+        </div>
+
+        <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
+            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
+                <label class="text-black font-semibold">Status</label>
+                <div class="flex items-center space-x-2 my-5">
+                    <!-- With Discount Radio Button -->
+                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="'Enabled'"
+                        [(ngModel)]="packageObj.status" />
+                    <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                        Enabled
+                    </label>
+                </div>
+
+                <div class="flex items-center space-x-2 my-5">
+                    <input class="w-5 h-5" type="radio" id="status" name="status" [value]="'Disabled'"
+                        [(ngModel)]="packageObj.status" />
+                    <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                        Disabled
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
+                <label class="text-black font-semibold">Total Price (Rs.)</label>
+                <div class="mb-6">
+                    <input type="text" id="endDate" name="endDate" disabled
+                        class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<hr class="border-[2px] my-6" />
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-gray-500 dark:text-gray-400">
+        <thead class="text-[#8492A3] bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-4">
+            <tr>
+                <th class="px-6 py-3 text-right">ITEM</th>
+                <th class="px-6 py-3 text-center">UNIT</th>
+                <th class="px-8 py-3 text-center">QUANTITY</th>
+                <th class="px-6 py-3 text-center">ACTUAL PRICE</th>
+                <th class="px-6 py-3 text-center">DISCOUNT VALUE</th>
+                <th class="px-6 py-3 text-center">DISCOUNT</th>
+                <th class="px-6 py-3 text-center"></th>
+            </tr>
+        </thead>
+        <tbody *ngIf="packageObj.Items.length > 1">
+            <tr *ngFor="let item of packageObj.Items; let i = index" 
+                class="bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="px-6 py-4 text-center text-gray-900 dark:text-white">
+                    {{ item.itemName }}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <div class="flex justify-center items-center">
+                        <div class="py-2 px-3 mx-1 border-[1px] shadow-lg rounded-md" [ngClass]="{ 'bg-[#CCEAE5]': item.qtytype === 'Kg' }">
+                            kg
+                        </div>
+                        <div class="py-2 px-4 mx-1 border-[1px] shadow-lg rounded-md" [ngClass]="{ 'bg-[#CCEAE5]': item.qtytype === 'g' }">
+                            g
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <div class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3">
+                        <i class="fa-solid fa-minus text-black text-lg cursor-pointer" (click)="decrementQuantity(i)"></i>
+                        <p>{{ item.quantity }}</p>
+                        <i class="fa-solid fa-plus text-black text-lg cursor-pointer" (click)="incrementQuantity(i)"></i>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-center text-black">
+                    {{ item.normalPrice * item.quantity }}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <!-- Placeholder for future discount interactions -->
+                    <div class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3 mx-12">
+                        <i class="fa-solid fa-minus text-black text-lg cursor-pointer"></i>
+                        <p>{{ item.discountedPrice }}</p>
+                        <i class="fa-solid fa-plus text-black text-lg cursor-pointer"></i>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <!-- Display Discount -->
+                    <p *ngIf="item.discountedPrice === 0">0</p>
+                    <p *ngIf="item.discountedPrice !== 0">{{ item.discountedPrice }}</p>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <!-- Remove item -->
+                    <i class="fa-solid fa-trash-can text-lg cursor-pointer text-red-600" (click)="removeItem(i)"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -64,6 +64,7 @@ export class CreateNewsComponent {
   htmlContent: any;
   isSinhalaValid: boolean = true;
   isEnglishValid: boolean = true;
+  isOnlyNumbers:boolean = false
   isTamilValid: boolean = true;
   isLoading = false;
   createDate: string = '';
@@ -129,7 +130,7 @@ export class CreateNewsComponent {
         'indent',
         'outdent',
         'fontSize',
-        'heading'
+        'heading',
       ],
     ],
   };
@@ -166,18 +167,15 @@ export class CreateNewsComponent {
   //   this.isTamilValid = tamilRegex.test(inputValue);
   // }
 
+  validateTitleEnglish(value: string): void {
+    // Regular expression to disallow numbers-only input
+    const regex = /[a-zA-Z!@#$%^&*(),.?":{}|<>]/; // Ensures the presence of at least one non-digit character
+    this.isEnglishValid = regex.test(value.trim());
+  }
+
   isEnglishOnly(input: string): string {
     const englishRegex =
       /^[\u0041-\u005A\u0061-\u007A\u0030-\u0039\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
-    // if(!englishRegex.test(input)){
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Unsuccess',
-    //     text: 'It allows English letters, numbers, and common symbols only!',
-    //   });
-    //   return '';
-
-    // }
     return input;
   }
 
@@ -246,7 +244,7 @@ export class CreateNewsComponent {
     formData.append('createdBy', this.createNewsObj.createdBy);
     if (this.selectedFile) {
       const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
-  
+
       if (!allowedTypes.includes(this.selectedFile.type)) {
         Swal.fire({
           icon: 'error',
@@ -318,7 +316,7 @@ export class CreateNewsComponent {
     this.selectedImage = null;
     this.selectedLanguage = 'english';
     console.log('Form cleared');
-    Swal.fire('Form cleared', '', 'info').then(()=>{
+    Swal.fire('Form cleared', '', 'info').then(() => {
       this.router.navigate(['/plant-care/manage-content']);
     });
   }
@@ -417,10 +415,10 @@ export class CreateNewsComponent {
       this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil)
     );
     formData.append('publishDate', this.newsItems[0].publishDate);
-    formData.append('expireDate' , this.newsItems[0].expireDate);
+    formData.append('expireDate', this.newsItems[0].expireDate);
     if (this.selectedFile) {
       const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
-    
+
       // Validate the image type
       if (!allowedTypes.includes(this.selectedFile.type)) {
         Swal.fire({
@@ -431,7 +429,7 @@ export class CreateNewsComponent {
         this.selectedFile = null; // Clear the invalid file
         return; // Stop further execution
       }
-    
+
       // Append the file to the form data if valid
       formData.append('image', this.selectedFile);
     }

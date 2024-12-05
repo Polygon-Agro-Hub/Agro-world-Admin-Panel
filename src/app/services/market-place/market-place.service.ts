@@ -92,6 +92,18 @@ export class MarketPlaceService {
     let url = `${this.apiUrl}market-place/get-product-category`;
     return this.http.get<any>(url, { headers });
   }
+
+
+  createPackage(Data: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}market-place/add-product`, Data, {
+      headers,
+    });
+  }
 }
 
 

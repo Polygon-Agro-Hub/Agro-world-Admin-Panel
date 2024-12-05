@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 interface CollectionOfficers {
   id: number;
@@ -35,7 +36,8 @@ interface CollectionOfficers {
     HttpClientModule,
     NgxPaginationModule,
     FormsModule,
-  ],
+    LoadingSpinnerComponent
+],
   templateUrl: './view-collective-officer.component.html',
   styleUrls: ['./view-collective-officer.component.css'],
 })
@@ -51,6 +53,7 @@ export class ViewCollectiveOfficerComponent {
   statusFilter: any = '';
 
   companyArr: Company[] = []
+  isLoading = false;
 
   constructor(
     private router: Router,
@@ -151,12 +154,13 @@ export class ViewCollectiveOfficerComponent {
 
   openPopup(item: any) {
     this.isPopupVisible = true;
-
-    let tableHtml = `
+  
+    // HTML structure for the popup
+    const tableHtml = `
       <div class="container mx-auto">
         <h1 class="text-center text-2xl font-bold mb-4">${item.firstName}</h1>
         <div class="border border-gray-300 p-4 rounded-lg">
-          
+          <p class="text-center">Are you sure you want to approve or reject this collection?</p>
         </div>
         <div class="flex justify-center mt-4">
           <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
@@ -164,24 +168,29 @@ export class ViewCollectiveOfficerComponent {
         </div>
       </div>
     `;
-
+  
     Swal.fire({
       html: tableHtml,
-      showConfirmButton: false, // Hide the default confirm button
+      showConfirmButton: false, // Hide default confirm button
       width: 'auto',
       didOpen: () => {
+        // Handle the "Approve" button click
         document
           .getElementById('approveButton')
-          ?.addEventListener('click', () =>
-            this.collectionService.ChangeStatus(item.id, "Approved").subscribe(
+          ?.addEventListener('click', () => {
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
               (res) => {
+                
+                this.isLoading = false;
                 if (res.status) {
                   Swal.fire({
                     icon: 'success',
                     title: 'Success!',
                     text: 'The collection was approved successfully.',
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 3000,
                   });
                   this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                 } else {
@@ -190,24 +199,39 @@ export class ViewCollectiveOfficerComponent {
                     title: 'Error!',
                     text: 'Something went wrong. Please try again.',
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 3000,
                   });
                 }
+              },
+              (err) => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while approving. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
               }
-            )
-          );
+            );
+          });
+  
+        // Handle the "Reject" button click
         document
           .getElementById('rejectButton')
-          ?.addEventListener('click', () =>
-            this.collectionService.ChangeStatus(item.id, "Rejected").subscribe(
+          ?.addEventListener('click', () => {
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
               (res) => {
+                this.isLoading = false;
                 if (res.status) {
                   Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: 'The collection was Rejected .',
+                    text: 'The collection was rejected successfully.',
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 3000,
                   });
                   this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                 } else {
@@ -216,15 +240,26 @@ export class ViewCollectiveOfficerComponent {
                     title: 'Error!',
                     text: 'Something went wrong. Please try again.',
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 3000,
                   });
                 }
+              },
+              (err) => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while rejecting. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
               }
-            )
-          );
+            );
+          });
       },
     });
   }
+  
 
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;

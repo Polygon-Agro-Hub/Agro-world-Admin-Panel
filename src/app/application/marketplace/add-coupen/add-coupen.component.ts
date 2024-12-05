@@ -63,26 +63,45 @@ export class AddCoupenComponent {
   }
 
   onSubmit() {
-    if (!this.coupenObj.code || !this.coupenObj.percentage || !this.coupenObj.endDate || !this.coupenObj.startDate || !this.coupenObj.type) {
+    if (!this.coupenObj.code || !this.coupenObj.endDate || !this.coupenObj.startDate || !this.coupenObj.type) {
       Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
       return;
 
-    } else {
-      this.marketSrv.createCoupen(this.coupenObj).subscribe(
-        (res) => {
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Coupen Created',
-              text: 'The coupen created successfull!',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              this.coupenObj =new Coupen()
-            });
-          }
-        }
-      )
     }
+
+    if (this.coupenObj.type === 'Percentage' && !this.coupenObj.percentage) {
+      Swal.fire('Warning', 'Please fill Discount Persentage fields', 'warning');
+      return;
+
+    }
+
+    if (this.coupenObj.type === 'Fixed Amount' && !this.coupenObj.fixDiscount) {
+      Swal.fire('Warning', 'Please fill Discount Amount fields', 'warning');
+      return;
+
+    }
+
+    if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
+      Swal.fire('Warning', 'Please fill Price Limit fields', 'warning');
+      return;
+    }
+
+
+    this.marketSrv.createCoupen(this.coupenObj).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Coupen Created',
+            text: 'The coupen created successfull!',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            this.coupenObj = new Coupen()
+          });
+        }
+      }
+    )
+
 
   }
 
@@ -95,10 +114,12 @@ export class AddCoupenComponent {
 
 class Coupen {
   code!: string;
-  type!: string;
+  type: string = 'Percentage'
   percentage!: string;
   status: string = 'Disabled';
   startDate!: string;
   endDate!: string;
   checkLimit: boolean = false;
+  priceLimit!: number
+  fixDiscount!: number
 }

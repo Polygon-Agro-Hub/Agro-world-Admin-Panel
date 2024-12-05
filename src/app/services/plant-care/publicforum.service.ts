@@ -24,7 +24,7 @@ export class PublicforumService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any[]>(`${this.apiUrl}get-post/`, {headers});
+    return this.http.get<any[]>(`${this.apiUrl}get-post`, {headers});
   }
 
   // getUserProfile(userId: number): Observable<any>{

@@ -46,9 +46,8 @@ export class ViewPublicForumComponent implements OnInit {
       return;
     }
 
-    // Correcting the property name from 'if' to 'id'
     const replyData = {
-      id: this.postId, // Changed from 'if' to 'id'
+      id: this.postId,
       replyMessage: this.replyMessage,
     };
 
@@ -71,25 +70,18 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   loadPosts(): void {
-    this.psotService.getAllPosts().subscribe((data: any[]) => {
-      this.post = data;
-      if(data.length > 0){
-        this.hasData = true
+    this.psotService.getAllPosts().subscribe((data: PublicForum[]) => {
+      this.post = data.map((post) => {
+        post.timeAgo = this.calculateTimeAgo(post.createdAt);
+        return post;
+      });
+      if (data.length > 0) {
+        this.hasData = true;
       }
       console.log(this.post);
       this.getCount();
-
     });
   }
-
-  //   getPostbyId(postId:number):void{
-  // this.psotService.getAllPosts(postId).subscribe(
-  //   (res) =>{
-  //     this.post = res;
-  //   },
-  //   (error) = 
-  // )
-  //   }
 
   viewUserProfile(userId: number) {
     this.router.navigate(['/plant-care/plant-care-user-profile'], {
@@ -127,15 +119,17 @@ export class ViewPublicForumComponent implements OnInit {
     this.deletePopUpVisible = true;
   }
 
-  fetchPostAllReply(id: number) {
+  fetchPostAllReply(id: number): void {
     this.publicForumSrv.getAllPostReply(id).subscribe(
-      (res) => {
-        this.publiForum = res;
-        console.log(res);
-        // console.log(this.publiForum.length);
+      (data: PublicForum[]) => {
+        this.publiForum = data.map((reply) => {
+          reply.timeAgo = this.calculateTimeAgo(reply.createdAt);
+          return reply;
+        });
+        console.log(this.publiForum);
       },
       (error) => {
-        console.log('Error: ', error);
+        console.error('Error:', error);
       }
     );
   }
@@ -225,14 +219,31 @@ export class ViewPublicForumComponent implements OnInit {
       this.countReply = data
     });
   }
+
+  calculateTimeAgo(createdAt:string):string{
+    const now = new Date();
+    const postTime = new Date(createdAt);
+    const diffInSeconds  = Math.floor((now.getTime() - postTime.getTime()) / 1000);
+
+    if(diffInSeconds < 60){
+      return `${diffInSeconds} sec ago`;
+    }else if(diffInSeconds < 3600){
+      return `${Math.floor(diffInSeconds / 60)} min ago`;
+    }else if (diffInSeconds < 86400){
+      return `${Math.floor(diffInSeconds / 3600)} hr ago`;
+    }else{
+      return `${Math.floor(diffInSeconds / 86400)} day(s) ago`;
+    }
+  }
 }
 
 class PublicForum {
   'id': number;
   'replyMessage': string;
-  'createdAt': string;
   'firstName': string;
   'lastName': string;
+  'createdAt': string;
+  timeAgo?:string;
 }
 
 class ReplyCount {

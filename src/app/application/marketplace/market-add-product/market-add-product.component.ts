@@ -98,12 +98,12 @@ export class MarketAddProductComponent implements OnInit {
     
 
     if (this.productObj.promo) {
-      if (!this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby || !this.productObj.discountedPrice || !this.productObj.salePrice) {
+      if (!this.productObj.category || !this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby || !this.productObj.discountedPrice || !this.productObj.salePrice) {
         Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
         return;
       }
     }else {
-      if (!this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby) {
+      if (!this.productObj.category || !this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby) {
         Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
         return;
       }
@@ -173,6 +173,7 @@ class MarketPrice {
   startValue!: number;
   changeby!: number;
   tags: string = '';
+  category!:String
 
   selectId!: number;
   displaytype!: string;

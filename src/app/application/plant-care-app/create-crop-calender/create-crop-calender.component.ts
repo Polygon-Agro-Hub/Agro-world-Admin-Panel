@@ -114,10 +114,19 @@ export class CreateCropCalenderComponent {
   onSubmit() {
 
     const formValue = this.cropForm.value;
-    if(!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.cropDuration || !formValue.suitableAreas){
+    if(!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.suitableAreas){
       Swal.fire(
         'warning',
         'pleace fill all input feilds',
+        'warning'
+      );
+      return;
+    }
+
+    if(formValue.cropDuration === 0 ){
+      Swal.fire(
+        'warning',
+        'Crop duration in days can not 0',
         'warning'
       );
       return;

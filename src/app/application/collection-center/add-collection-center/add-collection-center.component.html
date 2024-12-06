@@ -19,9 +19,15 @@
         <div
           *ngIf="collectionCenterForm.get('regCode')?.invalid && (collectionCenterForm.get('regCode')?.dirty || collectionCenterForm.get('regCode')?.touched)"
           class="text-red-500 text-sm mt-1">
-          regCode is required
+          <ng-container *ngIf="collectionCenterForm.get('regCode')?.hasError('required')">
+            Reg Code is required.
+          </ng-container>
+          <ng-container *ngIf="collectionCenterForm.get('regCode')?.hasError('pattern')">
+            Reg Code cannot contain numbers.
+          </ng-container>
         </div>
       </div>
+      
 
       <!-- Collection Center Name -->
       <div>

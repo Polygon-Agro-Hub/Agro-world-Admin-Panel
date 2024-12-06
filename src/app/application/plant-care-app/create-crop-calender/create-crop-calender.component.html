@@ -150,6 +150,11 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option *ngFor="let group of groupList" [value]="group.id">{{ group.cropNameEnglish}}</option>
           </select>
+          <div
+            *ngIf="cropForm.get('groupId')!.invalid && (cropForm.get('groupId')!.dirty || cropForm.get('groupId')!.touched)"
+            class="text-red-500 text-sm mt-1">
+            <div *ngIf="cropForm.get('groupId')!.errors?.['required']">Crop name is required</div>
+          </div>
         </div>
 
 

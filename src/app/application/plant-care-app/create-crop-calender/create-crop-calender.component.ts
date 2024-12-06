@@ -20,7 +20,7 @@ import { NgxColorsModule } from 'ngx-colors';
 
 interface NewCropCalender {
   id: number;
-  method : any;
+  method: any;
   natOfCul: any;
   cropDuration: string;
   createdAt: string;
@@ -89,10 +89,10 @@ export class CreateCropCalenderComponent {
   selectedFileName: string | null = null;
   selectedImage: string | ArrayBuffer | null = null;
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
-  selectedPage:'pageOne' | 'pageTwo' = 'pageOne'
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne'
   groupList: any[] = [];
   varietyList: any[] = [];
-  
+
 
   constructor(
     private fb: FormBuilder,
@@ -103,18 +103,19 @@ export class CreateCropCalenderComponent {
   ) {
     // Initialize the form with FormBuilder
     this.cropForm = this.fb.group({
-      varietyId:['',[Validators.required]],
-      cultivationMethod: ['',[Validators.required]],
-      natureOfCultivation: ['',[Validators.required]],
+      varietyId: ['', [Validators.required]],
+      groupId: ['', [Validators.required]],
+      cultivationMethod: ['', [Validators.required]],
+      natureOfCultivation: ['', [Validators.required]],
       cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      suitableAreas: ['',[Validators.required]],
+      suitableAreas: ['', [Validators.required]],
     });
   }
 
   onSubmit() {
 
     const formValue = this.cropForm.value;
-    if(!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.suitableAreas){
+    if (!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.suitableAreas) {
       Swal.fire(
         'warning',
         'pleace fill all input feilds',
@@ -123,7 +124,7 @@ export class CreateCropCalenderComponent {
       return;
     }
 
-    if(formValue.cropDuration === 0 ){
+    if (formValue.cropDuration === 0) {
       Swal.fire(
         'warning',
         'Crop duration in days can not 0',
@@ -146,9 +147,10 @@ export class CreateCropCalenderComponent {
     }
 
     this.isLoading = true;
-  
-      this.cropCalendarService.createCropCalendar(formData).subscribe(
-        (res: any) => {
+
+    this.cropCalendarService.createCropCalendar(formData).subscribe(
+      (res: any) => {
+        if (res.status) {
           this.isLoading = false;
           this.cropId = res.cropId;
           if (this.cropId !== null) {
@@ -162,19 +164,27 @@ export class CreateCropCalenderComponent {
               'error'
             );
           }
-        },
-        (error: any) => {
-          console.error('Error creating crop calendar', error);
+        }else{
+          this.isLoading = false;
           Swal.fire(
             'Error',
-            'There was an error creating the crop calendar',
+            res.message,
             'error'
           );
-          this.isLoading = false;
         }
-      );
+      },
+      (error: any) => {
+        console.error('Error creating crop calendar', error);
+        Swal.fire(
+          'Error',
+          'There was an error creating the crop calendar',
+          'error'
+        );
+        this.isLoading = false;
+      }
+    );
 
-    
+
 
 
   }
@@ -198,7 +208,7 @@ export class CreateCropCalenderComponent {
       `,
       showCancelButton: true,
       confirmButtonText: 'Upload',
-      cancelButtonText: 'Skip',
+      cancelButtonText: 'Cancel',
       allowOutsideClick: false,
       didOpen: () => {
         const fileInput = document.getElementById(
@@ -253,16 +263,16 @@ export class CreateCropCalenderComponent {
         this.cropCalendarService.deleteCropCalender(this.cropId)
           .subscribe(
             (data: any) => {
-              if(data){
-               
+              if (data) {
+
               }
-             
+
             },
             (error) => {
               console.error('Error deleting crop calendar:', error);
             }
           );
-
+          
 
         if (error.error && typeof error.error === 'string') {
           errorMessage = error.error;
@@ -277,11 +287,11 @@ export class CreateCropCalenderComponent {
       this.cropId = params['id'] ? +params['id'] : null;
       console.log('Received crop ID:', this.cropId);
     });
-    if (this.cropId!=null) {
+    if (this.cropId != null) {
       this.getCropCalenderById(this.cropId);
     }
     this.getAllRoles();
-    
+
   }
 
   getCropCalenderById(id: any) {
@@ -321,7 +331,7 @@ export class CreateCropCalenderComponent {
       formValue.suitableAreas = formValue.suitableAreas.join(', ');
     }
     const formData = new FormData();
-    formData.append('method', this.cropCalender[0].method );
+    formData.append('method', this.cropCalender[0].method);
     formData.append('natOfCul', this.cropCalender[0].natOfCul);
     formData.append('cropDuration', this.cropCalender[0].cropDuration);
     formData.append('suitableAreas', formValue.suitableAreas);
@@ -368,41 +378,41 @@ export class CreateCropCalenderComponent {
       timer: 2000,
       showConfirmButton: false,
     });
-    
+
 
 
   }
 
-  
+
 
 
   deleteCropCalender(id: any) {
-  
-       
-        this.cropCalendarService.deleteCropCalender(id)
-          .subscribe(
-            (data: any) => {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'Your uncomplete crop calender has been deleted',
-                  'success'
-                  
-                );
-                
-              }
-             
-            },
-            (error) => {
-              console.error('Error deleting crop calendar:', error);
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the uncomplete crop calendar.',
-                'error'
-              );
-            }
+
+
+    this.cropCalendarService.deleteCropCalender(id)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            Swal.fire(
+              'Deleted!',
+              'Your uncomplete crop calender has been deleted',
+              'success'
+
+            );
+
+          }
+
+        },
+        (error) => {
+          console.error('Error deleting crop calendar:', error);
+          Swal.fire(
+            'Error!',
+            'There was an error deleting the uncomplete crop calendar.',
+            'error'
           );
-    
+        }
+      );
+
   }
 
 
@@ -415,21 +425,21 @@ export class CreateCropCalenderComponent {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    
+
     this.http
       .get<any>(`${environment.API_URL}crop-calendar/crop-groups`, {
         headers,
       })
       .subscribe(
         (response) => {
-          
+
           this.groupList = response.groups;
           console.log(response);
 
         },
         (error) => {
           console.error('Error fetching news:', error);
-          
+
           // Handle error...
         }
       );
@@ -447,22 +457,22 @@ export class CreateCropCalenderComponent {
     });
 
     const selectElement = event.target as HTMLSelectElement;  // Cast to HTMLSelectElement
-  const cropGroupId = selectElement.value;
-    
+    const cropGroupId = selectElement.value;
+
     this.http
       .get<any>(`${environment.API_URL}crop-calendar/crop-variety/${cropGroupId}`, {
         headers,
       })
       .subscribe(
         (response) => {
-          
+
           this.varietyList = response.varieties;
           console.log(response);
 
         },
         (error) => {
           console.error('Error fetching news:', error);
-          
+
           // Handle error...
         }
       );
@@ -475,5 +485,5 @@ export class CreateCrop {
   natureOfCultivation: string = '';
   cropDuration: string = '';
   suitableAreas: string = '';
- 
+
 }

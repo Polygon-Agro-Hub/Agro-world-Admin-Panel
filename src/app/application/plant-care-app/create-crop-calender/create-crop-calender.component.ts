@@ -6,6 +6,8 @@ import {
   ReactiveFormsModule,
   FormControl,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import {
   HttpClient,
@@ -106,7 +108,7 @@ export class CreateCropCalenderComponent {
       varietyId:['',[Validators.required]],
       cultivationMethod: ['',[Validators.required]],
       natureOfCultivation: ['',[Validators.required]],
-      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), nonZeroValidator]],
       suitableAreas: ['',[Validators.required]],
     });
   }
@@ -458,6 +460,11 @@ export class CreateCropCalenderComponent {
         }
       );
   }
+}
+
+export function nonZeroValidator(control: AbstractControl):ValidationErrors | null{
+  const value = Number(control.value);
+  return value > 0 ? null:{nonZero: true}
 }
 
 export class CreateCrop {

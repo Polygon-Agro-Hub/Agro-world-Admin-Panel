@@ -175,17 +175,17 @@ export class CreateCropCalenderComponent {
       title: 'Upload XLSX File',
       html: `
         <div class="upload-container">
-        <input type="file" id="xlsx-file-input" accept=".xlsx, .xls" style="display: none;">
-        <label for="xlsx-file-input" class="upload-box">
-          <div class="upload-box-content" style="cursor: pointer;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v8m0 0l-4-4m4 4l4-4M4 20h16" />
-            </svg>
-          </div>
+          <input type="file" id="xlsx-file-input" accept=".xlsx, .xls" style="display: none;">
+          <label for="xlsx-file-input" class="upload-box">
+            <div class="upload-box-content" style="cursor: pointer;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v8m0 0l-4-4m4 4l4-4M4 20h16" />
+              </svg>
+            </div>
             <p class="upload-text">Drag & drop your XLSX file here or click to select</p>
             <p id="selected-file-name" class="file-name">No file selected</p>
-        </label>
-      </div>
+          </label>
+        </div>
       `,
       showCancelButton: true,
       confirmButtonText: 'Upload',
@@ -196,9 +196,16 @@ export class CreateCropCalenderComponent {
           'xlsx-file-input'
         ) as HTMLInputElement;
         const fileNameDisplay = document.getElementById('selected-file-name');
+        
+        // Initially disable the upload button
+        Swal.disableButtons();
+  
         fileInput.onchange = () => {
           if (fileInput.files && fileInput.files[0]) {
             fileNameDisplay!.textContent = `Selected file: ${fileInput.files[0].name}`;
+            Swal.enableButtons(); // Enable the buttons once a file is selected
+          } else {
+            Swal.disableButtons(); // Disable the buttons if no file is selected
           }
         };
       },
@@ -214,13 +221,16 @@ export class CreateCropCalenderComponent {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
+        this.router.navigate(["/plant-care/view-crop-calender"])
       } else {
-        this.deleteCropCalender(this.cropId)
+        this.deleteCropCalender(this.cropId);
         console.log('XLSX upload skipped');
+        this.router.navigate(["/plant-care/view-crop-calender"])
         // You can add any additional logic here for when the user skips the upload
       }
     });
   }
+  
 
   uploadXlsxFile(cropId: number, file: File) {
     const formData = new FormData();

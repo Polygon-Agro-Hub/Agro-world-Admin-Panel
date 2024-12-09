@@ -21,6 +21,7 @@ interface CollectionOfficers {
   lastNameEnglish: string;
   phoneNumber01: string;
   companyNameEnglish: string;
+  empId : string;
   nic: string;
   status: string;
   created_at: string;

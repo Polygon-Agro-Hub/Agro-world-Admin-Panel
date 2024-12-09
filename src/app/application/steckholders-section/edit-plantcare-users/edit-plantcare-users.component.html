@@ -102,7 +102,7 @@
                     <!-- Image Upload -->
                     <div>
                         <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark">Profile Image</label>
-                        <input type="file" id="profileImage" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                        <input type="file" id="profileImage" accept="image/*" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
                     </div>
                 </div>
             </div>
@@ -222,8 +222,15 @@
                     <!-- Image Upload -->
                     <div>
                         <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark text-left">Profile Image</label>
-                        <input type="file" id="profileImage" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                        <input 
+                            type="file" 
+                            id="profileImage" 
+                            accept="image/*" 
+                            (change)="onImageSelected($event)" 
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
+                        />
                     </div>
+                    
                 </div>
             </div>
 

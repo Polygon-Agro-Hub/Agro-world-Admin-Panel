@@ -69,6 +69,7 @@ import { UserBulkUploadComponent } from './application/steckholders-section/user
 import { ViewCoupenComponent } from './application/marketplace/view-coupen/view-coupen.component';
 import { EditCollectionCenterComponent } from './application/collection-center/edit-collection-center/edit-collection-center.component';
 import { AddPackageComponent } from './application/marketplace/add-package/add-package.component';
+import { MonthlyReportComponent } from './application/report-section/monthly-report/monthly-report.component';
 
 export const routes: Routes = [
   {
@@ -238,6 +239,10 @@ export const routes: Routes = [
           {
             path: 'collective-officer/province-report',
             component: CollectionOfficerProvinceReportComponent,
+          },
+          {
+            path: 'collective-officer-report/monthly-report',
+            component: MonthlyReportComponent,
           },
         ],
       },

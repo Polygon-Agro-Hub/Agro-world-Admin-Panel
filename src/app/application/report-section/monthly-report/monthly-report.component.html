@@ -1,1 +1,175 @@
-<p>monthly-report works!</p>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/plant-care'">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="mx-auto py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
+    <!-- From Date Input (Label and Input on the Same Line) -->
+    <div class="flex items-center gap-2">
+      <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
+      <input
+        id="fromDate"
+        type="date"
+        class="p-2 border rounded-md focus:ring focus:ring-blue-300"
+        placeholder="YYYY/MM/DD"
+        [(ngModel)]="fromDate"
+        [max]="maxDate"
+      />
+    </div>
+  
+    <!-- To Date Input (Label and Input on the Same Line) -->
+    <div class="flex items-center gap-2">
+      <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
+      <input
+        id="toDate"
+        type="date"
+        class="p-2 border rounded-md focus:ring focus:ring-blue-300"
+        placeholder="YYYY/MM/DD"
+        [(ngModel)]="toDate"
+        [min]="fromDate"
+      />
+    </div>
+  
+    <!-- Go Button -->
+    <div class="flex items-center">
+      <button
+      (click)="getCollectionReport()"
+        class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
+      >
+        Go
+      </button>
+    </div>
+  
+    <!-- Download Report Button (New Line) -->
+    <div class="w-full text-center" >
+      <button
+        (click)="downloadReport()"
+        class="bg-[#3980C0] text-white px-6 py-2 rounded-md"
+      >
+        Download Report
+      </button>
+    </div>
+  </div>
+  
+  
+  
+
+<div class="h-[20px]"></div>
+
+
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg rounded-lg">
+    <!-- Date Range Filter -->
+    
+  
+    <!-- Officer Info Section -->
+    <div #contentToConvert>
+
+        <p class="text-md text-center dark:text-textDark">Collection Officer Report</p>
+        <p class="text-md text-center dark:text-textDark">ID NO : {{ officerData.companyDetails.employeeId }}</p>
+
+
+
+
+        <div class="grid grid-cols-2 gap-x-8 gap-y-4 p-6">
+            <!-- From Date -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">From</p>
+              <p class="dark:text-textDark text-gray-800">: {{ fromDate }}</p>
+            </div>
+          
+            <!-- To Date -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">To</p>
+              <p class="dark:text-textDark text-gray-800">: {{ toDate }}</p>
+            </div>
+          
+            <!-- EMP ID -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.companyDetails.employeeId }}</p>
+            </div>
+          
+            <!-- Role -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">Role</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.companyDetails.jobRole }}</p>
+            </div>
+          
+            <!-- First Name -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">First Name</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.collectionOfficer.firstNameEnglish }}</p>
+            </div>
+          
+            <!-- Last Name -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">Last Name</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.collectionOfficer.lastNameEnglish }}</p>
+            </div>
+          
+            <!-- Total Weight -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">Weight</p>
+              <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }}</p>
+            </div>
+          
+            <!-- Total Farmers -->
+            <div class="flex items-center gap-2">
+              <p class="text-sm dark:text-textDark text-gray-600 w-24">Farmers</p>
+              <p class="dark:text-textDark text-gray-800">: {{ finalTotalFarmers }}</p>
+            </div>
+          </div>
+          
+          
+  
+      <!-- Daily Report Table -->
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border border-gray-300 px-4 py-2">Date</th>
+            <th class="border border-gray-300 px-4 py-2">Total Weight</th>
+            <th class="border border-gray-300 px-4 py-2">Total Farmers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of dailyReports">
+            <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.date | date: 'yyyy-MM-dd' }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }}</td>
+            <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalPayments }}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <!-- Generated Time -->
+      <p class="text-xs text-gray-500 mt-4 dark:text-textDark" *ngIf="generatedDate && generatedTime">
+        This report is generated on {{ generatedDate }} , at {{ generatedTime }}.
+      </p>
+      <div class="h-[20px]"></div>
+    </div>
+  </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

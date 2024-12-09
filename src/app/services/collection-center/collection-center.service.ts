@@ -93,7 +93,7 @@ export class CollectionCenterService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get(`${this.apiUrl}collection-officer-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}officer-details-monthly/${id}`, {
       headers,
     });
   }
@@ -148,6 +148,13 @@ export class CollectionCenterService {
     return this.http.get(`${this.apiUrl}get-last-emp-id/${role}`, {
       headers,
     });
+  }
+
+
+
+  getCollectionReportByOfficerId(fromDate: string, toDate: string, officerId: number): Observable<any> {
+    const params = { fromDate, toDate, collectionOfficerId: officerId.toString() };
+    return this.http.get<any>(`${this.apiUrl}/get-daily-report`, { params });
   }
 
 

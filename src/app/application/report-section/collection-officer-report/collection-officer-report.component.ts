@@ -106,7 +106,7 @@ export class CollectionOfficerReportComponent {
     this.router.navigate([`/reports/payment-slip-report/${id}`], { queryParams: { firstName, lastName } });
   }
 
-  navigateToMonthlyReport() {
-    this.router.navigate([`/reports/collective-officer-report/monthly-report`]);
+  navigateToMonthlyReport(id : number) {
+    this.router.navigate([`/reports/collective-officer-report/monthly-report/${id}`]);
   }
 }

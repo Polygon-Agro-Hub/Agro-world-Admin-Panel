@@ -241,7 +241,7 @@ export const routes: Routes = [
             component: CollectionOfficerProvinceReportComponent,
           },
           {
-            path: 'collective-officer-report/monthly-report',
+            path: 'collective-officer-report/monthly-report/:id',
             component: MonthlyReportComponent,
           },
         ],

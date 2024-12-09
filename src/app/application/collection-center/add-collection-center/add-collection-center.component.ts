@@ -21,7 +21,7 @@ export class AddCollectionCenterComponent {
 
   constructor(private fb: FormBuilder, private collectionCenterService: CollectionCenterService, private router: Router) {
     this.collectionCenterForm = this.fb.group({
-      regCode: ['', Validators.required],
+      regCode: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
       centerName: ['', [Validators.required, this.noNumbersValidator]],      contact01: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],
       contact01Code: ['+94', Validators.required],
       contact02: ['', Validators.required, Validators.maxLength(10), Validators.minLength(10)],

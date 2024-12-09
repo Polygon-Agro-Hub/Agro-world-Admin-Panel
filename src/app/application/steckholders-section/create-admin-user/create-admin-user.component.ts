@@ -259,6 +259,16 @@ export class CreateAdminUserComponent implements OnInit {
   }
 
   createAdmin() {
+
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please fill out all required fields correctly.',
+      });
+      return;
+    }
     console.log('clicked');
     console.log(this.createAdminObj);
 

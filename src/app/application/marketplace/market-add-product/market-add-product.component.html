@@ -14,6 +14,17 @@
         <div class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[60%]">
 
             <div class="mb-6">
+                <label class="text-[#534E4E]">Category *</label>
+                <select id="category" name="category"
+                    class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [(ngModel)]="productObj.category">
+                    <option selected disabled value="">--Display type--</option>
+                    <option value="Retail">Retail </option>
+                    <option value="Retail">WholeSale</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
                 <label class="text-[#534E4E]">Display Name *</label>
                 <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" 
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />

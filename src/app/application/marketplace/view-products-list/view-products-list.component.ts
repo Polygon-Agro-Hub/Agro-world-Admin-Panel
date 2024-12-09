@@ -146,4 +146,5 @@ class ProductList {
   promo!: number;
   unitType!: string;
   changeby!: number;
+  category!:string;
 }

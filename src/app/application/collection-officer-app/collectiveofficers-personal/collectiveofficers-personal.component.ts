@@ -36,8 +36,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   selectedFileName!: string
   selectedImage: string | ArrayBuffer | null = null;
   lastID!: string
+  UpdatelastID!: string
+  selectJobRole!: string
+  upateEmpID!: string
 
-  officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
+  officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, empId: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
     collectionOfficer: {
       centerId: '',
       firstNameEnglish: '',
@@ -67,6 +70,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       companyNameSinhala: '',
       companyNameTamil: '',
       jobRole: '',
+      empId: '',
       IRMname: '',
       companyEmail: '',
       assignedDistrict: '',
@@ -196,6 +200,12 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
         next: (response: any) => {
           this.officer = response.officerData;
+          this.selectJobRole = response.officerData.companyDetails.jobRole;
+          this.getUpdateLastID(response.officerData.companyDetails.jobRole)
+
+
+          console.log(response);
+
 
           this.isLoading = false;
         },
@@ -207,8 +217,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
 
     this.getLastID('COO');
-    console.log(this.companyData.empId);
-    
   }
 
   getAllCollectionCetnter() {
@@ -254,6 +262,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       companyNameSinhala: this.officer.companyDetails.companyNameSinhala,
       companyNameTamil: this.officer.companyDetails.companyNameTamil,
       IRMname: this.officer.companyDetails.IRMname,
+      jobRole: this.officer.companyDetails.jobRole,
+      empId: this.upateEmpID,
       companyEmail: this.officer.companyDetails.companyEmail,
       assignedDistrict: this.officer.companyDetails.assignedDistrict,
       employeeType: this.officer.companyDetails.employeeType,
@@ -284,7 +294,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
             title: 'Success',
             text: 'Collection Officer details updated successfully!'
           });
-          this.router.navigate(['/collection-officer/view']); // Update this to your correct route
+          this.router.navigate(['/steckholders/collective-officer']); // Update this to your correct route
         },
         (error) => {
           console.error('Error updating collection officer details', error);
@@ -332,39 +342,91 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   EpmloyeIdCreate() {
-  let rolePrefix: string;
+    let rolePrefix: string;
 
-  if (this.companyData.jobRole === 'Collection Center Head') {
-    rolePrefix = 'CCH';
-  } else if (this.companyData.jobRole === 'Collection Center Manager') {
-    rolePrefix = 'CCM';
-  } else if (this.companyData.jobRole === 'Customer Officer') {
-    rolePrefix = 'CUO';
-  } else {
-    rolePrefix = 'COO';
+    if (this.companyData.jobRole === 'Collection Center Head') {
+      rolePrefix = 'CCH';
+    } else if (this.companyData.jobRole === 'Collection Center Manager') {
+      rolePrefix = 'CCM';
+    } else if (this.companyData.jobRole === 'Customer Officer') {
+      rolePrefix = 'CUO';
+    } else {
+      rolePrefix = 'COO';
+    }
+
+
+
+    this.getLastID(rolePrefix).then((lastID) => {
+      this.companyData.empId = rolePrefix + lastID;
+    });
   }
 
-  this.getLastID(rolePrefix).then((lastId) => {
-    this.companyData.empId = rolePrefix + lastId;
-    console.log(this.companyData.empId);
-  });
-}
 
-getLastID(role: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    this.collectionCenterSrv.getForCreateId(role).subscribe(
-      (res) => {
-        this.lastID = res.result.empId;
-        const lastId = res.result.empId;
-        resolve(lastId); // Resolve the Promise with the empId
-      },
-      (error) => {
-        console.error('Error fetching last ID:', error);
-        reject(error);
-      }
-    );
-  });
-}
+  UpdateEpmloyeIdCreate() {
+    let rolePrefix: string;
+
+    if (this.officer.companyDetails.jobRole === 'Collection Center Head') {
+      rolePrefix = 'CCH';
+    } else if (this.officer.companyDetails.jobRole === 'Collection Center Manager') {
+      rolePrefix = 'CCM';
+    } else if (this.officer.companyDetails.jobRole === 'Customer Officer') {
+      rolePrefix = 'CUO';
+    } else {
+      rolePrefix = 'COO';
+    }
+
+
+
+    this.getUpdateLastID(rolePrefix).then((lastId) => {
+      console.log(rolePrefix);
+      
+      this.upateEmpID = rolePrefix + lastId;
+      console.log("update EMPID", this.upateEmpID);
+    });
+  }
+
+  getLastID(role: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.collectionCenterSrv.getForCreateId(role).subscribe(
+        (res) => {
+          this.lastID = res.result.empId;
+          const lastId = res.result.empId;
+          resolve(lastId); // Resolve the Promise with the empId
+        },
+        (error) => {
+          console.error('Error fetching last ID:', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  getUpdateLastID(role: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.collectionCenterSrv.getForCreateId(role).subscribe(
+        (res) => {
+          let lastId;
+          if (this.selectJobRole === this.officer.companyDetails.jobRole) {
+            lastId = this.officer.companyDetails.empId;
+            this.UpdatelastID = lastId;
+            console.log(lastId);
+            
+          } else {
+            this.UpdatelastID = res.result.empId;
+            lastId = res.result.empId
+            console.log(lastId);
+
+          }
+          ;
+          resolve(lastId); // Resolve the Promise with the empId
+        },
+        (error) => {
+          console.error('Error fetching last ID:', error);
+          reject(error);
+        }
+      );
+    });
+  }
 
 
 }

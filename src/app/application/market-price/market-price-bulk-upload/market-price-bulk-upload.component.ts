@@ -154,7 +154,6 @@ export class MarketPriceBulkUploadComponent {
     }
   }
 
-
   onCancel(): void {
     if (this.selectedFile) {
       this.selectedFile = null;

@@ -40,6 +40,36 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   selectJobRole!: string
   upateEmpID!: string
 
+  districts = [
+    { name: 'Ampara', province: 'Eastern' },
+    { name: 'Anuradhapura', province: 'North Central' },
+    { name: 'Badulla', province: 'Uva' },
+    { name: 'Batticaloa', province: 'Eastern' },
+    { name: 'Colombo', province: 'Western' },
+    { name: 'Galle', province: 'Southern' },
+    { name: 'Gampaha', province: 'Western' },
+    { name: 'Hambantota', province: 'Southern' },
+    { name: 'Jaffna', province: 'Northern' },
+    { name: 'Kalutara', province: 'Western' },
+    { name: 'Kandy', province: 'Central' },
+    { name: 'Kegalle', province: 'Sabaragamuwa' },
+    { name: 'Kilinochchi', province: 'Northern' },
+    { name: 'Kurunegala', province: 'North Western' },
+    { name: 'Mannar', province: 'Northern' },
+    { name: 'Matale', province: 'Central' },
+    { name: 'Matara', province: 'Southern' },
+    { name: 'Monaragala', province: 'Uva' },
+    { name: 'Mullaitivu', province: 'Northern' },
+    { name: 'Nuwara Eliya', province: 'Central' },
+    { name: 'Polonnaruwa', province: 'North Central' },
+    { name: 'Puttalam', province: 'North Western' },
+    { name: 'Rathnapura', province: 'Sabaragamuwa' },
+    { name: 'Trincomalee', province: 'Eastern' },
+    { name: 'Vavuniya', province: 'Northern' },
+  ];
+  
+  
+
   officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, empId: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
     collectionOfficer: {
       centerId: '',
@@ -429,6 +459,36 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
 
+
+  updateProvince(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
+    const selectedDistrict = target.value;
+  
+    const selected = this.districts.find(district => district.name === selectedDistrict);
+
+    if(this.itemId === null){
+
+      if (selected) {
+        this.personalData.province = selected.province;
+      } else {
+        this.personalData.province = ''; // Clear if no matching district is found
+      }
+
+    }else{
+
+
+      if (selected) {
+        this.officer.collectionOfficer.address.province = selected.province;
+      }
+
+
+    }
+
+   
+  }
+  
+  
+
 }
 
 class Personal {
@@ -451,7 +511,7 @@ class Personal {
   city!: string;
   district!: string;
   province!: string;
-  country!: string;
+  country: string = 'Sri Lanka';
   languages: string = '';
   centerId!: string
   image!: any

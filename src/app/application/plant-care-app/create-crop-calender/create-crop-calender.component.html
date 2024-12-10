@@ -9,138 +9,11 @@
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
     <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark font-bold">ADD CROP CALENDAR</h2>
 
-    <!-- <div class="mb-6">
-      <ul class="flex">
-        <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-          [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
-          English
-        </li>
-        <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-          [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
-          Sinhala
-        </li>
-        <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-          [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
-          Tamil
-        </li>
-      </ul>
-    </div> -->
+   
 
     <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
 
 
-      <!-- <div *ngIf="selectedLanguage === 'english'">
-        <div class="my-3">
-          <label for="crop" class="block text-sm font-medium text-textLight dark:text-textDark">Crop</label>
-          <input formControlName="cropName" id="cropName" [(ngModel)]="createNewObj.cropName" name="cropName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div
-            *ngIf="cropForm.get('cropName')!.invalid && (cropForm.get('cropName')!.dirty || cropForm.get('cropName')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('cropName')!.errors?.['required']">Crop name is required</div>
-          </div>
-        </div>
-
-        <div class="my-3">
-          <label for="variety" class="block text-sm font-medium text-textLight dark:text-textDark">Variety</label>
-          <input formControlName="variety" id="variety" [(ngModel)]="createNewObj.variety" name="variety"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div
-            *ngIf="cropForm.get('variety')!.invalid && (cropForm.get('variety')!.dirty || cropForm.get('variety')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('variety')!.errors?.['required']">Variety is required</div>
-          </div>
-        </div>
-
-        <div class="md:col-span-2 my-3">
-          <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Special Notes</label>
-          <textarea formControlName="specialNotes" id="specialNotes" [(ngModel)]="createNewObj.SpecialNotes"
-            name="specialNotes" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <div
-            *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('specialNotes')!.errors?.['required']">Special Notes is required</div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- <div *ngIf="selectedLanguage === 'sinhala'">
-        <div class="my-3">
-          <label for="sinhalaCropName" class="block text-sm font-medium text-textLight dark:text-textDark">Crop in Sinhala </label>
-          <input formControlName="sinhalaCropName" id="sinhalaCropName" [(ngModel)]="createNewObj.sinhalaCropName"
-            name="sinhalaCropName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div
-            *ngIf="cropForm.get('sinhalaCropName')!.invalid && (cropForm.get('sinhalaCropName')!.dirty || cropForm.get('sinhalaCropName')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('sinhalaCropName')!.errors?.['required']">Crop name is required</div>
-          </div>
-        </div>
-
-        <div class="my-3">
-          <label for="sinhalaVariety" class="block text-sm font-medium text-textLight dark:text-textDark">Variety in Sinhala</label>
-          <input formControlName="sinhalaVariety" id="sinhalaVariety" [(ngModel)]="createNewObj.sinhalaVariety"
-            name="sinhalaVariety" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div
-            *ngIf="cropForm.get('sinhalaVariety')!.invalid && (cropForm.get('sinhalaVariety')!.dirty || cropForm.get('sinhalaVariety')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('sinhalaVariety')!.errors?.['required']">Variety is required</div>
-          </div>
-        </div>
-
-        <div class="md:col-span-2 my-3">
-          <label for="sinhalaSpecialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Special Notes in
-            Sinhala</label>
-          <textarea formControlName="sinhalaSpecialNotes" id="sinhalaSpecialNotes"
-            [(ngModel)]="createNewObj.sinhalaSpecialNotes" name="sinhalaSpecialNotes" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <div
-            *ngIf="cropForm.get('sinhalaSpecialNotes')!.invalid && (cropForm.get('sinhalaSpecialNotes')!.dirty || cropForm.get('sinhalaSpecialNotes')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('sinhalaSpecialNotes')!.errors?.['required']">Special Notes is required</div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- <div *ngIf="selectedLanguage === 'tamil'">
-        <div class="my-3">
-          <label for="tamilCropName" class="block text-sm font-medium text-textLight dark:text-textDark">Crop in Tamil </label>
-          <input formControlName="tamilCropName" id="tamilCropName" [(ngModel)]="createNewObj.tamilCropName"
-            name="tamilCropName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div
-            *ngIf="cropForm.get('tamilCropName')!.invalid && (cropForm.get('tamilCropName')!.dirty || cropForm.get('tamilCropName')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('tamilCropName')!.errors?.['required']">Crop name is required</div>
-          </div>
-        </div>
-
-        <div class="my-3">
-          <label for="tamilVariety" class="block text-sm font-medium text-textLight dark:text-textDark">Variety in Tamil</label>
-          <input formControlName="tamilVariety" id="tamilVariety" [(ngModel)]="createNewObj.tamilVariety"
-            name="tamilVariety" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div
-            *ngIf="cropForm.get('tamilVariety')!.invalid && (cropForm.get('tamilVariety')!.dirty || cropForm.get('tamilVariety')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('tamilVariety')!.errors?.['required']">Variety is required</div>
-          </div>
-        </div>
-
-        <div class="md:col-span-2 my-2">
-          <label for="tamilSpecialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Special Notes in Tamil</label>
-          <textarea formControlName="tamilSpecialNotes" id="tamilSpecialNotes"
-            [(ngModel)]="createNewObj.tamilSpecialNotes" name="tamilSpecialNotes" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <div
-            *ngIf="cropForm.get('tamilSpecialNotes')!.invalid && (cropForm.get('tamilSpecialNotes')!.dirty || cropForm.get('tamilSpecialNotes')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('tamilSpecialNotes')!.errors?.['required']">Special Notes is required</div>
-          </div>
-        </div>
-      </div> -->
-
-
-
-
-      <!-- *ngIf="selectedPage === 'pageTwo'" -->
       <div>
 
         <div class="mb-5">
@@ -193,11 +66,7 @@
               class="text-red-500 text-sm mt-1">
               <div *ngIf="cropForm.get('cultivationMethod')!.errors?.['required']">Cultivation method is required</div>
             </div>
-            <!-- <div
-              *ngIf="cropForm.get('variety')!.invalid && (cropForm.get('variety')!.dirty || cropForm.get('variety')!.touched)"
-              class="text-red-500 text-sm mt-1">
-              <div *ngIf="cropForm.get('variety')!.errors?.['required']">Variety is required</div>
-            </div> -->
+            
           </div>
 
           <div class="my-3">
@@ -275,7 +144,6 @@
   </div>
 </div>
 
-<!--  -->
 
 <div *ngIf="cropId != null">
 

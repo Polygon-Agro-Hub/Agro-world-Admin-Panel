@@ -250,21 +250,64 @@
                             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                     </div>
 
-                    <div>
-                        <label for="district"
-                            class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-                        <input formControlName="district" id="district" name="district"
-                            [(ngModel)]="personalData.district"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-                    </div>
+
+
+
 
                     <div>
-                        <label for="provice"
-                            class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-                        <input formControlName="province" id="province" name="province"
-                            [(ngModel)]="personalData.province"
-                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-                    </div>
+                        <label
+                          for="district"
+                          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                        >
+                          District
+                        </label>
+                        <select
+                          formControlName="district"
+                          id="district"
+                          name="district"
+                          [(ngModel)]="personalData.district"
+                          (change)="updateProvince($event)"
+                          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                        >
+                          <option value="" disabled selected>Select a district</option>
+                          <option *ngFor="let district of districts" [value]="district.name">
+                            {{ district.name }}
+                          </option>
+                        </select>
+                      </div>
+                      
+
+                    
+
+
+
+
+
+
+                      <div>
+                        <label
+                          for="province"
+                          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                        >
+                          Province
+                        </label>
+                        <input
+                          formControlName="province"
+                          id="province"
+                          name="province"
+                          [(ngModel)]="personalData.province"
+                          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                          readonly
+                        />
+                      </div>
+                      
+
+
+
+
+
+
+
 
                     <div>
                         <label for="country"
@@ -276,7 +319,7 @@
                 </div>
 
                 <div class="flex justify-end m-10">
-                    <button (click)="nextForm('pageOne')" type="button"
+                    <button onclick="window.location.href='/steckholders/collective-officer'" type="button"
                         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Back</button>
                     <button (click)="nextForm('pageTwo')" type="button"
                         class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Submit</button>
@@ -670,19 +713,81 @@
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
-                <div>
-                    <label for="district"
-                        class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-                    <input id="district" name="district" [(ngModel)]="officer.collectionOfficer.address.district"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <div>
-                    <label for="provice"
-                        class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-                    <input id="province" name="province" [(ngModel)]="officer.collectionOfficer.address.province"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-                </div>
+                    <label
+                      for="district"
+                      class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                    >
+                      District
+                    </label>
+                    <select
+                      id="district"
+                      name="district"
+                      [(ngModel)]="officer.collectionOfficer.address.district"
+                      (change)="updateProvince($event)"
+                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                    >
+                      <option value="" disabled selected>Select a district</option>
+                      <option *ngFor="let district of districts" [value]="district.name">
+                        {{ district.name }}
+                      </option>
+                    </select>
+                  </div>
+
+
+
+
+
+
+                  <div>
+                    <label
+                      for="province"
+                      class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                    >
+                      Province
+                    </label>
+                    <input
+                      
+                      id="province"
+                      name="province"
+                      [(ngModel)]="officer.collectionOfficer.address.province"
+                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                      readonly
+                    />
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <div>
                     <label for="country"
@@ -694,7 +799,7 @@
             </div>
 
             <div class="flex justify-end m-10">
-                <button (click)="nextForm('pageOne')" type="button"
+                <button onclick="window.location.href='/steckholders/collective-officer'" type="button"
                     class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">Cancel</button>
                 <button (click)="nextForm('pageTwo')" type="button"
                     class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Next</button>

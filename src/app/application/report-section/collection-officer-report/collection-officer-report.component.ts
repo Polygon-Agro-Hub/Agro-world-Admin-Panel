@@ -53,7 +53,7 @@ export class CollectionOfficerReportComponent {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
     this.collectionoOfficer
-      .fetchAllCollectionOfficer(page, limit, this.searchNIC,'')
+      .fetchAllCollectionOfficerStatus(page, limit, this.searchNIC,'')
       .subscribe(
         (response) => {
           this.ongoingCultivation = response.items;

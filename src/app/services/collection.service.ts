@@ -32,6 +32,28 @@ export class CollectionService {
     return this.http.get<any>(url, { headers });
   }
 
+
+
+  fetchAllCollectionOfficerStatus(page: number, limit: number, searchNIC: string = '', company:string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+    console.log(company);
+    
+    let url = `${this.apiUrl}collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
+
+    if (company) {
+      url += `&company=${company}`;
+    }
+
+    if (searchNIC) {
+      url += `&nic=${searchNIC}`;
+    }
+    return this.http.get<any>(url, { headers });
+  }
+
+
+
   getCompanyNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`

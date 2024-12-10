@@ -12,7 +12,7 @@
       <input
         id="fromDate"
         type="date"
-        class="p-2 border rounded-md focus:ring focus:ring-blue-300"
+        class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
         placeholder="YYYY/MM/DD"
         [(ngModel)]="fromDate"
         [max]="maxDate"
@@ -25,7 +25,7 @@
       <input
         id="toDate"
         type="date"
-        class="p-2 border rounded-md focus:ring focus:ring-blue-300"
+        class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
         placeholder="YYYY/MM/DD"
         [(ngModel)]="toDate"
         [min]="fromDate"
@@ -59,7 +59,7 @@
 <div class="h-[20px]"></div>
 
 
-<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg rounded-lg">
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg rounded-lg"  *ngIf="go">
     <!-- Date Range Filter -->
     
   
@@ -141,6 +141,7 @@
           </tr>
         </tbody>
       </table>
+
   
       <!-- Generated Time -->
       <p class="text-xs text-gray-500 mt-4 dark:text-textDark" *ngIf="generatedDate && generatedTime">
@@ -149,6 +150,15 @@
       <div class="h-[20px]"></div>
     </div>
   </div>
+
+  <div
+  *ngIf="!go"
+  class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
+>
+  <i class="fa-solid fa-folder-minus text-4xl text-gray-500 mb-4"></i>
+  <p class="text-sm dark:text-textDark text-gray-600">-- No Data Available --</p>
+</div>
+
   
 
 

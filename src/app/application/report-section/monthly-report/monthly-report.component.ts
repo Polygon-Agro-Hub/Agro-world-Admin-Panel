@@ -18,8 +18,8 @@ import html2canvas from 'html2canvas';
 })
 export class MonthlyReportComponent implements OnInit {
   @ViewChild('contentToConvert', { static: false }) contentToConvert!: ElementRef;
-  fromDate: string = '2024/01/05';
-  toDate: string = '2024/01/10';
+  fromDate: string = '';
+  toDate: string = '';
   officerId!: number;
   officerData: any;
   dailyReports: any[] = [];
@@ -30,6 +30,8 @@ export class MonthlyReportComponent implements OnInit {
   isLoading: boolean = true;
   visible:boolean = false;
   maxDate: string = '';
+  hasData : boolean = false;
+  go : boolean = false;
   
 
   constructor(
@@ -99,6 +101,7 @@ export class MonthlyReportComponent implements OnInit {
         this.dailyReports = response;
         this.calculateTotalWeight();
         this.calculateTotalFarmers();
+        this.go = this.dailyReports && this.dailyReports.length > 0;
         const now = new Date();
         this.generatedTime = now.toLocaleTimeString();
         this.generatedDate = now.toLocaleDateString();
@@ -120,7 +123,7 @@ export class MonthlyReportComponent implements OnInit {
 
   calculateTotalFarmers() {
     this.finalTotalFarmers = this.dailyReports.reduce((sum, report) => {
-      const farmers = parseInt(report.totalFarmers); // Fixed key
+      const farmers = parseInt(report.totalPayments); // Fixed key
       return !isNaN(farmers) ? sum + farmers : sum;
     }, 0);
   }

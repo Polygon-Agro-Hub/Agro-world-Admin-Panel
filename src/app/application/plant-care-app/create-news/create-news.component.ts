@@ -69,6 +69,8 @@ export class CreateNewsComponent {
   isLoading = false;
   createDate: string = '';
   expireDate: string = '';
+  today: string = this.getTodayDate();
+
 
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -468,6 +470,51 @@ export class CreateNewsComponent {
   onDeleteImage() {
     if (this.newsItems[0]) {
       this.newsItems[0].image = '';
+    }
+  }
+
+  getTodayDate(): string {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  checkPublishDate() {
+    if (this.createNewsObj.publishDate < this.today) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Publish Date',
+        text: 'Publish Date cannot be a past date!',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        this.createNewsObj.publishDate = '';
+      });
+    }
+  }
+
+  checkExpireDate() {
+    if (!this.createNewsObj.publishDate) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'publish Date Required',
+        text: 'Please select a publish Date before setting an Expiration Date.',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        this.createNewsObj.expireDate = '';
+      });
+    } else {
+      if (this.createNewsObj.expireDate < this.createNewsObj.publishDate) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Expire Date',
+          text: 'Expire Date cannot be earlier than publish Date!',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.createNewsObj.expireDate = '';
+        });
+      }
     }
   }
 }

@@ -8,6 +8,7 @@ import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { MarketPriceService } from '../../../services/market-price/market-price.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-market-price-bulk-upload',
@@ -33,7 +34,7 @@ export class MarketPriceBulkUploadComponent {
   endTime: string = ''; // to store end time
   createdBy : any= localStorage.getItem('userId:');
   
-  constructor(private http: HttpClient, private marketPriceService: MarketPriceService) {}
+  constructor(private http: HttpClient, private marketPriceService: MarketPriceService, private router:Router) {}
 
  
 
@@ -106,6 +107,10 @@ export class MarketPriceBulkUploadComponent {
             title: 'Success',
             text: 'File uploaded successfully!',
             confirmButtonText: 'OK'
+          }).then((result)=>{
+            if(result.isConfirmed){
+              this.router.navigate(['/market-place/view-current-price'])
+            }
           });
         },
         error: (error) => {
@@ -148,7 +153,6 @@ export class MarketPriceBulkUploadComponent {
       });
     }
   }
-
 
   onCancel(): void {
     if (this.selectedFile) {

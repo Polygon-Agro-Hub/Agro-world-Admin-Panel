@@ -6,6 +6,8 @@ import {
   ReactiveFormsModule,
   FormControl,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import {
   HttpClient,
@@ -487,6 +489,11 @@ export class CreateCropCalenderComponent {
         }
       );
   }
+}
+
+export function nonZeroValidator(control: AbstractControl):ValidationErrors | null{
+  const value = Number(control.value);
+  return value > 0 ? null:{nonZero: true}
 }
 
 export class CreateCrop {

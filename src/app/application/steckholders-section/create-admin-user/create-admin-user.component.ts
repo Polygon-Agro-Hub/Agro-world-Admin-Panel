@@ -14,7 +14,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Console } from 'node:console';
 import { of } from 'rxjs';
@@ -55,7 +55,8 @@ export class CreateAdminUserComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.userForm = this.fb.group({
       id: [''],
@@ -244,6 +245,8 @@ export class CreateAdminUserComponent implements OnInit {
             title: 'Success',
             text: 'Admin updated successfully!',
           });
+          this.userForm.reset(); 
+          this.router.navigate(['/steckholders/admin'])
         },
         (error) => {
           console.error('Error updating Admin', error);
@@ -302,8 +305,7 @@ export class CreateAdminUserComponent implements OnInit {
             text: 'Admin created successfully!',
           });
           this.userForm.reset(); 
-          // window.location.href='/admin-users'
-          // this.createAdminObj = new CreateAdmin(); // Reset form data
+          this.router.navigate(['/steckholders/admin'])
         },
         (error) => {
           console.error('Error creating Admin', error);
@@ -312,18 +314,18 @@ export class CreateAdminUserComponent implements OnInit {
             title: 'Unsuccess',
             text: 'Error creating Admin',
           });
-          //this.createAdminObj = new CreateAdmin(); // Reset form data
         }
       );
   }
 
   onCancel() {
-    this.createAdminObj = new CreateAdmin(); // Reset the object to clear the form fields
-    console.log('Form cleared');
+    this.userForm.reset();
+    this.router.navigate(['/steckholders/admin'])
   }
 
   onCancel2() {
-    window.location.href='/admin-users'
+    this.userForm.reset();
+    this.router.navigate(['/steckholders/admin'])
   }
 
   togglePasswordVisibility() {

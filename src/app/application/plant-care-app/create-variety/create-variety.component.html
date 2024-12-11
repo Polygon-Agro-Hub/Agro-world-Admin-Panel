@@ -8,7 +8,7 @@
   <div class="h-[20px]"></div>
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-    <h2 class="text-xl font-semibold text-center mb-4">ADD CROP VARIETY</h2>
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">ADD CROP VARIETY</h2>
 
 
     <div class="space-y-4">
@@ -35,10 +35,10 @@
 
 
         <div>
-          <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700">Variety Name By
+          <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name By
             English</label>
           <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
             required />
           <div
             *ngIf="cropForm.get('varietyNameEnglish')!.invalid && (cropForm.get('varietyNameEnglish')!.dirty || cropForm.get('varietyNameEnglish')!.touched)"
@@ -62,10 +62,10 @@
         <hr class="border-[2px] border-gray-400 my-10" />
 
         <div>
-          <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700">Variety Name By
+          <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name By
             Sinhala</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
             required />
           <div
             *ngIf="cropForm.get('varietyNameSinhala')!.invalid && (cropForm.get('varietyNameSinhala')!.dirty || cropForm.get('varietyNameSinhala')!.touched)"
@@ -93,9 +93,9 @@
 
 
         <div>
-          <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700">Variety Name By Tamil</label>
+          <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name By Tamil</label>
           <input type="varietyNameTamil" id="varietyNameTamil" formControlName="varietyNameTamil"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
             required />
           <div
             *ngIf="cropForm.get('varietyNameTamil')!.invalid && (cropForm.get('varietyNameTamil')!.dirty || cropForm.get('varietyNameTamil')!.touched)"

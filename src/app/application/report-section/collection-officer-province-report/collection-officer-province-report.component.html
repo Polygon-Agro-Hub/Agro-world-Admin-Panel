@@ -59,11 +59,11 @@
             </thead>
             <tbody>
                 <tr *ngFor="let crop of reportDetails">
-                    <td class="px-6 py-3 border-[2px]">{{ crop.cropName }}</td>
-                    <td class="px-6 py-3 border-[2px]">{{ crop.qtyA ? crop.qtyA + 'kg' : '-' }}</td>
-                    <td class="px-6 py-3 border-[2px]">{{ crop.qtyB ? crop.qtyB + 'kg' : '-' }}</td>
-                    <td class="px-6 py-3 border-[2px]">{{ crop.qtyC ? crop.qtyC+ 'kg' : '-' }}</td>
-                    <td class="px-6 py-3 border-[2px]">{{ crop.qtyA + crop.qtyB + crop.qtyC }}kg</td>
+                    <td class="px-6 py-3 border-[2px] dark:text-textDark">{{ crop.cropName }}</td>
+                    <td class="px-6 py-3 border-[2px] dark:text-textDark">{{ crop.qtyA ? crop.qtyA + 'kg' : '-' }}</td>
+                    <td class="px-6 py-3 border-[2px] dark:text-textDark">{{ crop.qtyB ? crop.qtyB + 'kg' : '-' }}</td>
+                    <td class="px-6 py-3 border-[2px] dark:text-textDark">{{ crop.qtyC ? crop.qtyC+ 'kg' : '-' }}</td>
+                    <td class="px-6 py-3 border-[2px] dark:text-textDark">{{ crop.qtyA + crop.qtyB + crop.qtyC }}kg</td>
                 </tr>
             </tbody>
         </table>

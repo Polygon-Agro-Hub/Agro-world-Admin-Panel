@@ -29,6 +29,7 @@ export class PaymentSlipReportComponent {
 
   firstName: string = '';
   lastName: string = '';
+  QRcode: string = '';
 
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
@@ -43,6 +44,7 @@ export class PaymentSlipReportComponent {
     this.route.queryParams.subscribe((params) => {
       this.firstName = params['firstName'] ? params['firstName'] : '';
       this.lastName = params['lastName'] ? params['lastName'] : '';
+      this.QRcode = params['QRcode'] ? params['QRcode'] : '';
       
     });
     this.loadPayments();
@@ -73,8 +75,8 @@ export class PaymentSlipReportComponent {
   }
 
 
-  navigateToFamerListReport(id: number, userId: number) {
-    this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId } });
+  navigateToFamerListReport(id: number, userId: number, QRcode: string) {
+    this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId, QRcode } });
   }
 
   onPageChange(event: number) {

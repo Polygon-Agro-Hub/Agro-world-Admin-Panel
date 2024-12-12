@@ -18,7 +18,8 @@ interface OngoingCultivationItem {
   nic: string;
   status: string;
   district: string;
-  centerName:string
+  centerName:string;
+  QRcode: string;
 }
 
 @Component({
@@ -102,8 +103,8 @@ export class CollectionOfficerReportComponent {
     this.router.navigate([`/reports/collective-officer-report/view/${id}/${name}`]);
   }
 
-  navigateToPaymentSlipReport(id: number, firstName : string , lastName : string) {
-    this.router.navigate([`/reports/payment-slip-report/${id}`], { queryParams: { firstName, lastName } });
+  navigateToPaymentSlipReport(id: number, firstName : string , lastName : string, QRcode : string) {
+    this.router.navigate([`/reports/payment-slip-report/${id}`], { queryParams: { firstName, lastName, QRcode } });
   }
 
   navigateToMonthlyReport(id : number) {

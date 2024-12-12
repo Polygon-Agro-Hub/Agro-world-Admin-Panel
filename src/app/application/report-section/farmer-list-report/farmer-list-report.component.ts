@@ -24,6 +24,7 @@ export class FarmerListReportComponent {
   isVisible: boolean = true;
   itemId: number | null = null;
   userId: number | null = null;
+  QRcode: string | null = null;
 
   constructor(
     private farmerListReportService: FarmerListReportService,
@@ -36,7 +37,8 @@ export class FarmerListReportComponent {
     // this.todayDate = today.toISOString().split('T')[0];
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
-      this.userId = params['id'] ? +params['userId'] : null;
+      this.userId = params['userId'] ? +params['userId'] : null;
+      this.QRcode = params['QRcode'] ? params['QRcode'] : '';
       console.log('Received item ID:', this.itemId);
       console.log('Received user ID:', this.userId);
     });
@@ -209,20 +211,21 @@ export class FarmerListReportComponent {
     this.cropList.forEach((crop) => {
       drawGrid(doc, 10, yPosition, cropColWidths, 1); // Row Grid
       const row = [
-        crop.cropNameEnglish,
-        crop.varietyNameEnglish,
-        crop.gradeAprice.toString(),
-        crop.gradeAquan.toString(),
-        crop.gradeBprice.toString(),
-        crop.gradeBquan.toString(),
-        crop.gradeCprice.toString(),
-        crop.gradeCquan.toString(),
+        crop.cropNameEnglish ?? 'N/A',
+        crop.varietyNameEnglish ?? 'N/A',
+        (crop.gradeAprice ?? 0).toString(),
+        (crop.gradeAquan ?? 0).toString(),
+        (crop.gradeBprice ?? 0).toString(),
+        (crop.gradeBquan ?? 0).toString(),
+        (crop.gradeCprice ?? 0).toString(),
+        (crop.gradeCquan ?? 0).toString(),
         (
-          crop.gradeAprice * crop.gradeAquan +
-          crop.gradeBprice * crop.gradeBquan +
-          crop.gradeCprice * crop.gradeCquan
+          (crop.gradeAprice ?? 0) * (crop.gradeAquan ?? 0) +
+          (crop.gradeBprice ?? 0) * (crop.gradeBquan ?? 0) +
+          (crop.gradeCprice ?? 0) * (crop.gradeCquan ?? 0)
         ).toFixed(2),
       ];
+      
   
       xPosition = 10;
       row.forEach((cell, index) => {
@@ -243,6 +246,30 @@ export class FarmerListReportComponent {
     doc.setFontSize(12);
     doc.text(`Full Total (Rs.): ${this.getTotal().toFixed(2)}`, 10, yPosition);
   
+
+
+    yPosition += 20; // Add some space after the table
+
+const pageWidth = doc.internal.pageSize.width; // Get the width of the PDF page
+const imageWidth = 50; // Width of each image
+const imageSpacing = 10; // Spacing between images
+const totalImageWidth = imageWidth * 2 + imageSpacing; // Total width of both images and spacing
+const startX = (pageWidth - totalImageWidth) / 2; // Starting X position to center the images
+
+// Add Farmer QR Code (if available)
+if (this.farmerList.farmerQr) {
+  doc.text('Farmer QR Code:', startX, yPosition - 5); // Add label above the image
+  doc.addImage(this.farmerList.farmerQr, 'PNG', startX, yPosition, imageWidth, imageWidth);
+}
+
+// Add Collection Officer QR Code (if available)
+if (this.QRcode) {
+  const secondImageX = startX + imageWidth + imageSpacing; // X position for the second image
+  doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5); // Add label above the image
+  doc.addImage(this.QRcode, 'PNG', secondImageX, yPosition, imageWidth, imageWidth);
+}
+
+yPosition += imageWidth + 20; 
     // Save PDF
     doc.save('Farmer_Details_Report.pdf');
   }

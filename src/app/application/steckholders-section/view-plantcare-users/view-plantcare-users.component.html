@@ -140,7 +140,8 @@
                 </tr>
             </tbody>
         </table>
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
-        </pagination-controls>
+        <div class="bg-blue-500"> <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
+        </pagination-controls></div>
+        
     </div>
 </div>

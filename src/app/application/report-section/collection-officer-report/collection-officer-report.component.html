@@ -121,12 +121,14 @@
           <th
             class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
-            Monthly Report
+          <span class="block">Monthly</span>
+          <span class="block">Report</span>
           </th>
           <th
             class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
-            Report
+          <span class="block">Daily</span>
+          <span class="block">Report</span>
           </th>
           <th
             class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
@@ -184,7 +186,7 @@
           <td class="px-4 py-3 text-center">
             <button
               class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-              (click)="navigateToPaymentSlipReport(item.id, item.firstNameEnglish, item.lastNameEnglish)"
+              (click)="navigateToPaymentSlipReport(item.id, item.firstNameEnglish, item.lastNameEnglish, item.QRcode)"
             >
               <i class="fa-regular fa-file"></i>
             </button>

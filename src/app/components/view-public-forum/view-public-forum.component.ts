@@ -33,6 +33,8 @@ export class ViewPublicForumComponent implements OnInit {
   count!: any;
   countReply!: ReplyCount[]
   hasData: boolean =false
+  selectPostId!: number;
+
 
   constructor(
     private psotService: PublicforumService,
@@ -98,6 +100,7 @@ export class ViewPublicForumComponent implements OnInit {
   openPopup(id: number) {
     this.isPopupVisible = true;
     this.fetchPostAllReply(id)
+    this.selectPostId = id;
   }
 
   closePopup() {

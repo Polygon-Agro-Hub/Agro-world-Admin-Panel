@@ -213,6 +213,22 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.reload();
+      }
+    });
+  }
+  
+
   nextForm(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
       

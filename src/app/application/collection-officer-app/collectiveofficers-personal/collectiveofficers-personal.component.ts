@@ -215,10 +215,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   nextForm(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
-      // Array to collect names of missing fields
+      
       const missingFields: string[] = [];
-  
-      // Check each field and add the field name to the list if it's missing
+
       if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English)');
       if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala)');
       if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil)');
@@ -239,7 +238,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       if (!this.personalData.country) missingFields.push('Country');
       if (!this.personalData.languages) missingFields.push('Languages');
   
-      // If there are missing fields, display an error alert and stop navigation
       if (missingFields.length > 0) {
         Swal.fire({
           icon: 'error',
@@ -248,50 +246,13 @@ export class CollectiveofficersPersonalComponent implements OnInit {
             .map(field => `<li>${field}</li>`)
             .join('')}</ul>`
         });
-        return; // Stop navigation if validation fails
+        return;
       }
     }
-  
-    // If validation passes, navigate to the selected page
+
     this.selectedPage = page;
   }
-  
 
-  // nextForm(page: 'pageOne' | 'pageTwo') {
-  //   if (page === 'pageTwo') {
-  //     if (
-  //       !this.personalData.firstNameEnglish ||
-  //       !this.personalData.firstNameSinhala ||
-  //       !this.personalData.firstNameTamil ||
-  //       !this.personalData.lastNameEnglish ||
-  //       !this.personalData.lastNameSinhala ||
-  //       !this.personalData.lastNameTamil ||
-  //       !this.personalData.phoneNumber01Code ||
-  //       !this.personalData.lastNameEnglish ||
-  //       !this.personalData.phoneNumber01 ||
-  //       !this.personalData.phoneNumber02Code ||
-  //       !this.personalData.phoneNumber02 ||
-  //       !this.personalData.nic ||
-  //       !this.personalData.email ||
-  //       !this.personalData.houseNumber ||
-  //       !this.personalData.streetName ||
-  //       !this.personalData.city ||
-  //       !this.personalData.district ||
-  //       !this.personalData.province ||
-  //       !this.personalData.country ||
-  //       !this.personalData.languages
-
-  //     ) {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Please fill all fields',
-  //         text: 'All required fields must be completed to proceed to the next page.'
-  //       });
-  //       return; // Stop navigation if validation fails
-  //     }
-  //   }
-  //   this.selectedPage = page;
-  // }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {

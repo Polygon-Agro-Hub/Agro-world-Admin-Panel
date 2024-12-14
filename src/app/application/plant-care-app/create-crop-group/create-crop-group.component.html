@@ -11,13 +11,13 @@
 
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-    <h2 class="text-xl font-semibold text-center mb-4">ADD CROP GROUP</h2>
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">ADD CROP GROUP</h2>
 
 
     <div class="space-y-4">
       <!-- Crop Name -->
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By English</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By English</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameEnglish" name="cropName"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #cropEngNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" required />
@@ -33,7 +33,7 @@
 
 
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Sinhala</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Sinhala</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameSinahala" name="cropName"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #cropSinNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
@@ -46,7 +46,7 @@
       </div>
 
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Tamil</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Tamil</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameTamil" name="cropName"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #cropTamilNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
@@ -61,7 +61,7 @@
 
       <!-- Select Parent Category -->
       <div>
-        <label for="parentCategory" class="block text-sm font-medium text-gray-700">Select Parent Category</label>
+        <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent Category</label>
         <select id="parentCategory" [(ngModel)]="cropGroup.parentCategory" name="parentCategory"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #parentCategoryInput="ngModel">
@@ -134,13 +134,13 @@
 
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-    <h2 class="text-xl font-semibold text-center mb-4">EDIT CROP GROUP</h2>
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">EDIT CROP GROUP</h2>
 
 
     <div class="space-y-4">
       <!-- Crop Name -->
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By English</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By English</label>
         <input type="text" id="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish" name="cropNameEnglish"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           required #cropNameEnglishInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
@@ -153,7 +153,7 @@
       </div>
 
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Sinhala</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Sinhala</label>
         <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           required #cropNameSinhalaInput="ngModel" pattern="^[a-zA-Z0-9]*$"  />
@@ -166,7 +166,7 @@
       </div>
 
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700">Crop Name By Tamil</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Tamil</label>
         <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           required #cropNameTamilInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
@@ -180,7 +180,7 @@
 
       <!-- Select Parent Category -->
       <div>
-        <label for="parentCategory" class="block text-sm font-medium text-gray-700">Select Parent Category</label>
+        <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent Category</label>
         <select id="parentCategory" [(ngModel)]="newsItems[0].category" name="parentCategory" #categoryInput="ngModel"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           required>

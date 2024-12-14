@@ -1,7 +1,7 @@
 <form>
     <!-- save button -->
     <div class="flex flex-row justify-between items-center mb-6">
-        <p class="text-lg text-black font-semibold">Add Product</p>
+        <p class="text-lg text-black font-semibold dark:text-textDark">Add Product</p>
         <div>
             <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">Cancel</button>
             <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">Save</button>
@@ -11,10 +11,10 @@
 
     <div class="flex flex-row justify-between">
         <!-- form component -->
-        <div class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[60%]">
+        <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
 
             <div class="mb-6">
-                <label class="text-[#534E4E]">Category *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Category *</label>
                 <select id="category" name="category"
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [(ngModel)]="productObj.category">
@@ -25,14 +25,14 @@
             </div>
 
             <div class="mb-6">
-                <label class="text-[#534E4E]">Display Name *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
                 <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" 
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
             <!-- Crop Selection -->
             <div class="mb-6">
-                <label class="text-[#534E4E]">Crop *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
                 <select id="selectId" name="selectId"
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [(ngModel)]="productObj.selectId" (change)="onCropChange()">
@@ -46,7 +46,7 @@
 
 
             <div class="mb-6">
-                <label class="text-[#534E4E]">Variety *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
                 <select id="variety" name="variety"
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [(ngModel)]="productObj.variety" (change)="selectVerityImage()">
@@ -59,7 +59,7 @@
 
 
             <div class="mb-6">
-                <label class="text-[#534E4E]">Price *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Price *</label>
                 <div class="flex items-center space-x-4 mt-3">
                     <div class="flex items-center space-x-2">
                         <!-- With Discount Radio Button -->
@@ -95,7 +95,7 @@
             
 
             <div class="mb-6" *ngIf="productObj.promo">
-                <label class="text-[#534E4E]">Display Type *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
                 <select id="displaytype" name="displaytype"  [(ngModel)]="productObj.displaytype"
                     class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
                     <option selected></option>
@@ -112,19 +112,19 @@
             </div>
 
             <div class="mb-6">
-                <label class="text-[#534E4E]">Actual Price *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Actual Price *</label>
                 <input type="number" min="0.0" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()" [(ngModel)]="productObj.normalPrice"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 
             <div class="mb-6" *ngIf="productObj.promo">
-                <label class="text-[#534E4E]">Sale Price *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
                 <input type="number" min="0.0" id="salePrice"  [value]="productObj.salePrice" 
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" disabled/>
             </div>
 
             <div class="mb-6">
-                <label class="text-[#534E4E]">Tags *</label>
+                <label class="text-[#534E4E] dark:text-textDark">Tags *</label>
                 <section>
                     <mat-form-field class="w-[100%]">
                         <mat-label>tags</mat-label>
@@ -151,7 +151,7 @@
         <div class="flex flex-col px-6 py-3 mx-6 w-[40%]">
             <!-- cart items -->
             <div class="rounded-lg shadow-lg px-12 py-6">
-                <p class="text-lg text-black font-medium">Preview</p>
+                <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
 
                 <div
                     class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
@@ -178,10 +178,10 @@
             </div>
 
 
-            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10">
-                <p class="text-lg text-balck font-medium mb-5">Quantity</p>
+            <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack">
+                <p class="text-lg text-balck font-medium mb-5 dark:text-textDark">Quantity</p>
                 <div class="my-3">
-                    <label class="text-lg text-[#534E4E]">Default Unit Type *</label>
+                    <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
                     <select
                         id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
                         class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
@@ -192,13 +192,13 @@
                 </div>
 
                 <div class="my-3">
-                    <label class="text-lg text-[#534E4E]">Starting Value *</label>
+                    <label class="text-lg text-[#534E4E] dark:text-textDark">Starting Value *</label>
                     <input type="number" min="0.0" id="startValue" name="startValue" [(ngModel)]="productObj.startValue"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>
 
                 <div class="my-3">
-                    <label class="text-lg text-[#534E4E]">Increase/Decrease by *</label>
+                    <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>
                     <input type="number" min="0.0" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
                         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
                 </div>

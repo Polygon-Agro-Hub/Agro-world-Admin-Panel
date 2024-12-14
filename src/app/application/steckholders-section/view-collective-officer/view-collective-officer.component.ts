@@ -159,8 +159,8 @@ export class ViewCollectiveOfficerComponent {
     // HTML structure for the popup
     const tableHtml = `
       <div class="container mx-auto">
-        <h1 class="text-center text-2xl font-bold mb-4">${item.firstName}</h1>
-        <div class="border border-gray-300 p-4 rounded-lg">
+        <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstNameEnglish}</h1>
+        <div >
           <p class="text-center">Are you sure you want to approve or reject this collection?</p>
         </div>
         <div class="flex justify-center mt-4">

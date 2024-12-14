@@ -46,7 +46,8 @@
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
-          <th class="py-3 font-normal text-gray-500 text-left"></th>
+          <!-- <th class="py-3 font-normal text-gray-500 text-left"></th> -->
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Emp. Id</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             First Name
           </th>
@@ -64,7 +65,7 @@
           </th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Phone</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">NIC</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Emp. Id</th>
+          
           <th class=" py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           <th class=" py-3 font-normal text-textLight dark:text-textDark text-center"></th>
         </tr>
@@ -79,10 +80,11 @@
                     totalItems: totalItems
                   }
           ">
-          <td class="py-3">
+          <!-- <td class="py-3">
             <img class="profile-pic w-14 h-14 bg-white rounded-full" [src]="'data:image/jpeg;base64,' + item.image"
               alt="Profile Picture" width="50" height="50" />
-          </td>
+          </td> -->
+          <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.empId }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.firstNameEnglish }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.lastNameEnglish }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.companyNameEnglish }}</td>
@@ -105,7 +107,7 @@
           </td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneNumber01 }}</td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.nic }}</td>
-          <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.empId }}</td>
+          
 
 
           <td class="py-3 text-center">

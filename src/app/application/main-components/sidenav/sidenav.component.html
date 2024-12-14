@@ -5,9 +5,9 @@
     <img src="assets/images/logo.png" alt="Logo" class="logo-text w-32 cursor-pointer" *ngIf="isExpanded"
       onclick="window.location.href='/steckholders'" />
     <i class="flex justify-end text-white fa-solid fa-angle-right inset-y-0 right-0 w-full cursor-pointer"
-      *ngIf="!isLeftButtonVisible" (click)="toggleSidenav()"></i>
+      *ngIf="!isExpanded" (click)="toggleSidenav()"></i>
     <i class="flex justify-end text-white fa-solid fa-angle-left inset-y-0 right-0 w-full cursor-pointer"
-      (click)="toggleSidenav()"></i>
+    *ngIf="isExpanded" (click)="toggleSidenav()"></i>
   </div>
 
   <ul class="sidenav-nav">

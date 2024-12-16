@@ -346,6 +346,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
 
     this.getLastID('COO');
+    this.EpmloyeIdCreate()
   }
 
 
@@ -494,48 +495,66 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   EpmloyeIdCreate() {
-    let rolePrefix: string;
-
-    if (this.companyData.jobRole === 'Collection Center Head') {
-      rolePrefix = 'CCH';
-    } else if (this.companyData.jobRole === 'Collection Center Manager') {
-      rolePrefix = 'CCM';
-    } else if (this.companyData.jobRole === 'Customer Officer') {
-      rolePrefix = 'CUO';
-    } else {
-      rolePrefix = 'COO';
+    let rolePrefix: string | undefined;
+  
+    // Map job roles to their respective prefixes
+    const rolePrefixes: { [key: string]: string } = {
+      'Collection Center Head': 'CCH',
+      'Collection Center Manager': 'CCM',
+      'Customer Officer': 'CUO',
+      'Collection Officer': 'COO',
+    };
+  
+    // Get the prefix based on the job role
+    rolePrefix = rolePrefixes[this.companyData.jobRole];
+  
+    if (!rolePrefix) {
+      console.error(`Invalid job role: ${this.companyData.jobRole}`);
+      return; // Exit if the job role is invalid
     }
-
-
-
-    this.getLastID(rolePrefix).then((lastID) => {
-      this.companyData.empId = rolePrefix + lastID;
-    });
+  
+    // Fetch the last ID and assign a new Employee ID
+    this.getLastID(rolePrefix)
+      .then((lastID) => {
+        this.companyData.empId = rolePrefix + lastID;
+      })
+      .catch((error) => {
+        console.error('Error fetching last ID:', error);
+      });
   }
+  
 
 
   UpdateEpmloyeIdCreate() {
-    let rolePrefix: string;
-
-    if (this.officer.companyDetails.jobRole === 'Collection Center Head') {
-      rolePrefix = 'CCH';
-    } else if (this.officer.companyDetails.jobRole === 'Collection Center Manager') {
-      rolePrefix = 'CCM';
-    } else if (this.officer.companyDetails.jobRole === 'Customer Officer') {
-      rolePrefix = 'CUO';
-    } else {
-      rolePrefix = 'COO';
+    let rolePrefix: string | undefined;
+  
+    // Map job roles to their respective prefixes
+    const rolePrefixes: { [key: string]: string } = {
+      'Collection Center Head': 'CCH',
+      'Collection Center Manager': 'CCM',
+      'Customer Officer': 'CUO',
+      'Collection Officer': 'COO',
+    };
+  
+    // Get the prefix based on the job role
+    rolePrefix = rolePrefixes[this.officer.companyDetails.jobRole];
+  
+    if (!rolePrefix) {
+      console.error(`Invalid job role: ${this.officer.companyDetails.jobRole}`);
+      return; // Exit if the job role is invalid
     }
-
-
-
-    this.getUpdateLastID(rolePrefix).then((lastId) => {
-      console.log(rolePrefix);
-      
-      this.upateEmpID = rolePrefix + lastId;
-      console.log("update EMPID", this.upateEmpID);
-    });
+  
+    // Fetch the updated last ID and assign the new Employee ID
+    this.getUpdateLastID(rolePrefix)
+      .then((lastId) => {
+        this.upateEmpID = rolePrefix + lastId;
+        console.log("Updated EMP ID:", this.upateEmpID);
+      })
+      .catch((error) => {
+        console.error('Error fetching updated last ID:', error);
+      });
   }
+  
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {

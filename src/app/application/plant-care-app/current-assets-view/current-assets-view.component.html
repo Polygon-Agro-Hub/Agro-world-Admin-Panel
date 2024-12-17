@@ -31,7 +31,7 @@
                         <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Unit Price</th>
                         <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Total Price</th>
                         <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Warranty Status</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Status</th>
+                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">View</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +46,7 @@
                         <td class="px-4 py-3 dark:text-textDark text-center">{{item.total}}</td>
                         <td class="px-4 py-3 dark:text-textDark text-center">
                             <div *ngIf="item.status == 'Still valid'">
-                                <span class="w-40 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
+                                <span class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
                                     {{item.status}}
                           </span>
                             </div>

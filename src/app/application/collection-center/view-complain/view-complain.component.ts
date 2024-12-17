@@ -80,8 +80,8 @@ export class ViewComplainComponent implements OnInit {
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
-  navigateSelectComplain(id:string){
-    this.router.navigate([`/collection-hub/view-selected-complain/${id}`])
+  navigateSelectComplain(id:string, farmerName: string){
+    this.router.navigate([`/collection-hub/view-selected-complain/${id}/${farmerName}`])
   }
 
 
@@ -93,6 +93,7 @@ class Complain {
   refNo!: string;
   status!: string;
   officerName!: string;
+  centerName!: string;
   farmerName!: string;
   complain!: string;
   language!: string;

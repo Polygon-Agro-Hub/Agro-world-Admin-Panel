@@ -368,7 +368,7 @@ export const routes: Routes = [
             component:ViewComplainComponent,
           },
           {
-            path: 'view-selected-complain/:id',
+            path: 'view-selected-complain/:id/:farmerName',
             component: ViewSelectedComplainComponent
           },
           {

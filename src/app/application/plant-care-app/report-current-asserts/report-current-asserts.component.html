@@ -5,11 +5,10 @@
     Back
 </button>
 
-<p class="text-textLight dark:text-textDark text-xl my-8">
-    {{name}}
-</p>
-
 <div class="container w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg px-32">
+    <p class="text-textLight dark:text-textDark text-xl py-8">
+        {{name}}
+    </p>
     <div *ngIf="assertReport.length > 0; else noData" class="flex justify-center overflow-x-auto">
         <table class="w-full divide-y divide-gray-200">
             <thead>

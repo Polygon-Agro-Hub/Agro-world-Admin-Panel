@@ -23,6 +23,16 @@
       </textarea>
     </div>
 
+
+    <div class="flex flex-row mb-6 justify-between">
+      <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark">Reply</label>
+      <textarea *ngIf="complain.reply" class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" rows="4" [value]="complain.reply" disabled>
+      </textarea>
+      <textarea *ngIf="!complain.reply" class="w-full pr-4 pl-8 py-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" rows="4" disabled>
+        Not Yet Reply
+      </textarea>
+    </div>
+
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
         <label class="block text-gray-700 dark:text-textDark  mb-2 mr-11"
@@ -101,7 +111,8 @@
     </div>
 
     <div class="text-center">
-      <button
+      <!-- <button pButton type="button" label="Open Popup" icon="pi pi-envelope" (click)="showDialog()"></button> -->
+      <button (click)="showDialog()"
         class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600"
       >
         Send Message
@@ -109,3 +120,83 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+<p-dialog
+  header=""
+  [(visible)]="display"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '600px' }"
+  [contentStyle]="{ 'padding': '0' }"
+>
+  <!-- Header Section -->
+  <div class="dialog-header text-center">
+    
+    <i class="fa-regular fa-envelope" style="font-size: 2rem; color: #999;"></i>
+    <h3 class="header-title">Reply as AgroWorld</h3>
+  </div>
+
+  <!-- Content Section -->
+  <div class="dialog-content">
+    <p>Dear <strong>{{this.farmerName}}</strong>,</p>
+    <p>
+      We are pleased to inform you that your complaint has been resolved.
+    </p>
+
+    <!-- Editable Text Area -->
+    <div class="message-box">
+      <textarea
+      [(ngModel)]="messageContent"
+      placeholder="Add your message here..."
+      rows="5"
+      style="
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        background-color: #ffffff; /* Normal white background */
+        color: #333;
+      "
+    ></textarea>
+    </div>
+
+    <p>
+      If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.
+    </p>
+
+    <p>
+      Sincerely,<br />
+      AgroWorld Customer Support Team
+    </p>
+  </div>
+
+  <!-- Footer Buttons -->
+  <p-footer>
+    <div class="dialog-footer text-right">
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-secondary"
+        style="margin-right: 8px"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Send"
+        class="p-button-primary"
+        (click)="submitComplaint()"
+      ></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+

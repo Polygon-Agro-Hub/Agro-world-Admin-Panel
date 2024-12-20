@@ -107,7 +107,7 @@ export class AddCollectionCenterComponent {
     {
       province: "Sabaragamuwa",
       district: [
-        { districtName: "Ratnapura" },
+        { districtName: "Rathnapura" },
         { districtName: "Kegalle" }
       ]
     },

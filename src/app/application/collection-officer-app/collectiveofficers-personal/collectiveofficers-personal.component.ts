@@ -70,7 +70,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   
   
 
-  officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, empId: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
+  officer: { collectionOfficer: { centerId: any, firstNameEnglish: string, firstNameSinhala: string, firstNameTamil: string, lastNameEnglish: string, lastNameSinhala: string, lastNameTamil: string, phoneNumber01: string, phoneNumber02: string, image: string, QRcode: string, nic: string, email: string, address: { houseNumber: string, streetName: string, city: string, district: string, province: string, country: string }, languages: string }, companyDetails: { companyNameEnglish: string, companyNameSinhala: string, companyNameTamil: string, jobRole: string, empId: string, IRMname: string, companyEmail: string, assignedDistrict: string, employeeType: string, employeeId: string }, bankDetails: { accHolderName: string, accNumber: string, bankName: string, branchName: string } } = {
     collectionOfficer: {
       centerId: '',
       firstNameEnglish: '',
@@ -104,7 +104,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       IRMname: '',
       companyEmail: '',
       assignedDistrict: '',
-      employeeType: ''
+      employeeType: '',
+      employeeId: ''
     },
     bankDetails: {
       accHolderName: '',
@@ -160,7 +161,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     });
   }
 
-  onCheckboxChange(lang: string, event: any) {
+  selectedLanguages: string[] = [];
+
+  onCheckboxChange1(lang: string, event: any) {
     // If the checkbox is checked, add the language to the string; if unchecked, remove it
     if (event.target.checked) {
       if (this.personalData.languages) {
@@ -223,13 +226,55 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        location.reload();
+        this.router.navigate(['/steckholders/collective-officer'])
       }
     });
   }
   
 
   nextForm(page: 'pageOne' | 'pageTwo') {
+    if (page === 'pageTwo') {
+      
+      const missingFields: string[] = [];
+
+      if (!this.officer.collectionOfficer.firstNameEnglish) missingFields.push('First Name (English)');
+      if (!this.officer.collectionOfficer.firstNameSinhala) missingFields.push('First Name (Sinhala)');
+      if (!this.officer.collectionOfficer.firstNameTamil) missingFields.push('First Name (Tamil)');
+      if (!this.officer.collectionOfficer.lastNameEnglish) missingFields.push('Last Name (English)');
+      if (!this.officer.collectionOfficer.lastNameSinhala) missingFields.push('Last Name (Sinhala)');
+      if (!this.officer.collectionOfficer.lastNameTamil) missingFields.push('Last Name (Tamil)');
+      // if (!this.personalData.phoneNumber01Code) missingFields.push('Phone Number 01 Code');
+      // if (!this.personalData.phoneNumber01) missingFields.push('Phone Number 01');
+      // if (!this.personalData.phoneNumber02Code) missingFields.push('Phone Number 02 Code');
+      // if (!this.personalData.phoneNumber02) missingFields.push('Phone Number 02');
+      if (!this.officer.collectionOfficer.nic) missingFields.push('NIC');
+      if (!this.officer.collectionOfficer.email) missingFields.push('Email');
+      if (!this.officer.collectionOfficer.address.houseNumber) missingFields.push('House Number');
+      if (!this.officer.collectionOfficer.address.streetName) missingFields.push('Street Name');
+      if (!this.officer.collectionOfficer.address.city) missingFields.push('City');
+      if (!this.officer.collectionOfficer.address.district) missingFields.push('District');
+      if (!this.officer.collectionOfficer.address.province) missingFields.push('Province');
+      if (!this.officer.collectionOfficer.address.country) missingFields.push('Country');
+      
+  
+      if (missingFields.length > 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Please fill all fields',
+          html: `The following fields are missing:<br><ul>${missingFields
+            .map(field => `<li>${field}</li>`)
+            .join('')}</ul>`
+        });
+        return;
+      }
+    }
+
+    this.selectedPage = page;
+  }
+
+
+
+  nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
       
       const missingFields: string[] = [];
@@ -283,6 +328,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
         next: (response: any) => {
           this.officer = response.officerData;
+          this.selectedLanguages = response.officerData.collectionOfficer.languages.split(',');
           this.selectJobRole = response.officerData.companyDetails.jobRole;
           this.getUpdateLastID(response.officerData.companyDetails.jobRole)
 
@@ -300,6 +346,29 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
 
     this.getLastID('COO');
+    this.EpmloyeIdCreate()
+  }
+
+
+
+  onCheckboxChange(language: string, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+  
+    if (isChecked) {
+      // Add the language to the selected list
+      if (!this.selectedLanguages.includes(language)) {
+        this.selectedLanguages.push(language);
+      }
+    } else {
+      // Remove the language from the selected list
+      this.selectedLanguages = this.selectedLanguages.filter(
+        (lang) => lang !== language
+      );
+    }
+  
+    // Update the officer's languages as a comma-separated string
+    this.officer.collectionOfficer.languages = this.selectedLanguages.join(',');
+    console.log(this.officer.collectionOfficer.languages); // Debugging: Log the updated string
   }
 
   getAllCollectionCetnter() {
@@ -341,6 +410,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       district: this.officer.collectionOfficer.address.district,
       province: this.officer.collectionOfficer.address.province,
       country: this.officer.collectionOfficer.address.country,
+      languages: this.officer.collectionOfficer.languages,
       companyNameEnglish: this.officer.companyDetails.companyNameEnglish,
       companyNameSinhala: this.officer.companyDetails.companyNameSinhala,
       companyNameTamil: this.officer.companyDetails.companyNameTamil,
@@ -425,48 +495,66 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   EpmloyeIdCreate() {
-    let rolePrefix: string;
-
-    if (this.companyData.jobRole === 'Collection Center Head') {
-      rolePrefix = 'CCH';
-    } else if (this.companyData.jobRole === 'Collection Center Manager') {
-      rolePrefix = 'CCM';
-    } else if (this.companyData.jobRole === 'Customer Officer') {
-      rolePrefix = 'CUO';
-    } else {
-      rolePrefix = 'COO';
+    let rolePrefix: string | undefined;
+  
+    // Map job roles to their respective prefixes
+    const rolePrefixes: { [key: string]: string } = {
+      'Collection Center Head': 'CCH',
+      'Collection Center Manager': 'CCM',
+      'Customer Officer': 'CUO',
+      'Collection Officer': 'COO',
+    };
+  
+    // Get the prefix based on the job role
+    rolePrefix = rolePrefixes[this.companyData.jobRole];
+  
+    if (!rolePrefix) {
+      console.error(`Invalid job role: ${this.companyData.jobRole}`);
+      return; // Exit if the job role is invalid
     }
-
-
-
-    this.getLastID(rolePrefix).then((lastID) => {
-      this.companyData.empId = rolePrefix + lastID;
-    });
+  
+    // Fetch the last ID and assign a new Employee ID
+    this.getLastID(rolePrefix)
+      .then((lastID) => {
+        this.companyData.empId = rolePrefix + lastID;
+      })
+      .catch((error) => {
+        console.error('Error fetching last ID:', error);
+      });
   }
+  
 
 
   UpdateEpmloyeIdCreate() {
-    let rolePrefix: string;
-
-    if (this.officer.companyDetails.jobRole === 'Collection Center Head') {
-      rolePrefix = 'CCH';
-    } else if (this.officer.companyDetails.jobRole === 'Collection Center Manager') {
-      rolePrefix = 'CCM';
-    } else if (this.officer.companyDetails.jobRole === 'Customer Officer') {
-      rolePrefix = 'CUO';
-    } else {
-      rolePrefix = 'COO';
+    let rolePrefix: string | undefined;
+  
+    // Map job roles to their respective prefixes
+    const rolePrefixes: { [key: string]: string } = {
+      'Collection Center Head': 'CCH',
+      'Collection Center Manager': 'CCM',
+      'Customer Officer': 'CUO',
+      'Collection Officer': 'COO',
+    };
+  
+    // Get the prefix based on the job role
+    rolePrefix = rolePrefixes[this.officer.companyDetails.jobRole];
+  
+    if (!rolePrefix) {
+      console.error(`Invalid job role: ${this.officer.companyDetails.jobRole}`);
+      return; // Exit if the job role is invalid
     }
-
-
-
-    this.getUpdateLastID(rolePrefix).then((lastId) => {
-      console.log(rolePrefix);
-      
-      this.upateEmpID = rolePrefix + lastId;
-      console.log("update EMPID", this.upateEmpID);
-    });
+  
+    // Fetch the updated last ID and assign the new Employee ID
+    this.getUpdateLastID(rolePrefix)
+      .then((lastId) => {
+        this.upateEmpID = rolePrefix + lastId;
+        console.log("Updated EMP ID:", this.upateEmpID);
+      })
+      .catch((error) => {
+        console.error('Error fetching updated last ID:', error);
+      });
   }
+  
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {

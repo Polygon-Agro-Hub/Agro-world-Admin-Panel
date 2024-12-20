@@ -96,7 +96,7 @@
                   id="sinhala"
                   name="languages"
                   value="Sinhala"
-                  (change)="onCheckboxChange('Sinhala', $event)"
+                  (change)="onCheckboxChange1('Sinhala', $event)"
                 />
                 <label for="sinhala" class="text-gray-700 dark:text-textDark"
                   >Sinhala</label
@@ -109,7 +109,7 @@
                   id="english"
                   name="languages"
                   value="English"
-                  (change)="onCheckboxChange('English', $event)"
+                  (change)="onCheckboxChange1('English', $event)"
                 />
                 <label for="english" class="text-gray-700 dark:text-textDark"
                   >English</label
@@ -122,7 +122,7 @@
                   id="tamil"
                   name="languages"
                   value="Tamil"
-                  (change)="onCheckboxChange('Tamil', $event)"
+                  (change)="onCheckboxChange1('Tamil', $event)"
                 />
                 <label for="tamil" class="text-gray-700 dark:text-textDark"
                   >Tamil</label
@@ -203,6 +203,7 @@
                 type="text"
                 [value]="lastID"
                 name="empId"
+                [(ngModel)]="companyData.empId"
                 class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 disabled
               />
@@ -506,11 +507,11 @@
             Cancel
           </button>
           <button
-            (click)="nextForm('pageTwo')"
+            (click)="nextFormCreate('pageTwo')"
             type="button"
             class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
           >
-            Submit
+            Next
           </button>
         </div>
       </div>
@@ -597,7 +598,11 @@
           />
         </div>
 
-        <div class="pb-6">
+
+
+
+
+        <!-- <div class="pb-6">
           <label
             for="assignedDistrict"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -610,7 +615,47 @@
             [(ngModel)]="companyData.assignedDistrict"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
+        </div> -->
+
+
+
+
+        <div class="pb-6">
+          <label
+            for="assignedDistrict"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            District assigned to
+          </label>
+          <select
+            id="assignedDistrict"
+            name="assignedDistrict"
+            formControlName="assignedDistrict"
+            [(ngModel)]="companyData.assignedDistrict"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
+            <option value="" disabled selected>Select a district</option>
+            <option
+              *ngFor="let district of districts"
+              [value]="district.name"
+            >
+              {{ district.name }}
+            </option>
+          </select>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div>
           <label
@@ -740,6 +785,56 @@
   </form>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div
   *ngIf="this.itemId != null"
   class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg"
@@ -792,7 +887,7 @@
           </select>
         </div>
 
-        <div>
+        <!-- <div>
           <label
             for="languages"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -841,7 +936,67 @@
               >
             </div>
           </div>
+        </div> -->
+
+
+        <div>
+          <label
+            for="languages"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Preferred Languages
+          </label>
+        
+          <div class="flex items-center space-x-4 mt-3">
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="checkbox"
+                id="sinhala"
+                name="languages"
+                value="Sinhala"
+                (change)="onCheckboxChange('Sinhala', $event)"
+                [checked]="selectedLanguages.includes('Sinhala')"
+              />
+              <label for="sinhala" class="text-gray-700 dark:text-textDark">Sinhala</label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="checkbox"
+                id="english"
+                name="languages"
+                value="English"
+                (change)="onCheckboxChange('English', $event)"
+                [checked]="selectedLanguages.includes('English')"
+              />
+              <label for="english" class="text-gray-700 dark:text-textDark">English</label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="checkbox"
+                id="tamil"
+                name="languages"
+                value="Tamil"
+                (change)="onCheckboxChange('Tamil', $event)"
+                [checked]="selectedLanguages.includes('Tamil')"
+              />
+              <label for="tamil" class="text-gray-700 dark:text-textDark">Tamil</label>
+            </div>
+          </div>
+        
+          <!-- Display the updated languages string -->
+          <!-- <p class="mt-4 text-sm text-gray-600 dark:text-textDark">
+            Selected Languages: {{ officer.collectionOfficer.languages }}
+          </p> -->
         </div>
+        
+
+        
+
+
+
 
         <div>
           <label
@@ -926,7 +1081,7 @@
             </span>
             <input
               type="text"
-              [value]="UpdatelastID"
+              [value]="UpdatelastID ? UpdatelastID : officer.companyDetails.employeeId.substring(3)"
               name="empId"
               class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               disabled
@@ -1183,7 +1338,7 @@
 
       <div class="flex justify-end m-10">
         <button
-          onclick="window.location.href='/steckholders/collective-officer'"
+          (click)="onCancel()"
           type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
         >
@@ -1247,7 +1402,7 @@
         />
       </div>
 
-      <div class="pb-6">
+      <!-- <div class="pb-6">
         <label
           for="jobrole"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -1259,7 +1414,7 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           disabled
         />
-      </div>
+      </div> -->
 
       <div class="pb-6">
         <label
@@ -1290,7 +1445,11 @@
         />
       </div>
 
-      <div class="pb-6">
+
+
+
+
+      <!-- <div class="pb-6">
         <label
           for="assignedDistrict"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -1302,7 +1461,37 @@
           [(ngModel)]="officer.companyDetails.assignedDistrict"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+      </div> -->
+
+
+
+
+
+
+
+      <div class="pb-6">
+        <label
+        for="assignedDistrict"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+        District assigned to
+        </label>
+        <select
+        id="assignedDistrict"
+        name="assignedDistrict"
+        [(ngModel)]="officer.companyDetails.assignedDistrict"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
+          <option value="" disabled selected>Select a district</option>
+          <option *ngFor="let district of districts" [value]="district.name">
+            {{ district.name }}
+          </option>
+        </select>
       </div>
+
+
+
+
 
       <div>
         <label

@@ -1,0 +1,35 @@
+.dialog-header {
+  padding-top: 1rem;
+}
+
+.dialog-header .header-title {
+  margin: 0.5rem 0 1.5rem;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.dialog-content {
+  padding: 1rem 1.5rem;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.dialog-content .message-box {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px dashed #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-style: italic;
+}
+
+.dialog-footer {
+  padding: 0 1rem 1rem;
+}
+
+button.p-button {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+}

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { environment } from '../../environment/environment';
+import { environment } from '../../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 

@@ -3,7 +3,7 @@ import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
 import { SignupComponent } from './application/main-components/signup/signup.component';
 import { ForgoPasswordComponent } from './application/main-components/forgo-password/forgo-password.component';
-import { PlantcareComponent } from './application/plantcare/plantcare.component';
+import { PlantcareComponent } from './application/plant-care-app/plantcare/plantcare.component';
 import { SteckholdersComponent } from './application/steckholders-section/steckholders/steckholders.component';
 import { ReportComponent } from './application/report-section/report/report.component';
 import { FieldofficersComponent } from './application/fieldofficers/fieldofficers.component';
@@ -27,7 +27,7 @@ import { CollectionOfficerReportViewComponent } from './application/collection-o
 import { CollectiveofficersPersonalComponent } from './application/collection-officer-app/collectiveofficers-personal/collectiveofficers-personal.component';
 import { CollectiveofficersCompanyComponent } from './application/collection-officer-app/collectiveofficers-company/collectiveofficers-company.component';
 import { CollectiveofficersBankDetailsComponent } from './application/collection-officer-app/collectiveofficers-bank-details/collectiveofficers-bank-details.component';
-import { CollectionofficerDistrictReportComponent } from './application/collectionofficer-district-report/collectionofficer-district-report.component';
+import { CollectionofficerDistrictReportComponent } from './application/report-section/collectionofficer-district-report/collectionofficer-district-report.component';
 import { EditAdminMeUserComponent } from './application/main-components/edit-admin-me-user/edit-admin-me-user.component';
 import { ReportsFarmerListComponent } from './application/plant-care-app/reports-farmer-list/reports-farmer-list.component';
 import { FixedAssetCategoryComponent } from './application/plant-care-app/fixed-asset-category/fixed-asset-category.component';
@@ -45,15 +45,15 @@ import { UserCropCalendarComponent } from './application/plant-care-app/user-cro
 import { UserTaskEditComponent } from './application/plant-care-app/user-task-edit/user-task-edit.component';
 import { AddNewCropCalanderTaskComponent } from './application/plant-care-app/add-new-crop-calander-task/add-new-crop-calander-task.component';
 import { ViewUserProfileComponent } from './application/steckholders-section/view-user-profile/view-user-profile.component';
-import { CollectionAllViewComponent } from './application/collection-center/collection-all-view/collection-all-view.component';
-import { ViewCurrentMarketPriceComponent } from './application/market-price/view-current-market-price/view-current-market-price.component';
-import { MarketPriceBulkDeleteComponent } from './application/market-price/market-price-bulk-delete/market-price-bulk-delete.component';
-import { MarketPriceBulkUploadComponent } from './application/market-price/market-price-bulk-upload/market-price-bulk-upload.component';
-import { CollectionHubComponent } from './application/collection-hub/collection-hub.component';
-import { ViewComplainComponent } from './application/collection-center/view-complain/view-complain.component';
-import { ViewSelectedComplainComponent } from './application/collection-center/view-selected-complain/view-selected-complain.component';
+import { CollectionAllViewComponent } from './application/collection-hub-section/collection-all-view/collection-all-view.component';
+import { ViewCurrentMarketPriceComponent } from './application/collection-hub-section/view-current-market-price/view-current-market-price.component';
+import { MarketPriceBulkDeleteComponent } from './application/collection-hub-section/market-price-bulk-delete/market-price-bulk-delete.component';
+import { MarketPriceBulkUploadComponent } from './application/collection-hub-section/market-price-bulk-upload/market-price-bulk-upload.component';
+import { CollectionHubComponent } from './application/collection-hub-section/collection-hub/collection-hub.component';
+import { ViewComplainComponent } from './application/collection-hub-section/view-complain/view-complain.component';
+import { ViewSelectedComplainComponent } from './application/collection-hub-section/view-selected-complain/view-selected-complain.component';
 import { PaymentSlipReportComponent } from './application/report-section/payment-slip-report/payment-slip-report.component';
-import { AddCollectionCenterComponent } from './application/collection-center/add-collection-center/add-collection-center.component';
+import { AddCollectionCenterComponent } from './application/collection-hub-section/add-collection-center/add-collection-center.component';
 import { FarmerListReportComponent } from './application/report-section/farmer-list-report/farmer-list-report.component';
 import { CollectionOfficerProvinceReportComponent } from './application/report-section/collection-officer-province-report/collection-officer-province-report.component';
 import { MarketPlaceDashbordComponent } from './application/marketplace/market-place-dashbord/dashbord/market-place-dashbord.component';
@@ -67,9 +67,10 @@ import { ViewVarietyComponent } from './application/plant-care-app/view-variety/
 import { AddCoupenComponent } from './application/marketplace/add-coupen/add-coupen.component';
 import { UserBulkUploadComponent } from './application/steckholders-section/user-bulk-upload/user-bulk-upload.component';
 import { ViewCoupenComponent } from './application/marketplace/view-coupen/view-coupen.component';
-import { EditCollectionCenterComponent } from './application/collection-center/edit-collection-center/edit-collection-center.component';
+import { EditCollectionCenterComponent } from './application/collection-hub-section/edit-collection-center/edit-collection-center.component';
 import { AddPackageComponent } from './application/marketplace/add-package/add-package.component';
 import { MonthlyReportComponent } from './application/report-section/monthly-report/monthly-report.component';
+import { CreateCompanyComponent } from './application/collection-hub-section/create-company/create-company.component';
 
 export const routes: Routes = [
   {
@@ -374,6 +375,10 @@ export const routes: Routes = [
           {
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent
+          },
+          {
+            path: 'create-company',
+            component: CreateCompanyComponent
           }
         ],
       },

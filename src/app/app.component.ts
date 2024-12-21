@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet, RouterModule } from '@angular/router';
 
 
-import { PlantcareComponent } from './application/plantcare/plantcare.component';
+import { PlantcareComponent } from './application/plant-care-app/plantcare/plantcare.component';
 import { SidenavComponent } from './application/main-components/sidenav/sidenav.component';
 //import { AppNavbar } from './components/navbar/navbar.component';
 import { HeaderComponent } from './application/main-components/header/header.component';

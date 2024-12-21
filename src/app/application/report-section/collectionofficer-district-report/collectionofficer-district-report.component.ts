@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
-import { CollectionOfficerReportService } from '../../services/collection-officer/collection-officer-report.service';
+import { CollectionOfficerReportService } from '../../../services/collection-officer/collection-officer-report.service';
 import { CommonModule } from '@angular/common';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import jsPDF from 'jspdf';
-import { LoadingSpinnerComponent } from "../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 interface IdistrictReport {
   cropName: string

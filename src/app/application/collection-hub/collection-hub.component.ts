@@ -14,42 +14,51 @@ import Swal from 'sweetalert2';
 export class CollectionHubComponent {
   popupVisibleCollectionCenter = false;
   popupVisibleComplains = false;
-  popupVisibleMarketPrice = false
+  popupVisibleMarketPrice = false;
+  popupVisibleCompanys = false;
   private token = `${environment.TOKEN}`;
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
-    this.popupVisibleMarketPrice = false
-    if(this.popupVisibleComplains=true){
+    this.popupVisibleMarketPrice = false;
+    this.popupVisibleCompanys = false;
+    if ((this.popupVisibleComplains = true)) {
       this.popupVisibleComplains = !this.popupVisibleComplains;
     }
   }
 
-  togglePopupComplains(){
+  togglePopupCompanys() {
+    this.popupVisibleCompanys = !this.popupVisibleCompanys;
+    this.popupVisibleMarketPrice= false;
+    this.popupVisibleCollectionCenter = false
+  }
+
+  togglePopupComplains() {
     this.popupVisibleComplains = !this.popupVisibleComplains;
-    this.popupVisibleMarketPrice = false
-    if(this.popupVisibleCollectionCenter = true){
+    this.popupVisibleMarketPrice = false;
+    this.popupVisibleCompanys = false;
+    if ((this.popupVisibleCollectionCenter = true)) {
       this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
     }
   }
 
   togglePopupMarketPrice() {
-    this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice
-    this.popupVisibleComplains =false
-    this.popupVisibleCollectionCenter =false
+    this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
+    this.popupVisibleCompanys = false;
+    this.popupVisibleComplains = false;
+    this.popupVisibleCollectionCenter = false;
   }
 
   downloadTemplate1() {
     const apiUrl = 'http://localhost:3000/api/market-price/download-crop-data';
-  
+
     // Trigger the download
     fetch(apiUrl, {
       method: 'GET',
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           // Create a blob for the Excel file
           return response.blob();
@@ -57,19 +66,19 @@ export class CollectionHubComponent {
           throw new Error('Failed to download the file');
         }
       })
-      .then(blob => {
+      .then((blob) => {
         // Create a URL for the blob
         const url = window.URL.createObjectURL(blob);
-  
+
         // Create a temporary anchor element to trigger the download
         const a = document.createElement('a');
         a.href = url;
         a.download = 'CropData.xlsx'; // Default file name
         a.click();
-  
+
         // Revoke the URL after the download is triggered
         window.URL.revokeObjectURL(url);
-  
+
         // Show success message
         Swal.fire({
           icon: 'success',
@@ -77,7 +86,7 @@ export class CollectionHubComponent {
           text: 'Please check your downloads folder',
         });
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle errors
         Swal.fire({
           icon: 'error',

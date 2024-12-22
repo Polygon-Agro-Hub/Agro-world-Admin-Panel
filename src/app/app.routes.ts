@@ -71,6 +71,7 @@ import { EditCollectionCenterComponent } from './application/collection-hub-sect
 import { AddPackageComponent } from './application/marketplace/add-package/add-package.component';
 import { MonthlyReportComponent } from './application/report-section/monthly-report/monthly-report.component';
 import { CreateCompanyComponent } from './application/collection-hub-section/create-company/create-company.component';
+import { ManageCompanyComponent } from './application/collection-hub-section/manage-company/manage-company.component';
 
 export const routes: Routes = [
   {
@@ -379,6 +380,10 @@ export const routes: Routes = [
           {
             path: 'create-company',
             component: CreateCompanyComponent
+          },
+          {
+            path: 'manage-company',
+            component: ManageCompanyComponent
           }
         ],
       },

@@ -158,4 +158,18 @@ export class CollectionCenterService {
   }
 
 
+
+  createCompany(companyData: any): Observable<any> {
+    console.log(companyData);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    })
+    return this.http.post(`${this.apiUrl}create-company`, companyData, {
+      headers,
+    })
+  }
+
+
 }

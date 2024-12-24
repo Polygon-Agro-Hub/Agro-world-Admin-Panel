@@ -278,43 +278,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
 
 
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    if (page === 'pageTwo') {
-      
-      const missingFields: string[] = [];
-
-      if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English)');
-      if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala)');
-      if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil)');
-      if (!this.personalData.lastNameEnglish) missingFields.push('Last Name (English)');
-      if (!this.personalData.lastNameSinhala) missingFields.push('Last Name (Sinhala)');
-      if (!this.personalData.lastNameTamil) missingFields.push('Last Name (Tamil)');
-      if (!this.personalData.phoneCode01) missingFields.push('Phone Number 01 Code');
-      if (!this.personalData.phoneNumber01) missingFields.push('Phone Number 01');
-      if (!this.personalData.phoneCode02) missingFields.push('Phone Number 02 Code');
-      if (!this.personalData.phoneNumber02) missingFields.push('Phone Number 02');
-      if (!this.personalData.nic) missingFields.push('NIC');
-      if (!this.personalData.email) missingFields.push('Email');
-      if (!this.personalData.houseNumber) missingFields.push('House Number');
-      if (!this.personalData.streetName) missingFields.push('Street Name');
-      if (!this.personalData.city) missingFields.push('City');
-      if (!this.personalData.district) missingFields.push('District');
-      if (!this.personalData.province) missingFields.push('Province');
-      if (!this.personalData.country) missingFields.push('Country');
-      if (!this.personalData.languages) missingFields.push('Languages');
-  
-      if (missingFields.length > 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Please fill all fields',
-          html: `The following fields are missing:<br><ul>${missingFields
-            .map(field => `<li>${field}</li>`)
-            .join('')}</ul>`
-        });
-        return;
-      }
-    }
-
+  nextFormCreate(page: 'pageOne' | 'pageTwo'){
     this.selectedPage = page;
   }
 

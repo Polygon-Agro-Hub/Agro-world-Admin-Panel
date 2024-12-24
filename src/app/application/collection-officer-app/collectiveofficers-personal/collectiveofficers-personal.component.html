@@ -11,8 +11,8 @@
   class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg"
 >
   <form [formGroup]="officerForm" (ngSubmit)="onSubmit()">
-    <!-- <div *ngIf="selectedPage === 'pageOne'"> -->
-    <div>
+    <div *ngIf="selectedPage === 'pageOne'">
+    <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Personal Details
       </h2>
@@ -625,8 +625,8 @@
       </div>
     </div>
 
-    <!-- <div *ngIf="selectedPage === 'pageTwo'"> -->
-    <div>
+    <div *ngIf="selectedPage === 'pageTwo'">
+    <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Residential Details
       </h2>

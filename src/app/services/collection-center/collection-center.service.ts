@@ -172,4 +172,27 @@ export class CollectionCenterService {
   }
 
 
+
+  getAllCompanyList(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}get-all-company-list`, {
+      headers,
+    });
+  }
+
+
+
+  getAllManagerList(companyId : any, centerId : any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}get-all-manager-list/${companyId}/${centerId}`, {
+      headers,
+    });
+  }
+
 }

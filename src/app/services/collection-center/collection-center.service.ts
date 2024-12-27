@@ -208,5 +208,14 @@ export class CollectionCenterService {
     return this.http.post<{ regCode: string }>(`${this.apiUrl}/generate-regcode`, { province, district, city });
   }
   
+  getAllCompanyDetails(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}get-all-company`, {
+      headers,
+    });
+  }
 
 }

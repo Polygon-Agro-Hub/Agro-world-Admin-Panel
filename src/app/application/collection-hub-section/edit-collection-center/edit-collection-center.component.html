@@ -11,16 +11,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
             <!-- Registration Code -->
-            <div>
-                <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
-                <input id="regCode" name="regCode" [value]="centerFetchData.regCode"
-                    [(ngModel)]="centerFetchData.regCode" #regCodeInput="ngModel"
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                    required />
-                <div *ngIf="regCodeInput.touched && !centerFetchData.regCode" class="text-red-500 text-sm mt-1">
-                    <div>RegCode is required</div>
-                </div>
-            </div>
+           
 
             <!-- Collection Center Name -->
             <div>
@@ -34,58 +25,95 @@
                 </div>
             </div>
 
-            <!-- Contact Number 01 -->
-            <!-- <div>
-                <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact
-                    Number 01</label>
-                <div class="mt-1 flex">
-                    <select id="contact01Code" [value]="centerFetchData.contact01Code" name="contact01Code"
-                        [(ngModel)]="centerData.contact01Code"
-                        class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-                        <option value="+94">+94 (LK)</option>
-                        <option value="+1">+1 (US)</option>
-                        <option value="+44">+44 (UK)</option>
-                        <option value="+91">+91 (India)</option>
-                    </select>
-                    <div class="flex flex-col">
-                        <input type="number" id="contact01" name="contact01" [value]="centerFetchData.contact01"
-                            [(ngModel)]="centerFetchData.contact01" #contact01Input="ngModel"
-                            class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                            placeholder="Enter your phone number" />
-                        <div *ngIf="contact01Input.touched && !centerFetchData.contact01"
-                            class="text-red-500 text-sm mt-1">
-                            <div>1st contact number is required</div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
 
-            <!-- Contact Number 02 -->
-            <!-- <div>
-                <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact
-                    Number
-                    02</label>
-                <div class="mt-1 flex">
-                    <select id="contact02Code" [value]="centerFetchData.contact02Code"
-                        [(ngModel)]="centerFetchData.contact02Code"
-                        class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-                        <option value="+94">+94 (LK)</option>
-                        <option value="+1">+1 (US)</option>
-                        <option value="+44">+44 (UK)</option>
-                        <option value="+91">+91 (India)</option>
-                    </select>
-                    <div class="flex flex-col">
-                        <input type="number" id="contact02" name="contact02" [value]="centerFetchData.contact02"
-                            [(ngModel)]="centerFetchData.contact02" #contact02Input="ngModel"
-                            class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                            placeholder="Enter your phone number" />
-                        <div *ngIf="contact02Input.touched && !centerFetchData.contact02"
-                            class="text-red-500 text-sm mt-1">
-                            <div>1st contact number is required</div>
-                        </div>
-                    </div>
+
+            <div class="relative">
+                <!-- Input Field -->
+                <label
+                  for="companies"
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  id="companies" 
+                  name="companies"
+                  [(ngModel)]="centerFetchData.companies"
+                  readonly
+                  class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
+                  placeholder="Select companies"
+                  (click)="toggleDropdown()"
+                />
+              
+                <!-- Dropdown -->
+                <!-- Dropdown -->
+                <div
+                *ngIf="dropdownOpen"
+                class="absolute top-0 left-0 w-full mt-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
+                style="transform: translateY(100%); position: absolute;"
+              >
+                <div
+                  *ngFor="let company of CompanyData"
+                  class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                  (click)="toggleSelection(company)"
+                >
+                  <input
+                    type="checkbox"
+                    [checked]="selectedCompaniesIds.includes(company.id)"
+                    class="mr-2"
+                  />
+                  {{ company.companyNameEnglish }}
                 </div>
-            </div> -->
+              </div>
+              </div>
+
+
+
+
+
+              <div>
+                <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
+                  01</label>
+                <div class="mt-1 flex">
+                  <select id="code1" [(ngModel)]="centerFetchData.code1" name="code1"
+                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                    <option value="+94">+94 (LK)</option>
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+91">+91 (India)</option>
+                  </select>
+                  <div class="flex flex-col">
+                    <input type="number" [(ngModel)]="centerFetchData.contact01" id="contact01" name="contact01"
+                      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                      placeholder="Enter your phone number" />
+                   
+                  </div>
+                </div>
+              </div>
+        
+              <!-- Contact Number 02 -->
+              <div>
+                <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
+                  02</label>
+                <div class="mt-1 flex">
+                  <select [(ngModel)]="centerFetchData.code2" id="code2" name="code2"
+                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                    <option value="+94">+94 (LK)</option>
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+91">+91 (India)</option>
+                  </select>
+                  <div class="flex flex-col">
+                    <input type="number" [(ngModel)]="centerFetchData.contact02" id="contact02" name="contact02"
+                      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                      placeholder="Enter your phone number" />
+                    
+                  </div>
+                </div>
+              </div>
+
+            
 
             <!-- Building Number -->
             <div>
@@ -115,36 +143,93 @@
                   </div>
             </div>
 
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+              <input type="text" 
+                     id="city" 
+                     name="city" 
+                     [value]="centerFetchData.city"
+                     [(ngModel)]="centerFetchData.city" 
+                     (input)="onCityChange()"
+                     (change)="onCityChange()"
+                     #cityInput="ngModel"
+                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <!-- ... validation ... -->
+          </div>
+          
+
             <!-- Province -->
             <div>
-                <label for="province"
-                    class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-                <select id="province" name="province" [(ngModel)]="selectProvince" (change)="onProvinceChange()"
-                    [value]="centerFetchData.province" #provinceInput="ngModel"
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-                    <option selected disabled>-- select --</option>
-                    <option *ngFor="let item of ProvinceData" [value]="item.province">{{item.province}}</option>
-                </select>
-                <div *ngIf="provinceInput.touched && !centerFetchData.province" class="text-red-500 text-sm mt-1">
-                    <div>province is required</div>
-                </div>
-            </div>
+              <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
+              <select id="province" 
+                      name="province" 
+                      [(ngModel)]="selectProvince" 
+                      (change)="onProvinceChange()"
+                      [value]="centerFetchData.province" 
+                      #provinceInput="ngModel"
+                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                  <option selected disabled>-- select --</option>
+                  <option *ngFor="let item of ProvinceData" [value]="item.province">{{item.province}}</option>
+              </select>
+              <!-- ... validation ... -->
+          </div>
 
             <!-- District -->
             <div>
-                <label for="district"
-                    class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-                <select id="district" name="district" [value]="centerFetchData.district"
-                    [(ngModel)]="centerFetchData.district" #districtInput="ngModel"
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-                    <option selected disabled>-- select --</option>
-                    <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}
-                    </option>
+              <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+              <select id="district" 
+                      name="district" 
+                      [value]="centerFetchData.district"
+                      [(ngModel)]="centerFetchData.district" 
+                      (change)="onDistrictChange()"
+                      #districtInput="ngModel"
+                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                  <option selected disabled>-- select --</option>
+                  <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}</option>
+              </select>
+              <!-- ... validation ... -->
+          </div>
+
+            <div>
+                <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+                <select id="country" name="country" [(ngModel)]="centerFetchData.country"
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+                  <option selected disabled>Sri Lanka</option>
                 </select>
-                <div *ngIf="districtInput.touched && !centerFetchData.district" class="text-red-500 text-sm mt-1">
-                    <div>district is required</div>
+                
+              </div>
+
+            <!-- <div>
+                <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+                <input id="regCode" name="regCode"
+                    [(ngModel)]="centerFetchData.regCode" #regCodeInput="ngModel"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                    required />
+                <div *ngIf="regCodeInput.touched && !centerFetchData.regCode" class="text-red-500 text-sm mt-1">
+                    <div>RegCode is required</div>
                 </div>
-            </div>
+            </div> -->
+
+            <div>
+              <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+              <input id="regCode" 
+                     name="regCode" 
+                     [(ngModel)]="centerFetchData.regCode"
+                     #regCodeInput="ngModel"
+                     readonly
+                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <!-- ... validation ... -->
+          </div>
+          
+
+
+              
+
+
+
+            
+
+
         </div>
         <div class="flex justify-end m-10">
             <div type="submit" class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md" (click)="onCancel()">Cancel</div>

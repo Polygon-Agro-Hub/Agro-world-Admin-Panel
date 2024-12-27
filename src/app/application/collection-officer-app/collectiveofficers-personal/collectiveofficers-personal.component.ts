@@ -28,9 +28,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   personalData: Personal = new Personal();
-  bankData: Bank = new Bank();
-  companyData: Company = new Company();
+  
+ 
   collectionCenterData: CollectionCenter[] = []
+  CompanyData: Company[] = []
+  collectionManagerData: CollectionManager[] = []
   itemId: number | null = null;
   isLoading = false;
   selectedFileName!: string
@@ -187,8 +189,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   onSubmit() {
     console.log(this.personalData); // Logs the personal data with updated languages
-    console.log(this.bankData);
-    console.log(this.companyData);
+    console.log('hii',this.personalData.emtype);
+    
+   
+    
 
     const formValue = this.officerForm.value;
 
@@ -203,7 +207,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
       // this.personalData.image = this.selectedFile
 
-      this.collectionOfficerService.createCollectiveOfficer(this.personalData, this.bankData, this.companyData).subscribe(
+      this.collectionOfficerService.createCollectiveOfficer(this.personalData).subscribe(
         (res: any) => {
           this.officerId = res.officerId;
           Swal.fire('Success', 'Collective Officer Created Successfully', 'success');
@@ -274,43 +278,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
 
 
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    if (page === 'pageTwo') {
-      
-      const missingFields: string[] = [];
-
-      if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English)');
-      if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala)');
-      if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil)');
-      if (!this.personalData.lastNameEnglish) missingFields.push('Last Name (English)');
-      if (!this.personalData.lastNameSinhala) missingFields.push('Last Name (Sinhala)');
-      if (!this.personalData.lastNameTamil) missingFields.push('Last Name (Tamil)');
-      if (!this.personalData.phoneNumber01Code) missingFields.push('Phone Number 01 Code');
-      if (!this.personalData.phoneNumber01) missingFields.push('Phone Number 01');
-      if (!this.personalData.phoneNumber02Code) missingFields.push('Phone Number 02 Code');
-      if (!this.personalData.phoneNumber02) missingFields.push('Phone Number 02');
-      if (!this.personalData.nic) missingFields.push('NIC');
-      if (!this.personalData.email) missingFields.push('Email');
-      if (!this.personalData.houseNumber) missingFields.push('House Number');
-      if (!this.personalData.streetName) missingFields.push('Street Name');
-      if (!this.personalData.city) missingFields.push('City');
-      if (!this.personalData.district) missingFields.push('District');
-      if (!this.personalData.province) missingFields.push('Province');
-      if (!this.personalData.country) missingFields.push('Country');
-      if (!this.personalData.languages) missingFields.push('Languages');
-  
-      if (missingFields.length > 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Please fill all fields',
-          html: `The following fields are missing:<br><ul>${missingFields
-            .map(field => `<li>${field}</li>`)
-            .join('')}</ul>`
-        });
-        return;
-      }
-    }
-
+  nextFormCreate(page: 'pageOne' | 'pageTwo'){
     this.selectedPage = page;
   }
 
@@ -321,6 +289,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       console.log('Received item ID:', this.itemId);
     });
     this.getAllCollectionCetnter()
+    this.getAllCompanies()
+    this.EpmloyeIdCreate()
 
     if (this.itemId) {
 
@@ -345,8 +315,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       });
     }
 
-    this.getLastID('COO');
-    this.EpmloyeIdCreate()
+    
   }
 
 
@@ -375,6 +344,22 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.collectionCenterSrv.getAllCollectionCenter().subscribe(
       (res) => {
         this.collectionCenterData = res
+      }
+    )
+  }
+
+  getAllCompanies() {
+    this.collectionCenterSrv.getAllCompanyList().subscribe(
+      (res) => {
+        this.CompanyData = res
+      }
+    )
+  }
+
+  getAllCollectionManagers() {
+    this.collectionCenterSrv.getAllManagerList(this.personalData.companyId, this.personalData.centerId).subscribe(
+      (res) => {
+        this.collectionManagerData = res
       }
     )
   }
@@ -495,6 +480,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   EpmloyeIdCreate() {
+
+    this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
   
     // Map job roles to their respective prefixes
@@ -506,17 +493,17 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     };
   
     // Get the prefix based on the job role
-    rolePrefix = rolePrefixes[this.companyData.jobRole];
+    rolePrefix = rolePrefixes[this.personalData.jobRole];
   
     if (!rolePrefix) {
-      console.error(`Invalid job role: ${this.companyData.jobRole}`);
+      console.error(`Invalid job role: ${this.personalData.jobRole}`);
       return; // Exit if the job role is invalid
     }
   
     // Fetch the last ID and assign a new Employee ID
     this.getLastID(rolePrefix)
       .then((lastID) => {
-        this.companyData.empId = rolePrefix + lastID;
+        this.personalData.empId = rolePrefix + lastID;
       })
       .catch((error) => {
         console.error('Error fetching last ID:', error);
@@ -633,15 +620,20 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 }
 
 class Personal {
+  jobRole: string = 'Collection Center Manager';
+  empId!: string;
+  centerId!: number;
+  irmId!: number;
+  emtype!: any;
   firstNameEnglish!: string;
   firstNameSinhala!: string;
   firstNameTamil!: string;
   lastNameEnglish!: string;
   lastNameSinhala!: string;
   lastNameTamil!: string;
-  phoneNumber01Code!: string;
+  phoneCode01: string = '+94';
   phoneNumber01!: string;
-  phoneNumber02Code!: string;
+  phoneCode02: string = '+94';
   phoneNumber02!: string;
   nic!: string;
   email!: string;
@@ -654,31 +646,33 @@ class Personal {
   province!: string;
   country: string = 'Sri Lanka';
   languages: string = '';
-  centerId!: string
-  image!: any
-}
-
-class Bank {
-  accHolderName!: string;
-  accNumber!: string;
+  companyId! : string;
+  image!: any;
+  accHolderName!: any;
+  accNumber!: any;
   bankName!: string;
   branchName!: string;
+  
 }
 
-class Company {
-  companyNameEnglish!: string;
-  companyNameSinhala!: string;
-  companyNameTamil!: string;
-  jobRole: string = 'Collection Officer'
-  empId!: string
-  IRMname!: string;
-  companyEmail!: string;
-  assignedDistrict!: string;
-  employeeType!: string;
-}
+
+
+
 
 class CollectionCenter {
   id!: number
   centerName!: string
+
+}
+
+
+class CollectionManager {
+  id!: number
+  firstNameEnglish!: string
+}
+
+class Company {
+  id!: number
+  companyNameEnglish!: string
 
 }

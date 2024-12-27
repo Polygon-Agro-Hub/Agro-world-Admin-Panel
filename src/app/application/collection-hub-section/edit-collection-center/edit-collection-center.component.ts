@@ -19,6 +19,12 @@ export class EditCollectionCenterComponent implements OnInit {
   selectProvince: string = '';
   selectedDistrict: any = [];
   existRegCode!: string
+  dropdownOpen: boolean = false;
+  CompanyData: Company[] = [];
+  selectedCompaniesIds: number[] = [];
+  selectedCompaniesNames: string[] = [];
+  selectDistrict: string = '';
+  city: string = '';
 
   constructor(
     private collectionCenterService: CollectionCenterService,
@@ -30,6 +36,7 @@ export class EditCollectionCenterComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchCollectionCenter();
+    this.getAllCompanies();
   }
 
   ProvinceData = [
@@ -106,7 +113,7 @@ export class EditCollectionCenterComponent implements OnInit {
   ];
 
   onSubmit() {
-    this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.collectionCenterID, this.existRegCode).subscribe(
+    this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.collectionCenterID).subscribe(
       (res) => {
         if (res?.status) {
           Swal.fire('Success', 'Collection Center updated Successfully', 'success');
@@ -139,27 +146,38 @@ export class EditCollectionCenterComponent implements OnInit {
     );
   }
 
-  onProvinceChange() {
-    const filteredProvince = this.ProvinceData.filter(item => item.province === this.selectProvince);
-    this.centerFetchData.province = this.selectProvince
 
-    if (filteredProvince.length > 0) {
-      this.selectedDistrict = filteredProvince[0].district;
-    } else {
-      this.selectedDistrict = [];
-    }
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
   }
+
+  getAllCompanies() {
+    this.collectionCenterService.getAllCompanyList().subscribe(
+      (res) => {
+        this.CompanyData = res;
+  
+        // Update selected companies once the CompanyData is available
+        this.updateSelectedCompanies();
+      },
+      (error) => console.error("Error fetching companies:", error)
+    );
+  }
+  
+
+  
+
 
   fetchCollectionCenter() {
     this.collectionCenterService.getCenterById(this.collectionCenterID).subscribe(
       (res) => {
         if (res?.status) {
-          console.log(res.results);
-
           this.centerFetchData = res.results;
           this.selectProvince = this.centerFetchData.province;
-          this.existRegCode = this.centerFetchData.regCode
-          this.onProvinceChange(); // Update districts based on fetched province
+          this.existRegCode = this.centerFetchData.regCode;  // Store initial reg code
+          
+          this.updateSelectedCompanies();
+          this.onProvinceChange();
         } else {
           Swal.fire('Sorry', 'Center Data not available', 'warning');
           this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -167,6 +185,37 @@ export class EditCollectionCenterComponent implements OnInit {
       },
       (error) => console.error("Error fetching collection center:", error)
     );
+  }
+
+
+  updateSelectedCompanies() {
+    if (this.centerFetchData.companies) {
+      const companyNames = this.centerFetchData.companies.split(',').map(name => name.trim());
+      this.selectedCompaniesIds = this.CompanyData
+        .filter(company => companyNames.includes(company.companyNameEnglish))
+        .map(company => company.id);
+    }
+  }
+  
+  
+  
+  // Update toggleSelection to synchronize selectedCompaniesIds and companies string
+  toggleSelection(company: any) {
+    const index = this.selectedCompaniesIds.indexOf(company.id);
+    if (index === -1) {
+      this.selectedCompaniesIds.push(company.id);
+    } else {
+      this.selectedCompaniesIds.splice(index, 1);
+    }
+  
+    // Update the companies string
+    this.centerFetchData.companies = this.CompanyData
+      .filter(c => this.selectedCompaniesIds.includes(c.id))
+      .map(c => c.companyNameEnglish)
+      .join(', ');
+  
+    console.log('Selected IDs:', this.selectedCompaniesIds);
+    console.log('Selected Companies:', this.centerFetchData.companies);
   }
 
 
@@ -182,17 +231,104 @@ export class EditCollectionCenterComponent implements OnInit {
     this.fetchCollectionCenter();
   }
 
+  updateRegCode() {
+    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase(); // First 3 letters of province
+    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase(); // First 3 letters of district
+    const cityCode = this.city.slice(0, 3).toUpperCase(); // First 3 letters of city
+  
+    if (provinceCode && districtCode && cityCode) {
+      this.centerFetchData.regCode = `${provinceCode}-${districtCode}-${cityCode}`;
+    }
+  }
+
+  onProvinceChange() {
+    const selectedProvince = this.centerFetchData.province;
+    const selectedDistrict = this.centerFetchData.district;
+    const selectedCity = this.centerFetchData.city;
+  
+    // Call the original province change logic
+    const filteredProvince = this.ProvinceData.filter(item => item.province === this.selectProvince);
+    this.centerFetchData.province = this.selectProvince;
+  
+    if (filteredProvince.length > 0) {
+      this.selectedDistrict = filteredProvince[0].district;
+    } else {
+      this.selectedDistrict = [];
+    }
+  
+    // Add reg code generation logic
+    if (selectedProvince && selectedDistrict && selectedCity) {
+      this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe(response => {
+          this.centerFetchData.regCode = response.regCode;
+          console.log("New RegCode:", response.regCode);
+        }, error => {
+          console.error("Error fetching regCode:", error);
+        });
+    }
+  }
+  
+  // Add new methods for district and city changes
+  onDistrictChange() {
+    const selectedProvince = this.centerFetchData.province;
+    const selectedDistrict = this.centerFetchData.district;
+    const selectedCity = this.centerFetchData.city;
+  
+    if (selectedProvince && selectedDistrict && selectedCity) {
+      this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe(response => {
+          this.centerFetchData.regCode = response.regCode;
+          console.log("New RegCode:", response.regCode);
+        }, error => {
+          console.error("Error fetching regCode:", error);
+        });
+    }
+  }
+  
+  onCityChange() {
+    const selectedProvince = this.centerFetchData.province;
+    const selectedDistrict = this.centerFetchData.district;
+    const selectedCity = this.centerFetchData.city;
+  
+    if (selectedProvince && selectedDistrict && selectedCity) {
+      this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe(response => {
+          this.centerFetchData.regCode = response.regCode;
+          console.log("New RegCode:", response.regCode);
+        }, error => {
+          console.error("Error fetching regCode:", error);
+        });
+    }
+  }
+  
+
+
+  
+  
+
+
+  
+
 }
 
 class CollectionCenter {
   regCode!: string;
   centerName!: string;
   contact01!: number;
-  contact01Code!: string;
+  code1!: string;
   contact02!: number;
-  contact02Code!: string;
+  code2!: string;
   buildingNumber!: string;
   street!: string;
+  city!: string;
   district!: string;
   province!: string;
+  country!: string;
+  companies!: string
+}
+
+
+class Company {
+  id!: number;
+  companyNameEnglish!: string;
 }

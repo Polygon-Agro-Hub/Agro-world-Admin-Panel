@@ -44,16 +44,23 @@ export class CollectionCenterService {
     });
   }
 
-  createCollectionCenter(centerData: any): Observable<any> {
+  createCollectionCenter(centerData: any, companies: any): Observable<any> {
     console.log(centerData);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.post(`${this.apiUrl}create-collection-center`, centerData, {
+
+    const payload = {
+      ...centerData,
+      companies,
+    };
+    console.log('hiii',payload);
+    return this.http.post(`${this.apiUrl}create-collection-center`, payload, {
       headers,
     })
+    console.log(payload);
   }
 
   getAllComplain(page: number, limit: number, status: String, searchText: string): Observable<any> {
@@ -127,14 +134,14 @@ export class CollectionCenterService {
   }
 
 
-  updateColectionCenter(centerData: any, id: number, existRegCode:string): Observable<any> {
+  updateColectionCenter(centerData: any, id: number): Observable<any> {
     console.log(centerData);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.patch(`${this.apiUrl}update-center/${id}/${existRegCode}`, centerData, {
+    return this.http.patch(`${this.apiUrl}update-center/${id}`, centerData, {
       headers,
     })
   }
@@ -194,5 +201,12 @@ export class CollectionCenterService {
       headers,
     });
   }
+
+
+
+  generateRegCode(province: string, district: string, city: string): Observable<{ regCode: string }> {
+    return this.http.post<{ regCode: string }>(`${this.apiUrl}/generate-regcode`, { province, district, city });
+  }
+  
 
 }

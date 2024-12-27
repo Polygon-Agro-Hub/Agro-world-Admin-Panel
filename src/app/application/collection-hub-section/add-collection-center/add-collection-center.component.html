@@ -11,22 +11,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
       <!-- Registration Code -->
-      <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
-        <input formControlName="regCode" id="regCode" name="regCode"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          required />
-        <div
-          *ngIf="collectionCenterForm.get('regCode')?.invalid && (collectionCenterForm.get('regCode')?.dirty || collectionCenterForm.get('regCode')?.touched)"
-          class="text-red-500 text-sm mt-1">
-          <ng-container *ngIf="collectionCenterForm.get('regCode')?.hasError('required')">
-            Reg Code is required.
-          </ng-container>
-          <!-- <ng-container *ngIf="collectionCenterForm.get('regCode')?.hasError('pattern')">
-            Reg Code cannot contain numbers.
-          </ng-container> -->
-        </div>
-      </div>
+      
       
 
       <!-- Collection Center Name -->
@@ -46,6 +31,54 @@
           Center name cannot contain numbers.
         </div>
       </div>
+
+
+
+
+
+      <div class="relative">
+        <!-- Input Field -->
+        <label
+          for="centerId"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Company Name
+        </label>
+        <input
+          type="text"
+          [value]="selectedCompaniesNames.join(', ')"
+          readonly
+          class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
+          placeholder="Select companies"
+          (click)="toggleDropdown()"
+        />
+      
+        <!-- Dropdown -->
+        <div
+          *ngIf="dropdownOpen"
+          class="absolute top-0 left-0 w-full mt-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
+          style="transform: translateY(100%); position: absolute;"
+        >
+          <div
+            *ngFor="let company of CompanyData"
+            class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+            (click)="toggleSelection(company)"
+          >
+            <input
+              type="checkbox"
+              [checked]="selectedCompaniesIds.includes(company.id)"
+              class="mr-2"
+            />
+            {{ company.companyNameEnglish }}
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+
 
       <!-- Contact Number 01 -->
       <div>
@@ -120,10 +153,17 @@
           class="text-red-500 text-sm mt-1">
           Street is required
         </div>
-        <div *ngIf="collectionCenterForm.get('street')?.hasError('containsNumbers') && 
-            (collectionCenterForm.get('street')?.dirty || collectionCenterForm.get('street')?.touched)"
-          class="text-red-500 text-sm mt-1">
-          Street name cannot contain numbers.
+       
+      </div>
+
+      <div>
+        <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+        <input formControlName="city" id="city" name="city" (input)="onCityChange()" 
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div *ngIf="collectionCenterForm.get('city')?.invalid && 
+            (collectionCenterForm.get('city')?.dirty || collectionCenterForm.get('city')?.touched)" 
+            class="text-red-500 text-sm mt-1">
+          City is required
         </div>
       </div>
 
@@ -143,10 +183,15 @@
         </div>
       </div>
 
+
+      
+
+      
+
       <!-- District -->
       <div>
         <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-        <select formControlName="district" id="district" name="district"
+        <select formControlName="district" id="district" name="district" (change)="onDistrictChange()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
           <option selected disabled>-- select --</option>
           <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}</option>
@@ -156,6 +201,35 @@
           class="text-red-500 text-sm mt-1">
           District is required
         </div>
+      </div>
+
+
+
+      <div>
+        <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+        <select formControlName="country" id="country" name="country"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+          <option selected disabled>Sri Lanka</option>
+        </select>
+        <div
+          *ngIf="collectionCenterForm.get('country')?.invalid && (collectionCenterForm.get('country')?.dirty || collectionCenterForm.get('country')?.touched)"
+          class="text-red-500 text-sm mt-1">
+          District is required
+        </div>
+      </div>
+
+
+
+
+
+
+      
+
+      <div>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <input formControlName="regCode" id="regCode" name="regCode"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+          [readonly]="true" />
       </div>
 
 

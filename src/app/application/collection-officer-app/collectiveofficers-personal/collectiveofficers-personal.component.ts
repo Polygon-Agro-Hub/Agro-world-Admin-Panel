@@ -189,7 +189,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   onSubmit() {
     console.log(this.personalData); // Logs the personal data with updated languages
-    console.log('hii',this.personalData.emtype);
+    console.log('hii',this.personalData.enpType);
     
    
     
@@ -624,7 +624,7 @@ class Personal {
   empId!: string;
   centerId!: number;
   irmId!: number;
-  emtype!: any;
+  enpType!: string ;
   firstNameEnglish!: string;
   firstNameSinhala!: string;
   firstNameTamil!: string;
@@ -637,6 +637,7 @@ class Personal {
   phoneNumber02!: string;
   nic!: string;
   email!: string;
+  new!: string;
   password!: string;
   passwordUpdated!: string;
   houseNumber!: string;

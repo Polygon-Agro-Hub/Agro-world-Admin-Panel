@@ -115,18 +115,18 @@
             {{ item.email }}
           </td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
-            <div >
+            <div *ngIf="item.status === 1">
               <span
                 class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
               >
-                {{ item.status }}
+               Active
               </span>
             </div>
-            <div>
+            <div *ngIf="item.status === 0">
               <span
                 class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
               >
-                {{ item.status }}
+                Deactive
               </span>
             </div>
           </td>
@@ -149,10 +149,10 @@
             {{ item.oicEmail }}
           </td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.oicConCode1 }} {{ item.oicConNum1 }}
+            {{ item.oicConCode1+' '+item.oicConNum1 }}
           </td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.oicConCode2 }} {{ item.oicConNum2 }}
+            {{ item.oicConCode2+' '+item.oicConNum2 }}
           </td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
             <button class="w-5 h-5 text-blue-500 hover:text-blue-700">

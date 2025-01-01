@@ -130,6 +130,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       firstNameSinhala: ['', Validators.required],
       firstNameTamil: ['', Validators.required],
       centerId: ['', Validators.required],
+      centerName: ['', Validators.required],
       lastNameEnglish: ['', Validators.required],
       lastNameSinhala: ['', Validators.required],
       lastNameTamil: ['', Validators.required],

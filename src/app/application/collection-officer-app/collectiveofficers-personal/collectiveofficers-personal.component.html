@@ -12,7 +12,7 @@
 >
   <form [formGroup]="officerForm" (ngSubmit)="onSubmit()">
     <div *ngIf="selectedPage === 'pageOne'">
-    <!-- <div> -->
+      <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Personal Details
       </h2>
@@ -56,25 +56,22 @@
           </div>
         </div>
 
-
-        
-
         <div class="h-[20px]"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-
-
-
-
           <div>
-            <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label
+              for="enpType"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
               Staff Employee Type
             </label>
-          
+
             <div class="flex items-center space-x-4 mt-3">
               <div class="flex items-center space-x-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
                   <input
                     class="w-5 h-5"
                     type="radio"
@@ -87,7 +84,9 @@
                 </label>
               </div>
               <div class="flex items-center space-x-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
                   <input
                     class="w-5 h-5"
                     type="radio"
@@ -101,16 +100,6 @@
               </div>
             </div>
           </div>
-          
-        
-         
-
-
-          
-
-
-
-
 
           <div>
             <label
@@ -119,7 +108,7 @@
             >
               Preferred Languages
             </label>
-  
+
             <div class="flex items-center space-x-4 mt-3">
               <div class="flex items-center space-x-2">
                 <input
@@ -161,13 +150,17 @@
                 >
               </div>
             </div>
+            <div
+              *ngIf="
+                officerForm.get('centerId')?.invalid &&
+                officerForm.get('centerId')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Please select a company</small
+              >
+            </div>
           </div>
-
-
-
-
-
-
 
           <div>
             <label
@@ -191,8 +184,17 @@
                 {{ center.companyNameEnglish }}
               </option>
             </select>
+            <div
+              *ngIf="
+                officerForm.get('centerId')?.invalid &&
+                officerForm.get('centerId')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Please select a company</small
+              >
+            </div>
           </div>
-
 
           <div>
             <label
@@ -216,24 +218,19 @@
                 {{ center.centerName }}
               </option>
             </select>
+            <div
+              *ngIf="
+                officerForm.get('centerId')?.invalid &&
+                officerForm.get('centerId')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Please select a center name</small
+              >
+            </div>
           </div>
 
-          
-
-
-
-
-
-          
-
-
-
-
-
-
-          
-
-          <div *ngIf="personalData.companyId=='1'">
+          <div *ngIf="personalData.companyId == '1'">
             <label
               for="jobRole"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -255,7 +252,7 @@
               >
                 -- select --
               </option>
-              
+
               <option
                 selected
                 value="Collection Center Manager"
@@ -276,12 +273,19 @@
                 Customer Officer
               </option>
             </select>
+            <div
+              *ngIf="
+                officerForm.get('jobRole')?.invalid &&
+                officerForm.get('jobRole')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Please select a job role</small
+              >
+            </div>
           </div>
 
-
-
-
-          <div *ngIf="personalData.companyId!='1'">
+          <div *ngIf="personalData.companyId != '1'">
             <label
               for="jobRole"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -303,7 +307,7 @@
               >
                 -- select --
               </option>
-              
+
               <option
                 selected
                 value="Collection Center Manager"
@@ -311,13 +315,8 @@
               >
                 Collection Center Manager
               </option>
-              
             </select>
           </div>
-
-
-
-
 
           <div>
             <label
@@ -328,7 +327,6 @@
               <span
                 class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
               >
-                
                 <p *ngIf="personalData.jobRole === 'Collection Center Manager'">
                   CCM
                 </p>
@@ -339,15 +337,11 @@
                 type="text"
                 [value]="lastID"
                 name="empId"
-               
                 class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 disabled
               />
             </div>
           </div>
-
-
-
 
           <div *ngIf="personalData.jobRole === 'Collection Officer'">
             <label
@@ -373,9 +367,6 @@
             </select>
           </div>
 
-
-
-
           <div>
             <label
               for="firstNameEnglish"
@@ -383,12 +374,22 @@
               >First Name (in English)</label
             >
             <input
-              formControlName="lastNameEnglish"
+              formControlName="firstNameEnglish"
               id="firstNameEnglish"
               [(ngModel)]="personalData.firstNameEnglish"
               name="firstNameEnglish"
               class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('firstNameEnglish')?.invalid &&
+                officerForm.get('firstNameEnglish')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >First name english is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -404,6 +405,16 @@
               [(ngModel)]="personalData.lastNameEnglish"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('lastNameEnglish')?.invalid &&
+                officerForm.get('lastNameEnglish')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Last name english is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -419,6 +430,16 @@
               [(ngModel)]="personalData.firstNameSinhala"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('firstNameSinhala')?.invalid &&
+                officerForm.get('firstNameSinhala')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >First name sinhala is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -434,6 +455,16 @@
               [(ngModel)]="personalData.lastNameSinhala"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('lastNameSinhala')?.invalid &&
+                officerForm.get('lastNameSinhala')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Last name sinhala is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -449,6 +480,16 @@
               [(ngModel)]="personalData.firstNameTamil"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('firstNameTamil')?.invalid &&
+                officerForm.get('firstNameTamil')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >First name tamil is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -464,6 +505,16 @@
               [(ngModel)]="personalData.lastNameTamil"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('lastNameTamil')?.invalid &&
+                officerForm.get('lastNameTamil')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Last name tamil is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -495,6 +546,16 @@
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="Enter your phone number"
               />
+            </div>
+            <div
+              *ngIf="
+                officerForm.get('phoneNumber01')?.invalid &&
+                officerForm.get('phoneNumber01')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Phone number required</small
+              >
             </div>
           </div>
 
@@ -543,6 +604,16 @@
               [(ngModel)]="personalData.nic"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('nic')?.invalid &&
+                officerForm.get('nic')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >NIC number is required</small
+              >
+            </div>
           </div>
 
           <div>
@@ -559,24 +630,17 @@
               [(ngModel)]="personalData.email"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                officerForm.get('email')?.invalid &&
+                officerForm.get('email')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Email required</small
+              >
+            </div>
           </div>
-
-
-
-
-
-
-          
-          
-          
-
-
-
-
-
-
-
-         
         </div>
 
         <div class="flex justify-end m-10">
@@ -599,122 +663,164 @@
     </div>
 
     <div *ngIf="selectedPage === 'pageTwo'">
-    <!-- <div> -->
+      <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Residential Details
       </h2>
       <div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="pb-6">
+            <label
+              for="house"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >House / Plot Number</label
+            >
+            <input
+              formControlName="houseNumber"
+              id="houseNumber"
+              name="houseNumber"
+              [(ngModel)]="personalData.houseNumber"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+            <div
+              *ngIf="
+                officerForm.get('houseNumber')?.invalid &&
+                officerForm.get('houseNumber')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >House / Plot Number required</small
+              >
+            </div>
+          </div>
 
-  <div class="pb-6">
-    <label
-      for="house"
-      class="block text-sm font-medium text-gray-700 dark:text-textDark"
-      >House / Plot Number</label
-    >
-    <input
-      formControlName="houseNumber"
-      id="houseNumber"
-      name="houseNumber"
-      [(ngModel)]="personalData.houseNumber"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-  </div>
+          <div class="pb-6">
+            <label
+              for="street"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Street Name</label
+            >
+            <input
+              formControlName="streetName"
+              id="streetName"
+              name="streetName"
+              [(ngModel)]="personalData.streetName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+            <div
+              *ngIf="
+                officerForm.get('streetName')?.invalid &&
+                officerForm.get('streetName')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Street name required</small
+              >
+            </div>
+          </div>
 
-  <div class="pb-6">
-    <label
-      for="street"
-      class="block text-sm font-medium text-gray-700 dark:text-textDark"
-      >Street Name</label
-    >
-    <input
-      formControlName="streetName"
-      id="streetName"
-      name="streetName"
-      [(ngModel)]="personalData.streetName"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-  </div>
+          <div class="pb-6">
+            <label
+              for="city"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >City</label
+            >
+            <input
+              formControlName="city"
+              id="city"
+              name="city"
+              [(ngModel)]="personalData.city"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+            <div
+              *ngIf="
+                officerForm.get('streetName')?.invalid &&
+                officerForm.get('streetName')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >City required</small
+              >
+            </div>
+          </div>
 
+          <div class="pb-6">
+            <label
+              for="district"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
+              District
+            </label>
+            <select
+              formControlName="district"
+              id="district"
+              name="district"
+              [(ngModel)]="personalData.district"
+              (change)="updateProvince($event)"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            >
+              <option value="" disabled selected>Select a district</option>
+              <option
+                *ngFor="let district of districts"
+                [value]="district.name"
+              >
+                {{ district.name }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                officerForm.get('district')?.invalid &&
+                officerForm.get('district')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >District required</small
+              >
+            </div>
+          </div>
 
+          <div class="pb-6">
+            <label
+              for="province"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
+              Province
+            </label>
+            <input
+              formControlName="province"
+              id="province"
+              name="province"
+              [(ngModel)]="personalData.province"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
+            />
+            <div
+              *ngIf="
+                officerForm.get('province')?.invalid &&
+                officerForm.get('province')?.touched
+              "
+            >
+              <small class="text-red-500 dark:text-red-500"
+                >Province required</small
+              >
+            </div>
+          </div>
 
-  <div class="pb-6">
-    <label
-      for="city"
-      class="block text-sm font-medium text-gray-700 dark:text-textDark"
-      >City</label
-    >
-    <input
-      formControlName="city"
-      id="city"
-      name="city"
-      [(ngModel)]="personalData.city"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-  </div>
-
-  <div class="pb-6">
-    <label
-      for="district"
-      class="block text-sm font-medium text-gray-700 dark:text-textDark"
-    >
-      District
-    </label>
-    <select
-      formControlName="district"
-      id="district"
-      name="district"
-      [(ngModel)]="personalData.district"
-      (change)="updateProvince($event)"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    >
-      <option value="" disabled selected>Select a district</option>
-      <option
-        *ngFor="let district of districts"
-        [value]="district.name"
-      >
-        {{ district.name }}
-      </option>
-    </select>
-  </div>
-
-  <div class="pb-6">
-    <label
-      for="province"
-      class="block text-sm font-medium text-gray-700 dark:text-textDark"
-    >
-      Province
-    </label>
-    <input
-      formControlName="province"
-      id="province"
-      name="province"
-      [(ngModel)]="personalData.province"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      readonly
-    />
-  </div>
-
-  <div class="pb-6">
-    <label
-      for="country"
-      class="block text-sm font-medium text-gray-700 dark:text-textDark"
-      >Country</label
-    >
-    <input
-      formControlName="country"
-      id="country"
-      name="country"
-      [(ngModel)]="personalData.country"
-      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-  </div>
-</div>
-       
-
-        
-
-        
+          <div class="pb-6">
+            <label
+              for="country"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Country</label
+            >
+            <input
+              formControlName="country"
+              id="country"
+              name="country"
+              [(ngModel)]="personalData.country"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+          </div>
+        </div>
       </div>
       <div>
         <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
@@ -733,6 +839,16 @@
             [(ngModel)]="personalData.accHolderName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
+          <div
+            *ngIf="
+              officerForm.get('accHolderName')?.invalid &&
+              officerForm.get('accHolderName')?.touched
+            "
+          >
+            <small class="text-red-500 dark:text-red-500"
+              >Account holder’s name required</small
+            >
+          </div>
         </div>
 
         <div class="pb-6">
@@ -748,6 +864,16 @@
             [(ngModel)]="personalData.accNumber"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
+          <div
+            *ngIf="
+              officerForm.get('accNumber')?.invalid &&
+              officerForm.get('accNumber')?.touched
+            "
+          >
+            <small class="text-red-500 dark:text-red-500"
+              >Account number required</small
+            >
+          </div>
         </div>
 
         <div class="pb-6">
@@ -763,6 +889,16 @@
             [(ngModel)]="personalData.bankName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
+          <div
+            *ngIf="
+              officerForm.get('bankName')?.invalid &&
+              officerForm.get('bankName')?.touched
+            "
+          >
+            <small class="text-red-500 dark:text-red-500"
+              >Banck name required</small
+            >
+          </div>
         </div>
 
         <div class="pb-6">
@@ -778,6 +914,16 @@
             [(ngModel)]="personalData.branchName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
+          <div
+            *ngIf="
+              officerForm.get('branchName')?.invalid &&
+              officerForm.get('branchName')?.touched
+            "
+          >
+            <small class="text-red-500 dark:text-red-500"
+              >Branch name required</small
+            >
+          </div>
         </div>
       </div>
 
@@ -799,54 +945,3 @@
     </div>
   </form>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

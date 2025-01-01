@@ -33,7 +33,7 @@
             <div *ngIf="userForm.get('regNumber')!.invalid && (userForm.get('regNumber')!.dirty || userForm.get('regNumber')!.touched)" class="text-red-500 text-sm mt-1">
               <div *ngIf="userForm.get('regNumber')!.errors?.['required']">Phone number is required.</div>
               <div *ngIf="userForm.get('regNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
-          </div>
+            </div>
           </div>
 
 

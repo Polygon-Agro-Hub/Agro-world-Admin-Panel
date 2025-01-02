@@ -10,7 +10,7 @@
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
 
 
-    <div *ngIf="selectedPage === 'pageOne'">
+    <div *ngIf="itemId === null">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Company Details
       </h2>
@@ -453,11 +453,243 @@
             Submit
           </button>
         </div>
-      </div>
+    </div>
+
+    
+    <div *ngIf="itemId !== null">
+      <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+        Edit Company Details
+      </h2>
+      <div>
+
+        
+
+        <div class="pb-6">
+            <label
+              for="regNumber"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Registration Number of the Company</label
+            >
+            <input
+            [(ngModel)]="companyData.regNumber"
+              id="regNumber"
+              name="regNumber"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+            <div *ngIf="userForm.get('regNumber')!.invalid && (userForm.get('regNumber')!.dirty || userForm.get('regNumber')!.touched)" class="text-red-500 text-sm mt-1">
+              <div *ngIf="userForm.get('regNumber')!.errors?.['required']">Phone number is required.</div>
+              <div *ngIf="userForm.get('regNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
+            </div>
+          </div>
+
+
+
+        <div class="pb-6">
+          <label
+            for="companyNameEnglish"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Name (in English)</label
+          >
+          <input
+            id="companyNameEnglish"
+            name="companyNameEnglish"
+            [(ngModel)]="companyData.companyNameEnglish"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div *ngIf="userForm.get('companyNameEnglish')!.invalid && (userForm.get('companyNameEnglish')!.dirty || userForm.get('companyNameEnglish')!.touched)" class="text-red-500 text-sm mt-1">
+            <div *ngIf="userForm.get('companyNameEnglish')!.errors?.['required']">Company Name is required.</div>
+          </div>
+        </div>
+
+
+
+
+
+        <div class="pb-6">
+          <label
+            for="companyNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Name (in Sinhala)</label
+          >
+          <input
+            id="companyNameSinhala"
+            name="companyNameSinhala"
+            [(ngModel)]="companyData.companyNameSinhala"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div *ngIf="userForm.get('companyNameSinhala')!.invalid && (userForm.get('companyNameSinhala')!.dirty || userForm.get('companyNameSinhala')!.touched)" class="text-red-500 text-sm mt-1">
+            <div *ngIf="userForm.get('companyNameSinhala')!.errors?.['required']">Company Name is required.</div>
+          </div>
+        </div>
+
+
+
+
+        <div class="pb-6">
+          <label
+            for="companyNameTamil"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Name (in Tamil)</label
+          >
+          <input
+            id="companyNameTamil"
+            name="companyNameTamil"
+            [(ngModel)]="companyData.companyNameTamil"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div *ngIf="userForm.get('companyNameTamil')!.invalid && (userForm.get('companyNameTamil')!.dirty || userForm.get('companyNameTamil')!.touched)" class="text-red-500 text-sm mt-1">
+            <div *ngIf="userForm.get('companyNameTamil')!.errors?.['required']">Company Name is required.</div>
+          </div>
+        </div>
 
       
 
+        <div class="pb-6">
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Email Address</label
+          >
+          <input
+            id="email"
+            name="email"
+            [(ngModel)]="companyData.email"
+            type="email"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div *ngIf="userForm.get('email')!.invalid && (userForm.get('email')!.dirty || userForm.get('email')!.touched)" class="text-red-500 text-sm mt-1">
+            <div *ngIf="userForm.get('email')!.errors?.['required']">Email is required.</div>
+          </div>
+        </div>
 
+
+
+        <div class="pb-6">
+            <label
+              for="oicName"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Officer In Charge Name</label
+            >
+            <input
+              id="oicName"
+              name="oicName"
+              [(ngModel)]="companyData.oicName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+            <div *ngIf="userForm.get('oicName')!.invalid && (userForm.get('oicName')!.dirty || userForm.get('oicName')!.touched)" class="text-red-500 text-sm mt-1">
+              <div *ngIf="userForm.get('oicName')!.errors?.['required']">Name is required.</div>
+            </div>
+          </div>
+
+
+
+
+          <div class="pb-6">
+            <label
+              for="oicEmail"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Officer In Charge Email</label
+            >
+            <input
+              id="oicEmail"
+              name="oicEmail"
+              [(ngModel)]="companyData.oicEmail"
+              type="email"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            />
+            <div *ngIf="userForm.get('oicEmail')!.invalid && (userForm.get('oicEmail')!.dirty || userForm.get('oicEmail')!.touched)" class="text-red-500 text-sm mt-1">
+              <div *ngIf="userForm.get('oicEmail')!.errors?.['required']">Email is required.</div>
+            </div>
+          </div>
+
+
+
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+         
+            <div>
+                <label
+                  for="phoneNumber01"
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
+                  Phone Number - 1
+                </label>
+                <div class="mt-1 flex">
+                  <select
+                    id="phoneNumber01Code"
+                    name="phoneNumber01Code"
+                    [(ngModel)]="companyData.oicConCode1"
+                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+                  >
+                    <option value="+94">+94 (LK)</option>
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+91">+91 (India)</option>
+                  </select>
+                  <input
+                  [(ngModel)]="companyData.oicConNum1"
+                    id="phoneNumber01"
+                    name="phoneNumber01"
+                    type="number"
+                    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+              </div>
+    
+              <div>
+                <label
+                  for="phoNumTwo"
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
+                  Phone Number - 2 (Optional)
+                </label>
+                <div class="mt-1 flex">
+                  <select
+                    id="phoneNumber02Code"
+                    name="phoneNumber02Code"
+                    [(ngModel)]="companyData.oicConCode2"
+                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+                  >
+                    <option value="+94">+94 (LK)</option>
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+91">+91 (India)</option>
+                  </select>
+                  <input
+                    [(ngModel)]="companyData.oicConNum2"
+                    id="phoneNumber02"
+                    name="phoneNumber02"
+                    type="number"
+                    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                    placeholder="Enter your phone number"
+                  />
+                  
+                </div>
+              </div>
+
+        </div>
+      </div>
+      
+
+      <div class="flex justify-end m-10">
+        <button
+          
+          type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+          (click)="nextFormCreate('pageTwo')"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+      
 </div>
 
 

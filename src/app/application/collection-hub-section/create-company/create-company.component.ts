@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import Swal from 'sweetalert2';
+import { response } from 'express';
+import { error } from 'console';
 
 @Component({
   selector: 'app-create-company',
@@ -19,7 +21,7 @@ export class CreateCompanyComponent {
   companyData: Company = new Company();
   userForm: FormGroup;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
-
+  itemId: number | null = null;
   
 
 
@@ -56,10 +58,33 @@ export class CreateCompanyComponent {
 
   ngOnInit() {
     // Subscribe to form value changes
+    this.route.queryParams.subscribe((params)=>{
+      this.itemId = params['id'] ? +params['id'] : null;
+      console.log('Received item ID:', this.itemId);
+    });
     this.userForm.valueChanges.subscribe(formValues => {
       this.companyData = { ...this.companyData, ...formValues };
     });
+    this.getCompanyData();
   }
+
+  
+getCompanyData() {
+  if (this.itemId) {
+    this.collectionCenterSrv.getCompanyById(this.itemId).subscribe(
+      (response: any) => {
+        console.log('Fetched company data:', response);
+
+        this.companyData = response;
+        console.log("--check--",this.companyData);
+      },
+      (error) => {
+        console.error('Error fetching company data:', error);
+        Swal.fire('Error', 'Failed to fetch company data. Please try again.', 'error');
+      }
+    );
+  }
+}
 
 
   saveCompanyData() {
@@ -113,13 +138,29 @@ export class CreateCompanyComponent {
       this.selectedPage = page;
     }
 
-
-
+    updateCompanyData(){
+      if(this.itemId){
+        this.collectionCenterSrv.updateCompany(this.companyData, this.itemId).subscribe(
+          (response)=>{
+            console.log('Company updated successfully:', response);
+            Swal.fire('Success', 'Company Updated Successfully', 'success');
+            this.router.navigate(['/collection-hub/manage-company']);
+          },
+          (error) =>{
+            console.error('Error updating company:', error);
+            Swal.fire('Error', 'Failed to update company. Please try again.', 'error');
+          }
+        );
+      }else{
+        Swal.fire('Error', 'No company ID found for update', 'error');
+      }
+    }
 
 }
 
 
 class Company {
+  id!:number;
   regNumber!: string;
   companyNameEnglish!: string;
   companyNameSinhala!: string;

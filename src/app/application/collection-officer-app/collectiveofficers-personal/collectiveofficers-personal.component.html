@@ -12,7 +12,7 @@
 >
  
     <div *ngIf="selectedPage === 'pageOne'">
-    <!-- <div> -->
+      <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Personal Details
       </h2>
@@ -56,25 +56,22 @@
           </div>
         </div>
 
-
-        
-
         <div class="h-[20px]"></div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-
-
-
-
           <div>
-            <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label
+              for="enpType"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
               Staff Employee Type
             </label>
-          
+
             <div class="flex items-center space-x-4 mt-3">
               <div class="flex items-center space-x-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
                   <input
                     class="w-5 h-5"
                     type="radio"
@@ -88,7 +85,9 @@
                 </label>
               </div>
               <div class="flex items-center space-x-2">
-                <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >
                   <input
                     class="w-5 h-5"
                     type="radio"
@@ -106,16 +105,6 @@
               Please select an employee type.
             </p>
           </div>
-          
-        
-         
-
-
-          
-
-
-
-
 
           <div>
             <label
@@ -124,7 +113,7 @@
             >
               Preferred Languages
             </label>
-  
+
             <div class="flex items-center space-x-4 mt-3">
               <div class="flex items-center space-x-2">
                 <input
@@ -174,12 +163,6 @@
             </p>
           </div>
 
-
-
-
-
-
-
           <div>
             <label
               for="centerId"
@@ -204,7 +187,6 @@
             </select>
             <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm">Company Name is required.</span>
           </div>
-
 
           <div>
             <label
@@ -318,15 +300,11 @@
                 type="text"
                 [value]="lastID"
                 name="empId"
-               
                 class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 disabled
               />
             </div>
           </div>
-
-
-
 
           <div *ngIf="personalData.jobRole === 'Collection Officer'">
             <label
@@ -602,7 +580,7 @@
     </div>
 
     <div *ngIf="selectedPage === 'pageTwo'">
-    <!-- <div> -->
+      <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Residential Details
       </h2>
@@ -811,54 +789,3 @@
     
  
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

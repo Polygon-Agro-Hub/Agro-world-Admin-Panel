@@ -219,4 +219,36 @@ export class CollectionCenterService {
     });
   }
 
+  updateCompany(companyData:any, id: number): Observable<any> {
+    console.log(companyData);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    })
+    return this.http.patch(`${this.apiUrl}update-company/${id}`, companyData, {
+      headers,
+    })
+  }
+
+  getCompanyById( id: number): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    })
+    return this.http.get(`${this.apiUrl}get-company-by-id/${id}`, {
+      headers,
+    })
+  }
+
+  deleteCompany(id:number): Observable<any>{
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log("DELETE ITEM", id);
+    return this.http.delete(`${this.apiUrl}delete-company/${id}`,{
+      headers,
+    })
+  }
 }

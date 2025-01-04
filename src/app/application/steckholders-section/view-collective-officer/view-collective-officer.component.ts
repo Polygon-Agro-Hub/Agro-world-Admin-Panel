@@ -147,10 +147,11 @@ export class ViewCollectiveOfficerComponent {
     });
   }
 
+ 
+
+
   editCollectionOfficer(id: number) {
-    this.router.navigate(['/steckholders/collective-officer/personal'], {
-      queryParams: { id },
-    });
+    this.router.navigate([`steckholders/collective-officer/personal-edit/${id}`]);
   }
 
   openPopup(item: any) {

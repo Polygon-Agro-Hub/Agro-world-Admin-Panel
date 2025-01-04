@@ -72,6 +72,7 @@ import { AddPackageComponent } from './application/marketplace/add-package/add-p
 import { MonthlyReportComponent } from './application/report-section/monthly-report/monthly-report.component';
 import { CreateCompanyComponent } from './application/collection-hub-section/create-company/create-company.component';
 import { ManageCompanyComponent } from './application/collection-hub-section/manage-company/manage-company.component';
+import { CollectiveofficersEditComponent } from './application/collection-officer-app/collectiveofficers-edit/collectiveofficers-edit.component';
 
 export const routes: Routes = [
   {
@@ -299,6 +300,10 @@ export const routes: Routes = [
               {
                 path: 'personal',
                 component: CollectiveofficersPersonalComponent,
+              },
+              {
+                path: 'personal-edit/:id',
+                component: CollectiveofficersEditComponent,
               },
               {
                 path: 'company',

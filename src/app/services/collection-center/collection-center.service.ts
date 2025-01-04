@@ -197,6 +197,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
+    console.log('This is company Id',companyId)
     return this.http.get(`${this.apiUrl}get-all-manager-list/${companyId}/${centerId}`, {
       headers,
     });

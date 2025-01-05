@@ -11,8 +11,8 @@
   class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg"
 >
   
-    <!-- <div *ngIf="selectedPage === 'pageOne'"> -->
-    <div>
+    <div *ngIf="selectedPage === 'pageOne'">
+    <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Personal Details
       </h2>
@@ -238,7 +238,7 @@
 
           
 
-          <div *ngIf="personalData.companyId=='1'">
+          <div>
             <label
               for="jobRole"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -260,7 +260,12 @@
               >
                 -- select --
               </option>
-              
+              <option
+              value="Collection Center Head"
+              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+            >
+              Collection Center Head
+            </option>
               <option
                 selected
                 value="Collection Center Manager"
@@ -301,7 +306,9 @@
               <span
                 class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
               >
-                
+              <p *ngIf="personalData.jobRole === 'Collection Center Head'">
+                CCH
+              </p>
                 <p *ngIf="personalData.jobRole === 'Collection Center Manager'">
                   CCM
                 </p>
@@ -571,8 +578,8 @@
       </div>
     </div>
 
-    <!-- <div *ngIf="selectedPage === 'pageTwo'"> -->
-    <div>
+    <div *ngIf="selectedPage === 'pageTwo'">
+    <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Residential Details
       </h2>
@@ -689,7 +696,7 @@
 
         
       </div>
-      <div>
+      <div *ngIf="personalData.companyId == 1">
         <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
           Add Bank Details
         </h2>
@@ -764,6 +771,7 @@
         </button>
         <button
           type="submit"
+          (click)="onSubmit()"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Submit

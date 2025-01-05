@@ -13,7 +13,7 @@
   </svg>
   Add New
 </button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg inline-block">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Collection Officers</h2>
@@ -42,7 +42,7 @@
       </div>
     </div>
   </div>
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto inline-block">
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
@@ -91,20 +91,23 @@
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.centerName }}</td>
           <td class="px-4 py-3 text-center">
             <div>
-              <span [ngClass]="{
-                  'w-24 h-19.5 inline-block font-medium px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg ':
+              <span
+                [ngClass]="{
+                  'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
                     item.status === 'Not Approved',
-                  'w-24 h-19.5 inline-block font-medium px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg ':
+                  'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg':
                     item.status === 'Approved',
-                  'w-24 h-19.5 inline-block font-medium px-3 py-1 text-sm bg-red-100 text-red-500 rounded-lg ':
+                  'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-lg':
                     item.status === 'Rejected'
                 }"
-                class="w-24 h-19.5 inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
-                (click)="openPopup(item)">
+                class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                (click)="openPopup(item)"
+              >
                 {{ item.status }}
               </span>
             </div>
           </td>
+          
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneNumber01 }}</td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.nic }}</td>
           

@@ -23,4 +23,14 @@ export class CollectionOfficerService {
       headers,
     });
   }
+
+
+  editCollectiveOfficer(person:any, id:number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.put(`${this.apiUrl}update-officer-details/${id}`, {officerData:person}, {
+      headers,
+    });
+  }
 }

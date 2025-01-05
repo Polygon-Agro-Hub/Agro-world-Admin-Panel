@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
+import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 
 @Component({
   selector: 'app-collectiveofficers-edit',
@@ -28,8 +29,12 @@ export class CollectiveofficersEditComponent {
   collectionManagerData: CollectionManager[] = []
   lastID!: string
   empType!: string;
-  cenId!: string
-  comId!: string;
+  cenId!: number
+  comId!: number;
+  initiateJobRole!: string;
+  initiateId!: string;
+  errorMessage: string = '';
+
   
 
   districts = [
@@ -67,6 +72,7 @@ export class CollectiveofficersEditComponent {
       private route: ActivatedRoute,
       private router: Router,
       private collectionCenterSrv: CollectionCenterService,
+      private collectionOfficerService: CollectionOfficerService,
     ) {}
 
 
@@ -151,6 +157,11 @@ export class CollectiveofficersEditComponent {
           this.lastID = this.personalData.empId.slice(-5);
           this.cenId = this.personalData.centerId;
           this.comId = this.personalData.companyId;
+          this.initiateJobRole = officerData.jobRole || '';
+          this.initiateId = officerData.empId.slice(-5);
+
+          console.log('This is the initiate Id',this.initiateJobRole)
+          console.log('This is the initiate JobRole',this.initiateId)
   
           console.log('Mapped Personal Data: ', this.personalData);
           console.log('laguages', this.selectedLanguages);
@@ -245,6 +256,9 @@ export class CollectiveofficersEditComponent {
 
     EpmloyeIdCreate() {
 
+
+      
+
       // this.getAllCollectionManagers();
       let rolePrefix: string | undefined;
     
@@ -258,20 +272,30 @@ export class CollectiveofficersEditComponent {
     
       // Get the prefix based on the job role
       rolePrefix = rolePrefixes[this.personalData.jobRole];
-    
-      if (!rolePrefix) {
-        console.error(`Invalid job role: ${this.personalData.jobRole}`);
-        return; // Exit if the job role is invalid
+
+
+      if(this.personalData.jobRole === this.initiateJobRole){
+        console.log('is');
+        this.lastID =  this.initiateId;
+      }else{
+        console.log('no');
+        if (!rolePrefix) {
+          console.error(`Invalid job role: ${this.personalData.jobRole}`);
+          return; // Exit if the job role is invalid
+        }
+      
+        // Fetch the last ID and assign a new Employee ID
+        this.getLastID(rolePrefix)
+          .then((lastID) => {
+            this.personalData.empId = rolePrefix + lastID;
+          })
+          .catch((error) => {
+            console.error('Error fetching last ID:', error);
+          });
+
       }
     
-      // Fetch the last ID and assign a new Employee ID
-      this.getLastID(rolePrefix)
-        .then((lastID) => {
-          this.personalData.empId = rolePrefix + lastID;
-        })
-        .catch((error) => {
-          console.error('Error fetching last ID:', error);
-        });
+     
     }
 
 
@@ -399,6 +423,43 @@ export class CollectiveofficersEditComponent {
         
 
 
+         onSubmit() {
+            console.log(this.personalData); // Logs the personal data with updated languages
+            console.log('hii', this.personalData.empType);
+          
+            // Show a confirmation dialog before proceeding
+            Swal.fire({
+              title: 'Are you sure?',
+              text: 'Do you want to create the collection officer?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, create it!',
+              cancelButtonText: 'No, cancel',
+              reverseButtons: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Proceed with submission if user clicks 'Yes'
+                this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId).subscribe(
+                  (res: any) => {
+                    
+          
+                    Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
+                    this.router.navigate(['/steckholders/collective-officer']);
+                  },
+                  (error: any) => {
+                    this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
+                    Swal.fire('Error', this.errorMessage, 'error');
+                  }
+                );
+              } else {
+                // If user clicks 'No', do nothing or show a cancellation message
+                Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+              }
+            });
+          }
+        
+
+
 
 
 }
@@ -407,7 +468,7 @@ export class CollectiveofficersEditComponent {
 class Personal {
   jobRole!: string;
   empId!: any;
-  centerId!: string;
+  centerId!: number;
   irmId!: number;
   empType!: string ;
   firstNameEnglish!: string;
@@ -432,7 +493,7 @@ class Personal {
   province!: string;
   country: string = 'Sri Lanka';
   languages: string = '';
-  companyId! : string;
+  companyId! : number;
   image!: any;
   accHolderName!: any;
   accNumber!: any;

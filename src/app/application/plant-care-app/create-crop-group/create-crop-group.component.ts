@@ -35,14 +35,15 @@ export class CreateCropGroupComponent {
     cropNameTamil: '',
     parentCategory: '',
     bgColor: '',
+    fileName: ''
   };
   categories = ['Fruit', 'Grain', 'Mushrooms', 'Vegetables'];
   imagePreview: string | ArrayBuffer | null = null;
   isLoading = false;
-  selectedFileName: string | null = null;
+  selectedFileName: string = '';
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
-  selectUpdateName!:string
+  selectUpdateName!: string
 
   itemId: number | null = null;
 
@@ -70,7 +71,7 @@ export class CreateCropGroupComponent {
           next: (response: any) => {
             this.newsItems = response.groups;
             this.selectUpdateName = response.groups[0].cropNameEnglish
-            
+
             if (response.groups[0].image) {
               this.selectedImage = response.groups[0].image; // Base64 image
               this.selectedFileName = "Existing Image";
@@ -132,7 +133,8 @@ export class CreateCropGroupComponent {
     formData.append('cropNameTamil', this.cropGroup.cropNameTamil);    // Adjust as needed
     formData.append('category', this.cropGroup.parentCategory);
     formData.append('bgColor', this.cropGroup.bgColor);
-    formData.append('image', this.selectedFile);  // The key should match backend's expected field name
+    formData.append('image', this.selectedFile);  // The key should match backend's expected field name selectedFileName
+    formData.append('fileName', this.selectedFileName);  // The key should match backend's expected field name selectedFileName
 
     // Send POST request to backend
     this.cropCalendarService.createCropGroup(formData).subscribe({
@@ -180,6 +182,7 @@ export class CreateCropGroupComponent {
       cropNameTamil: '',
       parentCategory: '',
       bgColor: '',
+      fileName: ''
     };
     Swal.fire({
       icon: 'info',

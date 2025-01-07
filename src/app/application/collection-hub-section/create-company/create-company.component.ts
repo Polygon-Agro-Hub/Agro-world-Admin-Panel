@@ -22,7 +22,7 @@ export class CreateCompanyComponent {
   userForm: FormGroup;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
-  
+  touchedFields: { [key in keyof Company]?: boolean } = {};
 
 
   constructor(
@@ -117,10 +117,10 @@ getCompanyData() {
         if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
         if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
         if (!this.companyData.email) missingFields.push('Company Email');
-        if (!this.companyData.oicName) missingFields.push('Officer In Charge Name');
-        if (!this.companyData.oicEmail) missingFields.push('Officer In Charge Email');
-        if (!this.companyData.oicConCode1) missingFields.push('Phone Number 01 Code');
-        if (!this.companyData.oicConNum1) missingFields.push('Phone Number 02');
+        // if (!this.companyData.oicName) missingFields.push('Officer In Charge Name');
+        // if (!this.companyData.oicEmail) missingFields.push('Officer In Charge Email');
+        // if (!this.companyData.oicConCode1) missingFields.push('Phone Number 01 Code');
+        // if (!this.companyData.oicConNum1) missingFields.push('Phone Number 02');
 
     
         if (missingFields.length > 0) {
@@ -155,6 +155,22 @@ getCompanyData() {
         Swal.fire('Error', 'No company ID found for update', 'error');
       }
     }
+
+
+
+
+
+    onBlur(fieldName: keyof Company): void {
+      this.touchedFields[fieldName] = true;
+    }
+  
+    isFieldInvalid(fieldName: keyof Company): boolean {
+      return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
+    }
+
+
+
+
 
 }
 

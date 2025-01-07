@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 })
 export class ManageCompanyComponent {
   companies: CompanyDetails[] = [];
+  total: number | null = null;
 
   constructor(private companyService: CollectionCenterService, private router: Router,) {}
 
@@ -28,6 +29,7 @@ export class ManageCompanyComponent {
         console.log(response);
         
         this.companies = response.results;
+        this.total = response.total;
       },
       (error) => {
         console.error(error);
@@ -85,15 +87,13 @@ export class ManageCompanyComponent {
 
 class CompanyDetails {
   id!:number;
-  companyNameEnglish!: string;
-  email!: string;
+  companyName!: string;
+  companyEmail!: string;
   status!:number;
-  oicName!: string;
-  oicEmail!: string;
-  oicConCode1!: number;
-  oicConNum1!: number;
-  oicConCode2!: number;
-  oicConNum2!: number;
   jobRole!:string;
-  jobRoleCount!:number;
+  numOfHead!:number;
+  numOfManagers!:number;
+  numOfOfficers!:number;
+  numOfCustomerOfficers!:number;
+  numOfCenters!:number;
 }

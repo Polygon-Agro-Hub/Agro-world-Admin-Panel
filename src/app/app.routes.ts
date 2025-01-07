@@ -73,6 +73,7 @@ import { MonthlyReportComponent } from './application/report-section/monthly-rep
 import { CreateCompanyComponent } from './application/collection-hub-section/create-company/create-company.component';
 import { ManageCompanyComponent } from './application/collection-hub-section/manage-company/manage-company.component';
 import { CollectiveofficersEditComponent } from './application/collection-officer-app/collectiveofficers-edit/collectiveofficers-edit.component';
+import { SalesDashComponent } from './application/sales-dash-section/sales-dash/sales-dash/sales-dash.component';
 
 export const routes: Routes = [
   {
@@ -424,6 +425,15 @@ export const routes: Routes = [
             path: 'add-package',
             component: AddPackageComponent,
           },
+        ]
+      },
+      {
+        path:'sales-dash',
+        children:[
+          {
+            path:'',
+            component: SalesDashComponent,
+          }
         ]
       }
     ],

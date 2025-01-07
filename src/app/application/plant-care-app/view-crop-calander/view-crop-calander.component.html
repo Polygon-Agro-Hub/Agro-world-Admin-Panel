@@ -14,7 +14,7 @@
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Crop Calenders</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All Crop Calenders ({{this.totalItems}})</h2>
     </div>
   </div>
 
@@ -27,6 +27,7 @@
     <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
       <thead>
         <tr>
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Crop</th>
           <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Crop</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Variety
@@ -53,8 +54,9 @@
                     itemsPerPage: itemsPerPage,
                     currentPage: page,
                     totalItems: totalItems
-                  }
+                  } ; let i = index
           " class="border-b border-gray-200 dark:border-[#4B555A]">
+          <td class="py-3 text-textLight dark:text-textDark">{{ i + 1 }}</td>
           <td class="py-3 text-textLight dark:text-textDark">{{ item.cropNameEnglish }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.varietyNameEnglish }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.category }}</td>

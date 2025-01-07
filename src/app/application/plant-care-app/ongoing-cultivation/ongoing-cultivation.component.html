@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
 
-            <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">Ongoing Cultivation</h2>
+            <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">Ongoing Cultivation ({{this.ongoingCultivation.length}})</h2>
         </div>
         <div class="flex items-center">
             <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -62,6 +62,7 @@
         <table class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
+                  <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">No</th>
                     <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">First Name</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Last Name</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">NIC</th>
@@ -79,8 +80,9 @@
                               itemsPerPage: itemsPerPage,
                               currentPage: page,
                               totalItems: totalItems
-                            }
+                            } ; let i = index
                     ">
+                    <td class="py-3 dark:text-textDark"> {{ i + 1 }}</td>
                     <td class="py-3 dark:text-textDark">{{item.firstName}}</td>
                     <td class="px-4 py-3 dark:text-textDark text-center">{{item.lastName}}</td>
                     <td class="px-4 py-3 dark:text-textDark text-center">{{item.NICnumber}}</td>

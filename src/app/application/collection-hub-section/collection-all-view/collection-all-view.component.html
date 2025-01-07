@@ -13,7 +13,7 @@ onclick="history.back()">
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Collection Centers</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Collection Centers ({{this.totalItems}})</h2>
     </div>
     <div class="flex items-center">
       <!-- <div class="mr-5">
@@ -48,6 +48,7 @@ onclick="history.back()">
     <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
       <thead>
         <tr>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">No</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Reg Code</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Center Name</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">City</th>
@@ -60,7 +61,8 @@ onclick="history.back()">
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of collectionObj">
+        <tr *ngFor="let item of collectionObj; let i = index">
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ i + 1 }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.regCode }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.centerName }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.street }}</td>

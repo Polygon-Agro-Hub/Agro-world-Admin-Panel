@@ -72,7 +72,7 @@
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center">
 
-                <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All News</h2>
+                <h2 class="text-2xl font-normal text-textLight dark:text-textDark">All News ({{this.totalItems}})</h2>
             </div>
             <div class="flex items-center">
                 <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
@@ -114,6 +114,7 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
                 <thead>
                     <tr>
+                        <th class="py-3 font-normal text-textLight dark:text-textDark text-left">No</th>
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-left">Title</th>
                         <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">View / Hide
                         </th>
@@ -128,7 +129,8 @@
                         itemsPerPage:itemsPerPage,
                         currentPage:page,
                         totalItems:totalItems
-                    }" class="border-b border-gray-200 dark:border-[#4B555A]">
+                    } ; let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
+                    <td class="px-4 py-3 text-left dark:text-textDark text-centser">{{ i + 1 }}</td>
                         <td class="py-3 dark:text-textDark text-centser">
                             {{ item.titleEnglish.length > 15 ? (item.titleEnglish | slice:0:35) + '.......' :
                             item.titleEnglish }}

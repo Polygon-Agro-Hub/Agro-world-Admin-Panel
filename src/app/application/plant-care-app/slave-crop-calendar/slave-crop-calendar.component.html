@@ -5,7 +5,7 @@
   </button>
     <div class="h-[20px]"></div>
     <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark">User Ongoing cultivation</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark">User Ongoing cultivation ({{this.cultivtionItems.length}})</h2>
 
         
 
@@ -18,6 +18,7 @@
               <table class="min-w-full divide-y divide-gray-200 table-auto">
                   <thead>
                       <tr>
+                        <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">No</th>
                           <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">Crop Name</th>
                           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Variety</th>
                           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">Cultivation Method</th>
@@ -30,8 +31,9 @@
                   <tbody>
       
                       <tr *ngFor="
-                            let item of newsItems
+                            let item of newsItems; let i = index
                           ">
+                          <td class="py-3 dark:text-textDark">{{ i + 1 }}</td>
                           <td class="py-3 dark:text-textDark">{{item.cropName}}</td>
                           <td class="px-4 py-3 dark:text-textDark text-center">{{item.variety}}</td>
                           <td class="px-4 py-3 dark:text-textDark text-center">{{item.cultivationMethod}}</td>

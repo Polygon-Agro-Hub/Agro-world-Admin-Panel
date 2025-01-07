@@ -40,6 +40,7 @@ export class ViewVarietyComponent {
   isLoading = true;
   itemId: number | null = null;
   name!: string;
+  total: number | null = null;
 
   constructor(
     private cropCalendarService: CropCalendarService,
@@ -64,6 +65,7 @@ export class ViewVarietyComponent {
         this.newCropGroup = data.groups;
         console.log(this.newCropGroup);
         this.hasData = this.newCropGroup.length > 0;
+        this.total = this.newCropGroup.length;
       },
       (error) => {
         console.error('Error fetch news:', error);

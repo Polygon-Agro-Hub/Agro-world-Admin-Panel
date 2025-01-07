@@ -16,7 +16,7 @@
 <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Collection Officers</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Collection Officers ({{this.totalItems}})</h2>
     </div>
     <div class="flex items-center">
       <div class="mr-5 ">
@@ -46,6 +46,11 @@
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
+          <th
+          class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+        >
+          No
+        </th>
           <!-- <th class="py-3 font-normal text-gray-500 text-left"></th> -->
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Emp. Id</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -78,12 +83,15 @@
                     itemsPerPage: itemsPerPage,
                     currentPage: page,
                     totalItems: totalItems
-                  }
+                  } ; let i = index
           ">
           <!-- <td class="py-3">
             <img class="profile-pic w-14 h-14 bg-white rounded-full" [src]="'data:image/jpeg;base64,' + item.image"
               alt="Profile Picture" width="50" height="50" />
           </td> -->
+          <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            {{ i + 1 }}
+          </td>
           <td class="px-2 py-3 text-center text-textLight dark:text-textDark">{{ item.empId }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.firstNameEnglish }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.lastNameEnglish }}</td>

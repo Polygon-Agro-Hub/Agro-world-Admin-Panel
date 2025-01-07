@@ -83,6 +83,7 @@ export class ViewPlantcareUsersComponent {
   searchNIC: string = '';
   isLoading = false;
   hasData: boolean = true;  
+  
 
   constructor(private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router) { }
 

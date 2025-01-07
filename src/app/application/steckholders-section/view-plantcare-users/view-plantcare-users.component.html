@@ -21,7 +21,7 @@
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-            <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Plant Care Users</h2>
+            <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Plant Care Users ({{this.totalItems}})</h2>
         </div>
         <div class="mr-8">
             <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
@@ -71,6 +71,9 @@
         <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
             <thead>
                 <tr>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                      No
+                    </th>
                     <th class="py-3 font-normal text-textLight dark:text-textDark text-left"></th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Name</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Phone</th>
@@ -79,15 +82,18 @@
             </thead>
             <tbody>
                 <tr *ngFor="
-            let item of plantCareUser
+            let item of plantCareUser 
               | paginate
                 : {
                     itemsPerPage: itemsPerPage,
                     currentPage: page,
                     totalItems: totalItems
-                  }
+                  } ; let i = index
           " class="border-b border-gray-200 dark:border-[#4B555A]"
           >
+          <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            {{ i + 1 }}
+          </td>
                     <td class="py-3">
                         <img *ngIf="item.profileImage != null" class="profile-pic" [src]="item.profileImage" />
                       

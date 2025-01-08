@@ -117,14 +117,14 @@ export class CreateNewsComponent {
         tag: 'h1',
       },
     ],
-
+    
     uploadWithCredentials: false,
     sanitize: false,
     toolbarPosition: 'top',
     toolbarHiddenButtons: [
       [
         'insertImage',
-        'backgroundColor',
+        // 'backgroundColor',
         'customClasses',
         'insertVideo',
         'insertHorizontalRule',
@@ -303,25 +303,43 @@ export class CreateNewsComponent {
     }
   }
 
-  onCancel() {
-    this.createNewsObj = new CreateNews();
-    this.selectedFile = null;
-    this.selectedImage = null;
-    this.selectedLanguage = 'english';
-    console.log('Form cleared');
-    Swal.fire('Form cleared', '', 'info');
-  }
+  // onCancel() {
+  //   this.createNewsObj = new CreateNews();
+  //   this.selectedFile = null;
+  //   this.selectedImage = null;
+  //   this.selectedLanguage = 'english';
+  //   console.log('Form cleared');
+  //   Swal.fire('Form cleared', '', 'info');
+  // }
 
-  onCancel2() {
-    this.createNewsObj = new CreateNews();
-    this.selectedFile = null;
-    this.selectedImage = null;
-    this.selectedLanguage = 'english';
-    console.log('Form cleared');
-    Swal.fire('Form cleared', '', 'info').then(() => {
-      this.router.navigate(['/plant-care/manage-content']);
-    });
-  }
+  // onCancel2() {
+  //   this.createNewsObj = new CreateNews();
+  //   this.selectedFile = null;
+  //   this.selectedImage = null;
+  //   this.selectedLanguage = 'english';
+  //   console.log('Form cleared');
+  //   Swal.fire('Form cleared', '', 'info').then(() => {
+  //     this.router.navigate(['/plant-care/manage-content']);
+  //   });
+  // }
+
+   onCancel() {
+
+          Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: 'You may lose the added data after canceling!',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Cancel',
+            cancelButtonText: 'No, Keep Editing',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.selectedFile = null;
+              this.selectedImage = null;
+              this.router.navigate(['/plant-care'])
+            }
+          });
+        }
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;

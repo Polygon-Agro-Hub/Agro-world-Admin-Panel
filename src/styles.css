@@ -10,3 +10,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Apply Tailwind classes using @apply */
+.angular-editor-toolbar {
+    @apply bg-gray-100; /* Light gray background */
+  }
+  
+  .angular-editor-textarea {
+    @apply bg-yellow-50; /* Light yellow background */
+  }
+  

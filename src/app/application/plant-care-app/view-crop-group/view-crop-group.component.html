@@ -59,11 +59,16 @@
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.varietyCount || 0 }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.category }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <ul>
-              <li *ngFor="let variety of item.varietyList">
-                {{ variety }}
-              </li>
-            </ul>
+            <div *ngIf="item.varietyList.length != 0">
+              <ul>
+                <li *ngFor="let variety of item.varietyList">
+                  {{ variety }}
+                </li>
+              </ul>
+            </div>
+            <div *ngIf="item.varietyList.length === 0">
+              No Varieties Yet
+            </div>
           </td>
           
           <td class="px-3 py-3 text-center text-textLight dark:text-textDark">

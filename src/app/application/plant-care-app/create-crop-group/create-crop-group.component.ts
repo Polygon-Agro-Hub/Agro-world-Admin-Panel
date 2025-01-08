@@ -173,25 +173,51 @@ export class CreateCropGroupComponent {
 
 
 
+  // onCancel() {
+  //   // Reset form or navigate away
+  //   // this.router.navigate(['/plant-care']);
+  //   this.cropGroup = {
+  //     cropNameEnglish: '',
+  //     cropNameSinahala: '',
+  //     cropNameTamil: '',
+  //     parentCategory: '',
+  //     bgColor: '',
+  //     fileName: ''
+  //   };
+  //   Swal.fire({
+  //     icon: 'info',
+  //     title: 'Cancelled',
+  //     text: 'Form has been cleared!',
+  //     timer: 2000,
+  //     showConfirmButton: false,
+  //   });
+  // }
+
   onCancel() {
-    // Reset form or navigate away
-    // this.router.navigate(['/plant-care']);
-    this.cropGroup = {
-      cropNameEnglish: '',
-      cropNameSinahala: '',
-      cropNameTamil: '',
-      parentCategory: '',
-      bgColor: '',
-      fileName: ''
-    };
-    Swal.fire({
-      icon: 'info',
-      title: 'Cancelled',
-      text: 'Form has been cleared!',
-      timer: 2000,
-      showConfirmButton: false,
-    });
-  }
+  
+            Swal.fire({
+              icon: 'warning',
+              title: 'Are you sure?',
+              text: 'You may lose the added data after canceling!',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, Cancel',
+              cancelButtonText: 'No, Keep Editing',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.selectedFile = null;
+                this.selectedImage = null;
+                this.cropGroup = {
+                  cropNameEnglish: '',
+                  cropNameSinahala: '',
+                  cropNameTamil: '',
+                  parentCategory: '',
+                  bgColor: '',
+                  fileName: ''
+                };
+                this.router.navigate(['/plant-care'])
+              }
+            });
+          }
 
   onCancelUpdate() {
     // Reset form or navigate away

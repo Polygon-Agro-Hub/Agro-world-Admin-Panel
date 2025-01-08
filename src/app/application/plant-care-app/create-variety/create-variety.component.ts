@@ -235,21 +235,40 @@ export class CreateVarietyComponent implements OnInit {
     });
   }
 
+  // onCancel() {
+  //   Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: 'You will lose all entered data!',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Yes, leave page',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.router.navigate(['/plant-care']);
+  //     }
+  //   });
+  // }
+
+
   onCancel() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will lose all entered data!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, leave page',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/plant-care']);
-      }
-    });
-  }
+  
+            Swal.fire({
+              icon: 'warning',
+              title: 'Are you sure?',
+              text: 'You may lose the added data after canceling!',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, Cancel',
+              cancelButtonText: 'No, Keep Editing',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.selectedFile = null;
+                this.selectedImage = null;
+                this.router.navigate(['/plant-care'])
+              }
+            });
+          }
 
   triggerFileInput(event: Event): void {
     event.preventDefault();

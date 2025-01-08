@@ -42,7 +42,7 @@ export class AddCollectionCenterComponent implements OnInit {
       street: ['', [Validators.required, this.noNumbersValidator]],
       district: ['', Validators.required],
       province: ['', Validators.required],
-      country: ['', Validators.required],
+      country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required]  // Add city form control
     });
   }

@@ -74,6 +74,7 @@ import { CreateCompanyComponent } from './application/collection-hub-section/cre
 import { ManageCompanyComponent } from './application/collection-hub-section/manage-company/manage-company.component';
 import { CollectiveofficersEditComponent } from './application/collection-officer-app/collectiveofficers-edit/collectiveofficers-edit.component';
 import { SalesDashComponent } from './application/sales-dash-section/sales-dash/sales-dash.component';
+import { ComplaintsDashbordComponent } from './application/Complaints/complaints-dashbord/complaints-dashbord.component';
 
 export const routes: Routes = [
   {
@@ -372,10 +373,6 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
-            path: 'view-complains',
-            component:ViewComplainComponent,
-          },
-          {
             path: 'view-selected-complain/:id/:farmerName',
             component: ViewSelectedComplainComponent
           },
@@ -434,6 +431,19 @@ export const routes: Routes = [
             path:'',
             component: SalesDashComponent,
           }
+        ]
+      },
+      {
+        path:'complaints',
+        children:[
+          {
+            path:'',
+            component: ComplaintsDashbordComponent,
+          },
+          {
+            path: 'view-complains',
+            component:ViewComplainComponent,
+          },
         ]
       }
     ],

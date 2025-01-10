@@ -112,10 +112,19 @@
 
         <div class="mb-4">
             <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
-                Video Link
-            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.videoLink" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+                Video Link English
+            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.videoLinkEnglish" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
-
+        <div class="mb-4">
+            <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+                Video Link Sinhala
+            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.videoLinkSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+        <div class="mb-4">
+            <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+                Video Link Tamil
+            </label> <input type="text" id="titleEnglish" [(ngModel)]="taskItems.videoLinkTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
         <div class="flex justify-end mt-6">
             <div class="w-[20px] "></div>
             <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md " type="button " (click)="updateTask()">

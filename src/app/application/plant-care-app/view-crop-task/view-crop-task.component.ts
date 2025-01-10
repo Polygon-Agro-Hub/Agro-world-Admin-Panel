@@ -14,7 +14,9 @@ class CropTask {
   'days': string;
   'taskEnglish': string;
   'imageLink' : string;
-  'videoLink': string;
+  'videoLinkEnglish': string;
+  'videoLinkSinhala': string;
+  'videoLinkTamil': string;
   'id': string;
 }
 

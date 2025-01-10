@@ -26,7 +26,9 @@ class CropTask {
   'taskDescriptionTamil': string;
   'reqImages': string;
   'imageLink': string;
-  'videoLink': string;
+  'videoLinkEnglish': string;
+  'videoLinkSinhala': string;
+  'videoLinkTamil': string;
 }
 @Component({
   selector: 'app-edit-task',
@@ -124,7 +126,9 @@ export class EditTaskComponent implements OnInit {
     formData.append('taskDescriptionTamil', this.taskItems.taskDescriptionTamil);
     formData.append('reqImages', this.taskItems.reqImages);
     formData.append('imageLink', this.taskItems.imageLink);
-    formData.append('videoLink', this.taskItems.videoLink);
+    formData.append('videoLink', this.taskItems.videoLinkEnglish);
+    formData.append('videoLink', this.taskItems.videoLinkSinhala);
+    formData.append('videoLink', this.taskItems.videoLinkTamil);
   
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,

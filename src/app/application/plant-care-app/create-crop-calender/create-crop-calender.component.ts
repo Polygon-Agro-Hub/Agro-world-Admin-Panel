@@ -77,7 +77,7 @@ export class CreateCropCalenderComponent {
     'Nuwara Eliya',
     'Polonnaruwa',
     'Puttalam',
-    'Ratnapura',
+    'Rathnapura',
     'Trincomalee',
     'Vavuniya',
   ];

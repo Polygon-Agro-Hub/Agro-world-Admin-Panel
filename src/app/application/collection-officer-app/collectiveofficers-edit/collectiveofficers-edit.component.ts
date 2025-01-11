@@ -34,6 +34,7 @@ export class CollectiveofficersEditComponent {
   initiateJobRole!: string;
   initiateId!: string;
   errorMessage: string = '';
+  img!: string;
 
   
 
@@ -76,34 +77,6 @@ export class CollectiveofficersEditComponent {
     ) {}
 
 
-  // ngOnInit() {
-  //   this.itemId = this.route.snapshot.params['id'];
-  //   console.log('Item ID: ', this.itemId);
-
-  //   if (this.itemId) {
-
-  //     this.isLoading = true;
-  //     this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
-  //       next: (response: any) => {
-          
-  //         this.selectedLanguages = response.officerData.collectionOfficer.languages.split(',');
-  //         this.selectJobRole = response.officerData.companyDetails.jobRole;
-         
-
-
-  //         console.log(response);
-
-
-  //         this.isLoading = false;
-  //       },
-  //       error: (error) => {
-  //         console.error('Error fetching crop group details:', error);
-  //         this.isLoading = false;
-  //       },
-  //     });
-  //   }
-
-  // }
 
   ngOnInit() {
     this.itemId = this.route.snapshot.params['id'];
@@ -150,6 +123,7 @@ export class CollectiveofficersEditComponent {
           this.personalData.accNumber = officerData.accNumber || '';
           this.personalData.empType = officerData.empType || '';
           this.personalData.irmId = officerData.irmId || '';
+          this.personalData.image = officerData.image || '';
   
           // Additional fields
           this.selectedLanguages = this.personalData.languages.split(',');
@@ -439,7 +413,7 @@ export class CollectiveofficersEditComponent {
             }).then((result) => {
               if (result.isConfirmed) {
                 // Proceed with submission if user clicks 'Yes'
-                this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId).subscribe(
+                this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
                   (res: any) => {
                     
           
@@ -494,7 +468,7 @@ class Personal {
   country: string = 'Sri Lanka';
   languages: string = '';
   companyId! : number;
-  image!: any;
+  image!: string;
   accHolderName!: any;
   accNumber!: any;
   bankName!: string;

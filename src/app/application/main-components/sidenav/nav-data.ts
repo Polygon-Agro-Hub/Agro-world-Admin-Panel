@@ -35,8 +35,12 @@ export const navbarData = [
         RouterLink : 'sales-dash',
         icon : 'fa-solid fa-bullseye',
         label :  'Sales Dash'
+    },
+    {
+        RouterLink : 'complaints',
+        icon : 'fa-solid fa-circle-question',
+        label :  'Complaints'
     }
-    
 
     
 ];

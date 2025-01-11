@@ -24,7 +24,9 @@
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Days</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Task</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Image</th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video English</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video Sinhala</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video Tamil</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,8 +61,8 @@
                       
 
                       <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                        <ng-container *ngIf="task.videoLink; else noVideo">
-                          <a [attr.href]="task.videoLink" target="_blank" rel="noopener noreferrer">
+                        <ng-container *ngIf="task.videoLinkEnglish; else noVideo">
+                          <a [attr.href]="task.videoLinkEnglish" target="_blank" rel="noopener noreferrer">
                             <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
                           </a>
                         </ng-container>
@@ -68,8 +70,26 @@
                           No video
                         </ng-template>
                       </td>
-                      
-                    
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.videoLinkSinhala; else noVideo">
+                            <a [attr.href]="task.videoLinkSinhala" target="_blank" rel="noopener noreferrer">
+                                <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
+                            </a>
+                        </ng-container>
+                        <ng-template #noVideo>
+                            No video
+                          </ng-template>
+                    </td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.videoLinkTamil; else noVideo">
+                            <a [attr.href]="task.videoLinkTamil" target="_blank" rel="noopener noreferrer">
+                                <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
+                            </a>
+                        </ng-container>
+                        <ng-template #noVideo>
+                            No video
+                          </ng-template>
+                    </td>
 
                     <td class="px-4 py-3 text-center">
                         <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editCropTask(task.id)">

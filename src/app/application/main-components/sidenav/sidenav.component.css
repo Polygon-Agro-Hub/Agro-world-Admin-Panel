@@ -66,6 +66,8 @@
     align-items: center;
     height: calc(100% - 3.65rem);
     cursor: pointer;
+    overflow-y: auto;
+    max-height: 80vh;
 }
 .child-nav {
     list-style: none;
@@ -81,6 +83,7 @@
 .sidenav-nav-item {
     width: 100%;
     margin-bottom: 0.625rem;
+    
 }
 
 .sidenav-nav-link {

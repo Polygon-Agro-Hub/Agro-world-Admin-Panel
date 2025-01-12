@@ -14,13 +14,13 @@ export const navbarData = [
     {
         RouterLink : 'plant-care',
         icon : 'fas fa-leaf',
-        label :  'PlantCare'
+        label :  'Plant Care'
     },
-    {
-        RouterLink : 'field-officer',
-        icon : 'fa-solid fa-user-tie',
-        label :  'Fieldofficers'
-    },
+    // {
+    //     RouterLink : 'field-officer',
+    //     icon : 'fa-solid fa-user-tie',
+    //     label :  'Fieldofficers'
+    // },
     {
         RouterLink:'collection-hub',
         icon : 'fa-solid fa-warehouse',
@@ -29,7 +29,7 @@ export const navbarData = [
     {
         RouterLink:'market',
         icon : 'fa-solid fa-shop',
-        label :  'Marketplace',
+        label :  'Market Place',
         expanded: false,
         children: [
             {

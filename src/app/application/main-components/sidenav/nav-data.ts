@@ -26,11 +26,24 @@ export const navbarData = [
         icon : 'fa-solid fa-warehouse',
         label : 'Collection Hub'
     },
-    // {
-    //     RouterLink : 'market-place',
-    //     icon : 'fa-solid fa-shop',
-    //     label :  'Marketplace'
-    // },
+    {
+        RouterLink:'market',
+        icon : 'fa-solid fa-shop',
+        label :  'Marketplace',
+        expanded: false,
+        children: [
+            {
+                RouterLink: '/market',
+                childIcon : 'fa-solid fa-gauge',
+                label: 'Dashbord'
+            },
+            {
+                RouterLink: '/market/action',
+                childIcon : 'fa-brands fa-creative-commons-nd',
+                label: 'Action'
+            }
+        ]
+    },
     {
         RouterLink : 'sales-dash',
         icon : 'fa-solid fa-bullseye',

@@ -352,18 +352,9 @@ export const routes: Routes = [
         ],
       },
 
-      {
-        path: 'collection-hub/view-collection-centers',
-        component: CollectionAllViewComponent,
-        // canActivate:[AuthGuard]
-      },
-      {
-        path:'collection-hub/add-collection-center',
-        component: AddCollectionCenterComponent
-        // canActivate:[AuthGuard]
-      },
+      
 
-      { path: '', redirectTo: '/steckholders', pathMatch: 'full' }, // Redirect to plant-care if no path
+      
       {
         path: 'collection-hub',
         children: [
@@ -387,7 +378,15 @@ export const routes: Routes = [
           {
             path: 'manage-company',
             component: ManageCompanyComponent
-          }
+          },
+          {
+            path: 'view-collection-centers',
+            component: CollectionAllViewComponent
+          },
+          {
+            path:'add-collection-center',
+            component: AddCollectionCenterComponent
+          },
         ],
       },
 
@@ -445,7 +444,9 @@ export const routes: Routes = [
             component:ViewComplainComponent,
           },
         ]
-      }
+      },
+
+      { path: '', redirectTo: '/steckholders', pathMatch: 'full' },
     ],
   },
 ];

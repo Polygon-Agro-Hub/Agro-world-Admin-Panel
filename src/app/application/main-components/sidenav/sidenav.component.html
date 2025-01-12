@@ -4,13 +4,14 @@
       onclick="window.location.href='/steckholders'" />
     <img src="assets/images/logo.png" alt="Logo" class="logo-text w-32 cursor-pointer" *ngIf="isExpanded"
       onclick="window.location.href='/steckholders'" />
+      
     <i class="flex justify-end text-white fa-solid fa-angle-right inset-y-0 right-0 w-full cursor-pointer"
       *ngIf="!isExpanded" (click)="toggleSidenav()"></i>
     <i class="flex justify-end text-white fa-solid fa-angle-left inset-y-0 right-0 w-full cursor-pointer"
     *ngIf="isExpanded" (click)="toggleSidenav()"></i>
   </div>
 
-  <ul class="sidenav-nav">
+  <!-- <ul class="sidenav-nav">
     <li class="sidenav-nav-item" *ngFor="let data of navData">
       <a class="sidenav-nav-link" [routerLink]="[data.RouterLink]" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact:false}">
@@ -18,26 +19,26 @@
         <span class="sidenav-link-text" *ngIf="isExpanded">{{data.label}}</span>
       </a>
     </li>
+  </ul> -->
 
-    <li class="sidenav-nav-item">
-      <a class="sidenav-nav-link" (click)="popupMarket()" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact:false}">
-        <i class="sidenav-link-icon" [class]="'fa-solid fa-shop'"></i>
-        <span class="sidenav-link-text" *ngIf="isExpanded">Market-Place</span>
+  <ul class="sidenav-nav">
+    <li *ngFor="let item of navData" class="sidenav-nav-item">
+      <a [routerLink]="item.RouterLink" class="sidenav-nav-link" (click)="toggleChildren(item)" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}">
+        <i class="sidenav-link-icon" [class]="item.icon"></i>
+        <span *ngIf="isExpanded" class="sidenav-link-text">{{ item.label }}</span>
+        <i *ngIf="isExpanded && item.children && !item.expanded" class="fa-solid fa-chevron-right ml-auto pr-1"></i>
+        <i *ngIf="isExpanded && item.expanded && item.children" class="fa-solid fa-chevron-down ml-auto pr-1"></i>
       </a>
-      <div *ngIf="ispopupMarketPrice" class="bg-[#FFFFFF33] rounded-b-lg">
-        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20"
-          onclick="window.location.href='/market'">
-          <div class="w-5"></div>
-          <p class="text-white ml-10">Dashbord</p>
-        </div>
-        <div class="w-[100%] flex items-center px-3 py-3 hover:bg-[#FFFFFF33] hover:opacity-20"
-          onclick="window.location.href='/market/action'">
-          <div class="w-5"></div>
-          <p class="text-white ml-10">Action</p>
-        </div>
 
-      </div>
+      <!-- Render children -->
+      <ul *ngIf="item.children && item.expanded" class="child-nav">
+        <li *ngFor="let child of item.children" class="sidenav-nav-item">
+          <a [routerLink]="child.RouterLink" class="sidenav-child-link">
+            <i class="child-link-icon" [class]="child.childIcon"></i>
+            <span *ngIf="isExpanded" class="sidenav-link-text">{{ child.label }}</span>
+          </a>
+        </li>
+      </ul>
     </li>
   </ul>
 

@@ -67,7 +67,7 @@
     <div #contentToConvert>
 
         <p class="text-md text-center dark:text-textDark">Collection Officer Report</p>
-        <p class="text-md text-center dark:text-textDark">ID NO : {{ officerData.companyDetails.employeeId }}</p>
+        <p class="text-md text-center dark:text-textDark">ID NO : {{ officerData.empId }}</p>
 
 
 
@@ -88,25 +88,25 @@
             <!-- EMP ID -->
             <div class="flex items-center gap-2">
               <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.companyDetails.employeeId }}</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.empId }}</p>
             </div>
           
             <!-- Role -->
             <div class="flex items-center gap-2">
               <p class="text-sm dark:text-textDark text-gray-600 w-24">Role</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.companyDetails.jobRole }}</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.jobRole }}</p>
             </div>
           
             <!-- First Name -->
             <div class="flex items-center gap-2">
               <p class="text-sm dark:text-textDark text-gray-600 w-24">First Name</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.collectionOfficer.firstNameEnglish }}</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.firstNameEnglish }}</p>
             </div>
           
             <!-- Last Name -->
             <div class="flex items-center gap-2">
               <p class="text-sm dark:text-textDark text-gray-600 w-24">Last Name</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.collectionOfficer.lastNameEnglish }}</p>
+              <p class="dark:text-textDark text-gray-800">: {{ officerData.lastNameEnglish }}</p>
             </div>
           
             <!-- Total Weight -->

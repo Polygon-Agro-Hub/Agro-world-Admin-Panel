@@ -257,17 +257,17 @@ const totalImageWidth = imageWidth * 2 + imageSpacing; // Total width of both im
 const startX = (pageWidth - totalImageWidth) / 2; // Starting X position to center the images
 
 // Add Farmer QR Code (if available)
-if (this.farmerList.farmerQr) {
-  doc.text('Farmer QR Code:', startX, yPosition - 5); // Add label above the image
-  doc.addImage(this.farmerList.farmerQr, 'PNG', startX, yPosition, imageWidth, imageWidth);
-}
+// if (this.farmerList.farmerQr) {
+//   doc.text('Farmer QR Code:', startX, yPosition - 5); // Add label above the image
+//   doc.addImage(this.farmerList.farmerQr, 'PNG', startX, yPosition, imageWidth, imageWidth);
+// }
 
 // Add Collection Officer QR Code (if available)
-if (this.QRcode) {
-  const secondImageX = startX + imageWidth + imageSpacing; // X position for the second image
-  doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5); // Add label above the image
-  doc.addImage(this.QRcode, 'PNG', secondImageX, yPosition, imageWidth, imageWidth);
-}
+// if (this.QRcode) {
+//   const secondImageX = startX + imageWidth + imageSpacing; // X position for the second image
+//   doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5); // Add label above the image
+//   doc.addImage(this.QRcode, 'PNG', secondImageX, yPosition, imageWidth, imageWidth);
+// }
 
 yPosition += imageWidth + 20; 
     // Save PDF

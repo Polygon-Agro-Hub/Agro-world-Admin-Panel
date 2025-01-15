@@ -92,9 +92,9 @@ export class FarmerListReportComponent {
 
   async downloadPDF() {
     try {
-      console.log('Starting PDF generation...');
-      console.log('Farmer List Data:', this.farmerList);
-      console.log('Crop List Data:', this.cropList);
+      // console.log('Starting PDF generation...');
+      // console.log('Farmer List Data:', this.farmerList);
+      // console.log('Crop List Data:', this.cropList);
   
       const doc = new jsPDF();
   
@@ -181,7 +181,7 @@ export class FarmerListReportComponent {
       };
   
       // Personal Details Table
-      console.log('Generating Personal Details section...');
+      // console.log('Generating Personal Details section...');
       doc.setFontSize(12);
       doc.text('Personal Details', 10, yPosition);
       yPosition += 10;
@@ -205,7 +205,7 @@ export class FarmerListReportComponent {
         address
       ];
   
-      console.log('Personal Row Data:', personalRow);
+      // console.log('Personal Row Data:', personalRow);
   
       // Draw Table Headers
       drawGrid(doc, 10, yPosition, personalColWidths, 1);
@@ -227,7 +227,7 @@ export class FarmerListReportComponent {
       yPosition += 20;
   
       // Bank Details Table
-      console.log('Generating Bank Details section...');
+      // console.log('Generating Bank Details section...');
       doc.setFontSize(12);
       doc.text('Bank Details', 10, yPosition);
       yPosition += 10;
@@ -242,7 +242,7 @@ export class FarmerListReportComponent {
         safeText(this.farmerList.branchName)
       ];
   
-      console.log('Bank Row Data:', bankRow);
+      // console.log('Bank Row Data:', bankRow);
   
       // Draw Bank Details Table
       drawGrid(doc, 10, yPosition, bankColWidths, 1);
@@ -264,7 +264,7 @@ export class FarmerListReportComponent {
       yPosition += 20;
   
       // Crop Details Table
-      console.log('Generating Crop Details section...');
+      // console.log('Generating Crop Details section...');
       if (!this.cropList || !Array.isArray(this.cropList)) {
         throw new Error('Crop list is not available or not an array');
       }
@@ -298,7 +298,7 @@ export class FarmerListReportComponent {
       yPosition += 6;
   
       // Draw Crop Rows
-      console.log('Processing crop list...');
+      // console.log('Processing crop list...');
       this.cropList.forEach((crop, index) => {
         console.log(`Processing crop ${index + 1}:`, crop);
   
@@ -335,14 +335,14 @@ export class FarmerListReportComponent {
       });
   
       // Full Total
-      console.log('Calculating full total...');
+      // console.log('Calculating full total...');
       yPosition += 10;
       doc.setFontSize(12);
       const total = this.getTotal();
       doc.text(`Full Total (Rs.): ${total.toFixed(2)}`, 10, yPosition);
   
       // QR Codes Section
-      console.log('Processing QR codes...');
+      // console.log('Processing QR codes...');
       yPosition += 20;
       const pageWidth = doc.internal.pageSize.width;
       const imageWidth = 50;

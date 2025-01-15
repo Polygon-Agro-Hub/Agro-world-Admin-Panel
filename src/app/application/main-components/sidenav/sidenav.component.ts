@@ -31,7 +31,7 @@ export class SidenavComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private router: Router
+    public router: Router
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -90,4 +90,13 @@ export class SidenavComponent implements OnInit {
   popupMarket() {
     this.ispopupMarketPrice = !this.ispopupMarketPrice;
   }
+
+
+  toggleChildren(item: any): void {
+    if (item.children) {
+      item.expanded = !item.expanded;
+    }
+  }
+
+
 }

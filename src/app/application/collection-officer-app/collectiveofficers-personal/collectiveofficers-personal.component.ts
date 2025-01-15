@@ -114,6 +114,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   onSubmit() {
     console.log(this.personalData); // Logs the personal data with updated languages
     console.log('hii', this.personalData.empType);
+
+    
   
     // Show a confirmation dialog before proceeding
     Swal.fire({
@@ -127,7 +129,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // Proceed with submission if user clicks 'Yes'
-        this.collectionOfficerService.createCollectiveOfficer(this.personalData).subscribe(
+        this.collectionOfficerService.createCollectiveOfficer(this.personalData, this.selectedImage).subscribe(
           (res: any) => {
             this.officerId = res.officerId;
             this.errorMessage = '';
@@ -230,6 +232,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       }
 
       this.selectedFile = file;
+      this.personalData.image = file;
       this.selectedFileName = file.name;
 
       const reader = new FileReader();
@@ -465,6 +468,7 @@ class Personal {
   accNumber!: any;
   bankName!: string;
   branchName!: string;
+
   
 }
 

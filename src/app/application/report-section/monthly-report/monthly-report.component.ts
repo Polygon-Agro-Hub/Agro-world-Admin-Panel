@@ -83,7 +83,7 @@ export class MonthlyReportComponent implements OnInit {
     
     this.collectionoOfficer.getOfficerReportById(id).subscribe(
       (response: any) => {
-        this.officerData = response.officerData;
+        this.officerData = response.officerData[0];
         this.isLoading = false;
         this.visible = true;
       },

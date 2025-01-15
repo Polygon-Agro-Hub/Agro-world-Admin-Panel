@@ -1,6 +1,6 @@
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/collection-hub/view-complains'"
+  onclick="window.location.href='/complaints/view-complains'"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -150,9 +150,26 @@
     </p>
 
     <!-- Editable Text Area -->
-    <div class="message-box">
+    <div class="message-box" *ngIf="!complain.reply">
       <textarea
       [(ngModel)]="messageContent"
+      placeholder="Add your message here..."
+      rows="5"
+      style="
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        background-color: #ffffff; /* Normal white background */
+        color: #333;
+      "
+    ></textarea>
+    </div>
+
+    <div class="message-box" *ngIf="complain.reply">
+      <textarea
+      [(ngModel)]="complain.reply"
       placeholder="Add your message here..."
       rows="5"
       style="

@@ -5,6 +5,8 @@ import { FarmerListReportService } from '../../../services/reports/farmer-list-r
 import { ActivatedRoute } from '@angular/router';
 import { response } from 'express';
 import jsPDF from 'jspdf';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-farmer-list-report',
@@ -28,7 +30,9 @@ export class FarmerListReportComponent {
 
   constructor(
     private farmerListReportService: FarmerListReportService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient, 
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +74,21 @@ export class FarmerListReportComponent {
                     (crop.gradeCprice * crop.gradeCquan);
     }, 0);
   }
+
+
+  // loadImageAsBase64(url: string): Promise<string> {
+  //   return this.http
+  //     .get(url, { responseType: 'blob' })
+  //     .toPromise()
+  //     .then((blob) => new Promise((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => resolve(reader.result as string);
+  //       reader.onerror = reject;
+  //       reader.readAsDataURL(blob);
+  //     }));
+  // }
+
+
 
   downloadPDF() {
     const doc = new jsPDF();

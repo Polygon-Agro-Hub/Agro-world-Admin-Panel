@@ -5,6 +5,8 @@ import { FarmerListReportService } from '../../../services/reports/farmer-list-r
 import { ActivatedRoute } from '@angular/router';
 import { response } from 'express';
 import jsPDF from 'jspdf';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-farmer-list-report',
@@ -28,7 +30,9 @@ export class FarmerListReportComponent {
 
   constructor(
     private farmerListReportService: FarmerListReportService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient, 
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -71,207 +75,331 @@ export class FarmerListReportComponent {
     }, 0);
   }
 
-  downloadPDF() {
-    const doc = new jsPDF();
+
+  // loadImageAsBase64(url: string): Promise<string> {
+  //   return this.http
+  //     .get(url, { responseType: 'blob' })
+  //     .toPromise()
+  //     .then((blob) => new Promise((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => resolve(reader.result as string);
+  //       reader.onerror = reject;
+  //       reader.readAsDataURL(blob);
+  //     }));
+  // }
+
+
+
+  async downloadPDF() {
+    try {
+      // console.log('Starting PDF generation...');
+      // console.log('Farmer List Data:', this.farmerList);
+      // console.log('Crop List Data:', this.cropList);
   
-    // Set Document Title
-    doc.setFontSize(14);
-    doc.text('Farmer Report', 105, 10, { align: 'center' });
-    doc.setFontSize(10);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 20, { align: 'center' });
+      const doc = new jsPDF();
   
-    let yPosition = 30;
-  
-    // Utility Function to Center Text in a Cell
-    const centerText = (doc: jsPDF, text: string, x: number, width: number, y: number) => {
-      const textWidth = doc.getTextWidth(text);
-      const xCentered = x + (width - textWidth) / 2;
-      doc.text(text, xCentered, y);
-    };
-  
-    // Utility Function to Draw Table Grid
-    const drawGrid = (doc: jsPDF, x: number, y: number, widths: number[], rows: number) => {
-      let xPos = x;
-      let yPos = y;
-      const totalWidth = widths.reduce((sum, width) => sum + width, 0);
-  
-      // Draw vertical lines
-      doc.line(xPos, yPos, xPos, yPos + rows * 6);
-      widths.forEach((width) => {
-        xPos += width;
-        doc.line(xPos, yPos, xPos, yPos + rows * 6);
-      });
-  
-      // Draw horizontal lines
-      for (let i = 0; i <= rows; i++) {
-        doc.line(x, yPos, x + totalWidth, yPos);
-        yPos += 6;
+      // Helper function to fetch and convert image to base64
+      function loadImageAsBase64(url: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+              resolve(reader.result as string);
+            };
+            reader.readAsDataURL(xhr.response);
+          };
+          xhr.onerror = function() {
+            // If XHR fails, try loading image directly
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.onload = function() {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx?.drawImage(img, 0, 0);
+              resolve(canvas.toDataURL('image/png'));
+            };
+            img.onerror = function() {
+              console.warn('Image load failed:', url);
+              resolve(''); // Resolve with empty string if image fails to load
+            };
+            img.src = url;
+          };
+          xhr.open('GET', url);
+          xhr.responseType = 'blob';
+          xhr.setRequestHeader('Accept', 'image/png;image/*');
+          try {
+            xhr.send();
+          } catch (error) {
+            console.error('XHR send error:', error);
+            reject(error);
+          }
+        });
       }
-    };
   
-    // Personal Details Table
-    doc.setFontSize(12);
-    doc.text('Personal Details', 10, yPosition);
-    yPosition += 10;
+      // Helper function to safely get text value
+      const safeText = (value: any): string => {
+        if (value === null || value === undefined) return 'N/A';
+        return value.toString();
+      };
   
-    doc.setFontSize(9); // Small font size for tables
-    const personalHeaders = ['First Name', 'Last Name', 'NIC Number', 'Phone Number', 'Address'];
-    const personalColWidths = [30, 30, 40, 40, 50];
-    const personalRow = [
-      this.farmerList.firstName,
-      this.farmerList.lastName,
-      this.farmerList.NICnumber,
-      this.farmerList.phoneNumber,
-      `${this.farmerList.houseNo}, ${this.farmerList.streetName}, ${this.farmerList.city}`,
-    ];
+      // Set Document Title
+      doc.setFontSize(14);
+      doc.text('Farmer Report', 105, 10, { align: 'center' });
+      doc.setFontSize(10);
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 20, { align: 'center' });
   
-    // Draw Table Headers
-    drawGrid(doc, 10, yPosition, personalColWidths, 1); // Header Grid
-    let xPosition = 10;
-    personalHeaders.forEach((header, index) => {
-      centerText(doc, header, xPosition, personalColWidths[index], yPosition + 4);
-      xPosition += personalColWidths[index];
-    });
+      let yPosition = 30;
   
-    yPosition += 6;
+      // Utility Function to Center Text in a Cell
+      const centerText = (doc: jsPDF, text: string, x: number, width: number, y: number) => {
+        const textWidth = doc.getTextWidth(text);
+        const xCentered = x + (width - textWidth) / 2;
+        doc.text(safeText(text), xCentered, y);
+      };
   
-    // Draw Table Row
-    drawGrid(doc, 10, yPosition, personalColWidths, 1); // Row Grid
-    xPosition = 10;
-    personalRow.forEach((cell, index) => {
-      centerText(doc, cell, xPosition, personalColWidths[index], yPosition + 4);
-      xPosition += personalColWidths[index];
-    });
-    yPosition += 20;
+      // Utility Function to Draw Table Grid
+      const drawGrid = (doc: jsPDF, x: number, y: number, widths: number[], rows: number) => {
+        let xPos = x;
+        let yPos = y;
+        const totalWidth = widths.reduce((sum, width) => sum + width, 0);
   
-    // Bank Details Table
-    doc.setFontSize(12);
-    doc.text('Bank Details', 10, yPosition);
-    yPosition += 10;
+        // Draw vertical lines
+        doc.line(xPos, yPos, xPos, yPos + rows * 6);
+        widths.forEach((width) => {
+          xPos += width;
+          doc.line(xPos, yPos, xPos, yPos + rows * 6);
+        });
   
-    doc.setFontSize(9);
-    const bankHeaders = ['Account Number', 'Account Holder', 'Bank Name', 'Branch Name'];
-    const bankColWidths = [40, 50, 50, 50];
-    const bankRow = [
-      this.farmerList.accNumber,
-      this.farmerList.accHolderName,
-      this.farmerList.bankName,
-      this.farmerList.branchName,
-    ];
+        // Draw horizontal lines
+        for (let i = 0; i <= rows; i++) {
+          doc.line(x, yPos, x + totalWidth, yPos);
+          yPos += 6;
+        }
+      };
   
-    // Draw Table Headers
-    drawGrid(doc, 10, yPosition, bankColWidths, 1); // Header Grid
-    xPosition = 10;
-    bankHeaders.forEach((header, index) => {
-      centerText(doc, header, xPosition, bankColWidths[index], yPosition + 4);
-      xPosition += bankColWidths[index];
-    });
+      // Personal Details Table
+      // console.log('Generating Personal Details section...');
+      doc.setFontSize(12);
+      doc.text('Personal Details', 10, yPosition);
+      yPosition += 10;
   
-    yPosition += 6;
+      doc.setFontSize(9);
+      const personalHeaders = ['First Name', 'Last Name', 'NIC Number', 'Phone Number', 'Address'];
+      const personalColWidths = [30, 30, 40, 40, 50];
   
-    // Draw Table Row
-    drawGrid(doc, 10, yPosition, bankColWidths, 1); // Row Grid
-    xPosition = 10;
-    bankRow.forEach((cell, index) => {
-      centerText(doc, cell, xPosition, bankColWidths[index], yPosition + 4);
-      xPosition += bankColWidths[index];
-    });
-    yPosition += 20;
+      // Check if farmerList exists
+      if (!this.farmerList) {
+        throw new Error('Farmer data is not available');
+      }
   
-    // Crop Details Table
-    doc.setFontSize(12);
-    doc.text('Crop Details', 10, yPosition);
-    yPosition += 10;
+      const address = `${safeText(this.farmerList.houseNo)}, ${safeText(this.farmerList.streetName)}, ${safeText(this.farmerList.city)}`;
   
-    doc.setFontSize(8);
-    const cropHeaders = [
-      'Crop Name',
-      'Variety',
-      'Unit Price (A)',
-      'Quantity (A)',
-      'Unit Price (B)',
-      'Quantity (B)',
-      'Unit Price (C)',
-      'Quantity (C)',
-      'Total (Rs.)',
-    ];
-    const cropColWidths = [20, 37, 19, 19, 19, 19, 19, 19, 19];
-  
-    // Draw Table Headers
-    drawGrid(doc, 10, yPosition, cropColWidths, 1); // Header Grid
-    xPosition = 10;
-    cropHeaders.forEach((header, index) => {
-      centerText(doc, header, xPosition, cropColWidths[index], yPosition + 4);
-      xPosition += cropColWidths[index];
-    });
-  
-    yPosition += 6;
-  
-    // Draw Table Rows
-    this.cropList.forEach((crop) => {
-      drawGrid(doc, 10, yPosition, cropColWidths, 1); // Row Grid
-      const row = [
-        crop.cropNameEnglish ?? 'N/A',
-        crop.varietyNameEnglish ?? 'N/A',
-        (crop.gradeAprice ?? 0).toString(),
-        (crop.gradeAquan ?? 0).toString(),
-        (crop.gradeBprice ?? 0).toString(),
-        (crop.gradeBquan ?? 0).toString(),
-        (crop.gradeCprice ?? 0).toString(),
-        (crop.gradeCquan ?? 0).toString(),
-        (
-          (crop.gradeAprice ?? 0) * (crop.gradeAquan ?? 0) +
-          (crop.gradeBprice ?? 0) * (crop.gradeBquan ?? 0) +
-          (crop.gradeCprice ?? 0) * (crop.gradeCquan ?? 0)
-        ).toFixed(2),
+      const personalRow = [
+        safeText(this.farmerList.firstName),
+        safeText(this.farmerList.lastName),
+        safeText(this.farmerList.NICnumber),
+        safeText(this.farmerList.phoneNumber),
+        address
       ];
-      
   
-      xPosition = 10;
-      row.forEach((cell, index) => {
-        centerText(doc, cell, xPosition, cropColWidths[index], yPosition + 4);
-        xPosition += cropColWidths[index];
+      // console.log('Personal Row Data:', personalRow);
+  
+      // Draw Table Headers
+      drawGrid(doc, 10, yPosition, personalColWidths, 1);
+      let xPosition = 10;
+      personalHeaders.forEach((header, index) => {
+        centerText(doc, header, xPosition, personalColWidths[index], yPosition + 4);
+        xPosition += personalColWidths[index];
       });
+  
       yPosition += 6;
   
-      // Check for page break
-      if (yPosition > 280) {
-        doc.addPage();
-        yPosition = 10;
+      // Draw Table Row
+      drawGrid(doc, 10, yPosition, personalColWidths, 1);
+      xPosition = 10;
+      personalRow.forEach((cell, index) => {
+        centerText(doc, cell, xPosition, personalColWidths[index], yPosition + 4);
+        xPosition += personalColWidths[index];
+      });
+      yPosition += 20;
+  
+      // Bank Details Table
+      // console.log('Generating Bank Details section...');
+      doc.setFontSize(12);
+      doc.text('Bank Details', 10, yPosition);
+      yPosition += 10;
+  
+      doc.setFontSize(9);
+      const bankHeaders = ['Account Number', 'Account Holder', 'Bank Name', 'Branch Name'];
+      const bankColWidths = [40, 50, 50, 50];
+      const bankRow = [
+        safeText(this.farmerList.accNumber),
+        safeText(this.farmerList.accHolderName),
+        safeText(this.farmerList.bankName),
+        safeText(this.farmerList.branchName)
+      ];
+  
+      // console.log('Bank Row Data:', bankRow);
+  
+      // Draw Bank Details Table
+      drawGrid(doc, 10, yPosition, bankColWidths, 1);
+      xPosition = 10;
+      bankHeaders.forEach((header, index) => {
+        centerText(doc, header, xPosition, bankColWidths[index], yPosition + 4);
+        xPosition += bankColWidths[index];
+      });
+  
+      yPosition += 6;
+  
+      // Draw Bank Row
+      drawGrid(doc, 10, yPosition, bankColWidths, 1);
+      xPosition = 10;
+      bankRow.forEach((cell, index) => {
+        centerText(doc, cell, xPosition, bankColWidths[index], yPosition + 4);
+        xPosition += bankColWidths[index];
+      });
+      yPosition += 20;
+  
+      // Crop Details Table
+      // console.log('Generating Crop Details section...');
+      if (!this.cropList || !Array.isArray(this.cropList)) {
+        throw new Error('Crop list is not available or not an array');
       }
-    });
   
-    // Full Total
-    yPosition += 10;
-    doc.setFontSize(12);
-    doc.text(`Full Total (Rs.): ${this.getTotal().toFixed(2)}`, 10, yPosition);
+      doc.setFontSize(12);
+      doc.text('Crop Details', 10, yPosition);
+      yPosition += 10;
   
-
-
-    yPosition += 20; // Add some space after the table
-
-const pageWidth = doc.internal.pageSize.width; // Get the width of the PDF page
-const imageWidth = 50; // Width of each image
-const imageSpacing = 10; // Spacing between images
-const totalImageWidth = imageWidth * 2 + imageSpacing; // Total width of both images and spacing
-const startX = (pageWidth - totalImageWidth) / 2; // Starting X position to center the images
-
-// Add Farmer QR Code (if available)
-// if (this.farmerList.farmerQr) {
-//   doc.text('Farmer QR Code:', startX, yPosition - 5); // Add label above the image
-//   doc.addImage(this.farmerList.farmerQr, 'PNG', startX, yPosition, imageWidth, imageWidth);
-// }
-
-// Add Collection Officer QR Code (if available)
-// if (this.QRcode) {
-//   const secondImageX = startX + imageWidth + imageSpacing; // X position for the second image
-//   doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5); // Add label above the image
-//   doc.addImage(this.QRcode, 'PNG', secondImageX, yPosition, imageWidth, imageWidth);
-// }
-
-yPosition += imageWidth + 20; 
-    // Save PDF
-    doc.save('Farmer_Details_Report.pdf');
+      doc.setFontSize(8);
+      const cropHeaders = [
+        'Crop Name',
+        'Variety',
+        'Unit Price (A)',
+        'Quantity (A)',
+        'Unit Price (B)',
+        'Quantity (B)',
+        'Unit Price (C)',
+        'Quantity (C)',
+        'Total (Rs.)'
+      ];
+      const cropColWidths = [20, 37, 19, 19, 19, 19, 19, 19, 19];
+  
+      // Draw Crop Headers
+      drawGrid(doc, 10, yPosition, cropColWidths, 1);
+      xPosition = 10;
+      cropHeaders.forEach((header, index) => {
+        centerText(doc, header, xPosition, cropColWidths[index], yPosition + 4);
+        xPosition += cropColWidths[index];
+      });
+  
+      yPosition += 6;
+  
+      // Draw Crop Rows
+      // console.log('Processing crop list...');
+      this.cropList.forEach((crop, index) => {
+        console.log(`Processing crop ${index + 1}:`, crop);
+  
+        drawGrid(doc, 10, yPosition, cropColWidths, 1);
+        const row = [
+          safeText(crop.cropNameEnglish),
+          safeText(crop.varietyNameEnglish),
+          safeText(crop.gradeAprice),
+          safeText(crop.gradeAquan),
+          safeText(crop.gradeBprice),
+          safeText(crop.gradeBquan),
+          safeText(crop.gradeCprice),
+          safeText(crop.gradeCquan),
+          safeText(
+            (
+              (Number(crop.gradeAprice) || 0) * (Number(crop.gradeAquan) || 0) +
+              (Number(crop.gradeBprice) || 0) * (Number(crop.gradeBquan) || 0) +
+              (Number(crop.gradeCprice) || 0) * (Number(crop.gradeCquan) || 0)
+            ).toFixed(2)
+          )
+        ];
+  
+        xPosition = 10;
+        row.forEach((cell, index) => {
+          centerText(doc, cell, xPosition, cropColWidths[index], yPosition + 4);
+          xPosition += cropColWidths[index];
+        });
+        yPosition += 6;
+  
+        if (yPosition > 280) {
+          doc.addPage();
+          yPosition = 10;
+        }
+      });
+  
+      // Full Total
+      // console.log('Calculating full total...');
+      yPosition += 10;
+      doc.setFontSize(12);
+      const total = this.getTotal();
+      doc.text(`Full Total (Rs.): ${total.toFixed(2)}`, 10, yPosition);
+  
+      // QR Codes Section
+      // console.log('Processing QR codes...');
+      yPosition += 20;
+      const pageWidth = doc.internal.pageSize.width;
+      const imageWidth = 50;
+      const imageSpacing = 10;
+      const totalImageWidth = imageWidth * 2 + imageSpacing;
+      const startX = (pageWidth - totalImageWidth) / 2;
+  
+      // Modify the image URLs to include cache-busting and force CORS
+      const appendCacheBuster = (url: string) => {
+        if (!url) return '';
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}t=${new Date().getTime()}`;
+      };
+  
+      try {
+        let farmerQrBase64 = '';
+        let officerQrBase64 = '';
+  
+        if (this.farmerList.farmerQr) {
+          const modifiedFarmerUrl = appendCacheBuster(this.farmerList.farmerQr);
+          farmerQrBase64 = await loadImageAsBase64(modifiedFarmerUrl);
+        }
+  
+        if (this.QRcode) {
+          const modifiedOfficerUrl = appendCacheBuster(this.QRcode);
+          officerQrBase64 = await loadImageAsBase64(modifiedOfficerUrl);
+        }
+  
+        // Add Farmer QR Code (if available)
+        if (farmerQrBase64) {
+          doc.text('Farmer QR Code:', startX, yPosition - 5);
+          doc.addImage(farmerQrBase64, 'PNG', startX, yPosition, imageWidth, imageWidth);
+        }
+  
+        // Add Collection Officer QR Code (if available)
+        if (officerQrBase64) {
+          const secondImageX = startX + imageWidth + imageSpacing;
+          doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5);
+          doc.addImage(officerQrBase64, 'PNG', secondImageX, yPosition, imageWidth, imageWidth);
+        }
+  
+        yPosition += imageWidth + 20;
+      } catch (error) {
+        console.error('Error adding QR codes:', error);
+        doc.setTextColor(255, 0, 0);
+        doc.text('Error loading QR codes', 10, yPosition);
+        doc.setTextColor(0, 0, 0);
+      }
+  
+      console.log('Saving PDF...');
+      doc.save('Farmer_Details_Report.pdf');
+      console.log('PDF generation completed successfully');
+  
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please check the console for details.');
+    }
   }
   
 }

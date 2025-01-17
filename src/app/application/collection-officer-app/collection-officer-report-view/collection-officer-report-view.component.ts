@@ -1,9 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
@@ -22,48 +31,51 @@ interface CropReport {
     'Grade A': number;
     'Grade B': number;
     'Grade C': number;
-    'Total': number;
+    Total: number;
   };
 }
 
 @Component({
   selector: 'app-collection-officer-report-view',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent, CalendarModule, FloatLabelModule],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    FormsModule,
+    CanvasJSAngularChartsModule,
+    LoadingSpinnerComponent,
+    CalendarModule,
+    FloatLabelModule,
+  ],
   templateUrl: './collection-officer-report-view.component.html',
-  styleUrl: './collection-officer-report-view.component.css'
+  styleUrl: './collection-officer-report-view.component.css',
 })
 export class CollectionOfficerReportViewComponent implements OnInit {
-  @ViewChild('contentToConvert', { static: false }) contentToConvert!: ElementRef;
+  @ViewChild('contentToConvert', { static: false })
+  contentToConvert!: ElementRef;
   id: string | null = null;
   name: string | null = null;
   createdDate: string = new Date().toISOString().split('T')[0];
-  
+
   reportData: CropReport = {};
   chartOptions: any;
   loadingChart = true;
   loadingTable = true;
 
-
-
-
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef,
-    
+    private cdr: ChangeDetectorRef
   ) {}
-  
+
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.id = params.get('id');
       this.name = params.get('name');
-      
     });
 
     setTimeout(() => {
       this.fetchReport();
-      
     }, 1000);
   }
 
@@ -75,12 +87,11 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     });
     this.loadingChart = true;
     this.loadingTable = true;
-    
+
     const url = `${environment.API_BASE_URL}collection-officer/get-collection-officer-report/${this.id}/${this.createdDate}`;
-  
+
     if (this.id) {
-      this.http.get<CropReport>(url, { headers })
-      .subscribe(
+      this.http.get<CropReport>(url, { headers }).subscribe(
         (data) => {
           this.reportData = data;
           this.loadingTable = false;
@@ -97,9 +108,9 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   updateChartOptions(): void {
     // Clear the chartData array
     let chartData: any[] = [];
-  
+
     console.log('Updating chart options. Current reportData:', this.reportData);
-  
+
     // Only proceed if reportData is not empty
     if (Object.keys(this.reportData).length > 0) {
       chartData = Object.entries(this.reportData).map(([crop, grades]) => ({
@@ -110,90 +121,93 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         gradeC: grades['Grade C'],
       }));
     }
-  
+
     console.log('Processed chartData:', chartData);
-  
+
     this.chartOptions = {
       animationEnabled: true,
       exportEnabled: true,
       title: {
-        text: `Crop Report by Grade ${this.createdDate}`
+        text: `Crop Report by Grade ${this.createdDate}`,
       },
       axisY: {
-        title: "Weight (Kg)",
-        includeZero: true
+        title: 'Weight (Kg)',
+        includeZero: true,
       },
       // toolTip: {
       //   shared: true,
       //   content: "<strong>{label}</strong><br/>Total: {y} Kg<br/>Grade A: {gradeA} Kg<br/>Grade B: {gradeB} Kg<br/>Grade C: {gradeC} Kg"
       // },
       legend: {
-        verticalAlign: "top"
+        verticalAlign: 'top',
       },
       data: [
         {
-          type: "stackedBar",
-          name: "Grade A",
+          type: 'stackedBar',
+          name: 'Grade A',
           showInLegend: true,
-          yValueFormatString: "#,### Kg",
-          color: "#FF9263",
-          dataPoints: chartData.map(item => ({ label: item.label, y: item.gradeA }))
+          yValueFormatString: '#,### Kg',
+          color: '#FF9263',
+          dataPoints: chartData.map((item) => ({
+            label: item.label,
+            y: item.gradeA,
+          })),
         },
         {
-          type: "stackedBar",
-          name: "Grade B",
+          type: 'stackedBar',
+          name: 'Grade B',
           showInLegend: true,
-          yValueFormatString: "#,### Kg",
-          color: "#5F75E9",
-          dataPoints: chartData.map(item => ({ label: item.label, y: item.gradeB }))
+          yValueFormatString: '#,### Kg',
+          color: '#5F75E9',
+          dataPoints: chartData.map((item) => ({
+            label: item.label,
+            y: item.gradeB,
+          })),
         },
         {
-          type: "stackedBar",
-          name: "Grade C",
+          type: 'stackedBar',
+          name: 'Grade C',
           showInLegend: true,
-          yValueFormatString: "#,### Kg",
-          color : "#3DE188",
-          dataPoints: chartData.map(item => ({ label: item.label, y: item.gradeC }))
-        }
-      ]
+          yValueFormatString: '#,### Kg',
+          color: '#3DE188',
+          dataPoints: chartData.map((item) => ({
+            label: item.label,
+            y: item.gradeC,
+          })),
+        },
+      ],
     };
-  
+
     console.log('Updated chartOptions:', this.chartOptions);
     this.loadingChart = false;
-  
+
     // Trigger change detection
     this.cdr.detectChanges();
   }
 
- 
-
   onDateChange(): void {
-    
-      console.log(this.createdDate);
+    console.log(this.createdDate);
     if (this.createdDate === '') {
       Swal.fire({
         title: 'Error!',
         text: 'Please select a date',
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       }).then(() => {
         // Set today's date to createdDate after the user presses OK
         this.createdDate = new Date().toISOString().split('T')[0];
         // Call fetchReport after setting the date
         this.fetchReport();
-        
       });
     } else {
-      
-        this.fetchReport();
-      
+      this.fetchReport();
     }
-  
   }
-  
 
-
-  get reportEntries(): [string, { 'Grade A': number; 'Grade B': number; 'Grade C': number; 'Total': number }][] {
+  get reportEntries(): [
+    string,
+    { 'Grade A': number; 'Grade B': number; 'Grade C': number; Total: number }
+  ][] {
     return Object.entries(this.reportData);
   }
 
@@ -204,31 +218,111 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     }
   }
 
+  // downloadPDF(): void {
+  //   const element = this.contentToConvert.nativeElement; // Get the content element to convert
+  //   const pdf = new jsPDF('p', 'mm', 'a4'); // Initialize jsPDF with A4 page size
+  //   const margin = 10; // Margin for the content in the PDF
+
+  //   // Calculate available width and height for content in A4 size
+  //   const pageWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+  //   const pageHeight = pdf.internal.pageSize.getHeight() - margin * 2;
+
+  //   html2canvas(element, {
+  //     scale: 2,
+  //     backgroundColor: '#ffffff',
+  //     useCORS: true,
+  //     allowTaint: false,
+  //   })
+  //     .then((canvas) => {
+  //       const imageWidth = canvas.width;
+  //       const imageHeight = canvas.height;
+
+  //       // Scale the content to fit within the PDF page
+  //       const scaleFactor = Math.min(
+  //         pageWidth / imageWidth,
+  //         pageHeight / imageHeight
+  //       );
+  //       const outputWidth = imageWidth * scaleFactor;
+  //       const outputHeight = imageHeight * scaleFactor;
+
+  //       const imgData = canvas.toDataURL('image/png'); // Convert canvas to image data
+  //       pdf.addImage(imgData, 'PNG', margin, margin, outputWidth, outputHeight);
+
+  //       // Trigger download
+  //       pdf.save(`Crop_Report_${this.createdDate}.pdf`);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error generating PDF:', error);
+  //     });
+  // }
+
   downloadPDF(): void {
-    const element = this.contentToConvert.nativeElement; // Get the content element to convert
-    const pdf = new jsPDF('p', 'mm', 'a4'); // Initialize jsPDF with A4 page size
-    const margin = 10; // Margin for the content in the PDF
-  
-    // Calculate available width and height for content in A4 size
+    const element = this.contentToConvert.nativeElement; // The element to convert
+    const pdf = new jsPDF('p', 'mm', 'a4'); // Initialize jsPDF with A4 dimensions
+    const margin = 10; // Margin around the content
+
     const pageWidth = pdf.internal.pageSize.getWidth() - margin * 2;
     const pageHeight = pdf.internal.pageSize.getHeight() - margin * 2;
-  
-    html2canvas(element, { scale: 2 }).then((canvas) => {
-      const imageWidth = canvas.width;
-      const imageHeight = canvas.height;
-  
-      // Scale the content to fit within the PDF page
-      const scaleFactor = Math.min(pageWidth / imageWidth, pageHeight / imageHeight);
-      const outputWidth = imageWidth * scaleFactor;
-      const outputHeight = imageHeight * scaleFactor;
-  
-      const imgData = canvas.toDataURL('image/png'); // Convert canvas to image data
-      pdf.addImage(imgData, 'PNG', margin, margin, outputWidth, outputHeight);
-  
-      // Trigger download
-      pdf.save(`Crop_Report_${this.createdDate}.pdf`);
-    }).catch((error) => {
-      console.error('Error generating PDF:', error);
-    });
+
+    // Render the chart to ensure it is complete
+    setTimeout(() => {
+      html2canvas(element, {
+        scale: 2, // High-resolution capture
+        useCORS: true, // Handle external resources
+        allowTaint: false, // Prevent tainting canvas
+        backgroundColor: '#ffffff', // Force white background
+        onclone: (clonedDoc) => {
+          const canvases = clonedDoc.querySelectorAll('canvas');
+
+          // Convert each canvas to an image and replace it
+          canvases.forEach((canvas) => {
+            const chartImage = (canvas as HTMLCanvasElement).toDataURL(
+              'image/png'
+            );
+            const img = document.createElement('img');
+            img.src = chartImage;
+            img.style.width = canvas.style.width;
+            img.style.height = canvas.style.height;
+            canvas.replaceWith(img); // Replace canvas with the image
+          });
+
+          // Ensure text color is black (for dark mode compatibility)
+          const elements = clonedDoc.querySelectorAll('*');
+          elements.forEach((el) => {
+            const style = window.getComputedStyle(el);
+            if (style.color !== 'rgb(0, 0, 0)') {
+              (el as HTMLElement).style.color = '#000000';
+            }
+          });
+        },
+      })
+        .then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          const canvasWidth = canvas.width;
+          const canvasHeight = canvas.height;
+
+          // Scale to fit within PDF dimensions
+          const scaleFactor = Math.min(
+            pageWidth / canvasWidth,
+            pageHeight / canvasHeight
+          );
+          const outputWidth = canvasWidth * scaleFactor;
+          const outputHeight = canvasHeight * scaleFactor;
+
+          // Add the content as an image to the PDF
+          pdf.addImage(
+            imgData,
+            'PNG',
+            margin,
+            margin,
+            outputWidth,
+            outputHeight
+          );
+          pdf.save(`Report_${new Date().toISOString()}.pdf`);
+        })
+        .catch((error) => {
+          console.error('Error generating PDF:', error);
+        });
+    }, 500); // Delay to ensure chart rendering is complete
   }
 }

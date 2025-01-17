@@ -75,6 +75,7 @@ import { ManageCompanyComponent } from './application/collection-hub-section/man
 import { CollectiveofficersEditComponent } from './application/collection-officer-app/collectiveofficers-edit/collectiveofficers-edit.component';
 import { SalesDashComponent } from './application/sales-dash-section/sales-dash/sales-dash.component';
 import { ComplaintsDashbordComponent } from './application/Complaints/complaints-dashbord/complaints-dashbord.component';
+import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-feedbacks/opt-out-feedbacks.component';
 
 export const routes: Routes = [
   {
@@ -210,6 +211,10 @@ export const routes: Routes = [
           {
             path: 'view-crop-variety',
             component: ViewVarietyComponent,
+          },
+          {
+            path: 'opt-out-feedbacks',
+            component: OptOutFeedbacksComponent,
           },
         ],
       },
@@ -352,9 +357,6 @@ export const routes: Routes = [
         ],
       },
 
-      
-
-      
       {
         path: 'collection-hub',
         children: [
@@ -365,27 +367,27 @@ export const routes: Routes = [
           },
           {
             path: 'view-selected-complain/:id/:farmerName',
-            component: ViewSelectedComplainComponent
+            component: ViewSelectedComplainComponent,
           },
           {
             path: 'update-collection-center/:id',
-            component: EditCollectionCenterComponent
+            component: EditCollectionCenterComponent,
           },
           {
             path: 'create-company',
-            component: CreateCompanyComponent
+            component: CreateCompanyComponent,
           },
           {
             path: 'manage-company',
-            component: ManageCompanyComponent
+            component: ManageCompanyComponent,
           },
           {
             path: 'view-collection-centers',
-            component: CollectionAllViewComponent
+            component: CollectionAllViewComponent,
           },
           {
-            path:'add-collection-center',
-            component: AddCollectionCenterComponent
+            path: 'add-collection-center',
+            component: AddCollectionCenterComponent,
           },
         ],
       },
@@ -421,29 +423,29 @@ export const routes: Routes = [
             path: 'add-package',
             component: AddPackageComponent,
           },
-        ]
+        ],
       },
       {
-        path:'sales-dash',
-        children:[
+        path: 'sales-dash',
+        children: [
           {
-            path:'',
+            path: '',
             component: SalesDashComponent,
-          }
-        ]
+          },
+        ],
       },
       {
-        path:'complaints',
-        children:[
+        path: 'complaints',
+        children: [
           {
-            path:'',
+            path: '',
             component: ComplaintsDashbordComponent,
           },
           {
             path: 'view-complains',
-            component:ViewComplainComponent,
+            component: ViewComplainComponent,
           },
-        ]
+        ],
       },
 
       { path: '', redirectTo: '/steckholders', pathMatch: 'full' },

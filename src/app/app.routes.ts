@@ -76,6 +76,7 @@ import { CollectiveofficersEditComponent } from './application/collection-office
 import { SalesDashComponent } from './application/sales-dash-section/sales-dash/sales-dash.component';
 import { ComplaintsDashbordComponent } from './application/Complaints/complaints-dashbord/complaints-dashbord.component';
 import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-feedbacks/opt-out-feedbacks.component';
+import { CreateFeedbackComponent } from './application/plant-care-app/create-feedback/create-feedback.component';
 
 export const routes: Routes = [
   {
@@ -214,7 +215,17 @@ export const routes: Routes = [
           },
           {
             path: 'opt-out-feedbacks',
-            component: OptOutFeedbacksComponent,
+            children: [
+              {
+                path: '',
+                component: OptOutFeedbacksComponent,
+              },
+              {
+                path: 'create-feedback',
+                component: CreateFeedbackComponent,
+              },
+              
+            ],
           },
         ],
       },

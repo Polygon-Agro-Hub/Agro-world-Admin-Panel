@@ -1,0 +1,144 @@
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  onclick="window.location.href='/plant-care/opt-out-feedbacks'"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+
+
+<div>
+   
+    
+    <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md ">
+        <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">Add Feedback Option</h2>
+
+        
+            <div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                    <div>
+                        <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Index Number</label>
+                        <input type="text" id="orderNumber" [(ngModel)]="feedback.orderNumber" name="orderNumber"
+                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                          #orderNumberInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly />
+                        <div *ngIf="orderNumberInput.touched && !feedback.orderNumber" class="text-red-500 text-sm mt-1">
+                          <div>Index number is required</div>
+                        </div>
+                        <div *ngIf="orderNumberInput.touched && orderNumberInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                          <div>Can not enter special character</div>
+                        </div>
+                      </div>
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+
+                        
+                      <div class="col-span-5">
+                        <label for="colour" class="block text-sm font-medium text-gray-700 dark:text-textDark">Color Code</label>
+                        <input type="text" id="colour" [(ngModel)]="feedback.colour" name="colour"
+                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                          #colourInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly/>
+                        <div *ngIf="colourInput.touched && !feedback.colour" class="text-red-500 text-sm mt-1">
+                          <div>Colour is required</div>
+                        </div>
+                        <!-- <div *ngIf="colourInput.touched && colourInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                          <div>Can not enter special character</div>
+                        </div> -->
+                      </div>
+
+
+                        
+                           
+                          <div class="col-span-1 pt-5">
+                            <ngx-colors ngx-colors-trigger [(ngModel)]="feedback.colour" (colorChange)="onColorChange($event)"
+                              style="display: inline-block; margin:5px;" #bgColorInput="ngModel">
+                            </ngx-colors>
+                            <div *ngIf="colourInput.touched && !feedback.colour" class="text-red-500 text-sm mt-1">
+                              <div>color is required</div>
+                            </div>
+                          </div>
+
+                      
+                    </div>
+                   
+                    
+                </div>
+
+                
+                <div class="pt-3 pb-3">
+                  <label for="feedbackEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In English)</label>
+                  <textarea 
+                    id="feedbackEnglish" 
+                    [(ngModel)]="feedback.feedbackEnglish" 
+                    name="feedbackEnglish" 
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
+                    #feedbackEnglishInput="ngModel" 
+                    rows="3" 
+                    pattern="^[a-zA-Z0-9]*$" 
+                    required>
+                  </textarea>
+                  <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
+                    <div>English crop name is required</div>
+                  </div>
+                  <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character</div>
+                  </div>
+                </div>
+
+                <div class="pt-3 pb-3">
+                  <label for="feedbackSinahala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In Sinhala)</label>
+                  <textarea 
+                    id="feedbackSinahala" 
+                    [(ngModel)]="feedback.feedbackSinahala" 
+                    name="feedbackSinahala" 
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
+                    #feedbackSinahalaInput="ngModel" 
+                    rows="3" 
+                    pattern="^[a-zA-Z0-9]*$" 
+                    required>
+                  </textarea>
+                  <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
+                    <div>English crop name is required</div>
+                  </div>
+                  <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character</div>
+                  </div>
+                </div>
+
+                <div class="pt-3 pb-3">
+                  <label for="feedbackTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In Tamil)</label>
+                  <textarea 
+                    id="feedbackTamil" 
+                    [(ngModel)]="feedback.feedbackTamil" 
+                    name="feedbackTamil" 
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
+                    #feedbackTamilInput="ngModel" 
+                    rows="3" 
+                    pattern="^[a-zA-Z0-9]*$" 
+                    required>
+                  </textarea>
+                  <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
+                    <div>English crop name is required</div>
+                  </div>
+                  <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character</div>
+                  </div>
+                </div>
+
+
+
+                    
+                
+                
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">Save</button>
+            </div>
+        
+    </div>
+</div>

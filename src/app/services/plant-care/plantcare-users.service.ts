@@ -41,6 +41,7 @@ export class PlantcareUsersService {
   }
   private apiUrl = `${environment.API_BASE_URL}`;
   private token = `${environment.TOKEN}`;
+  private url = `${environment.API_URL}`;
 
   constructor(private http: HttpClient) { }
 
@@ -113,5 +114,19 @@ export class PlantcareUsersService {
   }
 
   
+
+
+  createFeedback(feedbackData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(
+      `${this.apiUrl}create-feedback`,
+      feedbackData,
+      {
+        headers,
+      }
+    );
+  }
 
 }

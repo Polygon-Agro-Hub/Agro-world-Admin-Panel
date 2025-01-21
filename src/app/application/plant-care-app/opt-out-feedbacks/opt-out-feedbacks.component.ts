@@ -42,6 +42,7 @@ class FeedbacksData {
   firstName!: string;
   lastName!: string;
   userCreatedAt!: number;
-  feedback!: string;
-  feedbackCreatedAt!: number;
+  feedbacks!: string;
+  deletedUserCreatedAt!: number;
+  orderNumbers!: number;
 }

@@ -156,13 +156,13 @@
               {{ item.lastName }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.userCreatedAt | date }}
+              {{ item.deletedUserCreatedAt | date }}
             </td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.feedback }}
+              {{ item.orderNumbers }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.feedbacks }}
             </td>
           </tr>
         </tbody>

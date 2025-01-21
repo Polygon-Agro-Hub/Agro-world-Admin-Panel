@@ -108,5 +108,66 @@
 <div
   class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
 >
-  <div class="flex justify-between items-center mb-8"></div>
+  <div class="flex justify-between items-center mb-8 w-full">
+    <div class="overflow-x-auto w-full">
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              First Name
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Last Name
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              User Exit Date
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Feedback No
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Feedback
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of feedbacks; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.firstName }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.lastName }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.deletedUserCreatedAt | date }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.orderNumbers }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.feedbacks }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

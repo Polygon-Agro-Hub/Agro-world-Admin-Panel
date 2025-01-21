@@ -8,11 +8,18 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { NgxColorsModule } from 'ngx-colors';
 import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragPlaceholder,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-create-feedback',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, NgxColorsModule, FormsModule ],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, NgxColorsModule, FormsModule, CdkDropList, CdkDrag, CdkDragPlaceholder ],
   templateUrl: './create-feedback.component.html',
   styleUrl: './create-feedback.component.css'
 })
@@ -28,6 +35,23 @@ export class CreateFeedbackComponent {
     feedbackSinahala: '',
     feedbackTamil: ''
   };
+
+
+  movies = [
+    'Episode I - The Phantom Menace',
+    'Episode II - Attack of the Clones',
+    'Episode III - Revenge of the Sith',
+    'Episode IV - A New Hope',
+    'Episode V - The Empire Strikes Back',
+    'Episode VI - Return of the Jedi',
+    'Episode VII - The Force Awakens',
+    'Episode VIII - The Last Jedi',
+    'Episode IX - The Rise of Skywalker',
+  ];
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
+  }
 
    constructor(
     private fb: FormBuilder,

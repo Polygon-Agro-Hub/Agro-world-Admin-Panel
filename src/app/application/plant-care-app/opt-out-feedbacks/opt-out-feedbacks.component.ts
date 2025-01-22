@@ -13,6 +13,7 @@ import { response } from 'express';
 })
 export class OptOutFeedbacksComponent {
   feedbacks: FeedbacksData[] = [];
+  total!: number;
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
@@ -23,7 +24,8 @@ export class OptOutFeedbacksComponent {
     this.plantcareService.getUserFeedbackDetails().subscribe(
       (response) => {
         console.log(response);
-        this.feedbacks = response;
+        this.feedbacks = response.feedbackDetails;
+        this.total = response.feedbackCount.Total;
       },
       (error) => {
         console.error(error);

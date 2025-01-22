@@ -26,7 +26,7 @@ import {
 export class CreateFeedbackComponent {
 
   isLoading = false;
-
+  feebackList: any[] = [];
   bgColor: any = '#ffffff'; 
   feedback = {
     orderNumber: '',
@@ -49,9 +49,12 @@ export class CreateFeedbackComponent {
     'Episode IX - The Rise of Skywalker',
   ];
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
-  }
+  // drop(event: CdkDragDrop<string[]>) {
+  //   moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
+  //   this.feebackList.forEach((item, index) => {
+  //     item.orderNumber = index + 1;
+  //   });
+  // }
 
    constructor(
     private fb: FormBuilder,
@@ -66,6 +69,7 @@ export class CreateFeedbackComponent {
 
     ngOnInit() {
       this.loadUserData();
+      this.getAllFeedbacks();
     }
 
 
@@ -167,8 +171,92 @@ export class CreateFeedbackComponent {
           }
         );
     }
+
+
+    getAllFeedbacks() {
+      const token = localStorage.getItem('Login Token : ');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+      
+      this.http
+        .get<any>(`${environment.API_BASE_URL}get-all-feedbacks`, {
+          headers,
+        })
+        .subscribe(
+          (response) => {
+            
+            this.feebackList = response.feedbacks;
+            console.log(response);
+  
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+            
+            // Handle error...
+          }
+        );
+    }
   
 
 
+
+    deleteFeedback(id: number): void {
+      this.feebackList = this.feebackList.filter((feedback) => feedback.id !== id);
+    }
+
+
+
+    drop(event: CdkDragDrop<any[]>) {
+      // First update the array locally
+      moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
+      
+      // Update order numbers
+      const updatedFeedbacks = this.feebackList.map((item, index) => ({
+        id: item.id,
+        orderNumber: index + 1
+      }));
+      
+      // Update in database
+      this.plantcareUsersService.updateFeedbackOrder(updatedFeedbacks)
+        .subscribe({
+          next: (response: any) => {
+            if (response.status) {
+              // Update local state
+              this.feebackList.forEach((item, index) => {
+                item.orderNumber = index + 1;
+              });
+              
+              Swal.fire(
+                'Success',
+                'Feedback order updated successfully',
+                'success'
+              );
+            } else {
+              Swal.fire(
+                'Error',
+                'Failed to update feedback order',
+                'error'
+              );
+              // Optionally revert the drag if update fails
+              this.getAllFeedbacks();
+            }
+          },
+          error: (error) => {
+            console.error('Error updating feedback order:', error);
+            Swal.fire(
+              'Error',
+              'An error occurred while updating feedback order',
+              'error'
+            );
+            // Revert the drag if update fails
+            this.getAllFeedbacks();
+          }
+        });
+    }
      
 }

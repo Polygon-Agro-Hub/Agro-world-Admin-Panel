@@ -146,7 +146,7 @@
 
 
 
-<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md ">
+<!-- <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md ">
   <h2 class="text-2xl text-left mb-6 text-textLight dark:text-textDark">Add Feedback Option</h2>
 
 
@@ -160,4 +160,45 @@
   </div>
   
 
+</div> -->
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
+  <h2 class="text-2xl text-left mb-6 text-textLight dark:text-textDark">FEEDBACK OPTIONS</h2>
+
+  <div cdkDropList class="w-full space-y-3" (cdkDropListDropped)="drop($event)">
+    @for (feedback of feebackList; track feedback.id) {
+      <div 
+        class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-move hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" 
+        cdkDrag
+      >
+        <!-- Order Number -->
+        <div class="min-w-[2rem] text-gray-600 dark:text-gray-400 font-medium">
+          {{feedback.orderNumber.toString().padStart(2, '0')}}
+        </div>
+        
+        <!-- Color Square -->
+        <div 
+          class="w-8 h-8 rounded-md"
+          [style.backgroundColor]="feedback.colour"
+        ></div>
+        
+        <!-- Feedback Text -->
+        <div class="flex-grow text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 p-5 rounded-md">
+          {{feedback.feedbackEnglish}}
+        </div>
+        
+        <!-- Delete Button -->
+        <button 
+          class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </button>
+
+        <!-- Drag Preview Placeholder -->
+        <div 
+          *cdkDragPlaceholder 
+          class="bg-gray-100 dark:bg-gray-700 rounded-lg opacity-50 h-[60px]"
+        ></div>
+      </div>
+    }
+  </div>
 </div>

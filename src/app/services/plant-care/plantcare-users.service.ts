@@ -129,4 +129,18 @@ export class PlantcareUsersService {
     );
   }
 
+
+  updateFeedbackOrder(feedbacks: { id: number; orderNumber: number }[]) {
+    const token = localStorage.getItem('Login Token : ');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put(
+      `${environment.API_BASE_URL}update-feedback-order`,
+      { feedbacks },
+      { headers }
+    );
+}
+
 }

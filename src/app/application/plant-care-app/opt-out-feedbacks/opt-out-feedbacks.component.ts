@@ -14,6 +14,7 @@ import { response } from 'express';
 export class OptOutFeedbacksComponent {
   feedbacks: FeedbacksData[] = [];
   total!: number;
+  deleteCount!: number;
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
@@ -26,6 +27,7 @@ export class OptOutFeedbacksComponent {
         console.log(response);
         this.feedbacks = response.feedbackDetails;
         this.total = response.feedbackCount.Total;
+        this.deleteCount = response.deletedUserCount.Total;
       },
       (error) => {
         console.error(error);

@@ -3,7 +3,6 @@ import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { NgxColorsModule } from 'ngx-colors';
@@ -29,32 +28,12 @@ export class CreateFeedbackComponent {
   feebackList: any[] = [];
   bgColor: any = '#ffffff'; 
   feedback = {
-    orderNumber: '',
-    colour: '',
+    orderNumber: 0,
     feedbackEnglish: '',
     feedbackSinahala: '',
     feedbackTamil: ''
   };
 
-
-  movies = [
-    'Episode I - The Phantom Menace',
-    'Episode II - Attack of the Clones',
-    'Episode III - Revenge of the Sith',
-    'Episode IV - A New Hope',
-    'Episode V - The Empire Strikes Back',
-    'Episode VI - Return of the Jedi',
-    'Episode VII - The Force Awakens',
-    'Episode VIII - The Last Jedi',
-    'Episode IX - The Rise of Skywalker',
-  ];
-
-  // drop(event: CdkDragDrop<string[]>) {
-  //   moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
-  //   this.feebackList.forEach((item, index) => {
-  //     item.orderNumber = index + 1;
-  //   });
-  // }
 
    constructor(
     private fb: FormBuilder,
@@ -62,13 +41,11 @@ export class CreateFeedbackComponent {
     private route: ActivatedRoute,
     private router: Router,
     private plantcareUsersService: PlantcareUsersService
-    ) {  
-     
-    }
+    ) {}
 
 
     ngOnInit() {
-      this.loadUserData();
+      this.loadNextNumber();
       this.getAllFeedbacks();
     }
 
@@ -77,15 +54,9 @@ export class CreateFeedbackComponent {
     location.reload();
   }
 
-
-  onColorChange(event: any): void {
-    this.feedback.colour = event.color.hex;
-  }
   
   onSubmit() {
-    // Check for empty fields
     if (!this.feedback.orderNumber || 
-        !this.feedback.colour || 
         !this.feedback.feedbackEnglish || 
         !this.feedback.feedbackSinahala || 
         !this.feedback.feedbackTamil) {
@@ -96,19 +67,21 @@ export class CreateFeedbackComponent {
       );
       return;
     }
-  
+    if (this.feedback.orderNumber === 10 ) {
+    Swal.fire(
+      'Warning',
+      'Maximum number of feedbacks are already uploaded',
+      'warning'
+    );
+    return;
+  }
     this.isLoading = true;
-  
-    // Create JSON object
     const feedbackData = {
       orderNumber: this.feedback.orderNumber,
-      colour: this.feedback.colour,
       feedbackEnglish: this.feedback.feedbackEnglish,
       feedbackSinahala: this.feedback.feedbackSinahala,
       feedbackTamil: this.feedback.feedbackTamil,
     };
-  
-    // Send POST request to backend
     this.plantcareUsersService.createFeedback(feedbackData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
@@ -142,17 +115,15 @@ export class CreateFeedbackComponent {
 
 
 
-  loadUserData() {
+  loadNextNumber() {
       const token = localStorage.getItem('Login Token : ');
       if (!token) {
         console.error('No token found');
         return;
       }
-  
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-  
       this.isLoading = true;
       this.http
         .get<any>(
@@ -162,7 +133,6 @@ export class CreateFeedbackComponent {
         .subscribe(
           (data) => {
             this.isLoading = false;
-            
             this.feedback.orderNumber = data.nextOrderNumber;
           },
           (error) => {
@@ -182,22 +152,17 @@ export class CreateFeedbackComponent {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-      
       this.http
         .get<any>(`${environment.API_BASE_URL}get-all-feedbacks`, {
           headers,
         })
         .subscribe(
           (response) => {
-            
             this.feebackList = response.feedbacks;
             console.log(response);
-  
           },
           (error) => {
             console.error('Error fetching news:', error);
-            
-            // Handle error...
           }
         );
     }
@@ -205,32 +170,48 @@ export class CreateFeedbackComponent {
 
 
 
-    deleteFeedback(id: number): void {
-      this.feebackList = this.feebackList.filter((feedback) => feedback.id !== id);
+    deleteFeedback(feedbackId: number): void {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This will delete the feedback and reorder subsequent feedback entries.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.plantcareUsersService.deleteFeedback(feedbackId).subscribe({
+            next: () => {
+              Swal.fire('Deleted!', 'Feedback has been deleted.', 'success');
+              this.getAllFeedbacks();
+              this.loadNextNumber();
+            },
+            error: (err) => {
+              Swal.fire('Error!', 'Failed to delete feedback.', 'error');
+              console.error('Error deleting feedback:', err);
+            },
+          });
+        }
+      });
     }
+    
 
 
 
     drop(event: CdkDragDrop<any[]>) {
-      // First update the array locally
       moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
-      
-      // Update order numbers
       const updatedFeedbacks = this.feebackList.map((item, index) => ({
         id: item.id,
         orderNumber: index + 1
       }));
-      
-      // Update in database
       this.plantcareUsersService.updateFeedbackOrder(updatedFeedbacks)
         .subscribe({
           next: (response: any) => {
             if (response.status) {
-              // Update local state
               this.feebackList.forEach((item, index) => {
                 item.orderNumber = index + 1;
               });
-              
               Swal.fire(
                 'Success',
                 'Feedback order updated successfully',
@@ -242,7 +223,6 @@ export class CreateFeedbackComponent {
                 'Failed to update feedback order',
                 'error'
               );
-              // Optionally revert the drag if update fails
               this.getAllFeedbacks();
             }
           },
@@ -253,10 +233,29 @@ export class CreateFeedbackComponent {
               'An error occurred while updating feedback order',
               'error'
             );
-            // Revert the drag if update fails
             this.getAllFeedbacks();
           }
         });
     }
+
+
+
+    getColorByOrderNumber(orderNumber: number): string {
+      const colors: { [key: number]: string } = {
+        1: '#FFF399',
+        2: '#FFD462',
+        3: '#FF8F61',
+        4: '#FE7200',
+        5: '#FF3B33',
+        6: '#CD0800',
+        7: '#850002',
+        8: '#51000B',
+        9: '#3B0214',
+        10: '#777777',
+      };
+      return colors[orderNumber] || '#FFFFFF';
+    }
+    
+    
      
 }

@@ -143,4 +143,15 @@ export class PlantcareUsersService {
     );
 }
 
+
+
+deleteFeedback(feedbackId: number): Observable<any> {
+  const token = localStorage.getItem('Login Token : ');
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  return this.http.delete(`${this.apiUrl}/feedback/${feedbackId}`, { headers });
+}
+
 }

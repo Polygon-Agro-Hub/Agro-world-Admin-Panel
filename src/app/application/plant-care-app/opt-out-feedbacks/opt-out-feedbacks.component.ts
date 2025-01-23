@@ -15,6 +15,8 @@ export class OptOutFeedbacksComponent {
   feedbacks: FeedbacksData[] = [];
   total!: number;
   deleteCount!: number;
+  previousDeleteCount: number = 0;
+  percentageChange: number = 0;
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
@@ -28,6 +30,8 @@ export class OptOutFeedbacksComponent {
         this.feedbacks = response.feedbackDetails;
         this.total = response.feedbackCount.Total;
         this.deleteCount = response.deletedUserCount.Total;
+
+        this.calculatePercentageChange();
       },
       (error) => {
         console.error(error);
@@ -35,6 +39,17 @@ export class OptOutFeedbacksComponent {
         }
       }
     );
+  }
+
+  calculatePercentageChange() {
+    if (this.previousDeleteCount > 0) {
+      this.percentageChange =
+        ((this.deleteCount - this.previousDeleteCount) /
+          this.previousDeleteCount) *
+        100;
+    } else {
+      this.percentageChange = 0;
+    }
   }
 
   ngOnInit() {

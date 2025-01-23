@@ -19,52 +19,28 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
-                    <div>
-                        <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Index Number</label>
-                        <input type="text" id="orderNumber" [(ngModel)]="feedback.orderNumber" name="orderNumber"
-                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                          #orderNumberInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly />
-                        <div *ngIf="orderNumberInput.touched && !feedback.orderNumber" class="text-red-500 text-sm mt-1">
-                          <div>Index number is required</div>
-                        </div>
-                        <div *ngIf="orderNumberInput.touched && orderNumberInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-                          <div>Can not enter special character</div>
-                        </div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="col-span-2">
+                      <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Index Number</label>
+                      <input type="text" id="orderNumber" [(ngModel)]="feedback.orderNumber" name="orderNumber"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                        #orderNumberInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly />
+                      <div *ngIf="orderNumberInput.touched && !feedback.orderNumber" class="text-red-500 text-sm mt-1">
+                        <div>Index number is required</div>
                       </div>
-
-
-                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
-
-                        
-                      <div class="col-span-5">
-                        <label for="colour" class="block text-sm font-medium text-gray-700 dark:text-textDark">Color Code</label>
-                        <input type="text" id="colour" [(ngModel)]="feedback.colour" name="colour"
-                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                          #colourInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly/>
-                        <div *ngIf="colourInput.touched && !feedback.colour" class="text-red-500 text-sm mt-1">
-                          <div>Colour is required</div>
-                        </div>
-                        <!-- <div *ngIf="colourInput.touched && colourInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-                          <div>Can not enter special character</div>
-                        </div> -->
+                      <div *ngIf="orderNumberInput.touched && orderNumberInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                        <div>Can not enter special character</div>
                       </div>
-
-
-                        
-                           
-                          <div class="col-span-1 pt-5">
-                            <ngx-colors ngx-colors-trigger [(ngModel)]="feedback.colour" (colorChange)="onColorChange($event)"
-                              style="display: inline-block; margin:5px;" #bgColorInput="ngModel">
-                            </ngx-colors>
-                            <div *ngIf="colourInput.touched && !feedback.colour" class="text-red-500 text-sm mt-1">
-                              <div>color is required</div>
-                            </div>
-                          </div>
-
-                      
                     </div>
-                   
-                    
+
+                    <div class="col-span-1">
+                      <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Colour</label>
+                         <div class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                            <div class="px-2 py-2 rounded-md" [style.backgroundColor]="getColorByOrderNumber(feedback.orderNumber)"></div>
+                         </div>
+                    </div>
+                  </div>
+  
                 </div>
 
                 
@@ -83,9 +59,9 @@
                   <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
                     <div>English crop name is required</div>
                   </div>
-                  <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                  <!-- <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
-                  </div>
+                  </div> -->
                 </div>
 
                 <div class="pt-3 pb-3">
@@ -103,9 +79,9 @@
                   <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
                     <div>English crop name is required</div>
                   </div>
-                  <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                  <!-- <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
-                  </div>
+                  </div> -->
                 </div>
 
                 <div class="pt-3 pb-3">
@@ -123,9 +99,9 @@
                   <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
                     <div>English crop name is required</div>
                   </div>
-                  <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                  <!-- <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
-                  </div>
+                  </div> -->
                 </div>
 
 
@@ -178,7 +154,7 @@
         <!-- Color Square -->
         <div 
           class="w-8 h-8 rounded-md"
-          [style.backgroundColor]="feedback.colour"
+          [style.backgroundColor]="getColorByOrderNumber(feedback.orderNumber)"
         ></div>
         
         <!-- Feedback Text -->
@@ -188,6 +164,7 @@
         
         <!-- Delete Button -->
         <button 
+        (click)="deleteFeedback(feedback.id)"
           class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2"
         >
           <i class="fa-solid fa-trash"></i>

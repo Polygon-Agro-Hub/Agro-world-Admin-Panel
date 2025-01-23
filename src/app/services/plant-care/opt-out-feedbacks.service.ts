@@ -28,4 +28,15 @@ export class OptOutFeedbacksService {
       headers,
     });
   }
+
+
+  getAllFeedbackListForBarChart(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`, // Ensure this.token is defined in your service
+    });
+
+    return this.http.get(`${this.apiUrl}/get-all-feedbacks-for-bar-chart`,{headers});
+  }
+
+
 }

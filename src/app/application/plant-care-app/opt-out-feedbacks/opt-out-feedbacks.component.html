@@ -88,40 +88,19 @@
   </div>
 
   <!-- Feedback Bar Chart -->
-  <div class="flex items-center justify-center w-full">
-    <div class="flex flex-col">
-      <div class="flex items-center space-x-2">
-        <p class="text-sm text-gray-600">1</p>
-        <div class="w-40 bg-yellow-400 h-2 rounded-full"></div>
-        <p class="text-sm text-gray-600">500</p>
-      </div>
-      <div class="flex items-center space-x-2 mt-2">
-        <p class="text-sm text-gray-600">2</p>
-        <div class="w-32 bg-red-400 h-2 rounded-full"></div>
-        <p class="text-sm text-gray-600">400</p>
-      </div>
-      <div class="flex items-center space-x-2 mt-2">
-        <p class="text-sm text-gray-600">3</p>
-        <div class="w-16 bg-red-600 h-2 rounded-full"></div>
-        <p class="text-sm text-gray-600">30</p>
-      </div>
-      <div class="flex items-center space-x-2 mt-2">
-        <p class="text-sm text-gray-600">4</p>
-        <div class="w-4 bg-purple-700 h-2 rounded-full"></div>
-        <p class="text-sm text-gray-600">10</p>
-      </div>
-      <div class="flex items-center space-x-2 mt-2">
-        <p class="text-sm text-gray-600">5</p>
-        <div class="w-2 bg-purple-900 h-2 rounded-full"></div>
-        <p class="text-sm text-gray-600">5</p>
-      </div>
-      <div class="flex items-center space-x-2 mt-2">
-        <p class="text-sm text-gray-600">6</p>
-        <div class="w-1 bg-gray-500 h-2 rounded-full"></div>
-        <p class="text-sm text-gray-600">2</p>
-      </div>
-    </div>
+<div class="flex items-center justify-center w-full">
+  <div class="flex flex-col w-full max-w-xl">
+    <div>
+      <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'180px'}"></canvasjs-chart>    
+  </div>  
+  
+  
   </div>
+ 
+</div>
+
+
+
 
   <!-- Add/Edit Options Button -->
   <div class="flex items-center justify-center w-full">
@@ -192,7 +171,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of feedbacks; let i = index">
-            <td>{{ i + 1 }}</td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ i + 1 }}
+            </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.firstName }}
             </td>

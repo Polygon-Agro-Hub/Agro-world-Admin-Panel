@@ -27,7 +27,6 @@
         "@ckeditor/ckeditor5-angular": "^8.0.0",
         "@ckeditor/ckeditor5-build-classic": "^43.0.0",
         "@kolkov/angular-editor": "^3.0.0-beta.0",
-        "@nguniversal/express-engine": "^7.0.2",
         "aws-sdk": "^2.1678.0",
         "bootstrap": "^5.3.3",
         "chart.js": "^4.4.4",

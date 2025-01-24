@@ -3,11 +3,18 @@ import { Component } from '@angular/core';
 import { OptOutFeedbacksService } from '../../../services/plant-care/opt-out-feedbacks.service';
 import { HttpClient } from '@angular/common/http';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-opt-out-feedbacks',
   standalone: true,
-  imports: [CommonModule, CanvasJSAngularChartsModule],
+  imports: [
+    CommonModule,
+    CanvasJSAngularChartsModule,
+    LoadingSpinnerComponent,
+    NgxPaginationModule,
+  ],
   templateUrl: './opt-out-feedbacks.component.html',
   styleUrl: './opt-out-feedbacks.component.css',
 })
@@ -17,28 +24,39 @@ export class OptOutFeedbacksComponent {
   deleteCount!: number;
   previousDeleteCount: number = 0;
   percentageChange: number = 0;
-  feedbackData : FeedbacksDataChart[] = [];
-  MAX_COUNT : number = 2000;
+  feedbackData: FeedbacksDataChart[] = [];
+  isLoading = true;
+  MAX_COUNT: number = 2000;
   maxFeedbackCount: number = 0;
   chart: any;
+  page: number = 1;
+  totalItems: number = 0;
+  itemsPerPage: number = 10;
+  hasData: boolean = true;
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
     private http: HttpClient
   ) {}
 
-  fetchAllFeedbacks() {
-    this.plantcareService.getUserFeedbackDetails().subscribe(
-      (response) => {
+  fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
+    this.page = page;
+    this.plantcareService.getUserFeedbackDetails(page, limit).subscribe(
+      (response: any) => {
         console.log(response);
         this.feedbacks = response.feedbackDetails;
         this.total = response.feedbackCount.Total;
         this.deleteCount = response.deletedUserCount.Total;
+        this.isLoading = false;
+        if (response.length > 0) {
+          this.hasData = false;
+        }
 
         this.calculatePercentageChange();
       },
       (error) => {
         console.error(error);
+        this.isLoading = false;
         if (error.ststus === 401) {
         }
       }
@@ -61,11 +79,18 @@ export class OptOutFeedbacksComponent {
     this.loadFeedbackData();
   }
 
-
   getColor(orderNumber: number): string {
     const colors = [
-      "#FFF399", "#FFD462", "#FF8F61", "#FE7200", "#FF3B33",
-      "#CD0800", "#850002", "#51000B", "#3B0214", "#777777",
+      '#FFF399',
+      '#FFD462',
+      '#FF8F61',
+      '#FE7200',
+      '#FF3B33',
+      '#CD0800',
+      '#850002',
+      '#51000B',
+      '#3B0214',
+      '#777777',
     ];
     return colors[(orderNumber - 1) % colors.length];
   }
@@ -75,26 +100,30 @@ export class OptOutFeedbacksComponent {
       next: (response) => {
         if (response && response.feedbacks && response.feedbacks.length > 0) {
           this.feedbackData = response.feedbacks;
-          
-          this.maxFeedbackCount = Math.max(...this.feedbackData.map(f => f.feedbackCount));
-  
+
+          this.maxFeedbackCount = Math.max(
+            ...this.feedbackData.map((f) => f.feedbackCount)
+          );
+
           const dataPoints = this.feedbackData
-              .slice()
-              .reverse()
-              .map((feedback) => ({
-                label: `${feedback.orderNumber}`,
-                y: feedback.feedbackCount,
-                color: this.getColor(feedback.orderNumber)
+            .slice()
+            .reverse()
+            .map((feedback) => ({
+              label: `${feedback.orderNumber}`,
+              y: feedback.feedbackCount,
+              color: this.getColor(feedback.orderNumber),
             }));
 
           this.chartOptions = {
             ...this.chartOptions,
-            data: [{
-              type: "bar",
-              indexLabel: "{y}",
-              yValueFormatString: "#,###",
-              dataPoints: dataPoints
-            }]
+            data: [
+              {
+                type: 'bar',
+                indexLabel: '{y}',
+                yValueFormatString: '#,###',
+                dataPoints: dataPoints,
+              },
+            ],
           };
         } else {
           console.warn('No feedback data received');
@@ -102,15 +131,17 @@ export class OptOutFeedbacksComponent {
       },
       error: (error) => {
         console.error('Error loading feedback data:', error);
-      }
+      },
     });
   }
-  
-  
-  
 
   getBarWidth(feedbackCount: number): number {
     return (feedbackCount / this.maxFeedbackCount) * 100;
+  }
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllFeedbacks(this.page, this.itemsPerPage);
   }
 
   chartOptions: any = {
@@ -118,13 +149,12 @@ export class OptOutFeedbacksComponent {
     animationEnabled: true,
     axisY: {
       includeZero: true,
-      
     },
     data: [
       {
-        type: "bar",
-        indexLabel: "{y}", // Show values on the bars
-        yValueFormatString: "#,###", // Format for bar values
+        type: 'bar',
+        indexLabel: '{y}', // Show values on the bars
+        yValueFormatString: '#,###', // Format for bar values
         maxBarWidth: 10, // Reduce bar width
         barThickness: 5, // Reduce bar thickness
         dataPoints: [], // Initialized as empty, will be updated dynamically
@@ -145,5 +175,4 @@ class FeedbacksData {
 class FeedbacksDataChart {
   orderNumber!: number;
   feedbackCount!: number;
-
 }

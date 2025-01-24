@@ -78,6 +78,7 @@ import { ComplaintsDashbordComponent } from './application/Complaints/complaints
 import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-feedbacks/opt-out-feedbacks.component';
 import { CreateFeedbackComponent } from './application/plant-care-app/create-feedback/create-feedback.component';
 import { CollectionCenterViewComplainComponent } from './application/collection-hub-section/collection-center-view-complain/collection-center-view-complain.component';
+import { SalesTargetComponent } from './application/sales-dash-section/sales-target/sales-target.component';
 
 export const routes: Routes = [
   {
@@ -442,6 +443,10 @@ export const routes: Routes = [
           {
             path: '',
             component: SalesDashComponent,
+          },
+          {
+            path: 'sales-targets',
+            component: SalesTargetComponent,
           },
         ],
       },

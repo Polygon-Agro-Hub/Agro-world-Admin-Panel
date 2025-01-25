@@ -88,16 +88,12 @@ export class LoginComponent {
           timer: 1500
         });
         localStorage.setItem('Login Token : ', res.token);
-  
         localStorage.setItem('userName:', res.userName);
         localStorage.setItem('userId:', res.userId);
         localStorage.setItem('role:', res.role);
-          localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
-          // console.log("hi..",res.token);
-          // console.log("hi..",res.userName);
-          // console.log("hi..",res.role);
-          // console.log("hi..",res.userId);
-         
+        localStorage.setItem('permissions', JSON.stringify(res.permissions));
+        localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
+
           
           
         this.router.navigate(['/steckholders']);

@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environment/environment';
 import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface PlantCareUser {
   id: number;
@@ -85,7 +86,7 @@ export class ViewPlantcareUsersComponent {
   hasData: boolean = true;  
   
 
-  constructor(private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router) { }
+  constructor(private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router, public permissionService: PermissionService) { }
 
   
 

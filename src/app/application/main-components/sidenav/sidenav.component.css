@@ -145,6 +145,12 @@
     transition: all 0.3s ease;
 }
 
+.setting-container {
+    cursor: pointer;
+    color: #A8B0C5;
+    transition: all 0.3s ease;
+}
+
 .logout-container:hover {
     background-color: #FFFFFF33;
     color: #fff;

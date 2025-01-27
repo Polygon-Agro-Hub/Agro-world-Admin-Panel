@@ -49,6 +49,7 @@ export class CreateAdminUserComponent implements OnInit {
   isPopupVisible = false;
   showPassword: boolean = false;
   rolesList: any[] = [];
+  positionList: any[] = [];
 
   userForm: FormGroup;
 
@@ -63,6 +64,7 @@ export class CreateAdminUserComponent implements OnInit {
       mail: ['', [Validators.required, Validators.email]],
       userName: ['', [Validators.required, this.singleWordValidator]],
       role: ['', Validators.required],
+      position: ['', Validators.required],
       password: ['', [Validators.required, this.passwordValidator()]]
     });
   }
@@ -77,6 +79,7 @@ export class CreateAdminUserComponent implements OnInit {
     }
     
     this.getAllRoles();
+    this.getAllPosition();
   }
 
   getAllRoles() {
@@ -97,6 +100,37 @@ export class CreateAdminUserComponent implements OnInit {
         (response) => {
           
           this.rolesList = response.roles;
+          console.log(response);
+
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+          
+          // Handle error...
+        }
+      );
+  }
+
+
+
+  getAllPosition() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    
+    this.http
+      .get<any>(`${environment.API_BASE_URL}get-all-position`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          
+          this.positionList = response.positions;
           console.log(response);
 
         },

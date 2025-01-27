@@ -87,6 +87,31 @@ export class SidenavComponent implements OnInit {
     }
   }
 
+
+  settings(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      // Remove the login token from localStorage
+      localStorage.removeItem('Login Token : ');
+
+      // Show a logout confirmation
+      Swal.fire({
+        icon: 'warning',
+        title: 'Logged Out',
+        text: 'Are you sure, you want to logged out.',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to the login page after confirmation
+          this.router.navigateByUrl('/login');
+        }
+      });
+    }
+  }
+
   popupMarket() {
     this.ispopupMarketPrice = !this.ispopupMarketPrice;
   }

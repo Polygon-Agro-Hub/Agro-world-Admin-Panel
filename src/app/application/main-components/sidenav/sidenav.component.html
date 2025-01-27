@@ -1,4 +1,4 @@
-<div class="sidenav bg-[#061E2C]" [ngClass]="{'expanded': isExpanded}">
+<div class="sidenav bg-[#061E2C] h-screen flex flex-col" [ngClass]="{'expanded': isExpanded}">
   <div class="logo-container">
     <img src="assets/images/logo.png" alt="Logo" class="logo-text w-16 cursor-pointer" *ngIf="!isExpanded"
       onclick="window.location.href='/steckholders'" />
@@ -13,7 +13,7 @@
 
 
 
-  <ul class="sidenav-nav">
+  <ul class="sidenav-nav flex-1 overflow-y-auto">
     <li *ngFor="let item of navData" class="sidenav-nav-item">
       <a [routerLink]="item.RouterLink" class="sidenav-nav-link" (click)="toggleChildren(item)" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}">
         <i class="sidenav-link-icon" [class]="item.icon"></i>
@@ -33,6 +33,12 @@
       </ul>
     </li>
   </ul>
+
+  <div class="setting-container p-4 pb-16 border-t" onclick="window.location.href='/settings/view-roles'">
+
+    <i class="sidenav-link-icon fa-solid fa-gear"></i>
+    <span class="sidenav-link-text" *ngIf="isExpanded">Settings</span>
+  </div>
 
   <div class="logout-container" (click)="logout()">
     <i class="sidenav-link-icon fa-solid fa-sign-out-alt"></i>

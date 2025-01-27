@@ -79,6 +79,8 @@ import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-f
 import { CreateFeedbackComponent } from './application/plant-care-app/create-feedback/create-feedback.component';
 import { CollectionCenterViewComplainComponent } from './application/collection-hub-section/collection-center-view-complain/collection-center-view-complain.component';
 import { SalesTargetComponent } from './application/sales-dash-section/sales-target/sales-target.component';
+import { RoleSelectionComponent } from './application/settings-section/role-selection/role-selection.component';
+import { PermissionAreaComponent } from './application/settings-section/permission-area/permission-area.component';
 
 export const routes: Routes = [
   {
@@ -464,6 +466,23 @@ export const routes: Routes = [
           {
             path: 'collection-center-complains',
             component: CollectionCenterViewComplainComponent,
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        children: [
+          {
+            path: '',
+            component: ComplaintsDashbordComponent,
+          },
+          {
+            path: 'view-roles',
+            component: RoleSelectionComponent,
+          },
+          {
+            path: 'give-permissions/:id',
+            component: PermissionAreaComponent,
           },
         ],
       },

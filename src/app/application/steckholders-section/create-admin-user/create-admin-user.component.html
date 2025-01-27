@@ -49,6 +49,21 @@
 
 
         <div>
+          <!-- Role Input -->
+          <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position</label>
+          <select id="position" name="position" formControlName="position"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+            <option *ngFor="let position of positionList" [value]="position.id">{{ position.positions }}</option>
+          </select>
+          <div *ngIf="userForm.get('position')?.invalid && (userForm.get('position')?.dirty || userForm.get('position')?.touched)"
+            class="text-red-500 text-sm mt-1">
+            User position are required
+          </div>
+        </div>
+
+
+
+        <div>
           <!-- Password Input -->
           <label for="password" class="block text-sm font-medium text-textLight dark:text-textDark">Password</label>
           <div

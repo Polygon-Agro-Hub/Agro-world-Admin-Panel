@@ -118,11 +118,11 @@ constructor(
 
 
 
-    isChecked(featureId: number, positionId: number, roleId: number): boolean {
+    isChecked(featureId: number, positionId: number): boolean {
       return this.RoleFeatureList.some(
         (roleFeature) =>
-          roleFeature.feature_id === featureId &&
-          roleFeature.position_id === positionId
+          roleFeature.featureId === featureId &&
+          roleFeature.positionId === positionId
       );
     }
 
@@ -195,8 +195,8 @@ constructor(
         // Find the role feature ID from the existing RoleFeatureList
         const roleFeature = this.RoleFeatureList.find(
           (item) =>
-            item.feature_id === featureId &&
-            item.position_id === positionId
+            item.featureId === featureId &&
+            item.positionId === positionId
         );
     
         if (roleFeature) {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +11,10 @@ export class CollectionOfficerService {
   patchValue(arg0: { language: string[]; }) {
     throw new Error('Method not implemented.');
   }
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   createCollectiveOfficer(person: any, selectedImage: any): Observable<any> {
     const formData = new FormData();
@@ -25,7 +26,7 @@ export class CollectionOfficerService {
       Authorization: `Bearer ${this.token}`,
     });
   
-    return this.http.post(`${this.apiUrl}collection-officer/create-collection-officer`, formData, {
+    return this.http.post(`${this.apiUrl}auth/collection-officer/create-collection-officer`, formData, {
       headers,
     });
   }
@@ -41,7 +42,7 @@ export class CollectionOfficerService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.put(`${this.apiUrl}update-officer-details/${id}`, formData, {
+    return this.http.put(`${this.apiUrl}auth/update-officer-details/${id}`, formData, {
       headers,
     });
   }

@@ -6,6 +6,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { Router } from '@angular/router';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-role-selection',
@@ -18,7 +19,8 @@ export class RoleSelectionComponent {
 
   rolesList: any[] = [];
 
-  constructor(private http: HttpClient, private router: Router, public permissionService: PermissionService) 
+  constructor(private http: HttpClient, private router: Router, public permissionService: PermissionService, private tokenService: TokenService
+  ) 
   {}
 
   ngOnInit() {
@@ -27,7 +29,8 @@ export class RoleSelectionComponent {
 
 
     getAllRoles() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
+
       if (!token) {
         console.error('No token found');
         return;
@@ -36,7 +39,7 @@ export class RoleSelectionComponent {
         Authorization: `Bearer ${token}`,
       });
       this.http
-        .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
+        .get<any>(`${environment.API_URL}auth/get-all-roles`, {
           headers,
         })
         .subscribe(

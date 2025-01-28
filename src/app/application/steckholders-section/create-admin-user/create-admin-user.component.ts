@@ -20,6 +20,7 @@ import { Console } from 'node:console';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface Admin {
   id: number;
@@ -57,7 +58,9 @@ export class CreateAdminUserComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
+
   ) {
     this.userForm = this.fb.group({
       id: [''],
@@ -83,7 +86,8 @@ export class CreateAdminUserComponent implements OnInit {
   }
 
   getAllRoles() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -93,7 +97,7 @@ export class CreateAdminUserComponent implements OnInit {
     });
     
     this.http
-      .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
+      .get<any>(`${environment.API_URL}auth/get-all-roles`, {
         headers,
       })
       .subscribe(
@@ -114,7 +118,8 @@ export class CreateAdminUserComponent implements OnInit {
 
 
   getAllPosition() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -124,7 +129,7 @@ export class CreateAdminUserComponent implements OnInit {
     });
     
     this.http
-      .get<any>(`${environment.API_BASE_URL}get-all-position`, {
+      .get<any>(`${environment.API_URL}auth/get-all-position`, {
         headers,
       })
       .subscribe(
@@ -193,7 +198,8 @@ export class CreateAdminUserComponent implements OnInit {
   }
 
   getAdminById(id: any): void {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -203,7 +209,7 @@ export class CreateAdminUserComponent implements OnInit {
     });
 
     this.http
-      .get<Admin[]>(`${environment.API_BASE_URL}get-admin-by-id/${id}`, {
+      .get<Admin[]>(`${environment.API_URL}auth/get-admin-by-id/${id}`, {
         headers,
       })
       .subscribe(
@@ -237,7 +243,8 @@ export class CreateAdminUserComponent implements OnInit {
   }
 
   updateAdmin(id:any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -262,7 +269,7 @@ export class CreateAdminUserComponent implements OnInit {
 
     this.http
       .post(
-        `${environment.API_BASE_URL}edit-admin-user/${id}`,
+        `${environment.API_URL}auth/edit-admin-user/${id}`,
         this.userForm.value,
         { headers }
       )
@@ -309,7 +316,8 @@ export class CreateAdminUserComponent implements OnInit {
     console.log('clicked');
     console.log(this.createAdminObj);
 
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -324,7 +332,7 @@ export class CreateAdminUserComponent implements OnInit {
 
     this.http
       .post(
-        `${environment.API_BASE_URL}create-admin`,
+        `${environment.API_URL}auth/create-admin`,
         this.userForm.value,
         {
           headers,

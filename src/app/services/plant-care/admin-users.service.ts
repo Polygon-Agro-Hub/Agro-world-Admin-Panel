@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { TokenService } from '../token/services/token.service';
 
 interface Admin {
   id: number;
@@ -14,12 +15,12 @@ interface Admin {
   providedIn: 'root'
 })
 export class AdminUsersService {
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private Token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private Token = this.tokenService.getToken();;
 
   
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tokenService: TokenService) {
     
    }
 
@@ -27,7 +28,7 @@ export class AdminUsersService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.Token}`,
     });
-    return this.http.get<Admin[]>(`${this.apiUrl}get-me`, { headers });
+    return this.http.get<Admin[]>(`${this.apiUrl}auth/get-me`, { headers });
   }
 
 
@@ -36,7 +37,7 @@ export class AdminUsersService {
       Authorization: `Bearer ${this.Token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${this.apiUrl}edit-admin-user-without-id`, adminData, {
+    return this.http.post(`${this.apiUrl}auth/edit-admin-user-without-id`, adminData, {
       headers,
     });
   }
@@ -47,7 +48,7 @@ export class AdminUsersService {
       Authorization: `Bearer ${this.Token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${this.apiUrl}create-admin`, adminData, {
+    return this.http.post(`${this.apiUrl}auth/create-admin`, adminData, {
       headers,
     });
   }

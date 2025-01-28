@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { TokenService } from '../token/services/token.service';
 
 interface NewsItem {
   id: number;
@@ -23,16 +24,16 @@ interface NewsItem {
   providedIn: 'root'
 })
 export class NewsService {
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   createNews(newsData: FormData): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${this.apiUrl}admin-create-news`, newsData, {
+    return this.http.post(`${this.apiUrl}auth/admin-create-news`, newsData, {
       headers,
     });
   }
@@ -42,7 +43,7 @@ export class NewsService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get(`${this.apiUrl}get-news-by-id/${id}`, { headers });
+    return this.http.get(`${this.apiUrl}auth/get-news-by-id/${id}`, { headers });
   }
 
   updateNews(id: number, newsData: any): Observable<any> {
@@ -52,7 +53,7 @@ export class NewsService {
     });
 
     return this.http.post(
-      `${this.apiUrl}edit-news/${id}`,
+      `${this.apiUrl}auth/edit-news/${id}`,
       newsData,
       { headers }
     );
@@ -67,7 +68,7 @@ export class NewsService {
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}get-all-contents?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/get-all-contents?page=${page}&limit=${limit}`;
     if (statusFilter) {
       url += `&status=${statusFilter}`;
     }
@@ -84,7 +85,7 @@ export class NewsService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.delete(`${this.apiUrl}delete-news/${id}`, {
+    return this.http.delete(`${this.apiUrl}auth/delete-news/${id}`, {
       headers
     });
   }
@@ -96,7 +97,7 @@ export class NewsService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.post(
-      `${this.apiUrl}edit-news-status/${id}`,
+      `${this.apiUrl}auth/edit-news-status/${id}`,
       {},
       { headers}
     );

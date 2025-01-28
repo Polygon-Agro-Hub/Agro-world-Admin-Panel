@@ -16,6 +16,7 @@ import { CalendarModule } from 'primeng/calendar';
 
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NewsService } from '../../../services/plant-care/news.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 
 interface NewsItem {
@@ -82,9 +83,11 @@ export class ManageContentComponent implements OnInit {
   safeHtmlDescriptionTamil: SafeHtml = '';
 
 
-  constructor(private newsService: NewsService, private http: HttpClient, private router: Router, private sanitizer: DomSanitizer) {}
+  constructor(private newsService: NewsService, private http: HttpClient, private router: Router, private sanitizer: DomSanitizer, private tokenService: TokenService,) {}
 
   ngOnInit() {
+    const token = this.tokenService.getToken();
+  console.log('Token:', token);
     this.fetchAllNews(this.page, this.itemsPerPage);
     this.status = [
       { name: 'Published', code: 'Published' },
@@ -115,7 +118,8 @@ export class ManageContentComponent implements OnInit {
 
 
   deleteNews(id: any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token =  this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;

@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface marketxl {
   id: number;
@@ -33,9 +34,12 @@ export class MarketPriceBulkDeleteComponent {
   itemsPerPage: number = 10;
   hasData: boolean = true; 
   mprices: marketxl[] = [];
+  private token = this.tokenService.getToken();
 
 
-  constructor(private http: HttpClient, private router: Router) {}
+
+  constructor(private http: HttpClient, private router: Router, private tokenService: TokenService
+  ) {}
 
 
   ngOnInit() {
@@ -52,7 +56,7 @@ export class MarketPriceBulkDeleteComponent {
   fetchAllXl(page: number = 1, limit: number = this.itemsPerPage) {
     console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
-    const token = localStorage.getItem('Login Token : ');
+    const token = `Bearer ${this.token}`
     if (!token) {
       console.error('No token found');
       return;
@@ -83,7 +87,7 @@ export class MarketPriceBulkDeleteComponent {
 
 
   deleteAdminUser(id: any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = `Bearer ${this.token}`
     if (!token) {
       console.error('No token found');
       return;

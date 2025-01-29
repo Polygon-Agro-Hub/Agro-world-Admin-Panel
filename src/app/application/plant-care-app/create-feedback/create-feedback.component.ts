@@ -14,6 +14,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-create-feedback',
@@ -40,7 +41,9 @@ export class CreateFeedbackComponent {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private plantcareUsersService: PlantcareUsersService
+    private plantcareUsersService: PlantcareUsersService,
+    private tokenService: TokenService
+
     ) {}
 
 
@@ -116,7 +119,8 @@ export class CreateFeedbackComponent {
 
 
   loadNextNumber() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
+
       if (!token) {
         console.error('No token found');
         return;
@@ -127,7 +131,7 @@ export class CreateFeedbackComponent {
       this.isLoading = true;
       this.http
         .get<any>(
-          `${environment.API_BASE_URL}next-order-number`,
+          `${environment.API_URL}auth/next-order-number`,
           { headers }
         )
         .subscribe(
@@ -144,7 +148,8 @@ export class CreateFeedbackComponent {
 
 
     getAllFeedbacks() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
+
       if (!token) {
         console.error('No token found');
         return;
@@ -153,7 +158,7 @@ export class CreateFeedbackComponent {
         Authorization: `Bearer ${token}`,
       });
       this.http
-        .get<any>(`${environment.API_BASE_URL}get-all-feedbacks`, {
+        .get<any>(`${environment.API_URL}auth/get-all-feedbacks`, {
           headers,
         })
         .subscribe(

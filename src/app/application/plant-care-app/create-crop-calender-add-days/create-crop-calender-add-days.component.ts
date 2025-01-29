@@ -16,6 +16,7 @@ import {
 
 import { AddDaysComponent } from '../../../components/add-days/add-days.component';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-create-crop-calender-add-days',
@@ -37,7 +38,9 @@ export class CreateCropCalenderAddDaysComponent implements AfterViewInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tokenService: TokenService
+
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { cropId: string };
@@ -65,7 +68,8 @@ export class CreateCropCalenderAddDaysComponent implements AfterViewInit {
     this.collectFormData();
     console.log('Form data array:', this.formDataArray);
 
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       alert('No token found. Please log in.');
@@ -83,7 +87,7 @@ export class CreateCropCalenderAddDaysComponent implements AfterViewInit {
 
     this.http
       .post(
-        `${environment.API_BASE_URL}admin-add-crop-calender-add-task`,
+        `${environment.API_URL}auth/admin-add-crop-calender-add-task`,
         requestBody,
         { headers }
       )

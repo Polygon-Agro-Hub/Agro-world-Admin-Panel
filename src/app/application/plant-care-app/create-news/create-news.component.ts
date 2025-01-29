@@ -22,6 +22,7 @@ import { NewsService } from '../../../services/plant-care/news.service';
 import { log } from 'console';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface NewsItem {
   id: number;
@@ -142,7 +143,9 @@ export class CreateNewsComponent {
     private http: HttpClient,
     private route: ActivatedRoute,
     private newsService: NewsService,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
+
   ) {}
 
   // validateSinhala(event: any) {
@@ -403,7 +406,7 @@ export class CreateNewsComponent {
   
 
   updateNews() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
       return;
@@ -459,7 +462,7 @@ export class CreateNewsComponent {
 
     this.isLoading = true;
     this.http
-      .put(`${environment.API_BASE_URL}edit-news/${this.itemId}`, formData, {
+      .put(`${environment.API_URL}auth/edit-news/${this.itemId}`, formData, {
         headers,
       })
       .subscribe(

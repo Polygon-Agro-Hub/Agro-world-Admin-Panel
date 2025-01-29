@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
+import { TokenService } from './token/services/token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +10,10 @@ import { environment } from '../environment/environment';
 export class CollectionService {
 
 
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   fetchAllCollectionOfficer(page: number, limit: number, searchNIC: string = '', company:string): Observable<any> {
     const headers = new HttpHeaders({
@@ -20,7 +21,7 @@ export class CollectionService {
     });
     console.log(company);
     
-    let url = `${this.apiUrl}collection-officer/get-all-collection-officers?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers?page=${page}&limit=${limit}`;
 
     if (company) {
       url += `&company=${company}`;
@@ -40,7 +41,7 @@ export class CollectionService {
     });
     console.log(company);
     
-    let url = `${this.apiUrl}collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
 
     if (company) {
       url += `&company=${company}`;
@@ -59,7 +60,7 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}collection-officer/get-all-company-names`;
+    let url = `${this.apiUrl}auth/collection-officer/get-all-company-names`;
     return this.http.get<any>(url, { headers });
   }
 
@@ -69,7 +70,7 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}collection-officer/update-status/${id}/${status}`;
+    let url = `${this.apiUrl}auth/collection-officer/update-status/${id}/${status}`;
     return this.http.get<any>(url, { headers });
   }
 
@@ -79,7 +80,7 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}collection-officer/delete-officer/${id}`;
+    let url = `${this.apiUrl}auth/collection-officer/delete-officer/${id}`;
     return this.http.delete<any>(url, { headers });
   }
 }

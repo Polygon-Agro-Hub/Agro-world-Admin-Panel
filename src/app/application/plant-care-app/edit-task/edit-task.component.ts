@@ -7,6 +7,7 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 import { error, log } from 'node:console';
 import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 class CropTask {
   'id':number;
@@ -53,7 +54,9 @@ export class EditTaskComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private taskService: CropCalendarService
+    private taskService: CropCalendarService,
+    private tokenService: TokenService
+
   ) {}
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
@@ -103,7 +106,8 @@ export class EditTaskComponent implements OnInit {
   }
 
   updateTask() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;

@@ -37,6 +37,7 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-create-crop-calender',
@@ -102,6 +103,8 @@ export class CreateCropCalenderComponent {
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
+    private tokenService: TokenService
+
   ) {
     // Initialize the form with FormBuilder
     this.cropForm = this.fb.group({
@@ -444,7 +447,8 @@ export class CreateCropCalenderComponent {
 
 
   getAllRoles() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -474,7 +478,8 @@ export class CreateCropCalenderComponent {
 
 
   getAllVarities(event: Event) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;

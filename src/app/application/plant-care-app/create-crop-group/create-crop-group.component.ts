@@ -8,6 +8,7 @@ import { NgxColorsModule } from 'ngx-colors';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 
 interface NewsItem {
@@ -55,7 +56,9 @@ export class CreateCropGroupComponent {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private cropCalendarService: CropCalendarService
+    private cropCalendarService: CropCalendarService,
+    private tokenService: TokenService
+
   ) { }
 
 
@@ -298,7 +301,7 @@ export class CreateCropGroupComponent {
       return;
     }
 
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
       return;

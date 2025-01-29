@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { MatSelectModule } from '@angular/material/select';
 import { response } from 'express';
+import { TokenService } from '../../../services/token/services/token.service';
 
 
 interface NewsItem {
@@ -77,7 +78,9 @@ export class CreateVarietyComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private cropCalendarService: CropCalendarService
+    private cropCalendarService: CropCalendarService,
+    private tokenService: TokenService
+
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', [Validators.required]],
@@ -281,7 +284,8 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   getAllCropGroups() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       Swal.fire(
         'Error',
@@ -315,7 +319,8 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   updateNews() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;

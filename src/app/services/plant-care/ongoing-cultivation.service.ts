@@ -2,23 +2,24 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { TokenService } from '../token/services/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OngoingCultivationService {
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   fetchAllOngoingCultivations(page: number, limit: number, searchNIC: string = ''): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}get-all-ongoing-culivations?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/get-all-ongoing-culivations?page=${page}&limit=${limit}`;
     if (searchNIC) {
       url += `&nic=${searchNIC}`;
     }
@@ -31,7 +32,7 @@ export class OngoingCultivationService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get(`${this.apiUrl}get-ongoing-cultivation-by-id/${id}`, { headers });
+    return this.http.get(`${this.apiUrl}auth/get-ongoing-cultivation-by-id/${id}`, { headers });
   }
 
 
@@ -42,7 +43,7 @@ export class OngoingCultivationService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ items: any[]; total: number }>(
-      `${this.apiUrl}get-all-users-crop-task/${cropId}/${userId}?page=${page}&limit=${limit}`,
+      `${this.apiUrl}auth/get-all-users-crop-task/${cropId}/${userId}?page=${page}&limit=${limit}`,
       { headers }
     );
   }
@@ -52,7 +53,7 @@ export class OngoingCultivationService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete<any>(`${this.apiUrl}delete-user-task/${id}/${cropId}/${index}/${userId}`, {
+    return this.http.delete<any>(`${this.apiUrl}auth/delete-user-task/${id}/${cropId}/${index}/${userId}`, {
       headers,
     });
   }
@@ -64,7 +65,7 @@ export class OngoingCultivationService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(`${this.apiUrl}edit-user-task-status/${id}`, {}, { headers});
+    return this.http.post(`${this.apiUrl}auth/edit-user-task-status/${id}`, {}, { headers});
   }
 
 }

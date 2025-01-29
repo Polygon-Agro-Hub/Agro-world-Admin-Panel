@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { TokenService } from '../../../services/token/services/token.service';
 
 
 
@@ -41,7 +42,8 @@ export class CreateMarketPriceComponent {
   selectedImage: string | ArrayBuffer | null = null;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient,private route: ActivatedRoute, private router: Router) { }
+  constructor(private fb: FormBuilder, private http: HttpClient,private route: ActivatedRoute, private router: Router, private tokenService: TokenService
+  ) { }
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
@@ -56,7 +58,8 @@ export class CreateMarketPriceComponent {
   }
 
   getMarketPrice(id: any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
     }
@@ -65,7 +68,7 @@ export class CreateMarketPriceComponent {
     });
     
 
-    this.http.get<NewsItem[]>(`${environment.API_BASE_URL}get-market-price-by-id/${id}`, { headers }).subscribe(
+    this.http.get<NewsItem[]>(`${environment.API_URL}auth/get-market-price-by-id/${id}`, { headers }).subscribe(
       (data) => {
         this.newsItems = data;
         console.log(this.newsItems);
@@ -148,7 +151,8 @@ export class CreateMarketPriceComponent {
     console.log('clicked');
     console.log(this.createMarketObj);
     
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -176,7 +180,7 @@ export class CreateMarketPriceComponent {
       return;
     }else{
       this.isLoading = true;
-      this.http.post(`${environment.API_BASE_URL}admin-create-market-price`, formData, { headers })
+      this.http.post(`${environment.API_URL}auth/admin-create-market-price`, formData, { headers })
       .subscribe(
         (res: any) => {
           console.log('News created successfully', res);
@@ -210,7 +214,7 @@ export class CreateMarketPriceComponent {
 
 
   // updateMarketPrice() {
-  //   const token = localStorage.getItem('Login Token : ');
+
   //   if (!token) {
   //     console.error('No token found');
   //     return;
@@ -237,7 +241,7 @@ export class CreateMarketPriceComponent {
   //     'Content-Type': 'application/json' // Setting the content type to JSON
   //   });
   
-  //   this.http.post(`${environment.API_BASE_URL}edit-market-price/${this.itemId}`, newsData, { headers })
+ 
   //     .subscribe(
   //       (res: any) => {
   //         console.log('News updated successfully', res);
@@ -259,7 +263,8 @@ export class CreateMarketPriceComponent {
   // }
 
   updateMarketPrice() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -283,7 +288,7 @@ export class CreateMarketPriceComponent {
     });
   
     this.isLoading = true;
-    this.http.put(`${environment.API_BASE_URL}edit-market-price/${this.itemId}`, formData, { headers })
+    this.http.put(`${environment.API_URL}auth/edit-market-price/${this.itemId}`, formData, { headers })
       .subscribe(
         (res: any) => {
           console.log('Market Price updated successfully', res);

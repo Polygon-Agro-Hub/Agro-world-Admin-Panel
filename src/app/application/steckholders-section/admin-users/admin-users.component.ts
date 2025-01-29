@@ -7,6 +7,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { environment } from '../../../environment/environment';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface AdminUsers {
   id: number;
@@ -48,12 +49,14 @@ export class AdminUsersComponent {
   userId: number | null = null;
   role: any = localStorage.getItem('role:');
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private tokenService: TokenService
+  ) { }
 
 
   fetchAllAdmins(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -62,7 +65,7 @@ export class AdminUsersComponent {
       'Authorization': `Bearer ${token}`
     });
 
-    let url = `${environment.API_BASE_URL}get-all-admin-users?page=${page}&limit=${limit}`
+    let url = `${environment.API_URL}auth/get-all-admin-users?page=${page}&limit=${limit}`
 
     if(this.statusFilter.role){
       url += `&role=${this.statusFilter.id}`
@@ -105,7 +108,8 @@ export class AdminUsersComponent {
 
 
   deleteAdminUser(id: any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -126,7 +130,7 @@ export class AdminUsersComponent {
           'Authorization': `Bearer ${token}`
         });
 
-        this.http.delete(`${environment.API_BASE_URL}delete-admin-user/${id}`, { headers }).subscribe(
+        this.http.delete(`${environment.API_URL}auth/delete-admin-user/${id}`, { headers }).subscribe(
           (data: any) => {
             console.log('Admin deleted successfully');
             Swal.fire(
@@ -168,7 +172,8 @@ export class AdminUsersComponent {
   }
 
   getAllRoles() {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -178,7 +183,7 @@ export class AdminUsersComponent {
     });
 
     this.http
-      .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
+      .get<any>(`${environment.API_URL}auth/get-all-roles`, {
         headers,
       })
       .subscribe(

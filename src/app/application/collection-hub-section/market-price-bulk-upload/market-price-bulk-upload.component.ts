@@ -92,7 +92,7 @@ export class MarketPriceBulkUploadComponent {
       formData.append('file', this.selectedFile);
 
       // Send the file to the backend
-      // this.http.post(`${environment.API_BASE_URL}market-price/upload-market-price-xlsx`, formData)
+    
       this.marketPriceService.bulkUploadingMarketPrice(formData).subscribe({
         next: (response: any) => {
           this.isLoading = false;

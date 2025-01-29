@@ -5,6 +5,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-permission-area',
@@ -24,7 +25,9 @@ constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
+
   ) {}
 
   ngOnInit() {
@@ -36,7 +39,7 @@ constructor(
   }
 
   getAllPosition() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
         return;
@@ -45,7 +48,7 @@ constructor(
         Authorization: `Bearer ${token}`,
       });
       this.http
-        .get<any>(`${environment.API_BASE_URL}get-all-position`, {
+        .get<any>(`${environment.API_URL}auth/get-all-position`, {
           headers,
         })
         .subscribe(
@@ -64,7 +67,7 @@ constructor(
 
 
     getAllFeatures() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
         return;
@@ -91,7 +94,7 @@ constructor(
 
 
     getAllRoleFeatures() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
         return;
@@ -139,7 +142,7 @@ constructor(
           feature_id: featureId,
         };
     
-        const token = localStorage.getItem('Login Token : ');
+        const token = this.tokenService.getToken();
         if (!token) {
           console.error('No token found');
           return;
@@ -183,7 +186,7 @@ constructor(
           });
       } else {
         // Handle the removal of a role feature
-        const token = localStorage.getItem('Login Token : ');
+        const token = this.tokenService.getToken();
         if (!token) {
           console.error('No token found');
           return;

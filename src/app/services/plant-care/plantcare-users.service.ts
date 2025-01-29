@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { TokenService } from '../token/services/token.service';
 
 
 export interface PlantCareUser {
@@ -39,20 +40,18 @@ export class PlantcareUsersService {
   getUserProfile(userId: number) {
     throw new Error('Method not implemented.');
   }
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private token = `${environment.TOKEN}`;
-  private url = `${environment.API_URL}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
 
   getAllPlantCareUsers(page: number, limit: number, searchNIC: string = ''): Observable<any> {
-    const token = localStorage.getItem('Login Token : ');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}get-all-users?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/get-all-users?page=${page}&limit=${limit}`;
     if (searchNIC) {
       url += `&nic=${searchNIC}`;
     }
@@ -66,7 +65,7 @@ export class PlantcareUsersService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete<void>(`${this.apiUrl}delete-plant-care-user/${id}`, { headers });
+    return this.http.delete<void>(`${this.apiUrl}auth/delete-plant-care-user/${id}`, { headers });
   }
 
 
@@ -76,7 +75,7 @@ export class PlantcareUsersService {
       Authorization: `Bearer ${this.token}`
     });
 
-    const url = `${this.apiUrl}get-total-fixed-assets-by-id/${id}`;
+    const url = `${this.apiUrl}auth/get-total-fixed-assets-by-id/${id}`;
     return this.http.get<any>(url, { headers });
   }
 
@@ -95,7 +94,7 @@ export class PlantcareUsersService {
   // }
 
   uploadUserXlsxFile(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}upload-user-xlsx`, formData, {
+    return this.http.post(`${this.apiUrl}auth/upload-user-xlsx`, formData, {
       responseType: 'json',
       observe: 'body'
     }).pipe(
@@ -121,12 +120,35 @@ export class PlantcareUsersService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.post(
-      `${this.apiUrl}create-feedback`,
+      `${this.apiUrl}auth/create-feedback`,
       feedbackData,
       {
         headers,
       }
     );
   }
+
+
+  updateFeedbackOrder(feedbacks: { id: number; orderNumber: number }[]) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(
+      `${environment.API_URL}auth/update-feedback-order`,
+      { feedbacks },
+      { headers }
+    );
+}
+
+
+
+deleteFeedback(feedbackId: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.delete(`${this.apiUrl}auth/feedback/${feedbackId}`, { headers });
+}
 
 }

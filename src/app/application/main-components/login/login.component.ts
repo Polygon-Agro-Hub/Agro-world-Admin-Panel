@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
 
   loginObj: Login;
 
-  constructor(private authService: AuthService, private http: HttpClient, private router: Router){
+  constructor(private authService: AuthService, private http: HttpClient, private router: Router, private tokenService: TokenService){
       this.loginObj = new Login();
   }
 
@@ -88,17 +89,13 @@ export class LoginComponent {
           timer: 1500
         });
         localStorage.setItem('Login Token : ', res.token);
-  
         localStorage.setItem('userName:', res.userName);
         localStorage.setItem('userId:', res.userId);
         localStorage.setItem('role:', res.role);
-          localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
-          // console.log("hi..",res.token);
-          // console.log("hi..",res.userName);
-          // console.log("hi..",res.role);
-          // console.log("hi..",res.userId);
-         
-          
+        localStorage.setItem('permissions', JSON.stringify(res.permissions));
+        localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
+
+        this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
           
         this.router.navigate(['/steckholders']);
       },

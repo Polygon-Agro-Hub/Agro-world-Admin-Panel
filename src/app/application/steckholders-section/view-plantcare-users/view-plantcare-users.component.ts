@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environment/environment';
 import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface PlantCareUser {
   id: number;
@@ -85,7 +87,8 @@ export class ViewPlantcareUsersComponent {
   hasData: boolean = true;  
   
 
-  constructor(private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router) { }
+  constructor(private tokenService: TokenService,
+    private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router, public permissionService: PermissionService) { }
 
   
 
@@ -130,7 +133,7 @@ export class ViewPlantcareUsersComponent {
 
 
   deletePlantCareUser(id: any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token =  this.tokenService.getToken();
     
     if (!token) {
       console.error('No token found');
@@ -153,7 +156,7 @@ export class ViewPlantcareUsersComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.http.delete(`${environment.API_BASE_URL}delete-plant-care-user/${id}`, { headers }).subscribe((data:any) => {
+        this.http.delete(`${environment.API_URL}auth/delete-plant-care-user/${id}`, { headers }).subscribe((data:any) => {
             if(data){
               Swal.fire('Deleted!', 'The plant care user has been deleted.', 'success');
               this.fetchAllPlantCareUsers();

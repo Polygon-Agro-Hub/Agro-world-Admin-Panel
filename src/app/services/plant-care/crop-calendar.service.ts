@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { TokenService } from '../token/services/token.service';
 
 export interface NewCropCalender {
   id: number;
@@ -40,11 +41,10 @@ interface NewVarietyGroup {
   providedIn: 'root',
 })
 export class CropCalendarService {
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private url = `${environment.API_URL}`;
-  private token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   // Create Crop Calendar
   createCropGroup(formData: FormData): Observable<any> {
@@ -52,7 +52,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.post(
-      `${this.url}crop-calendar/create-crop-group`,
+      `${this.apiUrl}crop-calendar/create-crop-group`,
       formData,
       {
         headers,
@@ -65,7 +65,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.post(
-      `${this.url}crop-calendar/create-crop-variety`,
+      `${this.apiUrl}crop-calendar/create-crop-variety`,
       formData,
       {
         headers,
@@ -78,7 +78,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.post(
-      `${this.url}crop-calendar/admin-add-crop-calender`,
+      `${this.apiUrl}crop-calendar/admin-add-crop-calender`,
       formData,
       {
         headers,
@@ -92,7 +92,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-cropcalender-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}auth/get-cropcalender-by-id/${id}`, {
       headers,
     });
   }
@@ -101,11 +101,11 @@ export class CropCalendarService {
 
   updateCropCalendar(cropId: number, formData: FormData) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.put(
-      `${this.url}crop-calendar/edit-cropcalender/${cropId}`,
+      `${this.apiUrl}crop-calendar/edit-cropcalender/${cropId}`,
       formData,
       { headers }
     );
@@ -121,7 +121,7 @@ export class CropCalendarService {
     formData.append('file', file);
 
     return this.http.post(
-      `${this.url}crop-calendar/upload-xlsx/${cropId}`,
+      `${this.apiUrl}crop-calendar/upload-xlsx/${cropId}`,
       formData,
       {
         headers,
@@ -137,7 +137,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ items: NewCropCalender[]; total: number }>(
-      `${this.url}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`,
+      `${this.apiUrl}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`,
       { headers }
     );
   }
@@ -150,7 +150,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ items: NewCropGroup[]; total: number }>(
-      `${this.url}crop-calendar/get-all-crop-groups?page=${page}&limit=${limit}`,
+      `${this.apiUrl}crop-calendar/get-all-crop-groups?page=${page}&limit=${limit}`,
       { headers }
     );
   }
@@ -159,7 +159,7 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.delete(`${this.url}crop-calendar/delete-crop/${id}`, {
+    return this.http.delete(`${this.apiUrl}crop-calendar/delete-crop/${id}`, {
       headers,
     });
   }
@@ -169,7 +169,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.delete(
-      `${this.url}crop-calendar/delete-crop-group/${id}`,
+      `${this.apiUrl}crop-calendar/delete-crop-group/${id}`,
       {
         headers,
       }
@@ -181,7 +181,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(`${this.url}crop-calendar/get-all-crop-task/${id}?page=${page}&limit=${limit}`, {
+    return this.http.get<any>(`${this.apiUrl}crop-calendar/get-all-crop-task/${id}?page=${page}&limit=${limit}`, {
       headers,
     });
   }
@@ -191,7 +191,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-crop-task/${id}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}auth/get-crop-task/${id}`, { headers });
   }
 
   getUserCropTaskBycropId(id: string) {
@@ -199,7 +199,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get<any>(`${this.apiUrl}get-slave-crop-task/${id}`, {
+    return this.http.get<any>(`${this.apiUrl}auth/get-slave-crop-task/${id}`, {
       headers,
     });
   }
@@ -210,7 +210,7 @@ export class CropCalendarService {
     });
 
     return this.http.delete<any>(
-      `${this.apiUrl}delete-crop-task/${id}/${cropId}/${indexId}`,
+      `${this.apiUrl}auth/delete-crop-task/${id}/${cropId}/${indexId}`,
       {
         headers,
       }
@@ -219,21 +219,21 @@ export class CropCalendarService {
 
   updateCropTask(cropId: string, formData: any) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(`${this.apiUrl}edit-crop-task/${cropId}`, formData, {
+    return this.http.post(`${this.apiUrl}auth/edit-crop-task/${cropId}`, formData, {
       headers,
     });
   }
 
   updateUserCropTask(cropId: string, formData: any) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.post(
-      `${this.apiUrl}edit-user-crop-task/${cropId}`,
+      `${this.apiUrl}auth/edit-user-crop-task/${cropId}`,
       formData,
       { headers }
     );
@@ -241,11 +241,11 @@ export class CropCalendarService {
 
   createNewCropTask(cropId: string, indexId: string, formData: any) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.post(
-      `${this.apiUrl}add-new-task/${cropId}/${indexId}`,
+      `${this.apiUrl}auth/add-new-task/${cropId}/${indexId}`,
       formData,
       { headers }
     );
@@ -253,11 +253,11 @@ export class CropCalendarService {
 
   createNewCropTaskU(cropId: string, indexId:string, userId: string ,formData: any, onCulscropID: any) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.post(
-      `${this.apiUrl}add-new-task-user/${cropId}/${indexId}/${userId}/${onCulscropID}`,
+      `${this.apiUrl}auth/add-new-task-user/${cropId}/${indexId}/${userId}/${onCulscropID}`,
       formData,
       { headers }
     );
@@ -270,7 +270,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<{ groups: NewVarietyGroup[] }>(
-      `${this.url}crop-calendar/crop-variety-by-group/${cropGroupId}`,
+      `${this.apiUrl}crop-calendar/crop-variety-by-group/${cropGroupId}`,
       { headers }
     );
   }
@@ -280,7 +280,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.delete(
-      `${this.url}crop-calendar/delete-crop-variety/${id}`,
+      `${this.apiUrl}crop-calendar/delete-crop-variety/${id}`,
       {
         headers,
       }
@@ -291,7 +291,7 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get(`${this.url}crop-calendar/crop-group-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}crop-calendar/crop-group-by-id/${id}`, {
       headers,
     });
   }
@@ -300,7 +300,7 @@ export class CropCalendarService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get(`${this.url}crop-calendar/crop-variety-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}crop-calendar/crop-variety-by-id/${id}`, {
       headers,
     });
   }
@@ -310,7 +310,7 @@ export class CropCalendarService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.put(
-      `${this.url}crop-calendar/update-crop-group/${id}`,
+      `${this.apiUrl}crop-calendar/update-crop-group/${id}`,
       data,
       { headers }
     );
@@ -318,7 +318,7 @@ export class CropCalendarService {
 
   updateVariety(cropId: number, formData: FormData) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('Login Token : ')}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.put(

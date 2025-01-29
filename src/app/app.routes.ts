@@ -77,6 +77,10 @@ import { SalesDashComponent } from './application/sales-dash-section/sales-dash/
 import { ComplaintsDashbordComponent } from './application/Complaints/complaints-dashbord/complaints-dashbord.component';
 import { OptOutFeedbacksComponent } from './application/plant-care-app/opt-out-feedbacks/opt-out-feedbacks.component';
 import { CreateFeedbackComponent } from './application/plant-care-app/create-feedback/create-feedback.component';
+import { CollectionCenterViewComplainComponent } from './application/collection-hub-section/collection-center-view-complain/collection-center-view-complain.component';
+import { SalesTargetComponent } from './application/sales-dash-section/sales-target/sales-target.component';
+import { RoleSelectionComponent } from './application/settings-section/role-selection/role-selection.component';
+import { PermissionAreaComponent } from './application/settings-section/permission-area/permission-area.component';
 
 export const routes: Routes = [
   {
@@ -224,7 +228,6 @@ export const routes: Routes = [
                 path: 'create-feedback',
                 component: CreateFeedbackComponent,
               },
-              
             ],
           },
         ],
@@ -443,6 +446,10 @@ export const routes: Routes = [
             path: '',
             component: SalesDashComponent,
           },
+          {
+            path: 'sales-targets',
+            component: SalesTargetComponent,
+          },
         ],
       },
       {
@@ -455,6 +462,27 @@ export const routes: Routes = [
           {
             path: 'view-complains',
             component: ViewComplainComponent,
+          },
+          {
+            path: 'collection-center-complains',
+            component: CollectionCenterViewComplainComponent,
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        children: [
+          {
+            path: '',
+            component: ComplaintsDashbordComponent,
+          },
+          {
+            path: 'view-roles',
+            component: RoleSelectionComponent,
+          },
+          {
+            path: 'give-permissions/:id',
+            component: PermissionAreaComponent,
           },
         ],
       },

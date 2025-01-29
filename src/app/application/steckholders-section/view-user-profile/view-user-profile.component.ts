@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PlantCareUser } from '../../../services/plant-care/plantcare-users.service';
 import { environment } from '../../../environment/environment';
 import { error } from 'console';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface UserDetails {
   id: number;
@@ -43,7 +44,9 @@ export class ViewUserProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private tokenService: TokenService
+
   ) {}
 
   ngOnInit() {
@@ -56,7 +59,7 @@ export class ViewUserProfileComponent implements OnInit {
     }
   }
   loadUserData(id: number) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
       return;
@@ -65,7 +68,7 @@ export class ViewUserProfileComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
     this.http
-      .get<any>(`${environment.API_BASE_URL}get-user-by-id/${id}`, {
+      .get<any>(`${environment.API_URL}auth/get-user-by-id/${id}`, {
         headers,
       })
       .subscribe(

@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-selected-complain',
@@ -32,6 +33,8 @@ export class ViewSelectedComplainComponent implements OnInit {
     private route: ActivatedRoute,
     private datePipe: DatePipe ,
      private http: HttpClient,
+     private tokenService: TokenService
+
   ) {}
 
 
@@ -73,7 +76,7 @@ export class ViewSelectedComplainComponent implements OnInit {
 
 
   submitComplaint() {
-      const token = localStorage.getItem('Login Token : ');
+      const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
         return;
@@ -92,7 +95,7 @@ export class ViewSelectedComplainComponent implements OnInit {
 
       this.http
         .put(
-          `${environment.API_BASE_URL}reply-complain/${this.complainId}`,
+          `${environment.API_URL}auth/reply-complain/${this.complainId}`,
           body,
           { headers }
         )

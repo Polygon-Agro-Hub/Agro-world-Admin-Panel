@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ViewProductListService {
   private apiUrl = `${environment.API_URL}`;
-  private token = `${environment.TOKEN}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getProductList(page: number, limit: number, searchVariety: string = ''): Observable<any> {
-    const token = localStorage.getItem('Login Token : ');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

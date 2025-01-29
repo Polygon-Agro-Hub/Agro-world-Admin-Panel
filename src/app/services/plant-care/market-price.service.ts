@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
 
 interface MarketPriceItem {
   id: number;
@@ -21,10 +22,10 @@ interface MarketPriceItem {
   providedIn: 'root'
 })
 export class MarketPriceService {
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private token = `${environment.TOKEN}`;
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -34,7 +35,7 @@ export class MarketPriceService {
   }
 
   getAllMarketPrices(page: number, limit: number, statusFilter?: string, createdDateFilter?: string): Observable<{ items: MarketPriceItem[], total: number }> {
-    let url = `${this.apiUrl}get-all-market-price?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/get-all-market-price?page=${page}&limit=${limit}`;
 
     if (statusFilter) {
       url += `&status=${statusFilter}`;
@@ -47,15 +48,15 @@ export class MarketPriceService {
   }
 
   deleteMarketPrice(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}delete-market-price/${id}`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.apiUrl}auth/delete-market-price/${id}`, { headers: this.getHeaders() });
   }
 
   getMarketPriceById(id: number): Observable<MarketPriceItem> {
-    return this.http.get<MarketPriceItem>(`${this.apiUrl}get-market-price-by-id/${id}`, { headers: this.getHeaders() });
+    return this.http.get<MarketPriceItem>(`${this.apiUrl}auth/get-market-price-by-id/${id}`, { headers: this.getHeaders() });
   }
 
   updateMarketPriceStatus(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}edit-market-price-status/${id}`, {}, { headers: this.getHeaders() });
+    return this.http.post(`${this.apiUrl}auth/edit-market-price-status/${id}`, {}, { headers: this.getHeaders() });
   }
 
   

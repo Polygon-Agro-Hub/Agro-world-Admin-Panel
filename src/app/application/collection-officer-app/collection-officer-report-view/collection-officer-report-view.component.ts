@@ -23,6 +23,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
 
 declare var html2pdf: any;
 
@@ -65,7 +66,8 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +82,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   }
 
   fetchReport(): void {
-    const Token = `${environment.TOKEN}`;
+    const Token = this.tokenService.getToken();;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${Token}`,
       'Content-Type': 'application/json',
@@ -88,7 +90,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     this.loadingChart = true;
     this.loadingTable = true;
 
-    const url = `${environment.API_BASE_URL}collection-officer/get-collection-officer-report/${this.id}/${this.createdDate}`;
+    const url = `${environment.API_URL}auth/collection-officer/get-collection-officer-report/${this.id}/${this.createdDate}`;
 
     if (this.id) {
       this.http.get<CropReport>(url, { headers }).subscribe(

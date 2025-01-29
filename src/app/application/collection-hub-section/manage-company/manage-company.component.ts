@@ -5,6 +5,7 @@ import { response } from 'express';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-manage-company',
@@ -16,8 +17,9 @@ import Swal from 'sweetalert2';
 export class ManageCompanyComponent {
   companies: CompanyDetails[] = [];
   total: number | null = null;
+  private token = this.tokenService.getToken();
 
-  constructor(private companyService: CollectionCenterService, private router: Router,) {}
+  constructor(private companyService: CollectionCenterService, private router: Router, private tokenService: TokenService) {}
 
   ngOnInit(){
     this.fetchAllCompanys();
@@ -42,7 +44,7 @@ export class ManageCompanyComponent {
   }
 
   deleteCompany(id: number) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
       return;

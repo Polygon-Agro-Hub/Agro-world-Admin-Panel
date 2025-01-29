@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface PlantCareUser {
   id: number;
@@ -45,7 +46,9 @@ export class EditPlantcareUsersComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private tokenService: TokenService
+
   ) {
     // Initialize the form with FormBuilder
     this.userForm = this.fb.group({
@@ -103,7 +106,8 @@ export class EditPlantcareUsersComponent implements OnInit {
   }
 
   loadUserData(id: number) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -116,7 +120,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     this.isLoading = true;
     this.http
       .get<PlantCareUser>(
-        `${environment.API_BASE_URL}get-user-by-id/${id}`,
+        `${environment.API_URL}auth/get-user-by-id/${id}`,
         { headers }
       )
       .subscribe(
@@ -164,7 +168,8 @@ export class EditPlantcareUsersComponent implements OnInit {
         }
       }
     // Handle authentication token
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -199,7 +204,7 @@ export class EditPlantcareUsersComponent implements OnInit {
         this.isLoading = true;
         this.http
           .put(
-            `${environment.API_BASE_URL}update-plant-care-user/${this.itemId}`, formData,{ headers })
+            `${environment.API_URL}auth/update-plant-care-user/${this.itemId}`, formData,{ headers })
           .subscribe(
             (data) => {
               this.isLoading = false;
@@ -256,7 +261,8 @@ export class EditPlantcareUsersComponent implements OnInit {
         }
       }
     // Handle authentication token
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;
@@ -292,7 +298,7 @@ export class EditPlantcareUsersComponent implements OnInit {
         this.isLoading = true;
 this.http
   .post(
-    `${environment.API_BASE_URL}create-plantcare-user`,
+    `${environment.API_URL}auth/create-plantcare-user`,
     formData,
     { headers }
   )

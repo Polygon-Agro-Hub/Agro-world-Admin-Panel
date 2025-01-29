@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { error } from 'console';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-products-list',
@@ -27,7 +28,9 @@ export class ViewProductsListComponent {
   constructor(
     private viewProductsList: ViewProductListService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private tokenService: TokenService
+
   ) {}
 
   fetchAllProducts(page: number = 1, limit: number = this.itemsPerPage) {
@@ -68,7 +71,7 @@ export class ViewProductsListComponent {
   }
 
   deleteProduct(id: any) {
-    const token = localStorage.getItem('Login Token : ');
+    const token = this.tokenService.getToken();
 
     if (!token) {
       console.error('No token found');

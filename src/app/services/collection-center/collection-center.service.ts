@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
 
 interface centerData {
   id: number;
@@ -19,17 +20,18 @@ interface centerData {
   providedIn: 'root'
 })
 export class CollectionCenterService {
-  private apiUrl = `${environment.API_BASE_URL}`;
-  private api = `${environment.API_URL}`;
-  private token = `${environment.TOKEN}`;
-  constructor(private http: HttpClient) { }
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
+
+  
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-all-center`, {
+    return this.http.get(`${this.apiUrl}auth/get-all-center`, {
       headers,
     });
   }
@@ -39,7 +41,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
     });
     console.log("DELETE ITEM", id);
-    return this.http.delete(`${this.apiUrl}delete-collection-center/${id}`, {
+    return this.http.delete(`${this.apiUrl}auth/delete-collection-center/${id}`, {
       headers,
     });
   }
@@ -57,7 +59,7 @@ export class CollectionCenterService {
       companies,
     };
     console.log('hiii',payload);
-    return this.http.post(`${this.apiUrl}create-collection-center`, payload, {
+    return this.http.post(`${this.apiUrl}auth/create-collection-center`, payload, {
       headers,
     })
     console.log(payload);
@@ -69,7 +71,7 @@ export class CollectionCenterService {
       'Content-Type': 'application/json',
     });
 
-    let url = `${this.apiUrl}get-all-complains?page=${page}&limit=${limit}`
+    let url = `${this.apiUrl}auth/get-all-complains?page=${page}&limit=${limit}`
 
     if (status) {
       url += `&status=${status}`
@@ -89,7 +91,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-complain-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}auth/get-complain-by-id/${id}`, {
       headers,
     });
   }
@@ -100,7 +102,7 @@ export class CollectionCenterService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get(`${this.apiUrl}officer-details-monthly/${id}`, {
+    return this.http.get(`${this.apiUrl}auth/officer-details-monthly/${id}`, {
       headers,
     });
   }
@@ -110,12 +112,11 @@ export class CollectionCenterService {
   getAllCollectionCenterPage(page: number, limit: number, searchItem: string = ''): Observable<any> {
     console.log(page, limit, searchItem);
 
-    const token = localStorage.getItem('Login Token : ');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}get-all-centerpage?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/get-all-centerpage?page=${page}&limit=${limit}`;
     if (searchItem) {
       url += `&searchItem=${searchItem}`;
     }
@@ -128,7 +129,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-center-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}auth/get-center-by-id/${id}`, {
       headers,
     });
   }
@@ -141,7 +142,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.patch(`${this.apiUrl}update-center/${id}`, centerData, {
+    return this.http.patch(`${this.apiUrl}auth/update-center/${id}`, centerData, {
       headers,
     })
   }
@@ -152,7 +153,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-last-emp-id/${role}`, {
+    return this.http.get(`${this.apiUrl}auth/get-last-emp-id/${role}`, {
       headers,
     });
   }
@@ -161,7 +162,7 @@ export class CollectionCenterService {
 
   getCollectionReportByOfficerId(fromDate: string, toDate: string, officerId: number): Observable<any> {
     const params = { fromDate, toDate, collectionOfficerId: officerId.toString() };
-    return this.http.get<any>(`${this.apiUrl}/get-daily-report`, { params });
+    return this.http.get<any>(`${this.apiUrl}auth/get-daily-report`, { params });
   }
 
 
@@ -173,7 +174,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.post(`${this.apiUrl}create-company`, companyData, {
+    return this.http.post(`${this.apiUrl}auth/create-company`, companyData, {
       headers,
     })
   }
@@ -185,7 +186,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-all-company-list`, {
+    return this.http.get(`${this.apiUrl}auth/get-all-company-list`, {
       headers,
     });
   }
@@ -198,7 +199,7 @@ export class CollectionCenterService {
       'Content-Type': 'application/json',
     });
     console.log('This is company Id',companyId)
-    return this.http.get(`${this.apiUrl}get-all-manager-list/${companyId}/${centerId}`, {
+    return this.http.get(`${this.apiUrl}auth/get-all-manager-list/${companyId}/${centerId}`, {
       headers,
     });
   }
@@ -206,7 +207,7 @@ export class CollectionCenterService {
 
 
   generateRegCode(province: string, district: string, city: string): Observable<{ regCode: string }> {
-    return this.http.post<{ regCode: string }>(`${this.apiUrl}/generate-regcode`, { province, district, city });
+    return this.http.post<{ regCode: string }>(`${this.apiUrl}auth/generate-regcode`, { province, district, city });
   }
   
   getAllCompanyDetails(): Observable<any> {
@@ -214,7 +215,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}get-all-company`, {
+    return this.http.get(`${this.apiUrl}auth/get-all-company`, {
       headers,
     });
   }
@@ -226,7 +227,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.patch(`${this.apiUrl}update-company/${id}`, companyData, {
+    return this.http.patch(`${this.apiUrl}auth/update-company/${id}`, companyData, {
       headers,
     })
   }
@@ -237,7 +238,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.get(`${this.apiUrl}get-company-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}auth/get-company-by-id/${id}`, {
       headers,
     })
   }
@@ -247,7 +248,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
     });
     console.log("DELETE ITEM", id);
-    return this.http.delete(`${this.apiUrl}delete-company/${id}`,{
+    return this.http.delete(`${this.apiUrl}auth/delete-company/${id}`,{
       headers,
     })
   }

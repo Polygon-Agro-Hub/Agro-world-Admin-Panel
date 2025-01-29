@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { environment } from '../../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-collection-hub',
@@ -16,9 +17,9 @@ export class CollectionHubComponent {
   popupVisibleComplains = false;
   popupVisibleMarketPrice = false;
   popupVisibleCompanys = false;
-  private token = `${environment.TOKEN}`;
+  private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;

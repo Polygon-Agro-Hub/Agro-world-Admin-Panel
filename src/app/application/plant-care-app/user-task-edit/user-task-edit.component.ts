@@ -8,6 +8,7 @@ import { OngoingCultivationService } from '../../../services/plant-care/ongoing-
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 
 class CropTask {
@@ -51,7 +52,9 @@ export class UserTaskEditComponent {
     private newsService: NewsService,
     private ongoingCultivationService: OngoingCultivationService,
     private router: Router,
-    private taskService: CropCalendarService
+    private taskService: CropCalendarService,
+    private tokenService: TokenService
+
   ) {}
 
   ngOnInit() {
@@ -90,7 +93,8 @@ export class UserTaskEditComponent {
 
 
   updateTask() {
-    const token = localStorage.getItem('Login Token : ');
+    const token =  this.tokenService.getToken();
+
     if (!token) {
       console.error('No token found');
       return;

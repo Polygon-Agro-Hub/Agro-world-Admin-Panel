@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -12,47 +16,62 @@ import { environment } from '../../../environment/environment';
   standalone: true,
   imports: [HttpClientModule, CommonModule, FormsModule],
   templateUrl: './role-selection.component.html',
-  styleUrl: './role-selection.component.css'
+  styleUrl: './role-selection.component.css',
 })
 export class RoleSelectionComponent {
+  isModalOpen: boolean = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  addSection() {
+    // Add logic to save the new section
+    console.log('New section added');
+    this.closeModal();
+  }
 
   rolesList: any[] = [];
 
-  constructor(private http: HttpClient, private router: Router, public permissionService: PermissionService) 
-  {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    public permissionService: PermissionService
+  ) {}
 
   ngOnInit() {
     this.getAllRoles();
   }
 
-
-    getAllRoles() {
-      const token = localStorage.getItem('Login Token : ');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      });
-      this.http
-        .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
-          headers,
-        })
-        .subscribe(
-          (response) => {
-            this.rolesList = response.roles;
-            console.log(response);
-          },
-          (error) => {
-            console.error('Error fetching news:', error);
-          }
-        );
+  getAllRoles() {
+    const token = localStorage.getItem('Login Token : ');
+    if (!token) {
+      console.error('No token found');
+      return;
     }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    this.http
+      .get<any>(`${environment.API_BASE_URL}get-all-roles`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          this.rolesList = response.roles;
+          console.log(response);
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+        }
+      );
+  }
 
-
-    viewPermissions(id: number) {
-      this.router.navigate([`/settings/give-permissions/${id}`]);
-    }
-
+  viewPermissions(id: number) {
+    this.router.navigate([`/settings/give-permissions/${id}`]);
+  }
 }

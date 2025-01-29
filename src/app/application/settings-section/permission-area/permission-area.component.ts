@@ -66,6 +66,31 @@ constructor(
 
 
 
+    // getAllFeatures() {
+    //   const token = this.tokenService.getToken();
+    //   if (!token) {
+    //     console.error('No token found');
+    //     return;
+    //   }
+    //   const headers = new HttpHeaders({
+    //     Authorization: `Bearer ${token}`,
+    //   });
+    //   this.http
+    //     .get<any>(`${environment.API_URL}permission/get-all-features`, {
+    //       headers,
+    //     })
+    //     .subscribe(
+    //       (response) => {
+    //         this.FeatureList = response.features;
+    //         console.log(response);
+    //       },
+    //       (error) => {
+    //         console.error('Error fetching news:', error);
+    //       }
+    //     );
+    // }
+
+
     getAllFeatures() {
       const token = this.tokenService.getToken();
       if (!token) {
@@ -75,20 +100,30 @@ constructor(
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-      this.http
-        .get<any>(`${environment.API_URL}permission/get-all-features`, {
-          headers,
-        })
+      
+      this.http.get<any>(`${environment.API_URL}permission/get-all-features`, { headers })
         .subscribe(
           (response) => {
-            this.FeatureList = response.features;
-            console.log(response);
+            // Transform API response to group features by category
+            const groupedFeatures = response.features.reduce((acc: any[], feature: any) => {
+              let category = acc.find((c) => c.category === feature.category);
+              if (!category) {
+                category = { category: feature.category, features: [] };
+                acc.push(category);
+              }
+              category.features.push(feature);
+              return acc;
+            }, []);
+            
+            this.FeatureList = groupedFeatures;
+            console.log(this.FeatureList);
           },
           (error) => {
-            console.error('Error fetching news:', error);
+            console.error('Error fetching features:', error);
           }
         );
     }
+    
 
 
 

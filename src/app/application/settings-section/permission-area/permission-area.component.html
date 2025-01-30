@@ -1,58 +1,89 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"> 
+<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 
+<div
+  class="bg-tileLight dark:bg-tileBlack w-full mx-auto rounded-lg shadow-lg p-2 max-h-screen overflow-hidden"
+>
+  <div class="flex items-center p-6">
+    <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+      Roles & Permissions Management
+    </h2>
+  </div>
+  <div class="flex items-center space-x-3 pl-6 pr-6">
+    <label for="featureCategory" class="text-gray-700 w-40"
+      >Feature Category</label
+    >
+    <input
+      type="text"
+      id="featureCategory"
+      name="category"
+      [(ngModel)]="createCategroyObj.category"
+      class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+      placeholder="Enter category"
+    />
+    <button
+      (click)="addCategory()"
+      class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+    >
+      Add
+    </button>
+  </div>
 
-<div class="overflow-auto">
-  <table class="table-auto border-collapse border border-gray-300 w-full">
-    <thead>
-      <tr>
-        <th class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-left text-textLight dark:text-textDark">
-          Feature
-        </th>
-        <th
-          *ngFor="let position of positionList"
-          class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-textLight dark:text-textDark text-center"
-        >
-          {{ position.positions }}
-        </th>
-      </tr>
-    </thead>
+  <div class="p-6">
+    <div class="overflow-auto">
+      <table class="table-auto border-collapse border border-gray-300 w-full">
+        <thead>
+          <tr>
+            <th
+              class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-left text-textLight dark:text-textDark"
+            >
+              Feature
+            </th>
+            <th
+              *ngFor="let position of positionList"
+              class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-textLight dark:text-textDark text-center"
+            >
+              {{ position.positions }}
+            </th>
+          </tr>
+        </thead>
 
+        <tbody>
+          <ng-container *ngFor="let category of FeatureList">
+            <!-- Category Header Row -->
+            <tr>
+              <td
+                [attr.colspan]="positionList.length + 1"
+                class="bg-gray-100 dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark"
+              >
+                {{ category.category }}
+              </td>
+            </tr>
 
-
-    <tbody>
-  <ng-container *ngFor="let category of FeatureList">
-    <!-- Category Header Row -->
-    <tr>
-      <td 
-        [attr.colspan]="positionList.length + 1" 
-        class="bg-gray-100 dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark"
-      >
-        {{ category.category }}
-      </td>
-    </tr>
-
-    <!-- Features under each category -->
-    <tr *ngFor="let feature of category.features">
-      <td class="border border-gray-300 p-2 text-left bg-gray-50 dark:bg-gray-900 text-textLight dark:text-textDark">
-        {{ feature.name }}
-      </td>
-      <td
-        *ngFor="let position of positionList"
-        class="border border-gray-300 p-2 text-center"
-      >
-        <input
-          type="checkbox"
-          class="form-checkbox h-5 w-5 text-[#3980C0]"
-          [checked]="isChecked(feature.id, position.id)"
-          (change)="onCheckboxChange($event, feature.id, position.id)"
-        />
-      </td>
-    </tr>
-  </ng-container>
-</tbody>
-
-  </table>
+            <!-- Features under each category -->
+            <tr *ngFor="let feature of category.features">
+              <td
+                class="border border-gray-300 p-2 text-left bg-gray-50 dark:bg-gray-900 text-textLight dark:text-textDark"
+              >
+                {{ feature.name }}
+              </td>
+              <td
+                *ngFor="let position of positionList"
+                class="border border-gray-300 p-2 text-center"
+              >
+                <input
+                  type="checkbox"
+                  class="form-checkbox h-5 w-5 text-[#3980C0]"
+                  [checked]="isChecked(feature.id, position.id)"
+                  (change)="onCheckboxChange($event, feature.id, position.id)"
+                />
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

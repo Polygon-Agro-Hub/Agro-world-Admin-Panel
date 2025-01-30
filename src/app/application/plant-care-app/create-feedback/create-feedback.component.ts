@@ -70,7 +70,7 @@ export class CreateFeedbackComponent {
       );
       return;
     }
-    if (this.feedback.orderNumber === 10 ) {
+    if (this.feedback.orderNumber === 11 ) {
     Swal.fire(
       'Warning',
       'Maximum number of feedbacks are already uploaded',

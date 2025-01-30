@@ -112,23 +112,26 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let item of rolesList; let i = index"
-          class="border-b border-gray-200 dark:border-[#4B555A]"
-        >
-          <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-            {{ i + 1 }}
-          </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ item.role }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <button (click)="viewPermissions(item.id)">
-              <i class="fa-regular fa-pen-to-square"></i>
-            </button>
-          </td>
-        </tr>
+        <ng-container *ngFor="let item of rolesList; let i = index">
+          <tr
+            *ngIf="item.id !== 1"
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+          >
+            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              {{ i  }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.role }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button (click)="viewPermissions(item.id)">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
+      
     </table>
   </div>
 </div>

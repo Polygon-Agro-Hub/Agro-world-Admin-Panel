@@ -22,6 +22,8 @@ export class TokenService {
     localStorage.setItem(this.ROLE_KEY, role);
     localStorage.setItem(this.PERMISSIONS_KEY, JSON.stringify(permissions));
     localStorage.setItem(this.EXPIRATION_KEY, expirationTime.toString());
+
+    
   }
 
 

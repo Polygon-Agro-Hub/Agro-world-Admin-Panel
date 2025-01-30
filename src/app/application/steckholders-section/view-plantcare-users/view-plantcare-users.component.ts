@@ -87,8 +87,8 @@ export class ViewPlantcareUsersComponent {
   hasData: boolean = true;  
   
 
-  constructor(private tokenService: TokenService,
-    private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router, public permissionService: PermissionService) { }
+  constructor(public tokenService: TokenService,
+    private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router, public permissionService: PermissionService, ) { }
 
   
 

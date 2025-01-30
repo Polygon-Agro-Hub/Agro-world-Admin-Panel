@@ -41,8 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment files (if ignoring the whole folder)
-/src/app/environment/environment.ts
-
 # Specific sensitive environment file
 .env

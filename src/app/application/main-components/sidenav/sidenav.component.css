@@ -195,3 +195,8 @@
     margin-left: 1rem;
   }
   
+
+
+  .scrollbar-thin::-webkit-scrollbar-button {
+    display: none;
+  }

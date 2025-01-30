@@ -25,6 +25,9 @@ module.exports = {
         darkModeBg: '#1a202c', // Custom background color for dark mode
         darkModeText: '#DFDFDF',
         lightModeText: '#a0aec0', // Custom text color for dark mode
+      },
+      variants: {
+        scrollbar: ['rounded']
       }
     },
   },

@@ -135,14 +135,19 @@ export class CollectionCenterService {
   }
 
 
-  updateColectionCenter(centerData: any, id: number): Observable<any> {
+  updateColectionCenter(centerData: any, companies: any,  id: number): Observable<any> {
     console.log(centerData);
+
+    const requestData = {
+      ...centerData,  // Spread the centerData
+      companies: companies,  // Add the companies data
+    };
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     })
-    return this.http.patch(`${this.apiUrl}auth/update-center/${id}`, centerData, {
+    return this.http.patch(`${this.apiUrl}auth/update-center/${id}`, requestData, {
       headers,
     })
   }

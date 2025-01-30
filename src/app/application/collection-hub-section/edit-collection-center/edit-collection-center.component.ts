@@ -113,7 +113,8 @@ export class EditCollectionCenterComponent implements OnInit {
   ];
 
   onSubmit() {
-    this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.collectionCenterID).subscribe(
+    
+    this.collectionCenterService.updateColectionCenter(this.centerFetchData,this.selectedCompaniesIds, this.collectionCenterID).subscribe(
       (res) => {
         if (res?.status) {
           Swal.fire('Success', 'Collection Center updated Successfully', 'success');
@@ -190,7 +191,7 @@ export class EditCollectionCenterComponent implements OnInit {
 
   updateSelectedCompanies() {
     if (this.centerFetchData.companies) {
-      const companyNames = this.centerFetchData.companies.split(',').map(name => name.trim());
+      const companyNames = this.centerFetchData.companies.split(', ').map(name => name.trim());
       this.selectedCompaniesIds = this.CompanyData
         .filter(company => companyNames.includes(company.companyNameEnglish))
         .map(company => company.id);

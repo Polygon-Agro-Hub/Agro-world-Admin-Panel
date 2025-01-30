@@ -178,7 +178,7 @@ export class AddCollectionCenterComponent implements OnInit {
 
     this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
 
-    this.collectionCenterService.createCollectionCenter(this.centerData, this.selectedCompaniesNames.join(', ')).subscribe(
+    this.collectionCenterService.createCollectionCenter(this.centerData, this.selectedCompaniesIds).subscribe(
       (res) => {
         console.log(res);
 

@@ -11,6 +11,9 @@ import { Router } from '@angular/router';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
+import { RoleSelectionService } from '../../../services/role-selection/role-selection.service';
+import Swal from 'sweetalert2';
+import { response } from 'express';
 
 @Component({
   selector: 'app-role-selection',
@@ -21,6 +24,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 })
 export class RoleSelectionComponent {
   isModalOpen: boolean = false;
+  createRolesObj: CreateRoles = new CreateRoles();
 
   openModal() {
     this.isModalOpen = true;
@@ -35,6 +39,33 @@ export class RoleSelectionComponent {
     console.log('New section added');
     this.closeModal();
   }
+  onSubmit() {
+    this.roleSelectionService.createRoles(this.createRolesObj)?.subscribe(
+      (response) => {
+        // Show SweetAlert confirmation
+        Swal.fire({
+          title: 'Success!',
+          text: 'Role created successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          // Refresh the page after the user clicks "OK"
+          if (result.isConfirmed) {
+            window.location.reload(); // Refresh the page
+          }
+        });
+      },
+      (error) => {
+        // Handle error if the role creation fails
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to create role.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    );
+  }
 
   rolesList: any[] = [];
 
@@ -42,7 +73,8 @@ export class RoleSelectionComponent {
     private http: HttpClient,
     private router: Router,
     public permissionService: PermissionService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private roleSelectionService: RoleSelectionService
   ) {}
 
   ngOnInit() {
@@ -50,31 +82,24 @@ export class RoleSelectionComponent {
   }
 
   getAllRoles() {
-    const token = this.tokenService.getToken();
-
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    this.http
-      .get<any>(`${environment.API_URL}auth/get-all-roles`, {
-        headers,
-      })
-      .subscribe(
-        (response) => {
-          this.rolesList = response.roles;
-          console.log(response);
-        },
-        (error) => {
-          console.error('Error fetching news:', error);
-        }
-      );
+    this.roleSelectionService.getAllRoles()?.subscribe(
+      (response) => {
+        this.rolesList = response.roles;
+        console.log(response);
+      },
+      (error) => {
+        console.error('Error fetching rols', error);
+      }
+    );
   }
 
   viewPermissions(id: number) {
     this.router.navigate([`/settings/give-permissions/${id}`]);
   }
+}
+
+export class CreateRoles {
+  id!: number;
+  role: string = '';
+  email: string = '';
 }

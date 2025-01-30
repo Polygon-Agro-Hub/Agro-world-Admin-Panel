@@ -21,12 +21,14 @@ import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
+import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 
 interface Admin {
   id: number;
   mail: string;
   userName: string;
   role: string;
+  position: string;
   storedCurrentPassword: string | null;
 }
 
@@ -60,7 +62,6 @@ export class CreateAdminUserComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private tokenService: TokenService
-
   ) {
     this.userForm = this.fb.group({
       id: [''],
@@ -68,7 +69,7 @@ export class CreateAdminUserComponent implements OnInit {
       userName: ['', [Validators.required, this.singleWordValidator]],
       role: ['', Validators.required],
       position: ['', Validators.required],
-      password: ['', [Validators.required, this.passwordValidator()]]
+      password: ['', [Validators.required, this.passwordValidator()]],
     });
   }
 
@@ -77,10 +78,10 @@ export class CreateAdminUserComponent implements OnInit {
       this.itemId = params['id'] ? +params['id'] : null;
       console.log('Received item ID:', this.itemId);
     });
-    if(this.itemId){
+    if (this.itemId) {
       this.getAdminById(this.itemId);
     }
-    
+
     this.getAllRoles();
     this.getAllPosition();
   }
@@ -95,27 +96,23 @@ export class CreateAdminUserComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    
+
     this.http
       .get<any>(`${environment.API_URL}auth/get-all-roles`, {
         headers,
       })
       .subscribe(
         (response) => {
-          
           this.rolesList = response.roles;
           console.log(response);
-
         },
         (error) => {
           console.error('Error fetching news:', error);
-          
+
           // Handle error...
         }
       );
   }
-
-
 
   getAllPosition() {
     const token = this.tokenService.getToken();
@@ -127,21 +124,19 @@ export class CreateAdminUserComponent implements OnInit {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-    
+
     this.http
       .get<any>(`${environment.API_URL}auth/get-all-position`, {
         headers,
       })
       .subscribe(
         (response) => {
-          
           this.positionList = response.positions;
           console.log(response);
-
         },
         (error) => {
           console.error('Error fetching news:', error);
-          
+
           // Handle error...
         }
       );
@@ -149,13 +144,13 @@ export class CreateAdminUserComponent implements OnInit {
 
   singleWordValidator(control: AbstractControl): ValidationErrors | null {
     const hasSpace = /\s/.test(control.value);
-    const hasNumber = /\d/.test(control.value)
+    const hasNumber = /\d/.test(control.value);
 
-    if(hasNumber){
-      return{containsNumber: true};
+    if (hasNumber) {
+      return { containsNumber: true };
     }
 
-    return hasSpace ? { 'singleWord': true } : null;
+    return hasSpace ? { singleWord: true } : null;
   }
 
   passwordValidator(): ValidationErrors | null {
@@ -169,12 +164,19 @@ export class CreateAdminUserComponent implements OnInit {
       const hasUpperCase = /[A-Z]/.test(value);
       const hasLowerCase = /[a-z]/.test(value);
       const hasNumeric = /[0-9]/.test(value);
-      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
+        value
+      );
 
-      const passwordValid = hasUpperCase && hasLowerCase && hasNumeric && hasSpecialChar && value.length >= 8;
+      const passwordValid =
+        hasUpperCase &&
+        hasLowerCase &&
+        hasNumeric &&
+        hasSpecialChar &&
+        value.length >= 8;
 
       return !passwordValid ? { invalidPassword: true } : null;
-    }
+    };
   }
 
   getErrorMessage(controlName: string): string {
@@ -191,7 +193,7 @@ export class CreateAdminUserComponent implements OnInit {
     if (control?.hasError('singleWord')) {
       return 'Username must be a single word (no spaces allowed)';
     }
-    if(control?.hasError('containsNumber')){
+    if (control?.hasError('containsNumber')) {
       return 'Username cannot contain numbers';
     }
     return '';
@@ -222,6 +224,7 @@ export class CreateAdminUserComponent implements OnInit {
               mail: adminData.mail,
               userName: adminData.userName,
               role: adminData.role,
+              position: adminData.position,
             });
 
             console.log('Form values after patch:', this.userForm.value);
@@ -242,7 +245,7 @@ export class CreateAdminUserComponent implements OnInit {
     this.isPopupVisible = true;
   }
 
-  updateAdmin(id:any) {
+  updateAdmin(id: any) {
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -286,8 +289,8 @@ export class CreateAdminUserComponent implements OnInit {
             title: 'Success',
             text: 'Admin updated successfully!',
           });
-          this.userForm.reset(); 
-          this.router.navigate(['/steckholders/admin'])
+          this.userForm.reset();
+          this.router.navigate(['/steckholders/admin']);
         },
         (error) => {
           console.error('Error updating Admin', error);
@@ -303,7 +306,6 @@ export class CreateAdminUserComponent implements OnInit {
   }
 
   createAdmin() {
-
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       Swal.fire({
@@ -331,13 +333,9 @@ export class CreateAdminUserComponent implements OnInit {
     });
 
     this.http
-      .post(
-        `${environment.API_URL}auth/create-admin`,
-        this.userForm.value,
-        {
-          headers,
-        }
-      )
+      .post(`${environment.API_URL}auth/create-admin`, this.userForm.value, {
+        headers,
+      })
       .subscribe(
         (res: any) => {
           console.log('Admin created successfully', res);
@@ -346,8 +344,8 @@ export class CreateAdminUserComponent implements OnInit {
             title: 'Success',
             text: 'Admin created successfully!',
           });
-          this.userForm.reset(); 
-          this.router.navigate(['/steckholders/admin'])
+          this.userForm.reset();
+          this.router.navigate(['/steckholders/admin']);
         },
         (error) => {
           console.error('Error creating Admin', error);
@@ -362,12 +360,12 @@ export class CreateAdminUserComponent implements OnInit {
 
   onCancel() {
     this.userForm.reset();
-    this.router.navigate(['/steckholders/admin'])
+    this.router.navigate(['/steckholders/admin']);
   }
 
   onCancel2() {
     this.userForm.reset();
-    this.router.navigate(['/steckholders/admin'])
+    this.router.navigate(['/steckholders/admin']);
   }
 
   togglePasswordVisibility() {

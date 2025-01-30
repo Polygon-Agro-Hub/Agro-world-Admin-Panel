@@ -197,6 +197,6 @@
   
 
 
-  .scrollbar-thin::-webkit-scrollbar-button {
-    display: none;
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    min-height: 30px;  /* Minimum height of the thumb */
   }

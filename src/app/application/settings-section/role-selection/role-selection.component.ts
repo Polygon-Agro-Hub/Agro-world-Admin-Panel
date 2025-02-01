@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
-import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
 import { RoleSelectionService } from '../../../services/role-selection/role-selection.service';
 import Swal from 'sweetalert2';

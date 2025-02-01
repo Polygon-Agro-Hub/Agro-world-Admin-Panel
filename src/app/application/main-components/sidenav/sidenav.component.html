@@ -34,7 +34,7 @@
     </li>
   </ul>
 
-  <div class="setting-container p-4 pb-16 border-t" onclick="window.location.href='/settings/view-roles'">
+  <div class="setting-container p-4 pb-16 border-t" onclick="window.location.href='/settings/view-roles'" *ngIf="tokenService.getUserDetails().role === '1'">
 
     <i class="sidenav-link-icon fa-solid fa-gear"></i>
     <span class="sidenav-link-text" *ngIf="isExpanded">Settings</span>

@@ -7,7 +7,7 @@
 
 <div class="flex space-x-4">
 <button
-*ngIf="permissionService.hasPermission('Add plantcare user') || tokenService.getUserDetails().userId ==='1'"
+*ngIf="permissionService.hasPermission('Add plantcare user') || tokenService.getUserDetails().role ==='1'"
 class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" onclick="window.location.href='steckholders/farmers/edit-plantcare-users'">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -140,7 +140,7 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
                    
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                         <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editPlantCareUser(item.id)"
-                        *ngIf="permissionService.hasPermission('Edit Plantcare User') || tokenService.getUserDetails().userId === '1'"
+                        *ngIf="permissionService.hasPermission('Edit Plantcare User') || tokenService.getUserDetails().role === '1'"
                         >
               <svg
                 fill="currentColor"
@@ -155,7 +155,7 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
               </svg>
             </button>
                         <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deletePlantCareUser(item.id)"
-                        *ngIf="permissionService.hasPermission('Delete plantcare user') || tokenService.getUserDetails().userId === '1'"
+                        *ngIf="permissionService.hasPermission('Delete plantcare user') || tokenService.getUserDetails().role === '1'"
                         >
               <svg
                 aria-hidden="true"

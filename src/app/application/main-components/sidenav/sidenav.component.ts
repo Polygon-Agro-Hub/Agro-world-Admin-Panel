@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -31,7 +33,9 @@ export class SidenavComponent implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    public router: Router
+    public router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
   ) {}
 
   @HostListener('window:resize', ['$event'])

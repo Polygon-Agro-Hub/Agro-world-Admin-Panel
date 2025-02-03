@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/complaints'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -17,9 +19,32 @@
             d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
         </svg>
       </i>
+
+
+
+      <div class="mr-5" *ngIf="tokenService.getUserDetails().role ==='1'">
+        <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
+        [baseZIndex]="1000"
+        appendTo="body"
+          [options]="category" 
+          [(ngModel)]="filterCategory" 
+          [checkmark]="true" 
+          optionLabel="type" 
+          [showClear]="true" placeholder="Status" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
+      </div>
+
+
+
+      
       <div class="mr-5">
-        <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-          [options]="status" [(ngModel)]="filterStatus" [checkmark]="true" optionLabel="type" [showClear]="true" placeholder="Status" (onChange)="applyFilters()"></p-dropdown>
+        <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
+        [baseZIndex]="1000"
+        appendTo="body"
+          [options]="status" 
+          [(ngModel)]="filterStatus" 
+          [checkmark]="true" 
+          optionLabel="type" 
+          [showClear]="true" placeholder="Status" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
       </div>
 
       <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -47,22 +72,31 @@
             Ref No.
           </th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
-            Date
+           Category
+          </th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            Farmer NIC
+          </th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            First Name
+          </th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            Last Name
+          </th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            Received At
           </th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
             Status
           </th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
-            Center Name
-          </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
-            Officer Name
-          </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
-            Farmer Name
-          </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
             View
+          </th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            Reply
+          </th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+           View Reply
           </th>
         </tr>
       </thead>
@@ -76,29 +110,27 @@
             totalItems: totalItems
           }">
           <td class="py-3 dark:text-textDark text-centser">{{item.refNo}}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.complainCategory }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.NIC }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.farmerName }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.lastName }}</td>
 
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.createdAt }}</td>
           <td class="px-4 py-3 text-green-500 text-center">
-            <div *ngIf="item.status==='Answered'">
+            <div *ngIf="item.status==='Assigned'">
               <span
                 class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{item.status}}</span>
             </div>
-            <div *ngIf="item.status==='Closed'">
+            <div *ngIf="item.status==='Pending'">
               <span
                 class="w-32 h-8 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">{{item.status}}</span>
             </div>
-            <div *ngIf="item.status==='Not Answered'">
+            <div *ngIf="item.status==='Closed'">
               <span
                 class="w-32 h-8 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">{{item.status}}</span>
             </div>
-            <!-- <div>
-              <span class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm">
-              </span>
-            </div> -->
           </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.centerName}}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.officerName}}</td>
-          <td class="px-4 py-3 text-center dark:text-textDark text-centser">{{item.farmerName}}</td>
+        
           <td class="px-4 py-3 text-center">
             <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="navigateSelectComplain(item.id, item.farmerName)">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,6 +140,22 @@
               </svg>
             </button>
           </td>
+
+
+          <td class="px-4 py-3 text-green-500 text-center">
+            <span *ngIf="item.reply===null"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">No</span>
+            <span *ngIf="item.reply != null"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">Yes</span>
+            
+          </td>
+
+
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <i (click)="fetchComplain(item.id,item.farmerName )" class="fa-solid fa-file-export"></i>
+          </td>
+
+
         </tr>
       </tbody>
     </table>

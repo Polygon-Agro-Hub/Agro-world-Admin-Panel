@@ -65,7 +65,7 @@ export class CollectionCenterService {
     console.log(payload);
   }
 
-  getAllComplain(page: number, limit: number, status: String, searchText: string): Observable<any> {
+  getAllComplain(page: number, limit: number, status: String,category: String,  searchText: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -75,6 +75,10 @@ export class CollectionCenterService {
 
     if (status) {
       url += `&status=${status}`
+    }
+
+    if (category) {
+      url += `&category=${category}`
     }
 
     if (searchText) {

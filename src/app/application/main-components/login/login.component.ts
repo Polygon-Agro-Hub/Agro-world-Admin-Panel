@@ -8,17 +8,19 @@ import { environment } from '../../../environment/environment';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { TokenService } from '../../../services/token/services/token.service';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, HttpClientModule, CommonModule],
+  imports: [FormsModule, HttpClientModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   showPassword: boolean = false;
   disError: any;
+  isLoading = false;
 
   loginObj: Login;
 
@@ -32,6 +34,9 @@ export class LoginComponent {
 
 
  onLogin(){
+
+  this.isLoading = true;
+
   console.log("Successfully click the button");
   // alert("login success");
   // debugger;
@@ -42,6 +47,7 @@ export class LoginComponent {
       title: 'Unsuccessful',
       text: 'Email is required',
     });
+    this.isLoading = false;
   } 
 
   if (this.loginObj.email) {
@@ -52,6 +58,7 @@ export class LoginComponent {
         text: 'Please enter a valid email address',
       });
     }
+    this.isLoading = false;
   } 
   
  
@@ -63,7 +70,7 @@ export class LoginComponent {
       title: 'Unsuccessful',
       text: 'Password is required',
     });
-
+    this.isLoading = false;
   }
 
   if(!this.loginObj.email && !this.loginObj.password){
@@ -72,7 +79,7 @@ export class LoginComponent {
       title: 'Unsuccessful',
       text: 'Email and Password is required',
     });
-
+    this.isLoading = false;
   }
 
   if(this.loginObj.password && this.loginObj.email){
@@ -96,7 +103,7 @@ export class LoginComponent {
         localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
 
         this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
-          
+          this.isLoading = false;
         this.router.navigate(['/steckholders']);
       },
       (error) => {
@@ -107,6 +114,7 @@ export class LoginComponent {
           title: 'Unsuccessful',
           text: this.disError,
         });
+        this.isLoading = false;
       }
   );
   }

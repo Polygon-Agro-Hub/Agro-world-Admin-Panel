@@ -10,11 +10,12 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-view-selected-complain',
   standalone: true,
-  imports: [DialogModule, ButtonModule, InputTextareaModule, FormsModule, FormsModule, CommonModule],
+  imports: [DialogModule, ButtonModule, InputTextareaModule, FormsModule, FormsModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './view-selected-complain.component.html',
   styleUrl: './view-selected-complain.component.css',
   providers: [DatePipe] // Add DatePipe to providers
@@ -26,6 +27,7 @@ export class ViewSelectedComplainComponent implements OnInit {
   display: boolean = false; // Controls dialog visibility
   complaintText: string = ''; // Holds the text entered in the textarea
   messageContent: string = '';
+  isLoading = false;
 
   constructor(
     private complainSrv: CollectionCenterService,
@@ -50,10 +52,12 @@ export class ViewSelectedComplainComponent implements OnInit {
 
 
   fetchComplain() {
+    this.isLoading = true;
     this.complainSrv.getComplainById(this.complainId).subscribe((res) => {
       res.createdAt = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm:ss a') || res.createdAt;
       this.complain = res;
       console.log(res);
+      this.isLoading = false;
     });
   }
 
@@ -76,6 +80,7 @@ export class ViewSelectedComplainComponent implements OnInit {
 
 
   submitComplaint() {
+    this.isLoading = true;
       const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
@@ -109,6 +114,7 @@ export class ViewSelectedComplainComponent implements OnInit {
               text: 'Market Price updated successfully!',
             });
             this.fetchComplain();
+            this.isLoading = false;
             
           },
           (error) => {
@@ -119,10 +125,51 @@ export class ViewSelectedComplainComponent implements OnInit {
               title: 'Unsuccessful',
               text: 'Error updating news',
             });
+            this.fetchComplain();
+            this.isLoading = false;
           }
         );
     }
 
+
+
+    showReplyDialog() {
+      Swal.fire({
+        title: 'Reply as AgroWorld',
+        html: `
+          <div class="text-left">
+            <p>Dear <strong>${this.farmerName}</strong>,</p>
+            <p>We are pleased to inform you that your complaint has been resolved.</p>
+            <textarea 
+              id="messageContent" 
+              class="w-full p-2 border rounded mt-3 mb-3" 
+              rows="5"
+              placeholder="Add your message here..."
+            >${this.complain.reply || ''}</textarea>
+            <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+            <p class="mt-3">
+              Sincerely,<br/>
+              AgroWorld Customer Support Team
+            </p>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        width: '600px',
+        preConfirm: () => {
+          const textarea = document.getElementById('messageContent') as HTMLTextAreaElement;
+          return textarea.value;
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.messageContent = result.value;
+          this.submitComplaint();
+        }
+      });
+    }
 
 
   
@@ -135,14 +182,17 @@ class Complain {
   id!: string;
   refNo!: string;
   status!: string;
-  officerName!: string;
-  farmerName!: string;
-  officerPhone!: string;
+  firstName!: string;
+  lastName!: string;
   farmerPhone!: string;
   complain!: string;
-  reply!: string;
+  complainCategory!: string;
   language!: string;
   createdAt!: string;
-  CollectionContact!:string;
-  centerName!:string;
+  reply!: string;
+  centerName!: string;
+  CollectionContact!: string;
+  officerName!: string;
+  officerPhone!: string;
+  farmerName!: string;
 }

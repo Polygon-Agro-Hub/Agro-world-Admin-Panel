@@ -17,11 +17,17 @@ import { response } from 'express';
 @Component({
   selector: 'app-role-selection',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule],
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './role-selection.component.html',
   styleUrl: './role-selection.component.css',
 })
 export class RoleSelectionComponent {
+  isLoading = false;
   isModalOpen: boolean = false;
   createRolesObj: CreateRoles = new CreateRoles();
 
@@ -81,8 +87,10 @@ export class RoleSelectionComponent {
   }
 
   getAllRoles() {
+    this.isLoading = true;
     this.roleSelectionService.getAllRoles()?.subscribe(
       (response) => {
+        this.isLoading = false;
         this.rolesList = response.roles;
         console.log(response);
       },

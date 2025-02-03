@@ -13,6 +13,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionManagerService } from '../../../services/permission-manager/permission-manager.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-permission-area',
@@ -23,12 +24,14 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     HttpClientModule,
     ToastModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './permission-area.component.html',
   styleUrl: './permission-area.component.css',
   providers: [MessageService],
 })
 export class PermissionAreaComponent {
+  isLoading = false;
   positionList: any[] = [];
   FeatureList: any[] = [];
   RoleFeatureList: any[] = [];
@@ -53,6 +56,7 @@ export class PermissionAreaComponent {
   }
 
   getAllPosition() {
+    this.isLoading = true;
     const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
@@ -67,6 +71,7 @@ export class PermissionAreaComponent {
       })
       .subscribe(
         (response) => {
+          this.isLoading = false;
           this.positionList = response.positions;
           console.log(response);
         },

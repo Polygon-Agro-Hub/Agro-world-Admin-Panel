@@ -9,11 +9,13 @@ import { PublicforumService } from '../../services/plant-care/publicforum.servic
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlantcareUsersService } from '../../services/plant-care/plantcare-users.service';
 import { response } from 'express';
+import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-public-forum',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule, FormsModule],
+  imports: [CommonModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-public-forum.component.html',
   styleUrl: './view-public-forum.component.css',
 })
@@ -34,6 +36,8 @@ export class ViewPublicForumComponent implements OnInit {
   countReply!: ReplyCount[]
   hasData: boolean =false
   selectPostId!: number;
+  isLoading = false;
+  isLoadingpop = false;
 
 
   constructor(
@@ -72,6 +76,7 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   loadPosts(): void {
+    this.isLoading = true;
     this.psotService.getAllPosts().subscribe((data: PublicForum[]) => {
       this.post = data.map((post) => {
         post.timeAgo = this.calculateTimeAgo(post.createdAt);
@@ -80,6 +85,7 @@ export class ViewPublicForumComponent implements OnInit {
       if (data.length > 0) {
         this.hasData = true;
       }
+      this.isLoading = false;
       console.log(this.post);
       this.getCount();
     });
@@ -122,19 +128,24 @@ export class ViewPublicForumComponent implements OnInit {
     this.deletePopUpVisible = true;
   }
 
+
   fetchPostAllReply(id: number): void {
-    this.publicForumSrv.getAllPostReply(id).subscribe(
-      (data: PublicForum[]) => {
-        this.publiForum = data.map((reply) => {
-          reply.timeAgo = this.calculateTimeAgo(reply.createdAt);
-          return reply;
-        });
-        console.log(this.publiForum);
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    );
+    this.isLoadingpop = true;
+    
+    this.publicForumSrv.getAllPostReply(id)
+      .pipe(finalize(() => this.isLoadingpop = false))
+      .subscribe(
+        (data: PublicForum[]) => {
+          this.publiForum = data.map((reply) => {
+            reply.timeAgo = this.calculateTimeAgo(reply.createdAt);
+            return reply;
+          });
+          console.log(this.publiForum);
+        },
+        (error) => {
+          console.error('Error:', error);
+        }
+      );
   }
 
   deletePost(id: number) {

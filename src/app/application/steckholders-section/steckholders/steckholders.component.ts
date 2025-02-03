@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-steckholders',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './steckholders.component.html',
   styleUrl: './steckholders.component.css'
 })
@@ -17,7 +19,7 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   isButton5Clicked = false;
   isButton6Clicked = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, public tokenService: TokenService) {}
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {

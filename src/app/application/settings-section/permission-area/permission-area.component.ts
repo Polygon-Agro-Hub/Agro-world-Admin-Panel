@@ -11,15 +11,22 @@ import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionManagerService } from '../../../services/permission-manager/permission-manager.service';
-import { response } from 'express';
-import { error } from 'console';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-permission-area',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
+    ToastModule,
+  ],
   templateUrl: './permission-area.component.html',
   styleUrl: './permission-area.component.css',
+  providers: [MessageService],
 })
 export class PermissionAreaComponent {
   positionList: any[] = [];
@@ -33,7 +40,8 @@ export class PermissionAreaComponent {
     private route: ActivatedRoute,
     private router: Router,
     private createCategoryService: PermissionManagerService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -229,12 +237,11 @@ export class PermissionAreaComponent {
               });
 
               // Display success Swal alert
-              Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Role feature created successfully!',
-                timer: 2000,
-                showConfirmButton: false,
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Role feature created successfully!',
+                life: 3000,
               });
             }
           },
@@ -242,10 +249,11 @@ export class PermissionAreaComponent {
             console.error('Error creating role feature:', error);
 
             // Display error Swal alert
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to create role feature. Please try again.',
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to create role feature. Please try again.',
+              life: 3000,
             });
           },
         });
@@ -283,22 +291,22 @@ export class PermissionAreaComponent {
               );
 
               // Display success Swal alert
-              Swal.fire({
-                icon: 'success',
-                title: 'Deleted',
-                text: 'Role feature removed successfully!',
-                timer: 2000,
-                showConfirmButton: false,
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Deleted',
+                detail: 'Role feature removed successfully!',
+                life: 2000,
               });
             },
             error: (error) => {
               console.error('Error deleting role feature:', error);
 
               // Display error Swal alert
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to delete role feature. Please try again.',
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete role feature. Please try again.',
+                life: 3000,
               });
             },
           });

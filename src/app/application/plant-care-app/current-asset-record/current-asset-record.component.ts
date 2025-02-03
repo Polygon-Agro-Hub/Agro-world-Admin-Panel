@@ -3,25 +3,27 @@ import { AssetsService } from '../../../services/plant-care/assets.service';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
-interface CurrentAssetsViewRecord{
+interface CurrentAssetsViewRecord {
   id: number;
   currentAssetId: number;
-  numOfPlusUnit:any;
-  numOfMinUnit:any;
-  totalPrice:any;
-  createdAt:string;
+  numOfPlusUnit: any;
+  numOfMinUnit: any;
+  totalPrice: any;
+  createdAt: string;
 }
 
 @Component({
   selector: 'app-current-asset-record',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './current-asset-record.component.html',
-  styleUrl: './current-asset-record.component.css'
+  styleUrl: './current-asset-record.component.css',
 })
 export class CurrentAssetRecordComponent {
-  hasData: boolean = true;  
+  isLoading = false;
+  hasData: boolean = true;
   currentAssetRecord: CurrentAssetsViewRecord[] = [];
   assetId: any | null = null;
   name: string = '';
@@ -43,16 +45,15 @@ export class CurrentAssetRecordComponent {
       this.category = params['category'] ? params['category'] : null;
       this.asset = params['asset'] ? params['asset'] : null;
       this.unit = params['unit'] ? params['unit'] : null;
-      
-      
     });
     this.loadAssetsRecords(this.assetId);
-    
   }
 
   loadAssetsRecords(id: number) {
+    this.isLoading = true;
     this.assetService.getAllCurrentAssetRecord(id).subscribe(
       (data) => {
+        this.isLoading = false;
         console.log('Received items:', data);
         this.currentAssetRecord = data;
         this.hasData = this.currentAssetRecord.length > 0;
@@ -62,6 +63,4 @@ export class CurrentAssetRecordComponent {
       }
     );
   }
-
-
 }

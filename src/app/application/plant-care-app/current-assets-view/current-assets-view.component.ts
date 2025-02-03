@@ -5,21 +5,21 @@ import { AssetsService } from '../../../services/plant-care/assets.service';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
-interface CurrentAssetsView{
+interface CurrentAssetsView {
   id: number;
   userId: number;
-  category:any;
-  asset:any;
-  brand:any;
-  batchNum:any;
+  category: any;
+  asset: any;
+  brand: any;
+  batchNum: any;
   unitVolume: any;
-  unit:any;
-  volume:any;
-  numOfUnit:any;
-  unitPrice:any;
-  total:any;
-  status:any;
-  createdAt:string;
+  unit: any;
+  volume: any;
+  numOfUnit: any;
+  unitPrice: any;
+  total: any;
+  status: any;
+  createdAt: string;
 }
 
 @Component({
@@ -32,12 +32,12 @@ interface CurrentAssetsView{
 export class CurrentAssetsViewComponent {
   currentAsset: CurrentAssetsView[] = [];
 
-  
+  isLoading = false;
 
   userId: any | null = null;
   name: string = '';
   category: string = '';
-  hasData: boolean = true;  
+  hasData: boolean = true;
 
   constructor(
     private assetService: AssetsService,
@@ -51,16 +51,16 @@ export class CurrentAssetsViewComponent {
       this.userId = params['id'] ? +params['id'] : null;
       this.name = params['fullName'] ? params['fullName'] : null;
       this.category = params['category'] ? params['category'] : null;
-      
-      
     });
-    
-    this.loadAssets(this.userId, this.category)
+
+    this.loadAssets(this.userId, this.category);
   }
 
   loadAssets(userId: number, category: any) {
+    this.isLoading = true;
     this.assetService.getAllCurrentAsset(userId, category).subscribe(
       (data) => {
+        this.isLoading = false;
         console.log('Received items:', data);
         this.currentAsset = data;
         this.hasData = this.currentAsset.length > 0;
@@ -71,11 +71,18 @@ export class CurrentAssetsViewComponent {
     );
   }
 
-
-  viewRecord(id: number, name: string, category: string, asset: string, unit: string) {
-
-    this.router.navigate(['plant-care/report-farmer-current-assert/record-view'], { 
-      queryParams: { id, name, category, asset, unit} 
-    });
+  viewRecord(
+    id: number,
+    name: string,
+    category: string,
+    asset: string,
+    unit: string
+  ) {
+    this.router.navigate(
+      ['plant-care/report-farmer-current-assert/record-view'],
+      {
+        queryParams: { id, name, category, asset, unit },
+      }
+    );
   }
 }

@@ -77,19 +77,25 @@ export class ViewPublicForumComponent implements OnInit {
 
   loadPosts(): void {
     this.isLoading = true;
-    this.psotService.getAllPosts().subscribe((data: PublicForum[]) => {
-      this.post = data.map((post) => {
-        post.timeAgo = this.calculateTimeAgo(post.createdAt);
-        return post;
-      });
-      if (data.length > 0) {
-        this.hasData = true;
+    this.psotService.getAllPosts().subscribe(
+      (data: PublicForum[]) => {
+        this.post = data.map((post) => {
+          post.timeAgo = this.calculateTimeAgo(post.createdAt);
+          return post;
+        });
+  
+        this.hasData = data.length > 0;
+        console.log(this.post);
+        this.getCount();
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error("Error fetching posts:", error);
+        this.isLoading = false;
       }
-      this.isLoading = false;
-      console.log(this.post);
-      this.getCount();
-    });
+    );
   }
+  
 
   viewUserProfile(userId: number) {
     this.router.navigate(['/plant-care/plant-care-user-profile'], {

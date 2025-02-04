@@ -155,7 +155,7 @@
       </p>
     </div>
 
-    <div *ngIf="hasData" class="overflow-x-auto">
+    <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full" >
       <table
         class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
       >
@@ -287,6 +287,8 @@
                   ></path>
                 </svg>
               </button>
+            </td>
+            <td class="px-4 py-3 text-center">
               <button
                 class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteNews(item.id)"

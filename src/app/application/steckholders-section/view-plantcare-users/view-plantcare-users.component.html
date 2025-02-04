@@ -96,7 +96,7 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
   </div>
 
 
-    <div *ngIf="hasData" class="overflow-x-auto">
+    <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
         <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
             <thead>
                 <tr>
@@ -154,6 +154,8 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
                 ></path>
               </svg>
             </button>
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                         <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deletePlantCareUser(item.id)"
                         *ngIf="permissionService.hasPermission('Delete plantcare user') || tokenService.getUserDetails().role === '1'"
                         >

@@ -23,7 +23,7 @@
   </div>
 
 
-  <div *ngIf="hasData" class="overflow-x-auto">
+  <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
       <thead>
         <tr>
@@ -66,7 +66,7 @@
           <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
 
 
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-8" (click)="ViewCroptask(item.id)">
+              <button class="w-5 h-5  text-blue-500 hover:text-blue-700 mr-8" (click)="ViewCroptask(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -74,6 +74,9 @@
                 </svg>
               </button>
 
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
             <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editCropCalender(item.id)">
               <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <title>pen-to-square</title>
@@ -82,6 +85,10 @@
                 </path>
               </svg>
             </button>
+
+          </td>
+      
+          <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
             <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCropCalender(item.id)">
               <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                 viewBox="0 0 24 24">

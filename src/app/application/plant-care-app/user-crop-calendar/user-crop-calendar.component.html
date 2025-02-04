@@ -1,16 +1,18 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
 
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-            <h2 class="text-2xl font-normal  text-gray-500 dark:text-textDark">All User Task</h2>
+            <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">All User Task</h2>
         </div>
     </div>
-    <div class="overflow-x-auto">
-        <table class="w-full divide-y divide-gray-200 table-auto">
+    <div >
+        <table class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
             <thead>
                 <tr>
                     <th class="py-3 font-normal text-gray-500 text-left"></th>
@@ -18,7 +20,9 @@
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Days</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Task</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Image</th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video English</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video Sinhala</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Guided Video Tamil</th>
                 
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Status</th>
                 </tr>
@@ -55,8 +59,30 @@
                       
 
                       <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                        <ng-container *ngIf="task.videoLink; else noVideo">
-                          <a [attr.href]="task.videoLink" target="_blank" rel="noopener noreferrer">
+                        <ng-container *ngIf="task.videoLinkEnglish; else noVideo">
+                          <a [attr.href]="task.videoLinkEnglish" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
+                          </a>
+                        </ng-container>
+                        <ng-template #noVideo>
+                          No video
+                        </ng-template>
+                      </td>
+
+                      <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.videoLinkSinhala; else noVideo">
+                          <a [attr.href]="task.videoLinkSinhala" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
+                          </a>
+                        </ng-container>
+                        <ng-template #noVideo>
+                          No video
+                        </ng-template>
+                      </td>
+
+                      <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                        <ng-container *ngIf="task.videoLinkTamil; else noVideo">
+                          <a [attr.href]="task.videoLinkTamil" target="_blank" rel="noopener noreferrer">
                             <i class="fa-solid fa-video text-blue-600 hover:text-blue-800"></i>
                           </a>
                         </ng-container>

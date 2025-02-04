@@ -111,7 +111,7 @@
     Back
   </button>
   <div
-    class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -155,9 +155,9 @@
       </p>
     </div>
 
-    <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full" >
+    <div *ngIf="hasData">
       <table
-        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
       >
         <thead>
           <tr>

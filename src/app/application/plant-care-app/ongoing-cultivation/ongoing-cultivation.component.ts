@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 
 interface OngoingCultivationItem {
@@ -32,7 +33,7 @@ interface NewsItem {
 @Component({
   selector: 'app-ongoing-cultivation',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, NgxPaginationModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './ongoing-cultivation.component.html',
   styleUrl: './ongoing-cultivation.component.css',
   template: `
@@ -53,7 +54,8 @@ export class OngoingCultivationComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchNIC: string = '';
-  hasData: boolean = true;  
+  hasData: boolean = true; 
+  isLoading = true;
 
   constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router) {}
 
@@ -62,6 +64,7 @@ export class OngoingCultivationComponent {
   }
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
     this.ongoingCultivationService.fetchAllOngoingCultivations(page, limit, this.searchNIC )
       .subscribe(
         (response) => {
@@ -70,11 +73,12 @@ export class OngoingCultivationComponent {
           this.ongoingCultivation = response.items;
           this.hasData = this.ongoingCultivation.length > 0;
           this.totalItems = response.total;
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
           if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
+            this.isLoading = false;
           }
         }
       );

@@ -29,7 +29,9 @@ class CropTask {
   'taskDescriptionSinhala': string;
   'taskDescriptionTamil': string;
   'reqImages': any;
-  'videoLink':any;
+  'videoLinkEnglish':any;
+  'videoLinkSinhala':any;
+  'videoLinkTamil':any;
   'imageLink':any;
 }
 
@@ -115,7 +117,9 @@ export class UserTaskEditComponent {
     formData.append('startingDate', this.taskItems.startingDate);
     formData.append('reqImages', this.taskItems.reqImages);
     formData.append('imageLink', this.taskItems.imageLink);
-    formData.append('videoLink', this.taskItems.videoLink);
+    formData.append('videoLink', this.taskItems.videoLinkEnglish);
+    formData.append('videoLink', this.taskItems.videoLinkSinhala);
+    formData.append('videoLink', this.taskItems.videoLinkTamil);
   
   
     const headers = new HttpHeaders({

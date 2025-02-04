@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 interface TaskList {
   id: any;
@@ -14,7 +15,9 @@ interface TaskList {
   startingDate: string;
   taskEnglish: string;
   imageLink : string;
-  videoLink: string;
+  videoLinkEnglish: string;
+  videoLinkSinhala: string;
+  videoLinkTamil: string;
   status: string;
   cropCalendarId: any;
 }
@@ -22,7 +25,7 @@ interface TaskList {
 @Component({
   selector: 'app-user-crop-calendar',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule,  NgxPaginationModule,],
+  imports: [CommonModule, HttpClientModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
   templateUrl: './user-crop-calendar.component.html',
   styleUrl: './user-crop-calendar.component.css'
 })
@@ -55,6 +58,7 @@ export class UserCropCalendarComponent {
 
 
   getchUserTaskList(cropId: number, userId: number, page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
     console.log('Fetching tasks for page:', page); 
     this.page = page;
     this.ongoingCultivationService.getUserTasks(cropId, userId, page, limit)

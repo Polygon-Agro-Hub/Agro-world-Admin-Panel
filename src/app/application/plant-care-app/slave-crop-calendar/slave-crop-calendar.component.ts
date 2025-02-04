@@ -45,6 +45,7 @@ export class SlaveCropCalendarComponent {
   hasData: boolean = true; 
   newsItems: NewsItem[] = [];
   userId: any | null = null;
+  isLoading = true;
 
  
   
@@ -76,17 +77,18 @@ export class SlaveCropCalendarComponent {
 
 
   getCultivation(id: any) {
-   
+    this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(id)
       .subscribe(
         (data) => {
           this.cultivtionItems = data;
           console.log(this.cultivtionItems);
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching news:', error);
           if (error.status === 401) {
-            
+            this.isLoading = false;
           }
         }
       );
@@ -94,16 +96,18 @@ export class SlaveCropCalendarComponent {
 
 
   fetchAllNews(id: number) {
+    this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(id)
       .subscribe(
         (data) => {
           this.newsItems = data;
           console.log(data);
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
           if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
+            this.isLoading = false;
           }
         }
       );

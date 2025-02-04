@@ -1,25 +1,25 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div>
-  <button onclick="history.back()">
+  <button onclick="history.back()" class="text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
-  <div class="mx-auto p-6 bg-white rounded-lg shadow-md">
-    <h2 class="text-lg font-semibold text-center mb-4">Index No: {{indexId}}</h2>
+  <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-md">
+    <h2 class="text-lg font-semibold text-center mb-4 text-textLight dark:text-textDark">Index No: {{indexId}}</h2>
 
     <div class="border-b mb-6 px-12">
       <ul class="flex">
-        <li class="cursor-pointer py-2 px-4 text-center border-b-2"
+        <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
           [ngClass]="{ 'border-green-500': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
           English
         </li>
-        <li class="cursor-pointer py-2 px-4 text-center border-b-2"
+        <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
           [ngClass]="{ 'border-green-500': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
           Sinhala
         </li>
-        <li class="cursor-pointer py-2 px-4 text-center border-b-2"
+        <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
           [ngClass]="{ 'border-green-500': selectedLanguage === 'tamil' }" 
           (click)="selectLanguage('tamil')">
           Tamil
@@ -32,9 +32,9 @@
 
       <div class="px-12" *ngIf="selectedLanguage === 'english'">
         <div class="my-3">
-          <label for="taskEnglish" class="block text-sm font-medium text-gray-700">Task</label>
+          <label for="taskEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Task</label>
           <input formControlName="taskEnglish" id="taskEnglish"name="taskEnglish" [(ngModel)]="cropTaskObj.taskEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
           <!-- <div
             *ngIf="cropForm.get('cropName')!.invalid && (cropForm.get('cropName')!.dirty || cropForm.get('cropName')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -43,9 +43,9 @@
         </div>
 
         <div class="my-3">
-          <label for="taskTypeEnglish" class="block text-sm font-medium text-gray-700">Task Type </label>
+          <label for="taskTypeEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Task Type </label>
           <input formControlName="taskTypeEnglish" id="taskTypeEnglish"  name="taskTypeEnglish" [(ngModel)]="cropTaskObj.taskTypeEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
           <!-- <div
             *ngIf="cropForm.get('variety')!.invalid && (cropForm.get('variety')!.dirty || cropForm.get('variety')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -54,9 +54,9 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="taskCategoryEnglish" class="block text-sm font-medium text-gray-700">Task Category</label>
+          <label for="taskCategoryEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Task Category</label>
           <input formControlName="taskCategoryEnglish" id="taskCategoryEnglish" [(ngModel)]="cropTaskObj.taskCategoryEnglish"
-            name="taskCategoryEnglish" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+            name="taskCategoryEnglish" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
           <!-- <div
             *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -65,9 +65,9 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="taskDescriptionEnglish" class="block text-sm font-medium text-gray-700">Task Discription</label>
+          <label for="taskDescriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Task Discription</label>
           <textarea rows="5" formControlName="taskDescriptionEnglish" id="taskDescriptionEnglish" [(ngModel)]="cropTaskObj.taskDescriptionEnglish"
-            name="taskDescriptionEnglish" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
+            name="taskDescriptionEnglish" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></textarea>
           <!-- <div
             *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -81,9 +81,9 @@
 
       <div class="px-12" *ngIf="selectedLanguage === 'sinhala'">
         <div class="my-2">
-          <label for="taskSinhala" class="block text-sm font-medium text-gray-700">Task in Sinhala </label>
+          <label for="taskSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Task in Sinhala </label>
           <input formControlName="taskSinhala" id="taskSinhala" [(ngModel)]="cropTaskObj.taskSinhala"
-            name="taskSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            name="taskSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
           <!-- <div
             *ngIf="cropForm.get('sinhalaCropName')!.invalid && (cropForm.get('sinhalaCropName')!.dirty || cropForm.get('sinhalaCropName')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -92,9 +92,9 @@
         </div>
 
         <div class="my-2">
-          <label for="taskTypeSinhala" class="block text-sm font-medium text-gray-700">Task Type in Sinhala</label>
+          <label for="taskTypeSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Task Type in Sinhala</label>
           <input formControlName="taskTypeSinhala" id="taskTypeSinhala" [(ngModel)]="cropTaskObj.taskTypeSinhala"
-            name="taskTypeSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            name="taskTypeSinhala" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"  />
           <!-- <div
             *ngIf="cropForm.get('sinhalaVariety')!.invalid && (cropForm.get('sinhalaVariety')!.dirty || cropForm.get('sinhalaVariety')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -103,11 +103,11 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="taskCategorySinhala" class="block text-sm font-medium text-gray-700">Task Category in
+          <label for="taskCategorySinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Task Category in
             Sinhala</label>
           <input formControlName="taskCategorySinhala" id="taskCategorySinhala" [(ngModel)]="cropTaskObj.taskCategorySinhala"
             name="taskCategorySinhala" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
           <!-- <div
             *ngIf="cropForm.get('sinhalaSpecialNotes')!.invalid && (cropForm.get('sinhalaSpecialNotes')!.dirty || cropForm.get('sinhalaSpecialNotes')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -116,9 +116,9 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="taskDescriptionSinhala" class="block text-sm font-medium text-gray-700">Task Description in Sinhala</label>
+          <label for="taskDescriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Task Description in Sinhala</label>
           <textarea rows="5" formControlName="taskDescriptionSinhala" id="taskDescriptionSinhala" [(ngModel)]="cropTaskObj.taskDescriptionSinhala"
-            name="taskDescriptionSinhala" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
+            name="taskDescriptionSinhala" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></textarea>
           <!-- <div
             *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -132,9 +132,9 @@
 
       <div class="px-12" *ngIf="selectedLanguage === 'tamil'">
         <div class="my-2">
-          <label for="taskTamil" class="block text-sm font-medium text-gray-700">Task in Tamil </label>
+          <label for="taskTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Task in Tamil </label>
           <input formControlName="taskTamil" id="taskTamil" [(ngModel)]="cropTaskObj.taskTamil"
-            name="taskTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            name="taskTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
           <!-- <div
             *ngIf="cropForm.get('tamilCropName')!.invalid && (cropForm.get('tamilCropName')!.dirty || cropForm.get('tamilCropName')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -143,9 +143,9 @@
         </div>
 
         <div class="my-2">
-          <label for="taskTypeTamil" class="block text-sm font-medium text-gray-700">Task Type in Tamil</label>
+          <label for="taskTypeTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Task Type in Tamil</label>
           <input formControlName="taskTypeTamil" id="taskTypeTamil" [(ngModel)]="cropTaskObj.taskTypeTamil"
-            name="taskTypeTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+            name="taskTypeTamil" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
           <!-- <div
             *ngIf="cropForm.get('tamilVariety')!.invalid && (cropForm.get('tamilVariety')!.dirty || cropForm.get('tamilVariety')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -154,10 +154,10 @@
         </div>
 
         <div class="md:col-span-2 my-2">
-          <label for="taskCategoryTamil" class="block text-sm font-medium text-gray-700">Task Category in Tamil</label>
+          <label for="taskCategoryTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Task Category in Tamil</label>
           <input formControlName="taskCategoryTamil" id="taskCategoryTamil"
             name="taskCategoryTamil" rows="3" [(ngModel)]="cropTaskObj.taskCategoryTamil"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
           <!-- <div
             *ngIf="cropForm.get('tamilSpecialNotes')!.invalid && (cropForm.get('tamilSpecialNotes')!.dirty || cropForm.get('tamilSpecialNotes')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -166,9 +166,9 @@
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="taskDescriptionTamil" class="block text-sm font-medium text-gray-700">Task Description in Tamil</label>
+          <label for="taskDescriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Task Description in Tamil</label>
           <textarea rows="5" formControlName="taskDescriptionTamil" id="taskDescriptionTamil" [(ngModel)]="cropTaskObj.taskDescriptionTamil"
-            name="taskDescriptionTamil" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
+            name="taskDescriptionTamil" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></textarea>
           <!-- <div
             *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
             class="text-red-500 text-sm mt-1">
@@ -182,22 +182,22 @@
 
 
       <div class="md:col-span-2 my-3 px-12">
-        <label for="startingDate" class="block text-sm font-medium text-gray-700">Starting Date</label>
+        <label for="startingDate" class="block text-sm font-medium text-textLight dark:text-textDark">Starting Date</label>
         <input
           type="date"
           formControlName="startingDate"
           id="startingDate"
           [(ngModel)]="cropTaskObj.startingDate"
           name="startingDate"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         />
       </div>
       
 
       <div class="md:col-span-2 my-3 px-12">
-        <label for="reqImages" class="block text-sm font-medium text-gray-700">Number of required images</label>
+        <label for="reqImages" class="block text-sm font-medium text-textLight dark:text-textDark">Number of required images</label>
         <input type="number" min="0" formControlName="reqImages" id="reqImages" [(ngModel)]="cropTaskObj.reqImages"
-          name="reqImages" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+          name="reqImages" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
         <!-- <div
           *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
           class="text-red-500 text-sm mt-1">
@@ -206,9 +206,9 @@
       </div>
 
       <div class="md:col-span-2 my-3 px-12">
-        <label for="imageLink" class="block text-sm font-medium text-gray-700">Image Link</label>
+        <label for="imageLink" class="block text-sm font-medium text-textLight dark:text-textDark">Image Link</label>
         <input  min="0" formControlName="imageLink" id="imageLink" [(ngModel)]="cropTaskObj.imageLink"
-          name="imageLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+          name="imageLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
         <!-- <div
           *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
           class="text-red-500 text-sm mt-1">
@@ -217,9 +217,9 @@
       </div>
 
       <div class="md:col-span-2 my-3 px-12">
-        <label for="videoLink" class="block text-sm font-medium text-gray-700">Video Linkkkkk</label>
+        <label for="videoLink" class="block text-sm font-medium text-textLight dark:text-textDark">Video Linkkkkk</label>
         <input min="0" formControlName="videoLink" id="videoLink" [(ngModel)]="cropTaskObj.videoLink"
-          name="videoLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"/>
+          name="videoLink" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
         <!-- <div
           *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
           class="text-red-500 text-sm mt-1">

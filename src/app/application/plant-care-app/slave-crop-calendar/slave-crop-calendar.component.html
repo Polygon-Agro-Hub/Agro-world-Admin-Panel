@@ -1,11 +1,13 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <div>
     <button class="text-textLight dark:text-textDark" onclick="window.location.href='plant-care/ongoing-cultivation'">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
     <div class="h-[20px]"></div>
-    <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark">User Ongoing cultivation ({{this.cultivtionItems.length}})</h2>
+    <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <h2 class="text-2xl font-bold mb-6 text-left text-textLight dark:text-textDark">User Ongoing cultivation ({{this.newsItems.length}})</h2>
 
         
 
@@ -14,8 +16,8 @@
         </div>
       
       
-          <div *ngIf="hasData" class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200 table-auto">
+          <div *ngIf="hasData">
+              <table class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
                   <thead>
                       <tr>
                         <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">No</th>

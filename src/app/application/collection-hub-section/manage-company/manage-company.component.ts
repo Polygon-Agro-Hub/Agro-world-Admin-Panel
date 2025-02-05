@@ -16,20 +16,27 @@ import { TokenService } from '../../../services/token/services/token.service';
 })
 export class ManageCompanyComponent {
   companies: CompanyDetails[] = [];
+  isLoading = false;
   total: number | null = null;
   private token = this.tokenService.getToken();
 
-  constructor(private companyService: CollectionCenterService, private router: Router, private tokenService: TokenService) {}
+  constructor(
+    private companyService: CollectionCenterService,
+    private router: Router,
+    private tokenService: TokenService
+  ) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.fetchAllCompanys();
   }
 
   fetchAllCompanys() {
+    this.isLoading = true;
     this.companyService.getAllCompanyDetails().subscribe(
       (response: any) => {
+        this.isLoading = false;
         console.log(response);
-        
+
         this.companies = response.results;
         this.total = response.total;
       },
@@ -40,7 +47,9 @@ export class ManageCompanyComponent {
   }
 
   editCompany(id: number) {
-    this.router.navigate(['/collection-hub/create-company'], { queryParams: { id } });
+    this.router.navigate(['/collection-hub/create-company'], {
+      queryParams: { id },
+    });
   }
 
   deleteCompany(id: number) {
@@ -49,7 +58,7 @@ export class ManageCompanyComponent {
       console.error('No token found');
       return;
     }
-  
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this company? This action cannot be undone.',
@@ -61,41 +70,35 @@ export class ManageCompanyComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.companyService.deleteCompany(id)
-          .subscribe(
-            (data: any) => {
-              console.log('Company deleted successfully');
-              Swal.fire(
-                'Deleted!',
-                'The company has been deleted.',
-                'success'
-              );
-              this.fetchAllCompanys(); // Refresh the company list
-            },
-            (error) => {
-              console.error('Error deleting company:', error);
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the company.',
-                'error'
-              );
-            }
-          );
+        this.companyService.deleteCompany(id).subscribe(
+          (data: any) => {
+            console.log('Company deleted successfully');
+            Swal.fire('Deleted!', 'The company has been deleted.', 'success');
+            this.fetchAllCompanys(); // Refresh the company list
+          },
+          (error) => {
+            console.error('Error deleting company:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the company.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
-  
 }
 
 class CompanyDetails {
-  id!:number;
+  id!: number;
   companyName!: string;
   companyEmail!: string;
-  status!:number;
-  jobRole!:string;
-  numOfHead!:number;
-  numOfManagers!:number;
-  numOfOfficers!:number;
-  numOfCustomerOfficers!:number;
-  numOfCenters!:number;
+  status!: number;
+  jobRole!: string;
+  numOfHead!: number;
+  numOfManagers!: number;
+  numOfOfficers!: number;
+  numOfCustomerOfficers!: number;
+  numOfCenters!: number;
 }

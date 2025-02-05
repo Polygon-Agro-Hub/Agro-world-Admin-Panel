@@ -7,7 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface CollectionCenter {
   id: number;
@@ -29,10 +29,11 @@ interface CollectionCenter {
     DropdownModule,
     HttpClientModule,
     NgxPaginationModule,
-    FormsModule
+    FormsModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './collection-all-view.component.html',
-  styleUrls: ['./collection-all-view.component.css'] // Fixed typo from styleUrl to styleUrls
+  styleUrls: ['./collection-all-view.component.css'], // Fixed typo from styleUrl to styleUrls
 })
 export class CollectionAllViewComponent implements OnInit {
   collectionObj!: CollectionCenter[];
@@ -49,7 +50,7 @@ export class CollectionAllViewComponent implements OnInit {
   constructor(
     private router: Router,
     private collectionService: CollectionCenterService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -71,9 +72,14 @@ export class CollectionAllViewComponent implements OnInit {
   //   );
   // }
 
-  fetchAllCollectionCenter(page: number = this.page, limit: number = this.itemsPerPage, searchItem?: string) {
+  fetchAllCollectionCenter(
+    page: number = this.page,
+    limit: number = this.itemsPerPage,
+    searchItem?: string
+  ) {
     this.isLoading = true;
-    this.collectionService.getAllCollectionCenterPage(page, limit, searchItem)
+    this.collectionService
+      .getAllCollectionCenterPage(page, limit, searchItem)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -141,18 +147,19 @@ export class CollectionAllViewComponent implements OnInit {
     });
   }
 
-
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage); // Include itemsPerPage
   }
 
-
   searchPlantCareUsers() {
     this.page = 1;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage, this.searchItem);
+    this.fetchAllCollectionCenter(
+      this.page,
+      this.itemsPerPage,
+      this.searchItem
+    );
   }
-
 
   clearSearch(): void {
     this.searchItem = '';
@@ -160,7 +167,7 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   navigateEdit(id: number) {
-    this.router.navigate([`/collection-hub/update-collection-center/${id}`])
+    this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
   }
 }
 

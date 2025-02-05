@@ -1,46 +1,57 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environment/environment';
-
-
-
-
-
-
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-collectiveofficers-personal',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './collectiveofficers-personal.component.html',
   styleUrls: ['./collectiveofficers-personal.component.css'],
 })
 export class CollectiveofficersPersonalComponent implements OnInit {
-  
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   personalData: Personal = new Personal();
-  
- 
-  collectionCenterData: CollectionCenter[] = []
-  CompanyData: Company[] = []
-  collectionManagerData: CollectionManager[] = []
+
+  collectionCenterData: CollectionCenter[] = [];
+  CompanyData: Company[] = [];
+  collectionManagerData: CollectionManager[] = [];
   itemId: number | null = null;
   isLoading = false;
-  selectedFileName!: string
+  selectedFileName!: string;
   selectedImage: string | ArrayBuffer | null = null;
-  lastID!: string
-  UpdatelastID!: string
-  selectJobRole!: string
-  upateEmpID!: string
+  lastID!: string;
+  UpdatelastID!: string;
+  selectJobRole!: string;
+  upateEmpID!: string;
   empType!: string;
 
   districts = [
@@ -70,8 +81,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     { name: 'Trincomalee', province: 'Eastern' },
     { name: 'Vavuniya', province: 'Northern' },
   ];
-  
-  
 
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   languagesTouched: boolean = false;
@@ -84,7 +93,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router,
+    private router: Router
   ) {}
 
   selectedLanguages: string[] = [];
@@ -95,7 +104,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       if (this.personalData.languages) {
         // Add the language if it's not already in the string
         if (!this.personalData.languages.includes(lang)) {
-          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
+          this.personalData.languages += this.personalData.languages
+            ? `,${lang}`
+            : lang;
         }
       } else {
         this.personalData.languages = lang;
@@ -115,8 +126,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     console.log(this.personalData); // Logs the personal data with updated languages
     console.log('hii', this.personalData.empType);
 
-    
-  
     // Show a confirmation dialog before proceeding
     Swal.fire({
       title: 'Are you sure?',
@@ -125,30 +134,39 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes, create it!',
       cancelButtonText: 'No, cancel',
-      reverseButtons: true
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         // Proceed with submission if user clicks 'Yes'
-        this.collectionOfficerService.createCollectiveOfficer(this.personalData, this.selectedImage).subscribe(
-          (res: any) => {
-            this.officerId = res.officerId;
-            this.errorMessage = '';
-  
-            Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
-            this.router.navigate(['/steckholders/collective-officer']);
-          },
-          (error: any) => {
-            this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
-            Swal.fire('Error', this.errorMessage, 'error');
-          }
-        );
+        this.collectionOfficerService
+          .createCollectiveOfficer(this.personalData, this.selectedImage)
+          .subscribe(
+            (res: any) => {
+              this.isLoading = true;
+              this.officerId = res.officerId;
+              this.errorMessage = '';
+
+              Swal.fire(
+                'Success',
+                'Collection Officer Created Successfully',
+                'success'
+              );
+              this.router.navigate(['/steckholders/collective-officer']);
+            },
+            (error: any) => {
+              this.isLoading = true;
+              this.errorMessage =
+                error.error.error || 'An unexpected error occurred'; // Update the error message
+              Swal.fire('Error', this.errorMessage, 'error');
+            }
+          );
       } else {
         // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
   }
-  
 
   onCancel() {
     Swal.fire({
@@ -160,62 +178,58 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/collective-officer'])
+        this.router.navigate(['/steckholders/collective-officer']);
       }
     });
   }
-  
 
-
-
-
-  nextFormCreate(page: 'pageOne' | 'pageTwo'){
+  nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.selectedPage = page;
+    if (!this.selectedImage) {
+      Swal.fire({
+        title: 'Image Required',
+        text: 'Please upload a profile picture',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      return; // This will terminate the function if no image is selected
+    }
   }
-
 
   ngOnInit(): void {
-  
-    this.getAllCollectionCetnter()
-    this.getAllCompanies()
-    this.EpmloyeIdCreate()
-
-    
+    this.getAllCollectionCetnter();
+    this.getAllCompanies();
+    this.EpmloyeIdCreate();
   }
 
-
-
   getAllCollectionCetnter() {
-    this.collectionCenterSrv.getAllCollectionCenter().subscribe(
-      (res) => {
-        this.collectionCenterData = res
-      }
-    )
+    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
+      this.collectionCenterData = res;
+    });
   }
 
   getAllCompanies() {
-    this.collectionCenterSrv.getAllCompanyList().subscribe(
-      (res) => {
-        this.CompanyData = res
-      }
-    )
+    this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res;
+    });
   }
 
   getAllCollectionManagers() {
-    this.collectionCenterSrv.getAllManagerList(this.personalData.companyId, this.personalData.centerId).subscribe(
-      (res) => {
-        this.collectionManagerData = res
-      }
-    )
+    this.collectionCenterSrv
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.collectionManagerData = res;
+      });
   }
-
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
   }
-
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -239,7 +253,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       reader.onload = (e: any) => {
         this.selectedImage = e.target.result;
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   }
 
@@ -249,7 +263,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
     this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
-  
+
     // Map job roles to their respective prefixes
     const rolePrefixes: { [key: string]: string } = {
       'Collection Center Head': 'CCH',
@@ -257,15 +271,15 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       'Customer Officer': 'CUO',
       'Collection Officer': 'COO',
     };
-  
+
     // Get the prefix based on the job role
     rolePrefix = rolePrefixes[this.personalData.jobRole];
-  
+
     if (!rolePrefix) {
       console.error(`Invalid job role: ${this.personalData.jobRole}`);
       return; // Exit if the job role is invalid
     }
-  
+
     // Fetch the last ID and assign a new Employee ID
     this.getLastID(rolePrefix)
       .then((lastID) => {
@@ -274,13 +288,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       .catch((error) => {
         console.error('Error fetching last ID:', error);
       });
-      this.personalData.companyId = currentCompanyId;
-  this.personalData.centerId = currentCenterId;
+    this.personalData.companyId = currentCompanyId;
+    this.personalData.centerId = currentCenterId;
   }
-  
-
-
-  
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -298,14 +308,13 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     });
   }
 
-
-
-
   updateProvince(event: Event): void {
     const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
     const selectedDistrict = target.value;
-    const selected = this.districts.find(district => district.name === selectedDistrict);
-    if(this.itemId === null){
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict
+    );
+    if (this.itemId === null) {
       if (selected) {
         this.personalData.province = selected.province;
       } else {
@@ -313,7 +322,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       }
     }
   }
-  
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
@@ -321,15 +329,23 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     console.log('Selected Employee Type:', this.personalData.empType);
   }
 
-
   isFormValid(): boolean {
-    if (!this.personalData.firstNameEnglish || !this.personalData.lastNameEnglish) {
+    if (
+      !this.personalData.firstNameEnglish ||
+      !this.personalData.lastNameEnglish
+    ) {
       return false;
     }
-    if (!this.personalData.email || !this.isValidEmail(this.personalData.email)) {
+    if (
+      !this.personalData.email ||
+      !this.isValidEmail(this.personalData.email)
+    ) {
       return false;
     }
-    if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+    if (
+      !this.personalData.phoneNumber01 ||
+      !this.isValidPhoneNumber(this.personalData.phoneNumber01)
+    ) {
       return false;
     }
     if (this.selectedFile && !this.validateFile(this.selectedFile)) {
@@ -337,8 +353,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
     return true;
   }
-
-
 
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -351,9 +365,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   isAtLeastOneLanguageSelected(): boolean {
-    return !!this.personalData.languages && this.personalData.languages.length > 0;
+    return (
+      !!this.personalData.languages && this.personalData.languages.length > 0
+    );
   }
-  
 
   isValidPhoneNumber(phone: string): boolean {
     const phoneRegex = /^[0-9]{9,10}$/; // Adjust based on phone number format
@@ -368,7 +383,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
 
-
   onLanguagesBlur(): void {
     this.languagesTouched = true;
   }
@@ -376,11 +390,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   onEmpTypeBlur(): void {
     this.empTypeTouched = true;
   }
-  
+
   isEmpTypeSelected(): boolean {
     return !!this.empType; // Returns true if empType is not null or undefined
   }
-  
 
   validateFile(file: File): boolean {
     if (file.size > 5000000) {
@@ -397,12 +410,18 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     return true;
   }
 
-
-
   checkFormValidity(): boolean {
-    const isFirstNameValid = !!this.personalData.firstNameEnglish && !!this.personalData.firstNameSinhala && !!this.personalData.firstNameTamil;
-    const isLastNameValid = !!this.personalData.lastNameEnglish && !!this.personalData.lastNameSinhala && !!this.personalData.lastNameTamil;
-    const isPhoneNumberValid = this.isValidPhoneNumber(this.personalData.phoneNumber01) && this.isValidPhoneNumber(this.personalData.phoneNumber02);
+    const isFirstNameValid =
+      !!this.personalData.firstNameEnglish &&
+      !!this.personalData.firstNameSinhala &&
+      !!this.personalData.firstNameTamil;
+    const isLastNameValid =
+      !!this.personalData.lastNameEnglish &&
+      !!this.personalData.lastNameSinhala &&
+      !!this.personalData.lastNameTamil;
+    const isPhoneNumberValid =
+      this.isValidPhoneNumber(this.personalData.phoneNumber01) &&
+      this.isValidPhoneNumber(this.personalData.phoneNumber02);
     const isEmailValid = this.isValidEmail(this.personalData.email);
     const isEmpTypeSelected = !!this.empType;
     const isLanguagesSelected = !!this.personalData.languages;
@@ -410,28 +429,45 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     const isCenterSelected = !!this.personalData.centerId;
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicSelected = !!this.personalData.nic;
-  
-    return isFirstNameValid && isLastNameValid && isPhoneNumberValid && isEmailValid && isEmpTypeSelected && isLanguagesSelected && isCompanySelected && isCenterSelected && isJobRoleSelected && isNicSelected;
-   
+
+    return (
+      isFirstNameValid &&
+      isLastNameValid &&
+      isPhoneNumberValid &&
+      isEmailValid &&
+      isEmpTypeSelected &&
+      isLanguagesSelected &&
+      isCompanySelected &&
+      isCenterSelected &&
+      isJobRoleSelected &&
+      isNicSelected
+    );
   }
 
-
   checkSubmitValidity(): boolean {
-    const { accHolderName, accNumber, bankName, branchName, houseNumber, streetName, city, district, companyId } = this.personalData;
-  
- 
-    const isAddressValid = !!houseNumber && !!streetName && !!city && !!district;
-  
+    const {
+      accHolderName,
+      accNumber,
+      bankName,
+      branchName,
+      houseNumber,
+      streetName,
+      city,
+      district,
+      companyId,
+    } = this.personalData;
+
+    const isAddressValid =
+      !!houseNumber && !!streetName && !!city && !!district;
+
     if (companyId === '1') {
-      const isBankDetailsValid = !!accHolderName && !!accNumber && !!bankName && !!branchName;
+      const isBankDetailsValid =
+        !!accHolderName && !!accNumber && !!bankName && !!branchName;
       return isBankDetailsValid && isAddressValid;
     } else {
       return isAddressValid;
     }
   }
-  
-  
-
 }
 
 class Personal {
@@ -439,7 +475,7 @@ class Personal {
   empId!: string;
   centerId!: number;
   irmId!: number;
-  empType!: string ;
+  empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;
   firstNameTamil!: string;
@@ -462,35 +498,26 @@ class Personal {
   province!: string;
   country: string = 'Sri Lanka';
   languages: string = '';
-  companyId! : any;
+  companyId!: any;
   image!: any;
   accHolderName!: any;
   accNumber!: any;
   bankName!: string;
   branchName!: string;
-
-  
 }
-
-
-
-
 
 class CollectionCenter {
-  id!: number
-  centerName!: string
-
+  id!: number;
+  centerName!: string;
 }
 
-
 class CollectionManager {
-  id!: number
-  firstNameEnglish!: string
-  lastNameEnglish!: string
+  id!: number;
+  firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }
 
 class Company {
-  id!: number
-  companyNameEnglish!: string
-
+  id!: number;
+  companyNameEnglish!: string;
 }

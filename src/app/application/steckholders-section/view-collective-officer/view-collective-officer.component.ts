@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
 
 interface CollectionOfficers {
@@ -22,7 +22,7 @@ interface CollectionOfficers {
   lastNameEnglish: string;
   phoneNumber01: string;
   companyNameEnglish: string;
-  empId : string;
+  empId: string;
   nic: string;
   status: string;
   created_at: string;
@@ -38,8 +38,8 @@ interface CollectionOfficers {
     HttpClientModule,
     NgxPaginationModule,
     FormsModule,
-    LoadingSpinnerComponent
-],
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-collective-officer.component.html',
   styleUrls: ['./view-collective-officer.component.css'],
 })
@@ -50,28 +50,33 @@ export class ViewCollectiveOfficerComponent {
   itemsPerPage: number = 10;
   searchNIC: string = '';
   isPopupVisible = false;
-
   status!: Company[];
   statusFilter: any = '';
 
-  companyArr: Company[] = []
+  companyArr: Company[] = [];
   isLoading = false;
 
   constructor(
     private router: Router,
     private collectionService: CollectionService,
     private tokenService: TokenService
-
-  ) { }
+  ) {}
 
   fetchAllCollectionOfficer(
     page: number = 1,
     limit: number = this.itemsPerPage
   ) {
+    this.isLoading = true;
     this.collectionService
-      .fetchAllCollectionOfficer(page, limit, this.searchNIC, this.statusFilter?.id)
+      .fetchAllCollectionOfficer(
+        page,
+        limit,
+        this.searchNIC,
+        this.statusFilter?.id
+      )
       .subscribe(
         (response) => {
+          this.isLoading = false;
           console.log(response);
 
           this.collectionOfficers = response.items;
@@ -89,7 +94,7 @@ export class ViewCollectiveOfficerComponent {
 
   ngOnInit() {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-    this.getAllcompany()
+    this.getAllcompany();
   }
 
   onPageChange(event: number) {
@@ -102,7 +107,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   deleteCollectionOfficer(id: number) {
-    const token =  this.tokenService.getToken();
+    const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
       return;
@@ -150,16 +155,15 @@ export class ViewCollectiveOfficerComponent {
     });
   }
 
- 
-
-
   editCollectionOfficer(id: number) {
-    this.router.navigate([`steckholders/collective-officer/personal-edit/${id}`]);
+    this.router.navigate([
+      `steckholders/collective-officer/personal-edit/${id}`,
+    ]);
   }
 
   openPopup(item: any) {
     this.isPopupVisible = true;
-  
+
     // HTML structure for the popup
     const tableHtml = `
       <div class="container mx-auto">
@@ -173,7 +177,7 @@ export class ViewCollectiveOfficerComponent {
         </div>
       </div>
     `;
-  
+
     Swal.fire({
       html: tableHtml,
       showConfirmButton: false, // Hide default confirm button
@@ -187,7 +191,6 @@ export class ViewCollectiveOfficerComponent {
             this.isLoading = true;
             this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
               (res) => {
-                
                 this.isLoading = false;
                 if (res.status) {
                   Swal.fire({
@@ -220,7 +223,7 @@ export class ViewCollectiveOfficerComponent {
               }
             );
           });
-  
+
         // Handle the "Reject" button click
         document
           .getElementById('rejectButton')
@@ -264,7 +267,6 @@ export class ViewCollectiveOfficerComponent {
       },
     });
   }
-  
 
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;
@@ -277,29 +279,25 @@ export class ViewCollectiveOfficerComponent {
   }
 
   getAllcompany() {
-    this.collectionService.getCompanyNames().subscribe(
-      (res) => {
-        console.log("company:", res);
-        this.companyArr = res
-      }
-    )
+    this.collectionService.getCompanyNames().subscribe((res) => {
+      console.log('company:', res);
+      this.companyArr = res;
+    });
   }
 
-  onSearch(){
+  onSearch() {
     console.log();
-    
+
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
-  offSearch(){
-    this.searchNIC =''
+  offSearch() {
+    this.searchNIC = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
-
 }
-
 
 class Company {
   id!: string;
-  companyNameEnglish!: string
+  companyNameEnglish!: string;
 }

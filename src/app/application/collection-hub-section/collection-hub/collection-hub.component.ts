@@ -53,7 +53,7 @@ export class CollectionHubComponent {
   }
 
   downloadTemplate1() {
-    const apiUrl = 'http://localhost:3000/api/market-price/download-crop-data';
+    const apiUrl = `${environment.API_URL}market-price/download-crop-data`;
 
     // Trigger the download
     fetch(apiUrl, {

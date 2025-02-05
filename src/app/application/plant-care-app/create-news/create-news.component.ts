@@ -246,7 +246,6 @@ export class CreateNewsComponent {
     formData.append('status', this.createNewsObj.status);
     formData.append('publishDate', this.createNewsObj.publishDate);
     formData.append('expireDate', this.createNewsObj.expireDate);
-    formData.append('createdBy', this.createNewsObj.createdBy);
     if (this.selectedFile) {
       const allowedTypes = ['image/jpeg', 'image/png']; // Allowed MIME types
 

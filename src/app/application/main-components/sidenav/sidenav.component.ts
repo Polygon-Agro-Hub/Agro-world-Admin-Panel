@@ -85,7 +85,7 @@ export class SidenavComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           // Redirect to the login page after confirmation
-          this.router.navigateByUrl('/login');
+          this.router.navigateByUrl('admin/login');
         }
       });
     }

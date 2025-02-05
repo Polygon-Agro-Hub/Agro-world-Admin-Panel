@@ -121,7 +121,7 @@ export class ViewCropTaskComponent implements OnInit {
     }).then((result)=>{
       if (result.isConfirmed) {
         const uid = null;
-        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${uid}`])
+        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`])
       }
     })
 

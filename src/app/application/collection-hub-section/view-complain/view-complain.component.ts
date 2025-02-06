@@ -216,7 +216,7 @@ export class ViewComplainComponent implements OnInit {
                     title: 'Success',
                     text: 'Market Price updated successfully!',
                   });
-                 
+                  this.fetchAllComplain(this.page, this.itemsPerPage);
                   
                 },
                 (error) => {
@@ -227,6 +227,7 @@ export class ViewComplainComponent implements OnInit {
                     title: 'Unsuccessful',
                     text: 'Error updating news',
                   });
+                  this.fetchAllComplain(this.page, this.itemsPerPage);
                 }
               );
           }

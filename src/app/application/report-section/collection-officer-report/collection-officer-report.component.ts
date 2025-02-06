@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CollectionService } from '../../../services/collection.service';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 interface OngoingCultivationItem {
   id: number;
@@ -31,7 +32,8 @@ interface OngoingCultivationItem {
     NgxPaginationModule,
     DropdownModule,
     FormsModule,
-  ],
+    LoadingSpinnerComponent
+],
   templateUrl: './collection-officer-report.component.html',
   styleUrl: './collection-officer-report.component.css',
 })
@@ -42,6 +44,7 @@ export class CollectionOfficerReportComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchNIC: string = '';
+  isLoading = false;
 
   constructor(
     private collectionoOfficer: CollectionService,
@@ -53,6 +56,7 @@ export class CollectionOfficerReportComponent {
   }
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
     this.collectionoOfficer
       .fetchAllCollectionOfficerStatus(page, limit, this.searchNIC,'')
       .subscribe(
@@ -60,11 +64,13 @@ export class CollectionOfficerReportComponent {
           this.ongoingCultivation = response.items;
           this.totalItems = response.total;
           console.log(this.ongoingCultivation)
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
           if (error.status === 401) {
           }
+          this.isLoading = false;
         }
       );
   }

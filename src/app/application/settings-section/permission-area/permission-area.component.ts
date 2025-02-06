@@ -234,7 +234,7 @@ export class PermissionAreaComponent {
         .subscribe({
           next: (response: any) => {
             if (response.status) {
-              console.log('Role feature created successfully:', response);
+              console.log('Give Permission successfully:', response);
               this.RoleFeatureList.push({
                 feature_id: featureId,
                 position_id: positionId,
@@ -245,7 +245,7 @@ export class PermissionAreaComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: 'Role feature created successfully!',
+                detail: 'Give Permission successfully!',
                 life: 3000,
               });
             }
@@ -257,7 +257,7 @@ export class PermissionAreaComponent {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: 'Failed to create role feature. Please try again.',
+              detail: 'Failed to Give Permission. Please try again.',
               life: 3000,
             });
           },
@@ -288,7 +288,7 @@ export class PermissionAreaComponent {
           )
           .subscribe({
             next: (response: any) => {
-              console.log('Role feature deleted successfully:', response);
+              console.log('Give Permission deleted successfully:', response);
 
               // Remove the deleted feature from the list
               this.RoleFeatureList = this.RoleFeatureList.filter(
@@ -299,7 +299,7 @@ export class PermissionAreaComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Deleted',
-                detail: 'Role feature removed successfully!',
+                detail: 'Give Permission removed successfully!',
                 life: 2000,
               });
             },

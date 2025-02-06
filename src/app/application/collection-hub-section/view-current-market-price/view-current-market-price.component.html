@@ -1,80 +1,137 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/collection-hub'">
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  style="min-width: 1200px"
+>
+  <button
+    class="mb-5 text-textLight dark:text-textDark"
+    onclick="window.location.href='/collection-hub'"
+  >
     <i class="fa-solid fa-arrow-left"></i>
     Back
-</button>
-<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  </button>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
     <div class="flex justify-end items-center">
-        <h3 class="text-xl font-normal text-center text-textLight dark:text-textDark">{{currentDate}}</h3>
+      <h3
+        class="text-xl font-normal text-center text-textLight dark:text-textDark"
+      >
+        {{ currentDate }}
+      </h3>
     </div>
     <div class="flex justify-center items-center mb-2">
-        <h2 class="text-2xl font-normal text-center text-textLight dark:text-textDark">Current Market Prices</h2>
+      <h2
+        class="text-2xl font-normal text-center text-textLight dark:text-textDark"
+      >
+        Current Market Prices
+      </h2>
     </div>
     <!-- <div class="flex justify-center items-center mb-8">
         <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
     </div> -->
 
     <div class="flex flex-row my-5">
-        <div>
-            <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-                [options]="crops" optionLabel="cropNameEnglish" [(ngModel)]="selectedCrop" [showClear]="true"
-                placeholder="Crop" (onChange)="applyFiltersCrop()" />
-        </div>
+      <div>
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          [options]="crops"
+          optionLabel="cropNameEnglish"
+          [(ngModel)]="selectedCrop"
+          [showClear]="true"
+          placeholder="Crop"
+          (onChange)="applyFiltersCrop()"
+        />
+      </div>
 
-        <div class="mx-6">
-            <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-                [options]="grades" optionLabel="Vgrade" [(ngModel)]="selectedGrade" [showClear]="true"
-                placeholder="Grade" (onChange)="applyFiltersGrade()" />
-        </div>
-        
+      <div class="mx-6">
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          [options]="grades"
+          optionLabel="Vgrade"
+          [(ngModel)]="selectedGrade"
+          [showClear]="true"
+          placeholder="Grade"
+          (onChange)="applyFiltersGrade()"
+        />
+      </div>
     </div>
 
     <!-- <div *ngIf="!hasData" class="text-center py-8">
     <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
   </div> -->
 
-
     <div class="overflow-x-auto">
-        <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
-        <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
-            <thead>
-                <tr>
-                    <th class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg">
-                        Crop Name
-                    </th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
-                        Variety
-                    </th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
-                        Qulity
-                    </th>
-                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
-                        Price ( per 1 Kg )
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of market     | paginate
-                : {
-                    itemsPerPage: itemsPerPage,
-                    currentPage: page,
-                    totalItems: totalItems
-                  }">
+      <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
+      >
+        <thead>
+          <tr>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
+            >
+              Crop Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
+            >
+              Variety
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
+            >
+              Qulity
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
+            >
+              Price ( per 1 Kg )
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+            *ngFor="
+              let item of market
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    }
+            "
+          >
+            <td class="py-3 text-textLight dark:text-textDark">
+              {{ item.cropName }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.varietyName }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.grade }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.price }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-                    <td class="py-3 text-textLight dark:text-textDark">{{item.cropName}}</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.varietyName}}</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.grade}}</td>
-                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{item.price}}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="my-6">
-            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-                [screenReaderCurrentLabel]="'Youre on page'">
-            </pagination-controls>
-        </div>
+      <div class="my-6">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
     </div>
+  </div>
 </div>

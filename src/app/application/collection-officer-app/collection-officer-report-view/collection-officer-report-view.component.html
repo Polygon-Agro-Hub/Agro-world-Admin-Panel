@@ -1,9 +1,15 @@
+
+
 <button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/reports/collective-officer-report'">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 
-<div #contentToConvert>
+
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
+
+<div #contentToConvert class="min-w-[1100px]">
 <div class="flex justify-between items-center mb-8">
   <div class="flex items-center">
     <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{this.name}}'s Report</h2>
@@ -65,10 +71,12 @@
 
 
 </div>
-<div class="flex justify-center">
+<div class="flex justify-center min-w-[1100px]">
   <button (click)="downloadPDF()" class="bg-[#3980C0] hover:bg-[#2b6293] text-white font-bold py-2 px-4 rounded">
     Download PDF
   </button>
 </div>
 
-<div class="h-[25px]"></div>
+<div class="h-[25px] min-w-[1100px]"></div>
+
+</div>

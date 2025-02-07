@@ -5,7 +5,8 @@
     Back
 </button>
 
-<div class="mx-auto py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+<div class="mx-auto min-w-[1200px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
     <!-- From Date Input (Label and Input on the Same Line) -->
     <div class="flex items-center gap-2">
       <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
@@ -52,14 +53,15 @@
       </button>
     </div>
   </div>
+
   
   
   
 
-<div class="h-[20px]"></div>
+<div class="h-[20px] min-w-[1200px]"></div>
 
 
-<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg rounded-lg"  *ngIf="go">
+<div class="mx-auto min-w-[1200px] p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"  *ngIf="go">
     <!-- Date Range Filter -->
     
   
@@ -153,12 +155,17 @@
 
   <div
   *ngIf="!go"
-  class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
+  class="mx-auto min-w-[1200px] p-28 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
 >
   <i class="fa-solid fa-folder-minus text-4xl text-gray-500 mb-4"></i>
   <p class="text-sm dark:text-textDark text-gray-600">-- No Data Available --</p>
 </div>
 
+
+
+
+
+</div>
   
 
 

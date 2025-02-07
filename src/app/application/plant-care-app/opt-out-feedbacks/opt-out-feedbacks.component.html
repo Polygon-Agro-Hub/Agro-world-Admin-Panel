@@ -7,8 +7,11 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
+
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
 <div
-  class="mb-10 p-6 bg-white rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x"
+  class="mb-10 p-6 min-w-[1200px] bg-white rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x"
 >
   <!-- Total Deleted Accounts -->
   <div class="flex items-center justify-center w-full">
@@ -127,7 +130,7 @@
 </div>
 
 <div
-  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
 >
   <div class="flex justify-between items-center mb-8 w-full">
     <div class="overflow-x-auto w-full">
@@ -171,7 +174,7 @@
         <tbody>
           <tr *ngFor="let item of feedbacks; let i = index">
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ i + 1 }}
+              {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.firstName }}

@@ -1,8 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
-  style="min-width: 1200px"
->
+
   <button
     class="mb-5 text-textLight dark:text-textDark"
     onclick="window.location.href='/plant-care'"
@@ -13,8 +10,10 @@
 
   <p class="text-xl my-8 text-textLight dark:text-textDark">Farmer List</p>
 
+  <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
   <div
-    class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1100px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-end items-center mb-8">
       <div class="flex justify-center items-end mr-8">
@@ -190,3 +189,4 @@
     </div>
   </div>
 </div>
+

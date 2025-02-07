@@ -1,3 +1,4 @@
+
 <button
   class="mb-5 text-textLight dark:text-textDark"
   onclick="history.back()"
@@ -5,8 +6,12 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
+
+
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
 <div
-  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
 >
   <div class="text-gray-500 dark:text-textDark">Date: {{ todayDate }}</div>
   <div class="flex justify-between items-center mb-8 mt-5">
@@ -265,7 +270,7 @@
   </div>
 </div>
 
-<div class="flex flex-col justify-center">
+<div class="flex flex-col justify-center min-w-[1200px]">
   <div class="flex justify-center">
     <button
       (click)="downloadPDF()"
@@ -277,3 +282,5 @@
     </button>
   </div>
 </div>
+
+

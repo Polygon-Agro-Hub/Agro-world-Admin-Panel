@@ -28,12 +28,10 @@
   Add New
 </button>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
-  style="min-width: 1200px"
->
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
   <div
-    class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -96,7 +94,7 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="py-3 text-textLight dark:text-textDark">{{ i + 1 }}</td>
+            <td class="py-3 text-textLight dark:text-textDark">{{ (page - 1) * itemsPerPage + i + 1 }}</td>
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.cropNameEnglish }}
             </td>

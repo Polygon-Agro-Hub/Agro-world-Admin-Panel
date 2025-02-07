@@ -24,8 +24,11 @@
   </svg>
   Add New
 </button>
+
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
 <div
-  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
 >
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
@@ -153,7 +156,7 @@
       <tbody>
         <tr *ngFor="let item of collectionObj; let i = index">
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ i + 1 }}
+            {{ (page - 1) * itemsPerPage + i + 1 }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ item.regCode }}
@@ -211,4 +214,5 @@
     [screenReaderCurrentLabel]="'Youre on page'"
   >
   </pagination-controls>
+</div>
 </div>

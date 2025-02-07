@@ -82,6 +82,7 @@ import { CollectionCenterViewComplainComponent } from './application/collection-
 import { SalesTargetComponent } from './application/sales-dash-section/sales-target/sales-target.component';
 import { RoleSelectionComponent } from './application/settings-section/role-selection/role-selection.component';
 import { PermissionAreaComponent } from './application/settings-section/permission-area/permission-area.component';
+import { PlatCareDashbordComponent } from './application/plant-care-app/plant-care-dashbord/dashbord/plat-care-dashbord.component';
 
 export const routes: Routes = [
   {
@@ -106,8 +107,9 @@ export const routes: Routes = [
       {
         path: 'plant-care',
         children: [
+          { path: '', component: PlatCareDashbordComponent },
           {
-            path: '',
+            path: 'action',
             component: PlantcareComponent,
           },
           {

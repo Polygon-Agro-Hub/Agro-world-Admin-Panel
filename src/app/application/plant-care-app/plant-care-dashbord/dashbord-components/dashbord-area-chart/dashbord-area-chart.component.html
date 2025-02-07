@@ -1,0 +1,44 @@
+<div
+  class="flex flex-col p-10 items-center justify-center bg-white rounded-lg shadow-lg text-black h-[450px]"
+>
+  <div class="flex h[20%] w-[100%] items-center">
+    <div class="w-[40%]">
+      <h3 class="mb-5 text-lg font-semibold">Statistics</h3>
+    </div>
+    <div class="w-[60%] flex items-center justify-end">
+      <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path
+            d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+          />
+        </svg>
+      </i>
+
+      <span class="mr-5">Filter by</span>
+
+      <div class="mr-5">
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          [checkmark]="true"
+          optionLabel="name"
+          [showClear]="true"
+          placeholder="Select a Status"
+        />
+      </div>
+
+      <!-- <div>
+                
+                <input [(ngModel)]="createdDateFilter" (change)="applyFilters()" id="createdDateFilter" type="date"
+                    class="border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]" />
+            </div> -->
+    </div>
+  </div>
+  <div class="flex items-end w-[100%] h-[80%]">
+    <p-chart
+      class="h-auto w-[100%]"
+      type="bar"
+      [data]="data"
+      [options]="options"
+    ></p-chart>
+  </div>
+</div>

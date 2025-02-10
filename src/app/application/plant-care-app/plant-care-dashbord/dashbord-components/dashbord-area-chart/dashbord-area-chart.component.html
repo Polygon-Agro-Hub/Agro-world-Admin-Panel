@@ -1,11 +1,11 @@
 <div
-  class="flex flex-col p-10 items-center justify-center bg-white rounded-lg shadow-lg text-black h-[450px]"
+  class="flex flex-col p-5 sm:p-10 items-center justify-center bg-white rounded-lg shadow-lg text-black h-auto sm:h-[450px] w-full max-w-full"
 >
-  <div class="flex h[20%] w-[100%] items-center">
-    <div class="w-[40%]">
-      <h3 class="mb-5 text-lg font-semibold">Statistics</h3>
+  <div class="flex h-auto sm:h-[20%] w-full items-center">
+    <div class="w-full sm:w-[40%]">
+      <h3 class="mb-5 text-lg sm:text-xl font-semibold">Statistics</h3>
     </div>
-    <div class="w-[60%] flex items-center justify-end">
+    <div class="w-full sm:w-[60%] flex items-center justify-end">
       <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
@@ -14,7 +14,7 @@
         </svg>
       </i>
 
-      <span class="mr-5">Filter by</span>
+      <span class="mr-5 text-xs sm:text-base">Filter by</span>
 
       <div class="mr-5">
         <p-dropdown
@@ -25,17 +25,12 @@
           placeholder="Select a Status"
         />
       </div>
-
-      <!-- <div>
-                
-                <input [(ngModel)]="createdDateFilter" (change)="applyFilters()" id="createdDateFilter" type="date"
-                    class="border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]" />
-            </div> -->
     </div>
   </div>
-  <div class="flex items-end w-[100%] h-[80%]">
+
+  <div class="flex items-end w-full sm:w-full h-auto sm:h-[80%]">
     <p-chart
-      class="h-auto w-[100%]"
+      class="h-auto w-full sm:w-full"
       type="bar"
       [data]="data"
       [options]="options"

@@ -35,6 +35,7 @@ export class UserBulkUploadComponent {
   successMessage: string = '';
   isLoading = false;
    existingUsers: ExistingUser[] = [];
+   duplicateEntries: ExistingUser[] = [];
    
   constructor(private http: HttpClient, private plantcareUsersService: PlantcareUsersService, private router: Router) {}
 
@@ -156,7 +157,62 @@ export class UserBulkUploadComponent {
             confirmButtonText: 'Close & Go Back',
           });
           
-        } else {
+        } else if(response.existingUsers){
+
+          this.downloadExcel(response.duplicateEntries, 'duplication_entries.xlsx');
+          this.duplicateEntries = response.duplicateEntries;
+
+          Swal.fire({
+            icon: 'warning',
+            title: 'Duplication Entries!',
+            html: `
+            <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
+             <br/>
+            <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}<p/>
+              
+              <br/>
+              <hr></hr>
+              <br/>
+              <p style="text-align: right;">File with duplicate entries users downloaded.</p>
+              <br/>
+              <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
+                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
+                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
+                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${this.duplicateEntries.map(user => `
+                    <tr>
+                      <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
+                      <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
+                       <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+                      <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+              <br/>
+              <p style="text-align: left;">Successfully added <b>${response.newUsersInserted}</b> new users.</p>
+              <p style="text-align: left;">Found <b>${response.duplicateEntries.length}</b> existing users:</p>
+              
+            `,
+            width: '80%',
+            confirmButtonText: 'Close & Go Back',
+          });
+
+
+        }
+        
+        
+        
+        
+        
+        
+        else {
           Swal.fire({
             icon: 'success',
             title: 'Success',

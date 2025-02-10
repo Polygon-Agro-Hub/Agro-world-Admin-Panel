@@ -217,6 +217,10 @@ export class EditPlantcareUsersComponent implements OnInit {
                 this.router.navigate(['/steckholders/farmers'])
               });
               this.loadUserData(this.itemId!);
+              this.userForm.reset();
+              this.imagePreview = '';
+              this.selectedImage = null;
+              this.itemId = null;
             },
             (error) => {
               this.isLoading = false;
@@ -226,6 +230,7 @@ export class EditPlantcareUsersComponent implements OnInit {
                 'There was an error updating the plant care user.',
                 'error'
               );
+              
             }
           );
       }

@@ -1,0 +1,12 @@
+.card {
+    @apply bg-white p-4 rounded-lg shadow-lg text-center;
+  }
+  
+  .title {
+    @apply text-sm font-semibold text-gray-600;
+  }
+  
+  .count {
+    @apply text-xl font-bold text-gray-900;
+  }
+  

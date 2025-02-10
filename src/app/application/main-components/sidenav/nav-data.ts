@@ -3,9 +3,22 @@ import { expand } from 'rxjs';
 
 export const navbarData = [
   {
-    RouterLink: 'steckholders',
+    RouterLink: 'steckholders/dashboard',
     icon: 'fa-solid fa-users',
     label: 'Stakeholders',
+    expanded: false,
+    children: [
+      {
+        RouterLink: '/steckholders/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashbord',
+      },
+      {
+        RouterLink: '/steckholders/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
   },
   {
     RouterLink: 'reports',
@@ -30,11 +43,6 @@ export const navbarData = [
       },
     ],
   },
-  // {
-  //     RouterLink : 'field-officer',
-  //     icon : 'fa-solid fa-user-tie',
-  //     label :  'Fieldofficers'
-  // },
   {
     RouterLink: 'collection-hub',
     icon: 'fa-solid fa-warehouse',

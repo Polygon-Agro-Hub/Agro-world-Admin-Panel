@@ -83,6 +83,7 @@ import { SalesTargetComponent } from './application/sales-dash-section/sales-tar
 import { RoleSelectionComponent } from './application/settings-section/role-selection/role-selection.component';
 import { PermissionAreaComponent } from './application/settings-section/permission-area/permission-area.component';
 import { PlatCareDashbordComponent } from './application/plant-care-app/plant-care-dashbord/dashbord/plat-care-dashbord.component';
+import { DashboardMainComponent } from './application/steckholders-section/stackholder-dashboard/dashboard-main/dashboard-main.component';
 
 export const routes: Routes = [
   {
@@ -278,7 +279,11 @@ export const routes: Routes = [
         path: 'steckholders',
         children: [
           {
-            path: '',
+            path: 'dashboard',
+            component: DashboardMainComponent,
+          },
+          {
+            path: 'action',
             component: SteckholdersComponent,
           },
           {

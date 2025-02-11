@@ -92,6 +92,12 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
 
+  {
+    path: '',
+    redirectTo: 'admin/login',
+    pathMatch: 'full',
+  },
+
   { path: 'admin/login', component: LoginComponent },
 
   {
@@ -500,13 +506,4 @@ export const routes: Routes = [
   },
 ];
 
-@NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      useHash: true,
-      initialNavigation: 'enabledBlocking',
-    }),
-  ],
-  exports: [RouterModule],
-})
 export class AppRoutingModule {}

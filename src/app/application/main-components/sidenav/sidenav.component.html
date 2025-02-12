@@ -14,18 +14,28 @@
 
 
   <ul class="sidenav-nav flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <li *ngFor="let item of navData" class="sidenav-nav-item">
-      <a [routerLink]="item.RouterLink" class="sidenav-nav-link" (click)="toggleChildren(item)" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}">
+    <li *ngFor="let item of navData" class="sidenav-nav-li" [class.active]="isParentActive(item)">
+      <a [routerLink]="item.RouterLink ? item.RouterLink : null" 
+         class="sidenav-nav-link" 
+         [routerLinkActive]="getActiveClass(item)" 
+         (click)="item.children ? $event.preventDefault() : null; toggleChildren(item)" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{exact:false}">
         <i class="sidenav-link-icon" [class]="item.icon"></i>
         <span *ngIf="isExpanded" class="sidenav-link-text">{{ item.label }}</span>
         <i *ngIf="isExpanded && item.children && !item.expanded" class="fa-solid fa-chevron-right ml-auto pr-1"></i>
         <i *ngIf="isExpanded && item.expanded && item.children" class="fa-solid fa-chevron-down ml-auto pr-1"></i>
       </a>
-
+  
       <!-- Render children -->
       <ul *ngIf="item.children && item.expanded" class="child-nav">
         <li *ngFor="let child of item.children" class="sidenav-nav-item">
-          <a [routerLink]="child.RouterLink" class="sidenav-child-link">
+          <a *ngIf="child.RouterLink"
+             [routerLink]="child.RouterLink" 
+             class="sidenav-child-link"
+             [routerLinkActive]="getActiveChildClass(child)" 
+             routerLinkActive="active" 
+             [routerLinkActiveOptions]="{exact:false}">
             <i class="child-link-icon" [class]="child.childIcon"></i>
             <span *ngIf="isExpanded" class="sidenav-link-text">{{ child.label }}</span>
           </a>
@@ -33,6 +43,9 @@
       </ul>
     </li>
   </ul>
+  
+  
+  
 
   <div class="setting-container p-4 pb-16 border-t" onclick="window.location.href='/settings/view-roles'" *ngIf="tokenService.getUserDetails().role === '1'">
 

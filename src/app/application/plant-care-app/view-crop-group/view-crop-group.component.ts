@@ -131,12 +131,12 @@ export class ViewCropGroupComponent {
 
 
   Varieties(id: number, name: any) {
-    this.router.navigate(['/plant-care/view-crop-variety'], { queryParams: { id, name } });
+    this.router.navigate(['/plant-care/action/view-crop-variety'], { queryParams: { id, name } });
   }
 
 
   editCropGroup(id: number) {
-    this.router.navigate(['/plant-care/create-crop-group'], { queryParams: { id } });
+    this.router.navigate(['/plant-care/action/create-crop-group'], { queryParams: { id } });
   }
 
   

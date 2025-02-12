@@ -80,6 +80,16 @@
     cursor: pointer;
 }
 
+
+
+.sidenav-nav-li {
+    width: 100%;
+    margin-bottom: 0.625rem;
+    background-color: transparent;
+    
+}
+
+
 .sidenav-nav-item {
     width: 100%;
     margin-bottom: 0.625rem;
@@ -184,7 +194,9 @@
     align-items: center;
     color: #8f9ec5;
     text-decoration: none;
+    border: 2px solid transparent;
     transition: all 0.3s ease;
+    
   }
   
   .sidenav-child-link:hover {
@@ -200,3 +212,43 @@
   .scrollbar-thin::-webkit-scrollbar-thumb {
     min-height: 30px;  /* Minimum height of the thumb */
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.sidenav-nav-item.active .sidenav-nav-link {
+    background-color: #FFFFFF33;
+    color: #fff;
+}
+
+.sidenav-child-link.active {
+    background-color: #03042c2d;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    border: 2px solid #d8cccc33;
+    transition: all 0.3s ease;
+}
+
+.active .sidenav-link-icon,
+.active .sidenav-link-text {
+    color: #fff;
+    font-weight: 600;
+}
+
+.sidenav-child-link.active .child-link-icon,
+.sidenav-child-link.active .child-text {
+    color: #fff;
+}

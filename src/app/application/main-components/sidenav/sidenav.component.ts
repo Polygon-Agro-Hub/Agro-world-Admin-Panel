@@ -8,13 +8,25 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { navbarData } from './nav-data';
-import { RouterModule } from '@angular/router';
+import { RouterModule, UrlTree } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+
+
+
+interface NavItem {
+  RouterLink: string | null;
+  icon: string;
+  label: string;
+  expanded?: boolean;
+  children?: NavItem[];  // children is an optional property of type NavItem array
+}
+
+
 
 @Component({
   selector: 'app-sidenav',
@@ -53,12 +65,51 @@ export class SidenavComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.screenWidth = window.innerWidth;
       this.isExpanded = this.screenWidth > 768;
+  
+      // Set expanded state for nav items based on current route
+      this.navData.forEach(item => {
+        // Check if any of the children matches the current route
+        if (item.children) {
+          item.expanded = item.children.some(child =>
+            this.router.url.includes(child.RouterLink)
+          );
+        }
+      });
+  
       this.onToggleSideNav.emit(this.isExpanded);
     }
   }
 
+  isParentActive(item: any): boolean {
+    // Check if the parent route is active
+    if (this.router.isActive(item.RouterLink, false)) {
+      return true;
+    }
+    
+    // Check for active child routes
+    if (item.children) {
+      return item.children.some((child: { RouterLink: string | UrlTree; }) => 
+        this.router.isActive(child.RouterLink, false)
+      );
+    }
+
+    return false;
+  }
+
+
+
+  getActiveClass(item: any): string {
+    return this.isParentActive(item) ? 'active' : '';
+  }
+
+
+  getActiveChildClass(child: any): string {
+    return this.router.isActive(child.RouterLink, false) ? 'active' : '';
+  }
+
+
   redirectToPage(): void {
-    this.router.navigateByUrl('/steckholders'); // Use your desired route here
+    this.router.navigateByUrl('/steckholders/dashboard'); // Use your desired route here
   }
 
   toggleSidenav(): void {
@@ -125,7 +176,11 @@ export class SidenavComponent implements OnInit {
     if (item.children) {
       item.expanded = !item.expanded;
     }
+    
   }
 
+
+ 
+  
 
 }

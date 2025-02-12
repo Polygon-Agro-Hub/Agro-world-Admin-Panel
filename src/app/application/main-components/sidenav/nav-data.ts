@@ -3,7 +3,7 @@ import { expand } from 'rxjs';
 
 export const navbarData = [
   {
-    RouterLink: 'steckholders/dashboard',
+    RouterLink: 'steckholders',
     icon: 'fa-solid fa-users',
     label: 'Stakeholders',
     expanded: false,
@@ -32,7 +32,7 @@ export const navbarData = [
     expanded: false,
     children: [
       {
-        RouterLink: '/plant-care',
+        RouterLink: '/plant-care/dashboard',
         childIcon: 'fa-solid fa-gauge',
         label: 'Dashbord',
       },

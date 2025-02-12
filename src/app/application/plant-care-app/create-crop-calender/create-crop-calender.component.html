@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="cropId === null">
-  <button onclick="window.location.href='/plant-care'" class="mb-5 text-textLight dark:text-textDark">
+  <button onclick="window.location.href='/plant-care/action'" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -148,7 +148,7 @@
 <div *ngIf="cropId != null">
 
   <div>
-    <button onclick="window.location.href='/plant-care/view-crop-calender'"
+    <button onclick="window.location.href='/plant-care/action/view-crop-calender'"
       class="mb-5 text-textLight dark:text-textDark">
       <i class="fa-solid fa-arrow-left"></i>
       Back

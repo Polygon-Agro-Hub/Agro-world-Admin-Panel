@@ -114,132 +114,140 @@ export const routes: Routes = [
       {
         path: 'plant-care',
         children: [
-          { path: '', component: PlatCareDashbordComponent },
+          { path: 'dashboard', 
+          component: PlatCareDashbordComponent 
+        },
           {
             path: 'action',
-            component: PlantcareComponent,
-          },
-          {
-            path: 'create-news',
-            component: CreateNewsComponent,
-          },
-          {
-            path: 'manage-content',
-            component: ManageContentComponent,
-          },
-          {
-            path: 'create-market-price',
-            component: CreateMarketPriceComponent,
-          },
-          {
-            path: 'manage-market-price',
-            component: ManageMarketPriceComponent,
-          },
-          {
-            path: 'create-crop-calender',
-            component: CreateCropCalenderComponent,
-          },
-          {
-            path: 'view-crop-calender',
-            component: ViewCropCalanderComponent,
-          },
-          {
-            path: 'view-crop-task/:cropId',
-            component: ViewCropTaskComponent,
-          },
-          {
-            path: 'edit-crop-task/:id',
-            component: EditTaskComponent,
-          },
-          {
-            path: 'public-forum',
-            component: PublicForumComponent,
-          },
-          {
-            path: 'ongoing-cultivation',
-            component: OngoingCultivationComponent,
-          },
-          {
-            path: 'view-crop-task-by-user',
-            component: SlaveCropCalendarComponent,
-          },
-          {
-            path: 'view-crop-task-by-user/user-task-list/edit-user-task',
-            component: UserTaskEditComponent,
-          },
-          {
-            path: 'view-crop-task-by-user/user-task-list',
-            component: UserCropCalendarComponent,
-          },
-          {
-            path: 'report-farmer-list',
-            component: ReportsFarmerListComponent,
-          },
-          {
-            path: 'report-farmer-current-assert/:userId/:name',
-            component: ReportCurrentAssertsComponent,
-          },
-          {
-            path: 'current-assets-view',
-            component: CurrentAssetsViewComponent,
-          },
-          {
-            path: 'report-farmer-current-assert/record-view',
-            component: CurrentAssetRecordComponent,
-          },
-          {
-            path: 'assets/fixed-asset-category',
-            component: FixedAssetCategoryComponent,
-          },
-          {
-            path: 'assets/fixed-asset-category/building-fixed-asset',
-            component: BuildingFixedAssetComponent,
-          },
-          {
-            path: 'assets/fixed-asset-category/land-fixed-asset',
-            component: LandFixedAssetComponent,
-          },
-          {
-            path: 'assets/fixed-asset-category/machinary&tools-fixed-asset',
-            component: MachToolsFixeedAssetsComponent,
-          },
-          {
-            path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',
-            component: AddNewCropCalanderTaskComponent,
-          },
-          {
-            path: 'add-block-words',
-            component: AddBlockWordsComponent,
-          },
-          {
-            path: 'create-crop-group',
-            component: CreateCropGroupComponent,
-          },
-          {
-            path: 'view-crop-group',
-            component: ViewCropGroupComponent,
-          },
-          {
-            path: 'create-crop-variety',
-            component: CreateVarietyComponent,
-          },
-          {
-            path: 'view-crop-variety',
-            component: ViewVarietyComponent,
-          },
-          {
-            path: 'opt-out-feedbacks',
             children: [
               {
                 path: '',
-                component: OptOutFeedbacksComponent,
+                component: PlantcareComponent,
               },
               {
-                path: 'create-feedback',
-                component: CreateFeedbackComponent,
+                path: 'create-news',
+                component: CreateNewsComponent,
               },
-            ],
+              {
+                path: 'manage-content',
+                component: ManageContentComponent,
+              },
+              {
+                path: 'create-market-price',
+                component: CreateMarketPriceComponent,
+              },
+              {
+                path: 'manage-market-price',
+                component: ManageMarketPriceComponent,
+              },
+              {
+                path: 'create-crop-calender',
+                component: CreateCropCalenderComponent,
+              },
+              {
+                path: 'view-crop-calender',
+                component: ViewCropCalanderComponent,
+              },
+              {
+                path: 'view-crop-task/:cropId',
+                component: ViewCropTaskComponent,
+              },
+              {
+                path: 'edit-crop-task/:id',
+                component: EditTaskComponent,
+              },
+              {
+                path: 'public-forum',
+                component: PublicForumComponent,
+              },
+              {
+                path: 'ongoing-cultivation',
+                component: OngoingCultivationComponent,
+              },
+              {
+                path: 'view-crop-task-by-user',
+                component: SlaveCropCalendarComponent,
+              },
+              {
+                path: 'view-crop-task-by-user/user-task-list/edit-user-task',
+                component: UserTaskEditComponent,
+              },
+              {
+                path: 'view-crop-task-by-user/user-task-list',
+                component: UserCropCalendarComponent,
+              },
+              {
+                path: 'report-farmer-list',
+                component: ReportsFarmerListComponent,
+              },
+              {
+                path: 'report-farmer-current-assert/:userId/:name',
+                component: ReportCurrentAssertsComponent,
+              },
+              {
+                path: 'current-assets-view',
+                component: CurrentAssetsViewComponent,
+              },
+              {
+                path: 'report-farmer-current-assert/record-view',
+                component: CurrentAssetRecordComponent,
+              },
+              {
+                path: 'assets/fixed-asset-category',
+                component: FixedAssetCategoryComponent,
+              },
+              {
+                path: 'assets/fixed-asset-category/building-fixed-asset',
+                component: BuildingFixedAssetComponent,
+              },
+              {
+                path: 'assets/fixed-asset-category/land-fixed-asset',
+                component: LandFixedAssetComponent,
+              },
+              {
+                path: 'assets/fixed-asset-category/machinary&tools-fixed-asset',
+                component: MachToolsFixeedAssetsComponent,
+              },
+              {
+                path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',
+                component: AddNewCropCalanderTaskComponent,
+              },
+              {
+                path: 'add-block-words',
+                component: AddBlockWordsComponent,
+              },
+              {
+                path: 'create-crop-group',
+                component: CreateCropGroupComponent,
+              },
+              {
+                path: 'view-crop-group',
+                component: ViewCropGroupComponent,
+              },
+              {
+                path: 'create-crop-variety',
+                component: CreateVarietyComponent,
+              },
+              {
+                path: 'view-crop-variety',
+                component: ViewVarietyComponent,
+              },
+              {
+                path: 'opt-out-feedbacks',
+                children: [
+                  {
+                    path: '',
+                    component: OptOutFeedbacksComponent,
+                  },
+                  {
+                    path: 'create-feedback',
+                    component: CreateFeedbackComponent,
+                  },
+                ],
+              },
+            ]
           },
+          
         ],
       },
 
@@ -290,66 +298,79 @@ export const routes: Routes = [
           },
           {
             path: 'action',
-            component: SteckholdersComponent,
-          },
-          {
-            path: 'farmers',
             children: [
               {
                 path: '',
-                component: ViewPlantcareUsersComponent,
+                component: SteckholdersComponent,
               },
-              {
-                path: 'edit-plantcare-users',
-                component: EditPlantcareUsersComponent,
-              },
-              {
-                path: 'upload-farmers',
-                component: UserBulkUploadComponent,
-              },
-            ],
-          },
 
-          {
-            path: 'admin',
-            children: [
               {
-                path: '',
-                component: AdminUsersComponent,
+                path: 'farmers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewPlantcareUsersComponent,
+                  },
+                  {
+                    path: 'edit-plantcare-users',
+                    component: EditPlantcareUsersComponent,
+                  },
+                  {
+                    path: 'upload-farmers',
+                    component: UserBulkUploadComponent,
+                  },
+                ],
               },
+    
               {
-                path: 'create-admin-user',
-                component: CreateAdminUserComponent,
-                canActivate: [AuthGuard],
+                path: 'admin',
+                children: [
+                  {
+                    path: '',
+                    component: AdminUsersComponent,
+                  },
+                  {
+                    path: 'create-admin-user',
+                    component: CreateAdminUserComponent,
+                    canActivate: [AuthGuard],
+                  },
+                ],
               },
-            ],
-          },
+    
+              {
+                path: 'collective-officer',
+                children: [
+                  {
+                    path: '',
+                    component: ViewCollectiveOfficerComponent,
+                  },
+                  {
+                    path: 'personal',
+                    component: CollectiveofficersPersonalComponent,
+                  },
+                  {
+                    path: 'personal-edit/:id',
+                    component: CollectiveofficersEditComponent,
+                  },
+                  {
+                    path: 'company',
+                    component: CollectiveofficersCompanyComponent,
+                  },
+                  {
+                    path: 'bank-details',
+                    component: CollectiveofficersBankDetailsComponent,
+                  },
+                ],
+              },
 
-          {
-            path: 'collective-officer',
-            children: [
-              {
-                path: '',
-                component: ViewCollectiveOfficerComponent,
-              },
-              {
-                path: 'personal',
-                component: CollectiveofficersPersonalComponent,
-              },
-              {
-                path: 'personal-edit/:id',
-                component: CollectiveofficersEditComponent,
-              },
-              {
-                path: 'company',
-                component: CollectiveofficersCompanyComponent,
-              },
-              {
-                path: 'bank-details',
-                component: CollectiveofficersBankDetailsComponent,
-              },
-            ],
+
+
+
+
+            ]
+
           },
+          
         ],
       },
 

@@ -15,6 +15,13 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
+
+interface Category {
+  id: number;
+  category: string;
+}
+
+
 @Component({
   selector: 'app-permission-area',
   standalone: true,
@@ -32,19 +39,25 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 })
 export class PermissionAreaComponent {
   isLoading = false;
+  featureCategoryList: any[] = [];
   positionList: any[] = [];
   FeatureList: any[] = [];
   RoleFeatureList: any[] = [];
   role_id!: number;
   createCategroyObj: CreateCategory = new CreateCategory();
+  categories: { id: number, category: string }[] = []; 
+  selectedCategory: string = ''; 
+  newCategory: string = '';
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private createCategoryService: PermissionManagerService,
+    private permissionManagerService: PermissionManagerService,
     private tokenService: TokenService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    
   ) {}
 
   ngOnInit() {
@@ -53,6 +66,7 @@ export class PermissionAreaComponent {
     this.getAllPosition();
     this.getAllFeatures();
     this.getAllRoleFeatures();
+    this.getAllfeatureCategory();
   }
 
   getAllPosition() {
@@ -81,33 +95,11 @@ export class PermissionAreaComponent {
       );
   }
 
-  // getAllFeatures() {
-  //   const token = this.tokenService.getToken();
-  //   if (!token) {
-  //     console.error('No token found');
-  //     return;
-  //   }
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`,
-  //   });
-  //   this.http
-  //     .get<any>(`${environment.API_URL}permission/get-all-features`, {
-  //       headers,
-  //     })
-  //     .subscribe(
-  //       (response) => {
-  //         this.FeatureList = response.features;
-  //         console.log(response);
-  //       },
-  //       (error) => {
-  //         console.error('Error fetching news:', error);
-  //       }
-  //     );
-  // }
+
 
   addCategory() {
-    this.createCategoryService
-      .createCategory(this.createCategroyObj)
+    this.permissionManagerService
+      .createCategory(this.createCategroyObj.category, this.selectedCategory, this.newCategory)
       ?.subscribe(
         (response) => {
           Swal.fire({
@@ -320,6 +312,55 @@ export class PermissionAreaComponent {
       }
     }
   }
+
+
+
+  onCategoryChange(event: any) {
+    console.log('Selected Category ID:', this.selectedCategory); // This will now log the string ID
+    if (this.selectedCategory !== 'add_new' && this.selectedCategory !== '') {
+      const selectedCategoryObj = this.categories.find(cat => cat.id.toString() === this.selectedCategory);
+      if (selectedCategoryObj) {
+        console.log('Selected Category:', selectedCategoryObj.category);
+      }
+    }
+  }
+
+
+  addNewCategory() {
+    if (this.newCategory.trim()) {
+      const newId = this.categories.length + 1; // You can generate an ID or use the API to add the category
+      this.categories.push({ id: newId, category: this.newCategory });
+      this.selectedCategory = newId.toString(); // Set the newly added category as selected
+      
+    }
+  }
+
+  getAllfeatureCategory() {
+    this.isLoading = true;
+
+    this.permissionManagerService.getFeatureCategories()
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response && response.featureCategories) {
+            // Map response to categories and store both id and category
+            this.categories = response.featureCategories.map((cat: Category) => ({
+              id: cat.id,
+              category: cat.category
+            }));
+          } else {
+            console.error('Invalid response structure:', response);
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error fetching categories:', error);
+        }
+      );
+  }
+
+
+  
 }
 
 export class CreateCategory {

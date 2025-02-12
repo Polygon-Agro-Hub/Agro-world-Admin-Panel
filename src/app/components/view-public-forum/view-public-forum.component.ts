@@ -98,7 +98,7 @@ export class ViewPublicForumComponent implements OnInit {
   
 
   viewUserProfile(userId: number) {
-    this.router.navigate(['/plant-care/plant-care-user-profile'], {
+    this.router.navigate(['/plant-care/action/plant-care-user-profile'], {
       queryParams: { userId },
     });
     console.log('forum U. Id', userId);

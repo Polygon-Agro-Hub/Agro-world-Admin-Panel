@@ -147,14 +147,14 @@ export class ReportsFarmerListComponent {
   }
 
   viewFixedAsset(id: number, firstName: string, lastName: string) {
-    this.router.navigate(['plant-care/assets/fixed-asset-category'], { 
+    this.router.navigate(['plant-care/action/assets/fixed-asset-category'], { 
       queryParams: { id, firstName, lastName} 
     });
   }
 
   viewCurrentAsset(id: number, fname:string, lname:string) {
     let userName = fname+" "+lname
-   this.router.navigate([`plant-care/report-farmer-current-assert/${id}/${userName}`])
+   this.router.navigate([`plant-care/action/report-farmer-current-assert/${id}/${userName}`])
   }
 
   

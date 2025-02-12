@@ -105,7 +105,7 @@ export class ViewCropTaskComponent implements OnInit {
   }
 
   editCropTask(id: string) {
-    this.router.navigate([`plant-care/edit-crop-task/${id}`]);
+    this.router.navigate([`plant-care/action/edit-crop-task/${id}`]);
   }
 
   addNewTask(cropId:string, indexId:string){
@@ -121,7 +121,7 @@ export class ViewCropTaskComponent implements OnInit {
     }).then((result)=>{
       if (result.isConfirmed) {
         const uid = null;
-        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`])
+        this.router.navigate([`plant-care/action/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`])
       }
     })
 

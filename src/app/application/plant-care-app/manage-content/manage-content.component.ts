@@ -161,7 +161,7 @@ export class ManageContentComponent implements OnInit {
   }
 
   editNews(id: number) {
-    this.router.navigate(['/plant-care/create-news'], { queryParams: { id } });
+    this.router.navigate(['/plant-care/action/create-news'], { queryParams: { id } });
   }
 
   openPopup(id: any) {

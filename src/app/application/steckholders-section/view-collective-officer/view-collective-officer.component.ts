@@ -157,7 +157,7 @@ export class ViewCollectiveOfficerComponent {
 
   editCollectionOfficer(id: number) {
     this.router.navigate([
-      `steckholders/collective-officer/personal-edit/${id}`,
+      `steckholders/action/collective-officer/personal-edit/${id}`,
     ]);
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,17 +12,16 @@ export class PermissionManagerService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  createCategory(data: any) {
-    const token = this.tokenService.getToken();
-
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-
+  createCategory(feature: any, selectedCategory: any, newCategory: any) {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.token}`,
     });
+
+    const data = {
+      feature: feature, // Pass the feature data
+      categoryId: selectedCategory, // Pass the selected category ID
+      newCategory: newCategory, // Pass the new category (if any)
+    };
 
     return this.http.post<any>(
       `${environment.API_URL}permission/create-categories`,
@@ -29,4 +29,13 @@ export class PermissionManagerService {
       { headers }
     );
   }
+
+
+
+     getFeatureCategories(): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+      });
+      return this.http.get<any>(`${this.apiUrl}permission/get-all-feture-categories`, { headers });
+    }
 }

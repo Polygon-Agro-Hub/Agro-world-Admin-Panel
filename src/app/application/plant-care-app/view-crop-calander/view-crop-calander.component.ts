@@ -13,7 +13,6 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 
-
 interface NewCropCalender {
   id: number;
   cropNameEnglish: string;
@@ -39,14 +38,18 @@ interface NewCropCalender {
 export class ViewCropCalanderComponent implements OnInit {
   newCropCalender: NewCropCalender[] = [];
   selectedCrop: any = null;
-  isLoading = true;
+  isLoading = false;
 
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  hasData: boolean = true;  
+  hasData: boolean = true;
 
-  constructor(private cropCalendarService: CropCalendarService, private http: HttpClient, private router: Router) {}
+  constructor(
+    private cropCalendarService: CropCalendarService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.fetchAllCropCalenders();
@@ -55,27 +58,24 @@ export class ViewCropCalanderComponent implements OnInit {
   fetchAllCropCalenders(page: number = 1, limit: number = this.itemsPerPage) {
     console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
-    this.cropCalendarService.fetchAllCropCalenders(page, limit)
-      .subscribe(
-        (data) => {
+    this.isLoading = true;
+    this.cropCalendarService.fetchAllCropCalenders(page, limit).subscribe(
+      (data) => {
+        this.isLoading = false;
+        this.newCropCalender = data.items;
+        this.hasData = this.newCropCalender.length > 0;
+        this.totalItems = data.total;
+      },
+      (error) => {
+        console.error('Error fetch news:', error);
+        if (error.status === 401) {
           this.isLoading = false;
-          this.newCropCalender = data.items;
-          this.hasData = this.newCropCalender.length > 0;
-          this.totalItems = data.total;
-        },
-        (error) => {
-          console.error('Error fetch news:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
         }
-      );
+      }
+    );
   }
 
-
   deleteCropCalender(id: any) {
-  
-
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop calendar item? This action cannot be undone.',
@@ -87,30 +87,26 @@ export class ViewCropCalanderComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-       
-        this.cropCalendarService.deleteCropCalender(id)
-          .subscribe(
-            (data: any) => {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'The crop calendar item has been deleted.',
-                  'success'
-                  
-                );
-                this.fetchAllCropCalenders();
-              }
-             
-            },
-            (error) => {
-              console.error('Error deleting crop calendar:', error);
+        this.cropCalendarService.deleteCropCalender(id).subscribe(
+          (data: any) => {
+            if (data) {
               Swal.fire(
-                'Error!',
-                'There was an error deleting the crop calendar.',
-                'error'
+                'Deleted!',
+                'The crop calendar item has been deleted.',
+                'success'
               );
+              this.fetchAllCropCalenders();
             }
-          );
+          },
+          (error) => {
+            console.error('Error deleting crop calendar:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the crop calendar.',
+              'error'
+            );
+          }
+        );
       }
     });
   }

@@ -15,12 +15,13 @@
 
   <ul class="sidenav-nav flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <li *ngFor="let item of navData" class="sidenav-nav-li" [class.active]="isParentActive(item)">
-      <a [routerLink]="item.RouterLink ? item.RouterLink : null" 
+      <a 
+         [routerLink]="item.children ? null : item.RouterLink" 
          class="sidenav-nav-link" 
          [routerLinkActive]="getActiveClass(item)" 
-         (click)="item.children ? $event.preventDefault() : null; toggleChildren(item)" 
+         (click)="toggleChildren(item)" 
          routerLinkActive="active" 
-         [routerLinkActiveOptions]="{exact:false}">
+         [routerLinkActiveOptions]="{exact: false}">
         <i class="sidenav-link-icon" [class]="item.icon"></i>
         <span *ngIf="isExpanded" class="sidenav-link-text">{{ item.label }}</span>
         <i *ngIf="isExpanded && item.children && !item.expanded" class="fa-solid fa-chevron-right ml-auto pr-1"></i>
@@ -35,7 +36,7 @@
              class="sidenav-child-link"
              [routerLinkActive]="getActiveChildClass(child)" 
              routerLinkActive="active" 
-             [routerLinkActiveOptions]="{exact:false}">
+             [routerLinkActiveOptions]="{exact: false}">
             <i class="child-link-icon" [class]="child.childIcon"></i>
             <span *ngIf="isExpanded" class="sidenav-link-text">{{ child.label }}</span>
           </a>
@@ -43,6 +44,7 @@
       </ul>
     </li>
   </ul>
+
   
   
   

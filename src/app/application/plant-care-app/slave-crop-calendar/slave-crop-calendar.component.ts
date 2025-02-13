@@ -8,6 +8,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 
+
 interface CultivationItems {
   id: any;
   cropName: string;
@@ -25,13 +26,17 @@ interface NewsItem {
   cultivationMethod: string;
   natureOfCultivation: string;
   cropDuration: string;
+  longitude: any;
+  latitude: any;
+  totalTasks: number;
+  completedTasks: number;
 }
 
 
 @Component({
   selector: 'app-slave-crop-calendar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule, AngularEditorModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule, AngularEditorModule, LoadingSpinnerComponent ],
   templateUrl: './slave-crop-calendar.component.html',
   styleUrl: './slave-crop-calendar.component.css'
 })
@@ -72,6 +77,14 @@ export class SlaveCropCalendarComponent {
     
   }
 
+
+  calculateProgressPercentage(totalTasks: number, completedTasks: number): number {
+    if (totalTasks === 0) {
+      return 0; // Prevent division by zero
+    }
+    return (completedTasks / totalTasks) * 100;
+  }
+  
 
 
 

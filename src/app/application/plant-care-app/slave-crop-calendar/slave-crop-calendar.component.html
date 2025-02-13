@@ -59,6 +59,16 @@
               <th
                 class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
               >
+                Progress
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              >
+                Geo Location
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              >
                 Crop Duration
               </th>
               <th
@@ -81,6 +91,29 @@
               <td class="px-4 py-3 dark:text-textDark text-center">
                 {{ item.natureOfCultivation }}
               </td>
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                <div class="flex items-center space-x-2 justify-center">
+                  <!-- Progress bar -->
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 flex-grow">
+                    <div
+                      class="bg-blue-500 h-2.5 rounded-full"
+                      [style.width.%]="calculateProgressPercentage(item.totalTasks, item.completedTasks)"
+                    ></div>
+                  </div>
+                  <!-- Percentage text -->
+                  <span class="text-sm">
+                    {{ (item.completedTasks / item.totalTasks) * 100 | number: '1.0-0' }} %
+                  </span>
+                </div>
+              </td>
+              
+              
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                <a href="https://www.google.com/maps?q={{item.longitude}},{{item.latitude}}" target="_blank">
+                  <i class="fa-solid fa-map-location-dot"></i>
+                </a>
+              </td>
+              
               <td class="px-4 py-3 dark:text-textDark text-center">
                 {{ item.cropDuration }}
               </td>

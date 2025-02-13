@@ -1,0 +1,59 @@
+<div class="p-6 bg-gray-100 min-h-screen dark:bg-tileBlack">
+    <!-- Back Button and User Profile -->
+    <div class="flex justify-between items-center mb-4 ">
+      <button class="text-gray-700 flex items-center dark:text-textDark gap-x-2" (click)="goBack()">
+        <i class="fa-solid fa-arrow-left text-[#534E4E] dark:text-textDark"></i>
+        Back
+      </button>
+      <div class="relative">
+        
+      </div>
+    </div>
+  
+    <!-- Add New Button -->
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-md mb-4 flex items-center">
+      + Add New
+    </button>
+  
+    <!-- Table -->
+    <div class="bg-white p-6 rounded-lg shadow dark:bg-tileBlack">
+      <h2 class="mb-4 text-[#534E4E] dark:text-textDark">Manage Applications</h2>
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b">
+            <th class=" py-2 font-normal text-[#5C5C5C] text-left pr-8 dark:text-textDark ">No</th>
+            <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark w-25">Application Name</th>
+            <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">No. of Categories</th>
+            <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark">View Categories</th>
+            <th class="text-left py-2"></th>
+            <th class="text-left py-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of systemApplicationsArr; let i = index" class="border-b">
+            <td class="py-2 text-left dark:text-white">{{ i + 1 }}</td>
+            <td class="py-2 vertical-align: middle text-start justify-items-center dark:text-white">{{ app.systemAppName }}</td>
+            <td class="py-2 vertical-align: middle text-center dark:text-white">{{ app.categoryCount }}</td>
+            <td class="py-2 text-center d-flex justify-content-center align-items-center dark:text-white">
+              <svg (click)="showAlert(app.systemAppId)"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   width="24" 
+                   height="24"
+                   stroke="blue"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </td>
+            <td class="py-2"><i class="fa-regular fa-pen-to-square text-[blue] "></i></td>
+            <td class="py-2"><i class="fa-solid fa-trash-can text-orange-500"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

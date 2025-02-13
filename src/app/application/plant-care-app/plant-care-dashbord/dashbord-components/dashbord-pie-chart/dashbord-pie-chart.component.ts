@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { PlantcareDashbordService } from '../../../../../services/plant-care/plantcare-dashbord.service';
 
 interface DashboardData {
   vegCultivation: number;
@@ -16,28 +15,21 @@ interface DashboardData {
   templateUrl: './dashbord-pie-chart.component.html',
   styleUrls: ['./dashbord-pie-chart.component.css'],
 })
-export class DashbordPieChartComponent {
-  dashboardData: DashboardData = {} as DashboardData;
+export class DashbordPieChartComponent implements OnChanges {
+  @Input() dashboardData: DashboardData = {} as DashboardData;
+
   data: any;
   options: any;
 
-  constructor(private dashboardService: PlantcareDashbordService) {}
-
-  ngOnInit(): void {
-    this.dashboardService.getDashboardData().subscribe((data) => {
-      const {
-        vegCultivation,
-        grainCultivation,
-        fruitCultivation,
-        mushCultivation,
-      } = data.data;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dashboardData'] && changes['dashboardData'].currentValue) {
       this.initializeChart(
-        vegCultivation,
-        grainCultivation,
-        fruitCultivation,
-        mushCultivation
+        this.dashboardData.vegCultivation,
+        this.dashboardData.grainCultivation,
+        this.dashboardData.fruitCultivation,
+        this.dashboardData.mushCultivation
       );
-    });
+    }
   }
 
   initializeChart(
@@ -49,7 +41,6 @@ export class DashbordPieChartComponent {
     const total =
       vegCultivation + grainCultivation + fruitCultivation + mushCultivation;
 
-    // Prevent division by zero
     const calculatePercentage = (value: number) =>
       total ? ((value / total) * 100).toFixed(0) : '0';
 
@@ -79,12 +70,12 @@ export class DashbordPieChartComponent {
             label: (tooltipItem: any) => {
               let dataset = tooltipItem.dataset.data;
               let index = tooltipItem.dataIndex;
-              return `${dataset[index]}%`; // Show percentage in tooltip
+              return `${dataset[index]}%`;
             },
           },
         },
       },
-      cutout: '60%', // Converts to Donut Chart
+      cutout: '60%',
     };
   }
 }

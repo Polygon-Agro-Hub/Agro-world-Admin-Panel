@@ -7,16 +7,22 @@
 </div>
 
 <div class="w-[100%]">
-  <app-dashbord-first-row />
+  <app-dashbord-first-row [dashboardData]="dashboardData" />
 </div>
 <div class="my-10 w-[100%]">
-  <app-dashbord-second-row />
+  <app-dashbord-second-row
+    [dashboardData]="dashboardData"
+    [totalCultivationCount]="totalCultivationCount"
+  />
 </div>
 <div class="flex flex-row justify-between gap-10 items-center my-10 w-[100%]">
   <div class="h-auto w-[68%]">
-    <app-dashbord-area-chart />
+    <app-dashbord-area-chart
+      [qrUsers]="dashboardData.qrUsers"
+      [allusers]="dashboardData.allusers"
+    />
   </div>
   <div class="h-auto w-[32%]">
-    <app-dashbord-pie-chart />
+    <app-dashbord-pie-chart [dashboardData]="dashboardData" />
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PlantcareDashbordService } from '../../../../../services/plant-care/plantcare-dashbord.service';
 import { CommonModule } from '@angular/common';
 
@@ -21,27 +21,27 @@ interface DashboardData {
   styleUrl: './dashbord-first-row.component.css',
 })
 export class DashbordFirstRowComponent {
-  dashboardData: DashboardData = {} as DashboardData;
+  @Input() dashboardData: DashboardData = {} as DashboardData;
 
   constructor(private dashbordService: PlantcareDashbordService) {}
 
   ngOnInit(): void {
-    this.fetchDashboardData();
+    this.dashboardData;
   }
 
-  fetchDashboardData(): void {
-    this.dashbordService.getDashboardData().subscribe(
-      (data: any) => {
-        if (data) {
-          this.dashboardData = data.data;
-          console.log(this.dashboardData);
-        } else {
-          console.warn('No data received from API.');
-        }
-      },
-      (error) => {
-        console.error('Error fetching dashboard data:', error);
-      }
-    );
-  }
+  // fetchDashboardData(): void {
+  //   this.dashbordService.getDashboardData().subscribe(
+  //     (data: any) => {
+  //       if (data && data.data) {
+  //         this.dashboardData = data.data;
+  //         console.log(this.dashboardData);
+  //       } else {
+  //         console.warn('No data received from API.');
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching dashboard data:', error);
+  //     }
+  //   );
+  // }
 }

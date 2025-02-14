@@ -11,7 +11,7 @@
     </div>
   
     <!-- Add New Button -->
-    <button class="bg-blue-600 text-white px-4 py-2 rounded-md mb-4 flex items-center">
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-md mb-4 flex items-center" (click)="addNewApp()">
       + Add New
     </button>
   
@@ -50,8 +50,8 @@
                 />
               </svg>
             </td>
-            <td class="py-2"><i class="fa-regular fa-pen-to-square text-[blue] "></i></td>
-            <td class="py-2"><i class="fa-solid fa-trash-can text-orange-500"></i></td>
+            <td class="py-2" ><i class="fa-regular fa-pen-to-square text-[blue] " (click)="editApp(app.systemAppId)"></i></td>
+            <td class="py-2" ><i class="fa-solid fa-trash-can text-orange-500" (click)="deleteApp(app.systemAppId)"></i></td>
           </tr>
         </tbody>
       </table>

@@ -290,7 +290,7 @@ deleteApp(systemAppId: number) {
 }
 
 goBack() {
-  this.router.navigate(['/complaints']);
+  this.router.navigate(['/admin/complaints']);
 }
 
 }

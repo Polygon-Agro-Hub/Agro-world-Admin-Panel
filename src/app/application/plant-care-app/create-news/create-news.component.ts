@@ -288,7 +288,7 @@ export class CreateNewsComponent {
           this.selectedFile = null;
           this.selectedImage = null;
           this.selectedLanguage = 'english';
-          this.router.navigate(['/plant-care/manage-content']);
+          this.router.navigate(['/admin/plant-care/action/manage-content']);
         },
         (error) => {
           this.isLoading = false;
@@ -473,7 +473,7 @@ export class CreateNewsComponent {
             title: 'Success',
             text: 'Market Price updated successfully!',
           });
-          this.router.navigate(['/plant-care/manage-content']);
+          this.router.navigate(['/admin/plant-care/action/manage-content']);
         },
         (error) => {
           console.error('Error updating news', error);

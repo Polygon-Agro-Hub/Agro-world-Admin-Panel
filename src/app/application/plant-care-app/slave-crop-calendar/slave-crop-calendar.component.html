@@ -109,9 +109,10 @@
               
               
               <td class="px-4 py-3 dark:text-textDark text-center">
-                <a href="https://www.google.com/maps?q={{item.longitude}},{{item.latitude}}" target="_blank">
+                <a *ngIf="item.longitude" href="https://www.google.com/maps?q={{item.longitude}},{{item.latitude}}" target="_blank">
                   <i class="fa-solid fa-map-location-dot"></i>
                 </a>
+                <span *ngIf="!item.longitude">No Data Yet</span>
               </td>
               
               <td class="px-4 py-3 dark:text-textDark text-center">

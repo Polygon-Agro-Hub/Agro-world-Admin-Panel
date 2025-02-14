@@ -115,7 +115,7 @@ export class MarketPriceBulkUploadComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage = 'Failed to upload file. Please try again.';
+          this.errorMessage = error.error.error;
           console.error('Upload error:', error);
           if (this.selectedFile) {
             this.selectedFile = null;

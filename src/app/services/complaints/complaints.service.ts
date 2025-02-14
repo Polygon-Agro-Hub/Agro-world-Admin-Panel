@@ -55,5 +55,40 @@ export class ComplaintsService {
     });
   }
 
+  addNewApplication(applicationName: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}complain/add-new-application/${applicationName}`, {
+      headers,
+    });
+  }
+
+  editApplication(systemAppId: number, applicationName: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}complain/edit-application/?systemAppId=${systemAppId}&applicationName=${applicationName}`,{
+      headers,
+    });
+  }
+
+  deleteApplicationById(systemAppId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}complain/delete-application/${systemAppId}`, {
+      headers,
+    });
+  }
+
+
 }
+
+
+
+
 

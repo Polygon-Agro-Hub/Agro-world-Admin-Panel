@@ -13,6 +13,7 @@ import { NgxColorsModule } from 'ngx-colors';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import Swal from 'sweetalert2';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-add-new-crop-calander-task',
@@ -24,6 +25,7 @@ import Swal from 'sweetalert2';
     MatFormFieldModule,
     NgxColorsModule,
     FormsModule,
+    RadioButtonModule,
   ],
   templateUrl: './add-new-crop-calander-task.component.html',
   styleUrl: './add-new-crop-calander-task.component.css',
@@ -38,6 +40,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   taskForm: FormGroup;
   cropTaskObj: Croptask = new Croptask();
+  requireImageLink: string = 'no';
 
   constructor(
     private fb: FormBuilder,

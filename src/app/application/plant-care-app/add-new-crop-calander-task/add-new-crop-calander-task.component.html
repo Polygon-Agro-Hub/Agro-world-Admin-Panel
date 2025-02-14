@@ -336,7 +336,37 @@
         </div>
       </div>
 
-      <div class="md:col-span-2 my-3 px-12">
+      <div class="flex items-center justify-between md:col-span-2 my-3 px-12">
+        <label
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Want to Add Images?</label
+        >
+        <div class="mt-1">
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              [(ngModel)]="requireImageLink"
+              [value]="'yes'"
+              formControlName="reqImages"
+              class="form-radio"
+            />
+            <span class="ml-2">Yes</span>
+          </label>
+          <label class="inline-flex items-center ml-32">
+            <input
+              type="radio"
+              [(ngModel)]="requireImageLink"
+              [value]="'no'"
+              formControlName="reqImages"
+              class="form-radio"
+            />
+            <span class="ml-2">No</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Conditional Input Field -->
+      <div *ngIf="requireImageLink === 'yes'" class="md:col-span-2 my-3 px-12">
         <label
           for="imageLink"
           class="block text-sm font-medium text-textLight dark:text-textDark"

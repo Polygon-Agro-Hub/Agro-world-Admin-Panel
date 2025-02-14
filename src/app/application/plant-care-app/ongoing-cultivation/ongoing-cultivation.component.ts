@@ -164,7 +164,7 @@ export class OngoingCultivationComponent {
 
   viewTaskByUser(cultivationId: any, userId: any) {
     if (cultivationId) {
-      this.router.navigate(['plant-care/action/view-crop-task-by-user'], { 
+      this.router.navigate(['admin/plant-care/action/view-crop-task-by-user'], { 
         queryParams: { cultivationId, userId } 
       });
       console.log('Navigating with cultivationId:', cultivationId);

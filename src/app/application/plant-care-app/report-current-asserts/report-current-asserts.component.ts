@@ -55,7 +55,7 @@ export class ReportCurrentAssertsComponent implements OnInit {
   }
 
   viewList(id: any, category: any) {
-    this.router.navigate(['plant-care/action/current-assets-view'], {
+    this.router.navigate(['admin/plant-care/action/current-assets-view'], {
       queryParams: { id, category, fullName: this.name },
     });
   }

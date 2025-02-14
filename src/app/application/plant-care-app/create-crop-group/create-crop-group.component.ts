@@ -149,7 +149,7 @@ export class CreateCropGroupComponent {
             response.message,
             'success'
           );
-          this.router.navigate(['/plant-care/view-crop-group']);
+          this.router.navigate(['/admin/plant-care/action/view-crop-group']);
         } else {
           this.isLoading = false;
           Swal.fire(
@@ -217,7 +217,7 @@ export class CreateCropGroupComponent {
                   bgColor: '',
                   fileName: ''
                 };
-                this.router.navigate(['/plant-care'])
+                this.router.navigate(['/admin/plant-care/action'])
               }
             });
           }
@@ -347,7 +347,7 @@ export class CreateCropGroupComponent {
               title: 'Success',
               text: 'Market Price updated successfully!',
             });
-            this.router.navigate(['/plant-care/view-crop-group']);
+            this.router.navigate(['/admin/plant-care/action/view-crop-group']);
           } else {
             this.isLoading = false;
             Swal.fire(

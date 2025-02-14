@@ -184,7 +184,7 @@ export class AddCollectionCenterComponent implements OnInit {
 
         if (res.status) {
           Swal.fire('Success', 'Collection Center Created Successfully', 'success');
-          this.router.navigate(['/collection-hub/view-collection-centers']);
+          this.router.navigate(['/admin/collection-hub/view-collection-centers']);
         } else {
           if (res.message === "This RegCode already exists!") {
             Swal.fire({

@@ -141,7 +141,7 @@ export class UserCropCalendarComponent {
 
 
   editCropTask(id: any) {
-    this.router.navigate(['plant-care/view-crop-task-by-user/user-task-list/edit-user-task'], { 
+    this.router.navigate(['admin/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task'], { 
       queryParams: { id } 
     });
     console.log(id);
@@ -184,7 +184,7 @@ export class UserCropCalendarComponent {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate([`plant-care/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`]);
+        this.router.navigate([`admin/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`]);
       }
     });
   }

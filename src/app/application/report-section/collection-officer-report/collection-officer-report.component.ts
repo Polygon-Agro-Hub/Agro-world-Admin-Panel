@@ -106,14 +106,14 @@ export class CollectionOfficerReportComponent {
   // }
 
   navigateToReport(id: number, name: string) {
-    this.router.navigate([`/reports/collective-officer-report/view/${id}/${name}`]);
+    this.router.navigate([`/admin/reports/collective-officer-report/view/${id}/${name}`]);
   }
 
   navigateToPaymentSlipReport(id: number, firstName : string , lastName : string, QRcode : string) {
-    this.router.navigate([`/reports/payment-slip-report/${id}`], { queryParams: { firstName, lastName, QRcode } });
+    this.router.navigate([`/admin/reports/payment-slip-report/${id}`], { queryParams: { firstName, lastName, QRcode } });
   }
 
   navigateToMonthlyReport(id : number) {
-    this.router.navigate([`/reports/collective-officer-report/monthly-report/${id}`]);
+    this.router.navigate([`/admin/reports/collective-officer-report/monthly-report/${id}`]);
   }
 }

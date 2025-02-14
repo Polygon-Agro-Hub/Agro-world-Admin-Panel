@@ -47,7 +47,7 @@ export class ManageCompanyComponent {
   }
 
   editCompany(id: number) {
-    this.router.navigate(['/collection-hub/create-company'], {
+    this.router.navigate(['/admin/collection-hub/create-company'], {
       queryParams: { id },
     });
   }

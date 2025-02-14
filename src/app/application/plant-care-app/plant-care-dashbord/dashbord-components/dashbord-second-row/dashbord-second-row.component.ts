@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { PlantcareDashbordService } from '../../../../../services/plant-care/plantcare-dashbord.service';
 
 interface DashboardData {
@@ -20,38 +20,24 @@ interface DashboardData {
   styleUrl: './dashbord-second-row.component.css',
 })
 export class DashbordSecondRowComponent implements OnInit {
-  dashboardData: DashboardData = {} as DashboardData;
-  totalCultivationCount: number = 0;
+  @Input() dashboardData: DashboardData = {} as DashboardData;
+  @Input() totalCultivationCount: number = 0;
 
   constructor(private dashbordService: PlantcareDashbordService) {}
   ngOnInit(): void {
-    this.getDashboardData();
+    // this.calculateTotalCultivation();
   }
 
-  getDashboardData() {
-    this.dashbordService.getDashboardData().subscribe(
-      (data) => {
-        console.log('This is second row ', data.data.allusers);
+  // calculateTotalCultivation(): void {
+  //   console.log('Calculating total');
 
-        this.dashboardData = data.data;
-        this.calculateTotalCultivation();
-      },
-      (error) => {
-        console.error('Error fetching dashboard data:', error);
-      }
-    );
-  }
-
-  calculateTotalCultivation(): void {
-    console.log('Calculating total');
-
-    if (this.dashboardData) {
-      this.totalCultivationCount =
-        this.dashboardData.vegCultivation +
-        this.dashboardData.grainCultivation +
-        this.dashboardData.fruitCultivation +
-        this.dashboardData.mushCultivation;
-    }
-    console.log(this.totalCultivationCount);
-  }
+  //   if (this.dashboardData) {
+  //     this.totalCultivationCount =
+  //       this.dashboardData.vegCultivation +
+  //       this.dashboardData.grainCultivation +
+  //       this.dashboardData.fruitCultivation +
+  //       this.dashboardData.mushCultivation;
+  //   }
+  //   console.log(this.totalCultivationCount);
+  // }
 }

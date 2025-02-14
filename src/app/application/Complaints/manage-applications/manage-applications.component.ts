@@ -63,19 +63,28 @@ export class ManageApplicationsComponent {
     this.complaintSrv.getComplainCategoriesByAppId(systemAppId).subscribe((res: any) => {
         console.log(res);
 
-        // Generate dynamic HTML for a properly aligned numbered list
-        const categoryList = res
-            .map((x: any, index: number) => `<tr><td>${index + 1}.</td><td class="text-start">${x.categoryEnglish}</td></tr>`)
-            .join('');
+        let htmlContent = '';
+
+        if (res.length === 0) {
+            // Show message when no complaint categories are available
+            htmlContent = `<p style="font-size: 18px; text-align: center;">No any complaint categories added.</p>`;
+        } else {
+            // Generate dynamic HTML for a properly aligned numbered list
+            const categoryList = res
+                .map((x: any, index: number) => `<tr><td>${index + 1}.</td><td class="text-start">${x.categoryEnglish}</td></tr>`)
+                .join('');
+
+            htmlContent = `<table style="margin: auto; font-size: 18px; align: justify-center;">${categoryList}</table>`;
+        }
 
         Swal.fire({
             title: 'Plant Care Complaint Categories',
-            html: `<table style="margin: auto; font-size: 18px; align: justify-center;">${categoryList}</table>`, // Centering table
-            
+            html: htmlContent,
             showConfirmButton: false,
         });
     });
 }
+
 
 goBack() {
   this.router.navigate(['/complaints']);

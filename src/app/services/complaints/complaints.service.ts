@@ -34,5 +34,26 @@ export class ComplaintsService {
     });
   }
 
+
+  getAdminComplainCategoryForCreate(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}complain/get-admin-complain-category`, {
+      headers,
+    });
+  }
+
+  AddNewComplainCategory(data:any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}complain/add-new-complaint-category`, data ,{
+      headers,
+    });
+  }
+
 }
 

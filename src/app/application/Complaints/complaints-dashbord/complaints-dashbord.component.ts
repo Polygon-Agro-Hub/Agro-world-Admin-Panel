@@ -12,11 +12,16 @@ import { FormsModule } from '@angular/forms';
 export class ComplaintsDashbordComponent {
   popupVisiblePlantCare: boolean = false;
   popupVisibleCollectionCenters: boolean = false;
+  popupVisibleCategories: boolean = false;
   togglePlantCare() {
     this.popupVisiblePlantCare = !this.popupVisiblePlantCare;
   }
 
   toggleCollectionCenters() {
     this.popupVisibleCollectionCenters = !this.popupVisibleCollectionCenters;
+  }
+
+  toggleCategories() {
+    this.popupVisibleCategories = !this.popupVisibleCategories;
   }
 }

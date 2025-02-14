@@ -84,6 +84,8 @@ import { RoleSelectionComponent } from './application/settings-section/role-sele
 import { PermissionAreaComponent } from './application/settings-section/permission-area/permission-area.component';
 import { PlatCareDashbordComponent } from './application/plant-care-app/plant-care-dashbord/dashbord/plat-care-dashbord.component';
 import { DashboardMainComponent } from './application/steckholders-section/stackholder-dashboard/dashboard-main/dashboard-main.component';
+import { ManageApplicationsComponent } from './application/Complaints/manage-applications/manage-applications.component';
+
 
 export const routes: Routes = [
   {
@@ -501,6 +503,10 @@ export const routes: Routes = [
           {
             path: 'collection-center-complains',
             component: CollectionCenterViewComplainComponent,
+          },
+          {
+            path: 'manage-applications',
+            component: ManageApplicationsComponent,
           },
         ],
       },

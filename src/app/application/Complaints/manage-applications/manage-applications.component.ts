@@ -66,24 +66,55 @@ export class ManageApplicationsComponent {
         let htmlContent = '';
 
         if (res.length === 0) {
-            // Show message when no complaint categories are available
-            htmlContent = `<p style="font-size: 18px; text-align: center;">No any complaint categories added.</p>`;
+            htmlContent = `<p class="swal-content">No any complaint categories added.</p>`;
         } else {
-            // Generate dynamic HTML for a properly aligned numbered list
             const categoryList = res
-                .map((x: any, index: number) => `<tr><td>${index + 1}.</td><td class="text-start">${x.categoryEnglish}</td></tr>`)
+                .map((x: any, index: number) => `<tr><td class="font-bold text-center">${index + 1}.</td><td class="text-start">${x.categoryEnglish}</td></tr>`)
                 .join('');
 
-            htmlContent = `<table style="margin: auto; font-size: 18px; align: justify-center;">${categoryList}</table>`;
+            htmlContent = `<table class="swal-table w-full">${categoryList}</table>`;
         }
 
         Swal.fire({
             title: 'Plant Care Complaint Categories',
             html: htmlContent,
             showConfirmButton: false,
+            didOpen: () => {
+                // Apply Tailwind styles using document.querySelector
+                const swalPopup = document.querySelector('.swal2-popup') as HTMLElement;
+                if (swalPopup) {
+                    swalPopup.classList.add('bg-gray-100', 'rounded-lg', 'shadow-lg', 'p-6', 'w-[400px]', 'dark:dark:bg-tileBlack');
+                }
+
+                const swalTitle = document.querySelector('.swal2-title') as HTMLElement;
+                if (swalTitle) {
+                    swalTitle.classList.add('text-lg', 'font-semibold', 'text-gray-800', 'dark:text-textDark');
+                }
+
+                const swalContent = document.querySelector('.swal-content') as HTMLElement;
+                if (swalContent) {
+                    swalContent.classList.add('text-gray-600', 'text-center', 'text-lg', 'dark:text-textDark');
+                }
+
+                const swalTable = document.querySelector('.swal-table') as HTMLElement;
+                if (swalTable) {
+                    swalTable.classList.add('border-collapse', 'text-lg', 'w-full', 'dark:text-textDark');
+                }
+
+                const tableRows = document.querySelectorAll('.swal-table tr');
+                tableRows.forEach(row => {
+                    row.classList.add('border-b', 'border-gray-300', 'p-2');
+                });
+
+                const tableCells = document.querySelectorAll('.swal-table td');
+                tableCells.forEach(cell => {
+                    cell.classList.add('px-4', 'py-2', 'text-gray-700', 'dark:text-textDark');
+                });
+            }
         });
     });
 }
+
 
 // swal2-input w-48 h-16 text-sm rounded-lg px-2 border border-gray-300 
 // focus:border-blue-500 focus:outline-none

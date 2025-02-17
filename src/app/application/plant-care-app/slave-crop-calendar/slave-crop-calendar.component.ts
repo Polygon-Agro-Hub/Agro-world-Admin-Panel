@@ -128,7 +128,7 @@ export class SlaveCropCalendarComponent {
 
   viewTaskByUser(cropCalendarId: any, userId : any, onCulscropID: any ) {
     if (cropCalendarId) {
-      this.router.navigate(['plant-care/action/view-crop-task-by-user/user-task-list'], { 
+      this.router.navigate(['admin/plant-care/action/view-crop-task-by-user/user-task-list'], { 
         queryParams: { cropCalendarId, userId, onCulscropID } 
       });
       console.log('Navigating with cultivationId:', cropCalendarId);

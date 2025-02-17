@@ -95,7 +95,7 @@ export class CreateFeedbackComponent {
             response.message,
             'success'
           );
-          this.router.navigate(['/plant-care/opt-out-feedbacks']);
+          this.router.navigate(['/admin/plant-care/action/opt-out-feedbacks']);
         } else {
           Swal.fire(
             'Unsuccessful',

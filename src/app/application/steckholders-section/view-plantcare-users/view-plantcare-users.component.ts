@@ -187,7 +187,7 @@ export class ViewPlantcareUsersComponent {
   // }
 
   editPlantCareUser(id: number) {
-    this.router.navigate(['/steckholders/action/farmers/edit-plantcare-users'], { queryParams: { id } });
+    this.router.navigate(['/admin/steckholders/action/farmers/edit-plantcare-users'], { queryParams: { id } });
   }
 
 

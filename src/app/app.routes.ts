@@ -84,19 +84,19 @@ import { RoleSelectionComponent } from './application/settings-section/role-sele
 import { PermissionAreaComponent } from './application/settings-section/permission-area/permission-area.component';
 import { PlatCareDashbordComponent } from './application/plant-care-app/plant-care-dashbord/dashbord/plat-care-dashbord.component';
 import { DashboardMainComponent } from './application/steckholders-section/stackholder-dashboard/dashboard-main/dashboard-main.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ManageApplicationsComponent } from './application/Complaints/manage-applications/manage-applications.component';
 import { AddComplainCategoriesComponent } from './application/Complaints/add-complain-categories/add-complain-categories.component';
 
 
 export const routes: Routes = [
   {
-    path: 'admin',
-    redirectTo: 'admin/login',
-    pathMatch: 'full',
-  },
-
-  {
     path: '',
+    redirectTo: 'admin/login',
+    pathMatch: 'full'
+  },
+  {
+    path: 'admin',
     redirectTo: 'admin/login',
     pathMatch: 'full',
   },
@@ -104,7 +104,7 @@ export const routes: Routes = [
   { path: 'admin/login', component: LoginComponent },
 
   {
-    path: '',
+    path: 'admin',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
@@ -257,6 +257,7 @@ export const routes: Routes = [
       {
         path: 'reports',
         children: [
+
           {
             path: '',
             component: ReportComponent,
@@ -448,33 +449,39 @@ export const routes: Routes = [
         path: 'market',
         children: [
           {
-            path: '',
+            path: 'dashboard',
             component: MarketPlaceDashbordComponent,
           },
           {
             path: 'action',
-            component: MarketPlaceActionsComponent,
+            children: [
+              {
+                path: '',
+                component: MarketPlaceActionsComponent,
+              },
+              {
+                path: 'add-product',
+                component: MarketAddProductComponent,
+              },
+              {
+                path: 'view-products-list',
+                component: ViewProductsListComponent,
+              },
+              {
+                path: 'add-coupen',
+                component: AddCoupenComponent,
+              },
+              {
+                path: 'view-coupen',
+                component: ViewCoupenComponent,
+              },
+              {
+                path: 'add-package',
+                component: AddPackageComponent,
+              },
+            ]
           },
-          {
-            path: 'add-product',
-            component: MarketAddProductComponent,
-          },
-          {
-            path: 'view-products-list',
-            component: ViewProductsListComponent,
-          },
-          {
-            path: 'add-coupen',
-            component: AddCoupenComponent,
-          },
-          {
-            path: 'view-coupen',
-            component: ViewCoupenComponent,
-          },
-          {
-            path: 'add-package',
-            component: AddPackageComponent,
-          },
+          
         ],
       },
       {
@@ -533,9 +540,16 @@ export const routes: Routes = [
         ],
       },
 
-      { path: '', redirectTo: '/steckholders', pathMatch: 'full' },
+     
     ],
   },
+  { path: '**', component: NotFoundComponent },
 ];
+
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
 
 export class AppRoutingModule {}

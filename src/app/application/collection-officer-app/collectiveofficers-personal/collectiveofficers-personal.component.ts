@@ -152,7 +152,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
                 'Collection Officer Created Successfully',
                 'success'
               );
-              this.router.navigate(['/steckholders/collective-officer']);
+              this.router.navigate(['/admin/steckholders/action/collective-officer']);
             },
             (error: any) => {
               this.isLoading = true;
@@ -178,7 +178,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/collective-officer']);
+        this.router.navigate(['/admin/steckholders/action/collective-officer']);
       }
     });
   }

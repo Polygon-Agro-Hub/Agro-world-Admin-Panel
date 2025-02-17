@@ -215,7 +215,7 @@ export class CreateVarietyComponent implements OnInit {
             icon: 'success',
             confirmButtonText: 'OK',
           }).then(() => {
-            this.router.navigate(['/plant-care/view-crop-group']);
+            this.router.navigate(['/admin/plant-care/action/view-crop-group']);
           });
         } else {
           this.isLoading = false;
@@ -268,7 +268,7 @@ export class CreateVarietyComponent implements OnInit {
               if (result.isConfirmed) {
                 this.selectedFile = null;
                 this.selectedImage = null;
-                this.router.navigate(['/plant-care'])
+                this.router.navigate(['admin/plant-care/action'])
               }
             });
           }
@@ -366,7 +366,7 @@ export class CreateVarietyComponent implements OnInit {
             title: 'Success',
             text: 'Market Price updated successfully!',
           });
-          this.router.navigate(['/plant-care/view-crop-group']);
+          this.router.navigate(['/admin/plant-care/action/view-crop-group']);
         },
         (error) => {
           console.error('Error updating news', error);

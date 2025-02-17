@@ -20,11 +20,11 @@ export class NavbarComponent {
 
   
   navigateToCreateAdmin() {
-    this.router.navigate(['/admin-users/create-admin-user']);
+    this.router.navigate(['/admin/admin-users/create-admin-user']);
   }
 
   editMeAdminUser() {
-    this.router.navigate(['/admin-users/edit-admin-me-user']);
+    this.router.navigate(['/admin/admin-users/edit-admin-me-user']);
   }
 
   toggleTheme() {

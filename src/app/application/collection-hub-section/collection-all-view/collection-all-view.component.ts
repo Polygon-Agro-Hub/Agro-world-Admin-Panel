@@ -167,7 +167,7 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   navigateEdit(id: number) {
-    this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
+    this.router.navigate([`/admin/collection-hub/update-collection-center/${id}`]);
   }
 }
 

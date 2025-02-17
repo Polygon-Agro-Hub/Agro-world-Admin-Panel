@@ -313,7 +313,7 @@ export class CollectiveofficersEditComponent {
           cancelButtonText: 'No, Keep Editing',
         }).then((result) => {
           if (result.isConfirmed) {
-            this.router.navigate(['/steckholders/collective-officer'])
+            this.router.navigate(['/admin/steckholders/action/collective-officer'])
           }
         });
       }
@@ -418,7 +418,7 @@ export class CollectiveofficersEditComponent {
                     
           
                     Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
-                    this.router.navigate(['/steckholders/collective-officer']);
+                    this.router.navigate(['/admin/steckholders/action/collective-officer']);
                   },
                   (error: any) => {
                     this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message

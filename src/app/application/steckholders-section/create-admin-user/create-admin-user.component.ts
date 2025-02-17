@@ -290,7 +290,7 @@ export class CreateAdminUserComponent implements OnInit {
             text: 'Admin updated successfully!',
           });
           this.userForm.reset();
-          this.router.navigate(['/steckholders/admin']);
+          this.router.navigate(['/admin/steckholders/action/admin']);
         },
         (error) => {
           console.error('Error updating Admin', error);
@@ -345,7 +345,7 @@ export class CreateAdminUserComponent implements OnInit {
             text: 'Admin created successfully!',
           });
           this.userForm.reset();
-          this.router.navigate(['/steckholders/admin']);
+          this.router.navigate(['/admin/steckholders/action/admin']);
         },
         (error) => {
           console.error('Error creating Admin', error);
@@ -360,12 +360,12 @@ export class CreateAdminUserComponent implements OnInit {
 
   onCancel() {
     this.userForm.reset();
-    this.router.navigate(['/steckholders/admin']);
+    this.router.navigate(['/admin/steckholders/action/admin']);
   }
 
   onCancel2() {
     this.userForm.reset();
-    this.router.navigate(['/steckholders/admin']);
+    this.router.navigate(['/admin/steckholders/action/admin']);
   }
 
   togglePasswordVisibility() {

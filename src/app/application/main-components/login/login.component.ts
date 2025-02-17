@@ -104,7 +104,7 @@ export class LoginComponent {
 
         this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
           this.isLoading = false;
-        this.router.navigate(['/steckholders/dashboard']);
+        this.router.navigate(['admin/steckholders/dashboard']);
       },
       (error) => {
         console.error('Error updating Market Price', error);

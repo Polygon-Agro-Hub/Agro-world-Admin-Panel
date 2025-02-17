@@ -94,7 +94,7 @@ getCompanyData() {
         (response) => {
           console.log('Data saved successfully:', response);
           Swal.fire('Success', 'Company Created Successfully', 'success');
-          this.router.navigate(['/collection-hub/manage-company']);
+          this.router.navigate(['/admin/collection-hub/manage-company']);
         },
         (error) => {
           console.error('Error saving data:', error);
@@ -144,7 +144,7 @@ getCompanyData() {
           (response)=>{
             console.log('Company updated successfully:', response);
             Swal.fire('Success', 'Company Updated Successfully', 'success');
-            this.router.navigate(['/collection-hub/manage-company']);
+            this.router.navigate(['/admin/collection-hub/manage-company']);
           },
           (error) =>{
             console.error('Error updating company:', error);

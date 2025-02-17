@@ -86,6 +86,7 @@ import { PlatCareDashbordComponent } from './application/plant-care-app/plant-ca
 import { DashboardMainComponent } from './application/steckholders-section/stackholder-dashboard/dashboard-main/dashboard-main.component';
 import { ManageApplicationsComponent } from './application/Complaints/manage-applications/manage-applications.component';
 import { AddComplainCategoriesComponent } from './application/Complaints/add-complain-categories/add-complain-categories.component';
+import { ManageComplaintsCategoriesComponent } from './application/Complaints/manage-complaints-categories/manage-complaints-categories.component';
 
 
 export const routes: Routes = [
@@ -512,6 +513,10 @@ export const routes: Routes = [
           {
             path: 'add-complain-Categories',
             component: AddComplainCategoriesComponent,
+          },
+          {
+            path: 'manage-complaints-categories/:id',
+            component: ManageComplaintsCategoriesComponent,
           },
         ],
       },

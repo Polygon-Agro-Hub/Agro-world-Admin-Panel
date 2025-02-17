@@ -182,14 +182,14 @@ addNewApp() {
 
 
 
-editApp(systemAppId: number) {
+editApp(systemAppId: number, systemAppName: string) {
   Swal.fire({
     html: `
       <div>
         <h1 class="mb-8 font-semibold text-black dark:text-textDark">Edit Application Name</h1>
         <div class="flex items-center gap-4">
           <label for="appName" class="whitespace-nowrap text-base dark:text-textDark">Application Name</label>
-          <input id="appName" type="text" 
+          <input id="appName" type="text" value="${systemAppName}"
                  class="text-sm rounded-lg p-3 w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
         </div>
       </div>
@@ -325,41 +325,6 @@ goBack() {
 }
 
 }
-// addNewApp() {
-//   Swal.fire({
-//       title: 'Add New Application',
-//       input: 'text',
-//       inputPlaceholder: 'Application Name',
-//       showCancelButton: true,
-//       confirmButtonText: 'Add',
-//       cancelButtonText: 'Cancel',
-//       confirmButtonColor: '#0d6efd', // Blue color for "Add"
-//       cancelButtonColor: '#6c757d', // Gray color for "Cancel"
-//       inputValidator: (value) => {
-//           if (!value.trim()) {
-//               return 'Application name is required!';
-//           }
-//       }
-//   }).then((result) => {
-//       if (result.isConfirmed) {
-//           const applicationName = result.value.trim(); // Get user input
-
-//           if (applicationName) {
-//               // Call the Angular service to send data to backend
-//               this.complaintSrv.addNewApplication(applicationName).subscribe(
-//                   (response) => {
-//                       console.log('Application added:', response);
-//                       Swal.fire('Success', 'Application added successfully!', 'success');
-//                   },
-//                   (error) => {
-//                       console.error('Error adding application:', error);
-//                       Swal.fire('Error', 'Failed to add application.', 'error');
-//                   }
-//               );
-//           }
-//       }
-//   });
-// }
 
 
 class SystemApplications {

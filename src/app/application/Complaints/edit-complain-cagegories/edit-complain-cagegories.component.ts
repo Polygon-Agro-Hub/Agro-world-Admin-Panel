@@ -65,7 +65,7 @@ export class EditComplainCagegoriesComponent implements OnInit {
       (res) => {
         if (res.status) {
           Swal.fire("Success", 'Edit complain category success!', 'success')
-          this.router.navigate(['/complaints/manage-applications'])
+          this.router.navigate(['/admin/complaints/manage-applications'])
         } else {
           Swal.fire("Error", 'Error Occur creaating complain category!', 'error')
 

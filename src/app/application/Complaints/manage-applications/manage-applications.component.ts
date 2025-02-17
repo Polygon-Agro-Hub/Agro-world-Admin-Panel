@@ -325,7 +325,7 @@ editApp(systemAppId: number, systemAppName: string) {
   }
 
   EditCategoris(id:number) {
-    this.router.navigate([`/complaints/manage-complaints-categories/${id}`]);
+    this.router.navigate([`/admin/complaints/manage-complaints-categories/${id}`]);
   }
 
 }

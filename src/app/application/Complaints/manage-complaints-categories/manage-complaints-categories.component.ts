@@ -37,6 +37,10 @@ export class ManageComplaintsCategoriesComponent implements OnInit {
     )
   }
 
+  editComplain(id:number){
+    this.router.navigate([`/complaints/edit-complaint-categories/${id}`])
+  }
+
 }
 
 class Categories {

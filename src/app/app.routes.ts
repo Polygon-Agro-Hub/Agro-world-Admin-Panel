@@ -87,6 +87,7 @@ import { DashboardMainComponent } from './application/steckholders-section/stack
 import { ManageApplicationsComponent } from './application/Complaints/manage-applications/manage-applications.component';
 import { AddComplainCategoriesComponent } from './application/Complaints/add-complain-categories/add-complain-categories.component';
 import { ManageComplaintsCategoriesComponent } from './application/Complaints/manage-complaints-categories/manage-complaints-categories.component';
+import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
 
 
 export const routes: Routes = [
@@ -517,6 +518,10 @@ export const routes: Routes = [
           {
             path: 'manage-complaints-categories/:id',
             component: ManageComplaintsCategoriesComponent,
+          },
+          {
+            path: 'edit-complaint-categories/:id',
+            component: EditComplainCagegoriesComponent,
           },
         ],
       },

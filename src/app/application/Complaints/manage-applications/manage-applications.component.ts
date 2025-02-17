@@ -56,7 +56,7 @@ export class ManageApplicationsComponent {
   }
 
 
-
+//---------------------------------this one not usefull------------------------------------
   showAlert(systemAppId: number) {
     console.log("Fetching data for System Application ID: ", systemAppId);
 

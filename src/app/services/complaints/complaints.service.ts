@@ -45,12 +45,12 @@ export class ComplaintsService {
     });
   }
 
-  AddNewComplainCategory(data:any): Observable<any> {
+  AddNewComplainCategory(data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${this.apiUrl}complain/add-new-complaint-category`, data ,{
+    return this.http.post(`${this.apiUrl}complain/add-new-complaint-category`, data, {
       headers,
     });
   }
@@ -70,7 +70,7 @@ export class ComplaintsService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${this.apiUrl}complain/edit-application/?systemAppId=${systemAppId}&applicationName=${applicationName}`,{
+    return this.http.post(`${this.apiUrl}complain/edit-application/?systemAppId=${systemAppId}&applicationName=${applicationName}`, {
       headers,
     });
   }
@@ -81,6 +81,27 @@ export class ComplaintsService {
       'Content-Type': 'application/json',
     });
     return this.http.post(`${this.apiUrl}complain/delete-application/${systemAppId}`, {
+      headers,
+    });
+  }
+
+  getCategoieDetailsById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}complain/get-categori-details-by-id/${id}`, {
+      headers,
+    });
+  }
+
+
+  EditComplainCategory(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.patch(`${this.apiUrl}complain/edit-complaint-category`, data, {
       headers,
     });
   }

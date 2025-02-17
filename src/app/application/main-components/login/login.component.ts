@@ -115,6 +115,7 @@ export class LoginComponent {
           text: this.disError,
         });
         this.isLoading = false;
+        this.router.navigate(['admin/login']);
       }
   );
   }

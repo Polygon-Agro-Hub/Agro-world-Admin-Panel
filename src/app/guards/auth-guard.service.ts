@@ -20,12 +20,12 @@ export class AuthGuard implements CanActivate {
         // Token expired, remove token and redirect to login
         localStorage.removeItem('Login Token : ');
         localStorage.removeItem('Token Expiration');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/admin/login']);
         return false;
       }
     } else {
       // If no token or expiration, redirect to the login page
-      this.router.navigate(['/login']);
+      this.router.navigate(['/admin/login']);
       return false;
     }
   }

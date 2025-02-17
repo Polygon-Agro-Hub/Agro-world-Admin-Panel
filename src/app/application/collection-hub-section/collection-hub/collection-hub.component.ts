@@ -74,7 +74,7 @@ export class CollectionHubComponent {
         // Create a temporary anchor element to trigger the download
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'CropData.xlsx'; // Default file name
+        a.download = 'Market Price Template.xlsx'; // Default file name
         a.click();
 
         // Revoke the URL after the download is triggered

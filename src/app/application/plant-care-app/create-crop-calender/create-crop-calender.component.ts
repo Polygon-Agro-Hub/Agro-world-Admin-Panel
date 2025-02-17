@@ -206,7 +206,7 @@ export class CreateCropCalenderComponent {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v8m0 0l-4-4m4 4l4-4M4 20h16" />
               </svg>
             </div>
-            <p class="upload-text">Drag & drop your XLSX file here or click to select</p>
+            <p class="upload-text">Select a XLSX file to upload</p>
             <p id="selected-file-name" class="file-name">No file selected</p>
           </label>
         </div>
@@ -245,11 +245,11 @@ export class CreateCropCalenderComponent {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
-        this.router.navigate(["/plant-care/view-crop-calender"])
+        this.router.navigate(["/admin/plant-care/action/view-crop-calender"])
       } else {
         this.deleteCropCalender(this.cropId);
         console.log('XLSX upload skipped');
-        this.router.navigate(["/plant-care/view-crop-calender"])
+        this.router.navigate(["/admin/plant-care/action/view-crop-calender"])
         // You can add any additional logic here for when the user skips the upload
       }
     });
@@ -269,7 +269,7 @@ export class CreateCropCalenderComponent {
           'success'
         );
         //navigate table
-        this.router.navigate(["/plant-care/view-crop-calender"])
+        this.router.navigate(["/admin/plant-care/action/view-crop-calender"])
       },
       (error: HttpErrorResponse) => {
         console.error('Error uploading XLSX file', error);

@@ -29,7 +29,9 @@ import { response } from 'express';
 export class RoleSelectionComponent {
   isLoading = false;
   isModalOpen: boolean = false;
+  iseditModalOpen: boolean = false;
   createRolesObj: CreateRoles = new CreateRoles();
+  selectedRole: any = {};
 
   openModal() {
     this.isModalOpen = true;
@@ -37,6 +39,15 @@ export class RoleSelectionComponent {
 
   closeModal() {
     this.isModalOpen = false;
+  }
+
+  editModalOpen(role: any) {
+    this.selectedRole = { ...role };
+    this.iseditModalOpen = true;
+  }
+
+  editCloseModel() {
+    this.iseditModalOpen = false;
   }
 
   addSection() {

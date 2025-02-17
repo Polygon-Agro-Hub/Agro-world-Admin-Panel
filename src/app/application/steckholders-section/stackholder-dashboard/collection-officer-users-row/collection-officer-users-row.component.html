@@ -1,0 +1,64 @@
+<div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 min-h-52"
+  >
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"
+    >
+      <div
+        class="bg-[#DA6200] text-white p-4 rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
+      >
+        <i class="fa-regular fa-newspaper text-4xl mb-4"></i>
+        <h2 class="text-lg font-semibold">Collection Officers</h2>
+        <h2 class="text-sm font-semibold">Total</h2>
+        <p class="text-2xl font-bold">{{allOfficers}}</p>
+      </div>
+
+      <div
+        class="flex flex-col items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg"
+      >
+        <p class="text-xl font-thin text-gray-600">Active Officers</p>
+        <p class="text-md font-thin text-gray-600">Just Now</p>
+        <p class="text-4xl font-bold text-gray-900">100</p>
+      </div>
+
+      <div
+        class="flex flex-col items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg"
+      >
+        <p class="text-xl font-thin text-gray-600">New Officers</p>
+        <p class="text-md font-thin text-gray-600">Today</p>
+        <p class="text-4xl font-bold text-gray-900">{{newOfficers}}</p>
+      </div>
+    </div>
+
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4"
+    >
+      <div
+        class="bg-white p-8 rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-xl font-thin text-gray-600">Center Head Officers</p>
+        <p class="text-4xl font-bold text-gray-900">{{centerHeadOfficers}}</p>
+      </div>
+
+      <div
+        class="bg-white p-8 rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-xl font-thin text-gray-600">Collection Officers</p>
+        <p class="text-4xl font-bold text-gray-900">{{collectionOfficers}}</p>
+      </div>
+
+      <div
+        class="bg-white p-8 rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-xl font-thin text-gray-600">Center Managers</p>
+        <p class="text-4xl font-bold text-gray-900">{{centerManagers}}</p>
+      </div>
+
+      <div
+        class="bg-white p-8 rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-xl font-thin text-gray-600">Customer Officers</p>
+        <p class="text-4xl font-bold text-gray-900">{{customerOfficers}}</p>
+      </div>
+    </div>
+  </div>

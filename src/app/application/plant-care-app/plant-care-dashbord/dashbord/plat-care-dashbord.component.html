@@ -22,18 +22,21 @@
         [totalCultivationCount]="totalCultivationCount"
       />
     </div>
-    <div
-      class="flex flex-row justify-between gap-10 items-center my-10 w-[100%]"
-    >
-      <div class="h-auto w-[68%]">
+    <div class="flex flex-row justify-between gap-10 items-stretch my-10 w-full">
+      <!-- Area Chart -->
+      <div class="flex-1 h-full w-[60%]">
         <app-dashbord-area-chart
+          class="h-full w-full"
           [qrUsers]="dashboardData.qrUsers"
           [allusers]="dashboardData.allusers"
         />
       </div>
-      <div class="h-auto w-[32%]">
-        <app-dashbord-pie-chart [dashboardData]="dashboardData" />
+    
+      <!-- Pie Chart -->
+      <div class="flex-1 h-full w-[35%]">
+        <app-dashbord-pie-chart class="h-full w-full" [dashboardData]="dashboardData" />
       </div>
     </div>
+    
   </div>
 </div>

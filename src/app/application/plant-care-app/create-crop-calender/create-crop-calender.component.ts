@@ -85,6 +85,7 @@ export class CreateCropCalenderComponent {
 
   cropForm: FormGroup;
   cropId: number | null = null;
+  cropIdNew: number | null = null;
   createNewObj: CreateCrop = new CreateCrop();
   cropCalender: NewCropCalender[] = [];
   isLoading = false;
@@ -157,9 +158,9 @@ export class CreateCropCalenderComponent {
       (res: any) => {
         if (res.status) {
           this.isLoading = false;
-          this.cropId = res.cropId;
-          if (this.cropId !== null) {
-            this.openXlsxUploadDialog(this.cropId);
+          this.cropIdNew = res.cropId;
+          if (this.cropIdNew !== null) {
+            this.openXlsxUploadDialog(this.cropIdNew);
           } else {
             console.error('Crop ID is null after creation');
             this.isLoading = false;

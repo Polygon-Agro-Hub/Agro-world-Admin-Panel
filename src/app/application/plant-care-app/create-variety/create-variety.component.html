@@ -128,7 +128,7 @@
 
 
         <!-- Add Image -->
-        <input type="file" id="imageUpload" accept="image/*" class="hidden" (onChange)="onFileSelected($event)" />
+        <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
         <!-- Button -->
         <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">

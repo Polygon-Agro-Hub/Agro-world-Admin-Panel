@@ -47,4 +47,23 @@ export class RoleSelectionService {
       { headers }
     );
   }
+
+  updateRole(data: any) {
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put<any>(
+      `${environment.API_URL}auth/update-role-permission`,
+      data,
+      { headers }
+    );
+  }
 }

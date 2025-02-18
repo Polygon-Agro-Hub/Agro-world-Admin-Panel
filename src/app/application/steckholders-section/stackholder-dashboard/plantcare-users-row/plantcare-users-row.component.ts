@@ -7,11 +7,12 @@ import { environment } from '../../../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
+import { BarChartComponent } from '../bar-chart/bar-chart.component'
 
 @Component({
   selector: 'app-plantcare-users-row',
   standalone: true,
-  imports: [CommonModule, DropdownModule],
+  imports: [CommonModule, DropdownModule, BarChartComponent],
   templateUrl: './plantcare-users-row.component.html',
   styleUrl: './plantcare-users-row.component.css'
 })
@@ -48,8 +49,8 @@ export class PlantcareUsersRowComponent implements OnInit {
       
       (res) => {
         console.log('dtgsgdgdg',res);
-        this.plantCareUsersWithOutQr = res.plantCareUserByQrRegistration[0]?.user_count ?? 0;
-        this.plantCareUsersWithQr = res.plantCareUserByQrRegistration[1]?.user_count ?? 0;
+        this.plantCareUsersWithOutQr = res.plantCareUserByQrRegistration[1]?.user_count ?? 0;
+        this.plantCareUsersWithQr = res.plantCareUserByQrRegistration[0]?.user_count ?? 0;
         this.newPlantCareUsers = res.newPlantCareUsers[0]?.newPlantCareUserCount ?? 0;
         this.allPlantCareUsers = res.allPlantCareUsers[0]?.totalPlantCareUserCount ?? 0;
 

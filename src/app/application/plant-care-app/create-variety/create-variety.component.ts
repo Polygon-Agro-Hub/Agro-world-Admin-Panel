@@ -21,7 +21,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { response } from 'express';
 import { TokenService } from '../../../services/token/services/token.service';
 
-
 interface NewsItem {
   varietyNameEnglish: string;
   varietyNameSinhala: string;
@@ -31,9 +30,7 @@ interface NewsItem {
   descriptionTamil: string;
   bgColor: string;
   image: string;
-
 }
-
 
 @Component({
   selector: 'app-create-variety',
@@ -50,7 +47,6 @@ interface NewsItem {
   styleUrl: './create-variety.component.css',
 })
 export class CreateVarietyComponent implements OnInit {
-
   cropVarity = {
     cropGroupId: '',
     varietyNameEnglish: '',
@@ -60,7 +56,7 @@ export class CreateVarietyComponent implements OnInit {
     descriptionSinhala: '',
     descriptionTamil: '',
     bgColor: '',
-  }
+  };
 
   isLoading = false;
   selectedFileName: string | null = null;
@@ -68,7 +64,7 @@ export class CreateVarietyComponent implements OnInit {
   selectedFile: File | null = null;
   groupList: any[] = [];
   cropForm: FormGroup;
-  imagePreview: string | ArrayBuffer | null = null
+  imagePreview: string | ArrayBuffer | null = null;
 
   itemId: number | null = null;
   newsItems: NewsItem[] = [];
@@ -80,7 +76,6 @@ export class CreateVarietyComponent implements OnInit {
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
     private tokenService: TokenService
-
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', [Validators.required]],
@@ -116,14 +111,13 @@ export class CreateVarietyComponent implements OnInit {
       console.log('Recived item ID:', this.itemId);
 
       if (this.itemId) {
-
         this.isLoading = true;
         this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
           next: (response: any) => {
             this.newsItems = response.groups;
             if (response.groups[0].image) {
               this.selectedImage = response.groups[0].image; // Base64 image
-              this.selectedFileName = "Existing Image";
+              this.selectedFileName = 'Existing Image';
             }
             this.isLoading = false;
           },
@@ -133,8 +127,7 @@ export class CreateVarietyComponent implements OnInit {
           },
         });
       }
-
-    })
+    });
   }
 
   getErrorMessage(controlName: string): string {
@@ -177,17 +170,20 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   onSubmit() {
-    const cropValues = this.cropForm.value
-    if (!cropValues.groupId || !cropValues.varietyNameEnglish || !cropValues.varietyNameSinhala || !cropValues.varietyNameTamil || !cropValues.descriptionEnglish || !cropValues.descriptionSinhala || !cropValues.descriptionTamil || !cropValues.bgColor) {
-      Swal.fire(
-        'warning',
-        'pleace fill all input feilds',
-        'warning'
-      );
+    const cropValues = this.cropForm.value;
+    if (
+      !cropValues.groupId ||
+      !cropValues.varietyNameEnglish ||
+      !cropValues.varietyNameSinhala ||
+      !cropValues.varietyNameTamil ||
+      !cropValues.descriptionEnglish ||
+      !cropValues.descriptionSinhala ||
+      !cropValues.descriptionTamil ||
+      !cropValues.bgColor
+    ) {
+      Swal.fire('warning', 'Please fill all input feilds', 'warning');
       return;
-
     }
-
 
     if (!this.selectedFile) {
       Swal.fire('Error', 'Please select an image file.', 'error');
@@ -219,11 +215,7 @@ export class CreateVarietyComponent implements OnInit {
           });
         } else {
           this.isLoading = false;
-          Swal.fire(
-            'Unsuccess',
-            response.message,
-            'error'
-          );
+          Swal.fire('Unsuccess', response.message, 'error');
         }
       },
       error: (error) => {
@@ -231,7 +223,7 @@ export class CreateVarietyComponent implements OnInit {
         Swal.fire(
           'Error',
           error.error?.message ||
-          'An error occurred while creating the crop variety.',
+            'An error occurred while creating the crop variety.',
           'error'
         );
       },
@@ -254,24 +246,22 @@ export class CreateVarietyComponent implements OnInit {
   //   });
   // }
 
-
   onCancel() {
-  
-            Swal.fire({
-              icon: 'warning',
-              title: 'Are you sure?',
-              text: 'You may lose the added data after canceling!',
-              showCancelButton: true,
-              confirmButtonText: 'Yes, Cancel',
-              cancelButtonText: 'No, Keep Editing',
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.selectedFile = null;
-                this.selectedImage = null;
-                this.router.navigate(['admin/plant-care/action'])
-              }
-            });
-          }
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.selectedFile = null;
+        this.selectedImage = null;
+        this.router.navigate(['admin/plant-care/action']);
+      }
+    });
+  }
 
   triggerFileInput(event: Event): void {
     event.preventDefault();

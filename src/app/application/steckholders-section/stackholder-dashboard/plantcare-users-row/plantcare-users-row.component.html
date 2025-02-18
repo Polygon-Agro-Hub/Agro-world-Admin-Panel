@@ -1,69 +1,49 @@
-<div
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 min-h-52"
-  >
-    <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"
-    >
-      <div
-        class="bg-[#0D9488] text-white p-4 rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
-      >
-        <i class="fa-regular fa-newspaper text-4xl mb-4"></i>
-        <h2 class="text-lg font-semibold">APlantCare Users</h2>
-        <h2 class="text-sm font-semibold">Total</h2>
-        <p class="text-2xl font-bold">{{allPlantCareUsers}}</p>
+<div class="w-full p-4">
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <!-- Left Column -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-[#DA6200] text-white p-4 rounded-lg shadow-lg flex flex-col items-center justify-center text-center h-full">
+              <i class="fa-regular fa-newspaper text-4xl mb-4"></i>
+              <h2 class="text-lg font-semibold dark:text-white">APlantCare Users</h2>
+              <h2 class="text-sm font-semibold dark:text-white">Total</h2>
+              <p class="text-2xl font-bold dark:text-white">{{allPlantCareUsers}}</p>
+          </div>
+
+          <div class="flex flex-col dark:bg-tileBlack items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg h-full">
+              <p class="text-xl font-thin text-gray-600 dark:text-white">Active Users</p>
+              <p class="text-md font-thin text-gray-600 dark:text-white">Just Now</p>
+              <p class="text-4xl font-bold text-gray-900 dark:text-white"></p>
+          </div>
+
+          <div class="flex flex-col dark:bg-tileBlack items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg h-full">
+              <p class="text-xl font-thin text-gray-600 dark:text-white">New Users</p>
+              <p class="text-md font-thin text-gray-600 dark:text-white">Today</p>
+              <p class="text-4xl font-bold text-gray-900 dark:text-white">{{newPlantCareUsers}}</p>
+          </div>
       </div>
 
-      <div
-        class="flex flex-col items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg"
-      >
-        <p class="text-xl font-thin text-gray-600">Active Users</p>
-        <p class="text-md font-thin text-gray-600">Just Now</p>
-        <p class="text-4xl font-bold text-gray-900"></p>
-      </div>
-
-      <div
-        class="flex flex-col items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg"
-      >
-        <p class="text-xl font-thin text-gray-600">New Users</p>
-        <p class="text-md font-thin text-gray-600">Today</p>
-        <p class="text-4xl font-bold text-gray-900">{{newPlantCareUsers}}</p>
-      </div>
-    </div>
-
-    <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4"
-    >
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1 gap-4"
-      >
-        <div
-          class="bg-white p-8 rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
-        >
-          <p class="text-xl font-thin text-gray-600">QR Registered Users</p>
-          <p class="text-4xl font-bold text-gray-900">{{plantCareUsersWithQr}}</p>
+      <!-- Right Column -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Stats Cards -->
+        <div class="space-y-4 flex flex-col h-full">
+          <!-- QR Registered Users Card -->
+          <div class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex justify-between items-center flex-grow">
+            <p class="text-xl font-thin text-gray-600 dark:text-white">QR Registered Users</p>
+            <p class="text-4xl font-bold text-gray-900 dark:text-white">{{plantCareUsersWithQr}}</p>
+          </div>
+      
+          <!-- Unregistered Users Card -->
+          <div class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex justify-between items-center flex-grow">
+            <p class="text-xl font-thin text-gray-600 dark:text-white">Unregistered Users</p>
+            <p class="text-4xl font-bold text-gray-900 dark:text-white">{{plantCareUsersWithOutQr}}</p>
+          </div>
         </div>
-
-        <div
-          class="bg-white p-8 rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
-        >
-          <p class="text-xl font-thin text-gray-600">Unregistered Users</p>
-          <p class="text-4xl font-bold text-gray-900">{{plantCareUsersWithOutQr}}</p>
-        </div>
-      </div>
-
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1 gap-4"
-      >
-        <div
-          class="bg-white p-0 rounded-lg shadow-lg text-left flex flex-row justify-between items-left w-auto"
-        >
-          <!-- <p class="text-xl font-thin text-gray-600">Total Managers</p>
-          <p class="text-4xl font-bold text-gray-900">20</p> -->
+      
+        <!-- Chart Container -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-grow">
           <app-bar-chart></app-bar-chart>
         </div>
       </div>
-    </div>
+      
   </div>
-
-
-
+</div>

@@ -31,6 +31,7 @@
     "aws-sdk": "^2.1678.0",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.7",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "ckeditor4-angular": "^5.1.0",
     "ckeditor5": "^42.0.1",
     "cors": "^2.8.5",

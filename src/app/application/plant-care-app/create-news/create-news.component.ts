@@ -392,7 +392,7 @@ export class CreateNewsComponent {
             if (result.isConfirmed) {
               this.selectedFile = null;
               this.selectedImage = null;
-              this.router.navigate(['/plant-care'])
+              this.router.navigate(['/admin/plant-care/action'])
             }
           });
         }

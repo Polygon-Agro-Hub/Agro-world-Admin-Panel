@@ -23,6 +23,7 @@ export class CollectionOfficerUsersRowComponent implements OnInit {
   customerOfficers!: number;
   newOfficers!: number;
   allOfficers!: number;
+  activeOfficers!: number;
 
   constructor(
     private router: Router,
@@ -55,6 +56,7 @@ export class CollectionOfficerUsersRowComponent implements OnInit {
         // this.adminUsersByPosition = res.adminUsersByPosition;
         this.newOfficers = res.newCollectionOfficers[0]?.newOfficerCount ?? 0;
         this.allOfficers = res.allCollectionOfficers[0]?.totalOfficerCount ?? 0;
+        this.activeOfficers = res.activeCollectionOfficers[0]?.activeOfficerCount ?? 0;
 
         
       },

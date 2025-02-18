@@ -23,6 +23,7 @@ export class PlantcareUsersRowComponent implements OnInit {
   plantCareUsersWithQr!: number;
   newPlantCareUsers!: number;
   allPlantCareUsers!: number;
+  activePlantCareUsers!: number;
 
   constructor(
     private router: Router,
@@ -53,6 +54,8 @@ export class PlantcareUsersRowComponent implements OnInit {
         this.plantCareUsersWithQr = res.plantCareUserByQrRegistration[0]?.user_count ?? 0;
         this.newPlantCareUsers = res.newPlantCareUsers[0]?.newPlantCareUserCount ?? 0;
         this.allPlantCareUsers = res.allPlantCareUsers[0]?.totalPlantCareUserCount ?? 0;
+        this.activePlantCareUsers = res.activePlantCareUsers[0]?.activePlantCareUserCount ?? 0;
+        
 
 
       },

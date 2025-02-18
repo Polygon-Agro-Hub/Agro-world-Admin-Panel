@@ -83,6 +83,38 @@ export class RoleSelectionComponent {
     );
   }
 
+  onEditOnSubmit() {
+    this.updateRole();
+  }
+
+  updateRole() {
+    this.roleSelectionService.updateRole(this.selectedRole)?.subscribe(
+      (response) => {
+        // Show SweetAlert confirmation
+        Swal.fire({
+          title: 'Success!',
+          text: 'Role updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          // Refresh the page after the user clicks "OK"
+          if (result.isConfirmed) {
+            window.location.reload(); // Refresh the page
+          }
+        });
+      },
+      (error) => {
+        // Handle error if the role update fails
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to update role.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    );
+  }
+
   rolesList: any[] = [];
 
   constructor(

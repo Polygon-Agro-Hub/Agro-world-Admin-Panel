@@ -71,6 +71,7 @@ export class CreateNewsComponent {
   createDate: string = '';
   expireDate: string = '';
   today: string = this.getTodayDate();
+  isPublishAfterExpireValid: boolean = true;
 
 
   editorConfig: AngularEditorConfig = {
@@ -218,6 +219,59 @@ export class CreateNewsComponent {
     console.log('clicked');
     console.log(this.createNewsObj);
 
+
+
+
+
+    if(!this.isPublishAfterExpireValid){
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Dates',
+        text: 'Please check the publish date and expire date again',
+      });
+      return;
+    }
+
+    const missingFields: string[] = [];
+
+  // Check for missing fields and add to the array
+  if (this.createNewsObj.titleEnglish.trim() === '') {
+    missingFields.push('Title (English)');
+  }
+  if (this.createNewsObj.descriptionEnglish.trim() === '') {
+    missingFields.push('Description (English)');
+  }
+  if (this.createNewsObj.titleSinhala.trim() === '') {
+    missingFields.push('Title (Sinhala)');
+  }
+  if (this.createNewsObj.descriptionSinhala.trim() === '') {
+    missingFields.push('Description (Sinhala)');
+  }
+  if (this.createNewsObj.titleTamil.trim() === '') {
+    missingFields.push('Title (Tamil)');
+  }
+  if (this.createNewsObj.descriptionTamil.trim() === '') {
+    missingFields.push('Description (Tamil)');
+  }
+  if (this.createNewsObj.publishDate.trim() === '') {
+    missingFields.push('Publishe Date');
+  }
+  if (this.createNewsObj.expireDate.trim() === '') {
+    missingFields.push('Expire Date');
+  }
+
+  // If there are any missing fields, show a Swal popup with the list
+  if (missingFields.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing Fields',
+      html: `<strong>Please fill in the following fields:</strong><ul>${missingFields
+        .map((field) => `<li>${field}</li>`)
+        .join('')}</ul>`,
+    });
+    return; // Stop further execution if fields are missing
+  }
+
     const formData = new FormData();
     formData.append(
       'titleEnglish',
@@ -338,7 +392,7 @@ export class CreateNewsComponent {
             if (result.isConfirmed) {
               this.selectedFile = null;
               this.selectedImage = null;
-              this.router.navigate(['/plant-care'])
+              this.router.navigate(['/admin/plant-care/action'])
             }
           });
         }
@@ -537,6 +591,27 @@ export class CreateNewsComponent {
       }
     }
   }
+
+
+
+
+  checkPublishExpireDate() {
+    if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
+      const publishDate = new Date(this.createNewsObj.publishDate);
+      const expireDate = new Date(this.createNewsObj.expireDate);
+  
+      if (publishDate > expireDate) {
+        this.isPublishAfterExpireValid = false;
+      } else {
+        this.isPublishAfterExpireValid = true;
+      }
+    }
+  }
+
+  
+
+
+
 }
 
 export class CreateNews {

@@ -85,6 +85,7 @@ export class CreateCropCalenderComponent {
 
   cropForm: FormGroup;
   cropId: number | null = null;
+  cropIdNew: number | null = null;
   createNewObj: CreateCrop = new CreateCrop();
   cropCalender: NewCropCalender[] = [];
   isLoading = false;
@@ -112,7 +113,7 @@ export class CreateCropCalenderComponent {
       groupId: ['', [Validators.required]],
       cultivationMethod: ['', [Validators.required]],
       natureOfCultivation: ['', [Validators.required]],
-      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'),Validators.min(1) ]],
       suitableAreas: ['', [Validators.required]],
     });
   }
@@ -120,10 +121,10 @@ export class CreateCropCalenderComponent {
   onSubmit() {
 
     const formValue = this.cropForm.value;
-    if (!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.suitableAreas) {
+    if (!formValue.varietyId || !formValue.cultivationMethod || !formValue.natureOfCultivation || !formValue.suitableAreas || !formValue.cropDuration) {
       Swal.fire(
         'warning',
-        'pleace fill all input feilds',
+        'Please fill all input feilds',
         'warning'
       );
       return;
@@ -157,9 +158,9 @@ export class CreateCropCalenderComponent {
       (res: any) => {
         if (res.status) {
           this.isLoading = false;
-          this.cropId = res.cropId;
-          if (this.cropId !== null) {
-            this.openXlsxUploadDialog(this.cropId);
+          this.cropIdNew = res.cropId;
+          if (this.cropIdNew !== null) {
+            this.openXlsxUploadDialog(this.cropIdNew);
           } else {
             console.error('Crop ID is null after creation');
             this.isLoading = false;
@@ -216,27 +217,23 @@ export class CreateCropCalenderComponent {
       cancelButtonText: 'Cancel',
       allowOutsideClick: false,
       didOpen: () => {
-        const fileInput = document.getElementById(
-          'xlsx-file-input'
-        ) as HTMLInputElement;
+        const fileInput = document.getElementById('xlsx-file-input') as HTMLInputElement;
         const fileNameDisplay = document.getElementById('selected-file-name');
-        
-        // Initially disable the upload button
-        Swal.disableButtons();
+  
+        // Disable only the "Upload" button initially
+        Swal.getConfirmButton()?.setAttribute("disabled", "true");
   
         fileInput.onchange = () => {
           if (fileInput.files && fileInput.files[0]) {
             fileNameDisplay!.textContent = `Selected file: ${fileInput.files[0].name}`;
-            Swal.enableButtons(); // Enable the buttons once a file is selected
+            Swal.getConfirmButton()?.removeAttribute("disabled"); // Enable "Upload" button
           } else {
-            Swal.disableButtons(); // Disable the buttons if no file is selected
+            Swal.getConfirmButton()?.setAttribute("disabled", "true"); // Disable "Upload" button again
           }
         };
       },
       preConfirm: () => {
-        const fileInput = document.getElementById(
-          'xlsx-file-input'
-        ) as HTMLInputElement;
+        const fileInput = document.getElementById('xlsx-file-input') as HTMLInputElement;
         if (fileInput.files && fileInput.files[0]) {
           return fileInput.files[0];
         }
@@ -245,15 +242,16 @@ export class CreateCropCalenderComponent {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
-        this.router.navigate(["/admin/plant-care/action/view-crop-calender"])
+        this.router.navigate(["/admin/plant-care/action/view-crop-calender"]);
       } else {
         this.deleteCropCalender(this.cropId);
         console.log('XLSX upload skipped');
-        this.router.navigate(["/admin/plant-care/action/view-crop-calender"])
-        // You can add any additional logic here for when the user skips the upload
+        this.router.navigate(["/admin/plant-care/action/view-crop-calender"]);
       }
     });
   }
+  
+
   
 
   uploadXlsxFile(cropId: number, file: File) {

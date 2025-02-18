@@ -206,6 +206,11 @@ export class AdminUsersComponent {
         }
       );
   }
+
+  clearSearch(): void {
+    this.statusFilter = '';
+    this.fetchAllAdmins();
+  }
 }
 
 class Roles {

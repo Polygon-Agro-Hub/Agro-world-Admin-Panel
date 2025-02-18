@@ -19,14 +19,14 @@
       <div>
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By English</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameEnglish" name="cropName"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #cropEngNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" required />
         <div *ngIf="cropEngNameInput.touched && !cropGroup.cropNameEnglish" class="text-red-500 text-sm mt-1">
           <div>English crop name is required</div>
         </div>
-        <div *ngIf="cropEngNameInput.touched && cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+        <!-- <div *ngIf="cropEngNameInput.touched && cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
           <div>Can not enter special character</div>
-        </div>
+        </div> -->
       </div>
 
 
@@ -35,7 +35,7 @@
       <div>
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Sinhala</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameSinahala" name="cropName"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #cropSinNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
         <div *ngIf="cropSinNameInput.touched && !cropGroup.cropNameSinahala" class="text-red-500 text-sm mt-1">
           <div>Sinhala crop name is required</div>
@@ -48,7 +48,7 @@
       <div>
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Tamil</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameTamil" name="cropName"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #cropTamilNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
         <div *ngIf="cropTamilNameInput.touched && !cropGroup.cropNameTamil" class="text-red-500 text-sm mt-1">
           <div>Tamil crop name is required</div>
@@ -63,7 +63,7 @@
       <div>
         <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent Category</label>
         <select id="parentCategory" [(ngModel)]="cropGroup.parentCategory" name="parentCategory"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #parentCategoryInput="ngModel">
           <option value="" disabled>Select Category</option>
           <option *ngFor="let category of categories" [value]="category">{{ category }}</option>

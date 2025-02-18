@@ -100,9 +100,8 @@
               class="text-red-500 text-sm mt-1">
               <div *ngIf="cropForm.get('cropDuration')!.errors?.['required']">Crop duration is required</div>
               <div *ngIf="cropForm.get('cropDuration')!.errors?.['pattern']">Enter Valid day</div>
-              <div *ngIf="cropForm.get('cropDuration')!.errors?.['nonZero']">
-                Crop duration can't be 0 days.
-              </div>
+              <div *ngIf="cropForm.get('cropDuration')!.errors?.['min']">Crop duration must be greater than 0</div>
+              
             </div>
           </div>
 

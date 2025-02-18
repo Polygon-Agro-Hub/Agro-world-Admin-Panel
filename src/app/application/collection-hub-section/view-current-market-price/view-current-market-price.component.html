@@ -35,7 +35,7 @@
     <div class="flex flex-row my-5">
       <div>
         <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
           [options]="crops"
           optionLabel="cropNameEnglish"
           [(ngModel)]="selectedCrop"
@@ -47,7 +47,7 @@
 
       <div class="mx-6">
         <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
           [options]="grades"
           optionLabel="Vgrade"
           [(ngModel)]="selectedGrade"
@@ -56,7 +56,74 @@
           (onChange)="applyFiltersGrade()"
         />
       </div>
+
+
+      <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+        <!-- Popover -->
+        <div
+          class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        >
+          Search by crop name
+        </div>
+    
+        <!-- Input field -->
+        <input
+          type="text"
+          placeholder="Search crop name"
+          class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+          [(ngModel)]="searchNIC"
+          (keydown.enter)="searchPlantCareUsers()"
+        />
+    
+        <!-- Search button -->
+        <button
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          (click)="searchPlantCareUsers()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+            />
+          </svg>
+        </button>
+    
+        <!-- Clear button -->
+        <button
+          type="button"
+          (click)="clearSearch()"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
+
+    
+      
+    
 
     <!-- <div *ngIf="!hasData" class="text-center py-8">
     <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
@@ -120,7 +187,7 @@
         </tbody>
       </table>
 
-      <div class="my-6">
+      <!-- <div class="my-6">
         <pagination-controls
           (pageChange)="onPageChange($event)"
           [responsive]="true"
@@ -131,7 +198,7 @@
           [screenReaderCurrentLabel]="'Youre on page'"
         >
         </pagination-controls>
-      </div>
+      </div> -->
     </div>
   </div>
   </div>

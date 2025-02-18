@@ -49,6 +49,7 @@
           placeholder="Role"
           [(ngModel)]="statusFilter"
           (onChange)="applyFilter()"
+          (onClear)="clearSearch()"
         />
       </div>
       <div

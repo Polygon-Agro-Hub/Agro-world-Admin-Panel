@@ -33,13 +33,14 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
+  searchNIC: string = '';
 
   constructor(private marketSrv: MarketPriceService) {
     this.currentDate = new Date().toLocaleDateString();
   }
 
   ngOnInit(): void {
-    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
+    this.fetchAllMarketPrices();
     this.getAllCrops();
 
     this.grades = [
@@ -49,20 +50,22 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     ];
   }
 
-  fetchAllMarketPrices(page: number = 1, limit: number = this.itemsPerPage) {
-    this.page = page;
+  fetchAllMarketPrices() {
+    this.isLoading = true;
 
     const cropId = this.selectedCrop?.id || ''; // Pass cropGroupId if selected
     const grade = this.selectedGrade?.Vgrade || ''; // Pass grade if selected
 
-    this.marketSrv.getAllMarketPrice(page, limit, cropId, grade).subscribe(
+    this.marketSrv.getAllMarketPrice(cropId, grade, this.searchNIC).subscribe(
       (res) => {
+        this.isLoading = false;
         this.market = res.results;
         this.totalItems = res.total;
         console.log('Market Prices:', res);
       },
       (error) => {
         console.error('Error fetching market price:', error);
+        this.isLoading = false;
         Swal.fire(
           'Error!',
           'There was an error fetching market prices.',
@@ -90,16 +93,27 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   }
 
   applyFiltersCrop() {
-    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
+    this.fetchAllMarketPrices();
   }
 
   applyFiltersGrade() {
-    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
+    this.fetchAllMarketPrices();
   }
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllMarketPrices(this.page, this.itemsPerPage);
+    this.fetchAllMarketPrices();
+  }
+
+
+  searchPlantCareUsers() {
+    this.page = 1;
+    this.fetchAllMarketPrices();
+  }
+
+  clearSearch(): void {
+    this.searchNIC = '';
+    this.fetchAllMarketPrices();
   }
 }
 

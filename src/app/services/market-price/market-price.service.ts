@@ -13,21 +13,25 @@ export class MarketPriceService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  getAllMarketPrice(page:number, limit:number, crop:any, grade:any):Observable<any>{
+  getAllMarketPrice(crop:any, grade:any, searchNIC: any):Observable<any>{
     console.log(crop);
     
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}market-price/get-market-prices?page=${page}&limit=${limit}`
+    let url = `${this.apiUrl}market-price/get-market-prices?`
 
     if(crop){
-      url+=`&crop=${crop}`
+      url+=`crop=${crop}`
     }
 
     if(grade){
       url+=`&grade=${grade}`
+    }
+
+    if(searchNIC){
+      url+=`&search=${searchNIC}`
     }
 
     return this.http.get<any>(url,{headers})

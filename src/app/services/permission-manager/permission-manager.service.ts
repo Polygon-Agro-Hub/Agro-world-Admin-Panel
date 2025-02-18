@@ -10,7 +10,7 @@ export class PermissionManagerService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   createCategory(feature: any, selectedCategory: any, newCategory: any) {
     const headers = new HttpHeaders({
@@ -32,10 +32,17 @@ export class PermissionManagerService {
 
 
 
-     getFeatureCategories(): Observable<any> {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`,
-      });
-      return this.http.get<any>(`${this.apiUrl}permission/get-all-feture-categories`, { headers });
-    }
+  getFeatureCategories(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}permission/get-all-feture-categories`, { headers });
+  }
+
+  editFeatureName(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.patch<any>(`${this.apiUrl}permission/edit-feature-name`, data, { headers });
+  }
 }

@@ -43,11 +43,16 @@ export class PermissionAreaComponent {
   positionList: any[] = [];
   FeatureList: any[] = [];
   RoleFeatureList: any[] = [];
+  editFeatureObj: Feature = new Feature();
+
+
   role_id!: number;
   createCategroyObj: CreateCategory = new CreateCategory();
-  categories: { id: number, category: string }[] = []; 
-  selectedCategory: string = ''; 
+  categories: { id: number, category: string }[] = [];
+  selectedCategory: string = '';
   newCategory: string = '';
+  isFeatureEdit: boolean = false;
+  existEditName: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -57,8 +62,8 @@ export class PermissionAreaComponent {
     private permissionManagerService: PermissionManagerService,
     private tokenService: TokenService,
     private messageService: MessageService,
-    
-  ) {}
+
+  ) { }
 
   ngOnInit() {
     this.role_id = this.route.snapshot.params['id'];
@@ -331,7 +336,7 @@ export class PermissionAreaComponent {
       const newId = this.categories.length + 1; // You can generate an ID or use the API to add the category
       this.categories.push({ id: newId, category: this.newCategory });
       this.selectedCategory = newId.toString(); // Set the newly added category as selected
-      
+
     }
   }
 
@@ -359,10 +364,60 @@ export class PermissionAreaComponent {
       );
   }
 
+  editFeature(id: number, fetureName: string) {
+    this.editFeatureObj = {
+      id: id,
+      name: fetureName
+    }
+    this.existEditName = fetureName
+    this.isFeatureEdit = true;
+  }
 
-  
+  editFeatureOnSubmit() {
+    if (this.existEditName === this.editFeatureObj.name) {
+      Swal.fire('Warning', 'The name is the same. Please edit the name before saving!', 'warning');
+      return;
+    }
+
+    if (!this.editFeatureObj.name) {
+      Swal.fire('Warning', 'Please Fill the name before saving!', 'warning');
+      return;
+    }
+
+    this.permissionManagerService.editFeatureName(this.editFeatureObj).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire('Successfull', res.message, 'success');
+          this.isFeatureEdit = false;
+          this.editFeatureObj = new Feature();
+          this.isLoading = true;
+          this.getAllPosition();
+          this.getAllFeatures();
+          this.getAllRoleFeatures();
+          this.getAllfeatureCategory();
+          this.isLoading = false;
+        } else {
+          Swal.fire('Error', res.message, 'error');
+        }
+      }
+    )
+
+  }
+
+  cancelEditFeature() {
+    this.isFeatureEdit = false;
+    this.editFeatureObj = new Feature();
+  }
+
+
+
 }
 
 export class CreateCategory {
   category!: string;
+}
+
+class Feature {
+  id!: number;
+  name!: string;
 }

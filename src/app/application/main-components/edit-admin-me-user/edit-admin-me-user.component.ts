@@ -65,6 +65,7 @@ export class EditAdminMeUserComponent implements OnInit {
       mail: ['', [Validators.required, Validators.email]],
       userName: ['', [Validators.required, this.singleWordValidator]],
       role: [''],
+      position: [''],
     });
 
     this.changePasswordForm = this.fb.group(
@@ -215,7 +216,7 @@ export class EditAdminMeUserComponent implements OnInit {
           }).then((result) => {
             if (result.isConfirmed) {
               // Redirect to the desired route
-              this.router.navigate(['/login']);
+              this.router.navigate(['/admin/login']);
               localStorage.removeItem('Login Token : ');
             }
           });

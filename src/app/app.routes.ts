@@ -97,16 +97,12 @@ export const routes: Routes = [
     redirectTo: 'admin/login',
     pathMatch: 'full',
   },
-  {
-    path: 'admin',
-    redirectTo: 'admin/login',
-    pathMatch: 'full',
-  },
 
-  { path: 'admin/login', component: LoginComponent },
+
+  { path: 'login', component: LoginComponent },
 
   {
-    path: 'admin',
+    path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plantcare',
@@ -12,6 +13,9 @@ export class PlantcareComponent {
   popupVisibleNews = false;
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
+
+   constructor(private router: Router){}
+  
 
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;
@@ -41,5 +45,16 @@ export class PlantcareComponent {
     if(this.popupVisibleMarketPrice = true){
       this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
     }
+  }
+
+
+
+
+  navigateToCreateNews(): void {
+    this.router.navigate(['/plant-care/action/create-news']);
+  }
+
+  navigateToManageNews(): void {
+    this.router.navigate(['/plant-care/action/manage-content']);
   }
 }

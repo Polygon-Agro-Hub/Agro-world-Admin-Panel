@@ -341,7 +341,7 @@ export class EditAdminMeUserComponent implements OnInit {
           }).then((result) => {
             if (result.isConfirmed) {
               this.closePopup();
-              this.router.navigate(['/login']);
+              this.router.navigate(['/admin/login']);
               localStorage.removeItem('Login Token : ');
             }
           });

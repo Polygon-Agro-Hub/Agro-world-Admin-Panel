@@ -54,17 +54,17 @@
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-start"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-start"
             >
               Crop
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Num of Varieties
             </th>
@@ -78,6 +78,7 @@
             >
               Varieties
             </th>
+            <th class="px-4 py-3 font-normal"></th>
           </tr>
         </thead>
         <tbody>
@@ -94,11 +95,11 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="py-3 text-textLight dark:text-textDark">{{ (page - 1) * itemsPerPage + i + 1 }}</td>
-            <td class="py-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-4 text-textLight dark:text-textDark">{{ (page - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="py-3 px-4 text-textLight dark:text-textDark text-start">
               {{ item.cropNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.varietyCount || 0 }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
@@ -115,9 +116,9 @@
               <div *ngIf="item.varietyList.length === 0">No Varieties Yet</div>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="flex flex-row gap-x-6 py-3 text-center text-textLight dark:text-textDark">
               <button
-                class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
+                class="w-6 h-6 text-blue-500 hover:text-blue-700"
                 (click)="Varieties(item.id, item.cropNameEnglish)"
               >
                 <svg
@@ -136,7 +137,7 @@
               </button>
 
               <button
-                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCropGroup(item.id)"
               >
                 <svg
@@ -153,7 +154,7 @@
               </button>
 
               <button
-                class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
+                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCropCalender(item.id)"
               >
                 <svg

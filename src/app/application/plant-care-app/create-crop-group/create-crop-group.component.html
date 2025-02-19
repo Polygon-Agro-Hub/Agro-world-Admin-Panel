@@ -17,17 +17,24 @@
     <div class="space-y-4">
       <!-- Crop Name -->
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By English</label>
+        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Crop Name By English
+        </label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameEnglish" name="cropName"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropEngNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" required />
+          #cropEngNameInput="ngModel" pattern="^(?![0-9]+$)[a-zA-Z0-9 ]*$" required />
+      
+        <!-- Error: Required Field -->
         <div *ngIf="cropEngNameInput.touched && !cropGroup.cropNameEnglish" class="text-red-500 text-sm mt-1">
           <div>English crop name is required</div>
         </div>
-        <!-- <div *ngIf="cropEngNameInput.touched && cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Can not enter special character</div>
-        </div> -->
+      
+        <!-- Error: Only Numbers Not Allowed -->
+        <div *ngIf="cropEngNameInput.touched && cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+          <div>Crop name can't be only numbers</div>
+        </div>
       </div>
+      
 
 
 
@@ -36,27 +43,32 @@
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Sinhala</label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameSinahala" name="cropName"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropSinNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
+          #cropSinNameInput="ngModel" pattern="^(?![0-9]+$)[a-zA-Z0-9 ]*$" required />
         <div *ngIf="cropSinNameInput.touched && !cropGroup.cropNameSinahala" class="text-red-500 text-sm mt-1">
           <div>Sinhala crop name is required</div>
         </div>
-        <!-- <div *ngIf="cropSinNameInput.touched && cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Can not enter special character</div>
-        </div> -->
+        <div *ngIf="cropSinNameInput.touched && cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+          <div>Crop name can't be only numbers</div>
+        </div>
       </div>
 
       <div>
-        <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By Tamil</label>
-        <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameTamil" name="cropName"
+        <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Crop Name By Tamil
+        </label>
+        <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropTamilNameInput="ngModel" pattern="^[a-zA-Z0-9]*$" />
+          #cropTamilNameInput="ngModel" pattern="^(?![0-9]+$)[\u0B80-\u0BFFa-zA-Z0-9 ]*$" required />
+      
+        <!-- Error: Required Field -->
         <div *ngIf="cropTamilNameInput.touched && !cropGroup.cropNameTamil" class="text-red-500 text-sm mt-1">
           <div>Tamil crop name is required</div>
         </div>
-        <!-- <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1">
-          <div>Can not enter special character</div>
-        </div> -->
+      
+        <!-- Error: Only Numbers Not Allowed -->
+        <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+          <div>Crop name can't be only numbers</div>
+        </div>
       </div>
 
       <!-- Select Parent Category -->

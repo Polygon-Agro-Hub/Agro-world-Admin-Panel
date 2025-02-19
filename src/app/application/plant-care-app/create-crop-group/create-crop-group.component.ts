@@ -111,15 +111,65 @@ export class CreateCropGroupComponent {
 
   onSubmit() {
     // Check if required fields are missing
-    if (!this.cropGroup.cropNameEnglish || !this.cropGroup.cropNameSinahala || !this.cropGroup.cropNameTamil || 
-        !this.cropGroup.parentCategory || !this.cropGroup.bgColor) {
+    if (!this.cropGroup.cropNameEnglish) {
       Swal.fire(
         'Warning',
-        'Please fill all input fields',
+        'Please fill the Crop Name in English',
         'warning'
       );
       return;
     }
+    
+    if (!this.cropGroup.cropNameSinahala) {
+      Swal.fire(
+        'Warning',
+        'Please fill the Crop Name in Sinhala',
+        'warning'
+      );
+      return;
+    }
+    
+    if (!this.cropGroup.cropNameTamil) {
+      Swal.fire(
+        'Warning',
+        'Please fill the Crop Name in Tamil',
+        'warning'
+      );
+      return;
+    }
+    
+    if (!this.cropGroup.parentCategory) {
+      Swal.fire(
+        'Warning',
+        'Please select a Parent Category',
+        'warning'
+      );
+      return;
+    }
+    
+    if (!this.cropGroup.bgColor) {
+      Swal.fire(
+        'Warning',
+        'Please choose a Background Color',
+        'warning'
+      );
+      return;
+    }
+
+    if (!this.cropGroup.cropNameEnglish || 
+      !this.cropGroup.cropNameSinahala || 
+      !this.cropGroup.cropNameTamil || 
+      !this.cropGroup.parentCategory || 
+      !this.cropGroup.bgColor) {
+    Swal.fire(
+      'Warning',
+      'Please fill in all the required fields.',
+      'warning'
+    );
+    return;
+    }
+
+    
   
     // Check if crop names contain only numbers
     const onlyNumbersPattern = /^[0-9]+$/;

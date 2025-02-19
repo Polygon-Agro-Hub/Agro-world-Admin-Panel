@@ -22,58 +22,62 @@
         </label>
         <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameEnglish" name="cropName"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropEngNameInput="ngModel" pattern="^(?![0-9]+$)[a-zA-Z0-9 ]*$" required />
+          #cropEngNameInput="ngModel" 
+          pattern="^(?![0-9]+$)[a-zA-Z0-9 ]*$"
+          required />
       
         <!-- Error: Required Field -->
         <div *ngIf="cropEngNameInput.touched && !cropGroup.cropNameEnglish" class="text-red-500 text-sm mt-1">
           <div>English crop name is required</div>
         </div>
       
-        <!-- Error: Only Numbers Not Allowed -->
+        <!-- Error: Pattern Validation -->
         <div *ngIf="cropEngNameInput.touched && cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Crop name can't be only numbers</div>
+          <div>Crop name cannot be only numbers and special characters are not allowed</div>
         </div>
       </div>
-      
 
-
-
-
+      <!-- Crop Name Sinhala -->
       <div>
         <label for="cropNameSin" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Crop Name By Sinhala
         </label>
         <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropSinNameInput="ngModel" pattern="^(?![0-9]+$)[\u0D80-\u0DFFa-zA-Z0-9 ]*$" required />
+          #cropSinNameInput="ngModel" 
+          pattern="^(?![0-9]+$)[\u0D80-\u0DFF0-9\s]*$"
+          required />
       
         <!-- Error: Required Field -->
         <div *ngIf="cropSinNameInput.touched && !cropGroup.cropNameSinahala" class="text-red-500 text-sm mt-1">
           <div>Sinhala crop name is required</div>
         </div>
       
-        <!-- Error: Only Numbers Not Allowed -->
+        <!-- Error: Pattern Validation -->
         <div *ngIf="cropSinNameInput.touched && cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Crop name can't be only numbers</div>
+          <div>Crop name cannot be only numbers and only Sinhala characters and numbers are allowed</div>
         </div>
       </div>
 
+      <!-- Crop Name Tamil -->
       <div>
         <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Crop Name By Tamil
         </label>
         <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropTamilNameInput="ngModel" pattern="^(?![0-9]+$)[\u0B80-\u0BFFa-zA-Z0-9 ]*$" required />
+          #cropTamilNameInput="ngModel" 
+          pattern="^(?![0-9]+$)[\u0B80-\u0BFF0-9\s]*$"
+          required />
       
         <!-- Error: Required Field -->
         <div *ngIf="cropTamilNameInput.touched && !cropGroup.cropNameTamil" class="text-red-500 text-sm mt-1">
           <div>Tamil crop name is required</div>
         </div>
       
-        <!-- Error: Only Numbers Not Allowed -->
+        <!-- Error: Pattern Validation -->
         <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Crop name can't be only numbers</div>
+          <div>Crop name cannot be only numbers and only Tamil characters and numbers are allowed</div>
         </div>
       </div>
 
@@ -127,7 +131,8 @@
         <button type="button" (click)="onCancel()"
           class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
         <button type="submit" (click)="onSubmit()"
-          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md"
+          [disabled]="cropEngNameInput.invalid || cropSinNameInput.invalid || cropTamilNameInput.invalid">Save</button>
       </div>
     </div>
 

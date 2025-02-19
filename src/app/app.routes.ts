@@ -90,12 +90,11 @@ import { AddComplainCategoriesComponent } from './application/Complaints/add-com
 import { ManageComplaintsCategoriesComponent } from './application/Complaints/manage-complaints-categories/manage-complaints-categories.component';
 import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
 
-
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'admin/login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'admin',
@@ -119,9 +118,7 @@ export const routes: Routes = [
       {
         path: 'plant-care',
         children: [
-          { path: 'dashboard', 
-          component: PlatCareDashbordComponent 
-        },
+          { path: 'dashboard', component: PlatCareDashbordComponent },
           {
             path: 'action',
             children: [
@@ -250,16 +247,14 @@ export const routes: Routes = [
                   },
                 ],
               },
-            ]
+            ],
           },
-          
         ],
       },
 
       {
         path: 'reports',
         children: [
-
           {
             path: '',
             component: ReportComponent,
@@ -327,7 +322,7 @@ export const routes: Routes = [
                   },
                 ],
               },
-    
+
               {
                 path: 'admin',
                 children: [
@@ -342,7 +337,7 @@ export const routes: Routes = [
                   },
                 ],
               },
-    
+
               {
                 path: 'collective-officer',
                 children: [
@@ -368,15 +363,8 @@ export const routes: Routes = [
                   },
                 ],
               },
-
-
-
-
-
-            ]
-
+            ],
           },
-          
         ],
       },
 
@@ -416,6 +404,7 @@ export const routes: Routes = [
         path: 'collection-hub',
         children: [
           { path: '', component: CollectionHubComponent },
+
           {
             path: 'view-collection-centers',
             component: CollectionAllViewComponent,
@@ -481,9 +470,8 @@ export const routes: Routes = [
                 path: 'add-package',
                 component: AddPackageComponent,
               },
-            ]
+            ],
           },
-          
         ],
       },
       {
@@ -549,17 +537,13 @@ export const routes: Routes = [
           },
         ],
       },
-
-     
     ],
   },
   { path: '**', component: NotFoundComponent },
 ];
 
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-
 export class AppRoutingModule {}

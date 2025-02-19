@@ -89,6 +89,7 @@ import { ManageApplicationsComponent } from './application/Complaints/manage-app
 import { AddComplainCategoriesComponent } from './application/Complaints/add-complain-categories/add-complain-categories.component';
 import { ManageComplaintsCategoriesComponent } from './application/Complaints/manage-complaints-categories/manage-complaints-categories.component';
 import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
+import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
 
 export const routes: Routes = [
   {
@@ -432,6 +433,10 @@ export const routes: Routes = [
           {
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
+          },
+          {
+            path: 'add-daily-target/:id/:name',
+            component: AddDailyTargetComponent,
           },
         ],
       },

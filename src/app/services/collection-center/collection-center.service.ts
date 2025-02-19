@@ -24,7 +24,7 @@ export class CollectionCenterService {
   private token = this.tokenService.getToken();
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  
+
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
@@ -58,14 +58,14 @@ export class CollectionCenterService {
       ...centerData,
       companies,
     };
-    console.log('hiii',payload);
+    console.log('hiii', payload);
     return this.http.post(`${this.apiUrl}auth/create-collection-center`, payload, {
       headers,
     })
     console.log(payload);
   }
 
-  getAllComplain(page: number, limit: number, status: String,category: String,  searchText: string): Observable<any> {
+  getAllComplain(page: number, limit: number, status: String, category: String, searchText: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ export class CollectionCenterService {
   }
 
 
-  updateColectionCenter(centerData: any, companies: any,  id: number): Observable<any> {
+  updateColectionCenter(centerData: any, companies: any, id: number): Observable<any> {
     console.log(centerData);
 
     const requestData = {
@@ -202,12 +202,12 @@ export class CollectionCenterService {
 
 
 
-  getAllManagerList(companyId : any, centerId : any): Observable<any> {
+  getAllManagerList(companyId: any, centerId: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id',companyId)
+    console.log('This is company Id', companyId)
     return this.http.get(`${this.apiUrl}auth/get-all-manager-list/${companyId}/${centerId}`, {
       headers,
     });
@@ -218,7 +218,7 @@ export class CollectionCenterService {
   generateRegCode(province: string, district: string, city: string): Observable<{ regCode: string }> {
     return this.http.post<{ regCode: string }>(`${this.apiUrl}auth/generate-regcode`, { province, district, city });
   }
-  
+
   getAllCompanyDetails(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -229,7 +229,7 @@ export class CollectionCenterService {
     });
   }
 
-  updateCompany(companyData:any, id: number): Observable<any> {
+  updateCompany(companyData: any, id: number): Observable<any> {
     console.log(companyData);
 
     const headers = new HttpHeaders({
@@ -241,7 +241,7 @@ export class CollectionCenterService {
     })
   }
 
-  getCompanyById( id: number): Observable<any> {
+  getCompanyById(id: number): Observable<any> {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -252,13 +252,33 @@ export class CollectionCenterService {
     })
   }
 
-  deleteCompany(id:number): Observable<any>{
+  deleteCompany(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
     console.log("DELETE ITEM", id);
-    return this.http.delete(`${this.apiUrl}auth/delete-company/${id}`,{
+    return this.http.delete(`${this.apiUrl}auth/delete-company/${id}`, {
       headers,
     })
+  }
+
+  getCropVerity(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    let url = `${this.apiUrl}auth/get-crop-category`;
+    return this.http.get<any>(url, { headers });
+  }
+
+
+  
+  createDailyTarget(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    let url = `${this.apiUrl}auth/create-daily-target`;
+    return this.http.post<any>(url, data, { headers });
   }
 }

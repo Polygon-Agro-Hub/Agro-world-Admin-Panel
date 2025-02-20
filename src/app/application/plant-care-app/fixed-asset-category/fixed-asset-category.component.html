@@ -1,6 +1,6 @@
 <!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/admin/plant-care/action/report-farmer-list'">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/report-farmer-list')">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>

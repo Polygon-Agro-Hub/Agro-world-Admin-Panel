@@ -176,7 +176,11 @@ export class CollectionAllViewComponent implements OnInit {
     this.router.navigate(['/collection-hub/add-collection-center']);
   }
 
-  
+  navigateDashboard(id: number) {
+    this.router.navigate([
+      `/collection-hub/collection-center-dashboard/${id}`,
+    ]);
+  }
 }
 
 // class CollectionCenter {

@@ -60,7 +60,7 @@ export class ViewCollectiveOfficerComponent {
     private router: Router,
     private collectionService: CollectionService,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
   fetchAllCollectionOfficer(
     page: number = 1,
@@ -156,9 +156,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   editCollectionOfficer(id: number) {
-    this.router.navigate([
-      `admin/steckholders/action/collective-officer/personal-edit/${id}`,
-    ]);
+    this.navigatePath(`/steckholders/action/collective-officer/personal-edit/${id}`);
   }
 
   openPopup(item: any) {
@@ -294,6 +292,10 @@ export class ViewCollectiveOfficerComponent {
   offSearch() {
     this.searchNIC = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 }
 

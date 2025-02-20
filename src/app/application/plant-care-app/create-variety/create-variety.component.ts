@@ -259,7 +259,7 @@ export class CreateVarietyComponent implements OnInit {
             icon: 'success',
             confirmButtonText: 'OK',
           }).then(() => {
-            this.router.navigate(['/admin/plant-care/action/view-crop-group']);
+            this.router.navigate(['/admin/plant-care/action/view-crop-variety']);
           });
         } else {
           this.isLoading = false;

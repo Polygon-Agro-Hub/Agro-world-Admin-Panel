@@ -73,6 +73,8 @@ export class CreateNewsComponent {
   today: string = this.getTodayDate();
   isPublishAfterExpireValid: boolean = true;
   isPublishAfterExpireValidEditNews: boolean= true;
+  currentPublishDate: string = '';
+  currentExpireDate: string = '';
   // isAnyFieldMissing:boolean = false;
 
 
@@ -436,16 +438,22 @@ export class CreateNewsComponent {
   getNewsById(id: any) {
     this.newsService.getNewsById(id).subscribe(
       (data) => {
+        
+        // this.currentPublishDate = data[0].publishDate
         // Convert dates to 'YYYY-MM-DD'
         data.forEach((newsItem: any) => {
           if (newsItem.publishDate) {
             newsItem.publishDate = this.formatDate(newsItem.publishDate);
+            this.currentPublishDate 
           }
           if (newsItem.expireDate) {
             newsItem.expireDate = this.formatDate(newsItem.expireDate);
           }
         });
         this.newsItems = data;
+        // console.log(this.newsItems[0].publishDate);
+        this.currentPublishDate = this.newsItems[0].publishDate;
+        this.currentExpireDate = this.newsItems[0].expireDate;
         console.log(this.newsItems);
       },
       (error) => {
@@ -631,17 +639,17 @@ export class CreateNewsComponent {
 
   checkPublishDateEditNews() {
     if (this.newsItems[0].publishDate < this.today) {
+      
       Swal.fire({
         icon: 'error',
         title: 'Invalid Publish Date',
         text: 'Publish Date cannot be a past date!',
         confirmButtonText: 'OK'
       }).then(() => {
-        this.newsItems[0].publishDate = '';
+        this.newsItems[0].publishDate = this.currentPublishDate;
       });
     }
   }
-
   
 
   checkExpireDate() {
@@ -670,13 +678,14 @@ export class CreateNewsComponent {
 
   checkExpireDateEditNews() {
     if (!this.newsItems[0].publishDate) {
+      
       Swal.fire({
         icon: 'warning',
         title: 'publish Date Required',
         text: 'Please select a publish Date before setting an Expiration Date.',
         confirmButtonText: 'OK'
       }).then(() => {
-        this.newsItems[0].expireDate = '';
+        this.newsItems[0].expireDate = this.currentExpireDate;
       });
     } else {
       if (this.newsItems[0].expireDate < this.newsItems[0].publishDate) {
@@ -686,7 +695,7 @@ export class CreateNewsComponent {
           text: 'Expire Date cannot be earlier than publish Date!',
           confirmButtonText: 'OK'
         }).then(() => {
-          this.newsItems[0].expireDate = '';
+          this.newsItems[0].expireDate = this.currentExpireDate;
         });
       }
     }
@@ -715,6 +724,15 @@ export class CreateNewsComponent {
   
       if (publishDate > expireDate) {
         this.isPublishAfterExpireValidEditNews = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid publish Date',
+          text: 'Publish date can not be later than expire date',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.newsItems[0].publishDate = this.currentPublishDate;
+          this.newsItems[0].expireDate = this.currentExpireDate;
+        });
       } else {
         this.isPublishAfterExpireValidEditNews = true;
       }

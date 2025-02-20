@@ -1,7 +1,7 @@
 <div class="flex justify-center items-center">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
     <div
-      onclick="window.location.href='admin/reports/collective-officer-report'"
+    (click)="coReport()"
       class="flex justify-center cursor-pointer"
     >
       <div
@@ -18,7 +18,7 @@
     </div>
 
     <div
-      onclick="window.location.href='admin/reports/collective-officer/district-report'"
+    (click)="districtReport()"
       class="flex justify-center cursor-pointer"
     >
       <div
@@ -35,7 +35,7 @@
     </div>
 
     <div
-      onclick="window.location.href='admin/reports/collective-officer/province-report'"
+    (click)="provinceReport()"
       class="flex justify-center cursor-pointer"
     >
       <div

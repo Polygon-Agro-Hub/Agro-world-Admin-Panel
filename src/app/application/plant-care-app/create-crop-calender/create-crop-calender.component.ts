@@ -242,11 +242,11 @@ export class CreateCropCalenderComponent {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
-        this.router.navigate(["/admin/plant-care/action/view-crop-calender"]);
+        this.router.navigate(["/plant-care/action/view-crop-calender"]);
       } else {
         this.deleteCropCalender(this.cropId);
         console.log('XLSX upload skipped');
-        this.router.navigate(["/admin/plant-care/action/view-crop-calender"]);
+        this.router.navigate(["/plant-care/action/view-crop-calender"]);
       }
     });
   }
@@ -267,7 +267,7 @@ export class CreateCropCalenderComponent {
           'success'
         );
         //navigate table
-        this.router.navigate(["/admin/plant-care/action/view-crop-calender"])
+        this.router.navigate(["/plant-care/action/view-crop-calender"])
       },
       (error: HttpErrorResponse) => {
         console.error('Error uploading XLSX file', error);
@@ -406,7 +406,25 @@ export class CreateCropCalenderComponent {
         if (result.isConfirmed) {
           this.selectedFile = null;
           this.selectedImage = null;
-          this.router.navigate(['/plant-care'])
+          this.router.navigate(['/plant-care/action'])
+        }
+      });
+    }
+
+    onCancelEdit() {
+    
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the added data after canceling!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'No, Keep Editing',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.selectedFile = null;
+          this.selectedImage = null;
+          this.router.navigate(['/plant-care/action/view-crop-calender']);
         }
       });
     }
@@ -506,6 +524,16 @@ export class CreateCropCalenderComponent {
           // Handle error...
         }
       );
+  }
+
+
+  backCreate(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
+
+
+  backEdit(): void {
+    this.router.navigate(['/plant-care/action/view-crop-calender']);
   }
 }
 

@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 
@@ -24,6 +24,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
+
 
 declare var html2pdf: any;
 
@@ -67,7 +68,8 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -345,7 +347,9 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   
 
  
-
+  back(): void {
+    this.router.navigate(['/reports/collective-officer-report']);
+  }
 
 
 

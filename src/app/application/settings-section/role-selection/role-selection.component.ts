@@ -144,7 +144,7 @@ export class RoleSelectionComponent {
   }
 
   viewPermissions(id: number) {
-    this.router.navigate([`/admin/settings/give-permissions/${id}`]);
+    this.router.navigate([`/settings/give-permissions/${id}`]);
   }
 }
 

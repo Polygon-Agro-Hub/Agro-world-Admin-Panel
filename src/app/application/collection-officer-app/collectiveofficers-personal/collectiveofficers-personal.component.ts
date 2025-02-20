@@ -6,19 +6,14 @@ import {
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import {
-  FormArray,
   FormBuilder,
-  FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
@@ -152,7 +147,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
                 'Collection Officer Created Successfully',
                 'success'
               );
-              this.router.navigate(['/admin/steckholders/action/collective-officer']);
+              this.navigatePath('/steckholders/action/collective-officer');
             },
             (error: any) => {
               this.isLoading = true;
@@ -178,7 +173,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/admin/steckholders/action/collective-officer']);
+        this.navigatePath('/steckholders/action/collective-officer');
       }
     });
   }
@@ -467,6 +462,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     } else {
       return isAddressValid;
     }
+  }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 }
 

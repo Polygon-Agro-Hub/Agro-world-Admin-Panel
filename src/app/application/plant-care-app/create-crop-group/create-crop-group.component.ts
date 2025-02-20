@@ -162,7 +162,7 @@ export class CreateCropGroupComponent {
             response.message,
             'success'
           );
-          this.router.navigate(['/admin/plant-care/action/view-crop-group']);
+          this.router.navigate(['/plant-care/action/view-crop-group']);
         } else {
           this.isLoading = false;
           Swal.fire(
@@ -230,7 +230,7 @@ export class CreateCropGroupComponent {
                   bgColor: '',
                   fileName: ''
                 };
-                this.router.navigate(['/admin/plant-care/action'])
+                this.router.navigate(['/plant-care/action'])
               }
             });
           }
@@ -360,7 +360,7 @@ export class CreateCropGroupComponent {
               title: 'Success',
               text: 'Crop Group Updated Successful!',
             });
-            this.router.navigate(['/admin/plant-care/action/view-crop-group']);
+            this.router.navigate(['/plant-care/action/view-crop-group']);
           } else {
             this.isLoading = false;
             Swal.fire(
@@ -392,6 +392,16 @@ export class CreateCropGroupComponent {
     return true
   }
 
+
+
+  backCreate(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
+
+
+  backEdit(): void {
+    this.router.navigate(['/plant-care/action/view-crop-group']);
+  }
 
 
 }

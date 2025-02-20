@@ -349,4 +349,10 @@ export class MonthlyReportComponent implements OnInit {
       return !isNaN(farmers) ? sum + farmers : sum;
     }, 0);
   }
+
+
+
+  back(): void {
+    this.router.navigate(['/reports/collective-officer-report']);
+  }
 }

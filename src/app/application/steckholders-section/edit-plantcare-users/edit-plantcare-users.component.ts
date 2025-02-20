@@ -214,7 +214,7 @@ export class EditPlantcareUsersComponent implements OnInit {
                 'plant care user has been updated.',
                 'success'
               ).then(()=>{
-                this.router.navigate(['/admin/steckholders/action/farmers'])
+                this.router.navigate(['/steckholders/action/farmers'])
               });
               this.loadUserData(this.itemId!);
               this.userForm.reset();
@@ -246,7 +246,7 @@ export class EditPlantcareUsersComponent implements OnInit {
   }
 
   onCancel() {
-    this.router.navigate(['/admin/steckholders/action/farmers'])
+    this.router.navigate(['/steckholders/action/farmers'])
   }
 
   onSubmitCreate() {
@@ -316,7 +316,7 @@ this.http
         'Plant care user has been successfully created.',
         'success'
       ).then(()=>{
-        this.router.navigate(['/admin/steckholders/action/farmers'])
+        this.router.navigate(['/steckholders/action/farmers'])
       });
       this.loadUserData(this.itemId!);
     },

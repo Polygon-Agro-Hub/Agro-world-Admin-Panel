@@ -11,10 +11,10 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
 interface TaskList {
   id: any;
   slavecropcalendardaysId: any;
-  taskIndex : any;
+  taskIndex: any;
   startingDate: string;
   taskEnglish: string;
-  imageLink : string;
+  imageLink: string;
   videoLinkEnglish: string;
   videoLinkSinhala: string;
   videoLinkTamil: string;
@@ -32,41 +32,41 @@ interface TaskList {
 export class UserCropCalendarComponent {
   cropCalendarId: any | null = null;
   userId: any | null = null;
-  onCulscropID : any | null = null;
+  onCulscropID: any | null = null;
   taskList: TaskList[] = [];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
   isLoading = true;
 
-  constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router,  private route: ActivatedRoute,) {}
+  constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router, private route: ActivatedRoute,) { }
 
-  
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.cropCalendarId = params['cropCalendarId'] ? +params['cropCalendarId'] : null; 
+      this.cropCalendarId = params['cropCalendarId'] ? +params['cropCalendarId'] : null;
       this.userId = params['userId'] ? +params['userId'] : null;
-      this.onCulscropID  = params['onCulscropID'] ? +params['onCulscropID'] : null;   
+      this.onCulscropID = params['onCulscropID'] ? +params['onCulscropID'] : null;
       console.log("This is the crop calendar Id : ", this.cropCalendarId);
       console.log("This is the user Id : ", this.userId);
     });
     console.log(this.cropCalendarId);
-    
+
     this.getchUserTaskList(this.cropCalendarId, this.userId);
-    
+
   }
 
 
   getchUserTaskList(cropId: number, userId: number, page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    console.log('Fetching tasks for page:', page); 
+    console.log('Fetching tasks for page:', page);
     this.page = page;
     this.ongoingCultivationService.getUserTasks(cropId, userId, page, limit)
       .subscribe(
         (data) => {
           this.isLoading = false;
           this.taskList = data.items;
-          
+
           this.totalItems = data.total;
         },
         (error) => {
@@ -80,7 +80,7 @@ export class UserCropCalendarComponent {
     this.page = event; // Set the current page to the event value
     this.getchUserTaskList(this.cropCalendarId, this.userId, this.page, this.itemsPerPage); // Fetch the data for the selected page
   }
-  
+
 
   deleteCroptask(id: string, cropId: any, index: any): void {
     Swal.fire({
@@ -141,8 +141,8 @@ export class UserCropCalendarComponent {
 
 
   editCropTask(id: any) {
-    this.router.navigate(['admin/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task'], { 
-      queryParams: { id } 
+    this.router.navigate(['/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task'], {
+      queryParams: { id }
     });
     console.log(id);
   }
@@ -158,7 +158,7 @@ export class UserCropCalendarComponent {
         color: #ffffff !important; /* Change this to your desired hover color */
       }
     `;
-  
+
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
@@ -184,7 +184,7 @@ export class UserCropCalendarComponent {
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate([`admin/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`]);
+        this.router.navigate([`/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`]);
       }
     });
   }

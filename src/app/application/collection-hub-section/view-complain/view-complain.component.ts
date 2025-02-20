@@ -46,12 +46,12 @@ export class ViewComplainComponent implements OnInit {
     // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService
-    
+
   ) { }
 
   ngOnInit(): void {
     console.log(this.tokenService.getUserDetails().role);
-    
+
     this.status = [
       { id: 1, type: "Assigned" },
       { id: 2, type: "Pending" },
@@ -65,13 +65,13 @@ export class ViewComplainComponent implements OnInit {
       { id: 4, type: "Procuiment" },
     ];
 
-    if(this.tokenService.getUserDetails().role === '2'){
+    if (this.tokenService.getUserDetails().role === '2') {
       this.filterCategory.type = 'Agriculture';
-    }else if(this.tokenService.getUserDetails().role === '3'){
+    } else if (this.tokenService.getUserDetails().role === '3') {
       this.filterCategory.type = 'Finance';
-    }else if(this.tokenService.getUserDetails().role === '4'){
+    } else if (this.tokenService.getUserDetails().role === '4') {
       this.filterCategory.type = 'Call Center';
-    }else if(this.tokenService.getUserDetails().role === '5'){
+    } else if (this.tokenService.getUserDetails().role === '5') {
       this.filterCategory.type = 'Procuiment';
     }
 
@@ -84,7 +84,7 @@ export class ViewComplainComponent implements OnInit {
     this.complainSrv.getAllComplain(page, limit, this.filterStatus?.type, this.filterCategory?.type, this.searchText).subscribe(
       (res) => {
         console.log(res.results);
-        
+
         // Map response data to ensure createdAt is in a readable date format
         this.complainsData = res.results.map((item: any) => ({
           ...item,
@@ -112,8 +112,8 @@ export class ViewComplainComponent implements OnInit {
     }
   }
 
-  searchComplain(){
-    this.page=1;
+  searchComplain() {
+    this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
@@ -122,8 +122,8 @@ export class ViewComplainComponent implements OnInit {
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
-  navigateSelectComplain(id:string, farmerName: string){
-    this.router.navigate([`/admin/collection-hub/view-selected-complain/${id}/${farmerName}`])
+  navigateSelectComplain(id: string, farmerName: string) {
+    this.router.navigate([`/collection-hub/view-selected-complain/${id}/${farmerName}`])
   }
 
 
@@ -135,15 +135,15 @@ export class ViewComplainComponent implements OnInit {
       console.log(res);
       this.isLoading = false;
       this.showReplyDialog(id, farmerName);
-  
+
     });
   }
 
 
-   showReplyDialog(id: any, farmerName: string) {
-        Swal.fire({
-          title: 'Reply as AgroWorld',
-          html: `
+  showReplyDialog(id: any, farmerName: string) {
+    Swal.fire({
+      title: 'Reply as AgroWorld',
+      html: `
             <div class="text-left">
               <p>Dear <strong>${farmerName}</strong>,</p>
               <p>We are pleased to inform you that your complaint has been resolved.</p>
@@ -160,77 +160,81 @@ export class ViewComplainComponent implements OnInit {
               </p>
             </div>
           `,
-          showCancelButton: true,
-          confirmButtonText: 'Send',
-          cancelButtonText: 'Cancel',
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          width: '600px',
-          preConfirm: () => {
-            const textarea = document.getElementById('messageContent') as HTMLTextAreaElement;
-            return textarea.value;
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.messageContent = result.value;
-            this.submitComplaint(id);
-          }
-        });
+      showCancelButton: true,
+      confirmButtonText: 'Send',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      width: '600px',
+      preConfirm: () => {
+        const textarea = document.getElementById('messageContent') as HTMLTextAreaElement;
+        return textarea.value;
       }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.messageContent = result.value;
+        this.submitComplaint(id);
+      }
+    });
+  }
 
 
 
 
 
 
-        submitComplaint(id:any) {
-            const token = this.tokenService.getToken();
-            if (!token) {
-              console.error('No token found');
-              return;
-            }
-      
-            const headers = new HttpHeaders({
-                  Authorization: `Bearer ${token}`,
-                });
-      
-               
-        
-                console.log(id);
-                console.log(this.messageContent);
-      
-                const body = { reply: this.messageContent };
-      
-            this.http
-              .put(
-                `${environment.API_URL}auth/reply-complain/${id}`,
-                body,
-                { headers }
-              )
-              .subscribe(
-                (res: any) => {
-                  console.log('Market Price updated successfully', res);
-                  
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Market Price updated successfully!',
-                  });
-                  this.fetchAllComplain(this.page, this.itemsPerPage);
-                  
-                },
-                (error) => {
-                  console.error('Error updating news', error);
-                  
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Unsuccessful',
-                    text: 'Error updating news',
-                  });
-                  this.fetchAllComplain(this.page, this.itemsPerPage);
-                }
-              );
-          }
+  submitComplaint(id: any) {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+
+
+    console.log(id);
+    console.log(this.messageContent);
+
+    const body = { reply: this.messageContent };
+
+    this.http
+      .put(
+        `${environment.API_URL}auth/reply-complain/${id}`,
+        body,
+        { headers }
+      )
+      .subscribe(
+        (res: any) => {
+          console.log('Market Price updated successfully', res);
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Market Price updated successfully!',
+          });
+          this.fetchAllComplain(this.page, this.itemsPerPage);
+
+        },
+        (error) => {
+          console.error('Error updating news', error);
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: 'Error updating news',
+          });
+          this.fetchAllComplain(this.page, this.itemsPerPage);
+        }
+      );
+  }
+
+  navigationPath(path: string) {
+    this.router.navigate([path])
+  }
 
 
 }

@@ -279,7 +279,6 @@ export class CreateAdminUserComponent implements OnInit {
       .subscribe(
         (res: any) => {
           this.userForm.patchValue(res);
-          console.log('hi...... Admin updated successfully', res);
 
           // Reassign the original id value back to the form
           this.userForm.patchValue({ id: originalId });
@@ -290,7 +289,7 @@ export class CreateAdminUserComponent implements OnInit {
             text: 'Admin updated successfully!',
           });
           this.userForm.reset();
-          this.router.navigate(['/admin/steckholders/action/admin']);
+          this.navigatePath('/steckholders/action/admin');
         },
         (error) => {
           console.error('Error updating Admin', error);
@@ -345,7 +344,7 @@ export class CreateAdminUserComponent implements OnInit {
             text: 'Admin created successfully!',
           });
           this.userForm.reset();
-          this.router.navigate(['/admin/steckholders/action/admin']);
+          this.navigatePath('/steckholders/action/admin');
         },
         (error) => {
           console.error('Error creating Admin', error);
@@ -360,16 +359,20 @@ export class CreateAdminUserComponent implements OnInit {
 
   onCancel() {
     this.userForm.reset();
-    this.router.navigate(['/admin/steckholders/action/admin']);
+    this.navigatePath('/steckholders/action/admin');
   }
 
   onCancel2() {
     this.userForm.reset();
-    this.router.navigate(['/admin/steckholders/action/admin']);
+    this.navigatePath('/steckholders/action/admin')
   }
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+
+  navigatePath(path:string){
+    this.router.navigate([path]);
   }
 }
 

@@ -1,7 +1,4 @@
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/plant-care/action/opt-out-feedbacks'"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/opt-out-feedbacks')">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -9,114 +6,104 @@
 
 
 <div class="pb-7">
-   
-    
-    <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md ">
-        <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">Add Feedback Option</h2>
-
-        
-            <div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div class="col-span-2">
-                      <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Index Number</label>
-                      <input type="text" id="orderNumber" [(ngModel)]="feedback.orderNumber" name="orderNumber"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                        #orderNumberInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly />
-                      <div *ngIf="orderNumberInput.touched && !feedback.orderNumber" class="text-red-500 text-sm mt-1">
-                        <div>Index number is required</div>
-                      </div>
-                      <div *ngIf="orderNumberInput.touched && orderNumberInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-                        <div>Can not enter special character</div>
-                      </div>
-                    </div>
-
-                    <div class="col-span-1">
-                      <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Colour</label>
-                         <div class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-                            <div class="px-2 py-2 rounded-md" [style.backgroundColor]="getColorByOrderNumber(feedback.orderNumber)"></div>
-                         </div>
-                    </div>
-                  </div>
-  
-                </div>
-
-                
-                <div class="pt-3 pb-3">
-                  <label for="feedbackEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In English)</label>
-                  <textarea 
-                    id="feedbackEnglish" 
-                    [(ngModel)]="feedback.feedbackEnglish" 
-                    name="feedbackEnglish" 
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
-                    #feedbackEnglishInput="ngModel" 
-                    rows="3" 
-                    pattern="^[a-zA-Z0-9]*$" 
-                    required>
-                  </textarea>
-                  <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
-                    <div>English crop name is required</div>
-                  </div>
-                  <!-- <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-                    <div>Can not enter special character</div>
-                  </div> -->
-                </div>
-
-                <div class="pt-3 pb-3">
-                  <label for="feedbackSinahala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In Sinhala)</label>
-                  <textarea 
-                    id="feedbackSinahala" 
-                    [(ngModel)]="feedback.feedbackSinahala" 
-                    name="feedbackSinahala" 
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
-                    #feedbackSinahalaInput="ngModel" 
-                    rows="3" 
-                    pattern="^[a-zA-Z0-9]*$" 
-                    required>
-                  </textarea>
-                  <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
-                    <div>English crop name is required</div>
-                  </div>
-                  <!-- <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-                    <div>Can not enter special character</div>
-                  </div> -->
-                </div>
-
-                <div class="pt-3 pb-3">
-                  <label for="feedbackTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In Tamil)</label>
-                  <textarea 
-                    id="feedbackTamil" 
-                    [(ngModel)]="feedback.feedbackTamil" 
-                    name="feedbackTamil" 
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" 
-                    #feedbackTamilInput="ngModel" 
-                    rows="3" 
-                    pattern="^[a-zA-Z0-9]*$" 
-                    required>
-                  </textarea>
-                  <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
-                    <div>English crop name is required</div>
-                  </div>
-                  <!-- <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-                    <div>Can not enter special character</div>
-                  </div> -->
-                </div>
 
 
+  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md ">
+    <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">Add Feedback Option</h2>
 
-                    
-                
-                
+
+    <div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="col-span-2">
+            <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Index
+              Number</label>
+            <input type="text" id="orderNumber" [(ngModel)]="feedback.orderNumber" name="orderNumber"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              #orderNumberInput="ngModel" pattern="^[a-zA-Z0-9]*$" required readonly />
+            <div *ngIf="orderNumberInput.touched && !feedback.orderNumber" class="text-red-500 text-sm mt-1">
+              <div>Index number is required</div>
             </div>
-
-            <div class="flex justify-end mt-6">
-                <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">Save</button>
+            <div *ngIf="orderNumberInput.touched && orderNumberInput.errors?.['pattern']"
+              class="text-red-500 text-sm mt-1">
+              <div>Can not enter special character</div>
             </div>
-        
+          </div>
+
+          <div class="col-span-1">
+            <label for="orderNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Colour</label>
+            <div
+              class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+              <div class="px-2 py-2 rounded-md" [style.backgroundColor]="getColorByOrderNumber(feedback.orderNumber)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="pt-3 pb-3">
+        <label for="feedbackEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In
+          English)</label>
+        <textarea id="feedbackEnglish" [(ngModel)]="feedback.feedbackEnglish" name="feedbackEnglish"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          #feedbackEnglishInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required>
+                  </textarea>
+        <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
+          <div>English crop name is required</div>
+        </div>
+        <!-- <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character</div>
+                  </div> -->
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="feedbackSinahala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In
+          Sinhala)</label>
+        <textarea id="feedbackSinahala" [(ngModel)]="feedback.feedbackSinahala" name="feedbackSinahala"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          #feedbackSinahalaInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required>
+                  </textarea>
+        <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
+          <div>English crop name is required</div>
+        </div>
+        <!-- <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character</div>
+                  </div> -->
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="feedbackTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In
+          Tamil)</label>
+        <textarea id="feedbackTamil" [(ngModel)]="feedback.feedbackTamil" name="feedbackTamil"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          #feedbackTamilInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required>
+                  </textarea>
+        <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
+          <div>English crop name is required</div>
+        </div>
+        <!-- <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+                    <div>Can not enter special character</div>
+                  </div> -->
+      </div>
+
+
+
+
+
+
     </div>
+
+    <div class="flex justify-end mt-6">
+      <button type="button" (click)="onCancel()"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">Cancel</button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">Save</button>
+    </div>
+
+  </div>
 </div>
 
 
@@ -142,40 +129,32 @@
 
   <div cdkDropList class="w-full space-y-3" (cdkDropListDropped)="drop($event)">
     @for (feedback of feebackList; track feedback.id) {
-      <div 
-        class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-move hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200" 
-        cdkDrag
-      >
-        <!-- Order Number -->
-        <div class="min-w-[2rem] text-gray-600 dark:text-gray-400 font-medium">
-          {{feedback.orderNumber.toString().padStart(2, '0')}}
-        </div>
-        
-        <!-- Color Square -->
-        <div 
-          class="w-8 h-8 rounded-md"
-          [style.backgroundColor]="getColorByOrderNumber(feedback.orderNumber)"
-        ></div>
-        
-        <!-- Feedback Text -->
-        <div class="flex-grow text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 p-5 rounded-md">
-          {{feedback.feedbackEnglish}}
-        </div>
-        
-        <!-- Delete Button -->
-        <button 
-        (click)="deleteFeedback(feedback.id)"
-          class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2"
-        >
-          <i class="fa-solid fa-trash"></i>
-        </button>
-
-        <!-- Drag Preview Placeholder -->
-        <div 
-          *cdkDragPlaceholder 
-          class="bg-gray-100 dark:bg-gray-700 rounded-lg opacity-50 h-[60px]"
-        ></div>
+    <div
+      class="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-move hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+      cdkDrag>
+      <!-- Order Number -->
+      <div class="min-w-[2rem] text-gray-600 dark:text-gray-400 font-medium">
+        {{feedback.orderNumber.toString().padStart(2, '0')}}
       </div>
+
+      <!-- Color Square -->
+      <div class="w-8 h-8 rounded-md" [style.backgroundColor]="getColorByOrderNumber(feedback.orderNumber)"></div>
+
+      <!-- Feedback Text -->
+      <div
+        class="flex-grow text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 p-5 rounded-md">
+        {{feedback.feedbackEnglish}}
+      </div>
+
+      <!-- Delete Button -->
+      <button (click)="deleteFeedback(feedback.id)"
+        class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+
+      <!-- Drag Preview Placeholder -->
+      <div *cdkDragPlaceholder class="bg-gray-100 dark:bg-gray-700 rounded-lg opacity-50 h-[60px]"></div>
+    </div>
     }
   </div>
 </div>

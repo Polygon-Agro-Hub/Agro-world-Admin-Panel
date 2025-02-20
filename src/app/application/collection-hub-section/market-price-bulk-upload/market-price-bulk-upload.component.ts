@@ -109,7 +109,7 @@ export class MarketPriceBulkUploadComponent {
             confirmButtonText: 'OK'
           }).then((result)=>{
             if(result.isConfirmed){
-              this.router.navigate(['/admin/market-place/view-current-price'])
+              this.router.navigate(['/market-place/view-current-price'])
             }
           });
         },
@@ -164,5 +164,9 @@ export class MarketPriceBulkUploadComponent {
     }if(this.endTime){
       this.endTime='';
     }
+  }
+
+  back(): void {
+    this.router.navigate(['/collection-hub']);
   }
 }

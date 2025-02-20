@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-market-place-actions',
@@ -75,6 +76,12 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupOrderView = false
     this.istogglePopupCentersView = false
     this.istogglePopupMarketingView = false
+  }
+
+  constructor(private router: Router) { }
+
+  navigatePath(path: string) {
+    this.router.navigate([path])
   }
 
 }

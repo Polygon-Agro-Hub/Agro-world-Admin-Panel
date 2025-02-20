@@ -36,7 +36,7 @@ export class CollectiveofficersEditComponent {
   errorMessage: string = '';
   img!: string;
 
-  
+
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -67,14 +67,14 @@ export class CollectiveofficersEditComponent {
   ];
 
 
-   constructor(
-      private fb: FormBuilder,
-      private http: HttpClient,
-      private route: ActivatedRoute,
-      private router: Router,
-      private collectionCenterSrv: CollectionCenterService,
-      private collectionOfficerService: CollectionOfficerService,
-    ) {}
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router,
+    private collectionCenterSrv: CollectionCenterService,
+    private collectionOfficerService: CollectionOfficerService,
+  ) { }
 
 
 
@@ -82,20 +82,20 @@ export class CollectiveofficersEditComponent {
     this.itemId = this.route.snapshot.params['id'];
     console.log('Item ID: ', this.itemId);
 
-    
-  
+
+
     if (this.itemId) {
       this.isLoading = true;
-  
+
       this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
         next: (response: any) => {
           console.log('Response: ', response);
-  
+
           // Map the response data to the Personal class
           const officerData = response.officerData[0];
           console.log('hi hi: ', response.officerData[0].empId);
-          
-          this.personalData.empId = officerData.empId ;
+
+          this.personalData.empId = officerData.empId;
           this.personalData.jobRole = officerData.jobRole || '';
           this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
           this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
@@ -124,7 +124,7 @@ export class CollectiveofficersEditComponent {
           this.personalData.empType = officerData.empType || '';
           this.personalData.irmId = officerData.irmId || '';
           this.personalData.image = officerData.image || '';
-  
+
           // Additional fields
           this.selectedLanguages = this.personalData.languages.split(',');
           this.empType = this.personalData.empType;
@@ -134,9 +134,9 @@ export class CollectiveofficersEditComponent {
           this.initiateJobRole = officerData.jobRole || '';
           this.initiateId = officerData.empId.slice(-5);
 
-          console.log('This is the initiate Id',this.initiateJobRole)
-          console.log('This is the initiate JobRole',this.initiateId)
-  
+          console.log('This is the initiate Id', this.initiateJobRole)
+          console.log('This is the initiate JobRole', this.initiateId)
+
           console.log('Mapped Personal Data: ', this.personalData);
           console.log('laguages', this.selectedLanguages);
           this.isLoading = false;
@@ -153,287 +153,288 @@ export class CollectiveofficersEditComponent {
     this.EpmloyeIdCreate()
     this.getAllCollectionManagers();
   }
-  
 
 
 
-    onFileSelected(event: any): void {
-      const file: File = event.target.files[0];
-      if (file) {
-        if (file.size > 5000000) {
-          Swal.fire('Error', 'File size should not exceed 5MB', 'error');
-          return;
-        }
-  
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-        if (!allowedTypes.includes(file.type)) {
-          Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
-          return;
-        }
-  
-        this.selectedFile = file;
-        this.selectedFileName = file.name;
-        // this.officerForm.patchValue({ image: file });
-  
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.selectedImage = e.target.result; // Set selectedImage to the base64 string or URL
-        };
-        reader.readAsDataURL(file); // Read the file as a data URL
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        return;
       }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        return;
+      }
+
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      // this.officerForm.patchValue({ image: file });
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedImage = e.target.result; // Set selectedImage to the base64 string or URL
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
     }
+  }
 
 
 
-    triggerFileInput(event: Event): void {
-      event.preventDefault();
-      const fileInput = document.getElementById('imageUpload');
-      fileInput?.click();
-    }
+  triggerFileInput(event: Event): void {
+    event.preventDefault();
+    const fileInput = document.getElementById('imageUpload');
+    fileInput?.click();
+  }
 
 
-    updateEmployeeType(selectedType: string): void {
-      this.empType = selectedType;
-      this.personalData.empType = selectedType; // Update personalData.empType dynamically
-      console.log('Selected Employee Type:', this.empType);
-    }
+  updateEmployeeType(selectedType: string): void {
+    this.empType = selectedType;
+    this.personalData.empType = selectedType; // Update personalData.empType dynamically
+    console.log('Selected Employee Type:', this.empType);
+  }
 
 
 
-    onCheckboxChange1(lang: string, event: any) {
-      // If the checkbox is checked, add the language to the string; if unchecked, remove it
-      if (event.target.checked) {
-        if (this.personalData.languages) {
-          // Add the language if it's not already in the string
-          if (!this.personalData.languages.includes(lang)) {
-            this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
-          }
-        } else {
-          this.personalData.languages = lang;
+  onCheckboxChange1(lang: string, event: any) {
+    // If the checkbox is checked, add the language to the string; if unchecked, remove it
+    if (event.target.checked) {
+      if (this.personalData.languages) {
+        // Add the language if it's not already in the string
+        if (!this.personalData.languages.includes(lang)) {
+          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
         }
       } else {
-        // Remove the language from the string if the checkbox is unchecked
-        const languagesArray = this.personalData.languages.split(',');
-        const index = languagesArray.indexOf(lang);
-        if (index !== -1) {
-          languagesArray.splice(index, 1);
-        }
-        this.personalData.languages = languagesArray.join(',');
+        this.personalData.languages = lang;
       }
+    } else {
+      // Remove the language from the string if the checkbox is unchecked
+      const languagesArray = this.personalData.languages.split(',');
+      const index = languagesArray.indexOf(lang);
+      if (index !== -1) {
+        languagesArray.splice(index, 1);
+      }
+      this.personalData.languages = languagesArray.join(',');
+    }
+  }
+
+
+
+
+
+
+
+  EpmloyeIdCreate() {
+
+
+
+
+    // this.getAllCollectionManagers();
+    let rolePrefix: string | undefined;
+
+    // Map job roles to their respective prefixes
+    const rolePrefixes: { [key: string]: string } = {
+      'Collection Center Head': 'CCH',
+      'Collection Center Manager': 'CCM',
+      'Customer Officer': 'CUO',
+      'Collection Officer': 'COO',
+    };
+
+    // Get the prefix based on the job role
+    rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+
+    if (this.personalData.jobRole === this.initiateJobRole) {
+      console.log('is');
+      this.lastID = this.initiateId;
+    } else {
+      console.log('no');
+      if (!rolePrefix) {
+        console.error(`Invalid job role: ${this.personalData.jobRole}`);
+        return; // Exit if the job role is invalid
+      }
+
+      // Fetch the last ID and assign a new Employee ID
+      this.getLastID(rolePrefix)
+        .then((lastID) => {
+          this.personalData.empId = rolePrefix + lastID;
+        })
+        .catch((error) => {
+          console.error('Error fetching last ID:', error);
+        });
+
     }
 
 
+  }
 
 
 
-
-
-    EpmloyeIdCreate() {
-
-
-      
-
-      // this.getAllCollectionManagers();
-      let rolePrefix: string | undefined;
-    
-      // Map job roles to their respective prefixes
-      const rolePrefixes: { [key: string]: string } = {
-        'Collection Center Head': 'CCH',
-        'Collection Center Manager': 'CCM',
-        'Customer Officer': 'CUO',
-        'Collection Officer': 'COO',
-      };
-    
-      // Get the prefix based on the job role
-      rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-
-      if(this.personalData.jobRole === this.initiateJobRole){
-        console.log('is');
-        this.lastID =  this.initiateId;
-      }else{
-        console.log('no');
-        if (!rolePrefix) {
-          console.error(`Invalid job role: ${this.personalData.jobRole}`);
-          return; // Exit if the job role is invalid
-        }
-      
-        // Fetch the last ID and assign a new Employee ID
-        this.getLastID(rolePrefix)
-          .then((lastID) => {
-            this.personalData.empId = rolePrefix + lastID;
-          })
-          .catch((error) => {
-            console.error('Error fetching last ID:', error);
-          });
-
+  getAllCollectionManagers() {
+    console.log('Company ID:', this.comId);
+    this.collectionCenterSrv.getAllManagerList(this.comId, this.cenId).subscribe(
+      (res) => {
+        this.collectionManagerData = res
       }
-    
-     
-    }
+    )
+  }
 
-
-
-    getAllCollectionManagers() {
-      console.log('Company ID:', this.comId);
-      this.collectionCenterSrv.getAllManagerList(this.comId , this.cenId).subscribe(
+  getLastID(role: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.collectionCenterSrv.getForCreateId(role).subscribe(
         (res) => {
-          this.collectionManagerData = res
+          this.lastID = res.result.empId;
+          const lastId = res.result.empId;
+          resolve(lastId); // Resolve the Promise with the empId
+        },
+        (error) => {
+          console.error('Error fetching last ID:', error);
+          reject(error);
         }
-      )
-    }
+      );
+    });
+  }
 
-    getLastID(role: string): Promise<string> {
-      return new Promise((resolve, reject) => {
-        this.collectionCenterSrv.getForCreateId(role).subscribe(
-          (res) => {
-            this.lastID = res.result.empId;
-            const lastId = res.result.empId;
-            resolve(lastId); // Resolve the Promise with the empId
+
+
+
+
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.navigatePath('/steckholders/action/collective-officer')
+      }
+    });
+  }
+
+
+
+
+  nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    this.selectedPage = page;
+  }
+
+
+  updateProvince(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
+    const selectedDistrict = target.value;
+
+    const selected = this.districts.find(district => district.name === selectedDistrict);
+
+    if (this.itemId === null) {
+
+      if (selected) {
+        this.personalData.province = selected.province;
+      } else {
+        this.personalData.province = ''; // Clear if no matching district is found
+      }
+
+    } else {
+
+
+      if (selected) {
+        this.personalData.province = selected.province;
+      }
+    }
+  }
+
+
+  nextForm(page: 'pageOne' | 'pageTwo') {
+
+
+    this.selectedPage = page;
+  }
+
+  getAllCollectionCetnter() {
+    this.collectionCenterSrv.getAllCollectionCenter().subscribe(
+      (res) => {
+        this.collectionCenterData = res
+      }
+    )
+  }
+
+  getAllCompanies() {
+    this.collectionCenterSrv.getAllCompanyList().subscribe(
+      (res) => {
+        this.CompanyData = res
+      }
+    )
+  }
+
+
+
+
+  onCheckboxChange(language: string, event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      // Add the language to the selectedLanguages array
+      if (!this.selectedLanguages.includes(language)) {
+        this.selectedLanguages.push(language);
+      }
+    } else {
+      // Remove the language from the selectedLanguages array
+      this.selectedLanguages = this.selectedLanguages.filter(
+        (lang) => lang !== language
+      );
+    }
+    console.log('Selected Languages:', this.selectedLanguages);
+  }
+
+
+
+
+
+
+  onSubmit() {
+    console.log(this.personalData); // Logs the personal data with updated languages
+    console.log('hii', this.personalData.empType);
+
+    // Show a confirmation dialog before proceeding
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to create the collection officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with submission if user clicks 'Yes'
+        this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
+          (res: any) => {
+
+
+            Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
+            this.navigatePath('/steckholders/action/collective-officer');
           },
-          (error) => {
-            console.error('Error fetching last ID:', error);
-            reject(error);
+          (error: any) => {
+            this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
+            Swal.fire('Error', this.errorMessage, 'error');
           }
         );
-      });
-    }
-
-
-
-
-
-      onCancel() {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Are you sure?',
-          text: 'You may lose the added data after canceling!',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, Cancel',
-          cancelButtonText: 'No, Keep Editing',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigate(['/admin/steckholders/action/collective-officer'])
-          }
-        });
+      } else {
+        // If user clicks 'No', do nothing or show a cancellation message
+        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
+    });
+  }
 
-
-
-
-      nextFormCreate(page: 'pageOne' | 'pageTwo'){
-        this.selectedPage = page;
-      }
-
-    
-      updateProvince(event: Event): void {
-        const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
-        const selectedDistrict = target.value;
-      
-        const selected = this.districts.find(district => district.name === selectedDistrict);
-    
-        if(this.itemId === null){
-    
-          if (selected) {
-            this.personalData.province = selected.province;
-          } else {
-            this.personalData.province = ''; // Clear if no matching district is found
-          }
-    
-        }else{
-    
-    
-          if (selected) {
-            this.personalData.province = selected.province;
-          }
-        }
-      }
-
-
-       nextForm(page: 'pageOne' | 'pageTwo') {
-         
-      
-          this.selectedPage = page;
-        }
-
-        getAllCollectionCetnter() {
-          this.collectionCenterSrv.getAllCollectionCenter().subscribe(
-            (res) => {
-              this.collectionCenterData = res
-            }
-          )
-        }
-      
-        getAllCompanies() {
-          this.collectionCenterSrv.getAllCompanyList().subscribe(
-            (res) => {
-              this.CompanyData = res
-            }
-          )
-        }
-
-
-
-
-        onCheckboxChange(language: string, event: Event): void {
-          const isChecked = (event.target as HTMLInputElement).checked;
-      
-          if (isChecked) {
-            // Add the language to the selectedLanguages array
-            if (!this.selectedLanguages.includes(language)) {
-              this.selectedLanguages.push(language);
-            }
-          } else {
-            // Remove the language from the selectedLanguages array
-            this.selectedLanguages = this.selectedLanguages.filter(
-              (lang) => lang !== language
-            );
-          }
-          console.log('Selected Languages:', this.selectedLanguages);
-        }
-
-
-
-        
-
-
-         onSubmit() {
-            console.log(this.personalData); // Logs the personal data with updated languages
-            console.log('hii', this.personalData.empType);
-          
-            // Show a confirmation dialog before proceeding
-            Swal.fire({
-              title: 'Are you sure?',
-              text: 'Do you want to create the collection officer?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Yes, create it!',
-              cancelButtonText: 'No, cancel',
-              reverseButtons: true
-            }).then((result) => {
-              if (result.isConfirmed) {
-                // Proceed with submission if user clicks 'Yes'
-                this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
-                  (res: any) => {
-                    
-          
-                    Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
-                    this.router.navigate(['/admin/steckholders/action/collective-officer']);
-                  },
-                  (error: any) => {
-                    this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
-                    Swal.fire('Error', this.errorMessage, 'error');
-                  }
-                );
-              } else {
-                // If user clicks 'No', do nothing or show a cancellation message
-                Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-              }
-            });
-          }
-        
-
-
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
 
 
 }
@@ -444,7 +445,7 @@ class Personal {
   empId!: any;
   centerId!: number;
   irmId!: number;
-  empType!: string ;
+  empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;
   firstNameTamil!: string;
@@ -467,13 +468,13 @@ class Personal {
   province!: string;
   country: string = 'Sri Lanka';
   languages: string = '';
-  companyId! : number;
+  companyId!: number;
   image!: string;
   accHolderName!: any;
   accNumber!: any;
   bankName!: string;
   branchName!: string;
-  
+
 }
 
 class CollectionCenter {

@@ -121,15 +121,15 @@ export class ReportsFarmerListComponent {
   getTotalFixedAssets(id: number) {
     this.plantcareService.getTotalFixedAssets(id).subscribe(
       (response) => {
-        console.log('API Response:', response); 
-  
+        console.log('API Response:', response);
+
         if (Array.isArray(response) && response.length > 0) {
           const totalFixedAssetData = response[0];
-  
+
           if (totalFixedAssetData && totalFixedAssetData.total_price) {
-            
+
             this.fixedAssetTotal = parseFloat(totalFixedAssetData.total_price);
-            console.log('Fixed Asset Total:', this.fixedAssetTotal); 
+            console.log('Fixed Asset Total:', this.fixedAssetTotal);
           } else {
             console.error('Error: total_price is missing or invalid in the response');
           }
@@ -147,19 +147,21 @@ export class ReportsFarmerListComponent {
   }
 
   viewFixedAsset(id: number, firstName: string, lastName: string) {
-    this.router.navigate(['admin/plant-care/action/assets/fixed-asset-category'], { 
-      queryParams: { id, firstName, lastName} 
+    this.router.navigate(['/plant-care/action/assets/fixed-asset-category'], {
+      queryParams: { id, firstName, lastName }
     });
   }
 
-  viewCurrentAsset(id: number, fname:string, lname:string) {
-    let userName = fname+" "+lname
-   this.router.navigate([`admin/plant-care/action/report-farmer-current-assert/${id}/${userName}`])
+  viewCurrentAsset(id: number, fname: string, lname: string) {
+    let userName = fname + " " + lname
+    this.navigatePath(`/plant-care/action/report-farmer-current-assert/${id}/${userName}`)
   }
 
-  
 
-  
-  
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
+
 
 }

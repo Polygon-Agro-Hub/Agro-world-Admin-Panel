@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plantcare',
@@ -12,6 +13,9 @@ export class PlantcareComponent {
   popupVisibleNews = false;
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
+
+   constructor(private router: Router){}
+  
 
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;
@@ -42,4 +46,70 @@ export class PlantcareComponent {
       this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
     }
   }
+
+
+
+
+  navigateToCreateNews(): void {
+    this.router.navigate(['/plant-care/action/create-news']);
+  }
+
+  navigateToManageNews(): void {
+    this.router.navigate(['/plant-care/action/manage-content']);
+  }
+
+
+
+
+  createCalendar(): void {
+    this.router.navigate(['/plant-care/action/create-crop-calender']);
+  }
+
+  manageCalendar(): void {
+    this.router.navigate(['/plant-care/action/view-crop-calender']);
+  }  
+  
+  createCropGroup(): void {
+    this.router.navigate(['/plant-care/action/create-crop-group']);
+  }
+
+  viewCropGroup(): void {
+    this.router.navigate(['/plant-care/action/view-crop-group']);
+  }
+
+  createVariety(): void {
+    this.router.navigate(['/plant-care/action/create-crop-variety']);
+  }
+
+
+
+
+
+  publicForum(): void {
+    this.router.navigate(['/plant-care/action/public-forum']);
+  }
+
+
+
+
+
+
+  ongoingCultivation(): void {
+    this.router.navigate(['/plant-care/action/ongoing-cultivation']);
+  }
+
+
+
+
+  assets(): void {
+    this.router.navigate(['/plant-care/action/report-farmer-list']);
+  }
+
+
+
+  feedBack(): void {
+    this.router.navigate(['/plant-care/action/opt-out-feedbacks']);
+  }
+
+  
 }

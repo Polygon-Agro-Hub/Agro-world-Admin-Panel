@@ -95,19 +95,15 @@ import { AddDailyTargetComponent } from './application/collection-hub-section/ad
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'admin/login',
-    pathMatch: 'full',
-  },
-  {
-    path: 'admin',
-    redirectTo: 'admin/login',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
 
-  { path: 'admin/login', component: LoginComponent },
+
+  { path: 'login', component: LoginComponent },
 
   {
-    path: 'admin',
+    path: '',
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
@@ -430,10 +426,6 @@ export const routes: Routes = [
           {
             path: 'manage-company',
             component: ManageCompanyComponent,
-          },
-          {
-            path: 'view-collection-centers',
-            component: CollectionAllViewComponent,
           },
           {
             path: 'add-collection-center',

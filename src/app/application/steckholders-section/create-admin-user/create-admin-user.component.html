@@ -1,6 +1,6 @@
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/steckholders/action/admin'"
+  (click)="navigatePath('/steckholders/action/admin')"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -11,7 +11,7 @@
 <div *ngIf="itemId == null">
   <!-- Admin Users Form -->
   <div
-    class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg rounded-lg"
+    class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">
       Create Admin User
@@ -132,7 +132,7 @@
             >Password</label
           >
           <div
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md flex items-center bg-tileLight dark:bg-tileBlack"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-md flex items-center bg-tileLight dark:bg-tileBlack"
           >
             <input
               [type]="showPassword ? 'text' : 'password'"
@@ -193,7 +193,7 @@
 <!-- Admin Users Form without Change Password Button when itemId is not null -->
 <div *ngIf="itemId != null">
   <div
-    class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white rounded-lg shadow-md dark:bg-tileBlack rounded-lg"
+    class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white shadow-md dark:bg-tileBlack rounded-lg"
   >
     <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">
       Edit Admin User
@@ -204,7 +204,7 @@
           <!-- User Name Input -->
           <label
             for="userName"
-            class="block text-sm font-medium text-gray-700 text-textLight dark:text-textDark"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
             >User Name</label
           >
           <input
@@ -229,7 +229,7 @@
           <!-- Email Input -->
           <label
             for="mail"
-            class="block text-sm font-medium text-gray-700 text-textLight dark:text-textDark"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
             >Email</label
           >
           <input
@@ -252,7 +252,7 @@
           <!-- Role Input -->
           <label
             for="role"
-            class="block text-sm font-medium text-gray-700 text-textLight dark:text-textDark"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
           >
             Role
           </label>

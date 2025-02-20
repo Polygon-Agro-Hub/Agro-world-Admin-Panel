@@ -4,6 +4,7 @@ import { environment } from '../../../environment/environment';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-collection-hub',
@@ -19,7 +20,7 @@ export class CollectionHubComponent {
   popupVisibleCompanys = false;
   private token = this.tokenService.getToken();;
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService,private router: Router) {}
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
@@ -95,5 +96,41 @@ export class CollectionHubComponent {
           text: error.message,
         });
       });
+  }
+
+
+
+  viewPrice(): void {
+    this.router.navigate(['/market-place/view-current-price']);
+  }
+
+  addPrice(): void {
+    this.router.navigate(['/market-place/price-bulk-upload']);
+  }
+
+  deletePrice(): void {
+    this.router.navigate(['/market-place/delete-bulk-price']);
+  }
+
+
+
+
+
+  addCom(): void {
+    this.router.navigate(['/collection-hub/create-company']);
+  }
+
+  viewCom(): void {
+    this.router.navigate(['/collection-hub/manage-company']);
+  }
+
+
+
+  viewCenter(): void {
+    this.router.navigate(['/collection-hub/view-collection-centers']);
+  }
+
+  addCenter(): void {
+    this.router.navigate(['/collection-hub/add-collection-center']);
   }
 }

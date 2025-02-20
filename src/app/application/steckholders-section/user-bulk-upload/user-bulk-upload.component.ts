@@ -222,7 +222,7 @@ export class UserBulkUploadComponent {
         }
   
         this.selectedFile = null;
-        this.router.navigate(['/admin/steckholders/action/farmers']);
+        this.router.navigate(['/steckholders/action/farmers']);
       },
       error: (error) => {
         this.downloadExcel(error.existingUsers, 'existing_users.xlsx');

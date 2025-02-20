@@ -8,6 +8,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-market-add-product',
@@ -31,9 +32,9 @@ export class MarketAddProductComponent implements OnInit {
   cropsObj: Crop[] = [];
   selectedVarieties!: Variety[];
   isVerityVisible = false;
-  selectedImage!:any
+  selectedImage!: any
 
-  constructor(private marketSrv: MarketPlaceService) { }
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllCropVerity();
@@ -66,14 +67,14 @@ export class MarketAddProductComponent implements OnInit {
     }
   }
 
-  selectVerityImage(){
+  selectVerityImage() {
     const sample = this.selectedVarieties.filter(verity => verity.id === +this.productObj.variety);
     console.log(sample[0].image);
     this.selectedImage = sample[0].image
-    
-    
-  }  
-  
+
+
+  }
+
 
   calculeSalePrice() {
     this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice / 100;
@@ -95,14 +96,14 @@ export class MarketAddProductComponent implements OnInit {
   onSubmit() {
     this.updateTags();
     console.log(this.productObj.promo);
-    
+
 
     if (this.productObj.promo) {
       if (!this.productObj.category || !this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby || !this.productObj.discountedPrice || !this.productObj.salePrice) {
         Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
         return;
       }
-    }else {
+    } else {
       if (!this.productObj.category || !this.productObj.cropName || !this.productObj.variety || !this.productObj.normalPrice || !this.productObj.unitType || !this.productObj.startValue || !this.productObj.changeby) {
         Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
         return;
@@ -113,6 +114,8 @@ export class MarketAddProductComponent implements OnInit {
       (res) => {
         if (res.status) {
           Swal.fire('Success', 'Product Created Successfully', 'success');
+          this.router.navigate(['/market/action/view-products-list'])
+
           this.onCancel();
         } else {
           Swal.fire('Error', 'Product Creation Failed', 'error');
@@ -173,7 +176,7 @@ class MarketPrice {
   startValue!: number;
   changeby!: number;
   tags: string = '';
-  category!:String
+  category!: String
 
   selectId!: number;
   displaytype!: string;
@@ -183,6 +186,6 @@ class MarketPrice {
 class Variety {
   id!: number;
   varietyEnglish!: string;
-  image!:any
+  image!: any
 }
 

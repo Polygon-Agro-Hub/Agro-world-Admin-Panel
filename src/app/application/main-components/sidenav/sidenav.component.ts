@@ -136,7 +136,7 @@ export class SidenavComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           // Redirect to the login page after confirmation
-          this.router.navigateByUrl('admin/login');
+          this.router.navigate(['login']);
         }
       });
     }
@@ -161,7 +161,7 @@ export class SidenavComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           // Redirect to the login page after confirmation
-          this.router.navigateByUrl('/login');
+          this.router.navigate(['login']);
         }
       });
     }
@@ -179,6 +179,11 @@ export class SidenavComponent implements OnInit {
     
   }
 
+
+
+  navigateToSettings(): void {
+    this.router.navigate(['/settings/view-roles']);
+  }
 
  
   

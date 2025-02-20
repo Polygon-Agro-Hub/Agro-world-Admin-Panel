@@ -131,7 +131,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
 
   back(cropCalendarId: string, userId: string) {
 
-    this.router.navigate(['admin/plant-care/action/view-crop-task-by-user/user-task-list'], { 
+    this.router.navigate(['plant-care/action/view-crop-task-by-user/user-task-list'], { 
       queryParams: { cropCalendarId, userId} 
     });
   }

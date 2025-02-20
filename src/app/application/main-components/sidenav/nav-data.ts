@@ -9,19 +9,19 @@ export const navbarData = [
     expanded: false,
     children: [
       {
-        RouterLink: '/admin/steckholders/dashboard',
+        RouterLink: '/steckholders/dashboard',
         childIcon: 'fa-solid fa-gauge',
         label: 'Dashbord',
       },
       {
-        RouterLink: '/admin/steckholders/action',
+        RouterLink: '/steckholders/action',
         childIcon: 'fa-brands fa-creative-commons-nd',
         label: 'Action',
       },
     ],
   },
   {
-    RouterLink: '/admin/reports',
+    RouterLink: '/reports',
     icon: 'fa-solid fa-file',
     label: 'Report',
   },
@@ -32,19 +32,19 @@ export const navbarData = [
     expanded: false,
     children: [
       {
-        RouterLink: '/admin/plant-care/dashboard',
+        RouterLink: '/plant-care/dashboard',
         childIcon: 'fa-solid fa-gauge',
         label: 'Dashbord',
       },
       {
-        RouterLink: '/admin/plant-care/action',
+        RouterLink: '/plant-care/action',
         childIcon: 'fa-brands fa-creative-commons-nd',
         label: 'Action',
       },
     ],
   },
   {
-    RouterLink: '/admin/collection-hub',
+    RouterLink: '/collection-hub',
     icon: 'fa-solid fa-warehouse',
     label: 'Collection Hub',
   },
@@ -55,24 +55,24 @@ export const navbarData = [
     expanded: false,
     children: [
       {
-        RouterLink: '/admin/market/dashboard',
+        RouterLink: '/market/dashboard',
         childIcon: 'fa-solid fa-gauge',
         label: 'Dashbord',
       },
       {
-        RouterLink: '/admin/market/action',
+        RouterLink: '/market/action',
         childIcon: 'fa-brands fa-creative-commons-nd',
         label: 'Action',
       },
     ],
   },
   {
-    RouterLink: '/admin/sales-dash',
+    RouterLink: '/sales-dash',
     icon: 'fa-solid fa-bullseye',
     label: 'Sales Dash',
   },
   {
-    RouterLink: '/admin/complaints',
+    RouterLink: '/complaints',
     icon: 'fa-solid fa-circle-question',
     label: 'Complaints',
   },

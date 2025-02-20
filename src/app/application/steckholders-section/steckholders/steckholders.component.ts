@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../../services/token/services/token.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-steckholders',
@@ -19,7 +20,7 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   isButton5Clicked = false;
   isButton6Clicked = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, public tokenService: TokenService) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, public tokenService: TokenService, private router: Router) {}
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -80,5 +81,25 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     this.isButton6Clicked = !this.isButton6Clicked;
     this.isDropdownOpen = false;
     this.isButton2Clicked = false;
+  }
+
+
+
+
+  navigateToViewFamers(): void {
+    this.router.navigate(['/steckholders/action/farmers']);
+  }
+
+
+  navigateToViewAdmins(): void {
+    this.router.navigate(['/steckholders/action/admin']);
+  }
+
+  navigateToViewCoOfficers(): void {
+    this.router.navigate(['/steckholders/action/collective-officer']);
+  }
+
+  navigateToViewCollectionCenter(): void {
+    this.router.navigate(['/collection-hub/view-collection-centers']);
   }
 }

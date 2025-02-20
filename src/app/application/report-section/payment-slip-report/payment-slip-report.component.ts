@@ -76,7 +76,7 @@ export class PaymentSlipReportComponent {
 
 
   navigateToFamerListReport(id: number, userId: number, QRcode: string) {
-    this.router.navigate(['/admin/reports/farmer-list-report'], { queryParams: { id, userId, QRcode } });
+    this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId, QRcode } });
   }
 
   onPageChange(event: number) {

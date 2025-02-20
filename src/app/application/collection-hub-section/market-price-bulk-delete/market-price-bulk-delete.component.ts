@@ -132,6 +132,8 @@ export class MarketPriceBulkDeleteComponent {
   }
 
 
-
+  back(): void {
+    this.router.navigate(['/collection-hub']);
+  }
   
 }

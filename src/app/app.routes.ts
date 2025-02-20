@@ -423,10 +423,6 @@ export const routes: Routes = [
             component: ManageCompanyComponent,
           },
           {
-            path: 'view-collection-centers',
-            component: CollectionAllViewComponent,
-          },
-          {
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
           },

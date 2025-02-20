@@ -6,6 +6,7 @@ import { MarketPriceService } from '../../../services/market-price/market-price.
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-current-market-price',
@@ -35,7 +36,7 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   itemsPerPage: number = 10;
   searchNIC: string = '';
 
-  constructor(private marketSrv: MarketPriceService) {
+  constructor(private marketSrv: MarketPriceService,private router: Router) {
     this.currentDate = new Date().toLocaleDateString();
   }
 
@@ -114,6 +115,12 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   clearSearch(): void {
     this.searchNIC = '';
     this.fetchAllMarketPrices();
+  }
+
+
+
+  back(): void {
+    this.router.navigate(['/collection-hub']);
   }
 }
 

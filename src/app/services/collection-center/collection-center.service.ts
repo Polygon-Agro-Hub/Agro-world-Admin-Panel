@@ -319,21 +319,4 @@ export class CollectionCenterService {
     return this.http.post<any>(url, data, { headers });
   }
 
-  getCropVerity(): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-
-    let url = `${this.apiUrl}auth/get-crop-category`;
-    return this.http.get<any>(url, { headers });
-  }
-
-  createDailyTarget(data: any): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-
-    let url = `${this.apiUrl}auth/create-daily-target`;
-    return this.http.post<any>(url, data, { headers });
-  }
 }

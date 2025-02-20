@@ -138,7 +138,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
           .createCollectiveOfficer(this.personalData, this.selectedImage)
           .subscribe(
             (res: any) => {
-              this.isLoading = true;
+              this.isLoading = false;
               this.officerId = res.officerId;
               this.errorMessage = '';
 
@@ -150,7 +150,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
               this.navigatePath('/steckholders/action/collective-officer');
             },
             (error: any) => {
-              this.isLoading = true;
+              this.isLoading = false;
               this.errorMessage =
                 error.error.error || 'An unexpected error occurred'; // Update the error message
               Swal.fire('Error', this.errorMessage, 'error');
@@ -180,15 +180,15 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.selectedPage = page;
-    if (!this.selectedImage) {
-      Swal.fire({
-        title: 'Image Required',
-        text: 'Please upload a profile picture',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-      });
-      return; // This will terminate the function if no image is selected
-    }
+    // if (!this.selectedImage) {
+    //   Swal.fire({
+    //     title: 'Image Required',
+    //     text: 'Please upload a profile picture',
+    //     icon: 'warning',
+    //     confirmButtonText: 'OK',
+    //   });
+    //   return; // This will terminate the function if no image is selected
+    // }
   }
 
   ngOnInit(): void {

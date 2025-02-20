@@ -90,6 +90,7 @@ import { AddComplainCategoriesComponent } from './application/Complaints/add-com
 import { ManageComplaintsCategoriesComponent } from './application/Complaints/manage-complaints-categories/manage-complaints-categories.component';
 import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
 import { CollectionCenterDashboardComponent } from './application/collection-hub-section/collection-center-dashboard/collection-center-dashboard.component';
+import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
 
 export const routes: Routes = [
   {

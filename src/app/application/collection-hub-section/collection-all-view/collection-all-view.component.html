@@ -25,19 +25,20 @@
   Add New
 </button>
 
-<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
 <div
-  class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
-  <div class="flex justify-between items-center mb-8">
-    <div class="flex items-center">
-      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Collection Centers ({{ this.totalItems }})
-      </h2>
-    </div>
-    <div class="flex items-center">
-      <!-- <div class="mr-5">
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Collection Centers ({{ this.totalItems }})
+        </h2>
+      </div>
+      <div class="flex items-center">
+        <!-- <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
             [options]="districts"
@@ -47,172 +48,194 @@
             (onChange)="applyFilters()"
           />
         </div> -->
-      <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-      >
-        <input
-          type="text"
-          placeholder="Search.."
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          [(ngModel)]="searchItem"
-          (keydown.enter)="searchPlantCareUsers()"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-          (click)="searchPlantCareUsers()"
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          <input
+            type="text"
+            placeholder="Search.."
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [(ngModel)]="searchItem"
+            (keydown.enter)="searchPlantCareUsers()"
+          />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="searchPlantCareUsers()"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
-          </svg>
-        </button>
-        <button
-          type="button"
-          (click)="clearSearch()"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            (click)="clearSearch()"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="overflow-x-auto">
-    <table
-      class="min-w-full divide-y divide-gray-200 table-auto"
-      *ngIf="hasData"
-    >
-      <thead>
-        <tr>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            No
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Reg Code
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Center Name
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            City
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            District
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Contact Number 01
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Contact Number 02
-          </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          ></th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          ></th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
-          ></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of collectionObj; let i = index">
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ (page - 1) * itemsPerPage + i + 1 }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.regCode }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.centerName }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.street }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.district }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.contact01 }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ item.contact02 }}
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <button
-              class="text-blue-400 hover:text-blue-700"
-              (click)="navigateEdit(item.id)"
+    <div class="overflow-x-auto">
+      <table
+        class="min-w-full divide-y divide-gray-200 table-auto"
+        *ngIf="hasData"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              <i class="fa-solid fa-pen-to-square fa-xl"></i>
-            </button>
-          </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <button
-              class="text-red-500 hover:text-red-700"
-              (click)="deleteCollectionCenter(item.id)"
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              <i class="fa-solid fa-trash fa-xl"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div
-      *ngIf="!hasData"
-      class="flex justify-center items-center py-20 shadow-lg"
-    >
-      <p class="text-center text-2xl text-black font-normal dark:text-textDark">
-        No data found
-      </p>
+              Reg Code
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Center Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              City
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              District
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Contact Number 01
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Contact Number 02
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            ></th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            ></th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            ></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of collectionObj; let i = index">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ (page - 1) * itemsPerPage + i + 1 }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.regCode }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.centerName }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.street }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.district }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.contact01 }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.contact02 }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
+                (click)="navigateDashboard(item.id)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                class="text-blue-400 hover:text-blue-700"
+                (click)="navigateEdit(item.id)"
+              >
+                <i class="fa-solid fa-pen-to-square fa-xl"></i>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                class="text-red-500 hover:text-red-700"
+                (click)="deleteCollectionCenter(item.id)"
+              >
+                <i class="fa-solid fa-trash fa-xl"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        *ngIf="!hasData"
+        class="flex justify-center items-center py-20 shadow-lg"
+      >
+        <p
+          class="text-center text-2xl text-black font-normal dark:text-textDark"
+        >
+          No data found
+        </p>
+      </div>
     </div>
+    <pagination-controls
+      (pageChange)="onPageChange($event)"
+      [responsive]="true"
+      [previousLabel]="'Previous'"
+      [nextLabel]="'Next'"
+      [screenReaderPaginationLabel]="'Pagination'"
+      [screenReaderPageLabel]="'page'"
+      [screenReaderCurrentLabel]="'Youre on page'"
+    >
+    </pagination-controls>
   </div>
-  <pagination-controls
-    (pageChange)="onPageChange($event)"
-    [responsive]="true"
-    [previousLabel]="'Previous'"
-    [nextLabel]="'Next'"
-    [screenReaderPaginationLabel]="'Pagination'"
-    [screenReaderPageLabel]="'page'"
-    [screenReaderCurrentLabel]="'Youre on page'"
-  >
-  </pagination-controls>
-</div>
 </div>

@@ -164,7 +164,7 @@ export class AdminUsersComponent {
   }
 
   editAdminUser(id: number) {
-    this.router.navigate(['admin/steckholders/action/admin/create-admin-user'], {
+    this.router.navigate(['/steckholders/action/admin/create-admin-user'], {
       queryParams: { id },
     });
   }
@@ -210,6 +210,10 @@ export class AdminUsersComponent {
   clearSearch(): void {
     this.statusFilter = '';
     this.fetchAllAdmins();
+  }
+
+  navigatePath(path:string){
+    this.router.navigate([path]);
   }
 }
 

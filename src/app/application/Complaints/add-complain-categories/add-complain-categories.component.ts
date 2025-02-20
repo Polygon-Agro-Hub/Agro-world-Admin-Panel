@@ -61,6 +61,10 @@ export class AddComplainCategoriesComponent implements OnInit {
 
   }
 
+  navigationPath(path: string) {
+    this.router.navigate([path])
+  }
+
 }
 
 class Roles {

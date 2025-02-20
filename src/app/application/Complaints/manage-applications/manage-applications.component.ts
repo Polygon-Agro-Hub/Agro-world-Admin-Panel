@@ -56,7 +56,7 @@ export class ManageApplicationsComponent {
   }
 
 
-//---------------------------------this one not usefull------------------------------------
+  //---------------------------------this one not usefull------------------------------------
   showAlert(systemAppId: number) {
     console.log("Fetching data for System Application ID: ", systemAppId);
 
@@ -182,9 +182,9 @@ export class ManageApplicationsComponent {
 
 
 
-editApp(systemAppId: number, systemAppName: string) {
-  Swal.fire({
-    html: `
+  editApp(systemAppId: number, systemAppName: string) {
+    Swal.fire({
+      html: `
       <div>
         <h1 class="mb-8 font-semibold text-black dark:text-textDark">Edit Application Name</h1>
         <div class="flex items-center gap-4">
@@ -321,12 +321,17 @@ editApp(systemAppId: number, systemAppName: string) {
   }
 
   goBack() {
-    this.router.navigate(['/admin/complaints']);
+    this.router.navigate(['/complaints']);
   }
 
-  EditCategoris(id:number) {
-    this.router.navigate([`/admin/complaints/manage-complaints-categories/${id}`]);
+  EditCategoris(id: number) {
+    this.router.navigate([`/complaints/manage-complaints-categories/${id}`]);
   }
+
+  navigationPath(path: string) {
+    this.router.navigate([path])
+  }
+
 
 }
 

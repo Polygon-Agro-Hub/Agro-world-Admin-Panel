@@ -1,11 +1,11 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/admin/complaints/manage-applications'">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="navigationPath('/complaints/manage-applications')">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
 
 <div class="flex space-x-4">
     <button class="bg-[#3980C0] text-white font-medium py-2 dark:text-white px-5 rounded text-lg flex mb-5 items-center"
-        onclick="window.location.href='complaints/add-complain-Categories'">
+        (click)="navigationPath('complaints/add-complain-Categories')">
         <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                 stroke-linejoin="round" />
@@ -35,7 +35,8 @@
                     <td class="px-6 py-2 dark:text-white">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
                     <td class="px-6 py-2 dark:text-white">{{item.categoryEnglish}}</td>
                     <td class="px-10 py-2">
-                        <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0]" (click)="editComplain(item.id)"></i>
+                        <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0]"
+                            (click)="editComplain(item.id)"></i>
                     </td>
                 </tr>
             </tbody>

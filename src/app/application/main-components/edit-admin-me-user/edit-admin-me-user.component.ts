@@ -216,7 +216,7 @@ export class EditAdminMeUserComponent implements OnInit {
           }).then((result) => {
             if (result.isConfirmed) {
               // Redirect to the desired route
-              this.router.navigate(['/admin/login']);
+              this.router.navigate(['/login']);
               localStorage.removeItem('Login Token : ');
             }
           });
@@ -341,7 +341,7 @@ export class EditAdminMeUserComponent implements OnInit {
           }).then((result) => {
             if (result.isConfirmed) {
               this.closePopup();
-              this.router.navigate(['/admin/login']);
+              this.router.navigate(['/login']);
               localStorage.removeItem('Login Token : ');
             }
           });
@@ -367,6 +367,11 @@ export class EditAdminMeUserComponent implements OnInit {
       this.errorMessage = '';
     }
   }
+
+  back(): void {
+    this.router.navigate(['/steckholders/dashboard']);
+  }
+  
 }
 
 export class CreateAdmin {

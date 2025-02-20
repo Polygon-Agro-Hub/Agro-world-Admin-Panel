@@ -26,7 +26,7 @@ export class AddDailyTargetComponent {
   selectCropId: number | string = '';
 
 
-  totalTime = 10;
+  totalTime = 300;
   remainingTime = this.totalTime;
   intervalId: any;
   progress = 283;

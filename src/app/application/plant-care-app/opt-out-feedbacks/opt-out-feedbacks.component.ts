@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-opt-out-feedbacks',
@@ -36,8 +37,8 @@ export class OptOutFeedbacksComponent {
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
-    private http: HttpClient
-  ) {}
+    private router: Router
+  ) { }
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
@@ -161,6 +162,11 @@ export class OptOutFeedbacksComponent {
       },
     ],
   };
+
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
 }
 
 class FeedbacksData {

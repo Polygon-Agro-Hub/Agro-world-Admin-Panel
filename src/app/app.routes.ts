@@ -94,7 +94,7 @@ import { AddDailyTargetComponent } from './application/collection-hub-section/ad
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'admin/login',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
 

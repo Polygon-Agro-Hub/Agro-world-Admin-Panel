@@ -95,11 +95,23 @@ export class CreateCropGroupComponent {
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
+  
     if (file) {
+      const allowedTypes = ['image/png', 'image/jpeg']; // Allowed MIME types
+  
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid File',
+          text: 'Only PNG and JPEG images are allowed!',
+          confirmButtonText: 'OK'
+        });
+        return;
+      }
+  
       this.selectedFile = file;
       this.selectedFileName = file.name;
-
-
+  
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedImage = e.target?.result as string | ArrayBuffer;
@@ -107,6 +119,7 @@ export class CreateCropGroupComponent {
       reader.readAsDataURL(file);
     }
   }
+  
 
 
   onSubmit() {
@@ -403,7 +416,7 @@ export class CreateCropGroupComponent {
             Swal.fire({
               icon: 'success',
               title: 'Success',
-              text: 'Market Price updated successfully!',
+              text: 'Crop Group Updated Successful!',
             });
             this.router.navigate(['/admin/plant-care/action/view-crop-group']);
           } else {

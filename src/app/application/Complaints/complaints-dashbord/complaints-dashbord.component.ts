@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-complaints-dashbord',
@@ -13,6 +14,8 @@ export class ComplaintsDashbordComponent {
   popupVisiblePlantCare: boolean = false;
   popupVisibleCollectionCenters: boolean = false;
   popupVisibleCategories: boolean = false;
+
+  constructor(private router: Router) { }
   togglePlantCare() {
     this.popupVisiblePlantCare = !this.popupVisiblePlantCare;
   }
@@ -23,5 +26,9 @@ export class ComplaintsDashbordComponent {
 
   toggleCategories() {
     this.popupVisibleCategories = !this.popupVisibleCategories;
+  }
+
+  navigationPath(path: string) {
+    this.router.navigate([path])
   }
 }

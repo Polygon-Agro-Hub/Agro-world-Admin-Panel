@@ -37,7 +37,7 @@ export class ReportCurrentAssertsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private assertService: AssetsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['userId'];
@@ -55,8 +55,12 @@ export class ReportCurrentAssertsComponent implements OnInit {
   }
 
   viewList(id: any, category: any) {
-    this.router.navigate(['admin/plant-care/action/current-assets-view'], {
+    this.router.navigate(['/plant-care/action/current-assets-view'], {
       queryParams: { id, category, fullName: this.name },
     });
+  }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 }

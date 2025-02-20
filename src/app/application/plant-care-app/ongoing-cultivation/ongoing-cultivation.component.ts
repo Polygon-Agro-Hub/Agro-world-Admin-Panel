@@ -15,7 +15,7 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
 
 interface OngoingCultivationItem {
   cultivationId: number;
-  id : number;
+  id: number;
   firstName: string;
   lastName: string;
   NICnumber: string;
@@ -54,10 +54,10 @@ export class OngoingCultivationComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchNIC: string = '';
-  hasData: boolean = true; 
+  hasData: boolean = true;
   isLoading = true;
 
-  constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router) {}
+  constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.fetchAllNews(this.page, this.itemsPerPage);
@@ -65,11 +65,11 @@ export class OngoingCultivationComponent {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.ongoingCultivationService.fetchAllOngoingCultivations(page, limit, this.searchNIC )
+    this.ongoingCultivationService.fetchAllOngoingCultivations(page, limit, this.searchNIC)
       .subscribe(
         (response) => {
-          console.log("____ONgoing Cultivation_____",response);
-          
+          console.log("____ONgoing Cultivation_____", response);
+
           this.ongoingCultivation = response.items;
           this.hasData = this.ongoingCultivation.length > 0;
           this.totalItems = response.total;
@@ -160,12 +160,12 @@ export class OngoingCultivationComponent {
       );
   }
 
-  
+
 
   viewTaskByUser(cultivationId: any, userId: any) {
     if (cultivationId) {
-      this.router.navigate(['admin/plant-care/action/view-crop-task-by-user'], { 
-        queryParams: { cultivationId, userId } 
+      this.router.navigate(['/plant-care/action/view-crop-task-by-user'], {
+        queryParams: { cultivationId, userId }
       });
       console.log('Navigating with cultivationId:', cultivationId);
       console.log('Navigating with cultivationId:', userId);
@@ -173,5 +173,9 @@ export class OngoingCultivationComponent {
       console.error('cultivationId is not defined:', cultivationId);
     }
   }
-  
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
+
 }

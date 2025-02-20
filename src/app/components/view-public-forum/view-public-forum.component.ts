@@ -255,6 +255,13 @@ export class ViewPublicForumComponent implements OnInit {
       return `${Math.floor(diffInSeconds / 86400)} day(s) ago`;
     }
   }
+
+
+  back(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
+
+  
 }
 
 class PublicForum {

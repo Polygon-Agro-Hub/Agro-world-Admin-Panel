@@ -131,14 +131,22 @@ export class ViewCropGroupComponent {
 
 
   Varieties(id: number, name: any) {
-    this.router.navigate(['/admin/plant-care/action/view-crop-variety'], { queryParams: { id, name } });
+    this.router.navigate(['/plant-care/action/view-crop-variety'], { queryParams: { id, name } });
   }
 
 
   editCropGroup(id: number) {
-    this.router.navigate(['/admin/plant-care/action/create-crop-group'], { queryParams: { id } });
+    this.router.navigate(['/plant-care/action/create-crop-group'], { queryParams: { id } });
   }
 
   
+
+  backCreate(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
   
+
+  add(): void {
+    this.router.navigate(['/plant-care/action/create-crop-group']);
+  }
 }

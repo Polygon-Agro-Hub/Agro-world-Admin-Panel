@@ -3,7 +3,7 @@
 
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/plant-care/action'"
+  (click)="back()"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -24,11 +24,11 @@
         <div class="flex items-center justify-between gap-x-5 w-full">
           <div class="flex items-center relative group">
             <!-- Tooltip -->
-            <div
+            <!-- <div
               class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
             >
               Enter NIC to search for Plant Care Users
-            </div>
+            </div> -->
           
             <!-- User Icon -->
             <div

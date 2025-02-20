@@ -2,7 +2,7 @@
 
 <div *ngIf="itemId === null">
   <button
-    onclick="window.location.href='/admin/plant-care/action'"
+  (click)="back()"
     class="mb-5 text-textLight dark:text-textDark"
   >
     <i class="fa-solid fa-arrow-left"></i>
@@ -230,7 +230,7 @@
 
 <div *ngIf="itemId != null">
   <button
-    onclick="window.location.href='/admin/plant-care/action/manage-content'"
+  (click)="backEdit()"
     class="mb-5 text-textLight dark:text-textDark"
   >
     <i class="fa-solid fa-arrow-left"></i>

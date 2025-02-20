@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="cropId === null">
-  <button onclick="window.location.href='/admin/plant-care/action'" class="mb-5 text-textLight dark:text-textDark">
+  <button  (click)="backCreate()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -147,7 +147,7 @@
 <div *ngIf="cropId != null">
 
   <div>
-    <button onclick="window.location.href='/admin/plant-care/action/view-crop-calender'"
+    <button (click)="backEdit()"
       class="mb-5 text-textLight dark:text-textDark">
       <i class="fa-solid fa-arrow-left"></i>
       Back
@@ -242,9 +242,9 @@
           </div>
 
           <div class="flex justify-end mt-6">
-            <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md" (click)="onCancel()">
+            <!-- <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md" (click)="onCancelEdit()">
               Cancel
-            </button>
+            </button> -->
             <button type="submit" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">
               Save
             </button>

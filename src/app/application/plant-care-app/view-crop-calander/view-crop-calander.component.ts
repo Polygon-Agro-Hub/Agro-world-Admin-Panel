@@ -112,7 +112,7 @@ export class ViewCropCalanderComponent implements OnInit {
   }
 
   editCropCalender(id: number) {
-    this.router.navigate(['/admin/plant-care/action/create-crop-calender'], {
+    this.router.navigate(['/plant-care/action/create-crop-calender'], {
       queryParams: { id },
     });
   }
@@ -123,6 +123,15 @@ export class ViewCropCalanderComponent implements OnInit {
   }
 
   ViewCroptask(id:number){
-    this.router.navigate([`admin/plant-care/action/view-crop-task/${id}`])
+    this.router.navigate([`plant-care/action/view-crop-task/${id}`])
+  }
+
+
+  Back(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
+
+  addNew(): void {
+    this.router.navigate(['/plant-care/action/create-crop-calender']);
   }
 }

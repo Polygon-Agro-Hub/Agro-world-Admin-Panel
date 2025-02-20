@@ -161,7 +161,7 @@ export class ManageContentComponent implements OnInit {
   }
 
   editNews(id: number) {
-    this.router.navigate(['/admin/plant-care/action/create-news'], { queryParams: { id } });
+    this.router.navigate(['/plant-care/action/create-news'], { queryParams: { id } });
   }
 
   openPopup(id: any) {
@@ -227,4 +227,11 @@ export class ManageContentComponent implements OnInit {
   applyFilters() {
     this.fetchAllNews(1, this.itemsPerPage);
   }
+
+  back(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
+
+
+
 }

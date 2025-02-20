@@ -342,7 +342,7 @@ export class CreateNewsComponent {
           this.selectedFile = null;
           this.selectedImage = null;
           this.selectedLanguage = 'english';
-          this.router.navigate(['/admin/plant-care/action/manage-content']);
+          this.router.navigate(['/plant-care/action/manage-content']);
         },
         (error) => {
           this.isLoading = false;
@@ -392,7 +392,7 @@ export class CreateNewsComponent {
             if (result.isConfirmed) {
               this.selectedFile = null;
               this.selectedImage = null;
-              this.router.navigate(['/admin/plant-care/action'])
+              this.router.navigate(['/plant-care/action'])
             }
           });
         }
@@ -527,7 +527,7 @@ export class CreateNewsComponent {
             title: 'Success',
             text: 'Market Price updated successfully!',
           });
-          this.router.navigate(['/admin/plant-care/action/manage-content']);
+          this.router.navigate(['/plant-care/action/manage-content']);
         },
         (error) => {
           console.error('Error updating news', error);
@@ -610,6 +610,14 @@ export class CreateNewsComponent {
 
   
 
+
+  back(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
+
+  backEdit(): void {
+    this.router.navigate(['/plant-care/action/manage-content']);
+  }
 
 
 }

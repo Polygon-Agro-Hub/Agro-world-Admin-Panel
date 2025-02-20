@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="this.itemId==null">
-  <button onclick="window.location.href='/admin/plant-care/action'" class="mb-5 text-textLight dark:text-textDark">
+  <button  (click)="back()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -174,7 +174,7 @@
 
 
 <div *ngIf="this.itemId!=null">
-  <button onclick="window.location.href='/admin/plant-care/action/view-crop-group'" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>

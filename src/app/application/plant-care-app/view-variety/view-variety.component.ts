@@ -113,8 +113,16 @@ export class ViewVarietyComponent {
   }
 
   editVarity(id: number) {
-    this.router.navigate(['/admin/plant-care/action/create-crop-variety'], {
+    this.router.navigate(['/plant-care/action/create-crop-variety'], {
       queryParams: { id },
     });
+  }
+
+  backCreate(): void {
+    this.router.navigate(['/plant-care/action/view-crop-group']);
+  }
+
+  add(): void {
+    this.router.navigate(['/plant-care/action/create-crop-variety']);
   }
 }

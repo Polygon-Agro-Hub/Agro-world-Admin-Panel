@@ -4,16 +4,17 @@ on:
     inputs:
       target_env:
         type: choice
-        description: Target environment (default = 'development')
+        description: Target environment
+        default: "development"
         options:
           - prod
           - development
       path_to_dockerfile:
-        description: Path to the dockerfile (default = 'Dockerfile')
+        description: Path to the dockerfile
         default: "Dockerfile"
         type: string
       docker_build_dir:
-        description: Docker build directory (default = '.')
+        description: Docker build directory
         default: "."
         type: string
       image_tag:

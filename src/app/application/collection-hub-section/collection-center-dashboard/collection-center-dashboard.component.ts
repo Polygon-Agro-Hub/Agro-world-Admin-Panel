@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class CollectionCenterDashboardComponent {
   centerNameObj: CenterName = new CenterName();
   resentCollectionArr!: ResentCollection[];
+  companyId!: number
 
   selectTable: string = 'collection';
   centerId!: number;
@@ -26,15 +27,18 @@ export class CollectionCenterDashboardComponent {
     private router: Router,
     private route: ActivatedRoute,
     private TargetSrv: CollectionCenterService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];
+    this.companyId = this.route.snapshot.params['comid'];
     this.fetchCenterDashbordDetails();
   }
 
   fetchCenterDashbordDetails() {
     this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
+      console.log(res);
+      
       this.centerNameObj = res.officerCount;
       this.transCount = res.transCount.transactionCount;
       this.transAmount = res.transAmountCount.transAmountCount;
@@ -54,7 +58,7 @@ export class CollectionCenterDashboardComponent {
 
   navigateAddTarget() {
     this.router.navigate([
-      `/centers/add-target/${this.centerId}/${this.centerNameObj.centerName}`,
+      `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.companyId}`,
     ]);
   }
 

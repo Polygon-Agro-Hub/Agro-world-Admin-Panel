@@ -408,7 +408,7 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
-            path: 'collection-center-dashboard/:id',
+            path: 'collection-center-dashboard/:id/:comid',
             component: CollectionCenterDashboardComponent,
           },
           {
@@ -432,7 +432,7 @@ export const routes: Routes = [
             component: AddCollectionCenterComponent,
           },
           {
-            path: 'add-daily-target/:id/:name',
+            path: 'add-daily-target/:id/:name/:comid',
             component: AddDailyTargetComponent,
           },
         ],

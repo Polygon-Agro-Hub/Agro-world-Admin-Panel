@@ -18,10 +18,15 @@ RUN npm run build -- --configuration=${ENVIRONMENT}
 
 FROM nginx:alpine
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx configuration as a template
+COPY nginx.conf /etc/nginx/conf.d/default.template
+
+# Copy the entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 COPY --from=builder /app/dist/plantr_care-admin/browser /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
+CMD ["/docker-entrypoint.sh"]

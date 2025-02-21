@@ -123,14 +123,86 @@ export class CreateCropGroupComponent {
 
 
   onSubmit() {
-    if (!this.cropGroup.cropNameEnglish || !this.cropGroup.cropNameSinahala || !this.cropGroup.cropNameTamil || !this.cropGroup.parentCategory || !this.cropGroup.bgColor) {
+    // Check if required fields are missing
+    if (!this.cropGroup.cropNameEnglish) {
       Swal.fire(
-        'warning',
-        'pleace fill all input feilds',
+        'Warning',
+        'Please fill the Crop Name in English',
         'warning'
       );
       return;
     }
+    
+    if (!this.cropGroup.cropNameSinahala) {
+      Swal.fire(
+        'Warning',
+        'Please fill the Crop Name in Sinhala',
+        'warning'
+      );
+      return;
+    }
+    
+    if (!this.cropGroup.cropNameTamil) {
+      Swal.fire(
+        'Warning',
+        'Please fill the Crop Name in Tamil',
+        'warning'
+      );
+      return;
+    }
+    
+    if (!this.cropGroup.parentCategory) {
+      Swal.fire(
+        'Warning',
+        'Please select a Parent Category',
+        'warning'
+      );
+      return;
+    }
+    
+    if (!this.cropGroup.bgColor) {
+      Swal.fire(
+        'Warning',
+        'Please choose a Background Color',
+        'warning'
+      );
+      return;
+    }
+
+    if (!this.cropGroup.cropNameEnglish || 
+      !this.cropGroup.cropNameSinahala || 
+      !this.cropGroup.cropNameTamil || 
+      !this.cropGroup.parentCategory || 
+      !this.cropGroup.bgColor) {
+    Swal.fire(
+      'Warning',
+      'Please fill in all the required fields.',
+      'warning'
+    );
+    return;
+    }
+
+    
+  
+    // Check if crop names contain only numbers
+    const onlyNumbersPattern = /^[0-9]+$/;
+    
+    if (onlyNumbersPattern.test(this.cropGroup.cropNameEnglish)) {
+      Swal.fire('Warning', "crop name can't be only numbers", 'warning');
+      return;
+    }
+    
+    if (onlyNumbersPattern.test(this.cropGroup.cropNameSinahala)) {
+      Swal.fire('Warning', "crop name can't be only numbers", 'warning');
+      return;
+    }
+  
+    if (onlyNumbersPattern.test(this.cropGroup.cropNameTamil)) {
+      Swal.fire('Warning', "crop name can't be only numbers", 'warning');
+      return;
+    }
+  
+    // Check if file is selected
     if (!this.selectedFile) {
       Swal.fire({
         icon: 'warning',
@@ -139,22 +211,23 @@ export class CreateCropGroupComponent {
       });
       return;
     }
-
+  
     this.isLoading = true;
-
+  
     // Create FormData object
     const formData = new FormData();
     formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
-    formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);  // Adjust as needed
-    formData.append('cropNameTamil', this.cropGroup.cropNameTamil);    // Adjust as needed
+    formData.append('cropNameSinhala', this.cropGroup.cropNameEnglish);
+    formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
     formData.append('category', this.cropGroup.parentCategory);
     formData.append('bgColor', this.cropGroup.bgColor);
-    formData.append('image', this.selectedFile);  // The key should match backend's expected field name selectedFileName
-    formData.append('fileName', this.selectedFileName);  // The key should match backend's expected field name selectedFileName
-
+    formData.append('image', this.selectedFile);
+    formData.append('fileName', this.selectedFileName);
+  
     // Send POST request to backend
     this.cropCalendarService.createCropGroup(formData).subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         if (response.status) {
           this.isLoading = false;
           Swal.fire(
@@ -164,27 +237,17 @@ export class CreateCropGroupComponent {
           );
           this.router.navigate(['/plant-care/action/view-crop-group']);
         } else {
-          this.isLoading = false;
-          Swal.fire(
-            'Unsuccess',
-            response.message,
-            'error'
-          );
+          Swal.fire('Unsuccess', response.message, 'error');
         }
-
       },
       error: (error) => {
         console.error('Error creating crop group:', error);
         this.isLoading = false;
-        Swal.fire(
-          'Error',
-          error,
-          'error'
-        );
+        Swal.fire('Error', 'Something went wrong!', 'error');
       }
     });
   }
-
+  
 
 
 

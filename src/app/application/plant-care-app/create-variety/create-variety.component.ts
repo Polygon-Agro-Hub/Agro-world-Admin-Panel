@@ -79,12 +79,12 @@ export class CreateVarietyComponent implements OnInit {
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', [Validators.required]],
-      varietyNameEnglish: ['', [Validators.required, Validators.minLength(2)]],
-      varietyNameSinhala: ['', [Validators.required, Validators.minLength(2)]],
-      varietyNameTamil: ['', [Validators.required, Validators.minLength(2)]],
+      varietyNameEnglish: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?!\d+$)[a-zA-Z0-9]*$/)]],
+      varietyNameSinhala: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?![0-9]+$)[\u0D80-\u0DFF0-9\s]*$/)]],
+      varietyNameTamil: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?![0-9]+$)[\u0B80-\u0BFF0-9\s]*$/)]],
       descriptionEnglish: ['', [Validators.required, Validators.minLength(10)]],
       descriptionSinhala: ['', [Validators.required, Validators.minLength(10)]],
-      descriptionTamil: ['', [Validators.required, Validators.minLength(10)]],
+      descriptionTamil: ['', [Validators.required, Validators.minLength(10)]], 
       bgColor: new FormControl('', Validators.required),
       image: [null, [Validators.required]],
     });
@@ -188,6 +188,54 @@ export class CreateVarietyComponent implements OnInit {
     if (!this.selectedFile) {
       Swal.fire('Error', 'Please select an image file.', 'error');
       return;
+    }
+
+    if (this.cropForm.invalid) {
+      let errorMessages = [];
+  
+      if (this.cropForm.controls['groupId'].hasError('required')) {
+        errorMessages.push('Group ID is required.');
+      }
+      if (this.cropForm.controls['varietyNameEnglish'].hasError('required')) {
+        errorMessages.push('Variety name is required.');
+
+      } else if (this.cropForm.controls['varietyNameEnglish'].hasError('pattern')) {
+        errorMessages.push('Variety name cannot be only numbers and special characters are not allowed');
+      }
+  
+      if (this.cropForm.controls['varietyNameSinhala'].hasError('required')) {
+        errorMessages.push('Sinhala variety name is required.');
+      
+      } else if (this.cropForm.controls['varietyNameSinhala'].hasError('pattern')) {
+        errorMessages.push('Variety name cannot be only numbers and only Sinhala characters and numbers are allowed');
+      }
+  
+      if (this.cropForm.controls['varietyNameTamil'].hasError('required')) {
+        errorMessages.push('Tamil variety name is required.');
+      
+      } else if (this.cropForm.controls['varietyNameTamil'].hasError('pattern')) {
+        errorMessages.push('Variety name cannot be only numbers and only tamil characters and numbers are allowed');
+      }
+  
+      if (this.cropForm.controls['bgColor'].hasError('required')) {
+        errorMessages.push('Background color is required.');
+      }
+  
+      if (!this.selectedFile) {
+        errorMessages.push('Please select an image file.');
+      }
+  
+      if (errorMessages.length > 0) {
+        Swal.fire({
+          title: 'Validation Errors',
+          html: `<ul style="text-align: center; padding: 0; list-style: none;">
+                    ${errorMessages.map((msg) => `<li style="margin-bottom: 5px;">${msg}</li>`).join('')}
+                 </ul>`,
+          icon: 'warning',
+          confirmButtonText: 'OK',
+        });
+        return;
+      }
     }
 
     this.isLoading = true;

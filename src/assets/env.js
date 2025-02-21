@@ -6,3 +6,4 @@
   window["env"]["apiBaseUrl"] =
     window["env"]["apiBaseUrl"] || "http://localhost:3000/api/auth/";
 })(this);
+

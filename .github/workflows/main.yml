@@ -2,6 +2,12 @@ name: Docker image build and publish
 on:
   workflow_dispatch:
     inputs:
+      target_env:
+        type: choice
+        description: Target environment (default = prod)
+        options:
+          - prod
+          - development
       path_to_dockerfile:
         description: Path to the dockerfile (default = 'Dockerfile')
         default: "Dockerfile"
@@ -63,9 +69,10 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ inputs.image_tag }}
+          TARGET_ENV: ${{ inputs.target_env }}
         run: |
-          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
-          echo "image_tag=$IMAGE_TAG"
-          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$TARGET_ENV"
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$TARGET_ENV"
+          echo "IMAGE $IMAGE_TAG-$TARGET_ENV is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
+          echo "image_tag=$IMAGE_TAG-$TARGET_ENV"
+          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$TARGET_ENV"

@@ -19,6 +19,13 @@ interface CollectionCenter {
   street: string;
   district: string;
   province: string;
+  companies:Company[]
+
+}
+
+interface Company{
+  id:number;
+  companyNameEnglish:string
 }
 
 @Component({
@@ -181,16 +188,18 @@ export class CollectionAllViewComponent implements OnInit {
       `/collection-hub/collection-center-dashboard/${id}`,
     ]);
   }
+
+  assignTarget(items:any, centerId:number){
+    let comId
+    items?.some((company:Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd' ? comId = company.id : 0)
+    console.log("companyID----->", comId);
+    this.router.navigate([`/collection-hub/collection-center-dashboard/${centerId}/${comId}`])
+    
+  }
+
+  isAgroworldPresent(item: any): boolean {
+    return item.companies?.some((company:any) => company.companyNameEnglish === 'agroworld (Pvt) Ltd') ?? false;
+  }
+  
 }
 
-// class CollectionCenter {
-//   id!: number;
-//   regCode!: string;
-//   centerName!: string;
-//   contact01!: string;
-//   contact02!: string;
-//   buildingNumber!: string;
-//   street!: string;
-//   district!: string;
-//   province!: string;
-// }

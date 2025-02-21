@@ -44,8 +44,8 @@ export class AddDailyTargetComponent {
 
   ngOnInit(): void {
     this.dailyTartgetObj.centerId = this.route.snapshot.params['id'];
-    // this.dailyTartgetObj.companyId = this.route.snapshot.params['cid'];
-    this.dailyTartgetObj.companyId = 1;
+    this.dailyTartgetObj.companyId = this.route.snapshot.params['comid'];
+    // this.dailyTartgetObj.companyId = 1;
     this.centerName = this.route.snapshot.params['name'];
     this.getAllCropVerity();
   }

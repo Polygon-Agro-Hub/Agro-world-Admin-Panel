@@ -33,12 +33,17 @@
           <th
             class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
-            Days
+            Task Date
           </th>
           <th
             class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
             Task
+          </th>
+          <th
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+          >
+            User Upload
           </th>
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -104,6 +109,26 @@
           </td>
 
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <div flex gap-2 >
+              
+            </div>
+            <ng-container *ngIf="task.images.length > 0; else noImage">
+              <div class="flex flex-row gap-2 justify-center ">
+                <a *ngFor="let img of task.images" class="gap-8"
+                [attr.href]="img"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i
+                  class="fa-solid fa-image text-blue-600 hover:text-blue-800"
+                ></i>
+               </a>
+              </div>
+            </ng-container>
+            <ng-template #noImage> No image </ng-template>
+          </td>
+
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             <ng-container *ngIf="task.imageLink; else noImage">
               <a
                 [attr.href]="task.imageLink"
@@ -117,6 +142,8 @@
             </ng-container>
             <ng-template #noImage> No image </ng-template>
           </td>
+
+          
 
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             <ng-container *ngIf="task.videoLinkEnglish; else noVideo">

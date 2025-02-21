@@ -15,6 +15,8 @@ interface TaskList {
   startingDate: string;
   taskEnglish: string;
   imageLink: string;
+  imageUpload: string;
+  images: string[];
   videoLinkEnglish: string;
   videoLinkSinhala: string;
   videoLinkTamil: string;
@@ -64,8 +66,10 @@ export class UserCropCalendarComponent {
     this.ongoingCultivationService.getUserTasks(cropId, userId, page, limit)
       .subscribe(
         (data) => {
+          
           this.isLoading = false;
           this.taskList = data.items;
+          console.log(this.taskList);
 
           this.totalItems = data.total;
         },

@@ -1,40 +1,57 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { environment } from '../../../environment/environment';
-import { NgxColorsModule } from 'ngx-colors';
-import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
+import { CommonModule } from "@angular/common";
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from "@angular/common/http";
+import { Component } from "@angular/core";
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import Swal from "sweetalert2";
+import { environment } from "../../../environment/environment";
+import { NgxColorsModule } from "ngx-colors";
+import { PlantcareUsersService } from "../../../services/plant-care/plantcare-users.service";
 import {
   CdkDrag,
   CdkDragDrop,
   CdkDragPlaceholder,
   CdkDropList,
   moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import { TokenService } from '../../../services/token/services/token.service';
+} from "@angular/cdk/drag-drop";
+import { TokenService } from "../../../services/token/services/token.service";
 
 @Component({
-  selector: 'app-create-feedback',
+  selector: "app-create-feedback",
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, NgxColorsModule, FormsModule, CdkDropList, CdkDrag, CdkDragPlaceholder],
-  templateUrl: './create-feedback.component.html',
-  styleUrl: './create-feedback.component.css'
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    NgxColorsModule,
+    FormsModule,
+    CdkDropList,
+    CdkDrag,
+    CdkDragPlaceholder,
+  ],
+  templateUrl: "./create-feedback.component.html",
+  styleUrl: "./create-feedback.component.css",
 })
 export class CreateFeedbackComponent {
-
   isLoading = false;
   feebackList: any[] = [];
-  bgColor: any = '#ffffff';
+  bgColor: any = "#ffffff";
   feedback = {
     orderNumber: 0,
-    feedbackEnglish: '',
-    feedbackSinahala: '',
-    feedbackTamil: ''
+    feedbackEnglish: "",
+    feedbackSinahala: "",
+    feedbackTamil: "",
   };
-
 
   constructor(
     private fb: FormBuilder,
@@ -42,39 +59,33 @@ export class CreateFeedbackComponent {
     private route: ActivatedRoute,
     private router: Router,
     private plantcareUsersService: PlantcareUsersService,
-    private tokenService: TokenService
-
-  ) { }
-
+    private tokenService: TokenService,
+  ) {}
 
   ngOnInit() {
     this.loadNextNumber();
     this.getAllFeedbacks();
   }
 
-
   onCancel() {
     location.reload();
   }
 
-
   onSubmit() {
-    if (!this.feedback.orderNumber ||
+    if (
+      !this.feedback.orderNumber ||
       !this.feedback.feedbackEnglish ||
       !this.feedback.feedbackSinahala ||
-      !this.feedback.feedbackTamil) {
-      Swal.fire(
-        'Warning',
-        'Please fill all input fields',
-        'warning'
-      );
+      !this.feedback.feedbackTamil
+    ) {
+      Swal.fire("Warning", "Please fill all input fields", "warning");
       return;
     }
     if (this.feedback.orderNumber === 11) {
       Swal.fire(
-        'Warning',
-        'Maximum number of feedbacks are already uploaded',
-        'warning'
+        "Warning",
+        "Maximum number of feedbacks are already uploaded",
+        "warning",
       );
       return;
     }
@@ -90,39 +101,29 @@ export class CreateFeedbackComponent {
         this.isLoading = false;
 
         if (response.status) {
-          Swal.fire(
-            'Success',
-            response.message,
-            'success'
-          );
-          this.navigatePath('/plant-care/action/opt-out-feedbacks');
+          Swal.fire("Success", response.message, "success");
+          this.navigatePath("/plant-care/action/opt-out-feedbacks");
         } else {
-          Swal.fire(
-            'Unsuccessful',
-            response.message,
-            'error'
-          );
+          Swal.fire("Unsuccessful", response.message, "error");
         }
       },
       error: (error) => {
-        console.error('Error creating feedback:', error);
+        console.error("Error creating feedback:", error);
         this.isLoading = false;
         Swal.fire(
-          'Error',
-          'An error occurred while creating feedback. Please try again.',
-          'error'
+          "Error",
+          "An error occurred while creating feedback. Please try again.",
+          "error",
         );
-      }
+      },
     });
   }
-
-
 
   loadNextNumber() {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
     const headers = new HttpHeaders({
@@ -130,28 +131,24 @@ export class CreateFeedbackComponent {
     });
     this.isLoading = true;
     this.http
-      .get<any>(
-        `${environment.API_URL}auth/next-order-number`,
-        { headers }
-      )
+      .get<any>(`${environment.API_URL}auth/next-order-number`, { headers })
       .subscribe(
         (data) => {
           this.isLoading = false;
           this.feedback.orderNumber = data.nextOrderNumber;
         },
         (error) => {
-          this.isLoading = false
-          console.error('Error fetching user data:', error);
-        }
+          this.isLoading = false;
+          console.error("Error fetching user data:", error);
+        },
       );
   }
-
 
   getAllFeedbacks() {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
     const headers = new HttpHeaders({
@@ -167,102 +164,88 @@ export class CreateFeedbackComponent {
           console.log(response);
         },
         (error) => {
-          console.error('Error fetching news:', error);
-        }
+          console.error("Error fetching news:", error);
+        },
       );
   }
 
-
-
-
   deleteFeedback(feedbackId: number): void {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This will delete the feedback and reorder subsequent feedback entries.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This will delete the feedback and reorder subsequent feedback entries.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         this.plantcareUsersService.deleteFeedback(feedbackId).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Feedback has been deleted.', 'success');
+            Swal.fire("Deleted!", "Feedback has been deleted.", "success");
             this.getAllFeedbacks();
             this.loadNextNumber();
           },
           error: (err) => {
-            Swal.fire('Error!', 'Failed to delete feedback.', 'error');
-            console.error('Error deleting feedback:', err);
+            Swal.fire("Error!", "Failed to delete feedback.", "error");
+            console.error("Error deleting feedback:", err);
           },
         });
       }
     });
   }
 
-
-
-
   drop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
     const updatedFeedbacks = this.feebackList.map((item, index) => ({
       id: item.id,
-      orderNumber: index + 1
+      orderNumber: index + 1,
     }));
-    this.plantcareUsersService.updateFeedbackOrder(updatedFeedbacks)
-      .subscribe({
-        next: (response: any) => {
-          if (response.status) {
-            this.feebackList.forEach((item, index) => {
-              item.orderNumber = index + 1;
-            });
-            Swal.fire(
-              'Success',
-              'Feedback order updated successfully',
-              'success'
-            );
-          } else {
-            Swal.fire(
-              'Error',
-              'Failed to update feedback order',
-              'error'
-            );
-            this.getAllFeedbacks();
-          }
-        },
-        error: (error) => {
-          console.error('Error updating feedback order:', error);
+    this.plantcareUsersService.updateFeedbackOrder(updatedFeedbacks).subscribe({
+      next: (response: any) => {
+        if (response.status) {
+          this.feebackList.forEach((item, index) => {
+            item.orderNumber = index + 1;
+          });
           Swal.fire(
-            'Error',
-            'An error occurred while updating feedback order',
-            'error'
+            "Success",
+            "Feedback order updated successfully",
+            "success",
           );
+        } else {
+          Swal.fire("Error", "Failed to update feedback order", "error");
           this.getAllFeedbacks();
         }
-      });
+      },
+      error: (error) => {
+        console.error("Error updating feedback order:", error);
+        Swal.fire(
+          "Error",
+          "An error occurred while updating feedback order",
+          "error",
+        );
+        this.getAllFeedbacks();
+      },
+    });
   }
-
-
 
   getColorByOrderNumber(orderNumber: number): string {
     const colors: { [key: number]: string } = {
-      1: '#FFF399',
-      2: '#FFD462',
-      3: '#FF8F61',
-      4: '#FE7200',
-      5: '#FF3B33',
-      6: '#CD0800',
-      7: '#850002',
-      8: '#51000B',
-      9: '#3B0214',
-      10: '#777777',
+      1: "#FFF399",
+      2: "#FFD462",
+      3: "#FF8F61",
+      4: "#FE7200",
+      5: "#FF3B33",
+      6: "#CD0800",
+      7: "#850002",
+      8: "#51000B",
+      9: "#3B0214",
+      10: "#777777",
     };
-    return colors[orderNumber] || '#FFFFFF';
+    return colors[orderNumber] || "#FFFFFF";
   }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
 }

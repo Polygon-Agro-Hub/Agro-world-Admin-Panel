@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
-import { TokenService } from '../token/services/token.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { environment } from "../../environment/environment";
+import { TokenService } from "../token/services/token.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class PermissionManagerService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   createCategory(feature: any, selectedCategory: any, newCategory: any) {
     const headers = new HttpHeaders({
@@ -26,23 +29,28 @@ export class PermissionManagerService {
     return this.http.post<any>(
       `${environment.API_URL}permission/create-categories`,
       data,
-      { headers }
+      { headers },
     );
   }
-
-
 
   getFeatureCategories(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any>(`${this.apiUrl}permission/get-all-feture-categories`, { headers });
+    return this.http.get<any>(
+      `${this.apiUrl}permission/get-all-feture-categories`,
+      { headers },
+    );
   }
 
   editFeatureName(data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.patch<any>(`${this.apiUrl}permission/edit-feature-name`, data, { headers });
+    return this.http.patch<any>(
+      `${this.apiUrl}permission/edit-feature-name`,
+      data,
+      { headers },
+    );
   }
 }

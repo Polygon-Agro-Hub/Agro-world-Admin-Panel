@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import {
   HttpClientModule,
   HttpClient,
   HttpHeaders,
-} from '@angular/common/http';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { environment } from '../../../environment/environment';
-import { DropdownModule } from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
-import { TokenService } from '../../../services/token/services/token.service';
+} from "@angular/common/http";
+import { Router } from "@angular/router";
+import Swal from "sweetalert2";
+import { NgxPaginationModule } from "ngx-pagination";
+import { environment } from "../../../environment/environment";
+import { DropdownModule } from "primeng/dropdown";
+import { FormsModule } from "@angular/forms";
+import { TokenService } from "../../../services/token/services/token.service";
 
 interface AdminUsers {
   id: number;
@@ -23,7 +23,7 @@ interface AdminUsers {
 }
 
 @Component({
-  selector: 'app-admin-users',
+  selector: "app-admin-users",
   standalone: true,
   imports: [
     CommonModule,
@@ -32,8 +32,8 @@ interface AdminUsers {
     DropdownModule,
     FormsModule,
   ],
-  templateUrl: './admin-users.component.html',
-  styleUrl: './admin-users.component.css',
+  templateUrl: "./admin-users.component.html",
+  styleUrl: "./admin-users.component.css",
   template: `
     <!-- Your existing table markup -->
     <pagination-controls
@@ -49,22 +49,22 @@ export class AdminUsersComponent {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  searchNIC: string = '';
+  searchNIC: string = "";
   hasData: boolean = true;
 
   status!: Roles[];
-  statusFilter: any = '';
+  statusFilter: any = "";
   roleArr: Roles[] = [];
 
-  searchText: string = '';
+  searchText: string = "";
 
   userId: number | null = null;
-  role: any = localStorage.getItem('role:');
+  role: any = localStorage.getItem("role:");
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   fetchAllAdmins(page: number = 1, limit: number = this.itemsPerPage) {
@@ -72,7 +72,7 @@ export class AdminUsersComponent {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
     const headers = new HttpHeaders({
@@ -98,16 +98,16 @@ export class AdminUsersComponent {
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
+          console.error("Error fetching market prices:", error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
           }
-        }
+        },
       );
   }
 
   ngOnInit() {
-    this.userId = Number(localStorage.getItem('userId:'));
+    this.userId = Number(localStorage.getItem("userId:"));
     this.fetchAllAdmins(this.page, this.itemsPerPage);
     this.getAllRoles();
   }
@@ -121,19 +121,19 @@ export class AdminUsersComponent {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this Admin? This action cannot be undone.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "Do you really want to delete this Admin? This action cannot be undone.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -146,25 +146,25 @@ export class AdminUsersComponent {
           })
           .subscribe(
             (data: any) => {
-              console.log('Admin deleted successfully');
-              Swal.fire('Deleted!', 'The Admin has been deleted.', 'success');
+              console.log("Admin deleted successfully");
+              Swal.fire("Deleted!", "The Admin has been deleted.", "success");
               this.fetchAllAdmins();
             },
             (error) => {
-              console.error('Error deleting news:', error);
+              console.error("Error deleting news:", error);
               Swal.fire(
-                'Error!',
-                'There was an error deleting the news item.',
-                'error'
+                "Error!",
+                "There was an error deleting the news item.",
+                "error",
               );
-            }
+            },
           );
       }
     });
   }
 
   editAdminUser(id: number) {
-    this.router.navigate(['/steckholders/action/admin/create-admin-user'], {
+    this.router.navigate(["/steckholders/action/admin/create-admin-user"], {
       queryParams: { id },
     });
   }
@@ -178,7 +178,7 @@ export class AdminUsersComponent {
   }
 
   offSearch() {
-    this.searchText = '';
+    this.searchText = "";
     this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
 
@@ -186,7 +186,7 @@ export class AdminUsersComponent {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
     const headers = new HttpHeaders({
@@ -202,17 +202,17 @@ export class AdminUsersComponent {
           this.roleArr = response.roles;
         },
         (error) => {
-          console.error('Error fetching news:', error);
-        }
+          console.error("Error fetching news:", error);
+        },
       );
   }
 
   clearSearch(): void {
-    this.statusFilter = '';
+    this.statusFilter = "";
     this.fetchAllAdmins();
   }
 
-  navigatePath(path:string){
+  navigatePath(path: string) {
     this.router.navigate([path]);
   }
 }

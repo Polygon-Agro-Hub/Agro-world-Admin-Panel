@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import {
   HttpClient,
   HttpClientModule,
   HttpErrorResponse,
   HttpHeaders,
-} from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { FormsModule } from '@angular/forms';
-import { environment } from '../../../environment/environment';
-import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
+} from "@angular/common/http";
+import { CommonModule } from "@angular/common";
+import Swal from "sweetalert2";
+import { Router } from "@angular/router";
+import { NgxPaginationModule } from "ngx-pagination";
+import { FormsModule } from "@angular/forms";
+import { environment } from "../../../environment/environment";
+import { PlantcareUsersService } from "../../../services/plant-care/plantcare-users.service";
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-import { PermissionService } from '../../../services/roles-permission/permission.service';
-import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from "../../../services/roles-permission/permission.service";
+import { TokenService } from "../../../services/token/services/token.service";
 
 interface PlantCareUser {
   id: number;
@@ -45,23 +45,24 @@ interface CurrentAsset {
   nature: Date;
   duration: number;
   createdAt: any;
-
 }
-
 
 interface TotalFixed {
   total_price: any;
-
 }
 
-
-
 @Component({
-  selector: 'app-view-plantcare-users',
+  selector: "app-view-plantcare-users",
   standalone: true,
-  imports: [HttpClientModule, CommonModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
-  templateUrl: './view-plantcare-users.component.html',
-  styleUrl: './view-plantcare-users.component.css',
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    NgxPaginationModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
+  templateUrl: "./view-plantcare-users.component.html",
+  styleUrl: "./view-plantcare-users.component.css",
   template: `
     <!-- Your existing table markup -->
     <pagination-controls
@@ -82,19 +83,22 @@ export class ViewPlantcareUsersComponent {
   currentAsset: CurrentAsset[] = [];
   fixedAssetTotal: number = 0;
   totalFixed: any;
-  searchNIC: string = '';
+  searchNIC: string = "";
   isLoading = false;
-  hasData: boolean = true;  
-  
+  hasData: boolean = true;
 
-  constructor(public tokenService: TokenService,
-    private plantcareService: PlantcareUsersService, private http: HttpClient, private router: Router, public permissionService: PermissionService, ) { }
-
-  
+  constructor(
+    public tokenService: TokenService,
+    private plantcareService: PlantcareUsersService,
+    private http: HttpClient,
+    private router: Router,
+    public permissionService: PermissionService,
+  ) {}
 
   fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.plantcareService.getAllPlantCareUsers(page, limit, this.searchNIC)
+    this.plantcareService
+      .getAllPlantCareUsers(page, limit, this.searchNIC)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -104,11 +108,11 @@ export class ViewPlantcareUsersComponent {
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
+          console.error("Error fetching market prices:", error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
           }
-        }
+        },
       );
   }
 
@@ -127,119 +131,117 @@ export class ViewPlantcareUsersComponent {
   }
 
   clearSearch(): void {
-    this.searchNIC = '';
+    this.searchNIC = "";
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
-
   deletePlantCareUser(id: any) {
-    const token =  this.tokenService.getToken();
-    
+    const token = this.tokenService.getToken();
+
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
-  
+
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     });
-  
+
     // Confirmation dialog using SweetAlert2
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this plant care user? This action cannot be undone.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "Do you really want to delete this plant care user? This action cannot be undone.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        this.http.delete(`${environment.API_URL}auth/delete-plant-care-user/${id}`, { headers }).subscribe((data:any) => {
-            if(data){
-              Swal.fire('Deleted!', 'The plant care user has been deleted.', 'success');
-              this.fetchAllPlantCareUsers();
-            }
-          },
-          (error) => {
-            console.error('Error deleting plant care user:', error);
-            Swal.fire('Error', 'There was a problem deleting the plant care user.', 'error');
-          }
-        );
+        this.http
+          .delete(`${environment.API_URL}auth/delete-plant-care-user/${id}`, {
+            headers,
+          })
+          .subscribe(
+            (data: any) => {
+              if (data) {
+                Swal.fire(
+                  "Deleted!",
+                  "The plant care user has been deleted.",
+                  "success",
+                );
+                this.fetchAllPlantCareUsers();
+              }
+            },
+            (error) => {
+              console.error("Error deleting plant care user:", error);
+              Swal.fire(
+                "Error",
+                "There was a problem deleting the plant care user.",
+                "error",
+              );
+            },
+          );
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Cancelled', 'Your plant care user is safe', 'info');
+        Swal.fire("Cancelled", "Your plant care user is safe", "info");
       }
     });
   }
-  
-
-  
-
-
-  
-
-
-
 
   // editPlantCareUser(id: number) {
   //   this.router.navigate(['/plant-care/edit-plantcare-users', id]);
   // }
 
   editPlantCareUser(id: number) {
-    this.router.navigate(['/steckholders/action/farmers/edit-plantcare-users'], { queryParams: { id } });
+    this.router.navigate(
+      ["/steckholders/action/farmers/edit-plantcare-users"],
+      { queryParams: { id } },
+    );
   }
-
 
   addPlantCareUser(id: number) {
-    this.router.navigate(['/plant-care/edit-plantcare-users']);
+    this.router.navigate(["/plant-care/edit-plantcare-users"]);
   }
-
-
 
   getTotalFixedAssets(id: number) {
     this.plantcareService.getTotalFixedAssets(id).subscribe(
       (response) => {
-        console.log('API Response:', response); 
-  
+        console.log("API Response:", response);
+
         if (Array.isArray(response) && response.length > 0) {
           const totalFixedAssetData = response[0];
-  
+
           if (totalFixedAssetData && totalFixedAssetData.total_price) {
-            
             this.fixedAssetTotal = parseFloat(totalFixedAssetData.total_price);
-            console.log('Fixed Asset Total:', this.fixedAssetTotal); 
+            console.log("Fixed Asset Total:", this.fixedAssetTotal);
           } else {
-            console.error('Error: total_price is missing or invalid in the response');
+            console.error(
+              "Error: total_price is missing or invalid in the response",
+            );
           }
         } else {
-          console.error('Error: Response is not an array or is empty');
+          console.error("Error: Response is not an array or is empty");
         }
       },
       (error) => {
-        console.error('Error fetching total fixed assets:', error);
+        console.error("Error fetching total fixed assets:", error);
         if (error.status === 401) {
           // Handle unauthorized access (e.g., redirect to login)
         }
-      }
+      },
     );
   }
 
-
-
-
   navigateToBack(): void {
-    this.router.navigate(['/steckholders/action']);
+    this.router.navigate(["/steckholders/action"]);
   }
 
   navigateToAddUser(): void {
-    this.router.navigate(['/steckholders/action/farmers/edit-plantcare-users']);
+    this.router.navigate(["/steckholders/action/farmers/edit-plantcare-users"]);
   }
-
 
   bulkUpload(): void {
-    this.router.navigate(['/steckholders/action/farmers/upload-farmers']);
+    this.router.navigate(["/steckholders/action/farmers/upload-farmers"]);
   }
-  
-  
 }

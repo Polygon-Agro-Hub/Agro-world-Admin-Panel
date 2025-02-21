@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
 
 ARG NODE_VERSION=20.17.0
+ARG ENVIRONMENT=development
 
-FROM node:${NODE_VERSION}-alpine as builder
+FROM node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +14,7 @@ RUN npm i
 
 COPY . .
 
-RUN npm run build --prod
+RUN npm run build --${ENVIRONMENT}
 
 #stage 2
 FROM nginx:alpine

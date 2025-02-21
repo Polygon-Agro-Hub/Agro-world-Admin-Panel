@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { environment } from '../../environment/environment';
-import { TokenService } from '../token/services/token.service';
-
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { catchError, Observable, throwError } from "rxjs";
+import { environment } from "../../environment/environment";
+import { TokenService } from "../token/services/token.service";
 
 export interface PlantCareUser {
   id: number;
@@ -32,23 +31,28 @@ export interface FixedAsset {
   createdAt: string;
 }
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class PlantcareUsersService {
   getUserProfile(userId: number) {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   private apiUrl = `${environment.API_URL}`;
-  private token = this.tokenService.getToken();;
+  private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
-
-  getAllPlantCareUsers(page: number, limit: number, searchNIC: string = ''): Observable<any> {
+  getAllPlantCareUsers(
+    page: number,
+    limit: number,
+    searchNIC: string = "",
+  ): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     let url = `${this.apiUrl}auth/get-all-users?page=${page}&limit=${limit}`;
@@ -59,26 +63,25 @@ export class PlantcareUsersService {
     return this.http.get<any>(url, { headers });
   }
 
-
   deletePlantCareUser(id: number): Observable<void> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete<void>(`${this.apiUrl}auth/delete-plant-care-user/${id}`, { headers });
+    return this.http.delete<void>(
+      `${this.apiUrl}auth/delete-plant-care-user/${id}`,
+      { headers },
+    );
   }
 
-
   getTotalFixedAssets(id: number): Observable<any> {
-    
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     const url = `${this.apiUrl}auth/get-total-fixed-assets-by-id/${id}`;
     return this.http.get<any>(url, { headers });
   }
-
 
   // uploadUserXlsxFile(file: File): Observable<any> {
   //   const headers = new HttpHeaders({
@@ -94,40 +97,34 @@ export class PlantcareUsersService {
   // }
 
   uploadUserXlsxFile(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}auth/upload-user-xlsx`, formData, {
-      responseType: 'json',
-      observe: 'body'
-    }).pipe(
-      catchError(error => {
-        // Check if the error response is an Excel file
-        if (error.status === 409 && error.error instanceof ArrayBuffer) {
-          // Return the file buffer for download
-          return new Observable(observer => {
-            observer.next(error.error);
-            observer.complete();
-          });
-        }
-        return throwError(() => error);
+    return this.http
+      .post(`${this.apiUrl}auth/upload-user-xlsx`, formData, {
+        responseType: "json",
+        observe: "body",
       })
-    );
+      .pipe(
+        catchError((error) => {
+          // Check if the error response is an Excel file
+          if (error.status === 409 && error.error instanceof ArrayBuffer) {
+            // Return the file buffer for download
+            return new Observable((observer) => {
+              observer.next(error.error);
+              observer.complete();
+            });
+          }
+          return throwError(() => error);
+        }),
+      );
   }
-
-  
-
 
   createFeedback(feedbackData: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(
-      `${this.apiUrl}auth/create-feedback`,
-      feedbackData,
-      {
-        headers,
-      }
-    );
+    return this.http.post(`${this.apiUrl}auth/create-feedback`, feedbackData, {
+      headers,
+    });
   }
-
 
   updateFeedbackOrder(feedbacks: { id: number; orderNumber: number }[]) {
     const headers = new HttpHeaders({
@@ -137,18 +134,17 @@ export class PlantcareUsersService {
     return this.http.put(
       `${environment.API_URL}auth/update-feedback-order`,
       { feedbacks },
-      { headers }
+      { headers },
     );
-}
+  }
 
+  deleteFeedback(feedbackId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-
-deleteFeedback(feedbackId: number): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
-
-  return this.http.delete(`${this.apiUrl}auth/feedback/${feedbackId}`, { headers });
-}
-
+    return this.http.delete(`${this.apiUrl}auth/feedback/${feedbackId}`, {
+      headers,
+    });
+  }
 }

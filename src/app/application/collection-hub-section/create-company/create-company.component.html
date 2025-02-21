@@ -1,41 +1,33 @@
-<button
-(click)="back()"
-  class="ml-5 text-textLight dark:text-textDark"
->
+<button (click)="back()" class="ml-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 <div class="h-[20px]"></div>
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-
-
   <div *ngIf="itemId === null">
     <div *ngIf="selectedPage === 'pageOne'">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Company Details
       </h2>
       <div>
-
-        
-
         <div class="pb-6">
-            <label
-              for="regNumber"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Registration Number of the Company</label
-            >
-            <input
-              id="regNumber"
-              name="regNumber"
-              [(ngModel)]="companyData.regNumber"
-              (blur)="onBlur('regNumber')"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span>
-          </div>
-
-
+          <label
+            for="regNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Registration Number of the Company</label
+          >
+          <input
+            id="regNumber"
+            name="regNumber"
+            [(ngModel)]="companyData.regNumber"
+            (blur)="onBlur('regNumber')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm"
+            >Register Number is required.</span
+          >
+        </div>
 
         <div class="pb-6">
           <label
@@ -50,12 +42,12 @@
             (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-600 text-sm">company Name is required.</span>
+          <span
+            *ngIf="isFieldInvalid('companyNameEnglish')"
+            class="text-red-600 text-sm"
+            >Company Name in English required.</span
+          >
         </div>
-
-
-
-
 
         <div class="pb-6">
           <label
@@ -70,11 +62,12 @@
             (blur)="onBlur('companyNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-600 text-sm">company Name is required.</span>
+          <span
+            *ngIf="isFieldInvalid('companyNameSinhala')"
+            class="text-red-600 text-sm"
+            >Company Name in Sinhala required.</span
+          >
         </div>
-
-
-
 
         <div class="pb-6">
           <label
@@ -89,10 +82,12 @@
             (blur)="onBlur('companyNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-600 text-sm">company Name is required.</span>
+          <span
+            *ngIf="isFieldInvalid('companyNameTamil')"
+            class="text-red-600 text-sm"
+            >Company Name in Tamil required.</span
+          >
         </div>
-
-      
 
         <div class="pb-6">
           <label
@@ -108,10 +103,16 @@
             type="email"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
+          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm"
+            >Email is required.</span
+          >
+          <span
+            *ngIf="companyData.email && !isValidEmail(companyData.email)"
+            class="text-red-600 text-sm"
+          >
+            Enter a valid email address.
+          </span>
         </div>
-
-
 
         <!-- <div class="pb-6">
             <label
@@ -130,10 +131,7 @@
             </div>
           </div> -->
 
-
-
-
-          <!-- <div class="pb-6">
+        <!-- <div class="pb-6">
             <label
               for="oicEmail"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -150,9 +148,6 @@
               <div *ngIf="userForm.get('oicEmail')!.errors?.['required']">Email is required.</div>
             </div>
           </div> -->
-
-
-
 
         <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
          
@@ -218,23 +213,7 @@
               </div>
 
         </div> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
       </div>
-      
 
       <div class="flex justify-end m-10">
         <!-- <button
@@ -254,163 +233,140 @@
       </div>
     </div>
   </div>
-    
 
   <div *ngIf="itemId === null">
     <div *ngIf="selectedPage === 'pageTwo'">
-        <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-         Billing Information
-        </h2>
-        <div>
-  
-          <div class="pb-6">
-              <label
-                for="accHolderName"
-                class="block text-sm font-medium text-gray-700 dark:text-textDark"
-                >Account Holder’s Name</label
-              >
-              <input
-                id="accHolderName"
-                name="accHolderName"
-                [(ngModel)]="companyData.accHolderName"
-                (blur)="onBlur('accHolderName')"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              />
-              <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder Name is required.</span>
-            </div>
-  
-  
-  
-          <div class="pb-6">
-            <label
-              for="accNumber"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Account Number</label
-            >
-            <input
-              id="accNumber"
-              name="accNumber"
-              [(ngModel)]="companyData.accNumber"
-              (blur)="onBlur('accNumber')"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">Account Number is required.</span>
-          </div>
-  
-  
-  
-  
-  
-          <div class="pb-6">
-            <label
-              for="companyNameSinhala"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Confirm Account Number</label
-            >
-            <input
-              id="companyNameSinhala"
-              name="companyNameSinhala"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <!-- <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span> -->
-          </div>
-  
-  
-  
-  
-          <div class="pb-6">
-            <label
-              for="bankName"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Bank Name</label
-            >
-            <input
-              id="bankName"
-              name="bankName"
-              [(ngModel)]="companyData.bankName"
-              (blur)="onBlur('bankName')"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">Bank Name is required.</span>
-          </div>
-  
-        
-  
-          <div class="pb-6">
-            <label
-              for="companyEmail"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Branch Name</label
-            >
-            <input
-              id="branchName"
-              name="branchName"
-              [(ngModel)]="companyData.branchName"
-              (blur)="onBlur('branchName')"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">Branch Name is required.</span>
-          </div>
-  
-  
-  
-          <div class="pb-6">
-              <label
-                for="companyEmail"
-                class="block text-sm font-medium text-gray-700 dark:text-textDark"
-                >Finance Officer’s Name</label
-              >
-              <input
-                id="foName"
-                name="foName"
-                [(ngModel)]="companyData.foName"
-                (blur)="onBlur('foName')"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              />
-              <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Register Number is required.</span>
-            </div>
+      <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+        Billing Information
+      </h2>
+      <div>
+        <div class="pb-6">
+          <label
+            for="accHolderName"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Account Holder’s Name</label
+          >
+          <input
+            id="accHolderName"
+            name="accHolderName"
+            [(ngModel)]="companyData.accHolderName"
+            (blur)="onBlur('accHolderName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('accHolderName')"
+            class="text-red-600 text-sm"
+            >Account Holder Name is required.</span
+          >
+        </div>
 
-          
+        <div class="pb-6">
+          <label
+            for="accNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Account Number</label
+          >
+          <input
+            id="accNumber"
+            name="accNumber"
+            [(ngModel)]="companyData.accNumber"
+            (blur)="onBlur('accNumber')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm"
+            >Account Number is required.</span
+          >
         </div>
-        
-  
-        <div class="flex justify-end m-10">
-          <button
-          
+
+        <div class="pb-6">
+          <label
+            for="companyNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Confirm Account Number</label
+          >
+          <input
+            id="companyNameSinhala"
+            name="companyNameSinhala"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <!-- <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span> -->
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="bankName"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Bank Name</label
+          >
+          <input
+            id="bankName"
+            name="bankName"
+            [(ngModel)]="companyData.bankName"
+            (blur)="onBlur('bankName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm"
+            >Bank Name is required.</span
+          >
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="companyEmail"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Branch Name</label
+          >
+          <input
+            id="branchName"
+            name="branchName"
+            [(ngModel)]="companyData.branchName"
+            (blur)="onBlur('branchName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('branchName')"
+            class="text-red-600 text-sm"
+            >Branch Name is required.</span
+          >
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="companyEmail"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Finance Officer’s Name</label
+          >
+          <input
+            id="foName"
+            name="foName"
+            [(ngModel)]="companyData.foName"
+            (blur)="onBlur('foName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm"
+            >Register Number is required.</span
+          >
+        </div>
+      </div>
+
+      <div class="flex justify-end m-10">
+        <button
           (click)="nextFormCreate('pageOne')"
-            type="button"
-            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-          >
-            Back
-          </button>
-          <button
-            type="button"
-            (click)="saveCompanyData()"
-            class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-          >
-            Submit
-          </button>
-        </div>
+          type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+        >
+          Back
+        </button>
+        <button
+          type="button"
+          (click)="saveCompanyData()"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+        >
+          Submit
+        </button>
+      </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
   <div *ngIf="itemId !== null">
     <div *ngIf="selectedPage === 'pageOne'">
@@ -418,28 +374,35 @@
         Edit Company Details
       </h2>
       <div>
-
-        
-
         <div class="pb-6">
-            <label
-              for="regNumber"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Registration Number of the Company</label
-            >
-            <input
+          <label
+            for="regNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Registration Number of the Company</label
+          >
+          <input
             [(ngModel)]="companyData.regNumber"
-              id="regNumber"
-              name="regNumber"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <div *ngIf="userForm.get('regNumber')!.invalid && (userForm.get('regNumber')!.dirty || userForm.get('regNumber')!.touched)" class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('regNumber')!.errors?.['required']">Phone number is required.</div>
-              <div *ngIf="userForm.get('regNumber')!.errors?.['pattern']">Please enter a valid phone number starting with +94 followed by 9 digits.</div>
+            id="regNumber"
+            name="regNumber"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="
+              userForm.get('regNumber')!.invalid &&
+              (userForm.get('regNumber')!.dirty ||
+                userForm.get('regNumber')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="userForm.get('regNumber')!.errors?.['required']">
+              Phone number is required.
+            </div>
+            <div *ngIf="userForm.get('regNumber')!.errors?.['pattern']">
+              Please enter a valid phone number starting with +94 followed by 9
+              digits.
             </div>
           </div>
-
-
+        </div>
 
         <div class="pb-6">
           <label
@@ -453,14 +416,21 @@
             [(ngModel)]="companyData.companyNameEnglish"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <div *ngIf="userForm.get('companyNameEnglish')!.invalid && (userForm.get('companyNameEnglish')!.dirty || userForm.get('companyNameEnglish')!.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="userForm.get('companyNameEnglish')!.errors?.['required']">Company Name is required.</div>
+          <div
+            *ngIf="
+              userForm.get('companyNameEnglish')!.invalid &&
+              (userForm.get('companyNameEnglish')!.dirty ||
+                userForm.get('companyNameEnglish')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div
+              *ngIf="userForm.get('companyNameEnglish')!.errors?.['required']"
+            >
+              Company Name is required.
+            </div>
           </div>
         </div>
-
-
-
-
 
         <div class="pb-6">
           <label
@@ -474,13 +444,21 @@
             [(ngModel)]="companyData.companyNameSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <div *ngIf="userForm.get('companyNameSinhala')!.invalid && (userForm.get('companyNameSinhala')!.dirty || userForm.get('companyNameSinhala')!.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="userForm.get('companyNameSinhala')!.errors?.['required']">Company Name is required.</div>
+          <div
+            *ngIf="
+              userForm.get('companyNameSinhala')!.invalid &&
+              (userForm.get('companyNameSinhala')!.dirty ||
+                userForm.get('companyNameSinhala')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div
+              *ngIf="userForm.get('companyNameSinhala')!.errors?.['required']"
+            >
+              Company Name is required.
+            </div>
           </div>
         </div>
-
-
-
 
         <div class="pb-6">
           <label
@@ -494,12 +472,19 @@
             [(ngModel)]="companyData.companyNameTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <div *ngIf="userForm.get('companyNameTamil')!.invalid && (userForm.get('companyNameTamil')!.dirty || userForm.get('companyNameTamil')!.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="userForm.get('companyNameTamil')!.errors?.['required']">Company Name is required.</div>
+          <div
+            *ngIf="
+              userForm.get('companyNameTamil')!.invalid &&
+              (userForm.get('companyNameTamil')!.dirty ||
+                userForm.get('companyNameTamil')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="userForm.get('companyNameTamil')!.errors?.['required']">
+              Company Name is required.
+            </div>
           </div>
         </div>
-
-      
 
         <div class="pb-6">
           <label
@@ -514,12 +499,18 @@
             type="email"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <div *ngIf="userForm.get('email')!.invalid && (userForm.get('email')!.dirty || userForm.get('email')!.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="userForm.get('email')!.errors?.['required']">Email is required.</div>
+          <div
+            *ngIf="
+              userForm.get('email')!.invalid &&
+              (userForm.get('email')!.dirty || userForm.get('email')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="userForm.get('email')!.errors?.['required']">
+              Email is required.
+            </div>
           </div>
         </div>
-
-
 
         <!-- <div class="pb-6">
             <label
@@ -558,9 +549,6 @@
               <div *ngIf="userForm.get('oicEmail')!.errors?.['required']">Email is required.</div>
             </div>
           </div> -->
-
-
-
 
         <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
          
@@ -627,11 +615,9 @@
 
         </div> -->
       </div>
-      
 
       <div class="flex justify-end m-10">
         <button
-          
           type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
         >
@@ -647,30 +633,26 @@
       </div>
     </div>
   </div>
-    
+
   <div *ngIf="itemId !== null">
     <div *ngIf="selectedPage === 'pageTwo'">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-       Edit Billing Information
+        Edit Billing Information
       </h2>
       <div>
-
         <div class="pb-6">
-            <label
-              for="companyNameEnglish"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Account Holder’s Name</label
-            >
-            <input
-              id="companyNameEnglish"
-              name="companyNameEnglish"
-              [(ngModel)]="companyData.accHolderName"
-             
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-          </div>
-
-
+          <label
+            for="companyNameEnglish"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Account Holder’s Name</label
+          >
+          <input
+            id="companyNameEnglish"
+            name="companyNameEnglish"
+            [(ngModel)]="companyData.accHolderName"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
 
         <div class="pb-6">
           <label
@@ -686,15 +668,6 @@
           />
         </div>
 
-
-
-
-
-       
-
-
-
-
         <div class="pb-6">
           <label
             for="companyNameTamil"
@@ -708,8 +681,6 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
         </div>
-
-      
 
         <div class="pb-6">
           <label
@@ -725,15 +696,11 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
         </div>
-
-        
       </div>
-      
 
       <div class="flex justify-end m-10">
         <button
-        
-        (click)="nextFormCreate('pageOne')"
+          (click)="nextFormCreate('pageOne')"
           type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
         >
@@ -747,58 +714,6 @@
           Save
         </button>
       </div>
+    </div>
   </div>
-  </div>
-      
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

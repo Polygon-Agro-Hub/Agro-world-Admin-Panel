@@ -72,7 +72,7 @@ jobs:
           IMAGE_TAG: ${{ inputs.image_tag }}
           TARGET_ENV: ${{ inputs.target_env }}
         run: |
-          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$TARGET_ENV"
+          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" --build-arg ENVIRONMENT=$TARGET_ENV -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$TARGET_ENV"
           docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$TARGET_ENV"
           echo "IMAGE $IMAGE_TAG-$TARGET_ENV is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
           echo "image_tag=$IMAGE_TAG-$TARGET_ENV"

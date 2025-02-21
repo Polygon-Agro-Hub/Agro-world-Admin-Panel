@@ -8,7 +8,6 @@ ARG ENVIRONMENT=development
 
 WORKDIR /app
 
-# Copy package files first to leverage Docker cache
 COPY package*.json ./
 
 RUN npm i
@@ -17,10 +16,8 @@ COPY . .
 
 RUN npm run build -- --configuration=${ENVIRONMENT}
 
-#stage 2
 FROM nginx:alpine
 
-# Copy Nginx configuration  (Line added by chalana)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist/plantr_care-admin/browser /usr/share/nginx/html

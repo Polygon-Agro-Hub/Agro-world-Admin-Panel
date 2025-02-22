@@ -7,7 +7,7 @@ on:
         description: Target environment
         default: "development"
         options:
-          - prod
+          - production
           - development
       path_to_dockerfile:
         description: Path to the dockerfile

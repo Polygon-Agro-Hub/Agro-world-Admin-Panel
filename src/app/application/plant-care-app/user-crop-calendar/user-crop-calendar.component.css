@@ -1,3 +1,11 @@
 .custom-cancel-button {
     color: #bab8b7 !important;  /* Change this to the desired color */
   }
+
+  .compact-slider .swiper-button-next,
+  .compact-slider .swiper-button-prev {
+    width: 8px;  /* Adjust size */
+    height: 8px; /* Adjust size */
+    font-size: 12px; /* Adjust arrow icon size */
+  }
+  

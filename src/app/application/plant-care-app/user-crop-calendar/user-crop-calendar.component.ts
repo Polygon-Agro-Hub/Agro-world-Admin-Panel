@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 import { FormsModule } from '@angular/forms';
@@ -29,7 +29,8 @@ interface TaskList {
   standalone: true,
   imports: [CommonModule, HttpClientModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
   templateUrl: './user-crop-calendar.component.html',
-  styleUrl: './user-crop-calendar.component.css'
+  styleUrl: './user-crop-calendar.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UserCropCalendarComponent {
   cropCalendarId: any | null = null;
@@ -40,6 +41,7 @@ export class UserCropCalendarComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   isLoading = true;
+  swiper: any;
 
   constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router, private route: ActivatedRoute,) { }
 
@@ -55,9 +57,11 @@ export class UserCropCalendarComponent {
     console.log(this.cropCalendarId);
 
     this.getchUserTaskList(this.cropCalendarId, this.userId);
+    
 
   }
 
+  
 
   getchUserTaskList(cropId: number, userId: number, page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;

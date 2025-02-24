@@ -33,93 +33,92 @@ export class LoginComponent {
   }
 
 
- onLogin(){
-
-  this.isLoading = true;
-
-  console.log("Successfully click the button");
-  // alert("login success");
-  // debugger;
-
-  if (!this.loginObj.email) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Unsuccessful',
-      text: 'Email is required',
-    });
-    this.isLoading = false;
-  } 
-
-  if (this.loginObj.email) {
+  onLogin() {
+    this.isLoading = true; // Start loader when login begins
+  
+    if (!this.loginObj.email && !this.loginObj.password) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsuccessful',
+        text: 'Email and Password are required',
+      }).then(() => {
+        this.isLoading = false; // Stop loader after user sees the error
+      });
+      return;
+    }
+  
+    if (!this.loginObj.email) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsuccessful',
+        text: 'Email is required',
+      }).then(() => {
+        this.isLoading = false;
+      });
+      return;
+    }
+  
     if (!/\S+@\S+\.\S+/.test(this.loginObj.email)) {
       Swal.fire({
         icon: 'error',
         title: 'Unsuccessful',
         text: 'Please enter a valid email address',
+      }).then(() => {
+        this.isLoading = false;
       });
+      return;
     }
-    this.isLoading = false;
-  } 
   
- 
+    if (!this.loginObj.password) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsuccessful',
+        text: 'Password is required',
+      }).then(() => {
+        this.isLoading = false;
+      });
+      return;
+    }
   
-
-  if(!this.loginObj.password){
-    Swal.fire({
-      icon: 'error',
-      title: 'Unsuccessful',
-      text: 'Password is required',
-    });
-    this.isLoading = false;
-  }
-
-  if(!this.loginObj.email && !this.loginObj.password){
-    Swal.fire({
-      icon: 'error',
-      title: 'Unsuccessful',
-      text: 'Email and Password is required',
-    });
-    this.isLoading = false;
-  }
-
-  if(this.loginObj.password && this.loginObj.email){
+    
     this.authService.login(this.loginObj.email, this.loginObj.password).subscribe(
-
       (res: any) => {
-        console.log('Market Price updated successfully', res);
-        
+        console.log('Successfully logged in', res);
         Swal.fire({
           icon: 'success',
-          title: 'Logged',
+          title: 'Logged In',
           text: 'Successfully Logged In',
           showConfirmButton: false,
           timer: 1500
+        }).then(() => {
+          this.isLoading = false; 
         });
+  
         localStorage.setItem('Login Token : ', res.token);
         localStorage.setItem('userName:', res.userName);
         localStorage.setItem('userId:', res.userId);
         localStorage.setItem('role:', res.role);
         localStorage.setItem('permissions', JSON.stringify(res.permissions));
-        localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20))); // Assuming expiresIn is in seconds
-
+        localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20)));
+  
         this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
-          this.isLoading = false;
+        
         this.router.navigate(['steckholders/dashboard']);
       },
       (error) => {
-        console.error('Error updating Market Price', error);
+        console.error('Error during login', error);
         this.disError = error.error?.error || 'An error occurred. Please try again.';
+  
         Swal.fire({
           icon: 'error',
           title: 'Unsuccessful',
           text: this.disError,
+        }).then(() => {
+          this.isLoading = false;
         });
-        this.isLoading = false;
-        this.router.navigate(['login']);
       }
-  );
+    );
   }
- }
 
   
 

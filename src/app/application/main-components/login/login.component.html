@@ -1,4 +1,7 @@
-<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
+<div *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
 <!-- <div class="flex flex-col md:flex-row justify-between items-center min-h-full box-border relative">
 
     <div class="mobile-header w-full md:hidden flex flex-col items-center mb-6">

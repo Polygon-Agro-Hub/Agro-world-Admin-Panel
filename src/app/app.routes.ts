@@ -91,6 +91,7 @@ import { ManageComplaintsCategoriesComponent } from './application/Complaints/ma
 import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
 import { CollectionCenterDashboardComponent } from './application/collection-hub-section/collection-center-dashboard/collection-center-dashboard.component';
 import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
+import { MarketEditProductComponent } from './application/marketplace/market-edit-product/market-edit-product.component';
 
 export const routes: Routes = [
   {
@@ -471,6 +472,10 @@ export const routes: Routes = [
               {
                 path: 'add-package',
                 component: AddPackageComponent,
+              },
+              {
+                path: 'edit-product/:id',
+                component: MarketEditProductComponent,
               },
             ],
           },

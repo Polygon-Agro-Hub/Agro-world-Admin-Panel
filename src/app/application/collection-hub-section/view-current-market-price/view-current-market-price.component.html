@@ -1,16 +1,13 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
 
-  <button
-    class="mb-5 text-textLight dark:text-textDark"
-    (click)="back()"
-  >
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
-  </button>
-
-  <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
@@ -57,15 +54,16 @@
         />
       </div>
 
-
-      <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+      <div
+        class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+      >
         <!-- Popover -->
         <div
           class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         >
           Search by crop name
         </div>
-    
+
         <!-- Input field -->
         <input
           type="text"
@@ -74,7 +72,7 @@
           [(ngModel)]="searchNIC"
           (keydown.enter)="searchPlantCareUsers()"
         />
-    
+
         <!-- Search button -->
         <button
           type="button"
@@ -96,7 +94,7 @@
             />
           </svg>
         </button>
-    
+
         <!-- Clear button -->
         <button
           type="button"
@@ -120,10 +118,6 @@
         </button>
       </div>
     </div>
-
-    
-      
-    
 
     <!-- <div *ngIf="!hasData" class="text-center py-8">
     <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
@@ -201,5 +195,4 @@
       </div> -->
     </div>
   </div>
-  </div>
-
+</div>

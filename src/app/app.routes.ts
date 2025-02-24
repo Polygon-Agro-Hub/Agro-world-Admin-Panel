@@ -92,6 +92,7 @@ import { EditComplainCagegoriesComponent } from './application/Complaints/edit-c
 import { CollectionCenterDashboardComponent } from './application/collection-hub-section/collection-center-dashboard/collection-center-dashboard.component';
 import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
 import { MarketEditProductComponent } from './application/marketplace/market-edit-product/market-edit-product.component';
+import { CustomersComponent } from './application/sales-dash-section/customers/customers.component';
 
 export const routes: Routes = [
   {
@@ -99,7 +100,6 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
-
 
   { path: 'login', component: LoginComponent },
 
@@ -488,6 +488,11 @@ export const routes: Routes = [
             path: '',
             component: SalesDashComponent,
           },
+          {
+            path: 'customer',
+            component: CustomersComponent,
+          },
+
           {
             path: 'sales-targets',
             component: SalesTargetComponent,

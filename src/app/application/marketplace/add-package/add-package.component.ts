@@ -28,6 +28,8 @@ export class AddPackageComponent implements OnInit {
 
   getCropProductData() {
     this.marketSrv.getProuctCropVerity().subscribe((res) => {
+      console.log(res);
+      
       this.cropObj = res;
     });
   }

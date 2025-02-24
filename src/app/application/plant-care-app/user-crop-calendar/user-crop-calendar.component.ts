@@ -43,6 +43,9 @@ export class UserCropCalendarComponent {
   isLoading = true;
   swiper: any;
 
+  isModalOpen = false;
+  selectedImages: string[] = [];
+
   constructor(private ongoingCultivationService: OngoingCultivationService, private http: HttpClient, private router: Router, private route: ActivatedRoute,) { }
 
 
@@ -195,6 +198,15 @@ export class UserCropCalendarComponent {
         this.router.navigate([`/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`]);
       }
     });
+  }
+
+  openImageSlider(images: string[]) {
+    this.selectedImages = images;
+    this.isModalOpen = true;
+  }
+
+  closeImageSlider() {
+    this.isModalOpen = false;
   }
 
 }

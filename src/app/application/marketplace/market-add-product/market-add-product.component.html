@@ -163,9 +163,13 @@
                     </div>
 
 
-                    <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8">
+                    <!-- <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8"> -->
+                    <img *ngIf="productObj.variety > 0" 
+                    [src]='selectedImage' 
+                    class="w-full h-auto object-contain px-4 py-2 mt-8">
+               
 
-                    <p class="text-lg text-black my-2">Green Capcicum</p>
+                    <p class="text-lg text-black my-2">{{productObj.cropName}}</p>
 
                     <p *ngIf="(productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D') && productObj.salePrice !== 0" class="text-[#00957D] my-1 line-through">Rs.{{productObj.normalPrice}}.00</p>
                     <p *ngIf="productObj.salePrice === 0" class="text-xl text-[#00957D] my-1">Rs.0.00</p>

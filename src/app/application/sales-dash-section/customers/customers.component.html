@@ -1,5 +1,98 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
+<div *ngIf="isPopupOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[500px]">
+        <div class="p-10">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-10">CUSTOMER INFO</h3>
+
+            <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <span>Name: {{ selectedCustomer?.title }}. {{ selectedCustomer?.firstName }} {{
+                    selectedCustomer?.lastName
+                    }}</span>
+            </div>
+            <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <span>Phone: {{ selectedCustomer?.phoneNumber }}</span>
+                <div class="ml-3 text-[#367bfa] hover:cursor-pointer" (click)="copyToClipboard(selectedCustomer?.phoneNumber)">
+                    <i class="fa-regular fa-clone"></i>
+                </div>
+            </div>
+            <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <span>Email: {{ selectedCustomer?.email }}</span>
+                <div class="ml-3 text-[#367bfa] hover:cursor-pointer" (click)="copyToClipboard(selectedCustomer?.email)">
+                    <i class="fa-regular fa-clone"></i>
+                </div>
+            </div>
+            <!-- <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <span>Address: {{ selectedCustomer?.address }}</span>
+            </div> -->
+            <div class="mb-5 flex text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <span *ngIf="selectedCustomer?.buildingType === 'House'">
+                    Address: {{ selectedCustomer?.houseHouseNo }}, {{ selectedCustomer?.houseStreetName }}, {{ selectedCustomer?.houseCity }}
+                </span>
+                <span *ngIf="selectedCustomer?.buildingType === 'Apartment'">
+                    Address: {{ selectedCustomer?.apartmentBuildingNo }} - {{ selectedCustomer?.apartmentBuildingName }},
+                    Unit {{ selectedCustomer?.apartmentUnitNo }}, Floor {{ selectedCustomer?.apartmentFloorNo }},
+                    {{ selectedCustomer?.apartmentHouseNo }}, {{ selectedCustomer?.apartmentStreetName }},
+                    {{ selectedCustomer?.apartmentCity }}
+                </span>
+            </div>
+            
+            <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-list"></i>
+                </div>
+                <span>No of Orders: {{ selectedCustomer?.orders }}</span>
+            </div>
+        </div>
+        <hr>
+        <div class="p-10">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-10">AGENT INFO</h3>
+
+            <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                </div>
+                <span>EMP ID: {{ selectedCustomer?.salesAgentEmpId}}</span>
+            </div>
+            <div class="mb-5 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <span>Name: {{ selectedCustomer?.salesAgentFirstName }} {{ selectedCustomer?.salesAgentLastName }}</span>
+            </div>
+        </div>
+        <hr>
+        <div class="p-10">
+            <div class="mb-2 flex  text-textLight dark:text-textDark">
+                <div class="mr-5">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <span>Created At : {{ selectedCustomer?.created_at | date: 'yyyy/MM/dd h.mm a' }}</span>
+            </div>
+        </div>
+        <div class="pb-10 flex items-center justify-center">
+            <button (click)="closePopup()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Close</button>
+        </div>
+
+    </div>
+</div>
+
+
 <div *ngIf="!isLoading"
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
 
@@ -69,13 +162,18 @@
                 <tbody>
                     <tr *ngFor="let customer of customers" class="border-b border-gray-200 dark:border-[#4B555A]">
                         <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ customer.cusId }}</td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark ">{{ customer.firstName }} {{ customer.lastName }}</td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.salesAgent }}</td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.created_at | date: 'd MMM, yyyy h:mm a' }}</td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.phoneNumber }}</td>
+                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark ">{{ customer.firstName }} {{
+                            customer.lastName }}</td>
+                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.salesAgentEmpId }}
+                        </td>
+                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.created_at |
+                            date: 'd MMM, yyyy h:mm a' }}</td>
+                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.phoneNumber }}
+                        </td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                            <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]">
+                            <button (click)="openPopup(customer)"
+                                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"

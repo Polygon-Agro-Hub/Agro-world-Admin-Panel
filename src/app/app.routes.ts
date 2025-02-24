@@ -91,6 +91,7 @@ import { ManageComplaintsCategoriesComponent } from './application/Complaints/ma
 import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
 import { CollectionCenterDashboardComponent } from './application/collection-hub-section/collection-center-dashboard/collection-center-dashboard.component';
 import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
+import { CustomersComponent } from './application/sales-dash-section/customers/customers.component';
 
 export const routes: Routes = [
   {
@@ -98,7 +99,6 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
-
 
   { path: 'login', component: LoginComponent },
 
@@ -483,6 +483,11 @@ export const routes: Routes = [
             path: '',
             component: SalesDashComponent,
           },
+          {
+            path: 'customer',
+            component: CustomersComponent,
+          },
+
           {
             path: 'sales-targets',
             component: SalesTargetComponent,

@@ -47,7 +47,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Sales Agents (01)
+        Sales Agents ({{totalItems}})
       </h2>
     </div>
     <div class="flex items-center">
@@ -58,68 +58,37 @@
           />
         </svg>
       </i>
-      <div class="mr-5">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-          placeholder="Category"
-        ></p-dropdown>
-      </div>
-      <div class="mr-5">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-          placeholder="Status"
-        ></p-dropdown>
-      </div>
 
-      <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-      >
-        <input
-          type="text"
-          placeholder="Search.."
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
-          </svg>
+      <p-dropdown
+      [options]="status"
+      [(ngModel)]="selectStatus"
+      optionLabel="name"
+      optionValue="name"  
+      placeholder="Select status"
+      [showClear]="true"
+      (onChange)="filterStatus()"
+    ></p-dropdown>
+
+      <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
+        <input type="text" placeholder="Search by Crop / Variety name.." [(ngModel)]="searchText"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            </svg>
         </button>
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12" />
+            </svg>
         </button>
-      </div>
+    </div>
     </div>
   </div>
   <div>
@@ -127,7 +96,7 @@
       class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
     >
       <thead>
-        <tr>
+        <tr >
           <th
             class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
@@ -161,15 +130,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="border-b border-gray-200 dark:border-[#4B555A]">
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
+        <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of agentsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index">
+          <td class="py-3 dark:text-textDark text-centser">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.empId}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.firstName}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.lastName}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.targetCompletion}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.targetStatus}}</td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="flex items-center justify-end my-5 mr-5">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'">
+      </pagination-controls>
   </div>
 </div>

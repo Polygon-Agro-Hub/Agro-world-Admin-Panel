@@ -59,18 +59,37 @@
         </svg>
       </i>
 
-      <p-dropdown
+      
+      <div class="mr-5">
+        <input
+          
+          type="date"
+          id="start-date"
+          placeholder="date"
+          [(ngModel)]="selectDate"
+          (change)="onDateChange($event)"
+          class="border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          
+        />
+      </div>
+      
+
+      <div class="mr-5">
+        <p-dropdown
+      styleClass="border border-2 rounded-xl h-8 items-center
+        bg-[#F1F1F1] dark:bg-[#272F45]"
       [options]="status"
       [(ngModel)]="selectStatus"
       optionLabel="name"
       optionValue="name"  
-      placeholder="Select status"
+      placeholder="status"
       [showClear]="true"
       (onChange)="filterStatus()"
     ></p-dropdown>
+      </div>
 
-      <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
-        <input type="text" placeholder="Search by Crop / Variety name.." [(ngModel)]="searchText"
+      <div class="flex items-center rounded-full  px-4 py-2 w-96 h-8 border-2 bg-[#F1F1F1] dark:bg-[#272F45]">
+        <input type="text" placeholder="First name/ Last name/ EMP ID" [(ngModel)]="searchText"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
         <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="onSearch()">
@@ -98,32 +117,32 @@
       <thead>
         <tr >
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             No
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             EMP ID
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             First Name
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Last Name
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Target Completion
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Status
           </th>
@@ -131,12 +150,25 @@
       </thead>
       <tbody>
         <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of agentsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index">
-          <td class="py-3 dark:text-textDark text-centser">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.empId}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.firstName}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.lastName}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.targetCompletion}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.targetStatus}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.empId}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.firstName}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.lastName}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.targetCompletion}}</td>
+          <td class="py-3 dark:text-textDark text-center" >
+          <span *ngIf="item.targetStatus === 'Pending'"
+                class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 w-24">
+                Pending
+            </span>
+            <span *ngIf="item.targetStatus === 'Completed'"
+                class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 w-24">
+                Completed
+            </span>
+            <span *ngIf="item.targetStatus === 'Exceeded'"
+                class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 w-24">
+                Exceeded
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -148,3 +180,19 @@
       </pagination-controls>
   </div>
 </div>
+
+<!-- <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 flex justify-center items-center">
+  <span *ngIf="item.targetStatus === 'Pending'"
+      class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 ">
+      Pending
+  </span>
+  <span *ngIf="item.status === 'Completed'"
+      class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 ">
+      Completed
+  </span>
+  <span *ngIf="item.status === 'Exceeded'"
+      class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 ">
+      Exceeded
+  </span>
+</td>
+{{item.targetStatus}} -->

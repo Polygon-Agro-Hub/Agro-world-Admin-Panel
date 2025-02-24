@@ -14,7 +14,7 @@ export class SalesDashService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  getAllSalesAgents(page: number = 1, limit: number = 10,  searchText: string = '', status: string = ''): Observable<any> {
+  getAllSalesAgents(page: number = 1, limit: number = 10,  searchText: string = '', status: string = '', date: string = ''): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -30,6 +30,10 @@ export class SalesDashService {
 
     if (searchText) {
       url += `&searchText=${searchText}`
+    }
+
+    if (date) {
+      url += `&date=${date}`
     }
 
     return this.http.get(url, {

@@ -23,6 +23,7 @@ export class SalesTargetComponent implements OnInit{
 
   selectStatus: string = '';
   searchText: string = '';
+  selectDate: string = ''; 
 
   status = [
     { name: 'Completed'},
@@ -43,8 +44,8 @@ export class SalesTargetComponent implements OnInit{
 
   
 
-  fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.selectStatus) {
-    this.salesDashSrv.getAllSalesAgents(page, limit, search, status).subscribe((res) => {
+  fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.selectStatus, date: string = this.selectDate) {
+    this.salesDashSrv.getAllSalesAgents(page, limit, search, status, date).subscribe((res) => {
 
       console.log(res);
 
@@ -58,17 +59,17 @@ export class SalesTargetComponent implements OnInit{
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus);
+    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
   }
 
   onSearch() {
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus);
+    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
   }
 
   offSearch() {
     
     this.searchText = '';
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus);
+    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
   }
 
   filterStatus() {
@@ -76,7 +77,13 @@ export class SalesTargetComponent implements OnInit{
       this.selectStatus = ''; // Ensure it's always an empty string
     }
     console.log("Selected Status:", this.selectStatus);
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus);
+    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+  }
+
+  onDateChange(event: any) {
+    this.selectDate = event.target.value || '';
+    console.log("Selected Status:", this.selectDate);
+    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
   }
 }
 
@@ -87,7 +94,7 @@ class Agents {
   lastName!: string;
   target!: number;
   targetCompletion!: string;
-  targetStatus!: number;
+  targetStatus!: string;
   
 }
 

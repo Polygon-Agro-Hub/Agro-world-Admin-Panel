@@ -19,4 +19,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .angular-editor-textarea {
     @apply bg-yellow-50; /* Light yellow background */
   }
+
+  
+  .compact-slider .swiper-button-next,
+  .compact-slider .swiper-button-prev {
+    width: 8px;  /* Adjust size */
+    height: 8px; /* Adjust size */
+    font-size: 8px; /* Adjust arrow icon size */
+  }
+  
+  .compact-slider .swiper-button-next::after,
+  .compact-slider .swiper-button-prev::after {
+    width: 8px;  /* Adjust size */
+    height: 8px; /* Adjust size */
+    font-size: 8px;
+    font-size: 8px; /* Reduces arrow icon size */
+  }
   

@@ -16,17 +16,13 @@ import Swal from 'sweetalert2';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
 
-
-
 interface NavItem {
   RouterLink: string | null;
   icon: string;
   label: string;
   expanded?: boolean;
-  children?: NavItem[];  // children is an optional property of type NavItem array
+  children?: NavItem[]; // children is an optional property of type NavItem array
 }
-
-
 
 @Component({
   selector: 'app-sidenav',
@@ -47,7 +43,7 @@ export class SidenavComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     public router: Router,
     public permissionService: PermissionService,
-    public tokenService: TokenService,
+    public tokenService: TokenService
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -65,17 +61,17 @@ export class SidenavComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.screenWidth = window.innerWidth;
       this.isExpanded = this.screenWidth > 768;
-  
+
       // Set expanded state for nav items based on current route
-      this.navData.forEach(item => {
+      this.navData.forEach((item) => {
         // Check if any of the children matches the current route
         if (item.children) {
-          item.expanded = item.children.some(child =>
+          item.expanded = item.children.some((child) =>
             this.router.url.includes(child.RouterLink)
           );
         }
       });
-  
+
       this.onToggleSideNav.emit(this.isExpanded);
     }
   }
@@ -85,10 +81,10 @@ export class SidenavComponent implements OnInit {
     if (this.router.isActive(item.RouterLink, false)) {
       return true;
     }
-    
+
     // Check for active child routes
     if (item.children) {
-      return item.children.some((child: { RouterLink: string | UrlTree; }) => 
+      return item.children.some((child: { RouterLink: string | UrlTree }) =>
         this.router.isActive(child.RouterLink, false)
       );
     }
@@ -96,17 +92,13 @@ export class SidenavComponent implements OnInit {
     return false;
   }
 
-
-
   getActiveClass(item: any): string {
     return this.isParentActive(item) ? 'active' : '';
   }
 
-
   getActiveChildClass(child: any): string {
     return this.router.isActive(child.RouterLink, false) ? 'active' : '';
   }
-
 
   redirectToPage(): void {
     this.router.navigateByUrl('/steckholders/dashboard'); // Use your desired route here
@@ -142,7 +134,6 @@ export class SidenavComponent implements OnInit {
     }
   }
 
-
   settings(): void {
     if (isPlatformBrowser(this.platformId)) {
       // Remove the login token from localStorage
@@ -171,21 +162,25 @@ export class SidenavComponent implements OnInit {
     this.ispopupMarketPrice = !this.ispopupMarketPrice;
   }
 
+  // toggleChildren(item: any): void {
+  //   if (item.children) {
+  //     item.expanded = !item.expanded;
+  //   }
+
+  // }
 
   toggleChildren(item: any): void {
-    if (item.children) {
-      item.expanded = !item.expanded;
-    }
-    
+    this.navData.forEach((navItem) => {
+      if (navItem !== item) {
+        navItem.expanded = false; // Close all other expanded items
+      }
+    });
+
+    // Toggle only the clicked item
+    item.expanded = !item.expanded;
   }
-
-
 
   navigateToSettings(): void {
     this.router.navigate(['/settings/view-roles']);
   }
-
- 
-  
-
 }

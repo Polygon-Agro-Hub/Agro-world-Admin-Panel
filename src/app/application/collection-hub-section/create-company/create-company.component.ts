@@ -16,6 +16,21 @@ import Swal from 'sweetalert2';
 import { response } from 'express';
 import { error } from 'console';
 
+interface Bank {
+  ID: number;
+  name: string;
+}
+
+interface Branch {
+  bankID: number;
+  ID: number;
+  name: string;
+}
+
+interface BranchesData {
+  [key: string]: Branch[];
+}
+
 @Component({
   selector: 'app-create-company',
   standalone: true,
@@ -29,6 +44,15 @@ export class CreateCompanyComponent {
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   touchedFields: { [key in keyof Company]?: boolean } = {};
+
+  banks: Bank[] = [];
+  branches: Branch[] = [];
+  selectedBankId: number | null = null;
+  selectedBranchId: number | null = null;
+  allBranches: BranchesData = {};
+  
+  invalidFields: Set<string> = new Set();
+  
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +85,8 @@ export class CreateCompanyComponent {
   }
 
   ngOnInit() {
+    this.loadBanks();
+    this.loadBranches();
     // Subscribe to form value changes
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
@@ -72,6 +98,129 @@ export class CreateCompanyComponent {
     this.getCompanyData();
   }
 
+
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      data => {
+        this.banks = data;
+        this.matchExistingBankToDropdown();
+      },
+      error => {
+        console.error('Error loading banks:', error);
+      }
+    );
+  }
+
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      data => {
+        this.allBranches = data;
+        this.matchExistingBankToDropdown();
+      },
+      error => {
+        console.error('Error loading branches:', error);
+      }
+    );
+  }
+
+  onBankChange1() {
+    if (this.selectedBankId) {
+      // Update branches based on selected bank
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      
+      // Update company data with bank name
+      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      if (selectedBank) {
+        this.companyData.bankName = selectedBank.name;
+        this.invalidFields.delete('bankName');
+      }
+      
+      // Reset branch selection
+      this.selectedBranchId = null;
+      this.companyData.branchName = '';
+    } else {
+      this.branches = [];
+      this.companyData.bankName = '';
+    }
+  }
+
+  onBranchChange1() {
+    if (this.selectedBranchId) {
+      // Update company data with branch name
+      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      if (selectedBranch) {
+        this.companyData.branchName = selectedBranch.name;
+        this.invalidFields.delete('branchName');
+      }
+    } else {
+      this.companyData.branchName = '';
+    }
+  }
+
+
+
+  matchExistingBankToDropdown() {
+    // Only proceed if both banks and branches are loaded and we have existing data
+    if (this.banks.length > 0 && Object.keys(this.allBranches).length > 0 && 
+        this.companyData && this.companyData.bankName) {
+          console.log('hit 01',this.companyData.bankName);
+      
+      // Find the bank ID that matches the existing bank name
+      const matchedBank = this.banks.find(bank => bank.name === this.companyData.bankName);
+      
+      if (matchedBank) {
+        this.selectedBankId = matchedBank.ID;
+        // Load branches for this bank
+        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+        
+        // If we also have a branch name, try to match it
+        if (this.companyData.branchName) {
+          const matchedBranch = this.branches.find(branch => branch.name === this.companyData.branchName);
+          if (matchedBranch) {
+            this.selectedBranchId = matchedBranch.ID;
+          }
+        }
+      }
+    }
+    console.log('hit 02');
+  }
+
+
+  onBankChange() {
+    if (this.selectedBankId) {
+      // Update branches based on selected bank
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      
+      // Update company data with bank name
+      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      if (selectedBank) {
+        this.companyData.bankName = selectedBank.name;
+      }
+      
+      // Reset branch selection if the current selection doesn't belong to this bank
+      const currentBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      if (!currentBranch) {
+        this.selectedBranchId = null;
+        this.companyData.branchName = '';
+      }
+    } else {
+      this.branches = [];
+      this.companyData.bankName = '';
+    }
+  }
+
+  onBranchChange() {
+    if (this.selectedBranchId) {
+      // Update company data with branch name
+      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      if (selectedBranch) {
+        this.companyData.branchName = selectedBranch.name;
+      }
+    } else {
+      this.companyData.branchName = '';
+    }
+  }
+
   getCompanyData() {
     if (this.itemId) {
       this.collectionCenterSrv.getCompanyById(this.itemId).subscribe(
@@ -80,6 +229,7 @@ export class CreateCompanyComponent {
 
           this.companyData = response;
           console.log('--check--', this.companyData);
+          this.matchExistingBankToDropdown();
         },
         (error) => {
           console.error('Error fetching company data:', error);

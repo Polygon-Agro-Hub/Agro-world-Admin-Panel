@@ -1,42 +1,54 @@
 <div class="flex w-full">
-  <div
-    class="flex w-[70%] pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  <form [formGroup]="targetForm" (ngSubmit)="saveTarget()" class="flex w-[70%] pt-5 pr-12 pl-12 pb-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <!-- Target Value Input -->
     <div class="flex justify-end w-full mr-2 flex-col space-y-2">
-      <label for="new-target" class="text-gray-600 font-medium"
-        >Set New Target</label
-      >
+      <label for="new-target" class="text-gray-600 font-medium">Set New Target</label>
       <input
         type="number"
         id="new-target"
         placeholder="--Type New Target--"
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        formControlName="targetValue"
       />
+      <p *ngIf="formControls['targetValue'].invalid && formControls['targetValue'].touched" class="text-red-500">
+      {{ formControls['targetValue'].errors?.required ? 'Target value is required.' : '' }}
+      {{ formControls['targetValue'].errors?.min ? 'Target must be at least 1.' : '' }}
+      </p>
     </div>
-
+  
+    <!-- Date Input -->
     <div class="flex justify-end w-full ml-2 flex-col space-y-2">
       <label for="start-date" class="text-gray-600 font-medium">From</label>
       <input
         type="date"
         id="start-date"
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        formControlName="startDate"
       />
+      <p *ngIf="formControls['startDate'].invalid && formControls['startDate'].touched" class="text-red-500">
+        {{ formControls['startDate'].errors?.required ? 'Start date is required.' : '' }}
+        {{ formControls['startDate'].errors?.pastDate ? 'Start date cannot be in the past.' : '' }}
+      </p>
     </div>
-
+  
+    <!-- Submit Button -->
     <div class="flex justify-end ml-2 flex-col space-y-2">
       <button
         class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out"
+        type="submit"
+        [disabled]="targetForm.invalid"
       >
         Save
       </button>
     </div>
-  </div>
+  </form>
+  
   <div
     class="flex items-center justify-center w-[30%] ml-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex flex-col items-center">
       <h4 class="text-gray-600 font-medium">Current Daily Target</h4>
-      <p class="text-2xl font-bold text-blue-600">10</p>
+      <p class="text-2xl font-bold text-blue-600">{{currentDailyTarget}}</p>
     </div>
   </div>
 </div>

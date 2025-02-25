@@ -740,7 +740,7 @@
           />
         </div>
 
-        <div class="pb-6">
+        <!-- <div class="pb-6">
           <label
             for="bankName"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -753,9 +753,26 @@
             [(ngModel)]="personalData.bankName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-        </div>
+        </div> -->
 
         <div class="pb-6">
+          <label
+            for="bankDropdown"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Bank Name</label
+          >
+          <select 
+            id="bankDropdown" 
+            name="bankDropdown"
+            [(ngModel)]="selectedBankId"
+            (change)="onBankChange()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a bank</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+          </select>
+        </div>
+
+        <!-- <div class="pb-6">
           <label
             for="branchName"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -768,6 +785,23 @@
             [(ngModel)]="personalData.branchName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
+        </div> -->
+        <div class="pb-6">
+          <label
+            for="branchDropdown"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Branch Name</label
+          >
+          <select 
+            id="branchDropdown" 
+            name="branchDropdown"
+            [(ngModel)]="selectedBranchId"
+            (change)="onBranchChange()"
+            [disabled]="!selectedBankId"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a branch</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+          </select>
         </div>
       </div>
 

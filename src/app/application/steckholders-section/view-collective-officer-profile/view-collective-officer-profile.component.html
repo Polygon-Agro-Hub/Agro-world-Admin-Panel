@@ -1,0 +1,128 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex flex-col gap-7 px-2 py-2" id="reportcontainer">
+        <div class="flex flex-row justify-between items-center border-[#F1F7FA] border-[3px] rounded-lg shadowmd p-6">
+            <div class="flex flex-row items-center">
+                <img class="w-28 h-28 rounded-full" [src]="officerObj.image || 'https://images.pexels.com/photos/845457/pexels-photo-845457.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'" />
+
+                <div class="ml-6">
+                    <p class="text-lg font-bold">{{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}</p>
+                    <p class="text-[#627189]">
+                        <span>{{ officerObj.jobRole }} - <span>CO{{ officerObj.empId}}</span></span>
+                    </p>
+                    <p class="font-semibold">{{ officerObj.centerName }}</p>
+                    <p class="text-[#627189]">{{ officerObj.companyNameEnglish }}</p>
+                </div>
+            </div>
+
+            <div class="flex">
+                <button class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2">Disclaim</button>
+                <button class="bg-[#415CFF] text-white font-semibold rounded-lg shadow-md px-5 py-2 ml-2">View Target</button>
+            </div>
+        </div>
+
+        <div class="border-[#F1F7FA] border-[3px] rounded-lg shadowmd p-6">
+            <div class="flex flex-row justify-between">
+                <p class="font-semibold">Personal Information</p>
+                <button class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+                <div>
+                    <p class="text-[#627189]">First Name</p>
+                    <p class="font-semibold">{{ officerObj.firstNameEnglish }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Last Name</p>
+                    <p class="font-semibold">{{ officerObj.lastNameEnglish }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">NIC Number</p>
+                    <p class="font-semibold">{{ officerObj.nic }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Email</p>
+                    <p class="font-semibold">{{ officerObj.email }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Phone Number - 1</p>
+                    <p class="font-semibold">{{ officerObj.phoneCode01 }} {{ officerObj.phoneNumber01 }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Phone Number - 2</p>
+                    <p class="font-semibold">{{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-[#F1F7FA] border-[3px] rounded-lg shadowmd p-6">
+            <p class="font-semibold">Address Details</p>
+
+            <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+                <div>
+                    <p class="text-[#627189]">House / Plot Number</p>
+                    <p class="font-semibold">{{ officerObj.houseNumber }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Street Name</p>
+                    <p class="font-semibold">{{ officerObj.streetName }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">City</p>
+                    <p class="font-semibold">{{ officerObj.city }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Country</p>
+                    <p class="font-semibold">{{ officerObj.country }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Province</p>
+                    <p class="font-semibold">{{ officerObj.province }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">District</p>
+                    <p class="font-semibold">{{ officerObj.district }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-[#F1F7FA] border-[3px] rounded-lg shadowmd p-6">
+            <p class="font-semibold">Bank Details</p>
+
+            <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+                <div>
+                    <p class="text-[#627189]">Account Holder’s Name</p>
+                    <p class="font-semibold">{{ officerObj.accHolderName }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Account Number</p>
+                    <p class="font-semibold">{{ officerObj.accNumber }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Bank Name</p>
+                    <p class="font-semibold">{{ officerObj.bankName }}</p>
+                </div>
+
+                <div>
+                    <p class="text-[#627189]">Branch Name</p>
+                    <p class="font-semibold">{{ officerObj.branchName }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

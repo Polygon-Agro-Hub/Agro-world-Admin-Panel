@@ -297,6 +297,10 @@ export class ViewCollectiveOfficerComponent {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  viewCollectiveOfficerProfile(id: number) {
+    this.router.navigate(['/steckholders/action/collective-officer/collective-officer-profile', id]);
+  }
 }
 
 class Company {

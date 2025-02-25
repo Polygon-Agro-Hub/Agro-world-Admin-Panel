@@ -93,6 +93,7 @@ import { CollectionCenterDashboardComponent } from './application/collection-hub
 import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
 import { MarketEditProductComponent } from './application/marketplace/market-edit-product/market-edit-product.component';
 import { CustomersComponent } from './application/sales-dash-section/customers/customers.component';
+import { ViewCollectiveOfficerProfileComponent } from './application/steckholders-section/view-collective-officer-profile/view-collective-officer-profile.component';
 
 export const routes: Routes = [
   {
@@ -360,6 +361,10 @@ export const routes: Routes = [
                     path: 'bank-details',
                     component: CollectiveofficersBankDetailsComponent,
                   },
+                  {
+                    path: 'collective-officer-profile/:id',
+                    component: ViewCollectiveOfficerProfileComponent
+                  }
                 ],
               },
             ],

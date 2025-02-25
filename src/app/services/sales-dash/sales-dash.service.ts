@@ -40,4 +40,36 @@ export class SalesDashService {
       headers,
     });
   }
+
+  saveTarget(startDate: string, targetValue: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}sales-agent-dash/save-target`;
+  
+    // Create request body
+    const body = { startDate, targetValue };
+  
+    
+    return this.http.post(url, body, { headers });
+  }
+
+  getDailyTarget(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}sales-agent-dash/get-daily-target`;
+  
+    return this.http.get(url, { headers });
+  }
 }
+
+
+
+
+
+

@@ -44,6 +44,7 @@ export class PermissionAreaComponent {
   FeatureList: any[] = [];
   RoleFeatureList: any[] = [];
   editFeatureObj: Feature = new Feature();
+  editCategoryObj: EditCategory = new EditCategory();
 
 
   role_id!: number;
@@ -53,6 +54,11 @@ export class PermissionAreaComponent {
   newCategory: string = '';
   isFeatureEdit: boolean = false;
   existEditName: string = '';
+
+  isCategoryEdit: boolean = false;
+  existCategoryName: string = '';
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -147,11 +153,13 @@ export class PermissionAreaComponent {
       .subscribe(
         (response) => {
           // Transform API response to group features by category
+          console.log("Main responce -> ",response);
+          
           const groupedFeatures = response.features.reduce(
             (acc: any[], feature: any) => {
               let category = acc.find((c) => c.category === feature.category);
               if (!category) {
-                category = { category: feature.category, features: [] };
+                category = { category: feature.category, categoryId:feature.categoryId, features: [] };
                 acc.push(category);
               }
               category.features.push(feature);
@@ -410,6 +418,54 @@ export class PermissionAreaComponent {
   }
 
 
+  editCategory(id: number, categoryName: string) {
+    this.editCategoryObj = {
+      id: id,
+      name: categoryName
+    }
+    this.existCategoryName = categoryName
+    this.isCategoryEdit = true;
+  }
+
+  cancelEditCategoriy() {
+    this.isCategoryEdit = false;
+    this.editCategoryObj = new EditCategory();
+  }
+
+  editCategoryOnSubmit() {
+    console.log(this.editCategoryObj);
+    
+    if (this.existCategoryName === this.editCategoryObj.name) {
+      Swal.fire('Warning', 'The name is the same. Please edit the name before saving!', 'warning');
+      return;
+    }
+
+    if (!this.editCategoryObj.name) {
+      Swal.fire('Warning', 'Please Fill the name before saving!', 'warning');
+      return;
+    }
+
+    this.permissionManagerService.editCategoryName(this.editCategoryObj).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire('Successfull', res.message, 'success');
+          this.isCategoryEdit = false;
+          this.editCategoryObj = new EditCategory();
+          this.isLoading = true;
+          this.getAllPosition();
+          this.getAllFeatures();
+          this.getAllRoleFeatures();
+          this.getAllfeatureCategory();
+          this.isLoading = false;
+        } else {
+          Swal.fire('Error', res.message, 'error');
+        }
+      }
+    )
+
+  }
+
+
 
 }
 
@@ -418,6 +474,11 @@ export class CreateCategory {
 }
 
 class Feature {
+  id!: number;
+  name!: string;
+}
+
+class EditCategory{
   id!: number;
   name!: string;
 }

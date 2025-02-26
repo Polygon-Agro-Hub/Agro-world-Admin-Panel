@@ -8,17 +8,19 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { environment } from '../../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 
 @Component({
   selector: 'app-manage-applications',
   standalone: true,
-  imports: [CommonModule, DropdownModule],
+  imports: [CommonModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './manage-applications.component.html',
   styleUrl: './manage-applications.component.css'
 })
 export class ManageApplicationsComponent {
   systemApplicationsArr!: SystemApplications[];
+  isLoading:boolean = true;
 
   constructor(
     private router: Router,
@@ -35,18 +37,11 @@ export class ManageApplicationsComponent {
   }
 
   fetchAllSystemApplications() {
-
-
-    console.log("fetching started");
-    // this.isLoading = true;
+    this.isLoading = true;
     this.complaintSrv.getAllSystemApplications().subscribe(
-
       (res) => {
-        console.log('dtgsgdgdg', res);
-
-
         this.systemApplicationsArr = res;
-
+        this.isLoading=false;
       },
       (error) => {
         console.log("Error: ", error);

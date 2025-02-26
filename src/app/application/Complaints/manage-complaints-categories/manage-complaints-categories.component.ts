@@ -3,11 +3,12 @@ import { ComplaintsService } from '../../../services/complaints/complaints.servi
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-manage-complaints-categories',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule, LoadingSpinnerComponent],
   templateUrl: './manage-complaints-categories.component.html',
   styleUrl: './manage-complaints-categories.component.css'
 })
@@ -15,6 +16,7 @@ export class ManageComplaintsCategoriesComponent implements OnInit {
   categoriesArr:Categories[] = []
 
   appId!: number
+  isLoading:boolean = true;
 
   constructor(
     private router: Router,
@@ -28,11 +30,13 @@ export class ManageComplaintsCategoriesComponent implements OnInit {
   }
 
   fetchCategories() {
+    this.isLoading=true
     this.complaintSrv.getComplainCategoriesByAppId(this.appId).subscribe(
       (res) => {
         console.log(res);
         
         this.categoriesArr = res
+        this.isLoading=false;
       }
     )
   }

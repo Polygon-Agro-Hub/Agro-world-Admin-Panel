@@ -16,6 +16,21 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
+interface Bank {
+  ID: number;
+  name: string;
+}
+
+interface Branch {
+  bankID: number;
+  ID: number;
+  name: string;
+}
+
+interface BranchesData {
+  [key: string]: Branch[];
+}
+
 @Component({
   selector: 'app-collectiveofficers-personal',
   standalone: true,
@@ -48,6 +63,16 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   selectJobRole!: string;
   upateEmpID!: string;
   empType!: string;
+
+
+
+  banks: Bank[] = [];
+  branches: Branch[] = [];
+  selectedBankId: number | null = null;
+  selectedBranchId: number | null = null;
+  allBranches: BranchesData = {};
+  
+  invalidFields: Set<string> = new Set();
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -192,10 +217,75 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadBanks();
+    this.loadBranches();
     this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
+
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      data => {
+        this.banks = data;
+       
+      },
+      error => {
+        console.error('Error loading banks:', error);
+      }
+    );
+  }
+
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      data => {
+        this.allBranches = data;
+        
+      },
+      error => {
+        console.error('Error loading branches:', error);
+      }
+    );
+  }
+
+
+
+  
+  
+  onBankChange() {
+    if (this.selectedBankId) {
+      // Update branches based on selected bank
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      
+      // Update company data with bank name
+      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      if (selectedBank) {
+        this.personalData.bankName = selectedBank.name;
+        this.invalidFields.delete('bankName');
+      }
+      
+      // Reset branch selection
+      this.selectedBranchId = null;
+      this.personalData.branchName = '';
+    } else {
+      this.branches = [];
+      this.personalData.bankName = '';
+    }
+  }
+
+  onBranchChange() {
+    if (this.selectedBranchId) {
+      // Update company data with branch name
+      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      if (selectedBranch) {
+        this.personalData.branchName = selectedBranch.name;
+        this.invalidFields.delete('branchName');
+      }
+    } else {
+      this.personalData.branchName = '';
+    }
+  }
+
 
   getAllCollectionCetnter() {
     this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {

@@ -293,41 +293,40 @@
         </div>
 
         <div class="pb-6">
-          <label
-            for="bankName"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Bank Name</label
-          >
-          <input
-            id="bankName"
-            name="bankName"
-            [(ngModel)]="companyData.bankName"
-            (blur)="onBlur('bankName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm"
-            >Bank Name is required.</span
-          >
+          <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Bank Name
+          </label>
+          <select 
+            id="bankDropdown" 
+            name="bankDropdown"
+            [(ngModel)]="selectedBankId"
+            (change)="onBankChange()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a bank</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+          </select>
+          <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
+            Bank Name is required.
+          </span>
         </div>
-
+        
         <div class="pb-6">
-          <label
-            for="companyEmail"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Branch Name</label
-          >
-          <input
-            id="branchName"
-            name="branchName"
-            [(ngModel)]="companyData.branchName"
-            (blur)="onBlur('branchName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('branchName')"
-            class="text-red-600 text-sm"
-            >Branch Name is required.</span
-          >
+          <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Branch Name
+          </label>
+          <select 
+            id="branchDropdown" 
+            name="branchDropdown"
+            [(ngModel)]="selectedBranchId"
+            (change)="onBranchChange()"
+            [disabled]="!selectedBankId"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a branch</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+          </select>
+          <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+            Branch Name is required.
+          </span>
         </div>
 
         <div class="pb-6">
@@ -670,31 +669,37 @@
 
         <div class="pb-6">
           <label
-            for="companyNameTamil"
+            for="bankDropdown"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Bank Name</label
           >
-          <input
-            id="companyNameTamil"
-            name="companyNameTamil"
-            [(ngModel)]="companyData.bankName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <select 
+            id="bankDropdown" 
+            name="bankDropdown"
+            [(ngModel)]="selectedBankId"
+            (change)="onBankChange()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a bank</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+          </select>
         </div>
-
+        
         <div class="pb-6">
           <label
-            for="companyEmail"
+            for="branchDropdown"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Branch Name</label
           >
-          <input
-            id="companyEmail"
-            name="companyEmail"
-            [(ngModel)]="companyData.branchName"
-            type="email"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <select 
+            id="branchDropdown" 
+            name="branchDropdown"
+            [(ngModel)]="selectedBranchId"
+            (change)="onBranchChange()"
+            [disabled]="!selectedBankId"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a branch</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+          </select>
         </div>
       </div>
 

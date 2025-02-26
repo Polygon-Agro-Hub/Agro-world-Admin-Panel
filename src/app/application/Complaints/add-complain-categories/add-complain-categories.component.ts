@@ -48,6 +48,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       (res)=>{
         if(res.status){
           Swal.fire("Success",'Create complain category success!','success')
+          this.router.navigate(['/complaints/manage-applications'])
         }else{
           Swal.fire("Error",'Error Occur creaating complain category!','error')
 

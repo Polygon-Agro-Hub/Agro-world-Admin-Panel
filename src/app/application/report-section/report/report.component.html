@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div
+    <div *ngIf="permissionService.hasPermission('District Report') || tokenService.getUserDetails().role === '1'"
     (click)="districtReport()"
       class="flex justify-center cursor-pointer"
     >
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div
+    <div *ngIf="permissionService.hasPermission('Province Report') || tokenService.getUserDetails().role === '1'"
     (click)="provinceReport()"
       class="flex justify-center cursor-pointer"
     >

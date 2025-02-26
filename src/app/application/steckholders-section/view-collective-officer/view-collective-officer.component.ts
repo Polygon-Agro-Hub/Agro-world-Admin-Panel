@@ -14,6 +14,7 @@ import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface CollectionOfficers {
   id: number;
@@ -59,7 +60,8 @@ export class ViewCollectiveOfficerComponent {
   constructor(
     private router: Router,
     private collectionService: CollectionService,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   fetchAllCollectionOfficer(

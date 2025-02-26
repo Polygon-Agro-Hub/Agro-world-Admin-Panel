@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CollectionService } from '../../../services/collection.service';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface OngoingCultivationItem {
   id: number;
@@ -48,7 +50,9 @@ export class CollectionOfficerReportComponent {
 
   constructor(
     private collectionoOfficer: CollectionService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+        public permissionService: PermissionService
   ) {}
 
   ngOnInit() {

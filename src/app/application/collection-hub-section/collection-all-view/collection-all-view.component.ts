@@ -19,13 +19,12 @@ interface CollectionCenter {
   street: string;
   district: string;
   province: string;
-  companies:Company[]
-
+  companies: Company[];
 }
 
-interface Company{
-  id:number;
-  companyNameEnglish:string
+interface Company {
+  id: number;
+  companyNameEnglish: string;
 }
 
 @Component({
@@ -43,6 +42,8 @@ interface Company{
   styleUrls: ['./collection-all-view.component.css'], // Fixed typo from styleUrl to styleUrls
 })
 export class CollectionAllViewComponent implements OnInit {
+  centerNameObj: CenterName = new CenterName();
+  companyId!: number;
   collectionObj!: CollectionCenter[];
   filteredCollection!: CollectionCenter[];
   districts: string[] = []; // Array to hold the districts
@@ -53,6 +54,7 @@ export class CollectionAllViewComponent implements OnInit {
   isLoading = false;
   totalItems: number = 0;
   hasData: boolean = true;
+  centerId!: number;
 
   constructor(
     private router: Router,
@@ -177,29 +179,44 @@ export class CollectionAllViewComponent implements OnInit {
     this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
   }
 
-
-
   add(): void {
     this.router.navigate(['/collection-hub/add-collection-center']);
   }
 
   navigateDashboard(id: number) {
+    this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
+  }
+
+  assignTarget(items: any, centerId: number) {
+    let comId;
+    items?.some((company: Company) =>
+      company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+        ? (comId = company.id)
+        : 0
+    );
+    console.log('companyID----->', comId);
     this.router.navigate([
-      `/collection-hub/collection-center-dashboard/${id}`,
+      `/collection-hub/collection-center-dashboard/${centerId}/${comId}`,
     ]);
   }
 
-  assignTarget(items:any, centerId:number){
-    let comId
-    items?.some((company:Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd' ? comId = company.id : 0)
-    console.log("companyID----->", comId);
-    this.router.navigate([`/collection-hub/collection-center-dashboard/${centerId}/${comId}`])
-    
+  isAgroworldPresent(item: any): boolean {
+    return (
+      item.companies?.some(
+        (company: any) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+      ) ?? false
+    );
   }
 
-  isAgroworldPresent(item: any): boolean {
-    return item.companies?.some((company:any) => company.companyNameEnglish === 'agroworld (Pvt) Ltd') ?? false;
+  navigateAddTarget() {
+    this.router.navigate([
+      `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.companyId}`,
+    ]);
   }
-  
 }
 
+class CenterName {
+  id!: number;
+  centerName!: string;
+  officerCount!: number;
+}

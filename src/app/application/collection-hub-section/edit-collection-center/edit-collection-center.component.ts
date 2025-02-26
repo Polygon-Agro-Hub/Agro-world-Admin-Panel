@@ -4,11 +4,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-edit-collection-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './edit-collection-center.component.html',
   styleUrl: './edit-collection-center.component.css'
 })
@@ -25,6 +26,7 @@ export class EditCollectionCenterComponent implements OnInit {
   selectedCompaniesNames: string[] = [];
   selectDistrict: string = '';
   city: string = '';
+  isLoading = false;
 
   constructor(
     private collectionCenterService: CollectionCenterService,
@@ -170,6 +172,7 @@ export class EditCollectionCenterComponent implements OnInit {
 
 
   fetchCollectionCenter() {
+    this.isLoading = true;
     this.collectionCenterService.getCenterById(this.collectionCenterID).subscribe(
       (res) => {
         if (res?.status) {
@@ -179,11 +182,14 @@ export class EditCollectionCenterComponent implements OnInit {
           
           this.updateSelectedCompanies();
           this.onProvinceChange();
+          this.isLoading = false;
         } else {
+          this.isLoading = false;
           Swal.fire('Sorry', 'Center Data not available', 'warning');
           this.router.navigate(['/collection-hub/view-collection-centers']);
         }
       },
+      
       (error) => console.error("Error fetching collection center:", error)
     );
   }
@@ -221,6 +227,7 @@ export class EditCollectionCenterComponent implements OnInit {
 
 
   onCancel() {
+    
     Swal.fire({
       icon: 'info',
       title: 'Cancelled',
@@ -228,8 +235,8 @@ export class EditCollectionCenterComponent implements OnInit {
       timer: 2000,
       showConfirmButton: false,
     });
-
     this.fetchCollectionCenter();
+    this.router.navigate(['/collection-hub/view-collection-centers']);
   }
 
   updateRegCode() {

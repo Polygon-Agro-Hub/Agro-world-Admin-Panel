@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
+
 import {
   FormBuilder,
   FormGroup,
@@ -12,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
 import { response } from 'express';
 import { error } from 'console';
@@ -34,7 +36,7 @@ interface BranchesData {
 @Component({
   selector: 'app-create-company',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './create-company.component.html',
   styleUrl: './create-company.component.css',
 })
@@ -50,6 +52,7 @@ export class CreateCompanyComponent {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
+  isLoading = false;
   
   invalidFields: Set<string> = new Set();
   
@@ -223,8 +226,10 @@ export class CreateCompanyComponent {
 
   getCompanyData() {
     if (this.itemId) {
+      this.isLoading = true;
       this.collectionCenterSrv.getCompanyById(this.itemId).subscribe(
         (response: any) => {
+          this.isLoading = false;
           console.log('Fetched company data:', response);
 
           this.companyData = response;
@@ -232,7 +237,9 @@ export class CreateCompanyComponent {
           this.matchExistingBankToDropdown();
         },
         (error) => {
+          this.isLoading = false;
           console.error('Error fetching company data:', error);
+          this.isLoading = false;
           Swal.fire(
             'Error',
             'Failed to fetch company data. Please try again.',
@@ -261,6 +268,7 @@ export class CreateCompanyComponent {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
+      this.isLoading = true;
       const missingFields: string[] = [];
 
       if (!this.companyData.regNumber)
@@ -278,6 +286,7 @@ export class CreateCompanyComponent {
       // if (!this.companyData.oicConNum1) missingFields.push('Phone Number 02');
 
       if (missingFields.length > 0) {
+        this.isLoading =false;
         Swal.fire({
           icon: 'error',
           title: 'Please fill all fields',

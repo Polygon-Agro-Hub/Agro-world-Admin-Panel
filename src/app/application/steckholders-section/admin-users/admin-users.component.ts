@@ -12,6 +12,7 @@ import { environment } from '../../../environment/environment';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface AdminUsers {
   id: number;
@@ -64,7 +65,8 @@ export class AdminUsersComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   fetchAllAdmins(page: number = 1, limit: number = this.itemsPerPage) {

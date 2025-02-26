@@ -76,8 +76,7 @@
             <div
               *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['pattern']"
             >
-              Variety name cannot be only numbers and special characters are not
-              allowed
+              Variety name cannot be only numbers.
             </div>
           </div>
         </div>
@@ -142,8 +141,7 @@
             <div
               *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['pattern']"
             >
-              Variety name cannot be only numbers and only Sinhala characters
-              and numbers are allowed
+            Variety Sinhala name cannot be only numbers.
             </div>
           </div>
         </div>
@@ -204,8 +202,7 @@
               Sinhala variety name is required
             </div>
             <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['pattern']">
-              Variety name cannot be only numbers and only tamil characters and
-              numbers are allowed
+              Variety Tamil name cannot be only numbers.
             </div>
           </div>
         </div>
@@ -367,7 +364,7 @@
           [(ngModel)]="newsItems[0].varietyNameEnglish"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #verityEngNameInput="ngModel"
-          pattern="^(?=.*[A-Za-z])[A-Za-z0-9\s]+$"
+          pattern="^(?!\d+$)[\s\S]*"
           required
         />
         <div
@@ -383,8 +380,7 @@
           class="text-red-500 text-sm mt-1"
         >
           <div>
-            Variety english name cannot be only numbers and special characters
-            are not allowed
+            Variety English name cannot be only numbers.
           </div>
         </div>
       </div>
@@ -428,7 +424,7 @@
           [(ngModel)]="newsItems[0].varietyNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #verietySinNameInput="ngModel"
-          pattern="^(?=.*[\u0D80-\u0DFF])[\u0D80-\u0DFF0-9\s]+$"
+          pattern="^(?!\d+$)[\s\S]*"
           required
         />
         <div
@@ -446,8 +442,7 @@
           class="text-red-500 text-sm mt-1"
         >
           <div>
-            Veriety name cannot be only numbers and only Sinhala characters and
-            numbers are allowed
+            Variety Sinhala name cannot be only numbers.
           </div>
         </div>
       </div>
@@ -491,7 +486,7 @@
           [(ngModel)]="newsItems[0].varietyNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
           #cropTamilNameInput="ngModel"
-          pattern="^(?=.*[\u0B80-\u0BFF])[\u0B80-\u0BFF0-9\s]+$"
+          pattern="^(?!\d+$)[\s\S]*"
           required
         />
         <div
@@ -507,8 +502,7 @@
           class="text-red-500 text-sm mt-1"
         >
           <div>
-            Veriety name cannot be only numbers and only Tamil characters and
-            numbers are allowed
+            Variety Tamil name cannot be only numbers.
           </div>
         </div>
       </div>

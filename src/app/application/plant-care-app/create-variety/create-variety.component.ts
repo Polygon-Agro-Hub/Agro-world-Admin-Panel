@@ -86,7 +86,7 @@ export class CreateVarietyComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.pattern(/^(?!\d+$)[a-zA-Z0-9 ]*$/),
+          Validators.pattern(/^(?!\d+$)[\s\S]*/),
         ],
       ],
       varietyNameSinhala: [
@@ -94,7 +94,7 @@ export class CreateVarietyComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.pattern(/^(?![0-9]+$)[\u0D80-\u0DFF0-9\s]*$/),
+          Validators.pattern(/^(?!\d+$)[\s\S]*/),
         ],
       ],
       varietyNameTamil: [
@@ -102,7 +102,7 @@ export class CreateVarietyComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.pattern(/^(?![0-9]+$)[\u0B80-\u0BFF0-9\s]*$/),
+          Validators.pattern(/^(?!\d+$)[\s\S]*/),
         ],
       ],
       descriptionEnglish: ['', [Validators.required, Validators.minLength(10)]],

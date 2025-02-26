@@ -136,6 +136,7 @@ export class ManageContentComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.newsService.deleteNews(id)
           .subscribe(
             (data: any) => {
@@ -146,6 +147,7 @@ export class ManageContentComponent implements OnInit {
                 'success'
               );
               this.fetchAllNews();
+              this.isLoading = false;
             },
             (error) => {
               console.error('Error deleting news:', error);
@@ -154,6 +156,7 @@ export class ManageContentComponent implements OnInit {
                 'There was an error deleting the news item.',
                 'error'
               );
+              this.isLoading = false;
             }
           );
       }
@@ -161,11 +164,15 @@ export class ManageContentComponent implements OnInit {
   }
 
   editNews(id: number) {
-    this.router.navigate(['/plant-care/action/create-news'], { queryParams: { id } });
+    this.isLoading = true;
+    this.router.navigate(['/plant-care/action/create-news'], { queryParams: { id } }).then(()=> {
+      this.isLoading = false;
+    });
   }
 
   openPopup(id: any) {
     this.isPopupVisible = true;
+    this.isLoading =true;
 
     this.newsService.getNewsById(id)
       .subscribe(
@@ -182,12 +189,14 @@ export class ManageContentComponent implements OnInit {
           this.safeHtmlDescriptionTamil = this.sanitizer.bypassSecurityTrustHtml(
             this.newsItems[0].descriptionTamil
           );
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching news:', error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
           }
+          this.isLoading = false;
         }
       );
   }
@@ -198,18 +207,23 @@ export class ManageContentComponent implements OnInit {
   }
 
   updateStatus(id: any) {
+         this.isLoading = true;
          this.newsService.updateNewsStatus(id)
       .subscribe(
         (data: any) => {
+          this.isLoading = false;
           console.log('News updated successfully');
           Swal.fire({
             icon: 'success',
             title: 'Success',
             text: 'Status updated successfully!',
           });
+          this.isLoading = true;
           this.fetchAllNews();
+          this.isLoading = false;
         },
         (error) => {
+          this.isLoading = false;
           console.error('Error updating news', error);
           Swal.fire({
             icon: 'error',

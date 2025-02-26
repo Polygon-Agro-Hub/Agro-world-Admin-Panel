@@ -432,10 +432,14 @@ export class CreateNewsComponent {
       this.itemId = params['id'] ? +params['id'] : null;
       console.log('Received item ID:', this.itemId);
     });
-    this.getNewsById(this.itemId);
+
+    if(this.itemId){this.getNewsById(this.itemId);}
+    
+    
   }
 
   getNewsById(id: any) {
+    this.isLoading=true;
     this.newsService.getNewsById(id).subscribe(
       (data) => {
         
@@ -455,11 +459,13 @@ export class CreateNewsComponent {
         this.currentPublishDate = this.newsItems[0].publishDate;
         this.currentExpireDate = this.newsItems[0].expireDate;
         console.log(this.newsItems);
+        this.isLoading=false;
       },
       (error) => {
         console.error('Error fetching news:', error);
         // if (error.status === 401) {
         // }
+        this.isLoading=false;
       }
     );
   }

@@ -134,6 +134,10 @@ export class ViewProductsListComponent {
       return 'Actual, Sales';
     }
   }
+
+  editProduct(id:number){
+    this.router.navigate([`/market/action/edit-product/${id}`])
+  }
 }
 
 class ProductList {

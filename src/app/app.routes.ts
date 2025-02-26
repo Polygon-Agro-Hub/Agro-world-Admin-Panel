@@ -91,6 +91,9 @@ import { ManageComplaintsCategoriesComponent } from './application/Complaints/ma
 import { EditComplainCagegoriesComponent } from './application/Complaints/edit-complain-cagegories/edit-complain-cagegories.component';
 import { CollectionCenterDashboardComponent } from './application/collection-hub-section/collection-center-dashboard/collection-center-dashboard.component';
 import { AddDailyTargetComponent } from './application/collection-hub-section/add-daily-target/add-daily-target.component';
+import { MarketEditProductComponent } from './application/marketplace/market-edit-product/market-edit-product.component';
+import { CustomersComponent } from './application/sales-dash-section/customers/customers.component';
+import { ViewCollectiveOfficerProfileComponent } from './application/steckholders-section/view-collective-officer-profile/view-collective-officer-profile.component';
 
 export const routes: Routes = [
   {
@@ -98,7 +101,6 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
-
 
   { path: 'login', component: LoginComponent },
 
@@ -359,6 +361,10 @@ export const routes: Routes = [
                     path: 'bank-details',
                     component: CollectiveofficersBankDetailsComponent,
                   },
+                  {
+                    path: 'collective-officer-profile/:id',
+                    component: ViewCollectiveOfficerProfileComponent
+                  }
                 ],
               },
             ],
@@ -472,6 +478,10 @@ export const routes: Routes = [
                 path: 'add-package',
                 component: AddPackageComponent,
               },
+              {
+                path: 'edit-product/:id',
+                component: MarketEditProductComponent,
+              },
             ],
           },
         ],
@@ -483,6 +493,11 @@ export const routes: Routes = [
             path: '',
             component: SalesDashComponent,
           },
+          {
+            path: 'customer',
+            component: CustomersComponent,
+          },
+
           {
             path: 'sales-targets',
             component: SalesTargetComponent,

@@ -79,7 +79,7 @@ export class CreateVarietyComponent implements OnInit {
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', [Validators.required]],
-      varietyNameEnglish: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?!\d+$)[a-zA-Z0-9]*$/)]],
+      varietyNameEnglish: ['', [Validators.required, Validators.minLength(2),  Validators.pattern(/^(?!\d+$)[a-zA-Z0-9 ]*$/)]],
       varietyNameSinhala: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?![0-9]+$)[\u0D80-\u0DFF0-9\s]*$/)]],
       varietyNameTamil: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?![0-9]+$)[\u0B80-\u0BFF0-9\s]*$/)]],
       descriptionEnglish: ['', [Validators.required, Validators.minLength(10)]],

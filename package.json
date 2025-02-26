@@ -49,6 +49,7 @@
     "ngx-pagination": "^6.0.3",
     "ngx-quill": "^25.3.2",
     "ngx-spinner": "^17.0.0",
+    "ngx-toastr": "^19.0.0",
     "plantr-care-admin": "file:",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.15",

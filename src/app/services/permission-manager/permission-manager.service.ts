@@ -45,4 +45,12 @@ export class PermissionManagerService {
     });
     return this.http.patch<any>(`${this.apiUrl}permission/edit-feature-name`, data, { headers });
   }
+
+
+  editCategoryName(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.patch<any>(`${this.apiUrl}permission/edit-category-name`, data, { headers });
+  }
 }

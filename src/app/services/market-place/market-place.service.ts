@@ -105,6 +105,28 @@ export class MarketPlaceService {
       headers,
     });
   }
+
+
+  getProductById(id:number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    let url = `${this.apiUrl}market-place/get-product-by-id/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+
+  updateProduct(Data: any, id:number): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.patch(`${this.apiUrl}market-place/edit-market-product/${id}`, Data, {
+      headers,
+    });
+  }
 }
 
 

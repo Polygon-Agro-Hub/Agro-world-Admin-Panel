@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-report',
@@ -10,7 +12,8 @@ import { Router } from '@angular/router';
   styleUrl: './report.component.css'
 })
 export class ReportComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, public tokenService: TokenService,
+      public permissionService: PermissionService) {}
 
   coReport(): void {
     this.router.navigate(['/reports/collective-officer-report']);

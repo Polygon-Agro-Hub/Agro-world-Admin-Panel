@@ -114,7 +114,7 @@ export class ViewCollectiveOfficerComponent {
       console.error('No token found');
       return;
     }
-
+  
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
@@ -126,8 +126,12 @@ export class ViewCollectiveOfficerComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true; // Start loading before making the request
+  
         this.collectionService.deleteOfficer(id).subscribe(
           (data) => {
+            this.isLoading = false; // Stop loading after the response
+  
             if (data.status) {
               console.log('Collection Officer deleted successfully');
               Swal.fire(
@@ -139,16 +143,17 @@ export class ViewCollectiveOfficerComponent {
             } else {
               Swal.fire(
                 'Error!',
-                'There was an error deleting the news item.',
+                'There was an error deleting the Collection Officer.',
                 'error'
               );
             }
           },
           (error) => {
-            console.error('Error deleting news:', error);
+            this.isLoading = false; // Stop loading if an error occurs
+            console.error('Error deleting officer:', error);
             Swal.fire(
               'Error!',
-              'There was an error deleting the news item.',
+              'There was an error deleting the Collection Officer.',
               'error'
             );
           }
@@ -156,8 +161,10 @@ export class ViewCollectiveOfficerComponent {
       }
     });
   }
+  
 
   editCollectionOfficer(id: number) {
+    
     this.navigatePath(`/steckholders/action/collective-officer/personal-edit/${id}`);
   }
 

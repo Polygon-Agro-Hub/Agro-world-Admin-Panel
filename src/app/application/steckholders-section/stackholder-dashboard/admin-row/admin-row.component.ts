@@ -27,17 +27,8 @@ export class AdminRowComponent implements OnChanges {
   newAdminUsers!: number;
   allAdminUsers!: number;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private stakeholderSrv: StakeholderService
-
-
-  ) { }
-
   ngOnChanges(): void {
-    console.log("Row ---> ", this.firstRow);
+    // console.log("Row ---> ", this.firstRow);
     this.fetchAdminUserData(this.firstRow)
   }
 
@@ -51,14 +42,6 @@ export class AdminRowComponent implements OnChanges {
     // this.adminUsersByPosition = data.adminUsersByPosition;
     this.newAdminUsers = data.todayAdmin.todayCount ?? 0;
     this.allAdminUsers = this.totCount(this.associateAdmins, this.executiveAdmins, this.managerAdmins, this.officerAdmins);
-    console.log(this.associateAdmins,
-      this.executiveAdmins,
-      this.managerAdmins,
-      this.officerAdmins,
-      this.newAdminUsers,
-      this.allAdminUsers);
-
-
   }
 
   totCount(x1: number, x2: number, x3: number, x4: number): number {

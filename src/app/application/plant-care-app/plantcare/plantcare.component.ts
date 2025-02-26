@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component'
 
 @Component({
   selector: 'app-plantcare',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './plantcare.component.html',
   styleUrl: './plantcare.component.css'
 })
 export class PlantcareComponent {
+
+  isLoading = false;
+
   popupVisibleNews = false;
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
@@ -51,11 +55,17 @@ export class PlantcareComponent {
 
 
   navigateToCreateNews(): void {
-    this.router.navigate(['/plant-care/action/create-news']);
+    this.isLoading = true;
+    this.router.navigate(['/plant-care/action/create-news']).then(() => {
+      this.isLoading = false;
+    });
   }
 
   navigateToManageNews(): void {
-    this.router.navigate(['/plant-care/action/manage-content']);
+    this.isLoading = true;
+    this.router.navigate(['/plant-care/action/manage-content']).then(() => {
+      this.isLoading = false;
+    });
   }
 
 

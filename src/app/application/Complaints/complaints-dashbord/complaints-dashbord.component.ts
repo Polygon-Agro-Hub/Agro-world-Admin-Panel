@@ -11,24 +11,34 @@ import { Router } from '@angular/router';
   styleUrl: './complaints-dashbord.component.css',
 })
 export class ComplaintsDashbordComponent {
-  popupVisiblePlantCare: boolean = false;
-  popupVisibleCollectionCenters: boolean = false;
-  popupVisibleCategories: boolean = false;
+  popupVisiblePlantCare = false;
+  popupVisibleCollectionCenters = false;
+  popupVisibleCategories = false;
 
-  constructor(private router: Router) { }
-  togglePlantCare() {
-    this.popupVisiblePlantCare = !this.popupVisiblePlantCare;
+  constructor(private router: Router) {}
+
+  closeAllPopups() {
+    this.popupVisibleCategories = false;
+    this.popupVisiblePlantCare = false;
+    this.popupVisibleCollectionCenters = false;
   }
 
-  toggleCollectionCenters() {
-    this.popupVisibleCollectionCenters = !this.popupVisibleCollectionCenters;
-  }
-
-  toggleCategories() {
+  togglePopupCategories() {
+    this.closeAllPopups();
     this.popupVisibleCategories = !this.popupVisibleCategories;
   }
 
+  togglePopupPlantCare() {
+    this.closeAllPopups();
+    this.popupVisiblePlantCare = !this.popupVisiblePlantCare;
+  }
+
+  togglePopupCollectionCenters() {
+    this.closeAllPopups();
+    this.popupVisibleCollectionCenters = !this.popupVisibleCollectionCenters;
+  }
+
   navigationPath(path: string) {
-    this.router.navigate([path])
+    this.router.navigate([path]);
   }
 }

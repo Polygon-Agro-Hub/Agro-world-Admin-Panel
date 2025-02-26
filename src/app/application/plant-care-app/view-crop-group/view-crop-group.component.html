@@ -1,9 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  (click)="backCreate()"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="backCreate()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -28,8 +25,9 @@
   Add New
 </button>
 
-<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
@@ -95,7 +93,9 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="py-3 px-4 text-textLight dark:text-textDark">{{ (page - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="py-3 px-4 text-textLight dark:text-textDark">
+              {{ (page - 1) * itemsPerPage + i + 1 }}
+            </td>
             <td class="py-3 px-4 text-textLight dark:text-textDark text-start">
               {{ item.cropNameEnglish }}
             </td>
@@ -116,7 +116,16 @@
               <div *ngIf="item.varietyList.length === 0">No Varieties Yet</div>
             </td>
 
-            <td class="flex flex-row gap-x-6 py-3 text-center text-textLight dark:text-textDark">
+            <td
+              class="flex flex-row gap-x-6 py-3 text-center text-textLight dark:text-textDark"
+            >
+              <button
+                class="flex w-6 h-6 text-blue-500 hover:text-blue-700 align-middle items-center justify-center"
+                (click)="addVarietie(item.id)"
+              >
+                <i class="fa-regular fa-square-plus text-2xl"></i>
+              </button>
+
               <button
                 class="w-6 h-6 text-blue-500 hover:text-blue-700"
                 (click)="Varieties(item.id, item.cropNameEnglish)"

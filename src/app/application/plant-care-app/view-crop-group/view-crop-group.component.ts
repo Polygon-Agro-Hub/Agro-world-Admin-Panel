@@ -7,7 +7,6 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 
-
 interface NewCropCalender {
   id: number;
   cropNameEnglish: string;
@@ -27,16 +26,17 @@ interface NewCropGroup {
   varietyList: string[];
 }
 
-
 @Component({
   selector: 'app-view-crop-group',
   standalone: true,
-  imports: [HttpClientModule,
+  imports: [
+    HttpClientModule,
     CommonModule,
     LoadingSpinnerComponent,
-    NgxPaginationModule,],
+    NgxPaginationModule,
+  ],
   templateUrl: './view-crop-group.component.html',
-  styleUrl: './view-crop-group.component.css'
+  styleUrl: './view-crop-group.component.css',
 })
 export class ViewCropGroupComponent {
   newCropCalender: NewCropCalender[] = [];
@@ -47,37 +47,36 @@ export class ViewCropGroupComponent {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  hasData: boolean = true;  
+  hasData: boolean = true;
 
-
-  constructor(private cropCalendarService: CropCalendarService, private http: HttpClient, private router: Router) {}
-
+  constructor(
+    private cropCalendarService: CropCalendarService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.fetchAllCropGroups();
   }
 
-
-
   fetchAllCropGroups(page: number = 1, limit: number = this.itemsPerPage) {
     console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
-    this.cropCalendarService.fetchAllCropGroups(page, limit)
-      .subscribe(
-        (data) => {
+    this.cropCalendarService.fetchAllCropGroups(page, limit).subscribe(
+      (data) => {
+        this.isLoading = false;
+        this.newCropGroup = data.items;
+        console.log(this.newCropGroup);
+        this.hasData = this.newCropGroup.length > 0;
+        this.totalItems = data.total;
+      },
+      (error) => {
+        console.error('Error fetch news:', error);
+        if (error.status === 401) {
           this.isLoading = false;
-          this.newCropGroup = data.items;
-          console.log(this.newCropGroup);
-          this.hasData = this.newCropGroup.length > 0;
-          this.totalItems = data.total;
-        },
-        (error) => {
-          console.error('Error fetch news:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
         }
-      );
+      }
+    );
   }
 
   onPageChange(event: number) {
@@ -85,11 +84,7 @@ export class ViewCropGroupComponent {
     this.fetchAllCropGroups(this.page, this.itemsPerPage); // Include itemsPerPage
   }
 
- 
-
   deleteCropCalender(id: any) {
-  
-
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop group item? This action cannot be undone.',
@@ -101,50 +96,55 @@ export class ViewCropGroupComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-       
-        this.cropCalendarService.deleteCropGroup(id)
-          .subscribe(
-            (data: any) => {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'The crop group item has been deleted.',
-                  'success'
-                  
-                );
-                this.fetchAllCropGroups();
-              }
-             
-            },
-            (error) => {
-              console.error('Error deleting crop group:', error);
+        this.cropCalendarService.deleteCropGroup(id).subscribe(
+          (data: any) => {
+            if (data) {
               Swal.fire(
-                'Error!',
-                'There was an error deleting the crop group.',
-                'error'
+                'Deleted!',
+                'The crop group item has been deleted.',
+                'success'
               );
+              this.fetchAllCropGroups();
             }
-          );
+          },
+          (error) => {
+            console.error('Error deleting crop group:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the crop group.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
 
+  addVarietie(cid: number) {
+    this.router.navigate(['/plant-care/action/create-crop-variety'], {
+      queryParams: { cid },
+    });
+  }
 
   Varieties(id: number, name: any) {
-    this.router.navigate(['/plant-care/action/view-crop-variety'], { queryParams: { id, name } });
+    this.router.navigate(['/plant-care/action/view-crop-variety'], {
+      queryParams: { id, name },
+    });
   }
-
 
   editCropGroup(id: number) {
-    this.router.navigate(['/plant-care/action/create-crop-group'], { queryParams: { id } });
+    this.router.navigate(['/plant-care/action/create-crop-group'], {
+      queryParams: { id },
+    });
   }
-
-  
 
   backCreate(): void {
-    this.router.navigate(['/plant-care/action']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/plant-care/action']);
+    }
   }
-  
 
   add(): void {
     this.router.navigate(['/plant-care/action/create-crop-group']);

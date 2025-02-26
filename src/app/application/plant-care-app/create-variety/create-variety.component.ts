@@ -67,6 +67,8 @@ export class CreateVarietyComponent implements OnInit {
   imagePreview: string | ArrayBuffer | null = null;
 
   itemId: number | null = null;
+  CropPassId: number | null = null;
+
   newsItems: NewsItem[] = [];
 
   constructor(
@@ -79,12 +81,33 @@ export class CreateVarietyComponent implements OnInit {
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', [Validators.required]],
-      varietyNameEnglish: ['', [Validators.required, Validators.minLength(2),  Validators.pattern(/^(?!\d+$)[a-zA-Z0-9 ]*$/)]],
-      varietyNameSinhala: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?![0-9]+$)[\u0D80-\u0DFF0-9\s]*$/)]],
-      varietyNameTamil: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^(?![0-9]+$)[\u0B80-\u0BFF0-9\s]*$/)]],
+      varietyNameEnglish: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.pattern(/^(?!\d+$)[a-zA-Z0-9 ]*$/),
+        ],
+      ],
+      varietyNameSinhala: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.pattern(/^(?![0-9]+$)[\u0D80-\u0DFF0-9\s]*$/),
+        ],
+      ],
+      varietyNameTamil: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.pattern(/^(?![0-9]+$)[\u0B80-\u0BFF0-9\s]*$/),
+        ],
+      ],
       descriptionEnglish: ['', [Validators.required, Validators.minLength(10)]],
       descriptionSinhala: ['', [Validators.required, Validators.minLength(10)]],
-      descriptionTamil: ['', [Validators.required, Validators.minLength(10)]], 
+      descriptionTamil: ['', [Validators.required, Validators.minLength(10)]],
       bgColor: new FormControl('', Validators.required),
       image: [null, [Validators.required]],
     });
@@ -104,11 +127,45 @@ export class CreateVarietyComponent implements OnInit {
   //   });
   // }
 
+  // ngOnInit() {
+  //   this.getAllCropGroups();
+  //   this.route.queryParams.subscribe((params) => {
+  //     this.itemId = params['id'] ? +params['id'] : null;
+  //     this.CropPassId = params['cid'] ? +params['cid'] : null;
+  //     console.log('Recived item ID:', this.itemId);
+  //     console.log('Hello', this.CropPassId);
+
+  //     // if(this.CropPassId){
+  //     //   this.group.id = this.CropPassId;
+  //     // }
+
+  //     if (this.itemId) {
+  //       this.isLoading = true;
+  //       this.cropCalendarService.getCropVarietyById(this.itemId).subscribe({
+  //         next: (response: any) => {
+  //           this.newsItems = response.groups;
+  //           if (response.groups[0].image) {
+  //             this.selectedImage = response.groups[0].image; // Base64 image
+  //             this.selectedFileName = 'Existing Image';
+  //           }
+  //           this.isLoading = false;
+  //         },
+  //         error: (error) => {
+  //           console.error('Error fetching crop group details:', error);
+  //           this.isLoading = false;
+  //         },
+  //       });
+  //     }
+  //   });
+  // }
+
   ngOnInit() {
     this.getAllCropGroups();
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
-      console.log('Recived item ID:', this.itemId);
+      this.CropPassId = params['cid'] ? +params['cid'] : null;
+      console.log('Received item ID:', this.itemId);
+      console.log('Received CropPassId:', this.CropPassId);
 
       if (this.itemId) {
         this.isLoading = true;
@@ -192,44 +249,57 @@ export class CreateVarietyComponent implements OnInit {
 
     if (this.cropForm.invalid) {
       let errorMessages = [];
-  
+
       if (this.cropForm.controls['groupId'].hasError('required')) {
         errorMessages.push('Group ID is required.');
       }
       if (this.cropForm.controls['varietyNameEnglish'].hasError('required')) {
         errorMessages.push('Variety name is required.');
-
-      } else if (this.cropForm.controls['varietyNameEnglish'].hasError('pattern')) {
-        errorMessages.push('Variety name cannot be only numbers and special characters are not allowed');
+      } else if (
+        this.cropForm.controls['varietyNameEnglish'].hasError('pattern')
+      ) {
+        errorMessages.push(
+          'Variety name cannot be only numbers and special characters are not allowed'
+        );
       }
-  
+
       if (this.cropForm.controls['varietyNameSinhala'].hasError('required')) {
         errorMessages.push('Sinhala variety name is required.');
-      
-      } else if (this.cropForm.controls['varietyNameSinhala'].hasError('pattern')) {
-        errorMessages.push('Variety name cannot be only numbers and only Sinhala characters and numbers are allowed');
+      } else if (
+        this.cropForm.controls['varietyNameSinhala'].hasError('pattern')
+      ) {
+        errorMessages.push(
+          'Variety name cannot be only numbers and only Sinhala characters and numbers are allowed'
+        );
       }
-  
+
       if (this.cropForm.controls['varietyNameTamil'].hasError('required')) {
         errorMessages.push('Tamil variety name is required.');
-      
-      } else if (this.cropForm.controls['varietyNameTamil'].hasError('pattern')) {
-        errorMessages.push('Variety name cannot be only numbers and only tamil characters and numbers are allowed');
+      } else if (
+        this.cropForm.controls['varietyNameTamil'].hasError('pattern')
+      ) {
+        errorMessages.push(
+          'Variety name cannot be only numbers and only tamil characters and numbers are allowed'
+        );
       }
-  
+
       if (this.cropForm.controls['bgColor'].hasError('required')) {
         errorMessages.push('Background color is required.');
       }
-  
+
       if (!this.selectedFile) {
         errorMessages.push('Please select an image file.');
       }
-  
+
       if (errorMessages.length > 0) {
         Swal.fire({
           title: 'Validation Errors',
           html: `<ul style="text-align: center; padding: 0; list-style: none;">
-                    ${errorMessages.map((msg) => `<li style="margin-bottom: 5px;">${msg}</li>`).join('')}
+                    ${errorMessages
+                      .map(
+                        (msg) => `<li style="margin-bottom: 5px;">${msg}</li>`
+                      )
+                      .join('')}
                  </ul>`,
           icon: 'warning',
           confirmButtonText: 'OK',
@@ -321,6 +391,41 @@ export class CreateVarietyComponent implements OnInit {
     this.cropForm.patchValue({ bgColor: event.color.hex });
   }
 
+  // getAllCropGroups() {
+  //   const token = this.tokenService.getToken();
+
+  //   if (!token) {
+  //     Swal.fire(
+  //       'Error',
+  //       'No authentication token found. Please login again.',
+  //       'error'
+  //     ).then(() => {
+  //       this.router.navigate(['/login']);
+  //     });
+  //     return;
+  //   }
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
+
+  //   this.http
+  //     .get<any>(`${environment.API_URL}crop-calendar/crop-groups`, { headers })
+  //     .subscribe({
+  //       next: (response) => {
+  //         this.groupList = response.groups;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching crop groups:', error);
+  //         Swal.fire(
+  //           'Error',
+  //           'Failed to load crop groups. Please try again later.',
+  //           'error'
+  //         );
+  //       },
+  //     });
+  // }
+
   getAllCropGroups() {
     const token = this.tokenService.getToken();
 
@@ -344,6 +449,11 @@ export class CreateVarietyComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.groupList = response.groups;
+
+          // After fetching crop groups, set the groupId form control value
+          if (this.CropPassId) {
+            this.cropForm.patchValue({ groupId: this.CropPassId });
+          }
         },
         error: (error) => {
           console.error('Error fetching crop groups:', error);
@@ -418,17 +528,15 @@ export class CreateVarietyComponent implements OnInit {
       );
   }
 
-
   back(): void {
-    this.router.navigate(['/plant-care/action']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/plant-care/action']);
+    }
   }
-
 
   backEdit(): void {
     this.router.navigate(['/plant-care/action/view-crop-group']);
   }
-
-
-
-
 }

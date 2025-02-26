@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div *ngIf="this.itemId==null">
+<div *ngIf="this.itemId == null">
   <button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
@@ -8,181 +8,325 @@
   <div class="h-[20px]"></div>
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-    <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">ADD CROP VARIETY</h2>
-
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">
+      ADD CROP VARIETY
+    </h2>
 
     <div class="space-y-4">
       <!-- Crop Name -->
       <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
         <div>
-
-          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark">Crop Name</label>
-          <select id="groupId" formControlName="groupId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+          <label
+            for="groupId"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+            >Crop Name</label
+          >
+          <select
+            id="groupId"
+            formControlName="groupId"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          >
             <option value="">Select a crop</option>
             <option *ngFor="let group of groupList" [value]="group.id">
               {{ group.cropNameEnglish }}
             </option>
           </select>
           <div
-            *ngIf="cropForm.get('groupId')!.invalid && (cropForm.get('groupId')!.dirty || cropForm.get('groupId')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('groupId')!.errors?.['required']">Crop name is required</div>
-          </div>
-        </div>
-
-        <hr class="border-[2px] border-gray-400 my-10" />
-
-
-        <div>
-          <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety
-            Name By
-            English</label>
-          <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
-            required />
-          <div
-            *ngIf="cropForm.get('varietyNameEnglish')!.invalid && (cropForm.get('varietyNameEnglish')!.dirty || cropForm.get('varietyNameEnglish')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['required']">English variety name is required</div>
-            <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['pattern']">Variety name cannot be only numbers and
-              special characters are not allowed</div>
-          </div>
-        </div>
-
-        <div class="md:col-span-2 my-3">
-          <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-            (in English)</label>
-          <textarea id="descriptionEnglish" formControlName="descriptionEnglish" name="descriptionEnglish" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
-          <div
-            *ngIf="cropForm.get('descriptionEnglish')!.invalid && (cropForm.get('descriptionEnglish')!.dirty || cropForm.get('descriptionEnglish')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('descriptionEnglish')!.errors?.['required']">English Description is required</div>
+            *ngIf="
+              cropForm.get('groupId')!.invalid &&
+              (cropForm.get('groupId')!.dirty ||
+                cropForm.get('groupId')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="cropForm.get('groupId')!.errors?.['required']">
+              Crop name is required
+            </div>
           </div>
         </div>
 
         <hr class="border-[2px] border-gray-400 my-10" />
 
         <div>
-          <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety
-            Name By
-            Sinhala</label>
-          <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
+          <label
+            for="varietyNameEnglish"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Variety Name By English</label
+          >
+          <input
+            type="text"
+            id="varietyNameEnglish"
+            formControlName="varietyNameEnglish"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
-            required />
+            required
+          />
           <div
-            *ngIf="cropForm.get('varietyNameSinhala')!.invalid && (cropForm.get('varietyNameSinhala')!.dirty || cropForm.get('varietyNameEnglish')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']">Sinhala variety name is required</div>
-            <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['pattern']">Variety name cannot be only numbers and
-              only Sinhala characters and numbers are allowed</div>
+            *ngIf="
+              cropForm.get('varietyNameEnglish')!.invalid &&
+              (cropForm.get('varietyNameEnglish')!.dirty ||
+                cropForm.get('varietyNameEnglish')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div
+              *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['required']"
+            >
+              English variety name is required
+            </div>
+            <div
+              *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['pattern']"
+            >
+              Variety name cannot be only numbers and special characters are not
+              allowed
+            </div>
           </div>
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="descriptionSinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark">Description
-            (in Sinhala)</label>
-          <textarea id="descriptionSinhala" formControlName="descriptionSinhala" name="descriptionSinhala" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+          <label
+            for="specialNotes"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+            >Description (in English)</label
+          >
+          <textarea
+            id="descriptionEnglish"
+            formControlName="descriptionEnglish"
+            name="descriptionEnglish"
+            rows="3"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          ></textarea>
           <div
-            *ngIf="cropForm.get('descriptionSinhala')!.invalid && (cropForm.get('descriptionSinhala')!.dirty || cropForm.get('descriptionSinhala')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('descriptionSinhala')!.errors?.['required']">Sinhala description is required</div>
+            *ngIf="
+              cropForm.get('descriptionEnglish')!.invalid &&
+              (cropForm.get('descriptionEnglish')!.dirty ||
+                cropForm.get('descriptionEnglish')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div
+              *ngIf="cropForm.get('descriptionEnglish')!.errors?.['required']"
+            >
+              English Description is required
+            </div>
           </div>
         </div>
 
-
         <hr class="border-[2px] border-gray-400 my-10" />
-
-
 
         <div>
-          <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
-            By Tamil</label>
-          <input type="varietyNameTamil" id="varietyNameTamil" formControlName="varietyNameTamil"
+          <label
+            for="varietyNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Variety Name By Sinhala</label
+          >
+          <input
+            type="text"
+            id="varietyNameSinhala"
+            formControlName="varietyNameSinhala"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
-            required />
+            required
+          />
           <div
-            *ngIf="cropForm.get('varietyNameTamil')!.invalid && (cropForm.get('varietyNameTamil')!.dirty || cropForm.get('varietyNameTamil')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['required']">Sinhala variety name is required</div>
-            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['pattern']">Variety name cannot be only numbers and
-              only tamil characters and numbers are allowed</div>
+            *ngIf="
+              cropForm.get('varietyNameSinhala')!.invalid &&
+              (cropForm.get('varietyNameSinhala')!.dirty ||
+                cropForm.get('varietyNameEnglish')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div
+              *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']"
+            >
+              Sinhala variety name is required
+            </div>
+            <div
+              *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['pattern']"
+            >
+              Variety name cannot be only numbers and only Sinhala characters
+              and numbers are allowed
+            </div>
           </div>
         </div>
 
         <div class="md:col-span-2 my-3">
-          <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-            (in Tamil)</label>
-          <textarea id="descriptionTamil" formControlName="descriptionTamil" name="descriptionTamil" rows="3"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+          <label
+            for="descriptionSinhala"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+            >Description (in Sinhala)</label
+          >
+          <textarea
+            id="descriptionSinhala"
+            formControlName="descriptionSinhala"
+            name="descriptionSinhala"
+            rows="3"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          ></textarea>
           <div
-            *ngIf="cropForm.get('descriptionTamil')!.invalid && (cropForm.get('descriptionTamil')!.dirty || cropForm.get('descriptionTamil')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('descriptionTamil')!.errors?.['required']">Tamil discription is required</div>
+            *ngIf="
+              cropForm.get('descriptionSinhala')!.invalid &&
+              (cropForm.get('descriptionSinhala')!.dirty ||
+                cropForm.get('descriptionSinhala')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div
+              *ngIf="cropForm.get('descriptionSinhala')!.errors?.['required']"
+            >
+              Sinhala description is required
+            </div>
           </div>
         </div>
 
-
         <hr class="border-[2px] border-gray-400 my-10" />
 
+        <div>
+          <label
+            for="varietyNameTamil"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Variety Name By Tamil</label
+          >
+          <input
+            type="varietyNameTamil"
+            id="varietyNameTamil"
+            formControlName="varietyNameTamil"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
+            required
+          />
+          <div
+            *ngIf="
+              cropForm.get('varietyNameTamil')!.invalid &&
+              (cropForm.get('varietyNameTamil')!.dirty ||
+                cropForm.get('varietyNameTamil')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['required']">
+              Sinhala variety name is required
+            </div>
+            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['pattern']">
+              Variety name cannot be only numbers and only tamil characters and
+              numbers are allowed
+            </div>
+          </div>
+        </div>
 
+        <div class="md:col-span-2 my-3">
+          <label
+            for="descriptionTamil"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+            >Description (in Tamil)</label
+          >
+          <textarea
+            id="descriptionTamil"
+            formControlName="descriptionTamil"
+            name="descriptionTamil"
+            rows="3"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          ></textarea>
+          <div
+            *ngIf="
+              cropForm.get('descriptionTamil')!.invalid &&
+              (cropForm.get('descriptionTamil')!.dirty ||
+                cropForm.get('descriptionTamil')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="cropForm.get('descriptionTamil')!.errors?.['required']">
+              Tamil discription is required
+            </div>
+          </div>
+        </div>
 
-
-
-
-
-
+        <hr class="border-[2px] border-gray-400 my-10" />
 
         <!-- Add Image -->
-        <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+        <input
+          type="file"
+          id="imageUpload"
+          accept="image/*"
+          class="hidden"
+          (change)="onFileSelected($event)"
+        />
 
         <!-- Button -->
-        <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
+        <button
+          class="flex items-center text-textLight dark:text-textDark"
+          (click)="triggerFileInput($event)"
+        >
           Add Image
           <span
-            class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
-            <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
+            class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold"
+          >
+            <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
           </span>
         </button>
 
-
-        <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
-          {{selectedFileName}}
-          <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
-            <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain">
+        <div
+          *ngIf="selectedFileName"
+          class="mt-2 text-textLight dark:text-textDark w-full block"
+        >
+          {{ selectedFileName }}
+          <div
+            class="w-full h-72 py-5 mt-2 content-center flex justify-center border"
+          >
+            <img
+              [src]="selectedImage"
+              alt="Crop Image"
+              class="max-w-full w-auto object-contain"
+            />
           </div>
         </div>
 
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
-          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
-          <ngx-colors ngx-colors-trigger formControlName="bgColor" (colorChange)="onColorChange($event)"
-            style="display: inline-block; margin:5px;">
+          <label
+            for="bgColor"
+            class="block text-sm font-medium text-textLight dark:text-textDark pt-2"
+            >Color</label
+          >
+          <ngx-colors
+            ngx-colors-trigger
+            formControlName="bgColor"
+            (colorChange)="onColorChange($event)"
+            style="display: inline-block; margin: 5px"
+          >
           </ngx-colors>
           <div
-            *ngIf="cropForm.get('bgColor')!.invalid && (cropForm.get('bgColor')!.dirty || cropForm.get('bgColor')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('bgColor')!.errors?.['required']">Background color is required</div>
+            *ngIf="
+              cropForm.get('bgColor')!.invalid &&
+              (cropForm.get('bgColor')!.dirty ||
+                cropForm.get('bgColor')!.touched)
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div *ngIf="cropForm.get('bgColor')!.errors?.['required']">
+              Background color is required
+            </div>
           </div>
         </div>
 
         <!-- Buttons -->
         <div class="flex justify-end space-x-4 mt-6">
-          <button type="button" (click)="onCancel()"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-          <button type="submit" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md"
+          >
+            Save
+          </button>
         </div>
       </form>
     </div>
-
   </div>
 </div>
 
-
-<div *ngIf="this.itemId!=null">
+<div *ngIf="this.itemId != null">
   <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
@@ -191,7 +335,6 @@
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
     <h2 class="text-xl font-semibold text-center mb-4">EDIT CROP VARIETY</h2>
-
 
     <div class="space-y-4">
       <!-- Crop Name -->
@@ -212,154 +355,267 @@
 
       <!-- <hr class="border-[2px] border-gray-400 my-10" /> -->
 
-
       <div>
-        <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700">Variety Name By
-          English</label>
-        <input type="text" id="varietyNameEnglish" [(ngModel)]="newsItems[0].varietyNameEnglish"
+        <label
+          for="varietyNameEnglish"
+          class="block text-sm font-medium text-gray-700"
+          >Variety Name By English</label
+        >
+        <input
+          type="text"
+          id="varietyNameEnglish"
+          [(ngModel)]="newsItems[0].varietyNameEnglish"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-          #verityEngNameInput="ngModel" pattern="^(?=.*[A-Za-z])[A-Za-z0-9\s]+$" required />
-        <div *ngIf="verityEngNameInput.touched && !newsItems[0].varietyNameEnglish" class="text-red-500 text-sm mt-1">
+          #verityEngNameInput="ngModel"
+          pattern="^(?=.*[A-Za-z])[A-Za-z0-9\s]+$"
+          required
+        />
+        <div
+          *ngIf="verityEngNameInput.touched && !newsItems[0].varietyNameEnglish"
+          class="text-red-500 text-sm mt-1"
+        >
           <div>English Variety name is required</div>
         </div>
 
         <!-- Error: Pattern Validation -->
-        <div *ngIf="verityEngNameInput.touched && verityEngNameInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1">
-          <div>Variety english name cannot be only numbers and special characters are not allowed</div>
+        <div
+          *ngIf="verityEngNameInput.touched && verityEngNameInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>
+            Variety english name cannot be only numbers and special characters
+            are not allowed
+          </div>
         </div>
       </div>
 
       <div class="md:col-span-2 my-3">
-        <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-          (in English)</label>
-        <textarea id="descriptionEnglish" name="descriptionEnglish" rows="3"
+        <label
+          for="specialNotes"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Description (in English)</label
+        >
+        <textarea
+          id="descriptionEnglish"
+          name="descriptionEnglish"
+          rows="3"
           [(ngModel)]="newsItems[0].descriptionEnglish"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #verityDisEngNameInput="ngModel" required></textarea>
-        <div *ngIf="verityDisEngNameInput.touched && !newsItems[0].descriptionEnglish"
-          class="text-red-500 text-sm mt-1">
+          #verityDisEngNameInput="ngModel"
+          required
+        ></textarea>
+        <div
+          *ngIf="
+            verityDisEngNameInput.touched && !newsItems[0].descriptionEnglish
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           <div>English Variety Discription is required</div>
         </div>
-
       </div>
 
       <hr class="border-[2px] border-gray-400 my-10" />
 
       <div>
-        <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700">Variety Name By
-          Sinhala</label>
-        <input type="text" id="varietyNameSinhala" [(ngModel)]="newsItems[0].varietyNameSinhala"
+        <label
+          for="varietyNameSinhala"
+          class="block text-sm font-medium text-gray-700"
+          >Variety Name By Sinhala</label
+        >
+        <input
+          type="text"
+          id="varietyNameSinhala"
+          [(ngModel)]="newsItems[0].varietyNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-          #verietySinNameInput="ngModel" pattern="^(?=.*[\u0D80-\u0DFF])[\u0D80-\u0DFF0-9\s]+$" required />
-        <div *ngIf="verietySinNameInput.touched && !newsItems[0].varietyNameSinhala" class="text-red-500 text-sm mt-1">
+          #verietySinNameInput="ngModel"
+          pattern="^(?=.*[\u0D80-\u0DFF])[\u0D80-\u0DFF0-9\s]+$"
+          required
+        />
+        <div
+          *ngIf="
+            verietySinNameInput.touched && !newsItems[0].varietyNameSinhala
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           <div>Sinhala Veriety name is required</div>
         </div>
 
         <!-- Error: Pattern Validation -->
-        <div *ngIf="verietySinNameInput.touched && verietySinNameInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1">
-          <div>Veriety name cannot be only numbers and only Sinhala characters and numbers are allowed</div>
+        <div
+          *ngIf="verietySinNameInput.touched && verietySinNameInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>
+            Veriety name cannot be only numbers and only Sinhala characters and
+            numbers are allowed
+          </div>
         </div>
       </div>
 
       <div class="md:col-span-2 my-3">
-        <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-          (in Sinhala)</label>
-        <textarea id="descriptionSinhala" name="descriptionSinhala" rows="3"
+        <label
+          for="descriptionSinhala"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Description (in Sinhala)</label
+        >
+        <textarea
+          id="descriptionSinhala"
+          name="descriptionSinhala"
+          rows="3"
           [(ngModel)]="newsItems[0].descriptionSinhala"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #verietyDisSinNameInput="ngModel" required></textarea>
-        <div *ngIf="verietyDisSinNameInput.touched && !newsItems[0].descriptionSinhala"
-          class="text-red-500 text-sm mt-1">
+          #verietyDisSinNameInput="ngModel"
+          required
+        ></textarea>
+        <div
+          *ngIf="
+            verietyDisSinNameInput.touched && !newsItems[0].descriptionSinhala
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           <div>Sinhala Veriety Discrtiption is required</div>
         </div>
-
       </div>
-
 
       <hr class="border-[2px] border-gray-400 my-10" />
 
-
-
       <div>
-        <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700">Variety Name By Tamil</label>
-        <input type="varietyNameTamil" id="varietyNameTamil" [(ngModel)]="newsItems[0].varietyNameTamil"
+        <label
+          for="varietyNameTamil"
+          class="block text-sm font-medium text-gray-700"
+          >Variety Name By Tamil</label
+        >
+        <input
+          type="varietyNameTamil"
+          id="varietyNameTamil"
+          [(ngModel)]="newsItems[0].varietyNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
-          #cropTamilNameInput="ngModel" pattern="^(?=.*[\u0B80-\u0BFF])[\u0B80-\u0BFF0-9\s]+$" required />
-        <div *ngIf="cropTamilNameInput.touched && !newsItems[0].varietyNameTamil" class="text-red-500 text-sm mt-1">
+          #cropTamilNameInput="ngModel"
+          pattern="^(?=.*[\u0B80-\u0BFF])[\u0B80-\u0BFF0-9\s]+$"
+          required
+        />
+        <div
+          *ngIf="cropTamilNameInput.touched && !newsItems[0].varietyNameTamil"
+          class="text-red-500 text-sm mt-1"
+        >
           <div>Tamil Veriety name is required</div>
         </div>
 
         <!-- Error: Pattern Validation -->
-        <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1">
-          <div>Veriety name cannot be only numbers and only Tamil characters and numbers are allowed</div>
+        <div
+          *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>
+            Veriety name cannot be only numbers and only Tamil characters and
+            numbers are allowed
+          </div>
         </div>
       </div>
     </div>
 
     <div class="md:col-span-2 my-3">
-      <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-        (in Tamil)</label>
-      <textarea id="descriptionTamil" name="descriptionTamil" rows="3" [(ngModel)]="newsItems[0].descriptionTamil"
+      <label
+        for="descriptionTamil"
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Description (in Tamil)</label
+      >
+      <textarea
+        id="descriptionTamil"
+        name="descriptionTamil"
+        rows="3"
+        [(ngModel)]="newsItems[0].descriptionTamil"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        #VerietyDisTamilInput="ngModel" required></textarea>
-      <div *ngIf="VerietyDisTamilInput.touched && !newsItems[0].descriptionTamil" class="text-red-500 text-sm mt-1">
+        #VerietyDisTamilInput="ngModel"
+        required
+      ></textarea>
+      <div
+        *ngIf="VerietyDisTamilInput.touched && !newsItems[0].descriptionTamil"
+        class="text-red-500 text-sm mt-1"
+      >
         <div>Tamil Veriety Discription is required</div>
       </div>
-
     </div>
-
 
     <hr class="border-[2px] border-gray-400 my-10" />
 
-
-
-
-
-
-
-
-
     <!-- Add Image -->
-    <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+    <input
+      type="file"
+      id="imageUpload"
+      accept="image/*"
+      class="hidden"
+      (change)="onFileSelected($event)"
+    />
 
     <!-- Button -->
-    <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
+    <button
+      class="flex items-center text-textLight dark:text-textDark"
+      (click)="triggerFileInput($event)"
+    >
       Add Image
       <span
-        class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
-        <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
+        class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold"
+      >
+        <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
       </span>
     </button>
 
-
-    <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
-      {{selectedFileName}}
-      <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
-        <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain">
+    <div
+      *ngIf="selectedFileName"
+      class="mt-2 text-textLight dark:text-textDark w-full block"
+    >
+      {{ selectedFileName }}
+      <div
+        class="w-full h-72 py-5 mt-2 content-center flex justify-center border"
+      >
+        <img
+          [src]="selectedImage"
+          alt="Crop Image"
+          class="max-w-full w-auto object-contain"
+        />
       </div>
     </div>
 
     <!-- Add Background Color -->
     <div class="flex items-center space-x-4">
-      <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
-      <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
-        style="display: inline-block; margin:5px;" #bgColorInput="ngModel">
+      <label
+        for="bgColor"
+        class="block text-sm font-medium text-textLight dark:text-textDark pt-2"
+        >Color</label
+      >
+      <ngx-colors
+        ngx-colors-trigger
+        [(ngModel)]="newsItems[0].bgColor"
+        (colorChange)="onColorChange($event)"
+        style="display: inline-block; margin: 5px"
+        #bgColorInput="ngModel"
+      >
       </ngx-colors>
-      <div *ngIf="bgColorInput.touched && !newsItems[0].bgColor" class="text-red-500 text-sm mt-1">
+      <div
+        *ngIf="bgColorInput.touched && !newsItems[0].bgColor"
+        class="text-red-500 text-sm mt-1"
+      >
         <div>Background color is required</div>
       </div>
     </div>
 
     <!-- Buttons -->
     <div class="flex justify-end space-x-4 mt-6">
-      <button type="button" (click)="onCancel()"
-        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-      <button type="submit" (click)="updateNews()"
-        class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        (click)="updateNews()"
+        class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md"
+      >
+        Save
+      </button>
     </div>
   </div>
-
 </div>

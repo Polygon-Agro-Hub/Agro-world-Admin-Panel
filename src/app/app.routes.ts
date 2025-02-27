@@ -94,6 +94,8 @@ import { AddDailyTargetComponent } from './application/collection-hub-section/ad
 import { MarketEditProductComponent } from './application/marketplace/market-edit-product/market-edit-product.component';
 import { CustomersComponent } from './application/sales-dash-section/customers/customers.component';
 import { ViewCollectiveOfficerProfileComponent } from './application/steckholders-section/view-collective-officer-profile/view-collective-officer-profile.component';
+import { PermissionGuard } from './guards/permission.guard';
+import { Status451Component } from './components/status-451/status-451.component';
 
 export const routes: Routes = [
   {
@@ -103,6 +105,8 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
+  
+  { path: 'status-451', component: Status451Component },
 
   {
     path: '',
@@ -315,6 +319,8 @@ export const routes: Routes = [
                   {
                     path: 'edit-plantcare-users',
                     component: EditPlantcareUsersComponent,
+                    canActivate: [ PermissionGuard],
+                    data: { permission: 'Add plantcare user' }, 
                   },
                   {
                     path: 'upload-farmers',

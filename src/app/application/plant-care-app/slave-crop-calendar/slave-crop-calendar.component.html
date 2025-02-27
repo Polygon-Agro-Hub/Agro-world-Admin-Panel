@@ -95,7 +95,29 @@
               <td class="px-4 py-3 dark:text-textDark text-center">
                 <div class="flex items-center space-x-2 justify-center">
                   <!-- Progress bar -->
+
                   <div
+                    class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
+                  >
+                    <div
+                      class="bg-blue-600 h-2.5 rounded-full"
+                      [ngClass]="{
+                        'min-w-[15px]':
+                          calculateProgressPercentage(
+                            item.totalTasks,
+                            item.completedTasks
+                          ) < 5
+                      }"
+                      [style.width.%]="
+                        calculateProgressPercentage(
+                          item.totalTasks,
+                          item.completedTasks
+                        )
+                      "
+                    ></div>
+                  </div>
+
+                  <!-- <div
                     class="w-[100%] bg-gray-200 rounded-full h-2.5 flex-grow"
                   >
                     <div
@@ -107,7 +129,7 @@
                         )
                       "
                     ></div>
-                  </div>
+                  </div> -->
                   <!-- Percentage text -->
                   <span class="text-sm">
                     {{

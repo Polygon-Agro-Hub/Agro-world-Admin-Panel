@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -16,54 +16,32 @@ import { BarChartComponent } from '../bar-chart/bar-chart.component'
   templateUrl: './plantcare-users-row.component.html',
   styleUrl: './plantcare-users-row.component.css'
 })
-export class PlantcareUsersRowComponent implements OnInit {
+export class PlantcareUsersRowComponent implements OnChanges {
+  @Input() secondRow: any = {}
 
-  
   plantCareUsersWithOutQr!: number;
   plantCareUsersWithQr!: number;
   newPlantCareUsers!: number;
   allPlantCareUsers!: number;
   activePlantCareUsers!: number;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private stakeholderSrv: StakeholderService
-    
-    
-  ) { }
+  ngOnChanges(): void {
+    this.fetchPlantCareUserData(this.secondRow);
+  }
 
-  ngOnInit(): void {
 
-    this.fetchPlantCareUserData();
-
+  fetchPlantCareUserData(data:any) {
+    console.log('Second Row -> ', data);
+    this.plantCareUsersWithOutQr = data.QRfarmers.notQrCode.count ?? 0;
+    this.plantCareUsersWithQr = data.QRfarmers.QrCode.count ?? 0;
+    this.newPlantCareUsers = data.TodayFarmers ?? 0;
+    this.allPlantCareUsers = this.totCount(this.plantCareUsersWithOutQr, this.plantCareUsersWithQr) ;
+    this.activePlantCareUsers = data.activeFarmers ?? 0;
 
   }
 
-  fetchPlantCareUserData() {
-
-
-    console.log("fetching started");
-    
-    this.stakeholderSrv.getPlantCareUserData().subscribe(
-      
-      (res) => {
-        console.log('dtgsgdgdg',res);
-        this.plantCareUsersWithOutQr = res.plantCareUserByQrRegistration[1]?.user_count ?? 0;
-        this.plantCareUsersWithQr = res.plantCareUserByQrRegistration[0]?.user_count ?? 0;
-        this.newPlantCareUsers = res.newPlantCareUsers[0]?.newPlantCareUserCount ?? 0;
-        this.allPlantCareUsers = res.allPlantCareUsers[0]?.totalPlantCareUserCount ?? 0;
-        this.activePlantCareUsers = res.activePlantCareUsers[0]?.activePlantCareUserCount ?? 0;
-        
-
-
-      },
-      (error) => {
-        console.log("Error: ", error);
-        // this.isLoading = false;
-      }
-    );
+  totCount(x1: number, x2: number): number {
+    return (x1 + x2)
   }
 
 }

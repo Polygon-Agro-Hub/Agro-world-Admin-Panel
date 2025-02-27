@@ -22,6 +22,9 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
 })
 export class DashboardMainComponent implements OnInit {
   firstRow: any = {};
+  secondRow: any = {};
+
+
   constructor(
     private router: Router,
     private stakeholderSrv: StakeholderService
@@ -37,7 +40,10 @@ export class DashboardMainComponent implements OnInit {
     this.stakeholderSrv.getAdminUserData().subscribe(
       (res) => {
         console.log('Admin ->', res);
-        this.firstRow = res.firstRow
+        this.firstRow = res.firstRow;
+        this.secondRow = res.secondRow;
+        console.log("---------------",this.secondRow);
+        
       },
       (error) => {
         console.log("Error: ", error);

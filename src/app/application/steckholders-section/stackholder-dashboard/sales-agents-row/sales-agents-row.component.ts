@@ -1,10 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges} from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { Router } from '@angular/router';
-import { TokenService } from '../../../../services/token/services/token.service'
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 
 @Component({
   selector: 'app-sales-agents-row',

@@ -27,8 +27,6 @@ export class BarChartComponent implements OnChanges {
 
 
   fetchPlantCareUserData(data: any) {
-    // console.log("Barchart --> ", data);
-
     const withQr = data.QrCode.count ?? 0;
     const withoutQr = data.notQrCode.count ?? 0;
     const total = withQr + withoutQr;

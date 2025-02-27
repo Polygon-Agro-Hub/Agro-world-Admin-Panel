@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { TokenService } from '../../../../services/token/services/token.service'
-import { environment } from '../../../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { AdminRowComponent } from '../admin-row/admin-row.component';
@@ -28,7 +24,6 @@ export class DashboardMainComponent implements OnInit {
 
 
   constructor(
-    private router: Router,
     private stakeholderSrv: StakeholderService
   ) { }
 

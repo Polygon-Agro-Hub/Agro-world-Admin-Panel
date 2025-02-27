@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 
@@ -30,7 +30,6 @@ export class CollectionOfficerUsersRowComponent implements OnChanges {
     this.centerManagers = data.jobRoleOfficerCount.CCM.officerCount ?? 0;
     this.collectionOfficers = data.jobRoleOfficerCount.COO.officerCount ?? 0;
     this.customerOfficers = data.jobRoleOfficerCount.CUO.officerCount ?? 0;
-    // this.adminUsersByPosition = data.adminUsersByPosition;
     this.newOfficers = data.newOfficerCount ?? 0;
     this.allOfficers = this.totCount(this.centerHeadOfficers, this.centerManagers, this.collectionOfficers, this.customerOfficers);
     this.activeOfficers = data.activeOfficers ?? 0;

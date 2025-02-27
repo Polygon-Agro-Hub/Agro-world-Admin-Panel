@@ -23,39 +23,6 @@ export class StakeholderService {
       headers,
     });
   }
-
-  //not useage should be removed
-  // getCollectionOfficerData(): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  //   return this.http.get(`${this.apiUrl}stakeholder/get-collection-officer-data`, {
-  //     headers,
-  //   });
-  // }
-
-  //not usefull shold be removed
-  // getPlantCareUserData(): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  //   return this.http.get(`${this.apiUrl}stakeholder/get-plant-care-user-data`, {
-  //     headers,
-  //   });
-  // }
-
-  //not useFull
-  // getSalesAgentData(): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  //   return this.http.get(`${this.apiUrl}stakeholder/get-sales-agent-data`, {
-  //     headers,
-  //   });
-  // }
 }
 
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-status-451',
@@ -11,7 +11,7 @@ export class Status451Component {
   suggestion = 'Please contact our support for more details or try visiting later.';
 
 
-  constructor(private location: Location) {}
+  constructor(private router: Router) {}
 
   // contactSupport() {
   //   // Redirect to the contact page or open a contact modal
@@ -20,7 +20,7 @@ export class Status451Component {
 
   goBack() {
     // Go back to the previous page
-    this.location.back();
+    this.router.navigate(['..']);
   }
 }
 

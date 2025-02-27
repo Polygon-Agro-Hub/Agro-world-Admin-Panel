@@ -49,6 +49,7 @@
       <div class="flex">
         <button
           class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2"
+          (click)="toggleDisclaimView()"
         >
           Disclaim
         </button>
@@ -197,6 +198,57 @@
             {{ officerObj.branchName }}
           </p>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="showDisclaimView"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
+    <div>
+      <!-- Icon -->
+      <div class="mb-4 flex justify-center">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+
+      <div class="mb-4 text-center">
+        <p class="text-lg mb-2">
+          Are you sure you want to Discharge the officer
+        </p>
+        <p class="font-semibold text-lg">
+          "{{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}""
+          (EMP ID - "CCO{{ officerObj.empId }}")
+          <span class="font-normal">from center</span> <br />
+          "{{ officerObj.centerName }}"?
+        </p>
+
+        <p class="text-red-500 mb-6 italic">
+          Please note that the officer will no longer be under your monitoring.
+        </p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-center gap-4">
+        <button
+          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="confirmDisclaim(officerId)"
+        >
+          <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
+          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
+            >Discharge</span
+          >
+        </button>
+        <button
+          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="cancelDisclaim()"
+        >
+          <span class="font-semibold text-white">No,</span> <br />
+          <span class="text-light text-whight-700 button-text text-white"
+            >Go Back</span
+          >
+        </button>
       </div>
     </div>
   </div>

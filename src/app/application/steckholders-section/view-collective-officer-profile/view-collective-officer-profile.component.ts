@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
+import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 
 @Component({
   selector: 'app-view-collective-officer-profile',
@@ -24,12 +25,13 @@ import Swal from 'sweetalert2';
 export class ViewCollectiveOfficerProfileComponent {
   officerObj: CollectionOfficer = new CollectionOfficer();
   officerId!: number;
-
+  showDisclaimView = false;
   isLoading = false;
 
   constructor(
     private route: ActivatedRoute,
     private collectionService: CollectionService,
+    private collectionOfficerService: CollectionOfficerService,
     private router: Router
   ) {}
 
@@ -94,6 +96,42 @@ export class ViewCollectiveOfficerProfileComponent {
           });
         });
     }
+  }
+
+  confirmDisclaim(id: number) {
+    this.collectionOfficerService.disclaimOfficer(id).subscribe(
+      (response) => {
+        console.log('Officer ID sent successfully:', response);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Officer ID sent successfully!',
+          confirmButtonText: 'OK',
+        });
+
+        this.showDisclaimView = false;
+        this.router.navigate(['/steckholders/action/collective-officer']);
+      },
+      (error) => {
+        console.error('Error sending Officer ID:', error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to send Officer ID!',
+          confirmButtonText: 'Try Again',
+        });
+      }
+    );
+  }
+
+  cancelDisclaim() {
+    this.showDisclaimView = false;
+  }
+
+  toggleDisclaimView() {
+    this.showDisclaimView = !this.showDisclaimView; // Toggle the boolean value
   }
 }
 

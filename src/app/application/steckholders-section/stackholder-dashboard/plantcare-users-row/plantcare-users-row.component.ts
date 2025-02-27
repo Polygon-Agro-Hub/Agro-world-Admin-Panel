@@ -31,7 +31,7 @@ export class PlantcareUsersRowComponent implements OnChanges {
 
 
   fetchPlantCareUserData(data:any) {
-    console.log('Second Row -> ', data);
+    // console.log('Second Row -> ', data);
     this.plantCareUsersWithOutQr = data.QRfarmers.notQrCode.count ?? 0;
     this.plantCareUsersWithQr = data.QRfarmers.QrCode.count ?? 0;
     this.newPlantCareUsers = data.TodayFarmers ?? 0;

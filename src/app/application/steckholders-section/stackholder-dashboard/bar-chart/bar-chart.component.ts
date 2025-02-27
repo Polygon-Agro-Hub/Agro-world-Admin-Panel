@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
-import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // Import plugin
 
@@ -19,9 +18,7 @@ export class BarChartComponent implements OnChanges {
   plantCareUsersWithQr!: number;
   chart: any;
 
-  constructor(
-    private stakeholderSrv: StakeholderService
-  ) {
+  constructor() {
     Chart.register(...registerables, ChartDataLabels); // Register plugin
   }
   ngOnChanges(): void {

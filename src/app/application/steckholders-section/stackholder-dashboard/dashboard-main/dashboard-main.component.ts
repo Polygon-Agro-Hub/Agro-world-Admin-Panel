@@ -23,6 +23,7 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
 export class DashboardMainComponent implements OnInit {
   firstRow: any = {};
   secondRow: any = {};
+  thirdRow:any = {};
 
 
   constructor(
@@ -42,7 +43,8 @@ export class DashboardMainComponent implements OnInit {
         console.log('Admin ->', res);
         this.firstRow = res.firstRow;
         this.secondRow = res.secondRow;
-        console.log("---------------",this.secondRow);
+        this.thirdRow = res.thirdRow;
+        // console.log("---------------",this.secondRow);
         
       },
       (error) => {

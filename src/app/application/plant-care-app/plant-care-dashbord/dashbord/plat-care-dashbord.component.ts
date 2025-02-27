@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashbordFirstRowComponent } from '../dashbord-components/dashbord-first-row/dashbord-first-row.component';
 import { DashbordSecondRowComponent } from '../dashbord-components/dashbord-second-row/dashbord-second-row.component';
@@ -6,6 +6,8 @@ import { DashbordAreaChartComponent } from '../dashbord-components/dashbord-area
 import { DashbordPieChartComponent } from '../dashbord-components/dashbord-pie-chart/dashbord-pie-chart.component';
 import { PlantcareDashbordService } from '../../../../services/plant-care/plantcare-dashbord.service';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface DashboardData {
   active_users: any;
@@ -33,6 +35,8 @@ interface DashboardData {
   styleUrl: './plat-care-dashbord.component.css',
 })
 export class PlatCareDashbordComponent implements OnInit {
+  @ViewChild('reportSection', { static: false }) reportSection!: ElementRef;
+
   dashboardData: DashboardData = {} as DashboardData;
   totalCultivationCount: number = 0;
   hasData: boolean = false;
@@ -72,5 +76,27 @@ export class PlatCareDashbordComponent implements OnInit {
       this.dashboardData.grainCultivation +
       this.dashboardData.fruitCultivation +
       this.dashboardData.mushCultivation;
+  }
+
+  captureScreenshot(): void {
+    console.log('Capturing screenshot...');
+
+    if (!this.reportSection) {
+      console.error('Error: reportSection is undefined!');
+      return;
+    }
+
+    html2canvas(this.reportSection.nativeElement, { scale: 2 }) // Higher scale for better quality
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait mode, millimeters, A4 size
+        const imgWidth = 210; // A4 width in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+
+        pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight); // Add image to PDF
+        pdf.save('report.pdf'); // Download PDF file
+      })
+      .catch((error) => console.error('Error capturing screenshot:', error));
   }
 }

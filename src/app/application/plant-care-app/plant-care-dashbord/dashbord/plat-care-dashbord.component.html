@@ -1,40 +1,42 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div *ngIf="!hasData" class="text-center py-8">
+<div *ngIf="!hasData" class="text-center py-8" >
   <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
 </div>
-<div *ngIf="!isLoading">
-  <div *ngIf="hasData">
+<div *ngIf="!isLoading" >
+  <div *ngIf="hasData" >
     <div class="flex justify-end mb-4">
-      <button
+      <button (click)="captureScreenshot()"
         class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
       >
         Export Report
       </button>
     </div>
 
-    <div class="w-[100%]">
-      <app-dashbord-first-row [dashboardData]="dashboardData" />
-    </div>
-    <div class="my-10 w-[100%]">
-      <app-dashbord-second-row
-        [dashboardData]="dashboardData"
-        [totalCultivationCount]="totalCultivationCount"
-      />
-    </div>
-    <div class="flex flex-row justify-between gap-10 items-stretch my-10 w-full">
-      <!-- Area Chart -->
-      <div class="flex-1 h-full w-[60%]">
-        <app-dashbord-area-chart
-          class="h-full w-full"
-          [qrUsers]="dashboardData.qrUsers"
-          [allusers]="dashboardData.allusers"
+    <div #reportSection>
+      <div class="w-[100%]">
+        <app-dashbord-first-row [dashboardData]="dashboardData" />
+      </div>
+      <div class="my-10 w-[100%]">
+        <app-dashbord-second-row
+          [dashboardData]="dashboardData"
+          [totalCultivationCount]="totalCultivationCount"
         />
       </div>
-    
-      <!-- Pie Chart -->
-      <div class="flex-1 h-full w-[35%]">
-        <app-dashbord-pie-chart class="h-full w-full" [dashboardData]="dashboardData" />
+      <div class="flex flex-row justify-between gap-10 items-stretch my-10 w-full">
+        <!-- Area Chart -->
+        <div class="flex-1 h-full w-[60%]">
+          <app-dashbord-area-chart
+            class="h-full w-full"
+            [qrUsers]="dashboardData.qrUsers"
+            [allusers]="dashboardData.allusers"
+          />
+        </div>
+      
+        <!-- Pie Chart -->
+        <div class="flex-1 h-full w-[35%]">
+          <app-dashbord-pie-chart class="h-full w-full" [dashboardData]="dashboardData" />
+        </div>
       </div>
     </div>
     

@@ -58,7 +58,7 @@ export class CollectiveofficersEditComponent {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
-  
+
   invalidFields: Set<string> = new Set();
 
 
@@ -169,11 +169,11 @@ export class CollectiveofficersEditComponent {
 
           this.matchExistingBankToDropdown();
 
-          
+
           this.isLoading = false;
           console.log('isloading became false');
           console.log(this.comId, this.cenId);
-          
+
         },
         error: (error) => {
           console.error('Error fetching officer details:', error);
@@ -193,8 +193,7 @@ export class CollectiveofficersEditComponent {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       data => {
-        this.banks = data;
-       
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
       },
       error => {
         console.error('Error loading banks:', error);
@@ -202,11 +201,14 @@ export class CollectiveofficersEditComponent {
     );
   }
 
+
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       data => {
+        Object.keys(data).forEach(bankID => {
+          data[bankID].sort((a, b) => a.name.localeCompare(b.name));
+        });
         this.allBranches = data;
-       
       },
       error => {
         console.error('Error loading branches:', error);
@@ -215,20 +217,21 @@ export class CollectiveofficersEditComponent {
   }
 
 
+
   matchExistingBankToDropdown() {
     // Only proceed if both banks and branches are loaded and we have existing data
-    if (this.banks.length > 0 && Object.keys(this.allBranches).length > 0 && 
-        this.personalData && this.personalData.bankName) {
-          console.log('hit 01',this.personalData.bankName);
-      
+    if (this.banks.length > 0 && Object.keys(this.allBranches).length > 0 &&
+      this.personalData && this.personalData.bankName) {
+      console.log('hit 01', this.personalData.bankName);
+
       // Find the bank ID that matches the existing bank name
       const matchedBank = this.banks.find(bank => bank.name === this.personalData.bankName);
-      
+
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         // Load branches for this bank
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        
+
         // If we also have a branch name, try to match it
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(branch => branch.name === this.personalData.branchName);
@@ -246,13 +249,13 @@ export class CollectiveofficersEditComponent {
     if (this.selectedBankId) {
       // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      
+
       // Update company data with bank name
       const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
-      
+
       // Reset branch selection if the current selection doesn't belong to this bank
       const currentBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
       if (!currentBranch) {
@@ -354,10 +357,6 @@ export class CollectiveofficersEditComponent {
 
 
   EpmloyeIdCreate() {
-
-
-
-
     // this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
@@ -447,6 +446,20 @@ export class CollectiveofficersEditComponent {
 
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    if (!this.personalData.firstNameEnglish ||
+      !this.personalData.firstNameSinhala ||
+      !this.personalData.firstNameTamil ||
+      !this.personalData.lastNameEnglish ||
+      !this.personalData.lastNameSinhala ||
+      !this.personalData.lastNameTamil ||
+      !this.personalData.phoneNumber01 ||
+      !this.personalData.nic ||
+      !this.personalData.email ||
+      !this.personalData.jobRole ||
+      !this.personalData.empType
+    ) {
+      return;
+    }
     this.selectedPage = page;
   }
 
@@ -475,11 +488,9 @@ export class CollectiveofficersEditComponent {
   }
 
 
-  nextForm(page: 'pageOne' | 'pageTwo') {
-
-
-    this.selectedPage = page;
-  }
+  // nextForm(page: 'pageOne' | 'pageTwo') {
+  //   this.selectedPage = page;
+  // }
 
   getAllCollectionCetnter() {
     this.collectionCenterSrv.getAllCollectionCenter().subscribe(
@@ -500,20 +511,22 @@ export class CollectiveofficersEditComponent {
 
 
 
+  isLanguageRequired = false; // Flag for validation
+
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
-      // Add the language to the selectedLanguages array
       if (!this.selectedLanguages.includes(language)) {
         this.selectedLanguages.push(language);
       }
     } else {
-      // Remove the language from the selectedLanguages array
-      this.selectedLanguages = this.selectedLanguages.filter(
-        (lang) => lang !== language
-      );
+      this.selectedLanguages = this.selectedLanguages.filter(lang => lang !== language);
     }
+
+    // Validation Check: If no languages are selected, show the error
+    this.isLanguageRequired = this.selectedLanguages.length === 0;
+
     console.log('Selected Languages:', this.selectedLanguages);
   }
 
@@ -523,6 +536,20 @@ export class CollectiveofficersEditComponent {
 
 
   onSubmit() {
+    if (
+      !this.personalData.houseNumber ||
+      !this.personalData.streetName ||
+      !this.personalData.city ||
+      !this.personalData.province ||
+      !this.personalData.district ||
+      !this.personalData.accHolderName ||
+      !this.personalData.accNumber ||
+      !this.personalData.bankName ||
+      !this.personalData.branchName
+
+    ) { return; }
+
+
     this.isLoading = true;
     console.log(this.personalData); // Logs the personal data with updated languages
     console.log('hii', this.personalData.empType);
@@ -534,13 +561,12 @@ export class CollectiveofficersEditComponent {
       text: 'Do you want to create the collection officer?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
+      confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'No, cancel',
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        // Proceed with submission if user clicks 'Yes'
         this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
           (res: any) => {
 
@@ -561,7 +587,7 @@ export class CollectiveofficersEditComponent {
       }
     });
   }
-  
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

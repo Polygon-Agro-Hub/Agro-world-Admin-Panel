@@ -13,6 +13,7 @@ import { PlantcareUsersRowComponent } from '../plantcare-users-row/plantcare-use
 import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.component';
 
 
+
 @Component({
   selector: 'app-dashboard-main',
   standalone: true,
@@ -21,6 +22,7 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
   styleUrl: './dashboard-main.component.css'
 })
 export class DashboardMainComponent implements OnInit {
+  
   firstRow: any = {};
   constructor(
     private router: Router,
@@ -45,7 +47,11 @@ export class DashboardMainComponent implements OnInit {
     );
   }
 
+  
 }
+
+
+
 
 
 

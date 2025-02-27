@@ -1,26 +1,28 @@
-<div class="p-4">
+<div class="p-4" >
   <div class="flex justify-end mb-4">
-    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm">
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" >
       Export Report
     </button>
   </div>
 
   <!-- First row -->
-  <app-admin-row [firstRow]="firstRow"></app-admin-row>
+  <div>
+    <app-admin-row [firstRow]="firstRow"></app-admin-row>
 
   <div class="h-4"></div>
-  <!-- second row -->
-
+  <!-- Second row -->
   <app-plantcare-users-row></app-plantcare-users-row>
 
   <div class="h-4"></div>
-  <!-- third row -->
-
+  <!-- Third row -->
   <app-collection-officer-users-row></app-collection-officer-users-row>
-  
 
+  <div class="h-4"></div>
   <!-- Fourth row -->
   <app-sales-agents-row></app-sales-agents-row>
+  </div>
+</div>
+
 
   
   

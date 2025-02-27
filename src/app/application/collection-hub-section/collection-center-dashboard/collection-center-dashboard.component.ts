@@ -3,11 +3,12 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-collection-center-dashboard',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './collection-center-dashboard.component.html',
   styleUrl: './collection-center-dashboard.component.css',
 })
@@ -22,6 +23,7 @@ export class CollectionCenterDashboardComponent {
   transAmount: number = 0.0;
   totExpences: number = 0.0;
   expencePrecentage: number = -22.0;
+  isLoading = false;
 
   constructor(
     private router: Router,
@@ -36,8 +38,10 @@ export class CollectionCenterDashboardComponent {
   }
 
   fetchCenterDashbordDetails() {
+    this.isLoading = true;
     this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
       console.log(res);
+      this.isLoading = false;
       
       this.centerNameObj = res.officerCount;
       this.transCount = res.transCount.transactionCount;
@@ -45,6 +49,7 @@ export class CollectionCenterDashboardComponent {
       this.resentCollectionArr = res.limitedResentCollection;
       this.totExpences = res.totExpences.totExpences;
       this.expencePrecentage = res.difExpences;
+      this.isLoading = false;
     });
   }
 

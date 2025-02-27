@@ -1,3 +1,7 @@
+<div *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
 <button
   onclick="window.location.href='/admin/steckholders/action/collective-officer'"
   (click)="navigatePath('/steckholders/action/collective-officer')"

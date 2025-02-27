@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface Bank {
   ID: number;
@@ -25,7 +26,7 @@ interface BranchesData {
 @Component({
   selector: 'app-collectiveofficers-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './collectiveofficers-edit.component.html',
   styleUrl: './collectiveofficers-edit.component.css'
 })
@@ -35,7 +36,7 @@ export class CollectiveofficersEditComponent {
   selectedFile: File | null = null;
   selectedFileName!: string
   selectedImage: string | ArrayBuffer | null = null;
-  isLoading = false;
+  isLoading = true;
   selectedLanguages: string[] = [];
   selectJobRole!: string
   personalData: Personal = new Personal();
@@ -111,6 +112,7 @@ export class CollectiveofficersEditComponent {
 
     if (this.itemId) {
       this.isLoading = true;
+      console.log('isLoading became true');
 
       this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
         next: (response: any) => {
@@ -169,6 +171,8 @@ export class CollectiveofficersEditComponent {
 
           
           this.isLoading = false;
+          console.log('isloading became false');
+          console.log(this.comId, this.cenId);
           
         },
         error: (error) => {
@@ -396,7 +400,7 @@ export class CollectiveofficersEditComponent {
 
 
   getAllCollectionManagers() {
-    console.log('Company ID:', this.comId);
+    console.log('Company ID:', this.comId, this.cenId);
     this.collectionCenterSrv.getAllManagerList(this.comId, this.cenId).subscribe(
       (res) => {
         this.collectionManagerData = res
@@ -519,10 +523,12 @@ export class CollectiveofficersEditComponent {
 
 
   onSubmit() {
+    this.isLoading = true;
     console.log(this.personalData); // Logs the personal data with updated languages
     console.log('hii', this.personalData.empType);
 
     // Show a confirmation dialog before proceeding
+    this.isLoading = false;
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to create the collection officer?',
@@ -533,26 +539,29 @@ export class CollectiveofficersEditComponent {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         // Proceed with submission if user clicks 'Yes'
         this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
           (res: any) => {
 
-
+            this.isLoading = false;
             Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
             this.navigatePath('/steckholders/action/collective-officer');
           },
           (error: any) => {
+            this.isLoading = false;
             this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
             Swal.fire('Error', this.errorMessage, 'error');
           }
         );
       } else {
+        this.isLoading = false;
         // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
   }
-
+  
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

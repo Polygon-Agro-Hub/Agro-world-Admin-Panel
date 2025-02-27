@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -16,7 +16,9 @@ import { StakeholderService } from '../../../../services/stakeholder/stakeholder
   templateUrl: './admin-row.component.html',
   styleUrl: './admin-row.component.css'
 })
-export class AdminRowComponent implements OnInit{
+export class AdminRowComponent implements OnChanges {
+
+  @Input() firstRow: any = {}
 
   associateAdmins!: number;
   executiveAdmins!: number;
@@ -25,46 +27,25 @@ export class AdminRowComponent implements OnInit{
   newAdminUsers!: number;
   allAdminUsers!: number;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private stakeholderSrv: StakeholderService
-    
-    
-  ) { }
-
-  ngOnInit(): void {
-
-    this.fetchAdminUserData();
-    
-
+  ngOnChanges(): void {
+    // console.log("Row ---> ", this.firstRow);
+    this.fetchAdminUserData(this.firstRow)
   }
 
-  fetchAdminUserData() {
+  fetchAdminUserData(data: any) {
 
+    console.log('Admin->', data);
+    this.associateAdmins = data.adminUsersByPosition.Associate.adminUserCount ?? 0;
+    this.executiveAdmins = data.adminUsersByPosition.Executive.adminUserCount ?? 0;
+    this.managerAdmins = data.adminUsersByPosition.Manager.adminUserCount ?? 0;
+    this.officerAdmins = data.adminUsersByPosition.Manager.adminUserCount ?? 0;
+    // this.adminUsersByPosition = data.adminUsersByPosition;
+    this.newAdminUsers = data.todayAdmin.todayCount ?? 0;
+    this.allAdminUsers = this.totCount(this.associateAdmins, this.executiveAdmins, this.managerAdmins, this.officerAdmins);
+  }
 
-    console.log("fetching started");
-    // this.isLoading = true;
-    this.stakeholderSrv.getAdminUserData().subscribe(
-      
-      (res) => {
-        console.log('dtgsgdgdg',res);
-        this.associateAdmins = res.adminUsersByPosition[0]?.adminUserCount ?? 0;
-        this.executiveAdmins = res.adminUsersByPosition[1]?.adminUserCount ?? 0;
-        this.managerAdmins = res.adminUsersByPosition[2]?.adminUserCount ?? 0;
-        this.officerAdmins = res.adminUsersByPosition[3]?.adminUserCount ?? 0;
-        // this.adminUsersByPosition = res.adminUsersByPosition;
-        this.newAdminUsers = res.newAdminUsers[0]?.TotalAdminUserCount ?? 0;
-        this.allAdminUsers = res.allAdminUsers[0]?.TotalAdminUserCount ?? 0;
-
-
-      },
-      (error) => {
-        console.log("Error: ", error);
-        // this.isLoading = false;
-      }
-    );
+  totCount(x1: number, x2: number, x3: number, x4: number): number {
+    return (x1 + x2 + x3 + x4)
   }
 
 }

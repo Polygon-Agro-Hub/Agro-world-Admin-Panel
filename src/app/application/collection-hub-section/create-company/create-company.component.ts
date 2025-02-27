@@ -268,7 +268,7 @@ export class CreateCompanyComponent {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
-      this.isLoading = true;
+      
       const missingFields: string[] = [];
 
       if (!this.companyData.regNumber)
@@ -286,7 +286,7 @@ export class CreateCompanyComponent {
       // if (!this.companyData.oicConNum1) missingFields.push('Phone Number 02');
 
       if (missingFields.length > 0) {
-        this.isLoading =false;
+       
         Swal.fire({
           icon: 'error',
           title: 'Please fill all fields',

@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { TokenService } from '../../../../services/token/services/token.service'
-import { environment } from '../../../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { AdminRowComponent } from '../admin-row/admin-row.component';
@@ -22,8 +18,12 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
 })
 export class DashboardMainComponent implements OnInit {
   firstRow: any = {};
+  secondRow: any = {};
+  thirdRow: any = {};
+  fourthRow: any = {};
+
+
   constructor(
-    private router: Router,
     private stakeholderSrv: StakeholderService
   ) { }
 
@@ -37,7 +37,12 @@ export class DashboardMainComponent implements OnInit {
     this.stakeholderSrv.getAdminUserData().subscribe(
       (res) => {
         console.log('Admin ->', res);
-        this.firstRow = res.firstRow
+        this.firstRow = res.firstRow;
+        this.secondRow = res.secondRow;
+        this.thirdRow = res.thirdRow;
+        this.fourthRow = res.fourthRow;
+        // console.log("---------------",this.secondRow);
+
       },
       (error) => {
         console.log("Error: ", error);

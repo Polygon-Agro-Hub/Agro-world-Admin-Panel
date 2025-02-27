@@ -1,12 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { TokenService } from '../../../../services/token/services/token.service'
-import { environment } from '../../../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 
 @Component({
   selector: 'app-collection-officer-users-row',
@@ -15,7 +9,8 @@ import { StakeholderService } from '../../../../services/stakeholder/stakeholder
   templateUrl: './collection-officer-users-row.component.html',
   styleUrl: './collection-officer-users-row.component.css'
 })
-export class CollectionOfficerUsersRowComponent implements OnInit {
+export class CollectionOfficerUsersRowComponent implements OnChanges {
+  @Input() thirdRow: any = {};
 
   centerHeadOfficers!: number;
   centerManagers!: number;
@@ -25,46 +20,24 @@ export class CollectionOfficerUsersRowComponent implements OnInit {
   allOfficers!: number;
   activeOfficers!: number;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private stakeholderSrv: StakeholderService
-    
-    
-  ) { }
-
-  ngOnInit(): void {
-
-    this.fetchCollectionOfficerData();
-
+  ngOnChanges(): void {
+    this.fetchCollectionOfficerData(this.thirdRow);
   }
 
-  fetchCollectionOfficerData() {
+  fetchCollectionOfficerData(data: any) {
+    console.log('Third Row -> ', data);
+    this.centerHeadOfficers = data.jobRoleOfficerCount.CCH.officerCount ?? 0;
+    this.centerManagers = data.jobRoleOfficerCount.CCM.officerCount ?? 0;
+    this.collectionOfficers = data.jobRoleOfficerCount.COO.officerCount ?? 0;
+    this.customerOfficers = data.jobRoleOfficerCount.CUO.officerCount ?? 0;
+    this.newOfficers = data.newOfficerCount ?? 0;
+    this.allOfficers = this.totCount(this.centerHeadOfficers, this.centerManagers, this.collectionOfficers, this.customerOfficers);
+    this.activeOfficers = data.activeOfficers ?? 0;
+  }
 
 
-    console.log("fetching started");
-    // this.isLoading = true;
-    this.stakeholderSrv.getCollectionOfficerData().subscribe(
-      
-      (res) => {
-        console.log('dtgsgdgdg',res);
-        this.centerHeadOfficers = res.collectionOfficersByPosition[0]?.officerCount ?? 0;
-        this.centerManagers = res.collectionOfficersByPosition[1]?.officerCount ?? 0;
-        this.collectionOfficers = res.collectionOfficersByPosition[2]?.officerCount ?? 0;
-        this.customerOfficers = res.collectionOfficersByPosition[3]?.officerCount ?? 0;
-        // this.adminUsersByPosition = res.adminUsersByPosition;
-        this.newOfficers = res.newCollectionOfficers[0]?.newOfficerCount ?? 0;
-        this.allOfficers = res.allCollectionOfficers[0]?.totalOfficerCount ?? 0;
-        this.activeOfficers = res.activeCollectionOfficers[0]?.activeOfficerCount ?? 0;
-
-        
-      },
-      (error) => {
-        console.log("Error: ", error);
-        // this.isLoading = false;
-      }
-    );
+  totCount(x1: number, x2: number, x3: number, x4: number): number {
+    return (x1 + x2 + x3 + x4)
   }
 
 }

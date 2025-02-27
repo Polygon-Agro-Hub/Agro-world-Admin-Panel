@@ -1,11 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { TokenService } from '../../../../services/token/services/token.service';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // Import plugin
 
@@ -16,51 +11,38 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'; // Import plugin
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.css'
 })
-export class BarChartComponent implements OnInit {
+export class BarChartComponent implements OnChanges {
+  @Input() QRfarmers: any;
+
   plantCareUsersWithOutQr!: number;
   plantCareUsersWithQr!: number;
   chart: any;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private stakeholderSrv: StakeholderService
-  ) {
+  constructor() {
     Chart.register(...registerables, ChartDataLabels); // Register plugin
   }
-
-  ngOnInit(): void {
-    this.fetchPlantCareUserData();
+  ngOnChanges(): void {
+    this.fetchPlantCareUserData(this.QRfarmers);
   }
 
-  fetchPlantCareUserData(): void {
-    this.stakeholderSrv.getPlantCareUserData().subscribe(
-      (res) => {
-        console.log('API Response:', res);
 
-        // Get values
-        const withQr = res.plantCareUserByQrRegistration[0]?.user_count ?? 0;
-        const withoutQr = res.plantCareUserByQrRegistration[1]?.user_count ?? 0;
-        const total = withQr + withoutQr;
+  fetchPlantCareUserData(data: any) {
+    const withQr = data.QrCode.count ?? 0;
+    const withoutQr = data.notQrCode.count ?? 0;
+    const total = withQr + withoutQr;
 
-        // Calculate percentages
-        this.plantCareUsersWithQr = total > 0 ? Math.round((withQr / total) * 100) : 0;
-        this.plantCareUsersWithOutQr = total > 0 ? Math.round((withoutQr / total) * 100) : 0;
+    this.plantCareUsersWithQr = total > 0 ? Math.round((withQr / total) * 100) : 0;
+    this.plantCareUsersWithOutQr = total > 0 ? Math.round((withoutQr / total) * 100) : 0;
 
-        this.createChart();
-      },
-      (error) => {
-        console.error('Error fetching data:', error);
-      }
-    );
+    this.createChart();
+
   }
 
   createChart(): void {
     if (this.chart) {
       this.chart.destroy();
     }
-  
+
     const ctx = document.getElementById('barChart') as HTMLCanvasElement;
     this.chart = new Chart(ctx, {
       type: 'bar',
@@ -130,5 +112,5 @@ export class BarChartComponent implements OnInit {
       }
     });
   }
-  
+
 }

@@ -368,6 +368,7 @@
         <button
           type="button"
           (click)="saveCompanyData()"
+          [disabled]="!companyData.confirmAccNumber || !companyData.accNumber || !companyData.accHolderName || !companyData.bankName || !companyData.branchName || !companyData.foName || companyData.accNumber != companyData.confirmAccNumber"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Submit
@@ -748,6 +749,7 @@
         <button
           type="button"
           (click)="updateCompanyData()"
+          [disabled]="!companyData.confirmAccNumber || !companyData.accNumber || !companyData.accHolderName || !companyData.bankName || !companyData.branchName || companyData.accNumber != companyData.confirmAccNumber"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Save

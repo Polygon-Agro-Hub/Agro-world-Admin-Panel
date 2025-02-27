@@ -820,6 +820,7 @@
         <button
           type="submit"
           (click)="onSubmit()"
+          [disabled]="!personalData.accNumber || !personalData.accHolderName"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Submit

@@ -282,6 +282,8 @@ export class CreateCompanyComponent {
         missingFields.push('Company Name (Sinhala)');
       if (!this.companyData.companyNameTamil)
         missingFields.push('Company Name (Tamil)');
+      
+      
       if (!this.companyData.email) missingFields.push('Company Email');
       // if (!this.companyData.oicName) missingFields.push('Officer In Charge Name');
       // if (!this.companyData.oicEmail) missingFields.push('Officer In Charge Email');

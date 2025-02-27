@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import {
   HttpClient,
   HttpClientModule,
@@ -21,6 +22,7 @@ import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface Admin {
   id: number;
@@ -33,7 +35,7 @@ interface Admin {
 @Component({
   selector: 'app-create-admin-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule, LoadingSpinnerComponent],
   templateUrl: './edit-admin-me-user.component.html',
   styleUrls: ['./edit-admin-me-user.component.css'], // Changed from styleUrl to styleUrls
 })
@@ -46,6 +48,7 @@ export class EditAdminMeUserComponent implements OnInit {
   showPassword2: boolean = false;
   showPassword3: boolean = false;
   isPopupVisible = false;
+  isLoading = false;
 
   storedCurrentPassword: string | null = null; // This will hold the current password fetched from the backend
   errorMessage: string = ''; // This will hold any error messages
@@ -151,6 +154,7 @@ export class EditAdminMeUserComponent implements OnInit {
       console.error('No token found');
       return;
     }
+    this.isLoading = true;
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -168,9 +172,11 @@ export class EditAdminMeUserComponent implements OnInit {
             'getAdminById data values in data',
             this.userForm.value.id
           );
+          this.isLoading =false;
         },
         (error) => {
           console.error('Error fetching admin data:', error);
+          this.isLoading = false;
           if (error.status === 401) {
           }
         }

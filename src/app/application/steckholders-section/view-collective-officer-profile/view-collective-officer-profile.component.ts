@@ -8,11 +8,15 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
-
 @Component({
   selector: 'app-view-collective-officer-profile',
   standalone: true,
-  imports: [CommonModule, HttpClientModule,FormsModule,LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-collective-officer-profile.component.html',
   styleUrl: './view-collective-officer-profile.component.css',
 })
@@ -22,22 +26,31 @@ export class ViewCollectiveOfficerProfileComponent {
 
   isLoading = false;
 
-  constructor(private route: ActivatedRoute,private collectionService:CollectionService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private collectionService: CollectionService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.officerId = this.route.snapshot.params['id'];
     this.fetchOfficerById(this.officerId);
   }
 
-  fetchOfficerById(id: number){
+  fetchOfficerById(id: number) {
     this.isLoading = true;
-    this.collectionService.fetchAllCollectionOfficerProfile(id).subscribe((res: any)=>{
-      this.isLoading = false;
-      this.officerObj = res.officerData.collectionOfficer;
-      console.log(this.officerObj);
-    })
+    this.collectionService
+      .fetchAllCollectionOfficerProfile(id)
+      .subscribe((res: any) => {
+        this.isLoading = false;
+        this.officerObj = res.officerData.collectionOfficer;
+        console.log(this.officerObj);
+      });
   }
-  
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
 }
 
 class CollectionOfficer {
@@ -65,5 +78,4 @@ class CollectionOfficer {
   branchName!: string;
   companyNameEnglish!: string;
   centerName!: string;
-
 }

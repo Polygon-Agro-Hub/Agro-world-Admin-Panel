@@ -53,8 +53,11 @@ export class CreateCompanyComponent {
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
   isLoading = false;
+  confirmAccountNumberError: boolean = false;
+  confirmAccountNumberRequired: boolean = false;
   
   invalidFields: Set<string> = new Set();
+
   
 
   constructor(
@@ -268,7 +271,7 @@ export class CreateCompanyComponent {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
-      this.isLoading = true;
+      
       const missingFields: string[] = [];
 
       if (!this.companyData.regNumber)
@@ -279,6 +282,8 @@ export class CreateCompanyComponent {
         missingFields.push('Company Name (Sinhala)');
       if (!this.companyData.companyNameTamil)
         missingFields.push('Company Name (Tamil)');
+      
+      
       if (!this.companyData.email) missingFields.push('Company Email');
       // if (!this.companyData.oicName) missingFields.push('Officer In Charge Name');
       // if (!this.companyData.oicEmail) missingFields.push('Officer In Charge Email');
@@ -286,7 +291,7 @@ export class CreateCompanyComponent {
       // if (!this.companyData.oicConNum1) missingFields.push('Phone Number 02');
 
       if (missingFields.length > 0) {
-        this.isLoading =false;
+       
         Swal.fire({
           icon: 'error',
           title: 'Please fill all fields',
@@ -327,10 +332,28 @@ export class CreateCompanyComponent {
 
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
+  
+    
+    if (fieldName === 'confirmAccNumber') {
+      this.validateConfirmAccNumber();
+    }
   }
-
+  
   isFieldInvalid(fieldName: keyof Company): boolean {
     return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
+  }
+  
+  
+  validateConfirmAccNumber(): void {
+   
+    this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
+  
+    // Check if account numbers match
+    if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
+      this.confirmAccountNumberError = this.companyData.accNumber !== this.companyData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
   }
 
   isValidEmail(email: string): boolean {
@@ -359,6 +382,7 @@ class Company {
   oicConNum2!: string;
   accHolderName!: string;
   accNumber!: string;
+  confirmAccNumber!: string;
   bankName!: string;
   branchName!: string;
   foName!: string;

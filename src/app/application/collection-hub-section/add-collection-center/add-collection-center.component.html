@@ -11,8 +11,8 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
       <!-- Registration Code -->
-      
-      
+
+
 
       <!-- Collection Center Name -->
       <div>
@@ -38,46 +38,29 @@
 
       <div class="relative">
         <!-- Input Field -->
-        <label
-          for="centerId"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >
+        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Company Name
         </label>
-        <input
-          type="text"
-          [value]="selectedCompaniesNames.join(', ')"
-          readonly
+        <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
           class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          placeholder="Select companies"
-          (click)="toggleDropdown()"
-        />
-      
+          placeholder="Select companies" (click)="toggleDropdown()" />
+
         <!-- Dropdown -->
-        <div
-          *ngIf="dropdownOpen"
-          class="absolute top-0 left-0 w-full mt-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
-          style="transform: translateY(100%); position: absolute;"
-        >
-          <div
-            *ngFor="let company of CompanyData"
-            class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-            (click)="toggleSelection(company)"
-          >
-            <input
-              type="checkbox"
-              [checked]="selectedCompaniesIds.includes(company.id)"
-              class="mr-2"
-            />
+        <div *ngIf="dropdownOpen"
+          class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
+          style="top: 100%; position: absolute;">
+          <div *ngFor="let company of CompanyData" class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+            (click)="toggleSelection(company)">
+            <input type="checkbox" [checked]="selectedCompaniesIds.includes(company.id)" class="mr-2" />
             {{ company.companyNameEnglish }}
           </div>
         </div>
       </div>
-      
-      
-      
-      
-      
+
+
+
+
+
 
 
       <!-- Contact Number 01 -->
@@ -153,16 +136,16 @@
           class="text-red-500 text-sm mt-1">
           Street is required
         </div>
-       
+
       </div>
 
       <div>
         <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
-        <input formControlName="city" id="city" name="city" (input)="onCityChange()" 
+        <input formControlName="city" id="city" name="city" (input)="onCityChange()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="collectionCenterForm.get('city')?.invalid && 
-            (collectionCenterForm.get('city')?.dirty || collectionCenterForm.get('city')?.touched)" 
-            class="text-red-500 text-sm mt-1">
+            (collectionCenterForm.get('city')?.dirty || collectionCenterForm.get('city')?.touched)"
+          class="text-red-500 text-sm mt-1">
           City is required
         </div>
       </div>
@@ -184,9 +167,9 @@
       </div>
 
 
-      
 
-      
+
+
 
       <!-- District -->
       <div>
@@ -223,12 +206,12 @@
 
 
 
-      
+
 
       <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
         <input formControlName="regCode" id="regCode" name="regCode"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [readonly]="true" />
       </div>
 

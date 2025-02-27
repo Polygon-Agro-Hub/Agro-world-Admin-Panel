@@ -1,4 +1,8 @@
+
 <!-- Main Container when itemId is null -->
+<div *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
 <div>
   <button
    (click)="back()"

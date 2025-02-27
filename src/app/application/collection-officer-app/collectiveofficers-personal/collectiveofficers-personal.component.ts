@@ -71,6 +71,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
+
+  confirmAccountNumberError: boolean = false;
+  confirmAccountNumberRequired: boolean = false;
   
   invalidFields: Set<string> = new Set();
 
@@ -462,7 +465,35 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
+  
+    
+    if (fieldName === 'confirmAccNumber') {
+      this.validateConfirmAccNumber();
+    }
   }
+  
+  // isFieldInvalid(fieldName: keyof Company): boolean {
+  //   return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
+  // }
+  
+  
+  validateConfirmAccNumber(): void {
+   
+    this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
+  
+    // Check if account numbers match
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError = this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
+
+
+  // onBlur(fieldName: keyof Personal): void {
+  //   this.touchedFields[fieldName] = true;
+  // }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
@@ -533,6 +564,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     const {
       accHolderName,
       accNumber,
+      confirmAccNumber,
       bankName,
       branchName,
       houseNumber,
@@ -547,7 +579,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
     if (companyId === '1') {
       const isBankDetailsValid =
-        !!accHolderName && !!accNumber && !!bankName && !!branchName;
+        !!accHolderName && !!accNumber && !!bankName && !!branchName && !! confirmAccNumber && accNumber === confirmAccNumber;
       return isBankDetailsValid && isAddressValid;
     } else {
       return isAddressValid;
@@ -591,6 +623,7 @@ class Personal {
   image!: any;
   accHolderName!: any;
   accNumber!: any;
+  confirmAccNumber!: any;
   bankName!: string;
   branchName!: string;
 }

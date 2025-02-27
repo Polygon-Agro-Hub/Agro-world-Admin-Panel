@@ -53,8 +53,11 @@ export class CreateCompanyComponent {
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
   isLoading = false;
+  confirmAccountNumberError: boolean = false;
+  confirmAccountNumberRequired: boolean = false;
   
   invalidFields: Set<string> = new Set();
+
   
 
   constructor(
@@ -327,10 +330,28 @@ export class CreateCompanyComponent {
 
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
+  
+    
+    if (fieldName === 'confirmAccNumber') {
+      this.validateConfirmAccNumber();
+    }
   }
-
+  
   isFieldInvalid(fieldName: keyof Company): boolean {
     return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
+  }
+  
+  
+  validateConfirmAccNumber(): void {
+   
+    this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
+  
+    // Check if account numbers match
+    if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
+      this.confirmAccountNumberError = this.companyData.accNumber !== this.companyData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
   }
 
   isValidEmail(email: string): boolean {
@@ -359,6 +380,7 @@ class Company {
   oicConNum2!: string;
   accHolderName!: string;
   accNumber!: string;
+  confirmAccNumber!: string;
   bankName!: string;
   branchName!: string;
   foName!: string;

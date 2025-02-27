@@ -262,11 +262,9 @@
         </div>
 
         <div class="pb-6">
-          <label
-            for="accNumber"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Account Number</label
-          >
+          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Account Number
+          </label>
           <input
             id="accNumber"
             name="accNumber"
@@ -274,24 +272,34 @@
             (blur)="onBlur('accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm"
-            >Account Number is required.</span
-          >
+          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+            Account Number is required.
+          </span>
         </div>
-
+        
         <div class="pb-6">
-          <label
-            for="companyNameSinhala"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Confirm Account Number</label
-          >
+          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Confirm Account Number
+          </label>
           <input
-            id="companyNameSinhala"
-            name="companyNameSinhala"
+            id="confirmAccNumber"
+            name="confirmAccNumber"
+            [(ngModel)]="companyData.confirmAccNumber"
+            (blur)="onBlur('confirmAccNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <!-- <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span> -->
+          
+          <!-- Required validation message -->
+          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+            Confirm Account Number is required.
+          </span>
+        
+          <!-- Mismatch validation message -->
+          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+            Account Numbers do not match.
+          </span>
         </div>
+        
 
         <div class="pb-6">
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">

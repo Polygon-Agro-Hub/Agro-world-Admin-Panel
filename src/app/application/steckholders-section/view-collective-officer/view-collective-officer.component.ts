@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
-import { DropdownModule } from 'primeng/dropdown';
+import { Component } from "@angular/core";
+import { NgxPaginationModule } from "ngx-pagination";
+import { CommonModule } from "@angular/common";
+import Swal from "sweetalert2";
+import { DropdownModule } from "primeng/dropdown";
 import {
   HttpClientModule,
   HttpClient,
@@ -31,7 +31,7 @@ interface CollectionOfficers {
 }
 
 @Component({
-  selector: 'app-view-collective-officer',
+  selector: "app-view-collective-officer",
   standalone: true,
   imports: [
     CommonModule,
@@ -41,18 +41,18 @@ interface CollectionOfficers {
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: './view-collective-officer.component.html',
-  styleUrls: ['./view-collective-officer.component.css'],
+  templateUrl: "./view-collective-officer.component.html",
+  styleUrls: ["./view-collective-officer.component.css"],
 })
 export class ViewCollectiveOfficerComponent {
   collectionOfficers: CollectionOfficers[] = [];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  searchNIC: string = '';
+  searchNIC: string = "";
   isPopupVisible = false;
   status!: Company[];
-  statusFilter: any = '';
+  statusFilter: any = "";
 
   companyArr: Company[] = [];
   isLoading = false;
@@ -66,7 +66,7 @@ export class ViewCollectiveOfficerComponent {
 
   fetchAllCollectionOfficer(
     page: number = 1,
-    limit: number = this.itemsPerPage
+    limit: number = this.itemsPerPage,
   ) {
     this.isLoading = true;
     this.collectionService
@@ -74,7 +74,7 @@ export class ViewCollectiveOfficerComponent {
         page,
         limit,
         this.searchNIC,
-        this.statusFilter?.id
+        this.statusFilter?.id,
       )
       .subscribe(
         (response) => {
@@ -86,11 +86,11 @@ export class ViewCollectiveOfficerComponent {
           console.log(this.collectionOfficers);
         },
         (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
+          console.error("Error fetching ongoing cultivations:", error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
           }
-        }
+        },
       );
   }
 
@@ -111,19 +111,19 @@ export class ViewCollectiveOfficerComponent {
   deleteCollectionOfficer(id: number) {
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
   
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "Do you really want to delete this Collection Officer? This action cannot be undone.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true; // Start loading before making the request
@@ -133,11 +133,11 @@ export class ViewCollectiveOfficerComponent {
             this.isLoading = false; // Stop loading after the response
   
             if (data.status) {
-              console.log('Collection Officer deleted successfully');
+              console.log("Collection Officer deleted successfully");
               Swal.fire(
-                'Deleted!',
-                'The Collection Officer has been deleted.',
-                'success'
+                "Deleted!",
+                "The Collection Officer has been deleted.",
+                "success",
               );
               this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
             } else {
@@ -156,7 +156,7 @@ export class ViewCollectiveOfficerComponent {
               'There was an error deleting the Collection Officer.',
               'error'
             );
-          }
+          },
         );
       }
     });
@@ -188,31 +188,31 @@ export class ViewCollectiveOfficerComponent {
     Swal.fire({
       html: tableHtml,
       showConfirmButton: false, // Hide default confirm button
-      width: 'auto',
+      width: "auto",
       didOpen: () => {
         // Handle the "Approve" button click
         document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
+          .getElementById("approveButton")
+          ?.addEventListener("click", () => {
             this.isPopupVisible = false;
             this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+            this.collectionService.ChangeStatus(item.id, "Approved").subscribe(
               (res) => {
                 this.isLoading = false;
                 if (res.status) {
                   Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The collection was approved successfully.',
+                    icon: "success",
+                    title: "Success!",
+                    text: "The collection was approved successfully.",
                     showConfirmButton: false,
                     timer: 3000,
                   });
                   this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                 } else {
                   Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    icon: "error",
+                    title: "Error!",
+                    text: "Something went wrong. Please try again.",
                     showConfirmButton: false,
                     timer: 3000,
                   });
@@ -221,39 +221,39 @@ export class ViewCollectiveOfficerComponent {
               (err) => {
                 this.isLoading = false;
                 Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
+                  icon: "error",
+                  title: "Error!",
+                  text: "An error occurred while approving. Please try again.",
                   showConfirmButton: false,
                   timer: 3000,
                 });
-              }
+              },
             );
           });
 
         // Handle the "Reject" button click
         document
-          .getElementById('rejectButton')
-          ?.addEventListener('click', () => {
+          .getElementById("rejectButton")
+          ?.addEventListener("click", () => {
             this.isPopupVisible = false;
             this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+            this.collectionService.ChangeStatus(item.id, "Rejected").subscribe(
               (res) => {
                 this.isLoading = false;
                 if (res.status) {
                   Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The collection was rejected successfully.',
+                    icon: "success",
+                    title: "Success!",
+                    text: "The collection was rejected successfully.",
                     showConfirmButton: false,
                     timer: 3000,
                   });
                   this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                 } else {
                   Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    icon: "error",
+                    title: "Error!",
+                    text: "Something went wrong. Please try again.",
                     showConfirmButton: false,
                     timer: 3000,
                   });
@@ -262,13 +262,13 @@ export class ViewCollectiveOfficerComponent {
               (err) => {
                 this.isLoading = false;
                 Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while rejecting. Please try again.',
+                  icon: "error",
+                  title: "Error!",
+                  text: "An error occurred while rejecting. Please try again.",
                   showConfirmButton: false,
                   timer: 3000,
                 });
-              }
+              },
             );
           });
       },
@@ -278,16 +278,16 @@ export class ViewCollectiveOfficerComponent {
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;
     Swal.fire(
-      'Updated!',
+      "Updated!",
       `The Collection Officer status has been updated to ${newStatus}.`,
-      'success'
+      "success",
     );
     this.isPopupVisible = false;
   }
 
   getAllcompany() {
     this.collectionService.getCompanyNames().subscribe((res) => {
-      console.log('company:', res);
+      console.log("company:", res);
       this.companyArr = res;
     });
   }
@@ -299,7 +299,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   offSearch() {
-    this.searchNIC = '';
+    this.searchNIC = "";
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 

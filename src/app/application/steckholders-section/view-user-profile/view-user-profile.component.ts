@@ -1,18 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from "@angular/common";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Component, OnInit } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
   NgModel,
   ReactiveFormsModule,
-} from '@angular/forms';
-import { MatCommonModule } from '@angular/material/core';
-import { ActivatedRoute } from '@angular/router';
-import { PlantCareUser } from '../../../services/plant-care/plantcare-users.service';
-import { environment } from '../../../environment/environment';
-import { error } from 'console';
-import { TokenService } from '../../../services/token/services/token.service';
+} from "@angular/forms";
+import { MatCommonModule } from "@angular/material/core";
+import { ActivatedRoute } from "@angular/router";
+import { PlantCareUser } from "../../../services/plant-care/plantcare-users.service";
+import { environment } from "../../../environment/environment";
+import { error } from "console";
+import { TokenService } from "../../../services/token/services/token.service";
 
 interface UserDetails {
   id: number;
@@ -24,20 +24,20 @@ interface UserDetails {
   createdAt: string;
 }
 @Component({
-  selector: 'app-view-user-profile',
+  selector: "app-view-user-profile",
   standalone: true,
   imports: [MatCommonModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './view-user-profile.component.html',
-  styleUrl: './view-user-profile.component.css',
+  templateUrl: "./view-user-profile.component.html",
+  styleUrl: "./view-user-profile.component.css",
 })
 export class ViewUserProfileComponent implements OnInit {
-  imagePreview: string = '';
+  imagePreview: string = "";
   userId: number | null = null;
   userDetails: UserDetails[] = [];
-  firstName: string = '';
-  lastName: string = '';
-  phoneNumber: string = '';
-  NICnumber: string = '';
+  firstName: string = "";
+  lastName: string = "";
+  phoneNumber: string = "";
+  NICnumber: string = "";
 
   userForm!: FormGroup;
 
@@ -45,14 +45,13 @@ export class ViewUserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private tokenService: TokenService
-
+    private tokenService: TokenService,
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.userId = params['userId'] ? +params['userId'] : null;
-      console.log('Received item ID:', this.userId);
+      this.userId = params["userId"] ? +params["userId"] : null;
+      console.log("Received item ID:", this.userId);
     });
     if (this.userId) {
       this.loadUserData(this.userId);
@@ -61,7 +60,7 @@ export class ViewUserProfileComponent implements OnInit {
   loadUserData(id: number) {
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
     const headers = new HttpHeaders({
@@ -81,8 +80,8 @@ export class ViewUserProfileComponent implements OnInit {
           this.imagePreview = data.profileImage;
         },
         (error) => {
-          console.error('Error ferching user data', error);
-        }
+          console.error("Error ferching user data", error);
+        },
       );
   }
 }

@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { BarChartComponent } from '../bar-chart/bar-chart.component'
 
 @Component({
-  selector: 'app-plantcare-users-row',
+  selector: "app-plantcare-users-row",
   standalone: true,
   imports: [CommonModule, DropdownModule, BarChartComponent],
-  templateUrl: './plantcare-users-row.component.html',
-  styleUrl: './plantcare-users-row.component.css'
+  templateUrl: "./plantcare-users-row.component.html",
+  styleUrl: "./plantcare-users-row.component.css",
 })
 export class PlantcareUsersRowComponent implements OnChanges {
   @Input() secondRow: any = {}
@@ -37,5 +37,4 @@ export class PlantcareUsersRowComponent implements OnChanges {
   totCount(x1: number, x2: number): number {
     return (x1 + x2)
   }
-
 }

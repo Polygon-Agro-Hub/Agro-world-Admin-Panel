@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { TokenService } from '../token/services/token.service';
+import { Injectable } from "@angular/core";
+import { environment } from "../../environment/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { TokenService } from "../token/services/token.service";
 
 interface MarketPriceItem {
   id: number;
@@ -19,22 +19,30 @@ interface MarketPriceItem {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MarketPriceService {
   private apiUrl = `${environment.API_URL}`;
-  private token = this.tokenService.getToken();;
+  private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     });
   }
 
-  getAllMarketPrices(page: number, limit: number, statusFilter?: string, createdDateFilter?: string): Observable<{ items: MarketPriceItem[], total: number }> {
+  getAllMarketPrices(
+    page: number,
+    limit: number,
+    statusFilter?: string,
+    createdDateFilter?: string,
+  ): Observable<{ items: MarketPriceItem[]; total: number }> {
     let url = `${this.apiUrl}auth/get-all-market-price?page=${page}&limit=${limit}`;
 
     if (statusFilter) {
@@ -44,23 +52,29 @@ export class MarketPriceService {
       url += `&createdAt=${createdDateFilter}`;
     }
 
-    return this.http.get<{ items: MarketPriceItem[], total: number }>(url, { headers: this.getHeaders() });
+    return this.http.get<{ items: MarketPriceItem[]; total: number }>(url, {
+      headers: this.getHeaders(),
+    });
   }
 
   deleteMarketPrice(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}auth/delete-market-price/${id}`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.apiUrl}auth/delete-market-price/${id}`, {
+      headers: this.getHeaders(),
+    });
   }
 
   getMarketPriceById(id: number): Observable<MarketPriceItem> {
-    return this.http.get<MarketPriceItem>(`${this.apiUrl}auth/get-market-price-by-id/${id}`, { headers: this.getHeaders() });
+    return this.http.get<MarketPriceItem>(
+      `${this.apiUrl}auth/get-market-price-by-id/${id}`,
+      { headers: this.getHeaders() },
+    );
   }
 
   updateMarketPriceStatus(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}auth/edit-market-price-status/${id}`, {}, { headers: this.getHeaders() });
+    return this.http.post(
+      `${this.apiUrl}auth/edit-market-price-status/${id}`,
+      {},
+      { headers: this.getHeaders() },
+    );
   }
-
-  
 }
-
-
-

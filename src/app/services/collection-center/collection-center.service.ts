@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { TokenService } from '../token/services/token.service';
+import { Injectable } from "@angular/core";
+import { environment } from "../../environment/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { TokenService } from "../token/services/token.service";
 
 interface centerData {
   id: number;
@@ -17,17 +17,20 @@ interface centerData {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class CollectionCenterService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-all-center`, {
       headers,
@@ -38,12 +41,12 @@ export class CollectionCenterService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('DELETE ITEM', id);
+    console.log("DELETE ITEM", id);
     return this.http.delete(
       `${this.apiUrl}auth/delete-collection-center/${id}`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -52,20 +55,20 @@ export class CollectionCenterService {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
 
     const payload = {
       ...centerData,
       companies,
     };
-    console.log('hiii', payload);
+    console.log("hiii", payload);
     return this.http.post(
       `${this.apiUrl}auth/create-collection-center`,
       payload,
       {
         headers,
-      }
+      },
     );
     console.log(payload);
   }
@@ -75,11 +78,11 @@ export class CollectionCenterService {
     limit: number,
     status: String,
     category: String,
-    searchText: string
+    searchText: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
 
     let url = `${this.apiUrl}auth/get-all-complains?page=${page}&limit=${limit}`;
@@ -104,7 +107,7 @@ export class CollectionCenterService {
   getComplainById(id: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-complain-by-id/${id}`, {
       headers,
@@ -123,7 +126,7 @@ export class CollectionCenterService {
   getAllCollectionCenterPage(
     page: number,
     limit: number,
-    searchItem: string = ''
+    searchItem: string = "",
   ): Observable<any> {
     console.log(page, limit, searchItem);
 
@@ -142,7 +145,7 @@ export class CollectionCenterService {
   getCenterById(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-center-by-id/${id}`, {
       headers,
@@ -152,7 +155,7 @@ export class CollectionCenterService {
   updateColectionCenter(
     centerData: any,
     companies: any,
-    id: number
+    id: number,
   ): Observable<any> {
     console.log(centerData);
 
@@ -163,21 +166,21 @@ export class CollectionCenterService {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.patch(
       `${this.apiUrl}auth/update-center/${id}`,
       requestData,
       {
         headers,
-      }
+      },
     );
   }
 
   getForCreateId(role: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-last-emp-id/${role}`, {
       headers,
@@ -187,7 +190,7 @@ export class CollectionCenterService {
   getCollectionReportByOfficerId(
     fromDate: string,
     toDate: string,
-    officerId: number
+    officerId: number,
   ): Observable<any> {
     const params = {
       fromDate,
@@ -204,7 +207,7 @@ export class CollectionCenterService {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.post(`${this.apiUrl}auth/create-company`, companyData, {
       headers,
@@ -214,7 +217,7 @@ export class CollectionCenterService {
   getAllCompanyList(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-all-company-list`, {
       headers,
@@ -224,32 +227,32 @@ export class CollectionCenterService {
   getAllManagerList(companyId: any, centerId: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
-    console.log('This is company Id', companyId);
+    console.log("This is company Id", companyId);
     return this.http.get(
       `${this.apiUrl}auth/get-all-manager-list/${companyId}/${centerId}`,
       {
         headers,
-      }
+      },
     );
   }
 
   generateRegCode(
     province: string,
     district: string,
-    city: string
+    city: string,
   ): Observable<{ regCode: string }> {
     return this.http.post<{ regCode: string }>(
       `${this.apiUrl}auth/generate-regcode`,
-      { province, district, city }
+      { province, district, city },
     );
   }
 
   getAllCompanyDetails(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-all-company`, {
       headers,
@@ -261,21 +264,21 @@ export class CollectionCenterService {
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.patch(
       `${this.apiUrl}auth/update-company/${id}`,
       companyData,
       {
         headers,
-      }
+      },
     );
   }
 
   getCompanyById(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     });
     return this.http.get(`${this.apiUrl}auth/get-company-by-id/${id}`, {
       headers,
@@ -286,7 +289,7 @@ export class CollectionCenterService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('DELETE ITEM', id);
+    console.log("DELETE ITEM", id);
     return this.http.delete(`${this.apiUrl}auth/delete-company/${id}`, {
       headers,
     });
@@ -318,5 +321,4 @@ export class CollectionCenterService {
     let url = `${this.apiUrl}auth/create-daily-target`;
     return this.http.post<any>(url, data, { headers });
   }
-
 }

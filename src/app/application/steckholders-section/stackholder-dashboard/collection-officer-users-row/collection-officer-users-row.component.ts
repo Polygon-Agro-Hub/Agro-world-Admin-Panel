@@ -3,11 +3,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-collection-officer-users-row',
+  selector: "app-collection-officer-users-row",
   standalone: true,
   imports: [CommonModule, DropdownModule],
-  templateUrl: './collection-officer-users-row.component.html',
-  styleUrl: './collection-officer-users-row.component.css'
+  templateUrl: "./collection-officer-users-row.component.html",
+  styleUrl: "./collection-officer-users-row.component.css",
 })
 export class CollectionOfficerUsersRowComponent implements OnChanges {
   @Input() thirdRow: any = {};
@@ -39,5 +39,4 @@ export class CollectionOfficerUsersRowComponent implements OnChanges {
   totCount(x1: number, x2: number, x3: number, x4: number): number {
     return (x1 + x2 + x3 + x4)
   }
-
 }

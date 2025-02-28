@@ -1,5 +1,5 @@
-import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
 import {
   HttpClient,
   HttpClientModule,
@@ -30,7 +30,7 @@ interface PlantCareUser {
 }
 
 @Component({
-  selector: 'app-edit-plantcare-users',
+  selector: "app-edit-plantcare-users",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -104,7 +104,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     { districtName: 'Puttalam' },
     { districtName: 'Anuradhapura' },
     { districtName: 'Polonnaruwa' },
-    { districtName: 'Ratnapura' },
+    { districtName: 'Rathnapura' },
     { districtName: 'Kegalle' },
   ];
 
@@ -116,8 +116,8 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.itemId = params['id'] ? +params['id'] : null;
-      console.log('Received item ID:', this.itemId);
+      this.itemId = params["id"] ? +params["id"] : null;
+      console.log("Received item ID:", this.itemId);
     });
     this.loadUserData(this.itemId!);
   }
@@ -126,7 +126,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
+      console.error("No token found");
       return;
     }
 
@@ -136,6 +136,9 @@ export class EditPlantcareUsersComponent implements OnInit {
 
     this.isLoading = true;
     this.http
+      .get<PlantCareUser>(`${environment.API_URL}auth/get-user-by-id/${id}`, {
+        headers,
+      })
       .get<PlantCareUser>(`${environment.API_URL}auth/get-user-by-id/${id}`, {
         headers,
       })
@@ -168,7 +171,7 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
-      console.log('this is the form values.....', this.userForm.value);
+      console.log("this is the form values.....", this.userForm.value);
 
       if (this.selectedImage) {
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -182,6 +185,8 @@ export class EditPlantcareUsersComponent implements OnInit {
           return;
         }
       }
+      // Handle authentication token
+      const token = this.tokenService.getToken();
       // Handle authentication token
       const token = this.tokenService.getToken();
 
@@ -258,6 +263,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     } else {
       // Mark all fields as touched to trigger validation messages
       Object.keys(this.userForm.controls).forEach((key) => {
+      Object.keys(this.userForm.controls).forEach((key) => {
         const control = this.userForm.get(key);
         control!.markAsTouched();
       });
@@ -270,7 +276,7 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onSubmitCreate() {
     if (this.userForm.valid) {
-      console.log('this is the form values.....', this.userForm.value);
+      console.log("this is the form values.....", this.userForm.value);
 
       if (this.selectedImage) {
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -371,6 +377,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       });
     } else {
       // Mark all fields as touched to trigger validation messages
+      Object.keys(this.userForm.controls).forEach((key) => {
       Object.keys(this.userForm.controls).forEach((key) => {
         const control = this.userForm.get(key);
         control!.markAsTouched();

@@ -11,11 +11,18 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
 
 
 @Component({
-  selector: 'app-dashboard-main',
+  selector: "app-dashboard-main",
   standalone: true,
-  imports: [CommonModule, DropdownModule, AdminRowComponent, CollectionOfficerUsersRowComponent, PlantcareUsersRowComponent, SalesAgentsRowComponent],
-  templateUrl: './dashboard-main.component.html',
-  styleUrl: './dashboard-main.component.css'
+  imports: [
+    CommonModule,
+    DropdownModule,
+    AdminRowComponent,
+    CollectionOfficerUsersRowComponent,
+    PlantcareUsersRowComponent,
+    SalesAgentsRowComponent,
+  ],
+  templateUrl: "./dashboard-main.component.html",
+  styleUrl: "./dashboard-main.component.css",
 })
 export class DashboardMainComponent implements OnInit {
   

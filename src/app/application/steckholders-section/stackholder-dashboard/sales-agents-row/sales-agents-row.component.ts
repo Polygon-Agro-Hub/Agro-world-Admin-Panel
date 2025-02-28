@@ -3,11 +3,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-sales-agents-row',
+  selector: "app-sales-agents-row",
   standalone: true,
   imports: [CommonModule, DropdownModule],
-  templateUrl: './sales-agents-row.component.html',
-  styleUrl: './sales-agents-row.component.css'
+  templateUrl: "./sales-agents-row.component.html",
+  styleUrl: "./sales-agents-row.component.css",
 })
 export class SalesAgentsRowComponent implements OnChanges {
   @Input() fourthRow: any = {};
@@ -26,5 +26,4 @@ export class SalesAgentsRowComponent implements OnChanges {
     this.allSalesAgents = data.allSalesAgents.totalSaleAgents ?? 0;
     this.newSalesAgents = data.newSalesAgents.newSalesAgents ?? 0;
   }
-
 }

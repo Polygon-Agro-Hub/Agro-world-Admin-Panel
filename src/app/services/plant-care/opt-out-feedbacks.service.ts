@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { TokenService } from '../token/services/token.service';
+import { Injectable } from "@angular/core";
+import { environment } from "../../environment/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { TokenService } from "../token/services/token.service";
 
 interface FeedbacksItems {
   firstName: string;
@@ -12,13 +12,16 @@ interface FeedbacksItems {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class OptOutFeedbacksService {
   private apiUrl = `${environment.API_URL}`;
-  private token = this.tokenService.getToken();;
+  private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   // getUserFeedbackDetails(): Observable<any> {
   //   const headers = new HttpHeaders({
@@ -32,7 +35,7 @@ export class OptOutFeedbacksService {
 
   getUserFeedbackDetails(
     page: number,
-    limit: number
+    limit: number,
   ): Observable<{ feedbackDetails: any[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`, // Ensure this.token is defined in your service

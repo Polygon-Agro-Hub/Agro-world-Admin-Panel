@@ -10,11 +10,11 @@ import { StakeholderService } from '../../../../services/stakeholder/stakeholder
 
 
 @Component({
-  selector: 'app-admin-row',
+  selector: "app-admin-row",
   standalone: true,
   imports: [CommonModule, DropdownModule],
-  templateUrl: './admin-row.component.html',
-  styleUrl: './admin-row.component.css'
+  templateUrl: "./admin-row.component.html",
+  styleUrl: "./admin-row.component.css",
 })
 export class AdminRowComponent implements OnChanges {
 
@@ -47,5 +47,4 @@ export class AdminRowComponent implements OnChanges {
   totCount(x1: number, x2: number, x3: number, x4: number): number {
     return (x1 + x2 + x3 + x4)
   }
-
 }

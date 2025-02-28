@@ -1,21 +1,26 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import Swal from 'sweetalert2';
-import { environment } from '../../../environment/environment';
-import { AuthService } from '../../../services/auth.service';
-import { CommonModule } from '@angular/common';
-import { TokenService } from '../../../services/token/services/token.service';
+import { FormsModule } from "@angular/forms";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import Swal from "sweetalert2";
+import { environment } from "../../../environment/environment";
+import { AuthService } from "../../../services/auth.service";
+import { CommonModule } from "@angular/common";
+import { TokenService } from "../../../services/token/services/token.service";
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
-  selector: 'app-login',
+  selector: "app-login",
   standalone: true,
-  imports: [FormsModule, HttpClientModule, CommonModule, LoadingSpinnerComponent],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  imports: [
+    FormsModule,
+    HttpClientModule,
+    CommonModule,
+    LoadingSpinnerComponent,
+  ],
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"],
 })
 export class LoginComponent {
   showPassword: boolean = false;
@@ -24,12 +29,17 @@ export class LoginComponent {
 
   loginObj: Login;
 
-  constructor(private authService: AuthService, private http: HttpClient, private router: Router, private tokenService: TokenService){
-      this.loginObj = new Login();
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router,
+    private tokenService: TokenService,
+  ) {
+    this.loginObj = new Login();
   }
 
   ngOnInit() {
-    localStorage.removeItem('Login Token : ');
+    localStorage.removeItem("Login Token : ");
   }
 
 
@@ -127,14 +137,12 @@ export class LoginComponent {
   }
 }
 
-export class Login{
+export class Login {
   email: string;
   password: string;
-  
-  constructor(){
-    this.email='';
-    this.password='';
+
+  constructor() {
+    this.email = "";
+    this.password = "";
   }
-
-
 }

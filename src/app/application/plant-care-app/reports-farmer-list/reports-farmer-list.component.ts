@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
-import Swal from 'sweetalert2';
-import { environment } from '../../../environment/environment';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { FormsModule } from '@angular/forms';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { Component } from "@angular/core";
+import { PlantcareUsersService } from "../../../services/plant-care/plantcare-users.service";
+import Swal from "sweetalert2";
+import { environment } from "../../../environment/environment";
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from "@angular/common/http";
+import { Router } from "@angular/router";
+import { CommonModule } from "@angular/common";
+import { NgxPaginationModule } from "ngx-pagination";
+import { FormsModule } from "@angular/forms";
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 interface PlantCareUser {
   id: number;
@@ -38,21 +42,24 @@ interface CurrentAsset {
   nature: Date;
   duration: number;
   createdAt: any;
-
 }
-
 
 interface TotalFixed {
   total_price: any;
-
 }
 
 @Component({
-  selector: 'app-reports-farmer-list',
+  selector: "app-reports-farmer-list",
   standalone: true,
-  imports: [HttpClientModule, CommonModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
-  templateUrl: './reports-farmer-list.component.html',
-  styleUrl: './reports-farmer-list.component.css',
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    NgxPaginationModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
+  templateUrl: "./reports-farmer-list.component.html",
+  styleUrl: "./reports-farmer-list.component.css",
   template: `
     <!-- Your existing table markup -->
     <pagination-controls
@@ -73,28 +80,33 @@ export class ReportsFarmerListComponent {
   currentAsset: CurrentAsset[] = [];
   fixedAssetTotal: number = 0;
   totalFixed: any;
-  searchNIC: string = '';
+  searchNIC: string = "";
   isLoading = false;
 
-  constructor(private plantcareService: PlantcareUsersService, private router: Router, private http: HttpClient) { }
+  constructor(
+    private plantcareService: PlantcareUsersService,
+    private router: Router,
+    private http: HttpClient,
+  ) {}
 
   fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.plantcareService.getAllPlantCareUsers(page, limit, this.searchNIC)
+    this.plantcareService
+      .getAllPlantCareUsers(page, limit, this.searchNIC)
       .subscribe(
         (response) => {
           this.isLoading = false;
-          console.log('Received items:', response.items); // Debug log
-          console.log('Total items:', response.total); // Debug log
+          console.log("Received items:", response.items); // Debug log
+          console.log("Total items:", response.total); // Debug log
           this.plantCareUser = response.items;
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
+          console.error("Error fetching market prices:", error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
           }
-        }
+        },
       );
   }
 
@@ -112,56 +124,54 @@ export class ReportsFarmerListComponent {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
-
   clearSearch(): void {
-    this.searchNIC = '';
+    this.searchNIC = "";
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
   getTotalFixedAssets(id: number) {
     this.plantcareService.getTotalFixedAssets(id).subscribe(
       (response) => {
-        console.log('API Response:', response);
+        console.log("API Response:", response);
 
         if (Array.isArray(response) && response.length > 0) {
           const totalFixedAssetData = response[0];
 
           if (totalFixedAssetData && totalFixedAssetData.total_price) {
-
             this.fixedAssetTotal = parseFloat(totalFixedAssetData.total_price);
-            console.log('Fixed Asset Total:', this.fixedAssetTotal);
+            console.log("Fixed Asset Total:", this.fixedAssetTotal);
           } else {
-            console.error('Error: total_price is missing or invalid in the response');
+            console.error(
+              "Error: total_price is missing or invalid in the response",
+            );
           }
         } else {
-          console.error('Error: Response is not an array or is empty');
+          console.error("Error: Response is not an array or is empty");
         }
       },
       (error) => {
-        console.error('Error fetching total fixed assets:', error);
+        console.error("Error fetching total fixed assets:", error);
         if (error.status === 401) {
           // Handle unauthorized access (e.g., redirect to login)
         }
-      }
+      },
     );
   }
 
   viewFixedAsset(id: number, firstName: string, lastName: string) {
-    this.router.navigate(['/plant-care/action/assets/fixed-asset-category'], {
-      queryParams: { id, firstName, lastName }
+    this.router.navigate(["/plant-care/action/assets/fixed-asset-category"], {
+      queryParams: { id, firstName, lastName },
     });
   }
 
   viewCurrentAsset(id: number, fname: string, lname: string) {
-    let userName = fname + " " + lname
-    this.navigatePath(`/plant-care/action/report-farmer-current-assert/${id}/${userName}`)
+    let userName = fname + " " + lname;
+    this.navigatePath(
+      `/plant-care/action/report-farmer-current-assert/${id}/${userName}`,
+    );
   }
-
-
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
-
 }

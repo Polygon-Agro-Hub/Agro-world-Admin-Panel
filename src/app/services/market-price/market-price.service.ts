@@ -1,59 +1,63 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { TokenService } from '../token/services/token.service';
+import { Injectable } from "@angular/core";
+import { environment } from "../../environment/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { TokenService } from "../token/services/token.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MarketPriceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
-  getAllMarketPrice(crop:any, grade:any, searchNIC: any):Observable<any>{
+  getAllMarketPrice(crop: any, grade: any, searchNIC: any): Observable<any> {
     console.log(crop);
-    
+
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
-    let url = `${this.apiUrl}market-price/get-market-prices?`
+    let url = `${this.apiUrl}market-price/get-market-prices?`;
 
-    if(crop){
-      url+=`crop=${crop}`
+    if (crop) {
+      url += `crop=${crop}`;
     }
 
-    if(grade){
-      url+=`&grade=${grade}`
+    if (grade) {
+      url += `&grade=${grade}`;
     }
 
-    if(searchNIC){
-      url+=`&search=${searchNIC}`
+    if (searchNIC) {
+      url += `&search=${searchNIC}`;
     }
 
-    return this.http.get<any>(url,{headers})
+    return this.http.get<any>(url, { headers });
   }
 
-  getAllCropName():Observable<any>{
+  getAllCropName(): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`)
-
+    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`);
   }
-
 
   bulkUploadingMarketPrice(formData: FormData): Observable<any> {
     console.log(formData);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${environment.API_URL}market-price/upload-market-price-xlsx`, formData, {
-      headers,
-    });
-    
+    return this.http.post(
+      `${environment.API_URL}market-price/upload-market-price-xlsx`,
+      formData,
+      {
+        headers,
+      },
+    );
   }
 }

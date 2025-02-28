@@ -110,8 +110,11 @@
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ item.companyName }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf='item.companyEmail' class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.companyEmail }}
+            </td>
+            <td *ngIf='!item.companyEmail' class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold">
+              No Email Provide
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.status === 1">

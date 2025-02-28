@@ -119,7 +119,9 @@ export class EditPlantcareUsersComponent implements OnInit {
       this.itemId = params["id"] ? +params["id"] : null;
       console.log("Received item ID:", this.itemId);
     });
-    this.loadUserData(this.itemId!);
+    if (this.itemId) {
+      this.loadUserData(this.itemId);
+    }
   }
 
   loadUserData(id: number) {
@@ -136,9 +138,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
     this.isLoading = true;
     this.http
-      .get<PlantCareUser>(`${environment.API_URL}auth/get-user-by-id/${id}`, {
-        headers,
-      })
       .get<PlantCareUser>(`${environment.API_URL}auth/get-user-by-id/${id}`, {
         headers,
       })
@@ -185,11 +184,8 @@ export class EditPlantcareUsersComponent implements OnInit {
           return;
         }
       }
-      // Handle authentication token
-      const token = this.tokenService.getToken();
-      // Handle authentication token
-      const token = this.tokenService.getToken();
 
+      const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
         return;
@@ -263,7 +259,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     } else {
       // Mark all fields as touched to trigger validation messages
       Object.keys(this.userForm.controls).forEach((key) => {
-      Object.keys(this.userForm.controls).forEach((key) => {
         const control = this.userForm.get(key);
         control!.markAsTouched();
       });
@@ -290,9 +285,8 @@ export class EditPlantcareUsersComponent implements OnInit {
           return;
         }
       }
-      // Handle authentication token
-      const token = this.tokenService.getToken();
 
+      const token = this.tokenService.getToken();
       if (!token) {
         console.error('No token found');
         return;
@@ -300,12 +294,12 @@ export class EditPlantcareUsersComponent implements OnInit {
 
       Swal.fire({
         title: 'Are you sure?',
-        text: 'Do you really want to add this plant care user?',
+        text: 'Do you really want to create a new plant care user?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, add it!',
+        confirmButtonText: 'Yes, create it!',
         cancelButtonText: 'Cancel',
       }).then((result) => {
         if (result.isConfirmed) {
@@ -330,54 +324,41 @@ export class EditPlantcareUsersComponent implements OnInit {
           this.isLoading = true;
           this.http
             .post(
-              `${environment.API_URL}auth/create-plantcare-user`,
+              `${environment.API_URL}auth/create-plant-care-user`,
               formData,
               { headers }
             )
             .subscribe(
-              (data: any) => {
+              (data) => {
                 this.isLoading = false;
                 this.userForm.patchValue(data);
                 Swal.fire(
-                  'User Created!',
-                  'Plant care user has been successfully created.',
+                  'Created!',
+                  'A new plant care user has been created.',
                   'success'
                 ).then(() => {
                   this.router.navigate(['/steckholders/action/farmers']);
                 });
                 this.loadUserData(this.itemId!);
+                this.userForm.reset();
+                this.imagePreview = '';
+                this.selectedImage = null;
+                this.itemId = null;
               },
               (error) => {
                 this.isLoading = false;
-                console.error('Error creating user:', error);
-
-                // Check for duplicate error
-                if (error.status === 409) {
-                  Swal.fire(
-                    'Error!',
-                    'Profile image is required. Only image files are allowed (jpg, png, gif).',
-                    'error'
-                  );
-                } else if (error.status === 400) {
-                  Swal.fire(
-                    'Error!',
-                    'Phone number or NIC number already exists.',
-                    'error'
-                  );
-                } else {
-                  Swal.fire(
-                    'Error!',
-                    'An unexpected error occurred while creating the plant care user.',
-                    'error'
-                  );
-                }
+                console.error('Error fetching user data:', error);
+                Swal.fire(
+                  'Error!',
+                  'There was an error creating the plant care user.',
+                  'error'
+                );
               }
             );
         }
       });
     } else {
       // Mark all fields as touched to trigger validation messages
-      Object.keys(this.userForm.controls).forEach((key) => {
       Object.keys(this.userForm.controls).forEach((key) => {
         const control = this.userForm.get(key);
         control!.markAsTouched();

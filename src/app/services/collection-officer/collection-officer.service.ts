@@ -13,7 +13,7 @@ export class CollectionOfficerService {
   }
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  private token = this.tokenService.getToken();
+
 
   constructor(
     private http: HttpClient,

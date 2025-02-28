@@ -192,7 +192,7 @@ export class CreateCropGroupComponent {
     // Create FormData object
     const formData = new FormData();
     formData.append("cropNameEnglish", this.cropGroup.cropNameEnglish);
-    formData.append("cropNameSinhala", this.cropGroup.cropNameEnglish);
+    formData.append("cropNameSinhala", this.cropGroup.cropNameSinahala);
     formData.append("cropNameTamil", this.cropGroup.cropNameTamil);
     formData.append("category", this.cropGroup.parentCategory);
     formData.append("bgColor", this.cropGroup.bgColor);

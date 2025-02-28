@@ -10,8 +10,7 @@ import { TokenService } from "./token/services/token.service";
 export class CollectionService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  private token = this.tokenService.getToken();
-
+ 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   fetchAllCollectionOfficer(
@@ -21,7 +20,6 @@ export class CollectionService {
     company: string
   ): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
       Authorization: `Bearer ${this.token}`,
     });
     console.log(company);

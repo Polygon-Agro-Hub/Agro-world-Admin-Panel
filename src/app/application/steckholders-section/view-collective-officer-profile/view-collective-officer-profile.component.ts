@@ -133,6 +133,20 @@ export class ViewCollectiveOfficerProfileComponent {
   toggleDisclaimView() {
     this.showDisclaimView = !this.showDisclaimView; // Toggle the boolean value
   }
+
+  shouldHideDisclaimButton(): boolean {
+    return (
+      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
+      this.officerObj.jobRole !== 'Collection Center Head'
+    );
+  }
+
+  shouldHideViewTargetmButton(): boolean {
+    return (
+      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
+      this.officerObj.jobRole !== 'Collection Officer'
+    );
+  }
 }
 
 class CollectionOfficer {

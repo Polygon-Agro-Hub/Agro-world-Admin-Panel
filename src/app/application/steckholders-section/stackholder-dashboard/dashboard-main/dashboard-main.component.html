@@ -1,4 +1,6 @@
-<div class="p-4" >
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="p-4" *ngIf="!isLoading">
   <div class="flex justify-end mb-4">
     <button class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" >
       Export Report
@@ -6,7 +8,7 @@
   </div>
 
   <!-- First row -->
-  <div>
+  
     <app-admin-row [firstRow]="firstRow"></app-admin-row>
 
   <div class="h-4"></div>
@@ -25,3 +27,4 @@
 
   
   
+</div>

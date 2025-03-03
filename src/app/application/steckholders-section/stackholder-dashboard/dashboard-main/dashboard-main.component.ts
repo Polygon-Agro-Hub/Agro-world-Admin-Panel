@@ -7,6 +7,7 @@ import { AdminRowComponent } from '../admin-row/admin-row.component';
 import { CollectionOfficerUsersRowComponent } from '../collection-officer-users-row/collection-officer-users-row.component';
 import { PlantcareUsersRowComponent } from '../plantcare-users-row/plantcare-users-row.component'
 import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.component';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
 
 
 
@@ -20,7 +21,8 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
     CollectionOfficerUsersRowComponent,
     PlantcareUsersRowComponent,
     SalesAgentsRowComponent,
-  ],
+    LoadingSpinnerComponent
+],
   templateUrl: "./dashboard-main.component.html",
   styleUrl: "./dashboard-main.component.css",
 })
@@ -30,6 +32,7 @@ export class DashboardMainComponent implements OnInit {
   secondRow: any = {};
   thirdRow: any = {};
   fourthRow: any = {};
+  isLoading = false;
 
 
   constructor(
@@ -42,6 +45,7 @@ export class DashboardMainComponent implements OnInit {
 
 
   fetchAdminUserData() {
+    this.isLoading = true;
     console.log("fetching started");
     this.stakeholderSrv.getAdminUserData().subscribe(
       (res) => {
@@ -51,10 +55,11 @@ export class DashboardMainComponent implements OnInit {
         this.thirdRow = res.thirdRow;
         this.fourthRow = res.fourthRow;
         // console.log("---------------",this.secondRow);
-
+        this.isLoading = false;
       },
       (error) => {
         console.log("Error: ", error);
+        this.isLoading = false;
       }
     );
   }

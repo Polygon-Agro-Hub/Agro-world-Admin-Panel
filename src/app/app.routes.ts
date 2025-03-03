@@ -96,6 +96,7 @@ import { CustomersComponent } from './application/sales-dash-section/customers/c
 import { ViewCollectiveOfficerProfileComponent } from './application/steckholders-section/view-collective-officer-profile/view-collective-officer-profile.component';
 import { PermissionGuard } from './guards/permission.guard';
 import { Status451Component } from './components/status-451/status-451.component';
+import { ViewOfficerTargetComponent } from './application/steckholders-section/view-officer-target/view-officer-target.component';
 
 export const routes: Routes = [
   {
@@ -370,6 +371,10 @@ export const routes: Routes = [
                   {
                     path: 'collective-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent
+                  },
+                  {
+                    path:'view-officer-targets',
+                    component: ViewOfficerTargetComponent
                   }
                 ],
               },

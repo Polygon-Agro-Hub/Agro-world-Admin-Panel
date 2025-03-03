@@ -1,0 +1,36 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environment';
+import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OfficerTargetService {
+  private apiUrl = `${environment.API_URL}`;
+  private token = this.tokenService.getToken();
+
+  constructor(private http:HttpClient, private tokenService: TokenService) { }
+
+  getSelectedOfficerTargetData(officerId: number, status: string = '', search: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}/get-selected-officer-target-data?officerId=${officerId}`;
+    
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (search) {
+      url += `&search=${search}`
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+}

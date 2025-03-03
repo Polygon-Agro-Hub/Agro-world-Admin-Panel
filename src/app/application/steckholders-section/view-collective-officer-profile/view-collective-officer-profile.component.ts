@@ -55,6 +55,10 @@ export class ViewCollectiveOfficerProfileComponent {
     this.router.navigate([path]);
   }
 
+  viewOfficerTarget(officerId: number) {
+    this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets${officerId}`])
+  }
+
   generatePDF() {
     const reportContainer = document.getElementById('reportcontainer');
 
@@ -132,6 +136,20 @@ export class ViewCollectiveOfficerProfileComponent {
 
   toggleDisclaimView() {
     this.showDisclaimView = !this.showDisclaimView; // Toggle the boolean value
+  }
+
+  shouldHideDisclaimButton(): boolean {
+    return (
+      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
+      this.officerObj.jobRole !== 'Collection Center Head'
+    );
+  }
+
+  shouldHideViewTargetmButton(): boolean {
+    return (
+      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
+      this.officerObj.jobRole !== 'Collection Officer'
+    );
   }
 }
 

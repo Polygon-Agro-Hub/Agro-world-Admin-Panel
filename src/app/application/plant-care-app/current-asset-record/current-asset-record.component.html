@@ -60,6 +60,11 @@
             >
               Date
             </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+              Time
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -92,7 +97,10 @@
               {{ item.totalPrice }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.createdAt }}
+              {{ item.createdAt | date:'yyyy-MM-dd' }}
+            </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.createdAt | date:'hh:mm a' }}
             </td>
           </tr>
         </tbody>

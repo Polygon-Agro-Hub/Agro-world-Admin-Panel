@@ -33,7 +33,6 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
 
   page: number = 1;
   totalItems: number = 0;
-  itemsPerPage: number = 10;
   searchNIC: string = '';
 
   constructor(private marketSrv: MarketPriceService,private router: Router) {
@@ -101,10 +100,10 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     this.fetchAllMarketPrices();
   }
 
-  onPageChange(event: number) {
-    this.page = event;
-    this.fetchAllMarketPrices();
-  }
+  // onPageChange(event: number) {
+  //   this.page = event;
+  //   this.fetchAllMarketPrices();
+  // }
 
 
   searchPlantCareUsers() {

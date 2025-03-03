@@ -1,24 +1,17 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div>
-  <button
-    class="text-textLight dark:text-textDark"
-    (click)="navigatePath('/plant-care/action/ongoing-cultivation')"
-  >
+  <button class="text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/ongoing-cultivation')">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
 
   <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
-  >
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div
-      class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
-    >
-      <h2
-        class="text-2xl font-bold mb-6 text-left text-textLight dark:text-textDark"
-      >
+      class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      <h2 class="text-2xl font-bold mb-6 text-left text-textLight dark:text-textDark">
         User Ongoing cultivation ({{ this.newsItems.length }})
       </h2>
 
@@ -27,54 +20,34 @@
       </div>
 
       <div *ngIf="hasData">
-        <table
-          class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
-        >
+        <table class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
           <thead>
             <tr>
-              <th
-                class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
-              >
+              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">
                 No
               </th>
-              <th
-                class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
-              >
+              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">
                 Crop Name
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Variety
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Cultivation Method
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Nature Of Cultivation
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Progress
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Geo Location
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Crop Duration
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Calendar
               </th>
             </tr>
@@ -96,7 +69,7 @@
                 <div class="flex items-center space-x-2 justify-center">
                   <!-- Progress bar -->
 
-                  <div
+                  <!-- <div
                     class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
                   >
                     <div
@@ -115,7 +88,12 @@
                         )
                       "
                     ></div>
-                  </div>
+                  </div> -->
+
+                  <mat-progress-bar class="rounded-full" mode="determinate"
+                    [value]="calculateProgressPercentage(item.totalTasks, item.completedTasks)"
+                    color="primary"></mat-progress-bar>
+
 
                   <!-- <div
                     class="w-[100%] bg-gray-200 rounded-full h-2.5 flex-grow"
@@ -133,8 +111,8 @@
                   <!-- Percentage text -->
                   <span class="text-sm">
                     {{
-                      (item.completedTasks / item.totalTasks) * 100
-                        | number : "1.0-0"
+                    (item.completedTasks / item.totalTasks) * 100
+                    | number : "1.0-0"
                     }}
                     %
                   </span>
@@ -142,13 +120,9 @@
               </td>
 
               <td class="px-4 py-3 dark:text-textDark text-center">
-                <a
-                  *ngIf="item.longitude"
-                  href="https://www.google.com/maps?q={{ item.latitude }},{{
+                <a *ngIf="item.longitude" href="https://www.google.com/maps?q={{ item.latitude }},{{
                     item.longitude
-                  }}"
-                  target="_blank"
-                >
+                  }}" target="_blank">
                   <i class="fa-solid fa-map-location-dot"></i>
                 </a>
                 <span *ngIf="!item.longitude">No Data Yet</span>
@@ -158,28 +132,17 @@
                 {{ item.cropDuration }}
               </td>
               <td class="px-4 py-3 dark:text-textDark text-center">
-                <button
-                  class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                  (click)="
+                <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="
                     viewTaskByUser(
                       item.cropCalendar,
                       this.userId,
                       item.ongoingCultivationId
                     )
-                  "
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+                  ">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
               </td>

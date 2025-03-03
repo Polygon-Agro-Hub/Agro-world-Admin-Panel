@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
-
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 interface CultivationItems {
   id: any;
@@ -21,7 +21,7 @@ interface CultivationItems {
 interface NewsItem {
   ongoingCultivationId: any;
   cropName: string;
-  cropCalendar : number;
+  cropCalendar: number;
   variety: string;
   cultivationMethod: string;
   natureOfCultivation: string;
@@ -32,13 +32,20 @@ interface NewsItem {
   completedTasks: number;
 }
 
-
 @Component({
   selector: 'app-slave-crop-calendar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule, AngularEditorModule, LoadingSpinnerComponent ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
+    AngularEditorModule,
+    LoadingSpinnerComponent,
+    MatProgressBarModule
+  ],
   templateUrl: './slave-crop-calendar.component.html',
-  styleUrl: './slave-crop-calendar.component.css'
+  styleUrl: './slave-crop-calendar.component.css',
 })
 export class SlaveCropCalendarComponent {
   itemId: number | null = null;
@@ -47,13 +54,10 @@ export class SlaveCropCalendarComponent {
   cultivationId: any | null = null;
   name: string = '';
   category: string = '';
-  hasData: boolean = true; 
+  hasData: boolean = true;
   newsItems: NewsItem[] = [];
   userId: any | null = null;
   isLoading = true;
-
- 
-  
 
   constructor(
     private fb: FormBuilder,
@@ -64,73 +68,68 @@ export class SlaveCropCalendarComponent {
     private router: Router
   ) {}
 
-
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.cultivationId = params['cultivationId'] ? +params['cultivationId'] : null;  
-      this.userId = params['userId'] ? +params['userId'] : null;    
-      console.log("This is the Id : ", this.cultivationId);
-      console.log("This is the user Id : ", this.userId);
+      this.cultivationId = params['cultivationId']
+        ? +params['cultivationId']
+        : null;
+      this.userId = params['userId'] ? +params['userId'] : null;
+      console.log('This is the Id : ', this.cultivationId);
+      console.log('This is the user Id : ', this.userId);
     });
     this.fetchAllNews(this.cultivationId);
-    
-    
   }
 
-
-  calculateProgressPercentage(totalTasks: number, completedTasks: number): number {
-    if (totalTasks === 0) {
-      return 0; // Prevent division by zero
-    }
+  calculateProgressPercentage(
+    totalTasks: number,
+    completedTasks: number
+  ): number {
+    if (totalTasks === 0) return 0; // Avoid division by zero
     return (completedTasks / totalTasks) * 100;
   }
-  
-
-
-
 
   getCultivation(id: any) {
     this.isLoading = true;
-    this.ongoingCultivationService.getOngoingCultivationById(id)
-      .subscribe(
-        (data) => {
-          this.cultivtionItems = data;
-          console.log(this.cultivtionItems);
+    this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
+      (data) => {
+        this.cultivtionItems = data;
+        console.log(this.cultivtionItems);
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching news:', error);
+        if (error.status === 401) {
           this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching news:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
         }
-      );
+      }
+    );
   }
-
 
   fetchAllNews(id: number) {
     this.isLoading = true;
-    this.ongoingCultivationService.getOngoingCultivationById(id)
-      .subscribe(
-        (data) => {
-          this.newsItems = data;
-          console.log(data);
+    this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
+      (data) => {
+        this.newsItems = data;
+        console.log(data);
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching ongoing cultivations:', error);
+        if (error.status === 401) {
           this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
         }
-      );
+      }
+    );
   }
 
-  viewTaskByUser(cropCalendarId: any, userId : any, onCulscropID: any ) {
+  viewTaskByUser(cropCalendarId: any, userId: any, onCulscropID: any) {
     if (cropCalendarId) {
-      this.router.navigate(['/plant-care/action/view-crop-task-by-user/user-task-list'], { 
-        queryParams: { cropCalendarId, userId, onCulscropID } 
-      });
+      this.router.navigate(
+        ['/plant-care/action/view-crop-task-by-user/user-task-list'],
+        {
+          queryParams: { cropCalendarId, userId, onCulscropID },
+        }
+      );
       console.log('Navigating with cultivationId:', cropCalendarId);
       console.log('ish:', onCulscropID);
     } else {
@@ -138,8 +137,7 @@ export class SlaveCropCalendarComponent {
     }
   }
 
-  navigatePath(path:string){
-    this.router.navigate([path])
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
-
 }

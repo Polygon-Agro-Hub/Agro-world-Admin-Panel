@@ -57,6 +57,7 @@
         <button
         *ngIf="!shouldHideViewTargetmButton()"
           class="bg-[#415CFF] text-white font-semibold rounded-lg shadow-md px-5 py-2 ml-2"
+          (click)="navigatePath('/steckholders/action/collective-officer/view-officer-targets')"
         >
           View Target
         </button>

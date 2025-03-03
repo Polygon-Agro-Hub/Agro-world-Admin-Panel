@@ -55,6 +55,10 @@ export class ViewCollectiveOfficerProfileComponent {
     this.router.navigate([path]);
   }
 
+  viewOfficerTarget(officerId: number) {
+    this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets${officerId}`])
+  }
+
   generatePDF() {
     const reportContainer = document.getElementById('reportcontainer');
 

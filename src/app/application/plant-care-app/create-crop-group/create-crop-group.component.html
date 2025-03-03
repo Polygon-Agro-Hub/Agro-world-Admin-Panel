@@ -168,7 +168,7 @@
             Crop Name By English
           </label>
           <input type="text" id="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish" name="cropNameEnglish"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required #cropNameEnglishInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
 
           <div *ngIf="cropNameEnglishInput.touched && !newsItems[0].cropNameEnglish" class="text-red-500 text-sm mt-1">
@@ -186,7 +186,7 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
             Sinhala</label>
           <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark" 
             required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
           <div *ngIf="cropNameSinhalaInput.touched && !newsItems[0].cropNameSinhala" class="text-red-500 text-sm mt-1">
             <div>Sinhala crop name is required</div>
@@ -204,7 +204,7 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
             Tamil</label>
           <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required #cropNameTamilInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$"/>
           <div *ngIf="cropNameTamilInput.touched && !newsItems[0].cropNameTamil" class="text-red-500 text-sm mt-1">
             <div>Tamil crop name is required</div>
@@ -223,7 +223,7 @@
           <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent
             Category</label>
           <select id="parentCategory" [(ngModel)]="newsItems[0].category" name="parentCategory" #categoryInput="ngModel"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required>
             <option value="" disabled>Select Category</option>
             <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
@@ -266,7 +266,7 @@
         <div class="flex justify-end space-x-4 mt-6">
           <button type="button" (click)="onCancel()"
             class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-          <button type="submit" (click)="updateNews()"  [disabled]="cropForm.invalid"
+          <button type="submit" (click)="updateNews()"  [disabled]="!newsItems[0].cropNameEnglish || !newsItems[0].cropNameSinhala || !newsItems[0].cropNameTamil || !newsItems[0].category || !newsItems[0].bgColor"
             class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
         </div>
       </div>
@@ -275,3 +275,5 @@
   </div>
 
 </div>
+
+<!-- [disabled]="cropForm.invalid" -->

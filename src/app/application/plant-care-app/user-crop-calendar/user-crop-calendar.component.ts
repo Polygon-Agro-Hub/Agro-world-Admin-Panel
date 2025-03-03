@@ -160,31 +160,51 @@ export class UserCropCalendarComponent {
 
 
   addNewTask(cropId: string, indexId: string, userId: string) {
-    const cancelButtonStyles = `
-      .custom-cancel-button {
-        color: #8b8989 !important;
-        transition: color 0.3s ease;
-      }
-      .custom-cancel-button:hover {
-        color: #ffffff !important; /* Change this to your desired hover color */
-      }
-    `;
-
+    // const cancelButtonStyles = `
+    //   .custom-cancel-button {
+    //     color: #8b8989 
+    //     transition: color 0.3s ease, background-color 0.3s ease 
+    //   }
+    //   .custom-cancel-button:hover {
+    //     color: #ffffff 
+    //   }
+      
+      
+    //   .dark .custom-cancel-button {
+    //     background-color: #74788D 
+    //     color: #e2e8f0  
+    //   }
+    //   .dark .custom-cancel-button:hover {
+    //     background-color: #4a5568 
+    //     color: #ffffff 
+    //   }
+    // `;
+  
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
-      confirmButtonColor: '#8AC440',
-      cancelButtonColor: '#ECECEC',
-      confirmButtonText: 'Yes',
+      // confirmButtonColor: '#8AC440',
+      // cancelButtonColor: '#ECECEC',
+      confirmButtonText: ' Yes ',
       cancelButtonText: 'Cancel',
+      
       customClass: {
-        cancelButton: 'custom-cancel-button'
+        popup: 'dark:bg-tileBlack dark:text-textDark',
+        cancelButton: 'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
+        actions: 'dark:bg-tileBlack',
+        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[#8AC440] bg-[#8AC440]'
       },
       didOpen: (popup) => {
         // Add custom styles to the document
         const styleElement = document.createElement('style');
-        styleElement.textContent = cancelButtonStyles;
+        // styleElement.textContent = cancelButtonStyles;
         document.head.appendChild(styleElement);
+        
+        // Check if dark mode is active and add class to body if needed
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        if (isDarkMode) {
+          document.body.classList.add('dark');
+        }
       },
       willClose: () => {
         // Remove the custom styles when the dialog closes

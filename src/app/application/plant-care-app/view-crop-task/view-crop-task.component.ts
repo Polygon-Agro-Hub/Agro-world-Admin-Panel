@@ -108,23 +108,26 @@ export class ViewCropTaskComponent implements OnInit {
     this.router.navigate([`plant-care/action/edit-crop-task/${id}`]);
   }
 
-  addNewTask(cropId:string, indexId:string){
-    // console.log("New task",cropId,indexId);
-    
+  addNewTask(cropId: string, indexId: string) {
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
-      confirmButtonColor: '#8AC440',
-      cancelButtonColor: '#ECECEC',
+      // confirmButtonColor: '#8AC440',
+      // cancelButtonColor: '#ECECEC',
       confirmButtonText: 'Yes',
       cancelButtonText: 'Cancel',
-    }).then((result)=>{
+      customClass: {
+        popup: 'dark:bg-tileBlack dark:text-textDark',
+        cancelButton: 'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
+        actions: 'dark:bg-tileBlack',
+        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[#8AC440] bg-[#8AC440]'
+      }
+    }).then((result) => {
       if (result.isConfirmed) {
         const uid = null;
         this.router.navigate([`plant-care/action/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`])
       }
     })
-
   }
 
   onPageChange(event: number) {

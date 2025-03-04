@@ -170,11 +170,11 @@ export class SidenavComponent implements OnInit {
   // }
 
   toggleChildren(item: any): void {
-    this.navData.forEach((navItem) => {
-      if (navItem !== item) {
-        navItem.expanded = false; // Close all other expanded items
-      }
-    });
+    // this.navData.forEach((navItem) => {
+    //   if (navItem !== item) {
+    //     navItem.expanded = false; // Close all other expanded items
+    //   }
+    // });
 
     // Toggle only the clicked item
     item.expanded = !item.expanded;

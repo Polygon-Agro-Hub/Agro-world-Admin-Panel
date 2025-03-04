@@ -12,6 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
+import { FormsModule } from '@angular/forms';
 
 interface NewCropCalender {
   id: number;
@@ -31,6 +32,7 @@ interface NewCropCalender {
     CommonModule,
     LoadingSpinnerComponent,
     NgxPaginationModule,
+    FormsModule
   ],
   templateUrl: './view-crop-calander.component.html',
   styleUrl: './view-crop-calander.component.css',
@@ -44,6 +46,7 @@ export class ViewCropCalanderComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   hasData: boolean = true;
+  searchText: string = '';
 
   constructor(
     private cropCalendarService: CropCalendarService,
@@ -55,11 +58,11 @@ export class ViewCropCalanderComponent implements OnInit {
     this.fetchAllCropCalenders();
   }
 
-  fetchAllCropCalenders(page: number = 1, limit: number = this.itemsPerPage) {
+  fetchAllCropCalenders(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText) {
     console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
     this.isLoading = true;
-    this.cropCalendarService.fetchAllCropCalenders(page, limit).subscribe(
+    this.cropCalendarService.fetchAllCropCalenders(page, limit, search).subscribe(
       (data) => {
         this.isLoading = false;
         this.newCropCalender = data.items;
@@ -119,7 +122,16 @@ export class ViewCropCalanderComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCropCalenders(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText); // Include itemsPerPage
+  }
+
+  onSearch() {
+    this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
+  }
+
+  offSearch() {
+    this.searchText = '';
+    this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
   }
 
   ViewCroptask(id:number){

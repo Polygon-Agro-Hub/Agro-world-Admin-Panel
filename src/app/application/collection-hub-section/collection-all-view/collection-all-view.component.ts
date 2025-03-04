@@ -188,6 +188,8 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   assignTarget(items: any, centerId: number) {
+    console.log(centerId,'<---centerId');
+    
     let comId;
     items?.some((company: Company) =>
       company.companyNameEnglish === 'agroworld (Pvt) Ltd'
@@ -208,11 +210,22 @@ export class CollectionAllViewComponent implements OnInit {
     );
   }
 
-  navigateAddTarget() {
+  navigateAddTarget(item: CollectionCenter) {
+    const agroworldCompany = item.companies.find(
+      (company: Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+    );
+  
+    if (!agroworldCompany) {
+      console.error("Agroworld (Pvt) Ltd not found in this Collection Center.");
+      return;
+    }
+    const companyId = agroworldCompany.id;
+  
     this.router.navigate([
-      `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.companyId}`,
+      `/collection-hub/add-daily-target/${item.id}/${item.centerName}/${companyId}`,
     ]);
   }
+  
 }
 
 class CenterName {

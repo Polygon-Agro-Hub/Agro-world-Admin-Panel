@@ -163,7 +163,7 @@ export class AddDailyTargetComponent {
         (res: any) => {
           if (res.status) {
             Swal.fire('Success', res.message, 'success')
-            this.router.navigate(['/admin/collection-hub/view-collection-centers'])
+            this.router.navigate(['/collection-hub/view-collection-centers'])
           } else {
             Swal.fire('Error', res.message, 'error')
 

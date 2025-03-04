@@ -135,12 +135,24 @@ export class CropCalendarService {
   fetchAllCropCalenders(
     page: number = 1,
     limit: number = 10,
+    searchText: string = '',
   ): Observable<{ items: NewCropCalender[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
+
+    console.log('going to fetch');
+
+    let url = `${this.apiUrl}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    console.log(url);
+
     return this.http.get<{ items: NewCropCalender[]; total: number }>(
-      `${this.apiUrl}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`,
+      url,
       { headers },
     );
   }

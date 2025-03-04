@@ -82,8 +82,11 @@
             <div
               *ngIf="collectionCenterForm.get('contact01')?.invalid && (collectionCenterForm.get('contact01')?.dirty || collectionCenterForm.get('contact01')?.touched)"
               class="text-red-500 text-sm mt-1">
-              Contact number 1 is required
+             Required valid contact number
             </div>
+            <!-- <div *ngIf="collectionCenterForm.get('contact01')?.hasError('pattern')">
+              Enter valid phone number
+            </div> -->
           </div>
         </div>
       </div>
@@ -104,10 +107,14 @@
             <input type="number" formControlName="contact02" id="contact02" name="contact02"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
-            <div
+            <!-- <div
               *ngIf="collectionCenterForm.get('contact02')?.invalid && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
               class="text-red-500 text-sm mt-1">
               Contact number 2 is required
+            </div> -->
+            <div *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern')"
+            class="text-red-500 text-sm mt-1">
+              Enter valid phone number
             </div>
           </div>
         </div>
@@ -134,14 +141,14 @@
         <div
           *ngIf="collectionCenterForm.get('street')?.invalid && (collectionCenterForm.get('street')?.dirty || collectionCenterForm.get('street')?.touched)"
           class="text-red-500 text-sm mt-1">
-          Street is required
+          Street name is required
         </div>
 
       </div>
 
       <div>
         <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
-        <input formControlName="city" id="city" name="city" (input)="onCityChange()"
+        <input formControlName="city" id="city" name="city" (input)="onProvinceChange()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="collectionCenterForm.get('city')?.invalid && 
             (collectionCenterForm.get('city')?.dirty || collectionCenterForm.get('city')?.touched)"
@@ -197,7 +204,7 @@
         <div
           *ngIf="collectionCenterForm.get('country')?.invalid && (collectionCenterForm.get('country')?.dirty || collectionCenterForm.get('country')?.touched)"
           class="text-red-500 text-sm mt-1">
-          District is required
+          Country is required
         </div>
       </div>
 
@@ -208,13 +215,28 @@
 
 
 
-      <div>
+      <!-- <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
         <input formControlName="regCode" id="regCode" name="regCode"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [readonly]="true" />
-      </div>
+      </div> -->
 
+      <div>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <div class="relative">
+          <input formControlName="regCode" id="regCode" name="regCode"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [readonly]="true" />
+          <div *ngIf="isLoadingregcode" class="absolute right-2 top-2">
+            <svg class="animate-spin h-5 w-5 text-gray-500 dark:text-textDark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+              <path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C4.48 0 0 4.48 0 9s4.48 9 10 9V15a8 8 0 0 1-8-8z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
 
     </div>
     <div class="flex justify-end items-end m-10">

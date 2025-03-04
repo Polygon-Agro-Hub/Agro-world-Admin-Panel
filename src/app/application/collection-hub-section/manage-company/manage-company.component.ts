@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-manage-company',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule],
+  imports: [LoadingSpinnerComponent, CommonModule, FormsModule],
   templateUrl: './manage-company.component.html',
   styleUrl: './manage-company.component.css',
 })
@@ -19,6 +20,7 @@ export class ManageCompanyComponent {
   isLoading = false;
   total: number | null = null;
   private token = this.tokenService.getToken();
+  search: string = "";
 
   constructor(
     private companyService: CollectionCenterService,
@@ -32,7 +34,7 @@ export class ManageCompanyComponent {
 
   fetchAllCompanys() {
     this.isLoading = true;
-    this.companyService.getAllCompanyDetails().subscribe(
+    this.companyService.getAllCompanyDetails(this.search).subscribe(
       (response: any) => {
         this.isLoading = false;
         console.log(response);
@@ -44,6 +46,16 @@ export class ManageCompanyComponent {
         console.error(error);
       }
     );
+  }
+
+
+  searchPlantCareUsers() {
+    this.fetchAllCompanys();
+  }
+
+  clearSearch(): void {
+    this.search = "";
+    this.fetchAllCompanys();
   }
 
   editCompany(id: number) {

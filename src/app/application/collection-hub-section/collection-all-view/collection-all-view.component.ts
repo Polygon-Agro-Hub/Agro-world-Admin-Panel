@@ -13,7 +13,9 @@ interface CollectionCenter {
   id: number;
   regCode: string;
   centerName: string;
+  code1: string;
   contact01: string;
+  code2: string;
   contact02: string;
   buildingNumber: string;
   street: string;

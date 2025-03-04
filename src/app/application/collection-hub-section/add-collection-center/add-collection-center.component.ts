@@ -38,8 +38,8 @@ export class AddCollectionCenterComponent implements OnInit {
       centerName: ['', [Validators.required, this.noNumbersValidator]],
       contact01: ['', [Validators.required,  Validators.pattern(/^[7][0-9]{8}$/)]],
       contact01Code: ['+94', Validators.required],
-      contact02: ['', [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)]],
-      contact02Code: ['+94', Validators.required],
+      contact02: ['',Validators.pattern(/^[7][0-9]{8}$/)],
+      contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],
       district: ['', Validators.required],
@@ -175,16 +175,19 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   onSubmit() {
-    // if (this.collectionCenterForm.invalid) {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Validation Error',
-    //     text: 'Please fill in all required fields.'
-    //   });
-    //   return;
-    // }
+   
 
-    this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
+    if(this.collectionCenterForm.value.buildingNumber && 
+      this.collectionCenterForm.value.street && 
+      this.collectionCenterForm.value.city &&
+      this.collectionCenterForm.value.centerName &&
+      this.collectionCenterForm.value.contact01 &&
+      this.collectionCenterForm.value.district &&
+      this.collectionCenterForm.value.province &&
+      this.collectionCenterForm.value.regCode &&
+      this.collectionCenterForm.value.contact01Code){
+
+      this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
 
     this.collectionCenterService.createCollectionCenter(this.centerData, this.selectedCompaniesIds).subscribe(
       (res) => {
@@ -207,7 +210,20 @@ export class AddCollectionCenterComponent implements OnInit {
         console.log("Error:", error);
       }
     );
+    }else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Form Validation Error',
+        text: 'Please check all fields and ensure they meet the required validation criteria.'
+      });
+    }
+
+    
   }
+
+
+ 
+  
 
   onCancel() {
     Swal.fire({

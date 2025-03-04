@@ -120,7 +120,7 @@ export class ViewCropTaskComponent implements OnInit {
         popup: 'dark:bg-tileBlack dark:text-textDark',
         cancelButton: 'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
         actions: 'dark:bg-tileBlack',
-        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[#8AC440] bg-[#8AC440]'
+        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]'
       }
     }).then((result) => {
       if (result.isConfirmed) {

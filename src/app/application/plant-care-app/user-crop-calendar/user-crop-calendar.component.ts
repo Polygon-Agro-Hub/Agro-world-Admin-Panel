@@ -192,7 +192,7 @@ export class UserCropCalendarComponent {
         popup: 'dark:bg-tileBlack dark:text-textDark',
         cancelButton: 'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
         actions: 'dark:bg-tileBlack',
-        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[[#3980C0] bg-[[#3980C0]'
+        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]'
       },
       didOpen: (popup) => {
         // Add custom styles to the document

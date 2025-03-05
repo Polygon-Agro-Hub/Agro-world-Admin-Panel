@@ -162,6 +162,10 @@
             </th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
+              Center Head Portals
+            ></th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
             ></th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -217,7 +221,15 @@
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.numOfCustomerOfficers }}
             </td>
-            <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="pt-1 pr-2 py-3 text-center text-textLight dark:text-textDark">
+              <button
+               class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                (click)="viewCompanyHeadPortals(item.id)"
+              >
+              <i class="fa-regular fa-square-plus text-2xl"></i>
+              </button>
+            </td>
+            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
             <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
               <svg
                 viewBox="0 0 24 24"
@@ -233,7 +245,8 @@
                 />
               </svg>
             </button>
-          </td> -->
+          </td>
+          
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"

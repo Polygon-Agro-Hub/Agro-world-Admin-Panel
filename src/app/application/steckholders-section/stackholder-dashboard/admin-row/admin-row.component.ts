@@ -7,12 +7,13 @@ import { environment } from '../../../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
 
 
 @Component({
   selector: "app-admin-row",
   standalone: true,
-  imports: [CommonModule, DropdownModule],
+  imports: [CommonModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: "./admin-row.component.html",
   styleUrl: "./admin-row.component.css",
 })
@@ -26,6 +27,8 @@ export class AdminRowComponent implements OnChanges {
   officerAdmins!: number;
   newAdminUsers!: number;
   allAdminUsers!: number;
+  isLoading = false;
+
 
   ngOnChanges(): void {
     // console.log("Row ---> ", this.firstRow);
@@ -33,7 +36,7 @@ export class AdminRowComponent implements OnChanges {
   }
 
   fetchAdminUserData(data: any) {
-
+    // this.isLoading = true;
     console.log('Admin->', data);
     this.associateAdmins = data.adminUsersByPosition.Associate.adminUserCount ?? 0;
     this.executiveAdmins = data.adminUsersByPosition.Executive.adminUserCount ?? 0;
@@ -41,7 +44,9 @@ export class AdminRowComponent implements OnChanges {
     this.officerAdmins = data.adminUsersByPosition.Manager.adminUserCount ?? 0;
     // this.adminUsersByPosition = data.adminUsersByPosition;
     this.newAdminUsers = data.todayAdmin.todayCount ?? 0;
+    // this.isLoading = false;
     this.allAdminUsers = this.totCount(this.associateAdmins, this.executiveAdmins, this.managerAdmins, this.officerAdmins);
+    
   }
 
   totCount(x1: number, x2: number, x3: number, x4: number): number {

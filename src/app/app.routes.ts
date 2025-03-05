@@ -271,26 +271,38 @@ export const routes: Routes = [
           {
             path: 'collective-officer-report/view/:id/:name',
             component: CollectionOfficerReportViewComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Collection Officer Daily Report' }, 
           },
           {
             path: 'collective-officer/district-report',
             component: CollectionofficerDistrictReportComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'District Report' }, 
           },
           {
             path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Collection Officer Farmer Report' },
           },
           {
             path: 'farmer-list-report',
             component: FarmerListReportComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Collection Officer Farmer Report' }, 
           },
           {
             path: 'collective-officer/province-report',
             component: CollectionOfficerProvinceReportComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Province Report' }, 
           },
           {
             path: 'collective-officer-report/monthly-report/:id',
             component: MonthlyReportComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Collection Officer Monthly Report' }, 
           },
         ],
       },
@@ -326,6 +338,8 @@ export const routes: Routes = [
                   {
                     path: 'upload-farmers',
                     component: UserBulkUploadComponent,
+                    canActivate: [ PermissionGuard],
+                    data: { permission: 'Bulk Plantcare User Upload' }, 
                   },
                 ],
               },

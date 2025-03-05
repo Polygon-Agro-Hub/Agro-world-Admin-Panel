@@ -14,7 +14,9 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
     </svg> Add New
 </button>
 
-<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="bulkUpload()">
+<button
+*ngIf="permissionService.hasPermission('Bulk Plantcare User Upload') || tokenService.getUserDetails().role ==='1'"
+class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="bulkUpload()">
   <i class="fa-solid fa-file-import pr-4"></i>
   Bulk Upload
 </button>

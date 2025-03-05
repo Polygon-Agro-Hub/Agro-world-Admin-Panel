@@ -334,7 +334,7 @@ export const routes: Routes = [
                     path: 'edit-plantcare-users',
                     component: EditPlantcareUsersComponent,
                     canActivate: [ PermissionGuard],
-                    data: { permission: 'Add plantcare user' }, 
+                    data: { permission: ['Add plantcare user', 'Edit Plantcare User'] }, 
                   },
                   {
                     path: 'upload-farmers',

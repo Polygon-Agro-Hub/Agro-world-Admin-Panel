@@ -350,4 +350,13 @@ export class CollectionCenterService {
       headers,
     });
   }
+
+  deleteCompanyHead(id: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete(`${this.apiUrl}auth/delete-company-head/${id}`, {
+      headers,
+    });
+  }
 }

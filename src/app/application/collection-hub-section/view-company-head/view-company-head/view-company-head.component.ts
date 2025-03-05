@@ -93,8 +93,11 @@ export class ViewCompanyHeadComponent implements OnInit{
     this.router.navigate(['/collection-hub/manage-company']);
   }
 
-  addNew(): void {
-    this.router.navigate(['/plant-care/action/create-crop-calender']);
+  // addNew(): void {
+  //   this.router.navigate(['/collection-hub/create-center-head']);
+  // }
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 
   onSearch() {
@@ -106,40 +109,44 @@ export class ViewCompanyHeadComponent implements OnInit{
     this.fetchAllCompanyHeads(this.companyId!, this.page, this.itemsPerPage, this.searchText);
   }
 
-  deleteCropCalender(id: any) {
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: 'Do you really want to delete this crop calendar item? This action cannot be undone.',
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#3085d6',
-    //   cancelButtonColor: '#d33',
-    //   confirmButtonText: 'Yes, delete it!',
-    //   cancelButtonText: 'Cancel',
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     this.cropCalendarService.deleteCropCalender(id).subscribe(
-    //       (data: any) => {
-    //         if (data) {
-    //           Swal.fire(
-    //             'Deleted!',
-    //             'The crop calendar item has been deleted.',
-    //             'success'
-    //           );
-    //           this.fetchAllCropCalenders();
-    //         }
-    //       },
-    //       (error) => {
-    //         console.error('Error deleting crop calendar:', error);
-    //         Swal.fire(
-    //           'Error!',
-    //           'There was an error deleting the crop calendar.',
-    //           'error'
-    //         );
-    //       }
-    //     );
-    //   }
-    // });
+  
+
+  deleteCompanyHead(id: any) {
+    console.log(id);
+    console.log('clicked');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this center head? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.companyService.deleteCompanyHead(id).subscribe(
+          (data: any) => {
+            if (data) {
+              Swal.fire(
+                'Deleted!',
+                'The Center Head has been deleted.',
+                'success'
+              );
+              this.fetchAllCompanyHeads();
+            }
+          },
+          (error) => {
+            console.error('Error deleting Center Head:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the Center Head.',
+              'error'
+            );
+          }
+        );
+      }
+    });
   }
 
   editCropCalender(id: number) {
@@ -155,7 +162,8 @@ export class ViewCompanyHeadComponent implements OnInit{
 }
 
 class CompanyHead {
-  empId!: number;
+  id!: number;
+  empId!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
   email!: string;

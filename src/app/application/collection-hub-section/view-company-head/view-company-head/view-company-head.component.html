@@ -9,7 +9,7 @@
 </button>
 <button
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-  (click)="addNew()"
+  (click)="navigatePath('/collection-hub/create-center-head')"
 >
   <svg
     class="w-5 h-5 mr-3"
@@ -163,9 +163,9 @@
                 {{ item.createdAtFormatted }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button
+              <!-- <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-2"
-                (click)="ViewCroptask(item.empId)"
+                (click)="ViewCroptask(item.id)"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -180,13 +180,13 @@
                     stroke-linejoin="round"
                   />
                 </svg>
-              </button>
+              </button> -->
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button
+              <!-- <button
                 class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="editCropCalender(item.empId)"
+                (click)="editCropCalender(item.id)"
               >
                 <svg
                   fill="currentColor"
@@ -199,13 +199,13 @@
                     d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
                   ></path>
                 </svg>
-              </button>
+              </button> -->
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
                 class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
-                (click)="deleteCropCalender(item.empId)"
+                (click)="deleteCompanyHead(item.id)"
               >
                 <svg
                   aria-hidden="true"

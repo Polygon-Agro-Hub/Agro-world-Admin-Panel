@@ -64,7 +64,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       taskDescriptionSinhala: ['', [Validators.required]],
       taskDescriptionTamil: ['', [Validators.required]],
       reqImages: ['', [Validators.required]],
-      imageLink: [''],
+      imageLink: ['', [Validators.required]],
       videoLinkEnglish: [''],
       videoLinkSinhala: [''],
       videoLinkTamil: [''],
@@ -93,52 +93,51 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
           if (res) {
             Swal.fire('Success', 'New Crop Calander Task Added !', 'success');
 
-          history.back()
-        }
-        else {
-          Swal.fire(
-            'Error',
-            'Error occor in adding task !',
-            'error'
-          );
-        }
-      }
-    )
-  }else{this.cropCalendarService.createNewCropTaskU(this.cropId, this.indexId, this.userId,  this.cropTaskObj, this.onCulscropID).subscribe(
-    (res) => {
-      if (res) {
-        Swal.fire(
-          'Success',
-          'New Crop Calander Task Added !',
-          'success'
-        );
+            history.back();
+          } else {
+            Swal.fire('Error', 'Error occor in adding task !', 'error');
+          }
+        });
+    } else {
+      this.cropCalendarService
+        .createNewCropTaskU(
+          this.cropId,
+          this.indexId,
+          this.userId,
+          this.cropTaskObj,
+          this.onCulscropID
+        )
+        .subscribe((res) => {
+          if (res) {
+            Swal.fire('Success', 'New Crop Calander Task Added !', 'success');
 
-        this.back(this.cropId, this.userId)
-      }
-      else {
-        Swal.fire(
-          'Error',
-          'Error occor in adding task !',
-          'error'
-        );
-      }
+            this.back(this.cropId, this.userId);
+          } else {
+            Swal.fire('Error', 'Error occor in adding task !', 'error');
+          }
+        });
     }
-  )}
-  
-    
-
   }
 
   back(cropCalendarId: string, userId: string) {
-
-    this.router.navigate(['plant-care/action/view-crop-task-by-user/user-task-list'], { 
-      queryParams: { cropCalendarId, userId} 
-    });
+    this.router.navigate(
+      ['plant-care/action/view-crop-task-by-user/user-task-list'],
+      {
+        queryParams: { cropCalendarId, userId },
+      }
+    );
   }
 
   onCancel(): void {
     console.log('Cancelled');
     this.selectedLanguage = 'english';
+  }
+
+  onlyAllowIntegers(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   }
 }
 

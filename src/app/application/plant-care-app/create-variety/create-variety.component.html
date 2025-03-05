@@ -57,7 +57,7 @@
             type="text"
             id="varietyNameEnglish"
             formControlName="varietyNameEnglish"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required
           />
           <div
@@ -122,7 +122,7 @@
             type="text"
             id="varietyNameSinhala"
             formControlName="varietyNameSinhala"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required
           />
           <div
@@ -187,7 +187,7 @@
             type="varietyNameTamil"
             id="varietyNameTamil"
             formControlName="varietyNameTamil"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required
           />
           <div
@@ -330,8 +330,8 @@
   </button>
   <div class="h-[20px]"></div>
 
-  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-    <h2 class="text-xl font-semibold text-center mb-4">EDIT CROP VARIETY</h2>
+  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg ">
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">EDIT CROP VARIETY</h2>
 
     <div class="space-y-4">
       <!-- Crop Name -->
@@ -355,14 +355,14 @@
       <div>
         <label
           for="varietyNameEnglish"
-          class="block text-sm font-medium text-gray-700"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >Variety Name By English</label
         >
         <input
           type="text"
           id="varietyNameEnglish"
           [(ngModel)]="newsItems[0].varietyNameEnglish"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
           #verityEngNameInput="ngModel"
           pattern="^(?!\d+$)[\s\S]*"
           required
@@ -415,14 +415,14 @@
       <div>
         <label
           for="varietyNameSinhala"
-          class="block text-sm font-medium text-gray-700"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >Variety Name By Sinhala</label
         >
         <input
           type="text"
           id="varietyNameSinhala"
           [(ngModel)]="newsItems[0].varietyNameSinhala"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
           #verietySinNameInput="ngModel"
           pattern="^(?!\d+$)[\s\S]*"
           required
@@ -477,14 +477,14 @@
       <div>
         <label
           for="varietyNameTamil"
-          class="block text-sm font-medium text-gray-700"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark" 
           >Variety Name By Tamil</label
         >
         <input
           type="varietyNameTamil"
           id="varietyNameTamil"
           [(ngModel)]="newsItems[0].varietyNameTamil"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
           #cropTamilNameInput="ngModel"
           pattern="^(?!\d+$)[\s\S]*"
           required

@@ -325,4 +325,29 @@ export class CollectionCenterService {
     let url = `${this.apiUrl}auth/create-daily-target`;
     return this.http.post<any>(url, data, { headers });
   }
+
+  getAllCompanyHeads(
+    companyId: number,
+    page: number,
+    limit: number,
+    searchText: string,
+    
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": "application/json",
+    });
+
+    let url = `${this.apiUrl}auth/get-company-head?companyId=${companyId}&page=${page}&limit=${limit}`;
+
+    
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
 }

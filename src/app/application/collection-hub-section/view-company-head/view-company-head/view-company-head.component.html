@@ -35,7 +35,7 @@
     <div class="flex justify-between items-center mb-8 ">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Crop Calenders ({{ this.totalItems }})
+          All Company Heads ({{totalItems}})
         </h2>
       </div>
       <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
@@ -71,48 +71,65 @@
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
       >
         <thead>
-          <tr>
+          <tr >
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class=" pr-20 font-normal text-textLight dark:text-textDark text-left"
             >
-              Crop
+              EMP ID
             </th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Crop
+              First Name
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Variety
+              Last Name
+            </th>
+            <th
+              class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Email
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Category
+              Status
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Cultivation Method
+              Phone Number-1
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Nature of Cultivation
+            Phone Number-2
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Duration
+            Created At
+            </th>
+            <th
+              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
+            >
+            </th>
+            <th
+              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
+            >
+            </th>
+            <th
+              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
+            >
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="
-              let item of newCropCalender
+              let item of companyHead
                 | paginate
                   : {
                       itemsPerPage: itemsPerPage,
@@ -123,29 +140,32 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="py-3 text-textLight dark:text-textDark">{{ (page - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="py-3 text-textLight dark:text-textDark">{{ item.empId }}</td>
             <td class="py-3 text-textLight dark:text-textDark">
-              {{ item.cropNameEnglish}}
+              {{ item.firstNameEnglish }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.lastNameEnglish }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.varietyNameEnglish }}
+              {{ item.email }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.category }}
+              {{ item.status }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.method }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.natOfCul }}
+              {{ item.phoneCode01+ ''  + item.phoneNumber01}}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.cropDuration }}
+                {{ item.phoneCode02 + ''  + item.phoneNumber02}}
+            </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                {{ item.createdAtFormatted }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
-                class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-8"
-                (click)="ViewCroptask(item.id)"
+                class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-2"
+                (click)="ViewCroptask(item.empId)"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -165,8 +185,8 @@
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
-                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="editCropCalender(item.id)"
+                class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="editCropCalender(item.empId)"
               >
                 <svg
                   fill="currentColor"
@@ -184,8 +204,8 @@
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
-                class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
-                (click)="deleteCropCalender(item.id)"
+                class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
+                (click)="deleteCropCalender(item.empId)"
               >
                 <svg
                   aria-hidden="true"

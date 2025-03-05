@@ -17,21 +17,21 @@
       <ul class="flex">
         <li
           class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-          [ngClass]="{ 'border-green-500': selectedLanguage === 'english' }"
+          [ngClass]="{ 'border-[#3B82F6]': selectedLanguage === 'english' }"
           (click)="selectLanguage('english')"
         >
           English
         </li>
         <li
           class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-          [ngClass]="{ 'border-green-500': selectedLanguage === 'sinhala' }"
+          [ngClass]="{ 'border-[#3B82F6]': selectedLanguage === 'sinhala' }"
           (click)="selectLanguage('sinhala')"
         >
           Sinhala
         </li>
         <li
           class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-          [ngClass]="{ 'border-green-500': selectedLanguage === 'tamil' }"
+          [ngClass]="{ 'border-[#3B82F6]': selectedLanguage === 'tamil' }"
           (click)="selectLanguage('tamil')"
         >
           Tamil
@@ -303,45 +303,53 @@
             >Add Days</label
           >
           <input
-            type="date"
+            type="number"
             formControlName="startingDate"
             id="startingDate"
             [(ngModel)]="cropTaskObj.startingDate"
             name="startingDate"
+            step="1"
+            inputmode="numeric"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            (keypress)="onlyAllowIntegers($event)"
           />
         </div>
 
         <div class="flex items-center my-3 px-12">
           <label
-            for="reqImages"
             class="block w-[100%] text-sm font-medium text-textLight dark:text-textDark"
             >Add No. of Images Required</label
           >
           <input
             type="number"
+            formControlName="images"
+            id="image"
+            [(ngModel)]="cropTaskObj.reqImages"
+            name="images"
+            step="1"
+            inputmode="numeric"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            (keypress)="onlyAllowIntegers($event)"
+          />
+          <!-- <input
+            type="number"
             min="0"
             formControlName="reqImages"
             id="reqImages"
             [(ngModel)]="cropTaskObj.reqImages"
-            name="reqImages"
             rows="3"
+            (keypress)="onlyAllowIntegers($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          />
-          <!-- <div
-            *ngIf="cropForm.get('specialNotes')!.invalid && (cropForm.get('specialNotes')!.dirty || cropForm.get('specialNotes')!.touched)"
-            class="text-red-500 text-sm mt-1">
-            <div *ngIf="cropForm.get('specialNotes')!.errors?.['required']">Special Notes is required</div>
-          </div> -->
+          /> -->
         </div>
       </div>
 
-      <div class="flex items-center justify-between md:col-span-2 my-3 px-12">
+      <div class="flex items-center md:col-span-2 my-3 px-12">
         <label
           class="block text-sm font-medium text-textLight dark:text-textDark"
           >Want to Add Images?</label
         >
-        <div class="mt-1">
+        <div class="mt-1 ml-6">
           <label class="inline-flex items-center">
             <input
               type="radio"

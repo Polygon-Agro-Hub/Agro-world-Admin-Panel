@@ -64,7 +64,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       taskDescriptionSinhala: ['', [Validators.required]],
       taskDescriptionTamil: ['', [Validators.required]],
       reqImages: ['', [Validators.required]],
-      imageLink: [''],
+      imageLink: ['', [Validators.required]],
       videoLinkEnglish: [''],
       videoLinkSinhala: [''],
       videoLinkTamil: [''],

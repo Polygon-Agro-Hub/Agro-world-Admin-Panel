@@ -249,14 +249,18 @@ export class CollectionCenterService {
     );
   }
 
-  getAllCompanyDetails(): Observable<any> {
+  getAllCompanyDetails(search: string = "",): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       "Content-Type": "application/json",
     });
-    return this.http.get(`${this.apiUrl}auth/get-all-company`, {
-      headers,
-    });
+
+    let url = `${this.apiUrl}auth/get-all-company`;
+    if (search) {
+      url += `?search=${search}`;
+    }
+
+    return this.http.get<any>(url, { headers });
   }
 
   updateCompany(companyData: any, id: number): Observable<any> {

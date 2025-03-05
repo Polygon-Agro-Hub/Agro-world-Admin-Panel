@@ -24,6 +24,8 @@ export class AddCollectionCenterComponent implements OnInit {
   selectedCompaniesNames: string[] = [];
   selectDistrict: string = '';
   city: string = '';
+
+  isLoadingregcode = false;
  
 
   constructor(
@@ -34,10 +36,10 @@ export class AddCollectionCenterComponent implements OnInit {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
       centerName: ['', [Validators.required, this.noNumbersValidator]],
-      contact01: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
+      contact01: ['', [Validators.required,  Validators.pattern(/^[7][0-9]{8}$/)]],
       contact01Code: ['+94', Validators.required],
-      contact02: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
-      contact02Code: ['+94', Validators.required],
+      contact02: ['',Validators.pattern(/^[7][0-9]{8}$/)],
+      contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],
       district: ['', Validators.required],
@@ -123,10 +125,11 @@ export class AddCollectionCenterComponent implements OnInit {
 
     // Fetch the next regCode from the backend when province or district changes
     if (selectedProvince && selectedDistrict && selectedCity) {
+      this.isLoadingregcode = true;
       this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
         .subscribe(response => {
           this.collectionCenterForm.patchValue({ regCode: response.regCode });
-         
+          this.isLoadingregcode = false;
         });
     }
   }
@@ -139,12 +142,15 @@ export class AddCollectionCenterComponent implements OnInit {
     const selectedCity = this.collectionCenterForm.get('city')?.value;
 
     if (selectedProvince && selectedDistrict && selectedCity) {
+      this.isLoadingregcode = true;
       this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
         .subscribe(response => {
           this.collectionCenterForm.patchValue({ regCode: response.regCode });
           console.log("New RegCode:", response.regCode);
+          this.isLoadingregcode = false;
         }, error => {
           console.error("Error fetching regCode:", error);
+          this.isLoadingregcode = false;
         });
     }
   }
@@ -153,6 +159,7 @@ export class AddCollectionCenterComponent implements OnInit {
     this.city = this.collectionCenterForm.get('city')?.value;
     // Trigger regCode update
     this.updateRegCode();
+    
   }
 
   updateRegCode() {
@@ -160,6 +167,7 @@ export class AddCollectionCenterComponent implements OnInit {
     const district = this.collectionCenterForm.get('district')?.value;
     const city = this.collectionCenterForm.get('city')?.value;
 
+    
     if (province && district && city) {
       const regCode = `${province.slice(0, 2).toUpperCase()}${district.slice(0, 1).toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
       this.collectionCenterForm.patchValue({ regCode });
@@ -167,16 +175,19 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   onSubmit() {
-    // if (this.collectionCenterForm.invalid) {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Validation Error',
-    //     text: 'Please fill in all required fields.'
-    //   });
-    //   return;
-    // }
+   
 
-    this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
+    if(this.collectionCenterForm.value.buildingNumber && 
+      this.collectionCenterForm.value.street && 
+      this.collectionCenterForm.value.city &&
+      this.collectionCenterForm.value.centerName &&
+      this.collectionCenterForm.value.contact01 &&
+      this.collectionCenterForm.value.district &&
+      this.collectionCenterForm.value.province &&
+      this.collectionCenterForm.value.regCode &&
+      this.collectionCenterForm.value.contact01Code){
+
+      this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
 
     this.collectionCenterService.createCollectionCenter(this.centerData, this.selectedCompaniesIds).subscribe(
       (res) => {
@@ -199,7 +210,20 @@ export class AddCollectionCenterComponent implements OnInit {
         console.log("Error:", error);
       }
     );
+    }else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Form Validation Error',
+        text: 'Please check all fields and ensure they meet the required validation criteria.'
+      });
+    }
+
+    
   }
+
+
+ 
+  
 
   onCancel() {
     Swal.fire({

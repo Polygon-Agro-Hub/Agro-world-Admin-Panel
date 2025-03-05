@@ -97,6 +97,7 @@ import { ViewCollectiveOfficerProfileComponent } from './application/steckholder
 import { PermissionGuard } from './guards/permission.guard';
 import { Status451Component } from './components/status-451/status-451.component';
 import { ViewOfficerTargetComponent } from './application/steckholders-section/view-officer-target/view-officer-target.component';
+import { ViewCompanyHeadComponent } from './application/collection-hub-section/view-company-head/view-company-head/view-company-head.component';
 
 export const routes: Routes = [
   {
@@ -451,6 +452,10 @@ export const routes: Routes = [
           {
             path: 'add-daily-target/:id/:name/:comid',
             component: AddDailyTargetComponent,
+          },
+          {
+            path: 'view-company-head',
+            component: ViewCompanyHeadComponent,
           },
         ],
       },

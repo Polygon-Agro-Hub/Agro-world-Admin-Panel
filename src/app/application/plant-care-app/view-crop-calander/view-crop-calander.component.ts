@@ -51,7 +51,8 @@ export class ViewCropCalanderComponent implements OnInit {
   constructor(
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    
   ) {}
 
   ngOnInit() {

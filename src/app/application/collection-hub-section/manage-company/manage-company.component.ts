@@ -64,6 +64,12 @@ export class ManageCompanyComponent {
     });
   }
 
+  viewCompanyHeadPortals(id: number) {
+    this.router.navigate(['/collection-hub/view-company-head'], {
+      queryParams: { id },
+    });
+  }
+
   deleteCompany(id: number) {
     const token = this.tokenService.getToken();
     if (!token) {

@@ -30,7 +30,7 @@
             placeholder="Company" [(ngModel)]="statusFilter" (onChange)="applyFilters()" />
         </div>
         <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by NIC" [(ngModel)]="searchNIC"
+          <input type="text" placeholder="Search" [(ngModel)]="searchNIC"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

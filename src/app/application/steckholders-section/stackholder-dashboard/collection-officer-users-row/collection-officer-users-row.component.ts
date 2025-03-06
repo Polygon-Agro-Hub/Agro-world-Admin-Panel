@@ -12,13 +12,13 @@ import { CommonModule } from '@angular/common';
 export class CollectionOfficerUsersRowComponent implements OnChanges {
   @Input() thirdRow: any = {};
 
-  centerHeadOfficers!: number;
-  centerManagers!: number;
-  collectionOfficers!: number;
-  customerOfficers!: number;
-  newOfficers!: number;
-  allOfficers!: number;
-  activeOfficers!: number;
+  centerHeadOfficers: number = 0;
+  centerManagers: number = 0;
+  collectionOfficers: number = 0;
+  customerOfficers: number = 0;
+  newOfficers: number = 0;
+  allOfficers: number = 0;
+  activeOfficers: number = 0;
 
   ngOnChanges(): void {
     this.fetchCollectionOfficerData(this.thirdRow);

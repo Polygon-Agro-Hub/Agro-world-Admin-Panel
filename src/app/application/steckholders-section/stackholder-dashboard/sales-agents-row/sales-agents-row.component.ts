@@ -12,9 +12,9 @@ import { CommonModule } from '@angular/common';
 export class SalesAgentsRowComponent implements OnChanges {
   @Input() fourthRow: any = {};
 
-  activeSalesAgents!: number;
-  allSalesAgents!: number;
-  newSalesAgents!: number;
+  activeSalesAgents: number = 0;
+  allSalesAgents : number = 0;
+  newSalesAgents: number = 0;
 
   ngOnChanges(): void {
     this.fetchSalesAgentData(this.fourthRow)

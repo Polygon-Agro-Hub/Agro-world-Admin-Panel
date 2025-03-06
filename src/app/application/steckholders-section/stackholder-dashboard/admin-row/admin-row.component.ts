@@ -21,12 +21,12 @@ export class AdminRowComponent implements OnChanges {
 
   @Input() firstRow: any = {}
 
-  associateAdmins!: number;
-  executiveAdmins!: number;
-  managerAdmins!: number;
-  officerAdmins!: number;
-  newAdminUsers!: number;
-  allAdminUsers!: number;
+  associateAdmins: number = 0;
+  executiveAdmins: number = 0;
+  managerAdmins: number = 0;
+  officerAdmins: number = 0;
+  newAdminUsers: number = 0;
+  allAdminUsers: number = 0;
   isLoading = false;
 
 

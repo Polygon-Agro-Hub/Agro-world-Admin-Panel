@@ -13,11 +13,11 @@ import { BarChartComponent } from '../bar-chart/bar-chart.component'
 export class PlantcareUsersRowComponent implements OnChanges {
   @Input() secondRow: any = {}
 
-  plantCareUsersWithOutQr!: number;
-  plantCareUsersWithQr!: number;
-  newPlantCareUsers!: number;
-  allPlantCareUsers!: number;
-  activePlantCareUsers!: number;
+  plantCareUsersWithOutQr: number =0;
+  plantCareUsersWithQr: number = 0;
+  newPlantCareUsers: number = 0;
+  allPlantCareUsers: number = 0;
+  activePlantCareUsers: number = 0;
 
   ngOnChanges(): void {
     this.fetchPlantCareUserData(this.secondRow);

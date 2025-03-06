@@ -459,7 +459,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9,10}$/; // Adjust based on phone number format
+    const phoneRegex = /^[0-9]{9}$/; // Adjust based on phone number format
     return phoneRegex.test(phone);
   }
 
@@ -536,8 +536,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       !!this.personalData.lastNameSinhala &&
       !!this.personalData.lastNameTamil;
     const isPhoneNumberValid =
-      this.isValidPhoneNumber(this.personalData.phoneNumber01) &&
-      this.isValidPhoneNumber(this.personalData.phoneNumber02);
+      this.isValidPhoneNumber(this.personalData.phoneNumber01);
     const isEmailValid = this.isValidEmail(this.personalData.email);
     const isEmpTypeSelected = !!this.empType;
     const isLanguagesSelected = !!this.personalData.languages;

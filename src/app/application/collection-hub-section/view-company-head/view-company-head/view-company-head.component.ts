@@ -16,6 +16,7 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
 
 import { FormsModule } from '@angular/forms';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
+import { CollectionService } from '../../../../services/collection.service';
 
 @Component({
   selector: 'app-view-company-head',
@@ -43,13 +44,15 @@ export class ViewCompanyHeadComponent implements OnInit{
   itemsPerPage: number = 10;
   hasData: boolean = true;
   searchText: string = '';
+  isPopupVisible = false;
   
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
     private companyService: CollectionCenterService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private collectionService: CollectionService,
   ) {}
 
   ngOnInit() {
@@ -159,6 +162,113 @@ export class ViewCompanyHeadComponent implements OnInit{
   ViewCroptask(id:number){
     // this.router.navigate([`plant-care/action/view-crop-task/${id}`])
   }
+
+    openPopup(item: any) {
+      this.isPopupVisible = true;
+  
+      // HTML structure for the popup
+      const tableHtml = `
+        <div class="container mx-auto">
+          <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstNameEnglish}</h1>
+          <div >
+            <p class="text-center">Are you sure you want to approve or reject this collection?</p>
+          </div>
+          <div class="flex justify-center mt-4">
+            <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
+            <button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>
+          </div>
+        </div>
+      `;
+  
+      Swal.fire({
+        html: tableHtml,
+        showConfirmButton: false, // Hide default confirm button
+        width: 'auto',
+        didOpen: () => {
+          // Handle the "Approve" button click
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The collection was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCompanyHeads();
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                (err) => {
+                  this.isLoading = false;
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while approving. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              );
+            });
+  
+          // Handle the "Reject" button click
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The collection was rejected successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCompanyHeads();
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                (err) => {
+                  this.isLoading = false;
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while rejecting. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              );
+            });
+        },
+      });
+    }
 
 }
 

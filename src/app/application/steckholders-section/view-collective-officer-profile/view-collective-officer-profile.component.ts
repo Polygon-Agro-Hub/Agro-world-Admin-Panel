@@ -27,6 +27,7 @@ export class ViewCollectiveOfficerProfileComponent {
   officerId!: number;
   showDisclaimView = false;
   isLoading = false;
+  empHeader: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +39,20 @@ export class ViewCollectiveOfficerProfileComponent {
   ngOnInit(): void {
     this.officerId = this.route.snapshot.params['id'];
     this.fetchOfficerById(this.officerId);
+    
+  }
+
+  getRoleHeading() {
+
+    if(this.officerObj.jobRole === 'Collection Officer'){
+      this.empHeader = 'COO';
+      console.log(this.empHeader);
+    }else if(this.officerObj.jobRole === 'Collection Center Manager'){
+      this.empHeader = 'CCM';
+      console.log('chalana',this.empHeader);
+    }else if(this.officerObj.jobRole === 'Customer Officer'){
+      this.empHeader = 'CUO';
+    }
   }
 
   fetchOfficerById(id: number) {
@@ -48,7 +63,10 @@ export class ViewCollectiveOfficerProfileComponent {
         this.isLoading = false;
         this.officerObj = res.officerData.collectionOfficer;
         console.log(this.officerObj);
+        this.getRoleHeading();
       });
+
+     
   }
 
   navigatePath(path: string) {
@@ -77,8 +95,12 @@ export class ViewCollectiveOfficerProfileComponent {
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
+          
+
+         
+
           pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-          const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.officerObj.empId}).pdf`;
+          const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader+this.officerObj.empId}).pdf`;
           pdf.save(fileName);
 
           buttons.forEach((btn) => (btn.style.display = 'block'));

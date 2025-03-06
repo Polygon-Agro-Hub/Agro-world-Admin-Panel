@@ -47,7 +47,7 @@
 
       <!-- Form or content for the modal -->
 
-      <div class="flex mb-4 align-middle justify-center items-center">
+      <div class="flex align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
           >Section Name</label
         >
@@ -55,11 +55,17 @@
           [(ngModel)]="createRolesObj.role"
           name="role"
           type="text"
+          #roleInput="ngModel"
+          required
           class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
           placeholder="Enter section name"
         />
       </div>
-      <div class="flex mb-4 align-middle justify-center items-center">
+      <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-center">
+        Section Name is required.
+      </div>
+
+      <div class="flex mt-4 align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
           >Email Address</label
         >
@@ -67,9 +73,14 @@
           [(ngModel)]="createRolesObj.email"
           name="email"
           type="email"
+          #emailInput="ngModel"
+          required
           class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
           placeholder="Enter email address"
         />
+      </div>
+      <div *ngIf="emailInput.invalid && emailInput.touched" class="text-red-500 text-sm text-center">
+        Valid email is required.
       </div>
 
       <!-- Modal Footer with buttons -->
@@ -81,6 +92,7 @@
           Cancel
         </button>
         <button
+          [disabled]="roleInput.invalid || emailInput.invalid"
           (click)="onSubmit()"
           class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
         >
@@ -105,7 +117,7 @@
 
       <!-- Form or content for the modal -->
 
-      <div class="flex mb-4 align-middle justify-center items-center">
+      <div class="flex align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
           >Section Name</label
         >
@@ -113,11 +125,17 @@
           [(ngModel)]="selectedRole.role"
           name="role"
           type="text"
+          #roleInput="ngModel"
+          required
           class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
           placeholder="Enter section name"
         />
       </div>
-      <div class="flex mb-4 align-middle justify-center items-center">
+      <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-center">
+        Section Name is required.
+      </div>
+
+      <div class="flex mt-4 align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
           >Email Address</label
         >
@@ -125,9 +143,14 @@
           [(ngModel)]="selectedRole.email"
           name="email"
           type="email"
+          #emailInput="ngModel"
+          required
           class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
           placeholder="Enter email address"
         />
+      </div>
+      <div *ngIf="emailInput.invalid && emailInput.touched" class="text-red-500 text-sm text-center">
+        Valid email is required.
       </div>
 
       <!-- Modal Footer with buttons -->
@@ -139,6 +162,7 @@
           Cancel
         </button>
         <button
+        [disabled]="roleInput.invalid || emailInput.invalid"
           (click)="onEditOnSubmit()"
           class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
         >

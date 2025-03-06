@@ -168,6 +168,7 @@ export class CollectiveofficersEditComponent {
           console.log('laguages', this.selectedLanguages);
 
           this.matchExistingBankToDropdown();
+          this.getAllCollectionManagers();
 
 
           this.isLoading = false;
@@ -185,7 +186,7 @@ export class CollectiveofficersEditComponent {
     this.getAllCollectionCetnter()
     this.getAllCompanies()
     this.EpmloyeIdCreate()
-    this.getAllCollectionManagers();
+    
   }
 
 
@@ -399,8 +400,8 @@ export class CollectiveofficersEditComponent {
 
 
   getAllCollectionManagers() {
-    console.log('Company ID:', this.comId, this.cenId);
-    this.collectionCenterSrv.getAllManagerList(this.comId, this.cenId).subscribe(
+    console.log('Company ID:', this.personalData.companyId, this.personalData.centerId);
+    this.collectionCenterSrv.getAllManagerList(this.personalData.companyId, this.personalData.centerId).subscribe(
       (res) => {
         this.collectionManagerData = res
       }

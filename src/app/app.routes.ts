@@ -99,6 +99,7 @@ import { Status451Component } from './components/status-451/status-451.component
 import { ViewOfficerTargetComponent } from './application/steckholders-section/view-officer-target/view-officer-target.component';
 import { ViewCompanyHeadComponent } from './application/collection-hub-section/view-company-head/view-company-head/view-company-head.component';
 import { CreateCenterHeadComponent } from './application/collection-hub-section/create-center-head/create-center-head/create-center-head.component';
+import { EditCenterHeadComponent } from './application/collection-hub-section/edit-center-head/edit-center-head/edit-center-head.component';
 
 export const routes: Routes = [
   {
@@ -475,6 +476,10 @@ export const routes: Routes = [
           {
             path: 'create-center-head',
             component: CreateCenterHeadComponent,
+          },
+          {
+            path: 'edit-center-head/:id',
+            component: EditCenterHeadComponent,
           },
         ],
       },

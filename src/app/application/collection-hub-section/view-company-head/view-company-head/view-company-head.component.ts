@@ -84,6 +84,11 @@ export class ViewCompanyHeadComponent implements OnInit{
     );
   }
 
+  editCompanyHead(id: number) {
+    
+    this.navigatePath(`/collection-hub/edit-center-head/${id}`);
+  }
+
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCompanyHeads(this.companyId!, this.page, this.itemsPerPage, this.searchText); // Include itemsPerPage

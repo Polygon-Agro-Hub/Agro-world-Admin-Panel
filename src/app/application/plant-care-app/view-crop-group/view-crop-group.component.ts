@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 interface NewCropCalender {
   id: number;
@@ -30,6 +31,7 @@ interface NewCropGroup {
   selector: 'app-view-crop-group',
   standalone: true,
   imports: [
+    FormsModule,
     HttpClientModule,
     CommonModule,
     LoadingSpinnerComponent,
@@ -49,6 +51,8 @@ export class ViewCropGroupComponent {
   itemsPerPage: number = 10;
   hasData: boolean = true;
 
+  searchTerm: string = '';
+
   constructor(
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
@@ -59,24 +63,63 @@ export class ViewCropGroupComponent {
     this.fetchAllCropGroups();
   }
 
-  fetchAllCropGroups(page: number = 1, limit: number = this.itemsPerPage) {
-    console.log('Fetching market prices for page:', page); // Debug log
+  // fetchAllCropGroups(page: number = 1, limit: number = this.itemsPerPage) {
+  //   console.log('Fetching market prices for page:', page); // Debug log
+  //   this.page = page;
+  //   this.cropCalendarService.fetchAllCropGroups(page, limit).subscribe(
+  //     (data) => {
+  //       this.isLoading = false;
+  //       this.newCropGroup = data.items;
+  //       console.log(this.newCropGroup);
+  //       this.hasData = this.newCropGroup.length > 0;
+  //       this.totalItems = data.total;
+  //     },
+  //     (error) => {
+  //       console.error('Error fetch news:', error);
+  //       if (error.status === 401) {
+  //         this.isLoading = false;
+  //       }
+  //     }
+  //   );
+  // }
+
+  fetchAllCropGroups(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    searchTerm: string = ''
+  ) {
+    console.log(
+      'Fetching market prices for page:',
+      page,
+      'Search:',
+      searchTerm
+    ); // Debug log
     this.page = page;
-    this.cropCalendarService.fetchAllCropGroups(page, limit).subscribe(
-      (data) => {
-        this.isLoading = false;
-        this.newCropGroup = data.items;
-        console.log(this.newCropGroup);
-        this.hasData = this.newCropGroup.length > 0;
-        this.totalItems = data.total;
-      },
-      (error) => {
-        console.error('Error fetch news:', error);
-        if (error.status === 401) {
+    this.isLoading = true;
+
+    this.cropCalendarService
+      .fetchAllCropGroups(page, limit, searchTerm)
+      .subscribe(
+        (data) => {
           this.isLoading = false;
+          this.newCropGroup = data.items;
+          console.log(this.newCropGroup);
+          this.hasData = this.newCropGroup.length > 0;
+          this.totalItems = data.total;
+        },
+        (error) => {
+          console.error('Error fetching crop groups:', error);
+          this.isLoading = false;
+          if (error.status === 401) {
+            // Handle unauthorized error
+          }
         }
-      }
-    );
+      );
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.fetchAllCropGroups(1, this.itemsPerPage);
   }
 
   onPageChange(event: number) {

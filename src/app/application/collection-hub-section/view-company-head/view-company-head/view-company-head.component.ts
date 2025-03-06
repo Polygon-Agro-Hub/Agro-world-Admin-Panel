@@ -32,6 +32,7 @@ import { CollectionCenterService } from '../../../../services/collection-center/
 })
 export class ViewCompanyHeadComponent implements OnInit{
   companyId: number | null = null;
+  companyName: string | null = null;
   companyHead: CompanyHead[] = [];
   
 
@@ -54,10 +55,10 @@ export class ViewCompanyHeadComponent implements OnInit{
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.companyId = params['id'] ? +params['id'] : null;
-      console.log('Received item ID:', this.companyId);
-      
-      this.fetchAllCompanyHeads();
+      this.companyName = params['companyName'] ? params['companyName'] : null; // Keep companyName as a string
+      console.log('Received item ID:', this.companyId);      
     });
+    this.fetchAllCompanyHeads();
   }
 
   fetchAllCompanyHeads(companyId: number = this.companyId!, page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText) {

@@ -64,9 +64,9 @@ export class ManageCompanyComponent {
     });
   }
 
-  viewCompanyHeadPortals(id: number) {
+  viewCompanyHeadPortals(id: number, companyName: string) {
     this.router.navigate(['/collection-hub/view-company-head'], {
-      queryParams: { id },
+      queryParams: { id, companyName },
     });
   }
 

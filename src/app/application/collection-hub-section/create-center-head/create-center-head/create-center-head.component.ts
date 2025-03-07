@@ -151,6 +151,7 @@ export class CreateCenterHeadComponent implements OnInit {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
+    console.log('file input triggered');
   }
 
   onFileSelected(event: any): void {
@@ -170,12 +171,19 @@ export class CreateCenterHeadComponent implements OnInit {
       this.selectedFile = file;
       this.personalData.image = file;
       this.selectedFileName = file.name;
+      
+      // console.log(this.selectedFile);
+      // console.log(this.personalData.image);
+      // console.log(this.selectedFileName);
+      
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
+        // console.log(e.target.result);
         this.selectedImage = e.target.result;
       };
       reader.readAsDataURL(file);
+      console.log(this.selectedImage);
     }
   }
 
@@ -338,7 +346,7 @@ export class CreateCenterHeadComponent implements OnInit {
         this.isLoading = true;
         // Proceed with submission if user clicks 'Yes'
         this.collectionOfficerService
-          .createCollectiveOfficer(this.personalData, this.selectedImage)
+          .createCenterHead(this.personalData, this.selectedImage)
           .subscribe(
             (res: any) => {
               this.isLoading = false;

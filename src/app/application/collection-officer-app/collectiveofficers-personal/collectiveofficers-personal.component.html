@@ -168,22 +168,27 @@
           >
             Company Name
           </label>
-          <select
-            (blur)="onBlur('companyId')"
-            id="centerId"
-            [(ngModel)]="personalData.companyId"
-            name="centerId"
-            (change)="getAllCollectionCetnter(personalData.companyId)"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option
-              *ngFor="let center of CompanyData"
-              [value]="center.id"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+          <div class="relative">
+            <select
+              (blur)="onBlur('companyId')"
+              id="centerId"
+              [(ngModel)]="personalData.companyId"
+              name="centerId"
+              (change)="getAllCollectionCetnter(personalData.companyId)"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
             >
-              {{ center.companyNameEnglish }}
-            </option>
-          </select>
+              <option
+                *ngFor="let center of CompanyData"
+                [value]="center.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                {{ center.companyNameEnglish }}
+              </option>
+            </select>
+            <i
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
+            ></i>
+          </div>
           <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm"
             >Company Name is required.</span
           >
@@ -223,28 +228,33 @@
           >
             Collection Center Name
           </label>
-          <select
-            (blur)="onBlur('centerId')"
-            id="centerId"
-            [(ngModel)]="personalData.centerId"
-            name="centerId"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-            [disabled]="!loaded"
-          >
-            <option *ngIf="!loaded" disabled selected>Loading...</option>
-            <option
-              *ngFor="let center of collectionCenterData"
-              [value]="center.id"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+          <div class="relative">
+            <select
+              (blur)="onBlur('centerId')"
+              id="centerId"
+              [(ngModel)]="personalData.centerId"
+              name="centerId"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+              [disabled]="!loaded"
             >
-              {{ center.centerName }}
-            </option>
-          </select>
+              <option *ngIf="!loaded" disabled selected>Loading...</option>
+              <option
+                *ngFor="let center of collectionCenterData"
+                [value]="center.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                {{ center.centerName }}
+              </option>
+            </select>
+            <!-- FontAwesome Down Arrow Icon -->
+            <i
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
+            ></i>
+          </div>
           <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm"
             >Center Name is required.</span
           >
         </div>
-        
 
         <div>
           <label
@@ -253,48 +263,54 @@
           >
             Job Role
           </label>
-          <select
-            (blur)="onBlur('jobRole')"
-            id="jobRole"
-            [(ngModel)]="personalData.jobRole"
-            (change)="EpmloyeIdCreate()"
-            name="jobRole"
-            placeholder="select"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option
-              disabled
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+          <div class="relative">
+            <select
+              (blur)="onBlur('jobRole')"
+              id="jobRole"
+              [(ngModel)]="personalData.jobRole"
+              (change)="EpmloyeIdCreate()"
+              name="jobRole"
+              placeholder="select"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
             >
-              -- select --
-            </option>
-            <!-- <option
-              value="Collection Center Head"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-            >
-              Collection Center Head
-            </option> -->
-            <option
-              value="Collection Center Manager"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-            >
-              Collection Center Manager
-            </option>
-            <option
-              *ngIf="personalData.companyId === '1'"
-              value="Collection Officer"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-            >
-              Collection Officer
-            </option>
-            <option
-              *ngIf="personalData.companyId === '1'"
-              value="Customer Officer"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-            >
-              Customer Officer
-            </option>
-          </select>
+              <option
+                disabled
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                -- select --
+              </option>
+              <!-- <option
+                value="Collection Center Head"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                Collection Center Head
+              </option> -->
+              <option
+                value="Collection Center Manager"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                Collection Center Manager
+              </option>
+              <option
+                *ngIf="personalData.companyId === '1'"
+                value="Collection Officer"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                Collection Officer
+              </option>
+              <option
+                *ngIf="personalData.companyId === '1'"
+                value="Customer Officer"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                Customer Officer
+              </option>
+            </select>
+            <!-- FontAwesome Down Arrow Icon -->
+            <i
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
+            ></i>
+          </div>
           <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm"
             >Job Role is required.</span
           >
@@ -335,20 +351,26 @@
           >
             Manager Name
           </label>
-          <select
-            id="centerId"
-            [(ngModel)]="personalData.irmId"
-            name="centerId"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option
-              *ngFor="let center of collectionManagerData"
-              [value]="center.id"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+          <div class="relative">
+            <select
+              id="centerId"
+              [(ngModel)]="personalData.irmId"
+              name="centerId"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
             >
-              {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
-            </option>
-          </select>
+              <option
+                *ngFor="let center of collectionManagerData"
+                [value]="center.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
+              </option>
+            </select>
+            <!-- FontAwesome Down Arrow Icon -->
+            <i
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
+            ></i>
+          </div>
         </div>
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>
@@ -768,7 +790,10 @@
       </div>
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Account Number
         </label>
         <input
@@ -783,9 +808,12 @@
           Account Number is required.
         </span>
       </div>
-      
+
       <div class="pb-6">
-        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="confirmAccNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Confirm Account Number
         </label>
         <input
@@ -796,14 +824,17 @@
           (blur)="onBlur('confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
+
         <!-- Required validation message -->
         <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
           Confirm Account Number is required.
         </span>
-      
+
         <!-- Mismatch validation message -->
-        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span
+          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+          class="text-red-600 text-sm"
+        >
           Account Numbers do not match.
         </span>
       </div>
@@ -826,42 +857,49 @@
         >
       </div> -->
 
-
       <div class="pb-6">
-        <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="bankDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Bank Name
         </label>
-        <select 
-          id="bankDropdown" 
+        <select
+          id="bankDropdown"
           name="bankDropdown"
           [(ngModel)]="selectedBankId"
           (change)="onBankChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option [ngValue]="null" disabled>Select a bank</option>
-          <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+          <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+            {{ bank.name }}
+          </option>
         </select>
         <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
           Bank Name is required.
         </span>
       </div>
 
-
-
-
-
       <div class="pb-6">
-        <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="branchDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Branch Name
         </label>
-        <select 
-          id="branchDropdown" 
+        <select
+          id="branchDropdown"
           name="branchDropdown"
           [(ngModel)]="selectedBranchId"
           (change)="onBranchChange()"
           [disabled]="!selectedBankId"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option [ngValue]="null" disabled>Select a branch</option>
-          <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+          <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+            {{ branch.name }}
+          </option>
         </select>
         <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
           Branch Name is required.

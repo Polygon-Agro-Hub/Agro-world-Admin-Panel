@@ -64,6 +64,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   upateEmpID!: string;
   empType!: string;
 
+  loaded = true;
+
 
 
   banks: Bank[] = [];
@@ -222,7 +224,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
-    this.getAllCollectionCetnter();
+    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
@@ -290,10 +292,31 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
 
-  getAllCollectionCetnter() {
-    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
-      this.collectionCenterData = res;
-    });
+  // getAllCollectionCetnter(id : number) {
+  //   this.loaded=false;
+  //   this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe((res) => {
+  //     this.collectionCenterData = res;
+      
+
+      
+  //     this.loaded=true;
+  //   });
+  // }
+
+
+  getAllCollectionCetnter(id : number) {
+    this.loaded = false; // Set loading state
+    this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
+      (res) => {
+        this.collectionCenterData = res;
+        this.loaded = true; // Set loaded state to true when data arrives
+      },
+      (error) => {
+        console.error("Error fetching centers", error);
+        this.collectionCenterData = []; // Clear the data on error
+        this.loaded = true; // Even on error, stop loading state
+      }
+    );
   }
 
   getAllCompanies() {

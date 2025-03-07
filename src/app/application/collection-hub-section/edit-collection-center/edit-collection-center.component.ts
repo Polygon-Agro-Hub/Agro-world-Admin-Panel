@@ -197,7 +197,8 @@ export class EditCollectionCenterComponent implements OnInit {
 
   updateSelectedCompanies() {
     if (this.centerFetchData.companies) {
-      const companyNames = this.centerFetchData.companies.split(', ').map(name => name.trim());
+      const companyNames = this.centerFetchData.companies.split(',').map(name => name.trim());
+
       this.selectedCompaniesIds = this.CompanyData
         .filter(company => companyNames.includes(company.companyNameEnglish))
         .map(company => company.id);
@@ -219,7 +220,7 @@ export class EditCollectionCenterComponent implements OnInit {
     this.centerFetchData.companies = this.CompanyData
       .filter(c => this.selectedCompaniesIds.includes(c.id))
       .map(c => c.companyNameEnglish)
-      .join(', ');
+      .join(',');
   
     console.log('Selected IDs:', this.selectedCompaniesIds);
     console.log('Selected Companies:', this.centerFetchData.companies);

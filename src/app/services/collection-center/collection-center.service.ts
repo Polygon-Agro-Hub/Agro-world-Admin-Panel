@@ -37,6 +37,19 @@ export class CollectionCenterService {
     });
   }
 
+
+
+
+  getAllCollectionCenterByCompany(companyId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": "application/json",
+    });
+    return this.http.get(`${this.apiUrl}auth/get-all-center-by-company/${companyId}`, {
+      headers,
+    });
+  }
+
   deleteCollectionCenter(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -141,6 +154,8 @@ export class CollectionCenterService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  
 
   getCenterById(id: number): Observable<any> {
     const headers = new HttpHeaders({

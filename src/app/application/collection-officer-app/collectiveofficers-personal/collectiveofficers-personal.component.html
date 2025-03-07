@@ -173,6 +173,7 @@
             id="centerId"
             [(ngModel)]="personalData.companyId"
             name="centerId"
+            (change)="getAllCollectionCetnter(personalData.companyId)"
             class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
           >
             <option
@@ -188,7 +189,7 @@
           >
         </div>
 
-        <div>
+        <!-- <div>
           <label
             for="centerId"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -213,7 +214,37 @@
           <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm"
             >Center Name is required.</span
           >
+        </div> -->
+
+        <div>
+          <label
+            for="centerId"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Collection Center Name
+          </label>
+          <select
+            (blur)="onBlur('centerId')"
+            id="centerId"
+            [(ngModel)]="personalData.centerId"
+            name="centerId"
+            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
+            [disabled]="!loaded"
+          >
+            <option *ngIf="!loaded" disabled selected>Loading...</option>
+            <option
+              *ngFor="let center of collectionCenterData"
+              [value]="center.id"
+              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+            >
+              {{ center.centerName }}
+            </option>
+          </select>
+          <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm"
+            >Center Name is required.</span
+          >
         </div>
+        
 
         <div>
           <label

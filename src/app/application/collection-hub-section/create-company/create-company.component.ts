@@ -52,6 +52,7 @@ export class CreateCompanyComponent {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
+  isView: boolean = false;
   isLoading = false;
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
@@ -96,7 +97,9 @@ export class CreateCompanyComponent {
     // Subscribe to form value changes
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
+      this.isView = params['isView'] === 'true';
       console.log('Received item ID:', this.itemId);
+      console.log('recieved view state: ', this.isView);
     });
     this.userForm.valueChanges.subscribe((formValues) => {
       this.companyData = { ...this.companyData, ...formValues };

@@ -407,7 +407,7 @@
 
 
 
-  <div *ngIf="itemId !== null">
+  <div *ngIf="itemId !== null && !isView">
     <div *ngIf="selectedPage === 'pageOne'">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Edit Company Details
@@ -550,109 +550,6 @@
             </div>
           </div>
         </div>
-
-        <!-- <div class="pb-6">
-            <label
-              for="oicName"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Officer In Charge Name</label
-            >
-            <input
-              id="oicName"
-              name="oicName"
-              [(ngModel)]="companyData.oicName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <div *ngIf="userForm.get('oicName')!.invalid && (userForm.get('oicName')!.dirty || userForm.get('oicName')!.touched)" class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('oicName')!.errors?.['required']">Name is required.</div>
-            </div>
-          </div>
-
-
-
-
-          <div class="pb-6">
-            <label
-              for="oicEmail"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Officer In Charge Email</label
-            >
-            <input
-              id="oicEmail"
-              name="oicEmail"
-              [(ngModel)]="companyData.oicEmail"
-              type="email"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <div *ngIf="userForm.get('oicEmail')!.invalid && (userForm.get('oicEmail')!.dirty || userForm.get('oicEmail')!.touched)" class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('oicEmail')!.errors?.['required']">Email is required.</div>
-            </div>
-          </div> -->
-
-        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-         
-            <div>
-                <label
-                  for="phoneNumber01"
-                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
-                >
-                  Phone Number - 1
-                </label>
-                <div class="mt-1 flex">
-                  <select
-                    id="phoneNumber01Code"
-                    name="phoneNumber01Code"
-                    [(ngModel)]="companyData.oicConCode1"
-                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-                  >
-                    <option value="+94">+94 (LK)</option>
-                    <option value="+1">+1 (US)</option>
-                    <option value="+44">+44 (UK)</option>
-                    <option value="+91">+91 (India)</option>
-                  </select>
-                  <input
-                  [(ngModel)]="companyData.oicConNum1"
-                    id="phoneNumber01"
-                    name="phoneNumber01"
-                    type="number"
-                    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-              </div>
-    
-              <div>
-                <label
-                  for="phoNumTwo"
-                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
-                >
-                  Phone Number - 2 (Optional)
-                </label>
-                <div class="mt-1 flex">
-                  <select
-                    id="phoneNumber02Code"
-                    name="phoneNumber02Code"
-                    [(ngModel)]="companyData.oicConCode2"
-                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-                  >
-                    <option value="+94">+94 (LK)</option>
-                    <option value="+1">+1 (US)</option>
-                    <option value="+44">+44 (UK)</option>
-                    <option value="+91">+91 (India)</option>
-                  </select>
-                  <input
-                    [(ngModel)]="companyData.oicConNum2"
-                    id="phoneNumber02"
-                    name="phoneNumber02"
-                    type="number"
-                    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                    placeholder="Enter your phone number"
-                  />
-                  
-                </div>
-              </div>
-
-        </div> -->
       </div>
 
       <div class="flex justify-end m-10">
@@ -674,7 +571,7 @@
     </div>
   </div>
 
-  <div *ngIf="itemId !== null">
+  <div *ngIf="itemId !== null && !isView">
     <div *ngIf="selectedPage === 'pageTwo'">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Edit Billing Information
@@ -789,4 +686,236 @@
       </div>
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div *ngIf="itemId !== null && isView">
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+      Company Details
+    </h2>
+    <div>
+      <div class="pb-6">
+        <label
+          for="regNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Registration Number of the Company</label
+        >
+        <input
+          id="regNumber"
+          name="regNumber"
+          [(ngModel)]="companyData.regNumber"
+          [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="companyNameEnglish"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Company Name (in English)</label
+        >
+        <input
+          id="companyNameEnglish"
+          name="companyNameEnglish"
+          [(ngModel)]="companyData.companyNameEnglish"
+          [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="companyNameSinhala"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Company Name (in Sinhala)</label
+        >
+        <input
+          id="companyNameSinhala"
+          name="companyNameSinhala"
+          [(ngModel)]="companyData.companyNameSinhala"
+          [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="companyNameTamil"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Company Name (in Tamil)</label
+        >
+        <input
+          id="companyNameTamil"
+          name="companyNameTamil"
+          [(ngModel)]="companyData.companyNameTamil"
+          [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="email"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Company Email Address</label
+        >
+        <input
+          id="email"
+          name="email"
+          [(ngModel)]="companyData.email"
+          [disabled]="true"
+          type="email"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        
+      </div>
+
+      
+    </div>
+
+
+
+    <h2 class="text-2xl mt-5 mb-10 text-textLight dark:text-textDark">
+      Billing Information
+    </h2>
+    <div>
+      <div class="pb-6">
+        <label
+          for="companyNameEnglish"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Account Holder’s Name</label
+        >
+        <input
+          id="companyNameEnglish"
+          name="companyNameEnglish"
+          [(ngModel)]="companyData.accHolderName"
+          [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+      </div>
+
+      <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Account Number
+        </label>
+        <input
+          id="accNumber"
+          name="accNumber"
+          [(ngModel)]="companyData.accNumber"
+          [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        
+      </div>
+
+      <div>
+        <div class="pb-6">
+          <label
+            for="bankName"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Bank Name</label
+          >
+          <input
+            id="bankName"
+            name="bankName"
+            [(ngModel)]="companyData.bankName"
+            [disabled]="true"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+      </div>
+
+      <div>
+        <div class="pb-6">
+          <label
+            for="branchName"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Branch Name</label
+          >
+          <input
+            id="branchName"
+            name="branchName"
+            [(ngModel)]="companyData.branchName"
+            [disabled]="true"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

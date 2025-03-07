@@ -32,6 +32,11 @@ interface CollectionOfficers {
   centerName: string;
 }
 
+interface JobRole {
+  id: number;
+  jobRole: string;
+}
+
 @Component({
   selector: 'app-view-collective-officer',
   standalone: true,
@@ -48,6 +53,7 @@ interface CollectionOfficers {
 })
 export class ViewCollectiveOfficerComponent {
   collectionOfficers: CollectionOfficers[] = [];
+  jobRole: JobRole[] = [];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;

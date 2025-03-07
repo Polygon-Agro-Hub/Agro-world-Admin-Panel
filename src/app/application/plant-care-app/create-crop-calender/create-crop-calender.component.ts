@@ -352,7 +352,7 @@ export class CreateCropCalenderComponent {
             title: "Success",
             text: "Crop Calendar updated successfully!",
           });
-          this.router.navigate(["/plant-care/view-crop-calender"]);
+          this.router.navigate(["/plant-care/action/view-crop-calender"]);
         },
         (error: any) => {
           this.isLoading = false;

@@ -64,6 +64,12 @@ export class ManageCompanyComponent {
     });
   }
 
+  viewCompany(id: number, isView: boolean) {
+    this.router.navigate(['/collection-hub/create-company'], {
+      queryParams: { id, isView },
+    });
+  }
+
   viewCompanyHeadPortals(id: number, companyName: string) {
     this.router.navigate(['/collection-hub/view-company-head'], {
       queryParams: { id, companyName },

@@ -117,6 +117,41 @@ export class CollectionCenterService {
     });
   }
 
+
+
+
+
+  getAllCenterComplain(
+    page: number,
+    limit: number,
+    status: String,
+    category: String,
+    searchText: string,
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": "application/json",
+    });
+
+    let url = `${this.apiUrl}auth/get-all-center-complains?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+
   getComplainById(id: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

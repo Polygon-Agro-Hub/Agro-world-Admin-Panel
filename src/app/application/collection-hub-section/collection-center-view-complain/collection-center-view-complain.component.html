@@ -23,13 +23,21 @@
           />
         </svg>
       </i>
-      <div class="mr-5">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-          placeholder="Category"
-        ></p-dropdown>
+      
+      
+
+      <div class="mr-5" *ngIf="tokenService.getUserDetails().role ==='1'">
+        <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
+        [baseZIndex]="1000"
+        appendTo="body"
+          [options]="category" 
+          [(ngModel)]="filterCategory" 
+          [checkmark]="true" 
+          optionLabel="type" 
+          [showClear]="true" placeholder="Category" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
       </div>
+
+      
       <div class="mr-5">
         <p-dropdown
           styleClass="border border-2 rounded-xl h-8 items-center
@@ -159,14 +167,20 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="border-b border-gray-200 dark:border-[#4B555A]">
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
-          <td class="py-3 dark:text-textDark text-centser"></td>
+        <tr class="border-b border-gray-200 dark:border-[#4B555A]"
+        *ngFor="let item of complainsData | paginate
+        : {
+            itemsPerPage: itemsPerPage,
+            currentPage: page,
+            totalItems: totalItems
+          }">
+          <td class="py-3 dark:text-textDark text-centser">{{item.refNo}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.complainCategory}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.empId}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.companyName}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.regCode}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.createdAt}}</td>
+          <td class="py-3 dark:text-textDark text-centser">{{item.status}}</td>
           <td class="py-3 dark:text-textDark text-centser">
             <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
               <svg

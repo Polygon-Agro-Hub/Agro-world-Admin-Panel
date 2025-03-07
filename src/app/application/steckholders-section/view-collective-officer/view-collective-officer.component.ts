@@ -27,6 +27,7 @@ interface CollectionOfficers {
   nic: string;
   status: string;
   claimStatus: number;
+  jobRole: string;
   created_at: string;
   centerName: string;
 }

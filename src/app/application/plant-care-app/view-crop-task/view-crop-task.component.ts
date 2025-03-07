@@ -5,15 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import Swal from 'sweetalert2';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 class CropTask {
-  'cropId':string;
+  'cropId': string;
   'taskIndex': string;
   'days': string;
   'taskEnglish': string;
-  'imageLink' : string;
+  'imageLink': string;
   'videoLinkEnglish': string;
   'videoLinkSinhala': string;
   'videoLinkTamil': string;
@@ -23,7 +22,12 @@ class CropTask {
 @Component({
   selector: 'app-view-crop-task',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    NgxPaginationModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-crop-task.component.html',
   styleUrl: './view-crop-task.component.css',
 })
@@ -35,7 +39,7 @@ export class ViewCropTaskComponent implements OnInit {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  hasData: boolean = true;  
+  hasData: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -48,13 +52,15 @@ export class ViewCropTaskComponent implements OnInit {
     this.fetchAllCropTask();
   }
 
-
   fetchAllCropTask(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     this.page = page;
-    this.cropCalService.getAllCropTaskBycropId(this.cropId, page, limit)
+    this.cropCalService
+      .getAllCropTaskBycropId(this.cropId, page, limit)
       .subscribe(
         (res) => {
+          console.log('Crop Task:', res);
+
           this.cropTask = res.results;
           this.isLoading = false;
           this.hasData = this.cropTask.length > 0;
@@ -68,7 +74,7 @@ export class ViewCropTaskComponent implements OnInit {
       );
   }
 
-  deleteCroptask(id: string, cropId:string, indexId:string): void {
+  deleteCroptask(id: string, cropId: string, indexId: string): void {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
@@ -118,16 +124,20 @@ export class ViewCropTaskComponent implements OnInit {
       cancelButtonText: 'Cancel',
       customClass: {
         popup: 'dark:bg-tileBlack dark:text-textDark',
-        cancelButton: 'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
+        cancelButton:
+          'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
         actions: 'dark:bg-tileBlack',
-        confirmButton: 'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]'
-      }
+        confirmButton:
+          'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const uid = null;
-        this.router.navigate([`plant-care/action/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`])
+        this.router.navigate([
+          `plant-care/action/add-new-crop-task/${cropId}/${indexId}/${uid}/${uid}`,
+        ]);
       }
-    })
+    });
   }
 
   onPageChange(event: number) {
@@ -135,14 +145,7 @@ export class ViewCropTaskComponent implements OnInit {
     this.fetchAllCropTask(this.page, this.itemsPerPage); // Include itemsPerPage
   }
 
-
-
   Back(): void {
     this.router.navigate(['/plant-care/action/view-crop-calender']);
   }
-
-
-  
-  
-
 }

@@ -1,53 +1,55 @@
-import { CommonModule } from "@angular/common";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CropCalendarService } from "../../../services/plant-care/crop-calendar.service";
-import { error, log } from "node:console";
-import { environment } from "../../../environment/environment";
-import Swal from "sweetalert2";
-import { TokenService } from "../../../services/token/services/token.service";
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
+import { error, log } from 'node:console';
+import { environment } from '../../../environment/environment';
+import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 class CropTask {
-  "id": number;
-  "taskIndex": string;
-  "days": string;
-  "taskTypeEnglish": string;
-  "taskTypeSinhala": string;
-  "taskTypeTamil": string;
-  "taskCategoryEnglish": string;
-  "taskCategorySinhala": string;
-  "taskCategoryTamil": string;
-  "taskEnglish": string;
-  "taskSinhala": string;
-  "taskTamil": string;
-  "taskDescriptionEnglish": string;
-  "taskDescriptionSinhala": string;
-  "taskDescriptionTamil": string;
-  "reqImages": string;
-  "imageLink": string;
-  "videoLinkEnglish": string;
-  "videoLinkSinhala": string;
-  "videoLinkTamil": string;
+  'id': number;
+  'taskIndex': string;
+  'days': string;
+  'taskTypeEnglish': string;
+  'taskTypeSinhala': string;
+  'taskTypeTamil': string;
+  'taskCategoryEnglish': string;
+  'taskCategorySinhala': string;
+  'taskCategoryTamil': string;
+  'taskEnglish': string;
+  'taskSinhala': string;
+  'taskTamil': string;
+  'taskDescriptionEnglish': string;
+  'taskDescriptionSinhala': string;
+  'taskDescriptionTamil': string;
+  'reqImages': string;
+  'imageLink': string;
+  'videoLinkEnglish': string;
+  'videoLinkSinhala': string;
+  'videoLinkTamil': string;
 }
 @Component({
-  selector: "app-edit-task",
+  selector: 'app-edit-task',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: "./edit-task.component.html",
-  styleUrl: "./edit-task.component.css",
+  templateUrl: './edit-task.component.html',
+  styleUrl: './edit-task.component.css',
 })
 export class EditTaskComponent implements OnInit {
   cropTask: CropTask = new CropTask();
 
   cropId!: string;
-  selectedLanguage: "english" | "sinhala" | "tamil" = "english";
+  selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   createTaskObj: CreateTask = new CreateTask();
   validatedObj: CreateTask = new CreateTask();
   itemId!: string;
   taskItems: CropTask = new CropTask();
   updatetsk: CropTask = new CropTask();
+
+  hasImageLink: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,10 +57,10 @@ export class EditTaskComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private taskService: CropCalendarService,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {}
 
-  selectLanguage(lang: "english" | "sinhala" | "tamil") {
+  selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }
 
@@ -81,8 +83,8 @@ export class EditTaskComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.itemId = this.route.snapshot.params["id"];
-    console.log("Item ID: ", this.itemId);
+    this.itemId = this.route.snapshot.params['id'];
+    console.log('Item ID: ', this.itemId);
 
     this.getTaskById(this.itemId);
     console.log(this.getTaskById);
@@ -91,16 +93,18 @@ export class EditTaskComponent implements OnInit {
   getTaskById(id: any) {
     this.taskService.getCropTaskBycropId(id).subscribe(
       (data) => {
-        console.log("jjjj", data);
+        console.log('jjjj', data);
 
         this.taskItems = data;
-        console.log("Task Items:", this.taskItems);
+        console.log('Task Items:', this.taskItems);
+
+        this.hasImageLink = !!this.taskItems.imageLink;
       },
       (error) => {
-        console.error("Error fetching task:", error);
+        console.error('Error fetching task:', error);
         if (error.status === 401) {
         }
-      },
+      }
     );
   }
 
@@ -108,78 +112,84 @@ export class EditTaskComponent implements OnInit {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error("No token found");
+      console.error('No token found');
       return;
     }
 
     const formData = new FormData();
 
     // Directly append all form fields without conditionals
-    formData.append("taskEnglish", this.taskItems.taskEnglish);
-    formData.append("taskSinhala", this.taskItems.taskSinhala);
-    formData.append("taskTamil", this.taskItems.taskTamil);
-    formData.append("taskTypeEnglish", this.taskItems.taskTypeEnglish);
-    formData.append("taskTypeSinhala", this.taskItems.taskTypeSinhala);
-    formData.append("taskTypeTamil", this.taskItems.taskTypeTamil);
-    formData.append("taskCategoryEnglish", this.taskItems.taskCategoryEnglish);
-    formData.append("taskCategorySinhala", this.taskItems.taskCategorySinhala);
-    formData.append("taskCategoryTamil", this.taskItems.taskCategoryTamil);
+    formData.append('taskEnglish', this.taskItems.taskEnglish);
+    formData.append('taskSinhala', this.taskItems.taskSinhala);
+    formData.append('taskTamil', this.taskItems.taskTamil);
+    formData.append('taskTypeEnglish', this.taskItems.taskTypeEnglish);
+    formData.append('taskTypeSinhala', this.taskItems.taskTypeSinhala);
+    formData.append('taskTypeTamil', this.taskItems.taskTypeTamil);
+    formData.append('taskCategoryEnglish', this.taskItems.taskCategoryEnglish);
+    formData.append('taskCategorySinhala', this.taskItems.taskCategorySinhala);
+    formData.append('taskCategoryTamil', this.taskItems.taskCategoryTamil);
     formData.append(
-      "taskDescriptionEnglish",
-      this.taskItems.taskDescriptionEnglish,
+      'taskDescriptionEnglish',
+      this.taskItems.taskDescriptionEnglish
     );
     formData.append(
-      "taskDescriptionSinhala",
-      this.taskItems.taskDescriptionSinhala,
+      'taskDescriptionSinhala',
+      this.taskItems.taskDescriptionSinhala
     );
     formData.append(
-      "taskDescriptionTamil",
-      this.taskItems.taskDescriptionTamil,
+      'taskDescriptionTamil',
+      this.taskItems.taskDescriptionTamil
     );
-    formData.append("reqImages", this.taskItems.reqImages);
-    formData.append("imageLink", this.taskItems.imageLink);
-    formData.append("videoLink", this.taskItems.videoLinkEnglish);
-    formData.append("videoLink", this.taskItems.videoLinkSinhala);
-    formData.append("videoLink", this.taskItems.videoLinkTamil);
+    formData.append('reqImages', this.taskItems.reqImages);
+    formData.append('imageLink', this.taskItems.imageLink);
+    formData.append('videoLink', this.taskItems.videoLinkEnglish);
+    formData.append('videoLink', this.taskItems.videoLinkSinhala);
+    formData.append('videoLink', this.taskItems.videoLinkTamil);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
-    console.log("FormData:", formData);
+    console.log('FormData:', formData);
 
     this.taskService.updateCropTask(this.itemId, this.taskItems).subscribe(
       (res: any) => {
-        console.log("Task updated successfully", res);
+        console.log('Task updated successfully', res);
         Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Task updated successfully!",
+          icon: 'success',
+          title: 'Success',
+          text: 'Task updated successfully!',
         });
       },
       (error) => {
-        console.error("Error updating task", error);
+        console.error('Error updating task', error);
         Swal.fire({
-          icon: "error",
-          title: "Unsuccessful",
-          text: "Error updating task",
+          icon: 'error',
+          title: 'Unsuccessful',
+          text: 'Error updating task',
         });
-      },
+      }
     );
+  }
+
+  onImageLinkChange() {
+    if (!this.hasImageLink) {
+      this.taskItems.imageLink = ''; // Clear the image link if "No" is selected
+    }
   }
 }
 
 export class CreateTask {
-  taskTypeEnglish: string = "";
-  taskTypeSinhala: string = "";
-  taskTypeTamil: string = "";
-  taskCategoryEnglish: string = "";
-  taskCategorySinhala: string = "";
-  taskCategoryTamil: string = "";
-  taskEnglish: string = "";
-  taskSinhala: string = "";
-  taskTamil: string = "";
-  taskDescriptionEnglish: string = "";
-  taskDescriptionSinhala: string = "";
-  taskDescriptionTamil: string = "";
+  taskTypeEnglish: string = '';
+  taskTypeSinhala: string = '';
+  taskTypeTamil: string = '';
+  taskCategoryEnglish: string = '';
+  taskCategorySinhala: string = '';
+  taskCategoryTamil: string = '';
+  taskEnglish: string = '';
+  taskSinhala: string = '';
+  taskTamil: string = '';
+  taskDescriptionEnglish: string = '';
+  taskDescriptionSinhala: string = '';
+  taskDescriptionTamil: string = '';
 }

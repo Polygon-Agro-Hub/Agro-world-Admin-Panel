@@ -137,7 +137,7 @@ export class ViewComplainComponent implements OnInit {
 
   navigateSelectComplain(id: string, farmerName: string) {
     this.router.navigate([
-      `/collection-hub/view-selected-complain/${id}/${farmerName}`,
+      `/complaints/view-selected-complain/${id}/${farmerName}`,
     ]);
   }
 

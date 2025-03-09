@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -8,11 +8,14 @@ import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import Swal from 'sweetalert2';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-collection-center-view-complain',
   standalone: true,
-  imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule],
+  imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
   providers: [DatePipe],
   templateUrl: './collection-center-view-complain.component.html',
   styleUrl: './collection-center-view-complain.component.css',
@@ -30,6 +33,8 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   complainsData!: Complain[];
   searchText: string = "";
   isLoading = false;
+  messageContent: string = "";
+  complain: ComplainN = new ComplainN();
     @ViewChild("dropdown") dropdown!: Dropdown;
 
 
@@ -129,6 +134,120 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     this.searchText = "";
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
+
+  navigateSelectComplain(id: string) {
+    this.router.navigate([
+      `/complaints/view-center-complain/${id}`,
+    ]);
+  }
+
+
+  fetchComplain(id: any, farmerName: string) {
+    this.isLoading = true;
+    this.complainSrv.getCenterComplainById(id).subscribe((res) => {
+      res.createdAt =
+        this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a") ||
+        res.createdAt;
+      this.complain = res;
+      console.log(res);
+      this.isLoading = false;
+      this.showReplyDialog(id, farmerName);
+    });
+  }
+
+
+
+   showReplyDialog(id: any, farmerName: string) {
+      Swal.fire({
+        title: "Reply as AgroWorld",
+        html: `
+              <div class="text-left">
+                <p>Dear <strong>${farmerName}</strong>,</p>
+                <p>We are pleased to inform you that your complaint has been resolved.</p>
+                <textarea
+                  id="messageContent"
+                  class="w-full p-2 border rounded mt-3 mb-3"
+                  rows="5"
+                  placeholder="Add your message here..."
+                >${this.complain.reply || ""}</textarea>
+                <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+                <p class="mt-3">
+                  Sincerely,<br/>
+                  AgroWorld Customer Support Team
+                </p>
+              </div>
+            `,
+        showCancelButton: true,
+        confirmButtonText: "Send",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        width: "600px",
+        preConfirm: () => {
+          const textarea = document.getElementById(
+            "messageContent",
+          ) as HTMLTextAreaElement;
+          return textarea.value;
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.messageContent = result.value;
+          this.submitComplaint(id);
+        }
+      });
+    }
+  
+
+  
+
+
+
+
+    submitComplaint(id: any) {
+      const token = this.tokenService.getToken();
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+  
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+  
+      console.log(id);
+      console.log(this.messageContent);
+  
+      const body = { reply: this.messageContent };
+  
+      this.http
+        .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
+        .subscribe(
+          (res: any) => {
+            console.log("Market Price updated successfully", res);
+  
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: "Market Price updated successfully!",
+            });
+            this.fetchAllComplain(this.page, this.itemsPerPage);
+          },
+          (error) => {
+            console.error("Error updating news", error);
+  
+            Swal.fire({
+              icon: "error",
+              title: "Unsuccessful",
+              text: "Error updating news",
+            });
+            this.fetchAllComplain(this.page, this.itemsPerPage);
+          },
+        );
+    }
+
+
+
+    
 }
 
 
@@ -160,15 +279,18 @@ class Category {
   type!: string;
 }
 
-class ComplainIn {
+
+class ComplainN {
   id!: string;
   refNo!: string;
   status!: string;
-  empId!: string;
-  compannyName!: string;
-  role!: string;
+  firstName!: string;
+  lastName!: string;
+  phoneCode01!: string;
+  phoneNumber01!: string;
   complain!: string;
   complainCategory!: string;
+  language!: string;
   createdAt!: string;
   reply!: string;
   centerName!: string;

@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <button
   class="mb-5 text-textLight dark:text-textDark"
   onclick="history.back()"
@@ -115,52 +117,52 @@
       <thead>
         <tr>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Ref No.
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Category
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             EMP ID
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Company
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Center Code
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Received At
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Status
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             View
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Reply
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             View Reply
           </th>
@@ -174,15 +176,28 @@
             currentPage: page,
             totalItems: totalItems
           }">
-          <td class="py-3 dark:text-textDark text-centser">{{item.refNo}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.complainCategory}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.empId}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.companyName}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.regCode}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.createdAt}}</td>
-          <td class="py-3 dark:text-textDark text-centser">{{item.status}}</td>
-          <td class="py-3 dark:text-textDark text-centser">
-            <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
+          <td class="py-3 dark:text-textDark text-center">{{item.refNo}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.complainCategory}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.empId}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.companyName}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.regCode}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.createdAt}}</td>
+          <td class="py-3 dark:text-textDark text-center">
+            <div *ngIf="item.status==='Assigned'">
+              <span
+                class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{item.status}}</span>
+            </div>
+            <div *ngIf="item.status==='Pending'">
+              <span
+                class="w-32 h-8 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">{{item.status}}</span>
+            </div>
+            <div *ngIf="item.status==='Closed'">
+              <span
+                class="w-32 h-8 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">{{item.status}}</span>
+            </div>
+          </td>
+          <td class="py-3 dark:text-textDark text-center">
+            <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="navigateSelectComplain(item.id)">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -198,32 +213,15 @@
               </svg>
             </button>
           </td>
-          <td class="py-3 dark:text-textDark text-centser">Yes</td>
-          <td class="py-3 dark:text-textDark text-centser">
-            <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
-              <svg
-                width="25px"
-                height="25px"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    d="M13 3H8.2C7.0799 3 6.51984 3 6.09202 3.21799C5.71569 3.40973 5.40973 3.71569 5.21799 4.09202C5 4.51984 5 5.0799 5 6.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.0799 21 8.2 21H12M13 3L19 9M13 3V7.4C13 7.96005 13 8.24008 13.109 8.45399C13.2049 8.64215 13.3578 8.79513 13.546 8.89101C13.7599 9 14.0399 9 14.6 9H19M19 9V11M19.2686 19.2686L21 21M20 17.5C20 18.8807 18.8807 20 17.5 20C16.1193 20 15 18.8807 15 17.5C15 16.1193 16.1193 15 17.5 15C18.8807 15 20 16.1193 20 17.5Z"
-                    stroke="#3276C3"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </g>
-              </svg>
+          <td class="py-3 dark:text-textDark text-center">
+            <span *ngIf="item.reply===null"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">No</span>
+            <span *ngIf="item.reply != null"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">Yes</span>
+          </td>
+          <td class="py-3 dark:text-textDark text-center">
+            <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="fetchComplain(item.id, item.farmerName )">
+              <i  class="fa-solid fa-file-export"></i>
             </button>
           </td>
         </tr>

@@ -100,6 +100,7 @@ import { ViewOfficerTargetComponent } from './application/steckholders-section/v
 import { ViewCompanyHeadComponent } from './application/collection-hub-section/view-company-head/view-company-head/view-company-head.component';
 import { CreateCenterHeadComponent } from './application/collection-hub-section/create-center-head/create-center-head/create-center-head.component';
 import { EditCenterHeadComponent } from './application/collection-hub-section/edit-center-head/edit-center-head/edit-center-head.component';
+import { ViewCenterComplainComponent } from './application/Complaints/view-center-complain/view-center-complain.component';
 
 export const routes: Routes = [
   {
@@ -446,10 +447,6 @@ export const routes: Routes = [
             component: CollectionCenterDashboardComponent,
           },
           {
-            path: 'view-selected-complain/:id/:farmerName',
-            component: ViewSelectedComplainComponent,
-          },
-          {
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent,
           },
@@ -574,6 +571,14 @@ export const routes: Routes = [
           {
             path: 'edit-complaint-categories/:id',
             component: EditComplainCagegoriesComponent,
+          },
+          {
+            path: 'view-selected-complain/:id/:farmerName',
+            component: ViewSelectedComplainComponent,
+          },
+          {
+            path: 'view-center-complain/:id',
+            component: ViewCenterComplainComponent,
           },
         ],
       },

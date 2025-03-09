@@ -162,6 +162,17 @@ export class CollectionCenterService {
     });
   }
 
+
+  getCenterComplainById(id: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": "application/json",
+    });
+    return this.http.get(`${this.apiUrl}auth/get-center-complain-by-id/${id}`, {
+      headers,
+    });
+  }
+
   getOfficerReportById(id: number) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

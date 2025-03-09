@@ -91,6 +91,7 @@ export class CollectionCenterService {
     limit: number,
     status: String,
     category: String,
+    comCategory: String,
     searchText: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
@@ -106,6 +107,10 @@ export class CollectionCenterService {
 
     if (category) {
       url += `&category=${category}`;
+    }
+
+    if (comCategory) {
+      url += `&comCategory=${comCategory}`;
     }
 
     if (searchText) {

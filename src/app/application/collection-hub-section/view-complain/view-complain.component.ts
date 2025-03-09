@@ -39,11 +39,14 @@ export class ViewComplainComponent implements OnInit {
 
   filterStatus: any = "";
   filterCategory: any = {};
+  filterComCategory: any = {};
   status!: Status[];
   category!: Category[];
 
   searchText: string = "";
   isLoading = false;
+  comCategories: ComCategories[] = [];
+
 
   constructor(
     private complainSrv: CollectionCenterService,
@@ -82,6 +85,7 @@ export class ViewComplainComponent implements OnInit {
 
     console.log(this.filterCategory);
     this.fetchAllComplain(this.page, this.itemsPerPage);
+    this.getAllComplainCategories();
   }
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
@@ -92,6 +96,7 @@ export class ViewComplainComponent implements OnInit {
         limit,
         this.filterStatus?.type,
         this.filterCategory?.type,
+        this.filterComCategory?.id,
         this.searchText,
       )
       .subscribe(
@@ -239,6 +244,61 @@ export class ViewComplainComponent implements OnInit {
   navigationPath(path: string) {
     this.router.navigate([path]);
   }
+
+
+  getAllComplainCategories() {
+
+    if(this.tokenService.getUserDetails().role === "1"){
+      const token = this.tokenService.getToken();
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+  
+      this.http
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super`, {
+          headers,
+        })
+        .subscribe(
+          (response) => {
+            this.comCategories = response;
+            console.log('Complain Categories:', this.comCategories);
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          }
+        );
+    }else{
+      const token = this.tokenService.getToken();
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+  
+      this.http
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}`, {
+          headers,
+        })
+        .subscribe(
+          (response) => {
+            this.comCategories = response.roles;
+            console.log('Complain Categories:', this.comCategories);
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          }
+        );
+    }
+ 
+  }
 }
 
 // Define interfaces for response data
@@ -282,4 +342,10 @@ class ComplainIn {
   officerName!: string;
   officerPhone!: string;
   farmerName!: string;
+}
+
+
+class ComCategories {
+  id!: number;
+  categoryEnglish!: string;
 }

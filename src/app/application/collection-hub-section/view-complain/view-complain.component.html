@@ -24,14 +24,14 @@
 
 
 
-      <div class="mr-5" *ngIf="tokenService.getUserDetails().role ==='1'">
+      <div class="mr-5" >
         <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
         [baseZIndex]="1000"
         appendTo="body"
-          [options]="category" 
-          [(ngModel)]="filterCategory" 
+          [options]="comCategories" 
+          [(ngModel)]="filterComCategory" 
           [checkmark]="true" 
-          optionLabel="type" 
+          optionLabel="categoryEnglish" 
           [showClear]="true" placeholder="Category" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
       </div>
 

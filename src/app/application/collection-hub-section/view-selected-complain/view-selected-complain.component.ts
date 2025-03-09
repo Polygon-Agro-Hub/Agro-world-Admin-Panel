@@ -110,7 +110,7 @@ export class ViewSelectedComplainComponent implements OnInit {
           Swal.fire({
             icon: "success",
             title: "Success",
-            text: "Market Price updated successfully!",
+            text: "Reply was sent successfully!",
           });
           this.fetchComplain();
           this.isLoading = false;
@@ -121,7 +121,7 @@ export class ViewSelectedComplainComponent implements OnInit {
           Swal.fire({
             icon: "error",
             title: "Unsuccessful",
-            text: "Error updating news",
+            text: "Error sending reply",
           });
           this.fetchComplain();
           this.isLoading = false;
@@ -129,17 +129,20 @@ export class ViewSelectedComplainComponent implements OnInit {
       );
   }
 
-  showReplyDialog() {
-    Swal.fire({
-      title: "Reply as AgroWorld",
-      html: `
+
+
+
+   showReplyDialog() {
+      Swal.fire({
+        title: "Reply as AgroWorld",
+        html: `
           <div class="text-left">
             <p>Dear <strong>${this.farmerName}</strong>,</p>
-            <p>We are pleased to inform you that your complaint has been resolved.</p>
-            <textarea
-              id="messageContent"
-              class="w-full p-2 border rounded mt-3 mb-3"
-              rows="5"
+            <p></p>
+            <textarea 
+              id="messageContent" 
+              class="w-full p-2 border rounded mt-3 mb-3" 
+              rows="5" 
               placeholder="Add your message here..."
             >${this.complain.reply || ""}</textarea>
             <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
@@ -149,25 +152,44 @@ export class ViewSelectedComplainComponent implements OnInit {
             </p>
           </div>
         `,
-      showCancelButton: true,
-      confirmButtonText: "Send",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      width: "600px",
-      preConfirm: () => {
-        const textarea = document.getElementById(
-          "messageContent",
-        ) as HTMLTextAreaElement;
-        return textarea.value;
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.messageContent = result.value;
-        this.submitComplaint();
-      }
-    });
-  }
+        showCancelButton: true,
+        confirmButtonText: "Send",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#3980C0", // Green color for Send button
+        cancelButtonColor: "#74788D", // Blue-gray for Cancel button
+        width: "600px",
+        reverseButtons: true, // Swap button positions
+        preConfirm: () => {
+          const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
+          return textarea.value;
+        },
+        didOpen: () => {
+          // Direct DOM manipulation for button alignment
+          setTimeout(() => {
+            const actionsElement = document.querySelector('.swal2-actions');
+            if (actionsElement) {
+              actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
+              
+              // Also swap buttons if needed (in addition to reverseButtons)
+              const cancelButton = document.querySelector('.swal2-cancel');
+              const confirmButton = document.querySelector('.swal2-confirm');
+              if (cancelButton && confirmButton && actionsElement) {
+                actionsElement.insertBefore(cancelButton, confirmButton);
+              }
+            }
+          }, ); // Small delay to ensure DOM is ready
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.messageContent = result.value;
+          this.submitComplaint();
+        }
+      });
+    }
+
+
+
+
 }
 
 class Complain {

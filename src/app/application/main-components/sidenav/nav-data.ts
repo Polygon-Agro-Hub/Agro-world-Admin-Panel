@@ -11,7 +11,7 @@ export const navbarData = [
       {
         RouterLink: '/steckholders/dashboard',
         childIcon: 'fa-solid fa-gauge',
-        label: 'Dashbord',
+        label: 'Dashboard',
       },
       {
         RouterLink: '/steckholders/action',
@@ -34,7 +34,7 @@ export const navbarData = [
       {
         RouterLink: '/plant-care/dashboard',
         childIcon: 'fa-solid fa-gauge',
-        label: 'Dashbord',
+        label: 'Dashboard',
       },
       {
         RouterLink: '/plant-care/action',
@@ -57,7 +57,7 @@ export const navbarData = [
       {
         RouterLink: '/market/dashboard',
         childIcon: 'fa-solid fa-gauge',
-        label: 'Dashbord',
+        label: 'Dashboard',
       },
       {
         RouterLink: '/market/action',

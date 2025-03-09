@@ -355,7 +355,7 @@ export class CreateCenterHeadComponent implements OnInit {
 
               Swal.fire(
                 'Success',
-                'Collection Officer Created Successfully',
+                'Collection Center Head Profile Created Successfully',
                 'success'
               );
               this.navigatePath('/collection-hub/manage-company');

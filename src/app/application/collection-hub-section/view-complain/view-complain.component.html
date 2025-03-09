@@ -11,7 +11,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Complain List
+        Complain List ({{this.totalItems}})
       </h2>
     </div>
     <div class="flex items-center">
@@ -154,7 +154,19 @@
 
 
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <i (click)="fetchComplain(item.id,item.farmerName )" class="fa-solid fa-file-export"></i>
+            <div *ngIf="item.reply===null">
+              <button disabled class="w-5 h-5 text-blue-100" (click)="fetchComplain(item.id,item.farmerName )">
+              <i  class="fa-solid fa-file-export"></i>
+            </button>
+          </div>
+
+          <div *ngIf="item.reply != null">
+            <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="fetchComplain(item.id,item.farmerName )">
+              <i  class="fa-solid fa-file-export"></i>
+            </button>
+          </div>
+            
+            
           </td>
 
 

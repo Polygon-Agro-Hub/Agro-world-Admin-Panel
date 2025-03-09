@@ -28,7 +28,7 @@
             <th class=" py-2 font-normal text-[#5C5C5C] text-left pr-8 dark:text-textDark ">No</th>
             <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark w-25">Application Name</th>
             <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">No. of Categories</th>
-            <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark">View Categories</th>
+            <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">View Categories</th>
             <th class="text-left py-2"></th>
             <th class="text-left py-2"></th>
           </tr>
@@ -39,7 +39,8 @@
             <td class="py-2 vertical-align: middle text-start justify-items-center dark:text-white">{{ app.systemAppName }}</td>
             <td class="py-2 vertical-align: middle text-center dark:text-white text-gray-500">{{ app.categoryCount }} <span class="italic size-16">added</span></td>
             <td class="py-2 text-center d-flex justify-content-center align-items-center dark:text-white">
-              <svg (click)="EditCategoris(app.systemAppId)"
+              <button (click)="EditCategoris(app.systemAppId)" class="w-5 h-5 text-blue-500 hover:text-blue-700">
+                <svg 
                    viewBox="0 0 24 24"
                    fill="none"
                    width="24" 
@@ -53,10 +54,13 @@
                   stroke-linejoin="round"
                 />
               </svg>
+              </button>
+              
             </td>
             <!-- <td class="py-2" ><i class="fa-regular fa-pen-to-square text-[blue] " (click)="editApp(app.systemAppId, app.systemAppName)"></i></td> -->
             <td class="py-2" >
-              <svg (click)="editApp(app.systemAppId, app.systemAppName)"
+              <button (click)="editApp(app.systemAppId, app.systemAppName)" class="w-5 h-5 text-blue-500 hover:text-blue-700">
+                <svg
                     fill="#3980C0"
                     viewBox="0 0 32 32"
                     version="1.1"
@@ -73,10 +77,13 @@
                       stroke-linejoin="round"
                     ></path>
                   </svg>
+              </button>
+              
             </td>
             <!-- <td class="py-2" ><i class="fa-solid fa-trash-can text-orange-500" (click)="deleteApp(app.systemAppId)"></i></td> -->
             <td class="py-2">
-              <svg (click)="deleteApp(app.systemAppId)"
+              <button (click)="deleteApp(app.systemAppId)" class="w-5 h-5 text-blue-500 hover:text-blue-700">
+                <svg 
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -92,6 +99,8 @@
                       d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
                   />
               </svg>
+              </button>
+              
             </td>
           </tr>
         </tbody>

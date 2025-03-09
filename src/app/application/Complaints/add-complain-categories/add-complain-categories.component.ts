@@ -58,9 +58,20 @@ export class AddComplainCategoriesComponent implements OnInit {
     )
   }
 
-  onCancel(){
-
-  }
+    onCancel() {
+      Swal.fire({
+        icon: "warning",
+        title: "Are you sure?",
+        text: "You may lose the added data after canceling!",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Cancel",
+        cancelButtonText: "No, Keep Editing",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(["/complaints"]);
+        }
+      });
+    }
 
   navigationPath(path: string) {
     this.router.navigate([path])

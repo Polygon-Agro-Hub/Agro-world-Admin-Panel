@@ -35,6 +35,11 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   isLoading = false;
   messageContent: string = "";
   complain: ComplainN = new ComplainN();
+  comCategories: ComCategories[] = [];
+  company: Company[] = [];
+  filterComCategory: any = {};
+  filterCompany: any = {};
+
     @ViewChild("dropdown") dropdown!: Dropdown;
 
 
@@ -80,6 +85,8 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
     console.log(this.filterCategory);
     this.fetchAllComplain(this.page, this.itemsPerPage);
+    this.getAllComplainCategories();
+    this.getAllCompanyForOfficerComplain();
   }
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
@@ -90,6 +97,8 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         limit,
         this.filterStatus?.type,
         this.filterCategory?.type,
+        this.filterComCategory?.id,
+        this.filterCompany?.id,
         this.searchText,
       )
       .subscribe(
@@ -247,6 +256,100 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
 
 
+
+
+
+    getAllComplainCategories() {
+
+      if(this.tokenService.getUserDetails().role === "1"){
+        const token = this.tokenService.getToken();
+  
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+        });
+    
+        this.http
+          .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/2`, {
+            headers,
+          })
+          .subscribe(
+            (response) => {
+              this.comCategories = response;
+              console.log('Complain Categories:', this.comCategories);
+            },
+            (error) => {
+              console.error('Error fetching news:', error);
+            }
+          );
+      }else{
+        const token = this.tokenService.getToken();
+  
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+        });
+    
+        this.http
+          .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/2`, {
+            headers,
+          })
+          .subscribe(
+            (response) => {
+              this.comCategories = response;
+              console.log('Complain Categories:', this.comCategories);
+            },
+            (error) => {
+              console.error('Error fetching news:', error);
+            }
+          );
+      }
+   
+    }
+
+
+
+
+
+
+
+    getAllCompanyForOfficerComplain() {
+
+      const token = this.tokenService.getToken();
+  
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+  
+      this.http
+        .get<any>(`${environment.API_URL}auth/get-all-comppany-for-officer-complain`, {
+          headers,
+        })
+        .subscribe(
+          (response) => {
+            this.company = response;
+            console.log('Complain Categories:', this.company);
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          }
+        );
+   
+    }
+    
+
+
+
     
 }
 
@@ -299,3 +402,15 @@ class ComplainN {
   officerPhone!: string;
   farmerName!: string;
 }
+
+
+class ComCategories {
+  id!: number;
+  categoryEnglish!: string;
+}
+
+class Company {
+  id!: number;
+  companyNameEnglish!: string;
+}
+

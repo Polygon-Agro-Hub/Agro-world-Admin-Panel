@@ -260,7 +260,7 @@ export class ViewComplainComponent implements OnInit {
       });
   
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/1`, {
           headers,
         })
         .subscribe(
@@ -284,12 +284,12 @@ export class ViewComplainComponent implements OnInit {
       });
   
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/1`, {
           headers,
         })
         .subscribe(
           (response) => {
-            this.comCategories = response.roles;
+            this.comCategories = response;
             console.log('Complain Categories:', this.comCategories);
           },
           (error) => {

@@ -28,83 +28,57 @@
       
       
 
-      <div class="mr-5" *ngIf="tokenService.getUserDetails().role ==='1'">
+      <div class="mr-5" >
         <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
         [baseZIndex]="1000"
         appendTo="body"
-          [options]="category" 
-          [(ngModel)]="filterCategory" 
+          [options]="comCategories" 
+          [(ngModel)]="filterComCategory" 
           [checkmark]="true" 
-          optionLabel="type" 
+          optionLabel="categoryEnglish" 
           [showClear]="true" placeholder="Category" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
       </div>
 
       
-      <div class="mr-5">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-          placeholder="Company"
-        ></p-dropdown>
+      <div class="mr-5" >
+        <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
+        [baseZIndex]="1000"
+        appendTo="body"
+          [options]="company" 
+          [(ngModel)]="filterCompany" 
+          [checkmark]="true" 
+          optionLabel="companyNameEnglish" 
+          [showClear]="true" placeholder="company" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
       </div>
       <div class="mr-5">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-          placeholder="Status"
-        ></p-dropdown>
+        <p-dropdown styleClass="custom-dropdown border border-2 rounded-xl h-8 w-40 items-center bg-[#F1F1F1] dark:bg-[#272F45]" [autoZIndex]="true" 
+        [baseZIndex]="1000"
+        appendTo="body"
+          [options]="status" 
+          [(ngModel)]="filterStatus" 
+          [checkmark]="true" 
+          optionLabel="type" 
+          [showClear]="true" placeholder="Status" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
       </div>
-      <div class="mr-5">
+      <!-- <div class="mr-5">
         <p-dropdown
           styleClass="border border-2 rounded-xl h-8 items-center
         bg-[#F1F1F1] dark:bg-[#272F45]"
           placeholder="Reply"
         ></p-dropdown>
-      </div>
-      <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-      >
-        <input
-          type="text"
-          placeholder="Search.."
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
+      </div> -->
+      <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+        <input type="text" placeholder="Search.." [(ngModel)]="searchText" 
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="searchComplain()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
           </svg>
         </button>
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -220,7 +194,7 @@
             class="px-4 py-3 text-center text-textLight dark:text-textDark">Yes</span>
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="fetchComplain(item.id, item.farmerName )">
+            <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="fetchComplain(item.id, item.officerName )">
               <i  class="fa-solid fa-file-export"></i>
             </button>
           </td>

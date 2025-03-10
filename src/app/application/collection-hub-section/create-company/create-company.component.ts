@@ -366,7 +366,7 @@ export class CreateCompanyComponent {
   }
 
   back(): void {
-    this.router.navigate(['/collection-hub']);
+    this.router.navigate(['/collection-hub/manage-company']);
   }
 
   onCancel() {

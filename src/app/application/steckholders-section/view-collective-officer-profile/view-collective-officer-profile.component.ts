@@ -28,7 +28,6 @@ export class ViewCollectiveOfficerProfileComponent {
   showDisclaimView = false;
   isLoading = false;
   empHeader: string = '';
-  isDisclaimed: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -63,6 +62,9 @@ export class ViewCollectiveOfficerProfileComponent {
       .subscribe((res: any) => {
         this.isLoading = false;
         this.officerObj = res.officerData.collectionOfficer;
+
+        this.officerObj.claimStatus = res.officerData.collectionOfficer.claimStatus;
+
         console.log(this.officerObj);
         this.getRoleHeading();
       });
@@ -197,4 +199,5 @@ class CollectionOfficer {
   companyNameEnglish!: string;
   centerName!: string;
   status!:string;
+  claimStatus!: number;
 }

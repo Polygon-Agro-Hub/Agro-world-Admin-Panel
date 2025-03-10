@@ -50,8 +50,12 @@
         <button
         *ngIf="isAgroworldCompany()"
           class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2"
-          [ngClass]="{'opacity-50 cursor-not-allowed bg-gray-400': isDisclaimed}"
           (click)="toggleDisclaimView()"
+          [disabled]="officerObj.claimStatus == 0"
+          [ngClass]="{
+            'bg-[#E20000]': officerObj.claimStatus !== 0,
+            'bg-gray-400 cursor-not-allowed': officerObj.claimStatus === 0
+          }"
         >
           Disclaim
         </button>
@@ -238,6 +242,7 @@
         <button
           class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
           (click)="confirmDisclaim(officerId)"
+          
         >
           <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
           <span class="text-light text-whight-700 button-text text-[#6B7D8C]"

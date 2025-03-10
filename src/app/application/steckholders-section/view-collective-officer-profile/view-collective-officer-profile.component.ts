@@ -62,6 +62,9 @@ export class ViewCollectiveOfficerProfileComponent {
       .subscribe((res: any) => {
         this.isLoading = false;
         this.officerObj = res.officerData.collectionOfficer;
+
+        this.officerObj.claimStatus = res.officerData.collectionOfficer.claimStatus;
+
         console.log(this.officerObj);
         this.getRoleHeading();
       });
@@ -85,7 +88,7 @@ export class ViewCollectiveOfficerProfileComponent {
       buttons.forEach((btn) => (btn.style.display = 'none'));
 
       html2canvas(reportContainer, {
-        scale: 2,
+        scale: 1,
         useCORS: true,
         logging: true,
       })
@@ -160,19 +163,14 @@ export class ViewCollectiveOfficerProfileComponent {
     this.showDisclaimView = !this.showDisclaimView; // Toggle the boolean value
   }
 
-  shouldHideDisclaimButton(): boolean {
+  isAgroworldCompany(): boolean {
     return (
-      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
-      this.officerObj.jobRole !== 'Collection Center Head'
+      this.officerObj.companyNameEnglish?.toLowerCase() === "agroworld (pvt) ltd" &&
+      this.officerObj.status === "Approved"
     );
   }
 
-  shouldHideViewTargetmButton(): boolean {
-    return (
-      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
-      this.officerObj.jobRole !== 'Collection Officer'
-    );
-  }
+  
 }
 
 class CollectionOfficer {
@@ -200,4 +198,6 @@ class CollectionOfficer {
   branchName!: string;
   companyNameEnglish!: string;
   centerName!: string;
+  status!:string;
+  claimStatus!: number;
 }

@@ -1,28 +1,16 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-  (click)="navigatePath('/steckholders/action/collective-officer')"
-  class="mb-5 text-textLight dark:text-textDark"
->
+<button (click)="navigatePath('/steckholders/action/collective-officer')"
+  class="mb-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div
-  class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
->
+<div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex flex-col gap-7 px-2 py-2" id="reportcontainer">
-    <div
-      class="flex flex-row justify-between items-center border-[#F1F7FA] border-[3px] rounded-lg shadowmd p-6"
-    >
+    <div class="flex flex-row justify-between items-center border-[#F1F7FA] border-[3px] rounded-lg shadowmd p-6">
       <div class="flex flex-row items-center">
-        <div
-          class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden"
-        >
+        <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
           <ng-container *ngIf="officerObj.image; else defaultIcon">
-            <img
-              [src]="officerObj.image"
-              alt="Officer Image"
-              class="w-full h-full object-cover"
-            />
+            <img [src]="officerObj.image" alt="Officer Image" class="w-full h-full object-cover" />
           </ng-container>
           <ng-template #defaultIcon>
             <i class="fa-regular fa-user text-5xl dark:text-textDark"></i>
@@ -34,10 +22,8 @@
             {{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}
           </p>
           <p class="dark:text-[#a6aebb]">
-            <span
-              >{{ officerObj.jobRole }} -
-              <span>{{this.empHeader}}{{ officerObj.empId }}</span></span
-            >
+            <span>{{ officerObj.jobRole }} -
+              <span>{{this.empHeader}}{{ officerObj.empId }}</span></span>
           </p>
           <p class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.centerName }}
@@ -47,18 +33,17 @@
       </div>
 
       <div class="flex">
-        <button
-        *ngIf="!shouldHideDisclaimButton()"
+        <button *ngIf="isAgroworldCompany()"
           class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2"
-          (click)="toggleDisclaimView()"
-        >
+          (click)="toggleDisclaimView()" [disabled]="officerObj.claimStatus == 0" [ngClass]="{
+            'bg-[#E20000]': officerObj.claimStatus !== 0,
+            'bg-gray-400 cursor-not-allowed': officerObj.claimStatus === 0
+          }">
           Disclaim
         </button>
-        <button
-        *ngIf="!shouldHideViewTargetmButton()"
+        <button *ngIf="isAgroworldCompany()"
           class="bg-[#415CFF] text-white font-semibold rounded-lg shadow-md px-5 py-2 ml-2"
-          (click)="navigatePath('/steckholders/action/collective-officer/view-officer-targets')"
-        >
+          (click)="navigatePath('/steckholders/action/collective-officer/view-officer-targets')">
           View Target
         </button>
       </div>
@@ -69,10 +54,7 @@
         <p class="font-semibold text-textLight dark:text-textDark">
           Personal Information
         </p>
-        <button
-          class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md"
-          (click)="generatePDF()"
-        >
+        <button class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md" (click)="generatePDF()">
           <i class="fa-solid fa-download"></i>
         </button>
       </div>
@@ -113,9 +95,12 @@
 
         <div>
           <p class="dark:text-[#a6aebb]">Phone Number - 2</p>
-          <p class="font-semibold dark:text-[#a6aebb]">
+          <p *ngIf="officerObj?.phoneNumber02; else noPhone" class="font-semibold dark:text-[#a6aebb]">
             {{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}
           </p>
+          <ng-template #noPhone>
+            <p class="font-semibold dark:text-[#a6aebb]">-</p>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -205,10 +190,7 @@
     </div>
   </div>
 </div>
-<div
-  *ngIf="showDisclaimView"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
+<div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
     <div>
       <!-- Icon -->
@@ -234,23 +216,15 @@
 
       <!-- Buttons -->
       <div class="flex justify-center gap-4">
-        <button
-          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="confirmDisclaim(officerId)"
-        >
+        <button class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="confirmDisclaim(officerId)">
           <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
-          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
-            >Discharge</span
-          >
+          <span class="text-light text-whight-700 button-text text-[#6B7D8C]">Discharge</span>
         </button>
-        <button
-          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="cancelDisclaim()"
-        >
+        <button class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="cancelDisclaim()">
           <span class="font-semibold text-white">No,</span> <br />
-          <span class="text-light text-whight-700 button-text text-white"
-            >Go Back</span
-          >
+          <span class="text-light text-whight-700 button-text text-white">Go Back</span>
         </button>
       </div>
     </div>

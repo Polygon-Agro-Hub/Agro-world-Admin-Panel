@@ -102,4 +102,8 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   navigateToViewCollectionCenter(): void {
     this.router.navigate(['/collection-hub/view-collection-centers']);
   }
+
+  navigateToViewSalesAgents(): void {
+    this.router.navigate(['/steckholders/action/sales-agents']);
+  }
 }

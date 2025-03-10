@@ -88,7 +88,7 @@ export class ViewCollectiveOfficerProfileComponent {
       buttons.forEach((btn) => (btn.style.display = 'none'));
 
       html2canvas(reportContainer, {
-        scale: 2,
+        scale: 1,
         useCORS: true,
         logging: true,
       })

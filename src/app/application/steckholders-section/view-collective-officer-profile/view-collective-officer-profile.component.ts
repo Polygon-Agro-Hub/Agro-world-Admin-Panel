@@ -28,6 +28,7 @@ export class ViewCollectiveOfficerProfileComponent {
   showDisclaimView = false;
   isLoading = false;
   empHeader: string = '';
+  isDisclaimed: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -160,19 +161,14 @@ export class ViewCollectiveOfficerProfileComponent {
     this.showDisclaimView = !this.showDisclaimView; // Toggle the boolean value
   }
 
-  shouldHideDisclaimButton(): boolean {
+  isAgroworldCompany(): boolean {
     return (
-      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
-      this.officerObj.jobRole !== 'Collection Center Head'
+      this.officerObj.companyNameEnglish?.toLowerCase() === "agroworld (pvt) ltd" &&
+      this.officerObj.status === "Approved"
     );
   }
 
-  shouldHideViewTargetmButton(): boolean {
-    return (
-      this.officerObj.companyNameEnglish === 'agroworld (Pvt) Ltd' &&
-      this.officerObj.jobRole !== 'Collection Officer'
-    );
-  }
+  
 }
 
 class CollectionOfficer {
@@ -200,4 +196,5 @@ class CollectionOfficer {
   branchName!: string;
   companyNameEnglish!: string;
   centerName!: string;
+  status!:string;
 }

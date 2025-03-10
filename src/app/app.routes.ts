@@ -102,6 +102,10 @@ import { CreateCenterHeadComponent } from './application/collection-hub-section/
 import { EditCenterHeadComponent } from './application/collection-hub-section/edit-center-head/edit-center-head/edit-center-head.component';
 import { ViewCenterComplainComponent } from './application/Complaints/view-center-complain/view-center-complain.component';
 
+
+import { application } from 'express';
+import { ViewSalesAgentsComponent } from './application/collection-hub-section/view-sales-agents/view-sales-agents.component';
+import { CreateSalesAgentsComponent } from './application/sales-dash-section/create-sales-agents/create-sales-agents.component';
 export const routes: Routes = [
   {
     path: '',
@@ -362,6 +366,27 @@ export const routes: Routes = [
                   },
                 ],
               },
+
+              {
+                path: 'sales-agents',
+                children: [
+                  {
+                    path: '',
+                    component: ViewSalesAgentsComponent,
+                  },
+                  {
+                    path: 'create-sales-agents',
+                    component: CreateSalesAgentsComponent,
+                  },
+                  // {
+                  //   path: 'upload-farmers',
+                  //   component: UserBulkUploadComponent,
+                  //   canActivate: [ PermissionGuard],
+                  //   data: { permission: 'Bulk Plantcare User Upload' }, 
+                  // },
+                ],
+              },
+
 
               {
                 path: 'collective-officer',

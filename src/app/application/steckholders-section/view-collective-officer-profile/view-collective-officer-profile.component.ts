@@ -77,7 +77,7 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   viewOfficerTarget(officerId: number) {
-    this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets${officerId}`])
+    this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets/${officerId}`])
   }
 
   generatePDF() {

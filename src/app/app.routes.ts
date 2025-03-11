@@ -407,7 +407,7 @@ export const routes: Routes = [
                     component: ViewCollectiveOfficerProfileComponent
                   },
                   {
-                    path:'view-officer-targets',
+                    path:'view-officer-targets/:officerId',
                     component: ViewOfficerTargetComponent
                   }
                 ],

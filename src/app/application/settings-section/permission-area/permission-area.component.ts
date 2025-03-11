@@ -136,6 +136,7 @@ export class PermissionAreaComponent {
   }
 
   getAllFeatures() {
+    this.isLoading = true;
     const token = this.tokenService.getToken();
     if (!token) {
       console.error("No token found");
@@ -153,7 +154,7 @@ export class PermissionAreaComponent {
         (response) => {
           // Transform API response to group features by category
           console.log("Main responce -> ",response);
-          
+          this.isLoading = false;
           const groupedFeatures = response.features.reduce(
             (acc: any[], feature: any) => {
               let category = acc.find((c) => c.category === feature.category);

@@ -5,6 +5,7 @@
   Back
 </button>
 <button
+*ngIf="permissionService.hasPermission('Add Collection Center') || tokenService.getUserDetails().role === '1'"
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add()"
 >
@@ -151,6 +152,7 @@
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="permissionService.hasPermission('Assign Center Target') || tokenService.getUserDetails().role === '1'"
             >
               Assign Target
             </th>
@@ -198,7 +200,8 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
              {{item.code1}} {{ item.contact01 }}
             </td>
-            <td class="px-4 py-3 text-center">
+            <td *ngIf="permissionService.hasPermission('Assign Center Target') || tokenService.getUserDetails().role === '1'" 
+            class="px-4 py-3 text-center">
               <i
                 class="fa-solid fa-bullseye text-xl text-textLight"
                 (click)="isAgroworldPresent(item) && navigateAddTarget(item)"
@@ -211,6 +214,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
+              *ngIf="permissionService.hasPermission('View Collection Center') || tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
                 (click)="
                   isAgroworldPresent(item) &&
@@ -234,6 +238,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
+              *ngIf="permissionService.hasPermission('Edit Collection Center') || tokenService.getUserDetails().role === '1'"
                 class="text-blue-400 hover:text-blue-700"
                 (click)="navigateEdit(item.id)"
               >
@@ -242,6 +247,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
+              *ngIf="permissionService.hasPermission('Delete Collection Center') || tokenService.getUserDetails().role === '1'"
                 class="text-red-500 hover:text-red-700"
                 (click)="deleteCollectionCenter(item.id)"
               >

@@ -101,9 +101,6 @@ import { ViewCompanyHeadComponent } from './application/collection-hub-section/v
 import { CreateCenterHeadComponent } from './application/collection-hub-section/create-center-head/create-center-head/create-center-head.component';
 import { EditCenterHeadComponent } from './application/collection-hub-section/edit-center-head/edit-center-head/edit-center-head.component';
 import { ViewCenterComplainComponent } from './application/Complaints/view-center-complain/view-center-complain.component';
-
-
-import { application } from 'express';
 import { ViewSalesAgentsComponent } from './application/collection-hub-section/view-sales-agents/view-sales-agents.component';
 import { CreateSalesAgentsComponent } from './application/sales-dash-section/create-sales-agents/create-sales-agents.component';
 export const routes: Routes = [
@@ -378,12 +375,6 @@ export const routes: Routes = [
                     path: 'create-sales-agents',
                     component: CreateSalesAgentsComponent,
                   },
-                  // {
-                  //   path: 'upload-farmers',
-                  //   component: UserBulkUploadComponent,
-                  //   canActivate: [ PermissionGuard],
-                  //   data: { permission: 'Bulk Plantcare User Upload' }, 
-                  // },
                 ],
               },
 
@@ -476,10 +467,14 @@ export const routes: Routes = [
           {
             path: 'collection-center-dashboard/:id/:comid',
             component: CollectionCenterDashboardComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'View Collection Center' },
           },
           {
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Edit Collection Center' },
           },
           {
             path: 'create-company',
@@ -494,10 +489,14 @@ export const routes: Routes = [
           {
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Add Collection Center' },
           },
           {
             path: 'add-daily-target/:id/:name/:comid',
             component: AddDailyTargetComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Assign Center Target' },
           },
           {
             path: 'view-company-head',

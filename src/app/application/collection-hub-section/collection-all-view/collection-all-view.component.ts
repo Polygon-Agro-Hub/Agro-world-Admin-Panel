@@ -8,6 +8,8 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface CollectionCenter {
   id: number;
@@ -60,7 +62,9 @@ export class CollectionAllViewComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private collectionService: CollectionCenterService
+    private collectionService: CollectionCenterService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit(): void {

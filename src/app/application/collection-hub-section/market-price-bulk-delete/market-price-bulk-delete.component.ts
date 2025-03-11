@@ -56,14 +56,14 @@ export class MarketPriceBulkDeleteComponent {
       return;
     }
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     this.http
       .get<{
         items: marketxl[];
         total: number;
-      }>(`${environment.API_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`, { headers })
+      }>(`${environment.API_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`, { headers: headers })
       .subscribe(
         (response) => {
           console.log("Received items:", response.items); // Debug log
@@ -100,7 +100,7 @@ export class MarketPriceBulkDeleteComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${this.token}`,
         });
 
         this.http

@@ -37,14 +37,14 @@ export class MarketPriceService {
       url += `&search=${searchNIC}`;
     }
 
-    return this.http.get<any>(url, { headers });
+    return this.http.get<any>(url, { headers: headers });
   }
 
   getAllCropName(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`);
+    return this.http.get<any>(`${this.apiUrl}market-price/get-all-crop-name`, {headers});
   }
 
   bulkUploadingMarketPrice(formData: FormData): Observable<any> {

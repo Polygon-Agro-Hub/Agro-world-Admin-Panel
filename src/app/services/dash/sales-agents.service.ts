@@ -80,4 +80,45 @@ export class SalesAgentsService {
       }
     );
   }
+
+  getSalesAgentReportById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}dash/get-sales-agent-details/${id}`, {
+      headers,
+    });
+  }
+
+  editSalesAgent(
+    person: any,
+    id: number,
+    selectedImage: any
+  ): Observable<any> {
+    const formData = new FormData();
+    formData.append('officerData', JSON.stringify(person)); // Attach officer data as a string
+    if (selectedImage) {
+      formData.append('file', selectedImage); // Attach the file (ensure the key matches the expected field name on the backend)
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.put(
+      `${this.apiUrl}dash/update-sales-agent-details/${id}`,
+      formData,
+      {
+        headers,
+      }
+    );
+  }
+
+  ChangeStatus(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}dash/update-status/${id}/${status}`;
+    return this.http.get<any>(url, { headers });
+  }
 }

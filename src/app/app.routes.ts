@@ -106,6 +106,7 @@ import { ViewCenterComplainComponent } from './application/Complaints/view-cente
 import { application } from 'express';
 import { ViewSalesAgentsComponent } from './application/collection-hub-section/view-sales-agents/view-sales-agents.component';
 import { CreateSalesAgentsComponent } from './application/sales-dash-section/create-sales-agents/create-sales-agents.component';
+import { EditSalesAgentComponent } from './application/sales-dash-section/edit-sales-agent/edit-sales-agent.component';
 export const routes: Routes = [
   {
     path: '',
@@ -378,12 +379,11 @@ export const routes: Routes = [
                     path: 'create-sales-agents',
                     component: CreateSalesAgentsComponent,
                   },
-                  // {
-                  //   path: 'upload-farmers',
-                  //   component: UserBulkUploadComponent,
-                  //   canActivate: [ PermissionGuard],
-                  //   data: { permission: 'Bulk Plantcare User Upload' }, 
-                  // },
+                  {
+                    path: 'edit-sales-agents/:id',
+                    component: EditSalesAgentComponent,
+                    
+                  },
                 ],
               },
 

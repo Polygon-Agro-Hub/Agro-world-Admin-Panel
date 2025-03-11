@@ -5,32 +5,45 @@ import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OfficerTargetService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http:HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  getSelectedOfficerTargetData(officerId: number, status: string = '', search: string = ''): Observable<any> {
+  // getSelectedOfficerTargetData(officerId: number, status: string = '', search: string = ''): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   let url = `${this.apiUrl}/get-selected-officer-target-data?officerId=${officerId}`;
+
+  //   if (status) {
+  //     url += `&status=${status}`;
+  //   }
+
+  //   if (search) {
+  //     url += `&search=${search}`
+  //   }
+
+  //   return this.http.get(url, {
+  //     headers,
+  //   });
+  // }
+
+  getSelectedOfficerTargetData(officerId: number): Observable<any> {
+    console.log("Officer ID:", officerId)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    let url = `${this.apiUrl}/get-selected-officer-target-data?officerId=${officerId}`;
-    
-    if (status) {
-      url += `&status=${status}`;
-    }
+    // Construct the URL with only the officerId parameter
+    const url = `${this.apiUrl}target/get-selected-officer-target-data?officerId=${officerId}`;
 
-    if (search) {
-      url += `&search=${search}`
-    }
-
-    return this.http.get(url, {
-      headers,
-    });
+    return this.http.get(url, { headers });
   }
 }

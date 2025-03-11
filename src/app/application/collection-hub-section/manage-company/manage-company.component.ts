@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
 import { FormsModule } from '@angular/forms';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-manage-company',
@@ -25,7 +26,8 @@ export class ManageCompanyComponent {
   constructor(
     private companyService: CollectionCenterService,
     private router: Router,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit() {

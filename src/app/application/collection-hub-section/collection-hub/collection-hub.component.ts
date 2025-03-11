@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import Swal from "sweetalert2";
 import { TokenService } from "../../../services/token/services/token.service";
 import { Router } from "@angular/router";
+import { PermissionService } from "../../../services/roles-permission/permission.service";
 
 @Component({
   selector: "app-collection-hub",
@@ -22,8 +23,9 @@ export class CollectionHubComponent {
 
   constructor(
     private http: HttpClient,
-    private tokenService: TokenService,
+    public tokenService: TokenService,
     private router: Router,
+    public permissionService: PermissionService
   ) {}
 
   togglePopupCollectionCenter() {

@@ -9,6 +9,7 @@
     Back
   </button>
   <button
+  *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
     class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="add()"
   >
@@ -253,6 +254,7 @@
           
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
+              *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompany(item.id)"
               >
@@ -271,6 +273,7 @@
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
+              *ngIf="permissionService.hasPermission('Delete Company') || tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCompany(item.id)"
               >

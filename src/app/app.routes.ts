@@ -446,14 +446,20 @@ export const routes: Routes = [
           {
             path: 'view-current-price',
             component: ViewCurrentMarketPriceComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'View Current Market Prices' },
           },
           {
             path: 'delete-bulk-price',
             component: MarketPriceBulkDeleteComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Delete Market Prices' },
           },
           {
             path: 'price-bulk-upload',
             component: MarketPriceBulkUploadComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Add Market Prices' },
           },
         ],
       },
@@ -478,6 +484,8 @@ export const routes: Routes = [
           {
             path: 'create-company',
             component: CreateCompanyComponent,
+            canActivate: [ PermissionGuard],
+            data: { permission: 'Add And Edit Company' },
           },
           {
             path: 'manage-company',

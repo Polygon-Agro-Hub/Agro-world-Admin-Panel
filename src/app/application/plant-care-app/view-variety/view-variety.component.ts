@@ -88,6 +88,7 @@ export class ViewVarietyComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.cropCalendarService.deleteCropVariety(id).subscribe(
           (data: any) => {
             if (data) {
@@ -96,6 +97,7 @@ export class ViewVarietyComponent {
                 'The crop variety item has been deleted.',
                 'success'
               );
+              this.isLoading = false;
               this.getAllVarietiesByGroup(this.itemId);
             }
           },
@@ -106,6 +108,7 @@ export class ViewVarietyComponent {
               'There was an error deleting the crop variety.',
               'error'
             );
+            this.isLoading = false;
           }
         );
       }

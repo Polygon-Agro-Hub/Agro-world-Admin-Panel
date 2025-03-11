@@ -139,6 +139,7 @@ export class ViewCropGroupComponent {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.cropCalendarService.deleteCropGroup(id).subscribe(
           (data: any) => {
             if (data) {
@@ -147,6 +148,7 @@ export class ViewCropGroupComponent {
                 'The crop group item has been deleted.',
                 'success'
               );
+              this.isLoading = false;
               this.fetchAllCropGroups();
             }
           },
@@ -157,6 +159,7 @@ export class ViewCropGroupComponent {
               'There was an error deleting the crop group.',
               'error'
             );
+            this.isLoading = false;
           }
         );
       }

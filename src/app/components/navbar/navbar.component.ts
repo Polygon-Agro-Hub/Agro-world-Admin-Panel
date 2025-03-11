@@ -2,6 +2,7 @@ import { Component, ElementRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { CommonModule } from '@angular/common';
+import { TokenService } from '../../services/token/services/token.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +15,7 @@ export class NavbarComponent {
   
   userName = localStorage.getItem('userName:');
     
-  constructor(private elementRef: ElementRef,private router: Router, private themeService: ThemeService) {}
+  constructor(private elementRef: ElementRef,private router: Router, private themeService: ThemeService, public tokenService: TokenService) {}
 
   
 

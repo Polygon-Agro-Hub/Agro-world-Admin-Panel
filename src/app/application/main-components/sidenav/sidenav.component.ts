@@ -112,8 +112,7 @@ export class SidenavComponent implements OnInit {
 
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
-      // Remove the login token from localStorage
-      localStorage.removeItem('Login Token : ');
+      
 
       // Show a logout confirmation
       Swal.fire({
@@ -127,7 +126,7 @@ export class SidenavComponent implements OnInit {
         cancelButtonText: 'No',
       }).then((result) => {
         if (result.isConfirmed) {
-          // Redirect to the login page after confirmation
+          this.tokenService.clearLoginDetails();
           this.router.navigate(['login']);
         }
       });

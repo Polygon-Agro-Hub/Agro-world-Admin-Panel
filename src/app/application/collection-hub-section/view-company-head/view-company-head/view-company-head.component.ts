@@ -184,6 +184,9 @@ export class ViewCompanyHeadComponent implements OnInit{
           </div>
         </div>
       `;
+
+
+      
   
       Swal.fire({
         html: tableHtml,
@@ -194,6 +197,7 @@ export class ViewCompanyHeadComponent implements OnInit{
           document
             .getElementById('approveButton')
             ?.addEventListener('click', () => {
+              Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
               this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
@@ -235,6 +239,7 @@ export class ViewCompanyHeadComponent implements OnInit{
           document
             .getElementById('rejectButton')
             ?.addEventListener('click', () => {
+              Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
               this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(

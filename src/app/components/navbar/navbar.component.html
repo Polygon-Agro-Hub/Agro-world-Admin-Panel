@@ -21,7 +21,7 @@
             </svg>
           </div>
           <div class="w-5"></div>
-          <div class="font-medium text-gray-700 dark:text-headerLight cursor-pointer" (click)="editMeAdminUser()">{{this.userName}}</div>
+          <div class="font-medium text-gray-700 dark:text-headerLight cursor-pointer" (click)="editMeAdminUser()">{{tokenService.getUserDetails().userName}}</div>
         </div>
           
           <!-- <li class="navbar-item">Admin Name</li> -->

@@ -39,6 +39,7 @@ export class LoginComponent {
   }
 
   ngOnInit() {
+    this.tokenService.clearLoginDetails()
     localStorage.removeItem("Login Token : ");
   }
 
@@ -102,18 +103,16 @@ export class LoginComponent {
           timer: 1500
         }).then(() => {
           this.isLoading = false; 
+          this.router.navigate(['steckholders/dashboard']);
+          this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
+        
+          
+          console.log('User logged in');
         });
   
-        localStorage.setItem('Login Token : ', res.token);
-        localStorage.setItem('userName:', res.userName);
-        localStorage.setItem('userId:', res.userId);
-        localStorage.setItem('role:', res.role);
-        localStorage.setItem('permissions', JSON.stringify(res.permissions));
-        localStorage.setItem('Token Expiration', String(new Date().getTime() + (res.expiresIn * 20)));
-  
-        this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
         
-        this.router.navigate(['steckholders/dashboard']);
+  
+       
       },
       (error) => {
         console.error('Error during login', error);

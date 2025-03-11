@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TokenService {
-  private readonly TOKEN_KEY = 'Login Token : ';
-  private readonly USERNAME_KEY = 'userName:';
-  private readonly USERID_KEY = 'userId:';
-  private readonly ROLE_KEY = 'role:';
-  private readonly PERMISSIONS_KEY = 'permissions';
-  private readonly EXPIRATION_KEY = 'Token Expiration';
+  private readonly TOKEN_KEY = 'AdminLoginToken';
+  private readonly USERNAME_KEY = 'AdminUserName';
+  private readonly USERID_KEY = 'AdminUserId';
+  private readonly ROLE_KEY = 'AdminRole';
+  private readonly PERMISSIONS_KEY = 'AdminPermissions';
+  private readonly EXPIRATION_KEY = 'AdminTokenExpiration';
 
 
   constructor() { }
@@ -23,7 +23,9 @@ export class TokenService {
     localStorage.setItem(this.PERMISSIONS_KEY, JSON.stringify(permissions));
     localStorage.setItem(this.EXPIRATION_KEY, expirationTime.toString());
 
-    
+    console.log('Saved login credentials');
+    console.log(localStorage.getItem(this.USERNAME_KEY));
+    console.log(this.USERID_KEY);
   }
 
 
@@ -39,6 +41,8 @@ export class TokenService {
     localStorage.removeItem(this.ROLE_KEY);
     localStorage.removeItem(this.PERMISSIONS_KEY);
     localStorage.removeItem(this.EXPIRATION_KEY);
+    console.log('User cleared');
+    
   }
 
 
@@ -57,6 +61,7 @@ export class TokenService {
       userId: localStorage.getItem(this.USERID_KEY),
       role: localStorage.getItem(this.ROLE_KEY),
       permissions: JSON.parse(localStorage.getItem(this.PERMISSIONS_KEY) || '[]'),
+      tokenExpiration: localStorage.getItem(this.EXPIRATION_KEY),
     };
   }
 }

@@ -236,7 +236,7 @@ export class EditAdminMeUserComponent implements OnInit {
             if (result.isConfirmed) {
               // Redirect to the desired route
               this.router.navigate(["/login"]);
-              localStorage.removeItem("Login Token : ");
+              this.tokenService.clearLoginDetails()
             }
           });
         },

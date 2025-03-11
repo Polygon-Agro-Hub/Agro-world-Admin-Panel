@@ -222,7 +222,7 @@
           [readonly]="true" />
       </div> -->
 
-      <div>
+      <!-- <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
         <div class="relative">
           <input formControlName="regCode" id="regCode" name="regCode"
@@ -234,6 +234,20 @@
               <path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C4.48 0 0 4.48 0 9s4.48 9 10 9V15a8 8 0 0 1-8-8z"></path>
             </svg>
           </div>
+        </div>
+      </div> -->
+
+      <div>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <div class="relative">
+          <input 
+            formControlName="regCode" 
+            id="regCode" 
+            name="regCode"
+            [value]="isLoadingregcode ? 'Loading...' : ''"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [readonly]="true" 
+          />
         </div>
       </div>
       

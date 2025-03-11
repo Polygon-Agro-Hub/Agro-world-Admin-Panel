@@ -202,6 +202,7 @@ export class ViewCollectiveOfficerComponent {
         document
           .getElementById('approveButton')
           ?.addEventListener('click', () => {
+            Swal.close();
             this.isPopupVisible = false;
             this.isLoading = true;
             this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
@@ -243,6 +244,7 @@ export class ViewCollectiveOfficerComponent {
         document
           .getElementById('rejectButton')
           ?.addEventListener('click', () => {
+            Swal.close();
             this.isPopupVisible = false;
             this.isLoading = true;
             this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(

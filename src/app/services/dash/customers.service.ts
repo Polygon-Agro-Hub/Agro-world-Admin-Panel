@@ -19,6 +19,6 @@ export class CustomersService {
     });
 
     let url = `${this.apiUrl}dash/get-all-customers`
-    return this.http.get<any>(url, { headers });
+    return this.http.get<any>(url, { headers: headers } );
   }
 }

@@ -48,6 +48,7 @@ export class MarketPriceBulkDeleteComponent {
   }
 
   fetchAllXl(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
     console.log("Fetching market prices for page:", page); // Debug log
     this.page = page;
     const token = `Bearer ${this.token}`;
@@ -71,11 +72,13 @@ export class MarketPriceBulkDeleteComponent {
           this.mprices = response.items;
           this.hasData = this.mprices.length > 0;
           this.totalItems = response.total;
+          this.isLoading = false;
         },
         (error) => {
           console.error("Error fetching market prices:", error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
+            this.isLoading = false;
           }
         },
       );

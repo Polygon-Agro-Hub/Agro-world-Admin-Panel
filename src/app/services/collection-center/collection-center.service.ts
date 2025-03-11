@@ -213,7 +213,7 @@ export class CollectionCenterService {
       url += `&searchItem=${searchItem}`;
     }
 
-    return this.http.get<any>(url, { headers });
+    return this.http.get<any>(url, { headers: headers });
   }
 
   
@@ -223,9 +223,7 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       "Content-Type": "application/json",
     });
-    return this.http.get(`${this.apiUrl}auth/get-center-by-id/${id}`, {
-      headers,
-    });
+    return this.http.get(`${this.apiUrl}auth/get-center-by-id/${id}`, { headers: headers });
   }
 
   updateColectionCenter(

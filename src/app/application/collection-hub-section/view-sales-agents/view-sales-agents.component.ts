@@ -50,7 +50,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   statusArr = [
     { status: 'Approved', value: 'Approved' },
     { status: 'Rejected', value: 'Rejected' },
-    
+    { status: 'Not Approved', value: 'Not Approved' },
   ];
 
   statusFilter: string = '';

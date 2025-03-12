@@ -34,6 +34,61 @@
 </button>
 
 <div
+  *ngIf="iseditModalOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div
+    class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3"
+  >
+    <h2
+      class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
+    >
+      Claim to a Center
+    </h2>
+
+    <div class="flex align-middle justify-center items-center">
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
+        >Select Center</label
+      >
+      <select
+        name="role"
+        required
+        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+      >
+        <option></option>
+      </select>
+    </div>
+
+    <div class="flex mt-4 align-middle justify-center items-center">
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
+        >Select Manager</label
+      >
+      <select
+        name="email"
+        required
+        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+      >
+        <option></option>
+      </select>
+    </div>
+
+    <div class="flex justify-center mt-4">
+      <button
+        (click)="editCloseModel()"
+        class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200"
+      >
+        Cancel
+      </button>
+      <button
+        class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
+      >
+        Claim
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
@@ -242,14 +297,15 @@
               {{ item.jobRole }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.centerName ? item.centerName : '---' }}
+              {{ item.centerName ? item.centerName : "---" }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
+                  class="cursor-pointer"
+                  (click)="editModalOpen(item)"
                   [ngClass]="{
-                    'px-3 py-1 text-sm text-[#308233]':
-                      item.claimStatus === 1,
+                    'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
                       item.claimStatus === 0
                   }"

@@ -1,158 +1,208 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="goBack()"
-  class="mb-5 text-textLight dark:text-textDark">
+<button (click)="goBack()" class="mb-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg ">
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
     <div class=""></div>
     <div class="flex flex-row items-center justify-between">
-        <div class="flex flex-col justify-between gap-3">
-            <p *ngIf="hasData" class="font-semibold text-lg mb-1 dark:text-white">EMP ID : {{selectedOfficerDataArr[0].empId}}</p>
-        </div>
-        <div class="flex flex-row items-center gap-8 ">
-            <i class="fa-solid fa-list text-2xl dark:text-white"></i>
+      <div class="flex flex-col justify-between gap-3">
+        <p *ngIf="hasData" class="font-semibold text-lg mb-1 dark:text-white">
+          EMP ID : {{ selectedOfficerDataArr[0].empId }}
+        </p>
+      </div>
+      <div class="flex flex-row items-center gap-8">
+        <i class="fa-solid fa-list text-2xl dark:text-white"></i>
 
-            <p class="text-lg dark:text-white">Filter By</p>
+        <p class="text-lg dark:text-white">Filter By</p>
 
-
-            <div class="relative w-46">
-                <div
-                    class="border-2 rounded-xl dark:bg-[#292929] text-textLight dark:text-textDark flex flex-row justify-between items-center">
-                    <select [(ngModel)]="selectStatus" (change)="filterStatus()"
-                        class="block w-full appearance-none  dark:bg-[#292929] text-textLight dark:text-textDark px-3 py-2 rounded-xl focus:outline-none">
-                        <option value="" selected disabled>Status</option>
-                        <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                            value="Pending">Pending</option>
-                        <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                            value="Completed">Completed</option>
-                        <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                            value="Exceeded">Exceeded</option>
-
-                    </select>
-                    <button *ngIf="!selectStatus">
-                        <i class="fa-solid fa-angle-down text-lg mr-3"></i>
-                    </button>
-                    <button *ngIf="selectStatus" (click)="cancelStatus()">
-                        <i class="fa-solid fa-xmark text-lg mr-3"></i>
-                    </button>
-
-                </div>
-            </div>
-
-            <div class="relative w-46">
-                <div
-                    class="border-2 rounded-xl dark:bg-[#292929] text-textLight dark:text-textDark flex flex-row justify-between items-center">
-                    <select [(ngModel)]="selectStatus" (change)="filterStatus()"
-                        class="block w-full appearance-none  dark:bg-[#292929] text-textLight dark:text-textDark px-3 py-2 rounded-xl focus:outline-none">
-                        <option value="" selected disabled>Status</option>
-                        <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                            value="Pending">Pending</option>
-                        <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                            value="Completed">Completed</option>
-                        <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                            value="Exceeded">Exceeded</option>
-
-                    </select>
-                    <button *ngIf="!selectStatus">
-                        <i class="fa-solid fa-angle-down text-lg mr-3"></i>
-                    </button>
-                    <button *ngIf="selectStatus" (click)="cancelStatus()">
-                        <i class="fa-solid fa-xmark text-lg mr-3"></i>
-                    </button>
-
-                </div>
-            </div>
-
-
-            <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#4B5563]">
-                <input type="text" placeholder="Search by Crop / Variety name.." [(ngModel)]="searchText"
-                    class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
-                <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-                    (click)="onSearch()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                    </svg>
-                </button>
-                <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
-                    (click)="offSearch()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
+        <div class="relative w-46">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+            [options]="statusOptions"
+            [checkmark]="true"
+            optionLabel="role"
+            [showClear]="true"
+            [(ngModel)]="selectStatus"
+            placeholder="Status"
+            (onChange)="filterStatus()"
+          />
         </div>
 
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#4B5563]"
+        >
+          <input
+            type="text"
+            placeholder="Search by Crop / Variety name.."
+            [(ngModel)]="searchText"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
-        <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
-        <img src="../../../../../assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    <div
+      *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen mt-6"
+    >
+      <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
+      <img
+        src="../../../../../assets/images/NoData.png"
+        alt="No Data"
+        class="w-20 h-20"
+      />
     </div>
-    
 
-    <div *ngIf="hasData"
-        class="overflow-x-auto mt-8 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
-        <table class="w-full divide-y-2 overflow-hidden">
-            <thead class=" text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021]">
-                <tr>
-                    <th class="px-6 py-3 text-left font-semibold">No</th>
-                    <th class="px-6 py-3 text-center font-semibold">Crop Name</th>
-                    <th class="px-6 py-3 text-center font-semibold">Variety Name</th>
-                    <th class="px-6 py-3 text-center font-semibold">Grade</th>
-                    <th class="px-6 py-3 text-center font-semibold">Target (kg)</th>
-                    <th class="px-6 py-3 text-center font-semibold">To Do (kg)</th>
-                    <th class="px-6 py-3 text-center font-semibold">Completed (kg)</th>
-                    <th class="px-6 py-3 text-center font-semibold">Status</th>
-                    <th class="px-6 py-3 text-center font-semibold">End Time</th>
-                    <th class="px-6 py-3 text-center font-semibold">Validity</th>
-                    <th class="px-6 py-3 text-center font-semibold"></th>
-                </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
-                <tr *ngFor="let item of selectedOfficerDataArr; let i = index">
-                    <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
-                        {{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }} </td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 text-center">{{item.cropNameEnglish}}</td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 text-center">{{item.varietyNameEnglish}}</td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 text-center">{{item.grade}}</td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 text-center">{{item.target}}</td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 text-center">{{item.remaining}}</td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 text-center">{{item.complete}}</td>
-                    <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 flex justify-center items-center">
-                        <span *ngIf="item.status === 'Pending'"
-                            class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 ">
-                            Pending
-                        </span>
-                        <span *ngIf="item.status === 'Completed'"
-                            class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 ">
-                            Completed
-                        </span>
-                        <span *ngIf="item.status === 'Exceeded'"
-                            class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 ">
-                            Exceeded
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
-                        <p class="text-[#646464] text-sm text-center">{{ item.toDate | date: 'yyyy/MM/dd' }}</p>
-                        <p class="text-[#646464] text-sm text-center">{{ item.toDate | date: 'hh:mm a' }}</p>
-                    </td>
-                    <td class="px-6 py-4 text-gray-900 dark:text-gray-300 text-center">
-                        <i *ngIf="item.status === 'Pending'"
-                            class="fa-solid fa-pen-to-square text-blue-600 cursor-pointer"
-                            >
-                        </i>
-                        <i *ngIf="item.status !== 'Pending'" class="fa-solid fa-pen-to-square text-gray-400">
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
+    <div *ngIf="hasData" class="overflow-x-auto mt-8 mr-5 rounded-lg">
+      <table class="w-full divide-y-2 overflow-hidden">
+        <thead class="text-gray-700 dark:text-gray-300 dark:border-[#ffffff]">
+          <tr>
+            <th class="px-6 py-3 text-left text-black dark:text-gray-300">
+              No
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Crop Name
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Variety Name
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Grade
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Target (kg)
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              To Do (kg)
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Completed (kg)
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Status
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              End Time
+            </th>
+            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+              Validity
+            </th>
+          </tr>
+        </thead>
+        <tbody class="dark:border-[#ffffff]">
+          <tr *ngFor="let item of selectedOfficerDataArr; let i = index">
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+              {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }}
+            </td>
+            <td class="px-6 py-4 text-black dark:text-gray-300 text-center">
+              {{ item.cropNameEnglish }}
+            </td>
+            <td class="px-6 py-4 text-black dark:text-gray-300 text-center">
+              {{ item.varietyNameEnglish }}
+            </td>
+            <td class="px-6 py-4 text-black dark:text-gray-300 text-center">
+              {{ item.grade }}
+            </td>
+            <td class="px-6 py-4 text-black dark:text-gray-300 text-center">
+              {{ item.target }}
+            </td>
+            <td class="px-6 py-4 text-black dark:text-gray-300 text-center">
+              {{ item.remaining }}
+            </td>
+            <td class="px-6 py-4 text-black dark:text-gray-300 text-center">
+              {{ item.complete }}
+            </td>
+            <td
+              class="px-6 py-4 text-black dark:text-gray-300 flex justify-center items-center"
+            >
+              <span
+                *ngIf="item.status === 'Pending'"
+                class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1"
+              >
+                Pending
+              </span>
+              <span
+                *ngIf="item.status === 'Completed'"
+                class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1"
+              >
+                Completed
+              </span>
+              <span
+                *ngIf="item.status === 'Exceeded'"
+                class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1"
+              >
+                Exceeded
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+              <p class="text-[#646464] text-sm text-center">
+                {{ item.toDate | date : "yyyy/MM/dd" }}
+              </p>
+              <p class="text-[#646464] text-sm text-center">
+                {{ item.toDate | date : "hh:mm a" }}
+              </p>
+            </td>
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300 text-center">
+              <i
+                *ngIf="item.status === 'Pending'"
+                class="fa-solid fa-pen-to-square text-blue-600 cursor-pointer"
+              >
+              </i>
+              <i
+                *ngIf="item.status !== 'Pending'"
+                class="fa-solid fa-pen-to-square text-gray-400"
+              >
+              </i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>

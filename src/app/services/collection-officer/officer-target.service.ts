@@ -34,15 +34,37 @@ export class OfficerTargetService {
   //   });
   // }
 
-  getSelectedOfficerTargetData(officerId: number): Observable<any> {
-    console.log("Officer ID:", officerId)
+  // getSelectedOfficerTargetData(officerId: number): Observable<any> {
+  //   console.log("Officer ID:", officerId)
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   // Construct the URL with only the officerId parameter
+  //   const url = `${this.apiUrl}target/get-selected-officer-target-data?officerId=${officerId}`;
+
+  //   return this.http.get(url, { headers });
+  // }
+
+  getSelectedOfficerTargetData(
+    officerId: number,
+    searchQuery: string = ''
+  ): Observable<any> {
+    console.log('Officer ID:', officerId);
+    console.log('Search Query:', searchQuery);
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    // Construct the URL with only the officerId parameter
-    const url = `${this.apiUrl}target/get-selected-officer-target-data?officerId=${officerId}`;
+    // Construct the URL with officerId and optional searchQuery
+    let url = `${this.apiUrl}target/get-selected-officer-target-data?officerId=${officerId}`;
+
+    if (searchQuery) {
+      url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+    }
 
     return this.http.get(url, { headers });
   }

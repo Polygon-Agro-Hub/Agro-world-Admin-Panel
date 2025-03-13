@@ -1,12 +1,13 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
-import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
-import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
+import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 
 interface Bank {
   ID: number;
@@ -24,13 +25,13 @@ interface BranchesData {
 }
 
 @Component({
-  selector: 'app-edit-center-head',
+  selector: 'app-edit-sales-agent',
   standalone: true,
   imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
-  templateUrl: './edit-center-head.component.html',
-  styleUrl: './edit-center-head.component.css'
+  templateUrl: './edit-sales-agent.component.html',
+  styleUrl: './edit-sales-agent.component.css'
 })
-export class EditCenterHeadComponent {
+export class EditSalesAgentComponent implements OnInit{
 
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
@@ -41,7 +42,7 @@ export class EditCenterHeadComponent {
   selectedLanguages: string[] = [];
   selectJobRole!: string
   personalData: Personal = new Personal();
-  CompanyData: Company[] = [];
+  
   confirmAccNumber!: any;
   
   lastID!: string
@@ -63,7 +64,6 @@ export class EditCenterHeadComponent {
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
-
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -100,6 +100,7 @@ export class EditCenterHeadComponent {
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
+    private salesAgentService: SalesAgentsService,
   ) { }
 
   ngOnInit(): void {
@@ -111,7 +112,7 @@ export class EditCenterHeadComponent {
       this.isLoading = true;
       console.log('isLoading became true');
 
-      this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
+      this.salesAgentService.getSalesAgentReportById(this.itemId).subscribe({
         next: (response: any) => {
           console.log('Response: ', response);
 
@@ -120,17 +121,12 @@ export class EditCenterHeadComponent {
           console.log('hi hi: ', response.officerData[0].empId);
 
           this.personalData.empId = officerData.empId;
-          this.personalData.jobRole = officerData.jobRole || '';
-          this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
-          this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
-          this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-          this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-          this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-          this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-          this.personalData.phoneCode01 = officerData.phoneCode01 || '+94';
-          this.personalData.phoneNumber01 = officerData.phoneNumber01 || '';
-          this.personalData.phoneCode02 = officerData.phoneCode02 || '+94';
-          this.personalData.phoneNumber02 = officerData.phoneNumber02 || '';
+          this.personalData.firstName = officerData.firstName || '';
+          this.personalData.lastName = officerData.lastName || '';
+          this.personalData.phoneCode1 = officerData.phoneCode1 || '+94';
+          this.personalData.phoneNumber1 = officerData.phoneNumber1 || '';
+          this.personalData.phoneCode2 = officerData.phoneCode2 || '+94';
+          this.personalData.phoneNumber2 = officerData.phoneNumber2 || '';
           this.personalData.nic = officerData.nic || '';
           this.personalData.email = officerData.email || '';
           this.personalData.houseNumber = officerData.houseNumber || '';
@@ -138,33 +134,30 @@ export class EditCenterHeadComponent {
           this.personalData.city = officerData.city || '';
           this.personalData.district = officerData.district || '';
           this.personalData.province = officerData.province || '';
-          this.personalData.languages = officerData.languages || '';
-          this.personalData.companyId = officerData.companyId || '';
           
           this.personalData.bankName = officerData.bankName || '';
           this.personalData.branchName = officerData.branchName || '';
           this.personalData.accHolderName = officerData.accHolderName || '';
           this.personalData.accNumber = officerData.accNumber || '';
           this.personalData.empType = officerData.empType || '';
-          this.personalData.irmId = officerData.irmId || '';
           this.personalData.image = officerData.image || '';
 
           // Additional fields
-          this.selectedLanguages = this.personalData.languages.split(',');
+          
           this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-5);
+          this.lastID = this.personalData.empId.slice(-4);
+          console.log('cutted empId', this.lastID);
           // this.lastID = this.personalData.empId;
           
-          this.comId = this.personalData.companyId;
           this.confirmAccNumber = this.personalData.accNumber;
-          this.initiateJobRole = officerData.jobRole || '';
-          this.initiateId = officerData.empId.slice(-5);
+          // this.initiateJobRole = officerData.jobRole || '';
+          // this.initiateId = officerData.empId.slice(-4);
 
-          console.log('This is the initiate Id', this.initiateJobRole)
-          console.log('This is the initiate JobRole', this.initiateId)
+          // console.log('This is the initiate Id', this.initiateJobRole)
+          // console.log('This is the initiate JobRole', this.initiateId)
 
-          console.log('Mapped Personal Data: ', this.personalData);
-          console.log('laguages', this.selectedLanguages);
+          // console.log('Mapped Personal Data: ', this.personalData);
+          // console.log('laguages', this.selectedLanguages);
 
           this.matchExistingBankToDropdown();
           
@@ -181,9 +174,6 @@ export class EditCenterHeadComponent {
         },
       });
     }
-
-    this.getAllCompanies()
-    // this.EpmloyeIdCreate()
     
   }
 
@@ -239,15 +229,6 @@ export class EditCenterHeadComponent {
     console.log('hit 02');
   }
 
-
-  getAllCompanies() {
-    this.collectionCenterSrv.getAllCompanyList().subscribe(
-      (res) => {
-        this.CompanyData = res
-      }
-    )
-  }
-
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -287,84 +268,6 @@ export class EditCenterHeadComponent {
     this.empType = selectedType;
     this.personalData.empType = selectedType; // Update personalData.empType dynamically
     console.log('Selected Employee Type:', this.empType);
-  }
-
-
-
-  onCheckboxChange1(lang: string, event: any) {
-    // If the checkbox is checked, add the language to the string; if unchecked, remove it
-    if (event.target.checked) {
-      if (this.personalData.languages) {
-        // Add the language if it's not already in the string
-        if (!this.personalData.languages.includes(lang)) {
-          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
-        }
-      } else {
-        this.personalData.languages = lang;
-      }
-    } else {
-      // Remove the language from the string if the checkbox is unchecked
-      const languagesArray = this.personalData.languages.split(',');
-      const index = languagesArray.indexOf(lang);
-      if (index !== -1) {
-        languagesArray.splice(index, 1);
-      }
-      this.personalData.languages = languagesArray.join(',');
-    }
-  }
-
-  isLanguageRequired = false; // Flag for validation
-
-  onCheckboxChange(language: string, event: Event): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
-
-    if (isChecked) {
-      if (!this.selectedLanguages.includes(language)) {
-        this.selectedLanguages.push(language);
-      }
-    } else {
-      this.selectedLanguages = this.selectedLanguages.filter(lang => lang !== language);
-    }
-
-    // Validation Check: If no languages are selected, show the error
-    this.isLanguageRequired = this.selectedLanguages.length === 0;
-
-    console.log('Selected Languages:', this.selectedLanguages);
-  }
-
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/collection-hub/edit-center-head')
-      }
-    });
-  }
-
-
-
-
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    if (!this.personalData.firstNameEnglish ||
-      !this.personalData.firstNameSinhala ||
-      !this.personalData.firstNameTamil ||
-      !this.personalData.lastNameEnglish ||
-      !this.personalData.lastNameSinhala ||
-      !this.personalData.lastNameTamil ||
-      !this.personalData.phoneNumber01 ||
-      !this.personalData.nic ||
-      !this.personalData.email ||
-      !this.personalData.empType
-    ) {
-      return;
-    }
-    this.selectedPage = page;
   }
 
   updateProvince(event: Event): void {
@@ -437,9 +340,30 @@ export class EditCenterHeadComponent {
     }
   }
 
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.navigatePath('/steckholders/action/sales-agents')
+      }
+    });
+  }
+
   onSubmit() {
     console.log('start submitting')
     if (
+      !this.personalData.firstName ||
+      !this.personalData.lastName ||
+      !this.personalData.phoneNumber1 ||
+      !this.personalData.nic ||
+      !this.personalData.email ||
+      !this.personalData.empType ||
       !this.personalData.houseNumber ||
       !this.personalData.streetName ||
       !this.personalData.city ||
@@ -459,11 +383,11 @@ export class EditCenterHeadComponent {
     console.log('hii', this.personalData.empType);
     console.log(this.selectedImage);
 
-    // Show a confirmation dialog before proceeding
+    
     this.isLoading = false;
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to edit the Center Head?',
+      text: 'Do you want to edit the Sales Agent?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
@@ -472,12 +396,12 @@ export class EditCenterHeadComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
+        this.salesAgentService.editSalesAgent(this.personalData, this.itemId, this.selectedImage).subscribe(
           (res: any) => {
 
             this.isLoading = false;
-            Swal.fire('Success', 'Center Head Created Successfully', 'success');
-            this.navigatePath('/collection-hub/manage-company');
+            Swal.fire('Success', 'Sales Agent Created Successfully', 'success');
+            this.navigatePath('/steckholders/action/sales-agents');
           },
           (error: any) => {
             this.isLoading = false;
@@ -499,22 +423,17 @@ export class EditCenterHeadComponent {
 
 }
 
+
 class Personal {
-  jobRole!: string;
   empId!: any;
-  
   irmId!: number;
   empType!: string;
-  firstNameEnglish!: string;
-  firstNameSinhala!: string;
-  firstNameTamil!: string;
-  lastNameEnglish!: string;
-  lastNameSinhala!: string;
-  lastNameTamil!: string;
-  phoneCode01: string = '+94';
-  phoneNumber01!: string;
-  phoneCode02: string = '+94';
-  phoneNumber02!: string;
+  firstName!: string;
+  lastName!: string;
+  phoneCode1: string = '+94';
+  phoneNumber1!: string;
+  phoneCode2: string = '+94';
+  phoneNumber2!: string;
   nic!: string;
   email!: string;
   new!: string;
@@ -526,8 +445,6 @@ class Personal {
   district!: string;
   province!: string;
   country: string = 'Sri Lanka';
-  languages: string = '';
-  companyId!: number;
   image!: string;
   accHolderName!: any;
   accNumber!: any;
@@ -537,8 +454,3 @@ class Personal {
 }
 
 
-class Company {
-  id!: number
-  companyNameEnglish!: string
-
-}

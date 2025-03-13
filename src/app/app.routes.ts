@@ -103,6 +103,7 @@ import { EditCenterHeadComponent } from './application/collection-hub-section/ed
 import { ViewCenterComplainComponent } from './application/Complaints/view-center-complain/view-center-complain.component';
 import { ViewSalesAgentsComponent } from './application/collection-hub-section/view-sales-agents/view-sales-agents.component';
 import { CreateSalesAgentsComponent } from './application/sales-dash-section/create-sales-agents/create-sales-agents.component';
+import { EditSalesAgentComponent } from './application/sales-dash-section/edit-sales-agent/edit-sales-agent.component';
 import { AgroWorldCentersComponent } from './application/collection-hub-section/agro-world-centers/agro-world-centers.component';
 export const routes: Routes = [
   {
@@ -375,6 +376,11 @@ export const routes: Routes = [
                   {
                     path: 'create-sales-agents',
                     component: CreateSalesAgentsComponent,
+                  },
+                  {
+                    path: 'edit-sales-agents/:id',
+                    component: EditSalesAgentComponent,
+                    
                   },
                 ],
               },

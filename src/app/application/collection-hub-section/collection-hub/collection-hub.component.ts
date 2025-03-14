@@ -19,6 +19,7 @@ export class CollectionHubComponent {
   popupVisibleComplains = false;
   popupVisibleMarketPrice = false;
   popupVisibleCompanys = false;
+  popupVisibleAG = false;
   private token = this.tokenService.getToken();
 
   constructor(
@@ -32,6 +33,7 @@ export class CollectionHubComponent {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
     this.popupVisibleMarketPrice = false;
     this.popupVisibleCompanys = false;
+    this.popupVisibleAG = false;
     if ((this.popupVisibleComplains = true)) {
       this.popupVisibleComplains = !this.popupVisibleComplains;
     }
@@ -41,12 +43,14 @@ export class CollectionHubComponent {
     this.popupVisibleCompanys = !this.popupVisibleCompanys;
     this.popupVisibleMarketPrice = false;
     this.popupVisibleCollectionCenter = false;
+    this.popupVisibleAG = false;
   }
 
   togglePopupComplains() {
     this.popupVisibleComplains = !this.popupVisibleComplains;
     this.popupVisibleMarketPrice = false;
     this.popupVisibleCompanys = false;
+    this.popupVisibleAG = false;
     if ((this.popupVisibleCollectionCenter = true)) {
       this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
     }
@@ -57,6 +61,18 @@ export class CollectionHubComponent {
     this.popupVisibleCompanys = false;
     this.popupVisibleComplains = false;
     this.popupVisibleCollectionCenter = false;
+    this.popupVisibleAG = false;
+  }
+
+
+
+
+  togglePopupAG() {
+    this.popupVisibleAG = !this.popupVisibleAG;
+    this.popupVisibleCollectionCenter = false;
+    this.popupVisibleMarketPrice = false;
+    this.popupVisibleCompanys = false;
+    
   }
 
   downloadTemplate1() {
@@ -126,6 +142,10 @@ export class CollectionHubComponent {
 
   viewCenter(): void {
     this.router.navigate(["/collection-hub/view-collection-centers"]);
+  }
+
+  viewAgroworldCenters(): void {
+    this.router.navigate(["/collection-hub/agro-world-centers"]);
   }
 
   addCenter(): void {

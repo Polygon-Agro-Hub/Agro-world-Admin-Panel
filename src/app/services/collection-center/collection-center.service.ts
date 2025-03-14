@@ -433,4 +433,29 @@ export class CollectionCenterService {
       headers,
     });
   }
+
+
+  getAllCollectionCenterPageAW(
+    page: number,
+    limit: number,
+    searchItem: string = "",
+  ): Observable<any> {
+    console.log(page, limit, searchItem);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}auth/get-all-centerpage-aw?page=${page}&limit=${limit}&companyId=1`;
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
 }
+
+
+
+
+

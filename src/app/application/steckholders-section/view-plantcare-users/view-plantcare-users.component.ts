@@ -111,6 +111,7 @@ export class ViewPlantcareUsersComponent {
           console.error("Error fetching market prices:", error);
           if (error.status === 401) {
             // Handle unauthorized access (e.g., redirect to login)
+            this.isLoading = false;
           }
         },
       );

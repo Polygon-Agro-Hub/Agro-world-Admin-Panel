@@ -39,6 +39,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   
 
   isLoading = false;
+  isPopupVisible = false;
 
   page: number = 1;
   totalItems: number = 0;
@@ -49,7 +50,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   statusArr = [
     { status: 'Approved', value: 'Approved' },
     { status: 'Rejected', value: 'Rejected' },
-    
+    { status: 'Not Approved', value: 'Not Approved' },
   ];
 
   statusFilter: string = '';
@@ -70,7 +71,7 @@ export class ViewSalesAgentsComponent implements OnInit {
   fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.statusFilter) {
     
     
-    // this.isLoading = true;
+    this.isLoading = true;
     this.salesAgentsService.getAllSalesAgents( page, limit, search, status).subscribe(
       (data) => {
         console.log(data);
@@ -111,7 +112,11 @@ export class ViewSalesAgentsComponent implements OnInit {
     this.router.navigate(['/steckholders/action']);
   }
 
-  
+  editCompanyHead(id: number) {
+    
+    this.navigatePath(`/steckholders/action/sales-agents/edit-sales-agents/${id}`);
+  }
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
@@ -130,6 +135,7 @@ export class ViewSalesAgentsComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.salesAgentsService.deleteSalesAgent(id).subscribe(
           (data: any) => {
             if (data) {
@@ -138,6 +144,7 @@ export class ViewSalesAgentsComponent implements OnInit {
                 'The sales agent has been deleted.',
                 'success'
               );
+              this.isLoading = true;
               this.fetchAllSalesAgents();
             }
           },
@@ -151,6 +158,115 @@ export class ViewSalesAgentsComponent implements OnInit {
           }
         );
       }
+    });
+  }
+
+  openPopup(item: any) {
+    this.isPopupVisible = true;
+
+    // HTML structure for the popup
+    const tableHtml = `
+      <div class="container mx-auto">
+        <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstName}</h1>
+        <div >
+          <p class="text-center">Are you sure you want to approve or reject this officer?</p>
+        </div>
+        <div class="flex justify-center mt-4">
+          <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
+          <button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>
+        </div>
+      </div>
+    `;
+
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false, // Hide default confirm button
+      width: 'auto',
+      didOpen: () => {
+        // Handle the "Approve" button click
+        document
+          .getElementById('approveButton')
+          ?.addEventListener('click', () => {
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.salesAgentsService.ChangeStatus(item.id, 'Approved').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The Agent was approved successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                  this.isLoading = false;
+                  this.fetchAllSalesAgents();
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              },
+              (err) => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while approving. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              }
+            );
+          });
+
+        // Handle the "Reject" button click
+        document
+          .getElementById('rejectButton')
+          ?.addEventListener('click', () => {
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.salesAgentsService.ChangeStatus(item.id, 'Rejected').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The Agent was rejected successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                  this.isLoading = false;
+                  this.fetchAllSalesAgents();
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              },
+              (err) => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while rejecting. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              }
+            );
+          });
+      },
     });
   }
 

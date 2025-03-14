@@ -79,50 +79,7 @@ export class ViewCollectiveOfficerProfileComponent {
   viewOfficerTarget(officerId: number) {
     this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets/${officerId}`])
   }
-
-  // generatePDF() {
-  //   const reportContainer = document.getElementById('reportcontainer');
-
-  //   if (reportContainer) {
-  //     const buttons = reportContainer.querySelectorAll('button');
-  //     buttons.forEach((btn) => (btn.style.display = 'none'));
-
-  //     html2canvas(reportContainer, {
-  //       scale: 1,
-  //       useCORS: true,
-  //       logging: true,
-  //     })
-  //       .then((canvas) => {
-  //         const imgData = canvas.toDataURL('image/png');
-  //         const pdf = new jsPDF('p', 'mm', 'a4');
-  //         const pdfWidth = pdf.internal.pageSize.getWidth();
-  //         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-  //         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  //         const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader+this.officerObj.empId}).pdf`;
-  //         pdf.save(fileName);
-
-  //         buttons.forEach((btn) => (btn.style.display = 'block'));
-
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Download Complete',
-  //           html: `<b>${fileName}</b> has been downloaded successfully!`,
-  //           confirmButtonText: 'OK',
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error generating PDF:', error);
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Oops...',
-  //           text: 'Something went wrong while generating the PDF!',
-  //           confirmButtonText: 'Try Again',
-  //         });
-  //       });
-  //   }
-  // }
-
+  
   generatePDF() {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const margin = 10;

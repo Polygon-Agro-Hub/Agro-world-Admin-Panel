@@ -23,6 +23,12 @@ export class ViewOfficerTargetComponent {
   searchText: string = '';
   isLoading = false;
 
+  statusOptions = [
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Completed', value: 'Completed' },
+    { label: 'Exceeded', value: 'Exceeded' },
+  ];
+
   constructor(
     private TargetSrv: OfficerTargetService,
     private router: Router,
@@ -34,9 +40,9 @@ export class ViewOfficerTargetComponent {
     this.location.back();
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.officerId = this.route.snapshot.params['officerId'];
-    this.fetchSelectedOfficerTarget(this.officerId);
+    this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 
   // fetchSelectedOfficerTarget(
@@ -61,29 +67,30 @@ export class ViewOfficerTargetComponent {
   //   });
   // }
 
-  fetchSelectedOfficerTarget(officerId: number): void {
+  fetchSelectedOfficerTarget(
+    officerId: number,
+    searchQuery: string = ''
+  ): void {
     this.isLoading = true;
-    this.TargetSrv.getSelectedOfficerTargetData(officerId).subscribe(
-        (res) => {
-          this.isLoading = false;
-            console.log(res);
+    this.TargetSrv.getSelectedOfficerTargetData(
+      officerId,
+      searchQuery
+    ).subscribe(
+      (res) => {
+        this.isLoading = false;
+        console.log(res);
 
-            this.selectedOfficerDataArr = res.items;
-            console.log(res.items.length);
+        this.selectedOfficerDataArr = res.items;
+        console.log(res.items.length);
 
-            // Check if there is data
-            if (res.items.length === 0) {
-                this.hasData = false;
-            } else {
-                this.hasData = true;
-            }
-        },
-        (error) => {
-            console.error("Error fetching officer target data:", error);
-            this.hasData = false; // Assume no data in case of an error
-        }
+        this.hasData = res.items.length > 0;
+      },
+      (error) => {
+        console.error('Error fetching officer target data:', error);
+        this.hasData = false; // Assume no data in case of an error
+      }
     );
-}
+  }
 
   // cancelStatus() {
   //   this.selectStatus = '';
@@ -92,7 +99,7 @@ export class ViewOfficerTargetComponent {
 
   cancelStatus() {
     this.selectStatus = '';
-    this.fetchSelectedOfficerTarget(this.officerId);
+    this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 
   // filterStatus() {
@@ -100,7 +107,7 @@ export class ViewOfficerTargetComponent {
   // }
 
   filterStatus() {
-    this.fetchSelectedOfficerTarget(this.officerId);
+    this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 
   // onSearch() {
@@ -108,7 +115,7 @@ export class ViewOfficerTargetComponent {
   // }
 
   onSearch() {
-    this.fetchSelectedOfficerTarget(this.officerId);
+    this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 
   // offSearch() {
@@ -118,7 +125,7 @@ export class ViewOfficerTargetComponent {
 
   offSearch() {
     this.searchText = '';
-    this.fetchSelectedOfficerTarget(this.officerId);
+    this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 }
 

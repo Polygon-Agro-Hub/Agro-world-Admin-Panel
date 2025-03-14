@@ -23,7 +23,7 @@ interface CollectionOfficers {
   lastNameEnglish: string;
   phoneNumber01: string;
   companyNameEnglish: string;
-  empId: string;
+  empId: any;
   nic: string;
   status: string;
   claimStatus: number;
@@ -64,6 +64,7 @@ export class ViewCollectiveOfficerComponent {
 
   companyArr: Company[] = [];
   isLoading = false;
+  iseditModalOpen: boolean = false;
 
   constructor(
     private router: Router,
@@ -322,6 +323,14 @@ export class ViewCollectiveOfficerComponent {
       '/steckholders/action/collective-officer/collective-officer-profile',
       id,
     ]);
+  }
+
+  editCloseModel() {
+    this.iseditModalOpen = false;
+  }
+
+  editModalOpen(role: any) {
+    this.iseditModalOpen = true;
   }
 }
 

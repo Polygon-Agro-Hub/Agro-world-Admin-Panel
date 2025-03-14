@@ -68,7 +68,7 @@ export class CollectionCenterDashboardComponent {
   }
 
   navigateToMarketPrice() {
-    this.router.navigate([`centers/center-view-price-list/${this.centerId}`]);
+    this.router.navigate([`collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerNameObj.centerName}`]);
   }
 }
 

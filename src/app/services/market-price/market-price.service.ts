@@ -60,4 +60,39 @@ export class MarketPriceService {
       },
     );
   }
+
+
+
+  getAllMarketPriceAgro(crop: any, grade: any, searchNIC: any, centerId : any, companyId : any): Observable<any> {
+    console.log(centerId,companyId);
+
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-price/get-market-prices-agroworld?`;
+
+    if (crop) {
+      url += `crop=${crop}`;
+    }
+
+    if (grade) {
+      url += `&grade=${grade}`;
+    }
+
+    if (searchNIC) {
+      url += `&search=${searchNIC}`;
+    }
+
+    if (centerId) {
+      url += `&centerId=${centerId}`;
+    }
+
+    if (companyId) {
+      url += `&companyId=${companyId}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
 }

@@ -187,6 +187,7 @@ export class ViewSalesAgentsComponent implements OnInit {
         document
           .getElementById('approveButton')
           ?.addEventListener('click', () => {
+            Swal.close();
             this.isPopupVisible = false;
             this.isLoading = true;
             this.salesAgentsService.ChangeStatus(item.id, 'Approved').subscribe(
@@ -229,6 +230,7 @@ export class ViewSalesAgentsComponent implements OnInit {
         document
           .getElementById('rejectButton')
           ?.addEventListener('click', () => {
+            Swal.close();
             this.isPopupVisible = false;
             this.isLoading = true;
             this.salesAgentsService.ChangeStatus(item.id, 'Rejected').subscribe(

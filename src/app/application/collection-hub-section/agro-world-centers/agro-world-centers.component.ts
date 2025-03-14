@@ -197,8 +197,7 @@ export class AgroWorldCentersComponent {
       }
     
       assignTarget(items: any, centerId: number) {
-        console.log(centerId,'<---centerId');
-        
+       
         let comId;
         items?.some((company: Company) =>
           company.companyNameEnglish === 'agroworld (Pvt) Ltd'

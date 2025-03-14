@@ -80,52 +80,171 @@ export class ViewCollectiveOfficerProfileComponent {
     this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets/${officerId}`])
   }
 
+  // generatePDF() {
+  //   const reportContainer = document.getElementById('reportcontainer');
+
+  //   if (reportContainer) {
+  //     const buttons = reportContainer.querySelectorAll('button');
+  //     buttons.forEach((btn) => (btn.style.display = 'none'));
+
+  //     html2canvas(reportContainer, {
+  //       scale: 1,
+  //       useCORS: true,
+  //       logging: true,
+  //     })
+  //       .then((canvas) => {
+  //         const imgData = canvas.toDataURL('image/png');
+  //         const pdf = new jsPDF('p', 'mm', 'a4');
+  //         const pdfWidth = pdf.internal.pageSize.getWidth();
+  //         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  //         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+  //         const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader+this.officerObj.empId}).pdf`;
+  //         pdf.save(fileName);
+
+  //         buttons.forEach((btn) => (btn.style.display = 'block'));
+
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Download Complete',
+  //           html: `<b>${fileName}</b> has been downloaded successfully!`,
+  //           confirmButtonText: 'OK',
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error generating PDF:', error);
+  //         Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Something went wrong while generating the PDF!',
+  //           confirmButtonText: 'Try Again',
+  //         });
+  //       });
+  //   }
+  // }
+
   generatePDF() {
-    const reportContainer = document.getElementById('reportcontainer');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const margin = 10;
+    let y = margin;
 
-    if (reportContainer) {
-      const buttons = reportContainer.querySelectorAll('button');
-      buttons.forEach((btn) => (btn.style.display = 'none'));
+    const hasImage = !!this.officerObj.image;
 
-      html2canvas(reportContainer, {
-        scale: 1,
-        useCORS: true,
-        logging: true,
-      })
-        .then((canvas) => {
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF('p', 'mm', 'a4');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    if (hasImage) {
+        const img = new Image();
+        img.src = this.officerObj.image;
 
-          
+        const imgDiameter = 30;
+        const imgRadius = imgDiameter / 2;
+        const imgX = margin;
+        const imgY = y;
 
-         
+        pdf.saveGraphicsState();
 
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-          const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader+this.officerObj.empId}).pdf`;
-          pdf.save(fileName);
+        pdf.setDrawColor(255, 255, 255);
+        pdf.setFillColor(255, 255, 255);
+        pdf.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'S');
+        pdf.clip();
 
-          buttons.forEach((btn) => (btn.style.display = 'block'));
+        pdf.addImage(img, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
 
-          Swal.fire({
-            icon: 'success',
-            title: 'Download Complete',
-            html: `<b>${fileName}</b> has been downloaded successfully!`,
-            confirmButtonText: 'OK',
-          });
-        })
-        .catch((error) => {
-          console.error('Error generating PDF:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong while generating the PDF!',
-            confirmButtonText: 'Try Again',
-          });
-        });
+        pdf.restoreGraphicsState();
     }
-  }
+
+    const detailsX = hasImage ? margin + 40 : margin;
+
+    pdf.setFontSize(10);
+    pdf.text(`${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}`, detailsX, y + 10);
+    y += 5;
+    pdf.text(`${this.officerObj.jobRole} - ${this.empHeader}${this.officerObj.empId}`, detailsX, y + 10);
+    y += 5;
+    pdf.text(`${this.officerObj.centerName}`, detailsX, y + 10);
+    y += 5;
+    pdf.text(`${this.officerObj.companyNameEnglish}`, detailsX, y + 10);
+    y += 30;
+
+    pdf.setFontSize(12);
+    pdf.text('Personal Information', margin, y);
+    y += 10;
+
+    pdf.setFontSize(10);
+    const leftColumnX = margin;
+    const rightColumnX = margin + 90;
+
+    pdf.text(`First Name`, leftColumnX, y);
+    pdf.text(`${this.officerObj.firstNameEnglish}`, leftColumnX, y + 7);
+    pdf.text(`NIC Number`, leftColumnX, y + 21);
+    pdf.text(`${this.officerObj.nic}`, leftColumnX, y + 28);
+    pdf.text(`Phone Number - 1`, leftColumnX, y + 42);
+    pdf.text(`${this.officerObj.phoneCode01} ${this.officerObj.phoneNumber01}`, leftColumnX, y + 49);
+
+    pdf.text(`Last Name`, rightColumnX, y);
+    pdf.text(`${this.officerObj.lastNameEnglish}`, rightColumnX, y + 7);
+    pdf.text(`Email`, rightColumnX, y + 21);
+    pdf.text(`${this.officerObj.email}`, rightColumnX, y + 28);
+    pdf.text(`Phone Number - 2`, rightColumnX, y + 42);
+    pdf.text(`${this.officerObj.phoneCode02} ${this.officerObj.phoneNumber02}`, rightColumnX, y + 49);
+
+    y += 70;
+
+    pdf.setFontSize(12);
+    pdf.text('Address Details', margin, y);
+    y += 10;
+
+    pdf.setFontSize(10);
+
+    pdf.text(`House / Plot Number`, leftColumnX, y);
+    pdf.text(`${this.officerObj.houseNumber}`, leftColumnX, y + 7);
+    pdf.text(`City`, leftColumnX, y + 21);
+    pdf.text(`${this.officerObj.city}`, leftColumnX, y + 28);
+    pdf.text(`Province`, leftColumnX, y + 42);
+    pdf.text(`${this.officerObj.province}`, leftColumnX, y + 49);
+
+    pdf.text(`Street Name`, rightColumnX, y);
+    pdf.text(`${this.officerObj.streetName}`, rightColumnX, y + 7);
+    pdf.text(`Country`, rightColumnX, y + 21);
+    pdf.text(`${this.officerObj.country}`, rightColumnX, y + 28);
+    pdf.text(`District`, rightColumnX, y + 42);
+    pdf.text(`${this.officerObj.district}`, rightColumnX, y + 49);
+
+    y += 70;
+
+    pdf.setFontSize(12);
+    pdf.text('Bank Details', margin, y);
+    y += 10;
+
+    pdf.setFontSize(10);
+
+    pdf.text(`Account Holder's Name`, leftColumnX, y);
+    pdf.text(`${this.officerObj.accHolderName}`, leftColumnX, y + 7);
+    pdf.text(`Bank Name`, leftColumnX, y + 21);
+    pdf.text(`${this.officerObj.bankName}`, leftColumnX, y + 28);
+
+    pdf.text(`Account Number`, rightColumnX, y);
+    pdf.text(`${this.officerObj.accNumber}`, rightColumnX, y + 7);
+    pdf.text(`Branch Name`, rightColumnX, y + 21);
+    pdf.text(`${this.officerObj.branchName}`, rightColumnX, y + 28);
+
+    y += 42;
+
+    pdf.setFontSize(10);
+    pdf.setTextColor(100);
+    pdf.text(
+        `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
+        margin,
+        pdf.internal.pageSize.getHeight() - margin
+    );
+
+    const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader + this.officerObj.empId}).pdf`;
+    pdf.save(fileName);
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Download Complete',
+        html: `<b>${fileName}</b> has been downloaded successfully!`,
+        confirmButtonText: 'OK',
+    });
+}
 
   confirmDisclaim(id: number) {
     this.collectionOfficerService.disclaimOfficer(id).subscribe(

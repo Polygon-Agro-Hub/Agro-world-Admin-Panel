@@ -80,16 +80,65 @@ export class ViewCollectiveOfficerProfileComponent {
     this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets/${officerId}`])
   }
   
-  generatePDF() {
+  async generatePDF() {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
+    function loadImageAsBase64(url: string): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            resolve(reader.result as string);
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.onerror = function () {
+          // If XHR fails, try loading image directly
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx?.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          };
+          img.onerror = function () {
+            console.warn('Image load failed:', url);
+            resolve(''); // Resolve with empty string if image fails to load
+          };
+          img.src = url;
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Accept', 'image/png;image/*');
+        try {
+          xhr.send();
+        } catch (error) {
+          console.error('XHR send error:', error);
+          reject(error);
+        }
+      });
+    }
     let y = margin;
 
     const hasImage = !!this.officerObj.image;
 
     if (hasImage) {
+
+      const appendCacheBuster = (url: string) => {
+        if (!url) return '';
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}t=${new Date().getTime()}`;
+      };
+
+
         const img = new Image();
-        img.src = this.officerObj.image;
+
+        const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
+        img.src = await loadImageAsBase64(modifiedFarmerUrl);
 
         const imgDiameter = 30;
         const imgRadius = imgDiameter / 2;

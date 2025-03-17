@@ -105,6 +105,7 @@ import { ViewSalesAgentsComponent } from './application/collection-hub-section/v
 import { CreateSalesAgentsComponent } from './application/sales-dash-section/create-sales-agents/create-sales-agents.component';
 import { EditSalesAgentComponent } from './application/sales-dash-section/edit-sales-agent/edit-sales-agent.component';
 import { AgroWorldCentersComponent } from './application/collection-hub-section/agro-world-centers/agro-world-centers.component';
+import { ViewSalesDashComplaintsComponent } from './application/sales-dash-section/view-sales-dash-complaints/view-sales-dash-complaints.component';
 export const routes: Routes = [
   {
     path: '',
@@ -622,6 +623,10 @@ export const routes: Routes = [
           {
             path: 'view-center-complain/:id',
             component: ViewCenterComplainComponent,
+          },
+          {
+            path: 'view-sales-dash-complain',
+            component: ViewSalesDashComplaintsComponent,
           },
         ],
       },

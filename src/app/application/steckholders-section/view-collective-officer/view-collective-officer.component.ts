@@ -75,6 +75,9 @@ export class ViewCollectiveOfficerComponent {
 
   selectedOfficer: CollectionOfficers | null = null;
 
+  selectedCenterId: string | null = null; // Store selected center ID
+  selectedIrmId: string | null = null;
+
   constructor(
     private router: Router,
     private collectionService: CollectionService,
@@ -422,6 +425,50 @@ export class ViewCollectiveOfficerComponent {
           });
         }
       );
+  }
+
+  claimOfficer() {
+    if (!this.selectedCenterId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please select a center.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+    const payload = {
+      centerId: this.selectedCenterId,
+    };
+
+    this.collectionOfficerService.claimOfficer(this.selectOfficerId, payload).subscribe(
+      (response) => {
+        console.log('Officer claimed successfully:', response);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Officer claimed successfully!',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.iseditModalOpen = false; // Close the modal
+            this.fetchAllCollectionOfficer(this.page, this.itemsPerPage); // Refresh the list
+          }
+        });
+      },
+      (error) => {
+        console.error('Error claiming officer:', error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to claim officer!',
+          confirmButtonText: 'Try Again',
+        });
+      }
+    );
   }
 }
 

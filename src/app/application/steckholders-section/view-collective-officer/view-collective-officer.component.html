@@ -24,7 +24,7 @@
 
     <div class="flex align-middle justify-center items-center">
       <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Center</label>
-      <select name="center" required
+      <select name="center" required [(ngModel)]="selectedCenterId"
         class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
         <option *ngFor="let center of centerNames" [value]="center.id">{{ center.centerName }}</option>
       </select>
@@ -47,7 +47,9 @@
         class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200">
         Cancel
       </button>
-      <button class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200">
+      <button class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
+      (click)="claimOfficer()"
+      >
         Claim
       </button>
     </div>

@@ -27,7 +27,7 @@ export class AdminRowComponent implements OnChanges {
   officerAdmins: number = 0;
   newAdminUsers: number = 0;
   allAdminUsers: number = 0;
-  isLoading = false;
+  
 
 
   ngOnChanges(): void {
@@ -36,18 +36,24 @@ export class AdminRowComponent implements OnChanges {
   }
 
   fetchAdminUserData(data: any) {
-    // this.isLoading = true;
-    console.log('Admin->', data);
-    this.associateAdmins = data.adminUsersByPosition.Associate.adminUserCount ?? 0;
-    this.executiveAdmins = data.adminUsersByPosition.Executive.adminUserCount ?? 0;
-    this.managerAdmins = data.adminUsersByPosition.Manager.adminUserCount ?? 0;
-    this.officerAdmins = data.adminUsersByPosition.Manager.adminUserCount ?? 0;
-    // this.adminUsersByPosition = data.adminUsersByPosition;
-    this.newAdminUsers = data.todayAdmin.todayCount ?? 0;
-    // this.isLoading = false;
-    this.allAdminUsers = this.totCount(this.associateAdmins, this.executiveAdmins, this.managerAdmins, this.officerAdmins);
     
-  }
+    console.log('Admin->', data);
+
+    this.associateAdmins = data.adminUsersByPosition?.Associate?.adminUserCount ?? 0;
+    this.executiveAdmins = data.adminUsersByPosition?.Executive?.adminUserCount ?? 0;
+    this.managerAdmins = data.adminUsersByPosition?.Manager?.adminUserCount ?? 0;
+    this.officerAdmins = data.adminUsersByPosition?.Officer?.adminUserCount ?? 0;
+    this.newAdminUsers = data.todayAdmin?.todayCount ?? 0;
+
+    this.allAdminUsers = this.totCount(
+        this.associateAdmins,
+        this.executiveAdmins,
+        this.managerAdmins,
+        this.officerAdmins
+    );
+
+}
+
 
   totCount(x1: number, x2: number, x3: number, x4: number): number {
     return (x1 + x2 + x3 + x4)

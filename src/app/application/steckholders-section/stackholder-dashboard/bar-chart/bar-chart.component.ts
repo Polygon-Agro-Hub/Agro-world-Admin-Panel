@@ -12,31 +12,47 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'; // Import plugin
   styleUrl: './bar-chart.component.css'
 })
 export class BarChartComponent implements OnChanges {
-  @Input() QRfarmers: any;
+  
+  @Input() plantCareUsersWithOutQr: any;
+  @Input() plantCareUsersWithQr: any;
 
-  plantCareUsersWithOutQr!: number;
-  plantCareUsersWithQr!: number;
+
+  QRpresentage: number = 0;
+  nonQRpresentage: number = 0;
+
+ 
   chart: any;
 
   constructor() {
     Chart.register(...registerables, ChartDataLabels); // Register plugin
   }
   ngOnChanges(): void {
-    this.fetchPlantCareUserData(this.QRfarmers);
-  }
-
-
-  fetchPlantCareUserData(data: any) {
-    const withQr = data.QrCode.count ?? 0;
-    const withoutQr = data.notQrCode.count ?? 0;
-    const total = withQr + withoutQr;
-
-    this.plantCareUsersWithQr = total > 0 ? Math.round((withQr / total) * 100) : 0;
-    this.plantCareUsersWithOutQr = total > 0 ? Math.round((withoutQr / total) * 100) : 0;
-
+    this.calculatePercentages();
     this.createChart();
-
+    // this.fetchPlantCareUserData(this.QRfarmers);
   }
+
+
+  // fetchPlantCareUserData(data: any) {
+  //   const withQr = data.QrCode.count ?? 0;
+  //   const withoutQr = data.notQrCode.count ?? 0;
+  //   const total = withQr + withoutQr;
+
+  //   this.plantCareUsersWithQr = total > 0 ? Math.round((withQr / total) * 100) : 0;
+  //   this.plantCareUsersWithOutQr = total > 0 ? Math.round((withoutQr / total) * 100) : 0;
+
+  //   this.createChart();
+
+  // }
+
+  calculatePercentages(): void {
+    const total = this.plantCareUsersWithQr + this.plantCareUsersWithOutQr;
+    
+    // Calculate the percentage of QR and non-QR users
+    this.QRpresentage = total > 0 ? (this.plantCareUsersWithQr / total) * 100 : 0;
+    this.nonQRpresentage = total > 0 ? (this.plantCareUsersWithOutQr / total) * 100 : 0;
+  }
+
 
   createChart(): void {
     if (this.chart) {
@@ -50,7 +66,7 @@ export class BarChartComponent implements OnChanges {
         labels: ['Registered', 'Unregistered'],
         datasets: [{
           label: '',
-          data: [this.plantCareUsersWithQr, this.plantCareUsersWithOutQr],
+          data: [this.QRpresentage, this.nonQRpresentage],
           backgroundColor: ['#008080', '#76B7B2'],
           borderColor: ['#008080', '#76B7B2'],
           borderWidth: 2

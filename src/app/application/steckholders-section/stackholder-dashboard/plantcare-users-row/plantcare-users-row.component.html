@@ -1,3 +1,4 @@
+
 <div class="w-full p-4">
   <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
       <!-- Left Column -->
@@ -41,8 +42,13 @@
       
         <!-- Chart Container -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-grow">
-          <app-bar-chart [QRfarmers]="secondRow.QRfarmers
-          "></app-bar-chart>
+          <app-bar-chart *ngIf="secondRow?.QRfarmers"
+               
+               [plantCareUsersWithOutQr]="plantCareUsersWithOutQr"
+               [plantCareUsersWithQr]="plantCareUsersWithQr">
+</app-bar-chart>
+
+
         </div>
       </div>
       

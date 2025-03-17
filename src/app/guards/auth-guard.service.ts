@@ -19,9 +19,7 @@ export class AuthGuard implements CanActivate {
         return true; // Token is valid and not expired
       } else {
         // Token expired, remove token and redirect to login
-        localStorage.removeItem('Login Token : ');
-        localStorage.removeItem('Token Expiration');
-        this.router.navigate(['/login']);
+        this.tokenService.clearLoginDetails()
         return false;
       }
     } else {

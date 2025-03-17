@@ -40,7 +40,6 @@ export class LoginComponent {
 
   ngOnInit() {
     this.tokenService.clearLoginDetails()
-    localStorage.removeItem("Login Token : ");
   }
 
 
@@ -94,7 +93,7 @@ export class LoginComponent {
     
     this.authService.login(this.loginObj.email, this.loginObj.password).subscribe(
       (res: any) => {
-        console.log('Successfully logged in', res);
+
         Swal.fire({
           icon: 'success',
           title: 'Logged In',
@@ -107,7 +106,6 @@ export class LoginComponent {
           this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
         
           
-          console.log('User logged in');
         });
   
         

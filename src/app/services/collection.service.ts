@@ -17,7 +17,8 @@ export class CollectionService {
     page: number,
     limit: number,
     searchNIC: string = '',
-    company: string
+    company: string,
+    role: string
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -29,6 +30,10 @@ export class CollectionService {
 
     if (company) {
       url += `&company=${company}`;
+    }
+
+    if (role) {
+      url += `&role=${role}`;
     }
 
     if (searchNIC) {

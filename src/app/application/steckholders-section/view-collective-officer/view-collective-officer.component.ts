@@ -32,10 +32,12 @@ interface CollectionOfficers {
   centerName: string;
 }
 
+
 interface JobRole {
   id: number;
   jobRole: string;
 }
+
 
 @Component({
   selector: 'app-view-collective-officer',
@@ -53,7 +55,11 @@ interface JobRole {
 })
 export class ViewCollectiveOfficerComponent {
   collectionOfficers: CollectionOfficers[] = [];
-  jobRole: JobRole[] = [];
+  jobRole: JobRole[] = [
+    { id: 1, jobRole: 'Collection Officer' },
+    { id: 2, jobRole: 'Collection Center Manager' },
+    { id: 3, jobRole: 'Customer Officer' }
+  ];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
@@ -61,6 +67,7 @@ export class ViewCollectiveOfficerComponent {
   isPopupVisible = false;
   status!: Company[];
   statusFilter: any = '';
+  role: any = '';
 
   companyArr: Company[] = [];
   isLoading = false;
@@ -83,7 +90,8 @@ export class ViewCollectiveOfficerComponent {
         page,
         limit,
         this.searchNIC,
-        this.statusFilter?.id
+        this.statusFilter?.id,
+        this.role?.jobRole
       )
       .subscribe(
         (response) => {

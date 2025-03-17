@@ -19,7 +19,7 @@
       </h2>
     </div>
     <div class="flex items-center space-x-3 pl-6 pr-6">
-      <label for="featureCategory" class="text-gray-700 w-40">Category</label>
+      <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Category</label>
       <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
         <!-- Bind to the 'category' name but store the 'id' -->
@@ -34,7 +34,7 @@
 
 
 
-      <label for="featureCategory" class="text-gray-700 w-40">Feature </label>
+      <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Feature </label>
       <input type="text" id="featureCategory" name="category" [(ngModel)]="createCategroyObj.category"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
         placeholder="Enter category" />

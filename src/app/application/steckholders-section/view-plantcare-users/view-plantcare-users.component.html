@@ -112,6 +112,9 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Name</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Phone</th>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">NIC</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Distrct</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Register Status</th>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -142,6 +145,41 @@ class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 i
                     </td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneNumber }}</td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.NICnumber }}</td>
+                    <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.district }}</td>
+                    <td *ngIf='item.farmerQr' class="px-2 py-3 text-center text-[#006C5A] dark:text-[#BFFEB8]">
+                      Registered
+                    </td>
+                    <td *ngIf='!item.farmerQr' class="px-2 py-3 text-center text-textLight dark:text-textDark italic">
+                      Unregistered
+                    </td>
+
+
+                    <td
+                      *ngIf="
+                        permissionService.hasPermission('Approve Collection Officer') ||
+                        tokenService.getUserDetails().role === '1'
+                      "
+                      class="px-4 py-3 text-center"
+                    >
+                      <div>
+                        <span
+                          [ngClass]="{
+                            'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+                              item.activeStatus === 'inactive',
+                            'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg':
+                              item.activeStatus === 'active',
+                            'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
+                              item.activeStatus === 'deactive'
+                          }"
+                          class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
+                          
+                        >
+                          {{ item.activeStatus }}
+                        </span>
+                      </div>
+                    </td>
+
+
                    
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                         <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="editPlantCareUser(item.id)"

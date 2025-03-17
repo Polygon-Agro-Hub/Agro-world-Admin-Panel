@@ -22,6 +22,9 @@ interface PlantCareUser {
   lastName: string;
   phoneNumber: string;
   NICnumber: string;
+  district: string;
+  farmerQr: string;
+  activeStatus: string;
   profileImage: string;
   created_at: string;
 }

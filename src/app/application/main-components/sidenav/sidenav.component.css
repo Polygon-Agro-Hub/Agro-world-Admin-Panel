@@ -1,15 +1,17 @@
 .sidenav {
-    width: 80px; /* Width when collapsed */
-  transition: width 0.3s ease;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+    width: 80px;
+    /* Width when collapsed */
+    transition: width 0.3s ease;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .sidenav.expanded {
-    width: 250px; /* Width when expanded */
-  }
+    width: 250px;
+    /* Width when expanded */
+}
 
 .logo-container {
     display: flex;
@@ -69,6 +71,7 @@
     overflow-y: auto;
     max-height: 80vh;
 }
+
 .child-nav {
     list-style: none;
     padding-top: 1rem;
@@ -86,14 +89,20 @@
     width: 100%;
     margin-bottom: 0.625rem;
     background-color: transparent;
-    
+
+}
+
+.sidenav-nav-li:hover {
+    background-color: #FFFFFF33;
+    transition: background-color 0.3s ease;
+    border-radius: 10px;
 }
 
 
 .sidenav-nav-item {
     width: 100%;
     margin-bottom: 0.625rem;
-    
+
 }
 
 .sidenav-nav-link {
@@ -135,7 +144,7 @@
 
 
 .active .sidenav-link-icon,
-.active .sidenav-link-text{
+.active .sidenav-link-text {
     color: #fff;
     font-weight: 600;
 }
@@ -147,15 +156,8 @@
     padding: 1rem;
     cursor: pointer;
     color: #A8B0C5;
-    position: absolute;
     bottom: 0;
     width: 100%;
-    transition: all 0.3s ease;
-}
-
-.setting-container {
-    cursor: pointer;
-    color: #A8B0C5;
     transition: all 0.3s ease;
 }
 
@@ -163,6 +165,23 @@
     background-color: #FFFFFF33;
     color: #fff;
 }
+
+.setting-container {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1rem;
+    cursor: pointer;
+    color: #A8B0C5;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.setting-container:hover {
+    background-color: #FFFFFF33;
+    color: #fff;
+}
+
+
 
 
 .logout-container .sidenav-link-icon {
@@ -182,35 +201,36 @@
     list-style: none;
     padding-left: 1.5rem;
     margin-top: 0.5rem;
-  }
-  
-  .sidenav-child-item {
+}
+
+.sidenav-child-item {
     margin-bottom: 0.5rem;
-  }
-  
-  .sidenav-child-link {
+}
+
+.sidenav-child-link {
     display: flex;
     align-items: center;
     color: #8f9ec5;
     text-decoration: none;
     border: 2px solid transparent;
     transition: all 0.3s ease;
-    
-  }
-  
-  .sidenav-child-link:hover {
+
+}
+
+.sidenav-child-link:hover {
     color: #fdfdfd;
-  }
-  
-  .child-text {
+}
+
+.child-text {
     margin-left: 1rem;
-  }
-  
+}
 
 
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    min-height: 30px;  /* Minimum height of the thumb */
-  }
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    min-height: 30px;
+    /* Minimum height of the thumb */
+}
 
 
 

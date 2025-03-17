@@ -66,6 +66,8 @@ export class ViewCollectiveOfficerComponent {
   isLoading = false;
   iseditModalOpen: boolean = false;
 
+  selectedOfficer: CollectionOfficers | null = null;
+
   constructor(
     private router: Router,
     private collectionService: CollectionService,
@@ -326,10 +328,12 @@ export class ViewCollectiveOfficerComponent {
   }
 
   editCloseModel() {
+    this.selectedOfficer = null;
     this.iseditModalOpen = false;
   }
 
   editModalOpen(role: any) {
+    this.selectedOfficer = role;
     this.iseditModalOpen = true;
   }
 }

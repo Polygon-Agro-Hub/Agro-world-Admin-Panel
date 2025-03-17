@@ -33,23 +33,14 @@
   Add New
 </button>
 
-<div
-  *ngIf="iseditModalOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-  <div
-    class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3"
-  >
-    <h2
-      class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
-    >
+<div *ngIf="iseditModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3">
+    <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
       Claim to a Center
     </h2>
 
     <div class="flex align-middle justify-center items-center">
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-        >Select Center</label
-      >
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Center</label>
       <select
         name="role"
         required
@@ -59,10 +50,9 @@
       </select>
     </div>
 
-    <div class="flex mt-4 align-middle justify-center items-center">
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-        >Select Manager</label
-      >
+    <!-- Conditionally show/hide the Select Manager section -->
+    <div *ngIf="selectedOfficer && !selectedOfficer.empId.startsWith('CCM')" class="flex mt-4 align-middle justify-center items-center">
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
       <select
         name="email"
         required

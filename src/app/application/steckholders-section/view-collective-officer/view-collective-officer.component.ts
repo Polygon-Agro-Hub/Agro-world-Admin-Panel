@@ -15,6 +15,7 @@ import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { response } from 'express';
 
 interface CollectionOfficers {
   id: number;
@@ -54,6 +55,8 @@ interface JobRole {
 export class ViewCollectiveOfficerComponent {
   collectionOfficers: CollectionOfficers[] = [];
   jobRole: JobRole[] = [];
+  centerNames: CenterName[] = [];
+  collectionCenterManagerNames: ManagerNames[] = [];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
@@ -105,9 +108,36 @@ export class ViewCollectiveOfficerComponent {
       );
   }
 
+  fetchCenterNames() {
+    this.collectionService.getCenterNames().subscribe(
+      (response) => {
+        console.log(response);
+        this.centerNames = response;
+      },
+      (error) => {
+        console.error('Error fetching center names:', error);
+      }
+    );
+  }
+
+  fetchManagerNames(){
+    this.collectionService.getCollectionCenterManagerNames().subscribe(
+      (response)=>{
+        console.log('Hello Manager',response);
+        
+        this.collectionCenterManagerNames = response
+      },
+      (error) =>{
+        console.error('Error fetching manager names:', error)
+      }
+    )
+  }
+
   ngOnInit() {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
+    this.fetchCenterNames();
+    this.fetchManagerNames();
   }
 
   onPageChange(event: number) {
@@ -341,4 +371,15 @@ export class ViewCollectiveOfficerComponent {
 class Company {
   id!: string;
   companyNameEnglish!: string;
+}
+
+class CenterName{
+  id!: string;
+  centerName!: string;
+}
+
+class ManagerNames{
+  id!: string;
+  firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }

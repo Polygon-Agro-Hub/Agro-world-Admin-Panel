@@ -96,4 +96,23 @@ export class CollectionService {
     let url = `${this.apiUrl}auth/collection-officer/delete-officer/${id}`;
     return this.http.delete<any>(url, { headers });
   }
+
+  getCenterNames(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}auth/collection-officer/get-all-center-names`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  getCollectionCenterManagerNames(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names`;
+    return this.http.get<any>(url, { headers });
+  }
+
 }

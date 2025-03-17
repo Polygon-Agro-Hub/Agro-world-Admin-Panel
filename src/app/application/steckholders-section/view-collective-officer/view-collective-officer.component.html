@@ -42,11 +42,11 @@
     <div class="flex align-middle justify-center items-center">
       <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Center</label>
       <select
-        name="role"
+        name="center"
         required
         class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
       >
-        <option></option>
+        <option *ngFor="let center of centerNames" [value]="center.id">{{ center.centerName }}</option>
       </select>
     </div>
 
@@ -58,7 +58,9 @@
         required
         class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
       >
-        <option></option>
+        <option *ngFor="let manager of collectionCenterManagerNames" [value]="manager.id">
+          {{ manager.firstNameEnglish }} {{ manager.lastNameEnglish }}
+        </option>
       </select>
     </div>
 

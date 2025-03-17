@@ -16,6 +16,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { response } from 'express';
+import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 
 interface CollectionOfficers {
   id: number;
@@ -64,6 +65,9 @@ export class ViewCollectiveOfficerComponent {
   isPopupVisible = false;
   status!: Company[];
   statusFilter: any = '';
+  showDisclaimView = false;
+  officerId!: number;
+  selectOfficerId!: number;
 
   companyArr: Company[] = [];
   isLoading = false;
@@ -75,7 +79,8 @@ export class ViewCollectiveOfficerComponent {
     private router: Router,
     private collectionService: CollectionService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private collectionOfficerService: CollectionOfficerService
   ) {}
 
   fetchAllCollectionOfficer(
@@ -120,17 +125,17 @@ export class ViewCollectiveOfficerComponent {
     );
   }
 
-  fetchManagerNames(){
+  fetchManagerNames() {
     this.collectionService.getCollectionCenterManagerNames().subscribe(
-      (response)=>{
-        console.log('Hello Manager',response);
-        
-        this.collectionCenterManagerNames = response
+      (response) => {
+        console.log('Hello Manager', response);
+
+        this.collectionCenterManagerNames = response;
       },
-      (error) =>{
-        console.error('Error fetching manager names:', error)
+      (error) => {
+        console.error('Error fetching manager names:', error);
       }
-    )
+    );
   }
 
   ngOnInit() {
@@ -366,6 +371,58 @@ export class ViewCollectiveOfficerComponent {
     this.selectedOfficer = role;
     this.iseditModalOpen = true;
   }
+
+  closeDisclaimView() {
+    this.showDisclaimView = false;
+  }
+
+  handleClaimButtonClick(item: CollectionOfficers) {
+    console.log('Hello World', item);
+
+    this.selectedOfficer = item;
+    this.selectOfficerId = item.id;
+    console.log('select officer', this.selectedOfficer);
+
+    if (item.claimStatus === 0) {
+      this.iseditModalOpen = true;
+    } else if (item.claimStatus === 1) {
+      this.showDisclaimView = true;
+    }
+  }
+
+  confirmDisclaim() {
+    this.collectionOfficerService
+      .disclaimOfficer(this.selectOfficerId)
+      .subscribe(
+        (response) => {
+          console.log('Officer ID sent successfully:', response);
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Officer ID sent successfully!',
+            confirmButtonText: 'OK',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Refresh the page after the user clicks "OK"
+              window.location.reload();
+            }
+          });
+
+          this.showDisclaimView = false;
+        },
+        (error) => {
+          console.error('Error sending Officer ID:', error);
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to send Officer ID!',
+            confirmButtonText: 'Try Again',
+          });
+        }
+      );
+  }
 }
 
 class Company {
@@ -373,12 +430,12 @@ class Company {
   companyNameEnglish!: string;
 }
 
-class CenterName{
+class CenterName {
   id!: string;
   centerName!: string;
 }
 
-class ManagerNames{
+class ManagerNames {
   id!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;

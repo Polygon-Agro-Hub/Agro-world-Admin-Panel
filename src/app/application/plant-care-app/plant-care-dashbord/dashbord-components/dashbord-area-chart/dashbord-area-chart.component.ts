@@ -109,6 +109,34 @@ export class DashbordAreaChartComponent implements OnChanges {
   data: any;
   options: any;
 
+  district = [
+    { districtName: 'Colombo' },
+    { districtName: 'Kalutara' },
+    { districtName: 'Gampaha' },
+    { districtName: 'Kandy' },
+    { districtName: 'Matale' },
+    { districtName: 'Nuwara Eliya' },
+    { districtName: 'Galle' },
+    { districtName: 'Matara' },
+    { districtName: 'Hambantota' },
+    { districtName: 'Jaffna' },
+    { districtName: 'Mannar' },
+    { districtName: 'Vavuniya' },
+    { districtName: 'Kilinochchi' },
+    { districtName: 'Mullaitivu' },
+    { districtName: 'Batticaloa' },
+    { districtName: 'Ampara' },
+    { districtName: 'Trincomalee' },
+    { districtName: 'Badulla' },
+    { districtName: 'Moneragala' },
+    { districtName: 'Kurunegala' },
+    { districtName: 'Puttalam' },
+    { districtName: 'Anuradhapura' },
+    { districtName: 'Polonnaruwa' },
+    { districtName: 'Rathnapura' },
+    { districtName: 'Kegalle' },
+  ];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       (changes['qrUsers'] && changes['qrUsers'].currentValue !== undefined) ||

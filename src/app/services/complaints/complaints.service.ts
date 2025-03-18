@@ -130,4 +130,51 @@ export class ComplaintsService {
       },
     );
   }
+
+  getAllSalesComplain(
+    page: number,
+    limit: number,
+    status: String,
+    category: String,
+    comCategory: String,
+    searchText: string,
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": "application/json",
+    });
+
+    let url = `${this.apiUrl}complain/get-all-sales-agent-complains?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
+    }
+
+    if (comCategory) {
+      url += `&comCategory=${comCategory}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+
+  getComplainById(id: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": "application/json",
+    });
+    return this.http.get(`${this.apiUrl}complain/get-complain-by-id/${id}`, {
+      headers,
+    });
+  }
+
 }

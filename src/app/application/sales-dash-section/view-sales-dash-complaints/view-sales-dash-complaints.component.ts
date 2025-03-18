@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Dropdown, DropdownModule } from "primeng/dropdown";
-import { CollectionCenterService } from "../../../services/collection-center/collection-center.service";
+import { ComplaintsService } from "../../../services/complaints/complaints.service";
 import { NgxPaginationModule } from "ngx-pagination";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -12,7 +12,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
-  selector: "app-view-complain",
+  selector: 'app-view-sales-dash-complaints',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,11 +21,12 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  providers: [DatePipe], // Provide DatePipe for date formatting
-  templateUrl: "./view-complain.component.html",
-  styleUrls: ["./view-complain.component.css"],
+  providers: [DatePipe],
+  templateUrl: './view-sales-dash-complaints.component.html',
+  styleUrl: './view-sales-dash-complaints.component.css'
 })
-export class ViewComplainComponent implements OnInit {
+export class ViewSalesDashComplaintsComponent implements OnInit{
+
   statusFilter: any;
   hasData: boolean = true;
   complainsData!: Complain[];
@@ -47,9 +48,8 @@ export class ViewComplainComponent implements OnInit {
   isLoading = false;
   comCategories: ComCategories[] = [];
 
-
   constructor(
-    private complainSrv: CollectionCenterService,
+    private complainSrv: ComplaintsService,
     private datePipe: DatePipe,
     private router: Router,
     // private tokenService: TokenService,
@@ -91,15 +91,17 @@ export class ViewComplainComponent implements OnInit {
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
+    console.log('sending to backend', this.filterStatus, this.filterCategory, this.filterComCategory, this.searchText, page, limit)
     
     this.complainSrv
-      .getAllComplain(
+      .getAllSalesComplain(
         page,
         limit,
         this.filterStatus?.type,
         this.filterCategory?.type,
         this.filterComCategory?.id,
         this.searchText,
+        
       )
       .subscribe(
         (res) => {
@@ -142,133 +144,10 @@ export class ViewComplainComponent implements OnInit {
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
 
-  navigateSelectComplain(id: string, farmerName: string) {
-    this.router.navigate([
-      `/complaints/view-selected-complain/${id}/${farmerName}`,
-    ]);
-  }
-
-  fetchComplain(id: any, farmerName: string) {
-    this.isLoading = true;
-    this.complainSrv.getComplainById(id).subscribe((res) => {
-      let formattedDate = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm a');
-      if (formattedDate) {
-        // Replace colon with dot and remove space before AM/PM
-        res.createdAt = formattedDate.replace(':', '.').replace(' ', '').replace('AM', 'AM').replace('PM', 'PM');
-      }
-      this.complain = res;
-      console.log(res);
-      this.isLoading = false;
-      this.showReplyDialog(id, farmerName);
-    });
-  }
-
- 
-
-
-
-
-   showReplyDialog(id: any, farmerName: string) {
-      Swal.fire({
-        title: "Reply as AgroWorld",
-        html: `
-          <div class="text-left">
-            <p>Dear <strong>${farmerName}</strong>,</p>
-            <p></p>
-            <textarea 
-              id="messageContent" 
-              class="w-full p-2 border rounded mt-3 mb-3" 
-              rows="5" 
-              placeholder="Add your message here..."
-            >${this.complain.reply || ""}</textarea>
-            <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-            <p class="mt-3">
-              Sincerely,<br/>
-              AgroWorld Customer Support Team
-            </p>
-          </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: "Send",
-        cancelButtonText: "Cancel",
-        confirmButtonColor: "#3980C0", // Green color for Send button
-        cancelButtonColor: "#74788D", // Blue-gray for Cancel button
-        width: "600px",
-        reverseButtons: true, // Swap button positions
-        preConfirm: () => {
-          const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
-          return textarea.value;
-        },
-        didOpen: () => {
-          // Direct DOM manipulation for button alignment
-          setTimeout(() => {
-            const actionsElement = document.querySelector('.swal2-actions');
-            if (actionsElement) {
-              actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
-              
-              // Also swap buttons if needed (in addition to reverseButtons)
-              const cancelButton = document.querySelector('.swal2-cancel');
-              const confirmButton = document.querySelector('.swal2-confirm');
-              if (cancelButton && confirmButton && actionsElement) {
-                actionsElement.insertBefore(cancelButton, confirmButton);
-              }
-            }
-          }, ); // Small delay to ensure DOM is ready
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.messageContent = result.value;
-          this.submitComplaint(id);
-        }
-      });
-    }
-
-  submitComplaint(id: any) {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    console.log(id);
-    console.log(this.messageContent);
-
-    const body = { reply: this.messageContent };
-
-    this.http
-      .put(`${environment.API_URL}auth/reply-complain/${id}`, body, { headers })
-      .subscribe(
-        (res: any) => {
-          console.log("Market Price updated successfully", res);
-
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Market Price updated successfully!",
-          });
-          this.fetchAllComplain(this.page, this.itemsPerPage);
-        },
-        (error) => {
-          console.error("Error updating news", error);
-
-          Swal.fire({
-            icon: "error",
-            title: "Unsuccessful",
-            text: "Error updating news",
-          });
-          this.fetchAllComplain(this.page, this.itemsPerPage);
-        },
-      );
-  }
 
   navigationPath(path: string) {
     this.router.navigate([path]);
   }
-
 
   getAllComplainCategories() {
 
@@ -284,7 +163,7 @@ export class ViewComplainComponent implements OnInit {
       });
   
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/1`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/4`, {
           headers,
         })
         .subscribe(
@@ -308,7 +187,7 @@ export class ViewComplainComponent implements OnInit {
       });
   
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/1`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/4`, {
           headers,
         })
         .subscribe(
@@ -323,15 +202,135 @@ export class ViewComplainComponent implements OnInit {
     }
  
   }
+
+  navigateSelectComplain(id: string, firstName: string) {
+    console.log('opening');
+    this.router.navigate([
+      `/complaints/view-selected-sales-dash-complain/${id}/${firstName}`,
+    ]);
+  }
+
+  fetchComplain(id: any, firstName: string) {
+    console.log('haa', id, firstName);
+    this.isLoading = true;
+    this.complainSrv.getComplainById(id).subscribe((res) => {
+      let formattedDate = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm a');
+      if (formattedDate) {
+        // Replace colon with dot and remove space before AM/PM
+        res.createdAt = formattedDate.replace(':', '.').replace(' ', '').replace('AM', 'AM').replace('PM', 'PM');
+      }
+      this.complain = res;
+      console.log(res);
+      this.isLoading = false;
+      this.showReplyDialog(id, firstName);
+    });
+  }
+
+  showReplyDialog(id: any, firstName: string) {
+    Swal.fire({
+      title: "Reply as AgroWorld",
+      html: `
+        <div class="text-left">
+          <p>Dear <strong>${firstName}</strong>,</p>
+          <p></p>
+          <textarea 
+            id="messageContent" 
+            class="w-full p-2 border rounded mt-3 mb-3" 
+            rows="5" 
+            placeholder="Add your message here..."
+          >${this.complain.reply || ""}</textarea>
+          <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+          <p class="mt-3">
+            Sincerely,<br/>
+            AgroWorld Customer Support Team
+          </p>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Send",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#3980C0", // Green color for Send button
+      cancelButtonColor: "#74788D", // Blue-gray for Cancel button
+      width: "600px",
+      reverseButtons: true, // Swap button positions
+      preConfirm: () => {
+        const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
+        return textarea.value;
+      },
+      didOpen: () => {
+        // Direct DOM manipulation for button alignment
+        setTimeout(() => {
+          const actionsElement = document.querySelector('.swal2-actions');
+          if (actionsElement) {
+            actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
+            
+            // Also swap buttons if needed (in addition to reverseButtons)
+            const cancelButton = document.querySelector('.swal2-cancel');
+            const confirmButton = document.querySelector('.swal2-confirm');
+            if (cancelButton && confirmButton && actionsElement) {
+              actionsElement.insertBefore(cancelButton, confirmButton);
+            }
+          }
+        }, ); // Small delay to ensure DOM is ready
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.messageContent = result.value;
+        this.submitComplaint(id);
+      }
+    });
+  }
+
+submitComplaint(id: any) {
+  const token = this.tokenService.getToken();
+  if (!token) {
+    console.error("No token found");
+    return;
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  console.log(id);
+  console.log(this.messageContent);
+
+  const body = { reply: this.messageContent };
+
+  this.http
+    .put(`${environment.API_URL}complain/reply-complain/${id}`, body, { headers })
+    .subscribe(
+      (res: any) => {
+        console.log("Sales Dash updated successfully", res);
+
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Sales Dash updated successfully!",
+        });
+        this.fetchAllComplain(this.page, this.itemsPerPage);
+      },
+      (error) => {
+        console.error("Error updating news", error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Unsuccessful",
+          text: "Error updating Sales Dash",
+        });
+        this.fetchAllComplain(this.page, this.itemsPerPage);
+      },
+    );
 }
 
-// Define interfaces for response data
+}
+
 class Complain {
   id!: string;
   refNo!: string;
   complainCategory!: string;
-  NIC!: string;
-  farmerName!: string;
+  AgentId!: string;
+  firstName!: string;
   lastName!: string;
   complain!: string;
   status!: string;
@@ -355,7 +354,7 @@ class ComplainIn {
   status!: string;
   firstName!: string;
   lastName!: string;
-  farmerPhone!: string;
+  AgentPhone!: string;
   complain!: string;
   complainCategory!: string;
   language!: string;

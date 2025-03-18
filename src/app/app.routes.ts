@@ -106,6 +106,7 @@ import { CreateSalesAgentsComponent } from './application/sales-dash-section/cre
 import { EditSalesAgentComponent } from './application/sales-dash-section/edit-sales-agent/edit-sales-agent.component';
 import { AgroWorldCentersComponent } from './application/collection-hub-section/agro-world-centers/agro-world-centers.component';
 import { ViewCenterPriceComponent } from './application/collection-hub-section/view-center-price/view-center-price.component';
+import { PreviewSalesAgentsComponent } from './application/sales-dash-section/preview-sales-agents/preview-sales-agents.component';
 export const routes: Routes = [
   {
     path: '',
@@ -381,6 +382,12 @@ export const routes: Routes = [
                   {
                     path: 'edit-sales-agents/:id',
                     component: EditSalesAgentComponent,
+                    
+                  },
+
+                  {
+                    path: 'preview-sales-agents/:id',
+                    component: PreviewSalesAgentsComponent,
                     
                   },
                 ],

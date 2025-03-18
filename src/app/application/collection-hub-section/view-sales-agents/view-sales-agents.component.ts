@@ -272,6 +272,10 @@ export class ViewSalesAgentsComponent implements OnInit {
     });
   }
 
+  viewSalesAgent(id: number) {
+    this.navigatePath(`/steckholders/action/sales-agents/preview-sales-agents/${id}`);
+  }
+
 }
 
 class SalesAgent {

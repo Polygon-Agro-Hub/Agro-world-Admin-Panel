@@ -25,13 +25,13 @@ interface BranchesData {
 }
 
 @Component({
-  selector: 'app-edit-sales-agent',
+  selector: 'app-preview-sales-agents',
   standalone: true,
   imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
-  templateUrl: './edit-sales-agent.component.html',
-  styleUrl: './edit-sales-agent.component.css'
+  templateUrl: './preview-sales-agents.component.html',
+  styleUrl: './preview-sales-agents.component.css'
 })
-export class EditSalesAgentComponent implements OnInit{
+export class PreviewSalesAgentsComponent implements OnInit{
 
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
@@ -452,5 +452,3 @@ class Personal {
   branchName!: string;
 
 }
-
-

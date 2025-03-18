@@ -1,0 +1,312 @@
+<div *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+  
+  <button 
+  onclick="history.back()" class="ml-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+  <div class="h-[20px]"></div>
+  <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  
+    <div>
+      <!-- <div> -->
+      <h2 class="text-2xl mb-4 text-textLight dark:text-textDark">
+        Preview Sales Agent Details
+      </h2>
+      <div>
+        <div class="flex justify-center pt-3 pb-9">
+          <div class="relative">
+            <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" [disabled]="true"/>
+  
+            <!-- Display default image if no file is selected -->
+            <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-60 h-60" [src]="personalData.image"
+              alt="Profile Picture" />
+  
+            <img *ngIf="!personalData.image && !selectedImage" class="rounded-full w-60 h-60"
+              [src]="'https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg?w=360'"
+              alt="Profile Picture" />
+  
+            <!-- Display the selected image if available -->
+            <img *ngIf="selectedImage" class="rounded-full w-60 h-60" [src]="selectedImage" alt="Profile Picture" />
+  
+  
+            <span (click)="triggerFileInput($event)"
+              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer">
+              <img src="../../../../assets/images/editIcon.png" alt="Edit Icon" class="w-16 h-16" />
+            </span>
+          </div>
+        </div>
+  
+        <div class="h-[20px]"></div>
+  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name</label>
+            <input id="firstName" [(ngModel)]="personalData.firstName" name="firstName"
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              #firstNameInput="ngModel" required [disabled]="true"/>
+            <div *ngIf="firstNameInput.touched && !personalData.firstName"
+              class="text-red-500 text-sm mt-1">
+              <div>First Name is required</div>
+            </div>
+          </div>
+  
+          <div>
+            <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
+              English)</label>
+            <input id="lastName" name="lastName" [(ngModel)]="personalData.lastName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              #lastNameInput="ngModel" required [disabled]="true"/>
+            <div *ngIf="lastNameInput.touched && !personalData.lastName" class="text-red-500 text-sm mt-1">
+              <div>Last Name is required</div>
+            </div>
+          </div>
+          <div>
+            <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Staff Employee Type
+            </label>
+  
+            <div class="flex items-center space-x-4 mt-3">
+              <div class="flex items-center space-x-2">
+                <input class="w-5 h-5" type="radio" id="permanent" name="empType" [value]="'Permanent'"
+                  [(ngModel)]="empType" #empTypeInput="ngModel" (ngModelChange)="updateEmployeeType($event)" required [disabled]="true"/>
+                <label for="permanent" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                  Permanent
+                </label>
+              </div>
+              <div class="flex items-center space-x-2">
+                <input class="w-5 h-5" type="radio" id="temporary" name="empType" [value]="'Temporary'"
+                  [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" required [disabled]="true"/>
+                <label for="temporary" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                  Temporary
+                </label>
+              </div>
+            </div>
+  
+            
+            <div *ngIf="empTypeInput.touched && !empType" class="text-red-500 text-sm mt-1">
+              <div>Employee Type is required</div>
+            </div>
+  
+        </div>
+
+          
+
+        <div class='mb-4 w-full'>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                >EMP ID / User name</label
+              >
+              <div class="flex mt-1">
+                <span
+                  class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
+                >
+                  <p >
+                    SA
+                  </p>
+                  
+                </span>
+                <input
+                  type="text"
+                  [value]="lastID"
+                  name="empId"
+                  class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+  
+          
+  
+          <div>
+            <label for="phoneNumber1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Phone Number - 1
+            </label>
+            <div class="mt-1 flex">
+                <input id="phoneNumber1Code" name="phoneNumber1Code" [(ngModel)]="personalData.phoneCode1" class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+                [disabled]="true"/>
+              
+              <input id="phoneNumber1" name="phoneNumber1" type="text" [(ngModel)]="personalData.phoneNumber1"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                />
+            </div>
+  
+            
+          </div>
+  
+  
+          <div>
+            <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Phone Number - 2
+            </label>
+            <div class="mt-1 flex">
+                <input id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode2"
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack" [disabled]="true"/>
+              
+              <input id="phoneNumber2" name="phoneNumber2" type="number" [(ngModel)]="personalData.phoneNumber2"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+               [disabled] = 'true'/>
+            </div>
+            
+          </div>
+  
+          <div>
+            <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number</label>
+            <input id="nic" name="nic" [(ngModel)]="personalData.nic"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [disabled]="true" />
+  
+            
+          </div>
+  
+  
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
+            <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [disabled]="true" />
+  
+            
+          </div>
+        </div>
+  
+      </div>
+    </div>
+
+    <div>
+        <!-- <div> -->
+        <h2 class="text-2xl mb-6 mt-10 text-textLight dark:text-textDark">
+          Residential Details
+        </h2>
+        <div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    
+            <div class="pb-6">
+              <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
+                Number</label>
+              <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+                [disabled]="true" />
+              
+    
+            </div>
+    
+            <div class="pb-6">
+              <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
+              <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+                [disabled]="true" />
+                
+            </div>
+    
+    
+    
+            <div class="pb-6">
+              <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+              <input id="city" name="city" [(ngModel)]="personalData.city"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+                [disabled]="true" />
+                
+            </div>
+    
+            <div class="pb-6">
+              <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+                District
+              </label>
+              <input id="district" name="district" [(ngModel)]="personalData.district"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+                [disabled]="true" />
+              <!-- <select id="district" name="district" [(ngModel)]="personalData.district" (change)="updateProvince($event)"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"  #districtInput="ngModel" required>
+                <option value="" disabled selected>Select a district</option>
+                <option *ngFor="let district of districts" [value]="district.name">
+                  {{ district.name }}
+                </option>
+              </select> -->
+              
+            </div>
+    
+            <div class="pb-6">
+              <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark" >
+                Province
+              </label>
+              <input id="province" name="province" [(ngModel)]="personalData.province"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                [disabled]="true" />
+            </div>
+    
+            <div class="pb-6">
+              <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+              <input id="country" name="country" [(ngModel)]="personalData.country"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [disabled]="true"/>
+            </div>
+          </div>
+    
+    
+    
+    
+    
+        </div>
+        <div>
+          <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
+            Add Bank Details
+          </h2>
+          <div class="pb-6">
+            <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s
+              Name</label>
+            <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+              [disabled]="true" />
+              
+          </div>
+    
+          <div class="pb-6">
+            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number</label>
+            <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+              [disabled]="true" />
+              
+          </div>
+
+          <div class="pb-6">
+            <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Confirm Account Number
+            </label>
+            <input
+              id="confirmAccNumber"
+              name="confirmAccNumber"
+              [(ngModel)]="confirmAccNumber"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [disabled]="true"
+            />
+            
+            
+            
+          </div>
+    
+          
+    
+          <div class="pb-6">
+            <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
+            <input id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [disabled]="true"/>
+            
+          </div>
+    
+          
+          <div class="pb-6">
+            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
+              Name</label>
+            <input id="branchDropdown" name="branchDropdown" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [(ngModel)]="selectedBranchId" [disabled]="true"/>
+            
+          </div>
+        </div>
+    
+        
+      </div>
+     
+  </div>

@@ -204,9 +204,10 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
   }
 
   navigateSelectComplain(id: string, firstName: string) {
-    // this.router.navigate([
-    //   `/complaints/view-selected-complain/${id}/${firstName}`,
-    // ]);
+    console.log('opening');
+    this.router.navigate([
+      `/complaints/view-selected-sales-dash-complain/${id}/${firstName}`,
+    ]);
   }
 
   fetchComplain(id: any, firstName: string) {
@@ -297,15 +298,15 @@ submitComplaint(id: any) {
   const body = { reply: this.messageContent };
 
   this.http
-    .put(`${environment.API_URL}auth/reply-complain/${id}`, body, { headers })
+    .put(`${environment.API_URL}complain/reply-complain/${id}`, body, { headers })
     .subscribe(
       (res: any) => {
-        console.log("Market Price updated successfully", res);
+        console.log("Sales Dash updated successfully", res);
 
         Swal.fire({
           icon: "success",
           title: "Success",
-          text: "Market Price updated successfully!",
+          text: "Sales Dash updated successfully!",
         });
         this.fetchAllComplain(this.page, this.itemsPerPage);
       },
@@ -315,7 +316,7 @@ submitComplaint(id: any) {
         Swal.fire({
           icon: "error",
           title: "Unsuccessful",
-          text: "Error updating news",
+          text: "Error updating Sales Dash",
         });
         this.fetchAllComplain(this.page, this.itemsPerPage);
       },

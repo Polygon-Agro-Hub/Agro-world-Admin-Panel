@@ -82,7 +82,7 @@
             <div
               *ngIf="collectionCenterForm.get('contact01')?.invalid && (collectionCenterForm.get('contact01')?.dirty || collectionCenterForm.get('contact01')?.touched)"
               class="text-red-500 text-sm mt-1">
-             Required valid contact number
+              Required valid contact number
             </div>
             <!-- <div *ngIf="collectionCenterForm.get('contact01')?.hasError('pattern')">
               Enter valid phone number
@@ -107,15 +107,20 @@
             <input type="number" formControlName="contact02" id="contact02" name="contact02"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
-            <!-- <div
-              *ngIf="collectionCenterForm.get('contact02')?.invalid && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
+            <div
+              *ngIf="collectionCenterForm.get('contact02')?.hasError('required') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
               class="text-red-500 text-sm mt-1">
               Contact number 2 is required
-            </div> -->
-            <div *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern')"
-            class="text-red-500 text-sm mt-1">
-              Enter valid phone number
             </div>
+
+            <div
+              *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Required valid contact number
+            </div>
+            <!-- <div *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern')" class="text-red-500 text-sm mt-1">
+              Enter valid phone number
+            </div> -->
           </div>
         </div>
       </div>
@@ -240,17 +245,12 @@
       <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
         <div class="relative">
-          <input 
-            formControlName="regCode" 
-            id="regCode" 
-            name="regCode"
-            [value]="isLoadingregcode ? 'Loading...' : ''"
+          <input formControlName="regCode" id="regCode" name="regCode" [value]="isLoadingregcode ? 'Loading...' : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [readonly]="true" 
-          />
+            [readonly]="true" />
         </div>
       </div>
-      
+
 
     </div>
     <div class="flex justify-end items-end m-10">

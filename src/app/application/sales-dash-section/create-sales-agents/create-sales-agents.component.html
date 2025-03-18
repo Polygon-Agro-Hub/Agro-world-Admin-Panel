@@ -13,7 +13,7 @@ onclick="history.back()"
 >
   <div>
     <!-- <div> -->
-    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+    <h2 class="text-2xl mb-4 text-textLight dark:text-textDark">
       Add Personal Details
     </h2>
     <div>
@@ -327,7 +327,7 @@ onclick="history.back()"
 
   <div>
     <!-- <div> -->
-    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+    <h2 class="text-2xl mb-6 mt-10 text-textLight dark:text-textDark ">
       Residential Details
     </h2>
     <div>
@@ -552,11 +552,11 @@ onclick="history.back()"
 
     <div class="flex justify-end m-10">
       <button
-        
         type="button"
+        (click)="onCancel()"
         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
       >
-        Back
+        cancel
       </button>
       <button
         type="submit"

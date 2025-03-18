@@ -38,7 +38,7 @@ export class AddCollectionCenterComponent implements OnInit {
       centerName: ['', [Validators.required, this.noNumbersValidator]],
       contact01: ['', [Validators.required,  Validators.pattern(/^[7][0-9]{8}$/)]],
       contact01Code: ['+94', Validators.required],
-      contact02: ['',Validators.pattern(/^[7][0-9]{8}$/)],
+      contact02: ['',[Validators.required, Validators.pattern(/^[7][0-9]{8}$/)]],
       contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],

@@ -56,6 +56,7 @@ export class MarketEditProductComponent implements OnInit {
         this.onCropChange()
         this.productObj.variety = res.cropId
         this.templateKeywords.update(() => res.tags || []);
+        this.calculeSalePrice()
         if (res.promo) {
           this.productObj.promo = true;
         } else {
@@ -102,6 +103,7 @@ export class MarketEditProductComponent implements OnInit {
 
 
   calculeSalePrice() {
+    this.productObj.discount = this.productObj.normalPrice * this.productObj.discountedPrice / 100;
     this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice / 100;
     console.log(this.productObj.salePrice);
   }
@@ -206,6 +208,7 @@ class MarketPrice {
   selectId!: number;
   displaytype!: string;
   salePrice: number = 0;
+  discount: number = 0.00;
 }
 
 class Variety {

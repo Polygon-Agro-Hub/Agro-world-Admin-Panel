@@ -124,7 +124,6 @@ export class MarketPlaceService {
 
 
   updateProduct(Data: any, id:number): Observable<any> {
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

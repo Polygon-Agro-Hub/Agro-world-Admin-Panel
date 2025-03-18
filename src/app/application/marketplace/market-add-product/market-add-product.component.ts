@@ -77,9 +77,12 @@ export class MarketAddProductComponent implements OnInit {
 
 
   calculeSalePrice() {
+    this.productObj.discount = this.productObj.normalPrice * this.productObj.discountedPrice / 100;
     this.productObj.salePrice = this.productObj.normalPrice - this.productObj.normalPrice * this.productObj.discountedPrice / 100;
     console.log(this.productObj.salePrice);
   }
+
+  // displayType
 
   onCancel() {
     this.productObj = new MarketPrice();
@@ -181,6 +184,7 @@ class MarketPrice {
   selectId!: number;
   displaytype!: string;
   salePrice: number = 0;
+  discount:number = 0.00;
 }
 
 class Variety {

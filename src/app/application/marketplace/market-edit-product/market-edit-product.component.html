@@ -107,7 +107,7 @@
 
             <div class="mb-6" *ngIf="productObj.promo">
                 <label class="text-[#534E4E]">Discount Percentage *</label>
-                <input type="number" min="0.0" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
+                <input type="number" min="0.0" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice" (change)="calculeSalePrice()"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             </div>
 

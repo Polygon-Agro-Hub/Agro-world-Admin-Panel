@@ -29,7 +29,8 @@
         [options]="district"
         optionLabel="districtName"
         [showClear]="true"
-        placeholder="Select a Status"
+        placeholder="Select a District"
+        (onChange)="onDistrictChange($event)"
       />
     </div>
   </div>

@@ -10,10 +10,10 @@
   </button>
   <div class="h-[20px]"></div>
   <div
-    class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg rounded-lg"
+    class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <h2
-      class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark font-bold"
+      class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold"
     >
       NEWS
     </h2>
@@ -29,7 +29,7 @@
           [(ngModel)]="createNewsObj.publishDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
           (change)="checkPublishDate(); checkPublishExpireDate()"
         />
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
@@ -46,7 +46,7 @@
           [(ngModel)]="createNewsObj.expireDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
           (change)="checkExpireDate(); checkPublishExpireDate()"
         />
       </div>
@@ -194,7 +194,7 @@
 
     <div
       *ngIf="selectedFileName"
-      class="mt-2 text-green-500 text-textLight dark:text-textDark"
+      class="mt-2  text-textLight dark:text-textDark"
     >
       {{ selectedFileName }}
       <div
@@ -257,7 +257,7 @@
           [(ngModel)]="newsItems[0].publishDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
           for="sinhalaCropName"
           (change)="checkPublishDateEditNews(); checkPublishExpireDateEditNews()"
           
@@ -276,7 +276,7 @@
           [(ngModel)]="newsItems[0].expireDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
           (change)="checkExpireDateEditNews(); checkPublishExpireDateEditNews()"
         />
       </div>

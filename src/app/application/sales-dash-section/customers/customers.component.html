@@ -56,7 +56,7 @@
                 <div class="mr-5">
                     <i class="fa-solid fa-list"></i>
                 </div>
-                <span>No of Orders: {{ selectedCustomer?.orders }}</span>
+                <span>No of Orders: {{ selectedCustomer?.totOrders }}</span>
             </div>
         </div>
         <hr>
@@ -67,7 +67,7 @@
                 <div class="mr-5">
                     <i class="fa-solid fa-id-card-clip"></i>
                 </div>
-                <span>EMP ID: {{ selectedCustomer?.salesAgentEmpId}}</span>
+                <span>EMP ID: {{ selectedCustomer?.empId}}</span>
             </div>
             <div class="mb-5 flex  text-textLight dark:text-textDark">
                 <div class="mr-5">
@@ -112,10 +112,10 @@
 
                     <!-- Input field -->
                     <input type="text" placeholder="Search.."
-                        class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" />
+                        class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="searchText" name="searchText"/>
 
                     <!-- Search button -->
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -124,7 +124,7 @@
                     </button>
 
                     <!-- Clear button -->
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -160,17 +160,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let customer of customers" class="border-b border-gray-200 dark:border-[#4B555A]">
+                    <tr *ngFor="let customer of customers | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }" 
+                    class="border-b border-gray-200 dark:border-[#4B555A]">
                         <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ customer.cusId }}</td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark ">{{ customer.firstName }} {{
                             customer.lastName }}</td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.salesAgentEmpId }}
+                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.empId }}
                         </td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.created_at |
                             date: 'd MMM, yyyy h:mm a' }}</td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ customer.phoneNumber }}
                         </td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark"></td>
+                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{customer.totOrders}}</td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                             <button (click)="openPopup(customer)"
                                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]">
@@ -190,8 +191,12 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- <div> <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'" [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'" [screenReaderCurrentLabel]="'Youre on page'">
-            </pagination-controls></div> -->
+            <div class="flex items-center justify-end my-5 mr-5">
+                <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+                    [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+                    [screenReaderCurrentLabel]="'Youre on page'">
+                </pagination-controls>
+            </div>
 
         </div>
     </div>

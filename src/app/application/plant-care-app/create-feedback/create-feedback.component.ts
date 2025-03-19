@@ -102,7 +102,12 @@ export class CreateFeedbackComponent {
 
         if (response.status) {
           Swal.fire("Success", response.message, "success");
-          this.navigatePath("/plant-care/action/opt-out-feedbacks");
+          
+      this.feedback.feedbackEnglish = "";
+      this.feedback.feedbackSinahala = "";
+      this.feedback.feedbackTamil = "";
+          this.loadNextNumber();
+    this.getAllFeedbacks();
         } else {
           Swal.fire("Unsuccessful", response.message, "error");
         }

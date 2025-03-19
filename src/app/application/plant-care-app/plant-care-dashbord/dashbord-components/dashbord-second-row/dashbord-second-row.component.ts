@@ -9,8 +9,14 @@ interface DashboardData {
   grainCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
+  allusersTillPreviousMonth: number;
+  user_increase_percentage: number;
+  qr_user_increase_percentage: number;
   allusers: number;
   qrUsers: number;
+  total_cultivation_till_previous_month: number;
+  cultivation_increase_percentage: number;
+  
 }
 @Component({
   selector: 'app-dashbord-second-row',
@@ -22,8 +28,13 @@ interface DashboardData {
 export class DashbordSecondRowComponent implements OnInit {
   @Input() dashboardData: DashboardData = {} as DashboardData;
   @Input() totalCultivationCount: number = 0;
+  userIncreasePercentage: number = 0;
+  
 
   constructor(private dashbordService: PlantcareDashbordService) {}
+
+ 
+
   ngOnInit(): void {
     // this.calculateTotalCultivation();
   }

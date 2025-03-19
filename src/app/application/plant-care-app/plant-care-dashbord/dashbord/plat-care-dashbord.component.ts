@@ -18,6 +18,7 @@ interface DashboardData {
   mushCultivation: number;
   allusers: number;
   qrUsers: number;
+  farmerRegistrationCounts: any;
 }
 
 @Component({
@@ -48,12 +49,15 @@ export class PlatCareDashbordComponent implements OnInit {
     this.fetchDashboardData();
   }
 
-  fetchDashboardData(): void {
+  fetchDashboardData(district?: string): void {
     this.isLoading = true;
-    this.dashbordService.getDashboardData().subscribe(
+    this.dashbordService.getDashboardData(district).subscribe(
       (data: any) => {
+        console.log('dashboard data showing', data);
+
         if (data && data.data) {
           this.dashboardData = data.data;
+          console.log('hit 01', this.dashboardData.farmerRegistrationCounts);
           this.calculateTotalCultivation();
           this.hasData = true;
         } else {
@@ -76,6 +80,10 @@ export class PlatCareDashbordComponent implements OnInit {
       this.dashboardData.grainCultivation +
       this.dashboardData.fruitCultivation +
       this.dashboardData.mushCultivation;
+  }
+
+  onDistrictSelected(district: string): void {
+    this.fetchDashboardData(district);
   }
 
   captureScreenshot(): void {

@@ -91,7 +91,14 @@
 //   }
 // }
 
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  EventEmitter,
+} from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { DropdownModule } from 'primeng/dropdown';
 
@@ -105,6 +112,7 @@ import { DropdownModule } from 'primeng/dropdown';
 export class DashbordAreaChartComponent implements OnChanges {
   @Input() qrUsers: number = 0;
   @Input() allusers: number = 0;
+  @Output() districtSelected = new EventEmitter<string>();
 
   data: any;
   options: any;
@@ -137,6 +145,11 @@ export class DashbordAreaChartComponent implements OnChanges {
     { districtName: 'Kegalle' },
   ];
 
+  onDistrictChange(event: any): void {
+    const selectedDistrict = event.value ? event.value.districtName : null;
+    this.districtSelected.emit(selectedDistrict);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (
       (changes['qrUsers'] && changes['qrUsers'].currentValue !== undefined) ||
@@ -146,8 +159,48 @@ export class DashbordAreaChartComponent implements OnChanges {
     }
   }
 
+  // initializeChart(qrUsers: number, allusers: number): void {
+  //   const unregisteredUsers = allusers - qrUsers;
+  //   const maxYValue = Math.ceil(Math.max(qrUsers, unregisteredUsers) * 1.2);
+
+  //   this.data = {
+  //     labels: ['QR Registered', 'Unregistered'],
+  //     datasets: [
+  //       {
+  //         label: 'Count',
+  //         data: [qrUsers, unregisteredUsers],
+  //         backgroundColor: [
+  //           'rgba(144, 238, 144, 0.5)',
+  //           'rgba(173, 216, 230, 0.5)',
+  //         ],
+  //         borderColor: ['rgba(34, 139, 34, 1)', 'rgba(70, 130, 180, 1)'],
+  //         borderWidth: 1,
+  //       },
+  //     ],
+  //   };
+
+  //   this.options = {
+  //     responsive: true,
+  //     maintainAspectRatio: false,
+  //     scales: {
+  //       y: {
+  //         beginAtZero: true,
+  //         max: maxYValue,
+  //       },
+  //     },
+  //     plugins: {
+  //       legend: {
+  //         display: false,
+  //       },
+  //       tooltip: {
+  //         enabled: true,
+  //       },
+  //     },
+  //   };
+  // }
+
   initializeChart(qrUsers: number, allusers: number): void {
-    const unregisteredUsers = allusers - qrUsers;
+    const unregisteredUsers = allusers;
     const maxYValue = Math.ceil(Math.max(qrUsers, unregisteredUsers) * 1.2);
 
     this.data = {

@@ -12,12 +12,17 @@ import jsPDF from 'jspdf';
 interface DashboardData {
   active_users: any;
   new_users: number;
+  allusersTillPreviousMonth: number;
+  user_increase_percentage: number;
+  qr_user_increase_percentage: number;
   vegCultivation: number;
   grainCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
   allusers: number;
   qrUsers: number;
+  total_cultivation_till_previous_month: number;
+  cultivation_increase_percentage: number;
 }
 
 @Component({
@@ -54,6 +59,7 @@ export class PlatCareDashbordComponent implements OnInit {
       (data: any) => {
         if (data && data.data) {
           this.dashboardData = data.data;
+          console.log(this.dashboardData);
           this.calculateTotalCultivation();
           this.hasData = true;
         } else {

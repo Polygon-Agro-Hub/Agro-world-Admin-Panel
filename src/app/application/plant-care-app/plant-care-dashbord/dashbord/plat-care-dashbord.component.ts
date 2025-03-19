@@ -94,17 +94,48 @@ export class PlatCareDashbordComponent implements OnInit {
       return;
     }
 
-    html2canvas(this.reportSection.nativeElement, { scale: 2 }) // Higher scale for better quality
-      .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+    // Hide the "Export Report" button
+    const exportButton = document.querySelector('button') as HTMLElement;
+    if (exportButton) {
+      exportButton.style.display = 'none';
+    }
 
+    html2canvas(this.reportSection.nativeElement, {
+      scale: 2, // Higher scale for better quality
+      useCORS: true, // Handle cross-origin images
+      logging: true, // Enable logging for debugging
+      allowTaint: true, // Allow tainted images
+      imageTimeout: 15000, // Set a timeout for images to load
+    })
+      .then((canvas) => {
+        // Convert canvas to JPEG with reduced quality
+        const imgData = canvas.toDataURL('image/jpeg', 0.6); // Use JPEG format with quality setting
+
+        // Show the "Export Report" button again
+        if (exportButton) {
+          exportButton.style.display = 'block';
+        }
+
+        // Create a PDF and add the image with padding
         const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait mode, millimeters, A4 size
-        const imgWidth = 210; // A4 width in mm
+        const imgWidth = 190; // A4 width in mm minus padding (210 - 20)
         const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
 
-        pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight); // Add image to PDF
+        // Add padding (10mm on each side)
+        const padding = 10; // Padding in mm
+        const x = padding; // X coordinate with padding
+        const y = padding; // Y coordinate with padding
+
+        pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight); // Add image to PDF with padding
         pdf.save('report.pdf'); // Download PDF file
       })
-      .catch((error) => console.error('Error capturing screenshot:', error));
+      .catch((error) => {
+        console.error('Error capturing screenshot:', error);
+
+        // Ensure the button is shown again in case of error
+        if (exportButton) {
+          exportButton.style.display = 'block';
+        }
+      });
   }
 }

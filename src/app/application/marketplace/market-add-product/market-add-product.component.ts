@@ -85,11 +85,27 @@ export class MarketAddProductComponent implements OnInit {
   // displayType
 
   onCancel() {
-    this.productObj = new MarketPrice();
-    this.selectedVarieties = [];
-    this.isVerityVisible = false;
-    this.templateKeywords.update(() => []);
-    this.updateTags();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productObj = new MarketPrice();
+        this.selectedVarieties = [];
+        this.isVerityVisible = false;
+        this.templateKeywords.update(() => []);
+        this.updateTags();
+        this.navigatePath('/market/action');
+      }
+    });
+  }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 
   private updateTags() {
@@ -184,7 +200,7 @@ class MarketPrice {
   selectId!: number;
   displaytype!: string;
   salePrice: number = 0;
-  discount:number = 0.00;
+  discount: number = 0.00;
 }
 
 class Variety {

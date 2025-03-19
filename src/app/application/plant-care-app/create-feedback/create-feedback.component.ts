@@ -78,7 +78,7 @@ export class CreateFeedbackComponent {
       !this.feedback.feedbackSinahala ||
       !this.feedback.feedbackTamil
     ) {
-      Swal.fire("Warning", "Please fill all input fields", "warning");
+      Swal.fire("Warning", "Please fill all fields", "warning");
       return;
     }
     if (this.feedback.orderNumber === 11) {

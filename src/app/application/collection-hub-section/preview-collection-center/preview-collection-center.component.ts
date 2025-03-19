@@ -7,13 +7,16 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: 'app-edit-collection-center',
+  selector: 'app-preview-collection-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, LoadingSpinnerComponent],
-  templateUrl: './edit-collection-center.component.html',
-  styleUrl: './edit-collection-center.component.css'
+  imports: [
+    CommonModule, ReactiveFormsModule, FormsModule, LoadingSpinnerComponent
+  ],
+  templateUrl: './preview-collection-center.component.html',
+  styleUrl: './preview-collection-center.component.css'
 })
-export class EditCollectionCenterComponent implements OnInit {
+export class PreviewCollectionCenterComponent implements OnInit {
+
   collectionCenterID!: number;
   centerData: CollectionCenter = new CollectionCenter();
   centerFetchData: CollectionCenter = new CollectionCenter();
@@ -181,7 +184,6 @@ export class EditCollectionCenterComponent implements OnInit {
           this.centerFetchData = res.results;
           this.selectProvince = this.centerFetchData.province;
           this.existRegCode = this.centerFetchData.regCode;  // Store initial reg code
-          console.log('efkskfnksdfjdf', this.centerFetchData.companies)
           
           this.updateSelectedCompanies();
           this.onProvinceChange();
@@ -201,7 +203,6 @@ export class EditCollectionCenterComponent implements OnInit {
   updateSelectedCompanies() {
     if (this.centerFetchData.companies) {
       const companyNames = this.centerFetchData.companies.split(',').map(name => name.trim());
-
 
       this.selectedCompaniesIds = this.CompanyData
         .filter(company => companyNames.includes(company.companyNameEnglish))
@@ -313,14 +314,6 @@ export class EditCollectionCenterComponent implements OnInit {
         });
     }
   }
-  
-
-
-  
-  
-
-
-  
 
 }
 

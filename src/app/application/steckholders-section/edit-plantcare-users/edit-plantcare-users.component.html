@@ -9,7 +9,7 @@
 
 
 
-<div *ngIf="itemId != null">
+<div *ngIf="itemId !== null && !isView">
 
     <div class="h-[20px]"></div>
     <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg ">
@@ -120,7 +120,7 @@
 
 
 
-<div *ngIf="itemId == null" >
+<div *ngIf="itemId === null" >
    
     
     <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md ">
@@ -237,6 +237,80 @@
             <div class="flex justify-end mt-6">
                 <button type="button" (click)="onCancel()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">Cancel</button>
                 <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">Save</button>
+            </div>
+        </form>
+    </div>
+
+    
+    
+</div>
+
+<div *ngIf="itemId !== null && isView">
+
+    <div class="h-[20px]"></div>
+    <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg ">
+        <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">Plant Care User PreView</h2>
+
+        <form [formGroup]="userForm" >
+            <div>
+                <div class="flex justify-between pt-3 pb-9">
+                    <div class="w-5"></div>
+                    <!-- Profile picture preview -->
+                    <img class="profile-pic" [src]="imagePreview" alt="Profile Image" *ngIf="imagePreview" style="width: 100px; height: 100px; object-fit: cover" />
+                    <div class="w-5"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name</label>
+                        <input formControlName="firstName" id="firstName"  class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+                        
+                    </div>
+
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name</label>
+                        <input formControlName="lastName" id="lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+                        
+                    </div>
+
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Mobile Number</label>
+                        <input formControlName="phoneNumber" id="phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" placeholder="+94 - XXXXXXXXX" readonly/>
+                    </div>
+
+                    <div>
+                        <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number</label>
+                        <input formControlName="NICnumber" id="NICnumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" placeholder="20XXXXXXXXXX  or  99XXXXXXXV" readonly/>
+                        
+                    </div>
+
+
+
+
+
+                    <div>
+                        <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+                        <input formControlName="district" id="district" name="district" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly/>
+                        
+                      </div>
+
+                      <div>
+                        <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership</label>
+                        <input formControlName="membership" id="membership" name="membership" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly/>
+                        
+                        
+                      </div>
+
+
+
+                      
+
+                    <!-- Image Upload -->
+                    <!-- <div>
+                        <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark">Profile Image</label>
+                        <input type="file" id="profileImage" accept="image/*" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+                    </div> -->
+                </div>
             </div>
         </form>
     </div>

@@ -160,8 +160,11 @@ export class PlatCareDashbordComponent implements OnInit {
 
       // First row: 6 tiles
       const firstRowTiles = 6;
-      const firstRowTileWidth = pageWidth / firstRowTiles;
+      const tileGap = 5; // Gap between tiles
+      const firstRowTileWidth =
+        (pageWidth - (firstRowTiles - 1) * tileGap) / firstRowTiles; // Adjusted width to include gaps
       const firstRowTileHeight = 40;
+      const borderRadius = 5; // Border radius for tiles
 
       const firstRowData = [
         {
@@ -196,29 +199,70 @@ export class PlatCareDashbordComponent implements OnInit {
         },
       ];
 
-      // Add first row tiles
-      for (let i = 0; i < firstRowTiles; i++) {
-        const x = margin + i * firstRowTileWidth;
-        const tileData = firstRowData[i];
+      // Define colors for each tile
+      const tileColors = [
+        { bg: [34, 139, 34], text: [255, 255, 255] }, // Green for Vegetable
+        { bg: [255, 165, 0], text: [0, 0, 0] }, // Orange for Fruits
+        { bg: [210, 180, 140], text: [0, 0, 0] }, // Tan for Grains
+        { bg: [128, 0, 128], text: [255, 255, 255] }, // Purple for Mushrooms
+        { bg: [0, 123, 255], text: [255, 255, 255] }, // Blue for Active Users
+        { bg: [220, 53, 69], text: [255, 255, 255] }, // Red for New Users
+      ];
 
-        // Draw tile border
-        pdf.rect(x, y, firstRowTileWidth, firstRowTileHeight);
+      // Add first row tiles with colors, gaps, and border radius
+      for (let i = 0; i < firstRowTiles; i++) {
+        const x = margin + i * (firstRowTileWidth + tileGap); // Add gap between tiles
+        const tileData = firstRowData[i];
+        const tileColor = tileColors[i];
+
+        // Set background color
+        pdf.setFillColor(tileColor.bg[0], tileColor.bg[1], tileColor.bg[2]);
+        pdf.roundedRect(
+          x,
+          y,
+          firstRowTileWidth,
+          firstRowTileHeight,
+          borderRadius,
+          borderRadius,
+          'F'
+        );
+
+        // Set text color
+        pdf.setTextColor(
+          tileColor.text[0],
+          tileColor.text[1],
+          tileColor.text[2]
+        );
+
+        // Center the text horizontally
+        const textWidth = (text: string) =>
+          (pdf.getStringUnitWidth(text) * pdf.getFontSize()) /
+          pdf.internal.scaleFactor;
 
         // Add tile content
-        pdf.setFontSize(12);
-        pdf.setTextColor(0, 0, 0);
-        pdf.text(tileData.title, x + 5, y + 10);
-        pdf.setFontSize(10);
-        pdf.text(tileData.value, x + 5, y + 20);
-        pdf.setFontSize(14);
-        pdf.text(tileData.subValue?.toString() || '0', x + 5, y + 30); // Ensure subValue is a string
+        pdf.setFontSize(10); // Reduced font size for title
+        const titleX = x + (firstRowTileWidth - textWidth(tileData.title)) / 2;
+        pdf.text(tileData.title, titleX, y + 10);
+
+        pdf.setFontSize(8); // Reduced font size for value
+        const valueX = x + (firstRowTileWidth - textWidth(tileData.value)) / 2;
+        pdf.text(tileData.value, valueX, y + 20);
+
+        pdf.setFontSize(12); // Adjusted font size for subValue
+        const subValueX =
+          x +
+          (firstRowTileWidth -
+            textWidth(tileData.subValue?.toString() || '0')) /
+            2;
+        pdf.text(tileData.subValue?.toString() || '0', subValueX, y + 30); // Ensure subValue is a string
       }
 
       y += firstRowTileHeight + 10;
 
       // Second row: 3 tiles
       const secondRowTiles = 3;
-      const secondRowTileWidth = pageWidth / secondRowTiles;
+      const secondRowTileWidth =
+        (pageWidth - (secondRowTiles - 1) * tileGap) / secondRowTiles; // Adjusted width to include gaps
       const secondRowTileHeight = 50;
 
       const secondRowData = [
@@ -242,13 +286,20 @@ export class PlatCareDashbordComponent implements OnInit {
         },
       ];
 
-      // Add second row tiles
+      // Add second row tiles with border radius and gaps
       for (let i = 0; i < secondRowTiles; i++) {
-        const x = margin + i * secondRowTileWidth;
+        const x = margin + i * (secondRowTileWidth + tileGap); // Add gap between tiles
         const tileData = secondRowData[i];
 
-        // Draw tile border
-        pdf.rect(x, y, secondRowTileWidth, secondRowTileHeight);
+        // Draw tile border with rounded corners
+        pdf.roundedRect(
+          x,
+          y,
+          secondRowTileWidth,
+          secondRowTileHeight,
+          borderRadius,
+          borderRadius
+        );
 
         // Add tile content
         pdf.setFontSize(12);

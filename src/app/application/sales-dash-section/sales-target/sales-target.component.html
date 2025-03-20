@@ -1,5 +1,5 @@
 <div class="flex w-full">
-  <form [formGroup]="targetForm" (ngSubmit)="saveTarget()" class="flex w-[70%] pt-5 pr-12 pl-12 pb-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+  <form class="flex w-[70%] pt-5 pr-12 pl-12 pb-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <!-- Target Value Input -->
     <div class="flex justify-end w-full mr-2 flex-col space-y-2">
       <label for="new-target" class="text-gray-600 font-medium">Set New Target</label>
@@ -8,35 +8,19 @@
         id="new-target"
         placeholder="--Type New Target--"
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        formControlName="targetValue"
+        [(ngModel)]="newTargetValue"
+        name="newTargetValue"
       />
-      <p *ngIf="formControls['targetValue'].invalid && formControls['targetValue'].touched" class="text-red-500">
+      <!-- <p *ngIf="formControls['targetValue'].invalid && formControls['targetValue'].touched" class="text-red-500">
       {{ formControls['targetValue'].errors?.required ? 'Target value is required.' : '' }}
       {{ formControls['targetValue'].errors?.min ? 'Target must be at least 1.' : '' }}
-      </p>
-    </div>
-  
-    <!-- Date Input -->
-    <div class="flex justify-end w-full ml-2 flex-col space-y-2">
-      <label for="start-date" class="text-gray-600 font-medium">From</label>
-      <input
-        type="date"
-        id="start-date"
-        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        formControlName="startDate"
-      />
-      <p *ngIf="formControls['startDate'].invalid && formControls['startDate'].touched" class="text-red-500">
-        {{ formControls['startDate'].errors?.required ? 'Start date is required.' : '' }}
-        {{ formControls['startDate'].errors?.pastDate ? 'Start date cannot be in the past.' : '' }}
-      </p>
+      </p> -->
     </div>
   
     <!-- Submit Button -->
     <div class="flex justify-end ml-2 flex-col space-y-2">
-      <button
+      <button (click)="saveTarget()"
         class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out"
-        type="submit"
-        [disabled]="targetForm.invalid"
       >
         Save
       </button>
@@ -48,7 +32,7 @@
   >
     <div class="flex flex-col items-center">
       <h4 class="text-gray-600 font-medium">Current Daily Target</h4>
-      <p class="text-2xl font-bold text-blue-600">{{currentDailyTarget}}</p>
+      <p class="text-2xl font-bold text-blue-600">{{totalTarget === 0 ? "-": totalTarget}}</p>
     </div>
   </div>
 </div>
@@ -79,6 +63,7 @@
           id="start-date"
           placeholder="date"
           [(ngModel)]="selectDate"
+          name="selectDate"
           (change)="onDateChange($event)"
           class="border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
           
@@ -166,17 +151,17 @@
           <td class="py-3 dark:text-textDark text-center">{{item.empId}}</td>
           <td class="py-3 dark:text-textDark text-center">{{item.firstName}}</td>
           <td class="py-3 dark:text-textDark text-center">{{item.lastName}}</td>
-          <td class="py-3 dark:text-textDark text-center">{{item.targetCompletion}}</td>
+          <td class="py-3 dark:text-textDark text-center">{{item.targetComplete}}/{{totalTarget}}</td>
           <td class="py-3 dark:text-textDark text-center" >
-          <span *ngIf="item.targetStatus === 'Pending'"
+          <span *ngIf="item.targetComplete < totalTarget"
                 class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 w-24">
                 Pending
             </span>
-            <span *ngIf="item.targetStatus === 'Completed'"
+            <span *ngIf="item.targetComplete === totalTarget"
                 class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 w-24">
                 Completed
             </span>
-            <span *ngIf="item.targetStatus === 'Exceeded'"
+            <span *ngIf="item.targetComplete > totalTarget"
                 class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 w-24">
                 Exceeded
             </span>

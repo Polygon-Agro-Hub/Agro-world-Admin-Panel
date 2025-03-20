@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms'; // ✅ Import this
 import { HttpClientModule } from '@angular/common/http';
 import { DropdownModule } from 'primeng/dropdown';
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sales-target',
@@ -15,10 +16,11 @@ import { SalesDashService } from '../../../services/sales-dash/sales-dash.servic
   templateUrl: './sales-target.component.html',
   styleUrl: './sales-target.component.css',
 })
-export class SalesTargetComponent implements OnInit{
+export class SalesTargetComponent implements OnInit {
 
-  targetForm: FormGroup;
+  // targetForm: FormGroup;
   currentDailyTarget!: number;
+  newTargetValue: number = 0;
 
   agentsArr!: Agents[];
 
@@ -29,26 +31,27 @@ export class SalesTargetComponent implements OnInit{
 
   selectStatus: string = '';
   searchText: string = '';
-  selectDate: string = ''; 
+  selectDate: string = '';
+  totalTarget!: number;
 
   status = [
-    { name: 'Completed'},
-    { name: 'Pending'},
-    { name: 'Exceeded'},
-    
+    { name: 'Completed' },
+    { name: 'Pending' },
+    { name: 'Exceeded' },
+
   ];
 
   constructor(
     private fb: FormBuilder,
     private salesDashSrv: SalesDashService,
-  ) {
-    this.targetForm = this.fb.group({
-      targetValue: [null, [Validators.required, Validators.min(1)]],
-      startDate: ['', [Validators.required, this.futureDateValidator]],
-    });
-   }
+  ) {}
 
-   futureDateValidator(control: any) {
+  ngOnInit(): void {
+    this.selectDate = new Date().toISOString().split('T')[0];
+    this.fetchAllSalesAgents();
+  }
+
+  futureDateValidator(control: any) {
     const selectedDate = new Date(control.value);
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Ignore time
@@ -56,41 +59,64 @@ export class SalesTargetComponent implements OnInit{
     return selectedDate >= today ? null : { pastDate: true };
   }
 
+
+
   saveTarget() {
-    if (this.targetForm.invalid) {
-      return;
-    }
-
-    const targetData = this.targetForm.value;
-
-    console.log(targetData);
-
-    this.salesDashSrv.saveTarget(targetData.startDate, targetData.targetValue).subscribe(
-      (response) => {
-        console.log('Target saved successfully:', response);
-        alert('Target saved successfully!');
-        this.fetchDailyTarget();
-      },
-      (error) => {
-        console.error('Error saving target:', error);
-        alert('Failed to save target.');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to save this target?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Save it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
+          (response) => {
+            if (response.status) {
+              Swal.fire({
+                title: 'Success!',
+                text: response.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+              });
+              this.fetchAllSalesAgents();
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: response.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+              this.fetchAllSalesAgents();
+            }
+          },
+          (error) => {
+            console.error('Error saving target:', error);
+            Swal.fire({
+              title: 'Failed!',
+              text: 'Failed to save target.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          }
+        );
       }
-    );
+    });
   }
 
-  ngOnInit(): void {
-    this.fetchAllSalesAgents();
-    this.fetchDailyTarget();
-    
-  }
 
-  
+ 
+
+
 
   fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.selectStatus, date: string = this.selectDate) {
     this.salesDashSrv.getAllSalesAgents(page, limit, search, status, date).subscribe((res) => {
 
       console.log(res);
 
+      this.totalTarget = res.totalTarget.targetValue
       this.agentsArr = res.items;
       this.totalItems = res.total;
       if (res.items.length === 0) {
@@ -99,15 +125,6 @@ export class SalesTargetComponent implements OnInit{
     });
   }
 
-  fetchDailyTarget() {
-    this.salesDashSrv.getDailyTarget().subscribe((res) => {
-
-      console.log(res[0].targetValue);
-
-      this.currentDailyTarget = res[0]?.targetValue ?? 0.00;
-
-    });
-  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -119,7 +136,7 @@ export class SalesTargetComponent implements OnInit{
   }
 
   offSearch() {
-    
+
     this.searchText = '';
     this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
   }
@@ -138,9 +155,9 @@ export class SalesTargetComponent implements OnInit{
     this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
   }
 
-  get formControls(): { [key: string]: any } {
-    return this.targetForm.controls;
-  }
+  // get formControls(): { [key: string]: any } {
+  //   return this.targetForm.controls;
+  // }
 }
 
 class Agents {
@@ -149,9 +166,8 @@ class Agents {
   firstName!: string;
   lastName!: string;
   target!: number;
-  targetCompletion!: string;
-  targetStatus!: string;
-  
+  targetComplete!: number;
+
 }
 
 

@@ -41,7 +41,7 @@ export class SalesDashService {
     });
   }
 
-  saveTarget(startDate: string, targetValue: number): Observable<any> {
+  saveTarget(targetValue: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -50,22 +50,23 @@ export class SalesDashService {
     const url = `${this.apiUrl}sales-agent-dash/save-target`;
   
     // Create request body
-    const body = { startDate, targetValue };
+    const body = {targetValue };
   
     
     return this.http.post(url, body, { headers });
   }
 
-  getDailyTarget(): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    });
+  //not useg should remove
+  // getDailyTarget(): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
   
-    const url = `${this.apiUrl}sales-agent-dash/get-daily-target`;
+  //   const url = `${this.apiUrl}sales-agent-dash/get-daily-target`;
   
-    return this.http.get(url, { headers });
-  }
+  //   return this.http.get(url, { headers });
+  // }
 }
 
 

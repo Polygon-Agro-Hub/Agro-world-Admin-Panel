@@ -3,33 +3,26 @@
     <!-- Target Value Input -->
     <div class="flex justify-end w-full mr-2 flex-col space-y-2">
       <label for="new-target" class="text-gray-600 font-medium">Set New Target</label>
-      <input
-        type="number"
-        id="new-target"
-        placeholder="--Type New Target--"
+      <input type="number" id="new-target" placeholder="--Type New Target--"
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        [(ngModel)]="newTargetValue"
-        name="newTargetValue"
-      />
+        [(ngModel)]="newTargetValue" name="newTargetValue" />
       <!-- <p *ngIf="formControls['targetValue'].invalid && formControls['targetValue'].touched" class="text-red-500">
       {{ formControls['targetValue'].errors?.required ? 'Target value is required.' : '' }}
       {{ formControls['targetValue'].errors?.min ? 'Target must be at least 1.' : '' }}
       </p> -->
     </div>
-  
+
     <!-- Submit Button -->
     <div class="flex justify-end ml-2 flex-col space-y-2">
       <button (click)="saveTarget()"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out"
-      >
+        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out">
         Save
       </button>
     </div>
   </form>
-  
+
   <div
-    class="flex items-center justify-center w-[30%] ml-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+    class="flex items-center justify-center w-[30%] ml-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex flex-col items-center">
       <h4 class="text-gray-600 font-medium">Current Daily Target</h4>
       <p class="text-2xl font-bold text-blue-600">{{totalTarget === 0 ? "-": totalTarget}}</p>
@@ -37,133 +30,96 @@
   </div>
 </div>
 
-<div
-  class="w-full mt-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
->
+<div class="w-full mt-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Sales Agents ({{totalItems}})
+        Sales Agents ({{agentCount}})
       </h2>
     </div>
     <div class="flex items-center">
       <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
-            d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-          />
+            d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
         </svg>
       </i>
 
-      
-      <div class="mr-5">
-        <input
-          
-          type="date"
-          id="start-date"
-          placeholder="date"
-          [(ngModel)]="selectDate"
-          name="selectDate"
-          (change)="onDateChange($event)"
-          class="border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-          
-        />
-      </div>
-      
 
       <div class="mr-5">
-        <p-dropdown
-      styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-      [options]="status"
-      [(ngModel)]="selectStatus"
-      optionLabel="name"
-      optionValue="name"  
-      placeholder="status"
-      [showClear]="true"
-      (onChange)="filterStatus()"
-    ></p-dropdown>
+        <input type="date" id="start-date" placeholder="date" [(ngModel)]="selectDate" name="selectDate"
+          (change)="onDateChange($event)"
+          class="border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2" />
+      </div>
+
+
+      <div class="mr-5">
+        <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center
+        bg-[#F1F1F1] dark:bg-[#272F45]" [options]="status" [(ngModel)]="selectStatus" optionLabel="name"
+          optionValue="name" placeholder="status" [showClear]="true" (onChange)="filterStatus()"></p-dropdown>
       </div>
 
       <div class="flex items-center rounded-full  px-4 py-2 w-96 h-8 border-2 bg-[#F1F1F1] dark:bg-[#272F45]">
         <input type="text" placeholder="First name/ Last name/ EMP ID" [(ngModel)]="searchText"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
-        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-            </svg>
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+          </svg>
         </button>
-        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12" />
-            </svg>
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
-    </div>
+      </div>
     </div>
   </div>
   <div>
-    <table
-      class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
-    >
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
       <thead>
-        <tr >
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+        <tr>
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
             No
           </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
             EMP ID
           </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
             First Name
           </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
             Last Name
           </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
             Target Completion
           </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
             Status
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of agentsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index">
+        <tr class="border-b border-gray-200 dark:border-[#4B555A]"
+          *ngFor="let item of agentsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index">
           <td class="py-3 dark:text-textDark text-center">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
           <td class="py-3 dark:text-textDark text-center">{{item.empId}}</td>
           <td class="py-3 dark:text-textDark text-center">{{item.firstName}}</td>
           <td class="py-3 dark:text-textDark text-center">{{item.lastName}}</td>
           <td class="py-3 dark:text-textDark text-center">{{item.targetComplete}}/{{totalTarget}}</td>
-          <td class="py-3 dark:text-textDark text-center" >
-          <span *ngIf="item.targetComplete < totalTarget"
-                class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 w-24">
-                Pending
+          <td class="py-3 dark:text-textDark text-center">
+            <span *ngIf="item.targetComplete < totalTarget"
+              class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 w-24">
+              Pending
             </span>
             <span *ngIf="item.targetComplete === totalTarget"
-                class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 w-24">
-                Completed
+              class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 w-24">
+              Completed
             </span>
             <span *ngIf="item.targetComplete > totalTarget"
-                class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 w-24">
-                Exceeded
+              class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 w-24">
+              Exceeded
             </span>
           </td>
         </tr>
@@ -171,25 +127,9 @@
     </table>
   </div>
   <div class="flex items-center justify-end my-5 mr-5">
-      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'">
-      </pagination-controls>
+    <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+      [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+      [screenReaderCurrentLabel]="'Youre on page'">
+    </pagination-controls>
   </div>
 </div>
-
-<!-- <td class="px-6 py-4 text-black font-semibold dark:text-gray-300 flex justify-center items-center">
-  <span *ngIf="item.targetStatus === 'Pending'"
-      class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 ">
-      Pending
-  </span>
-  <span *ngIf="item.status === 'Completed'"
-      class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 ">
-      Completed
-  </span>
-  <span *ngIf="item.status === 'Exceeded'"
-      class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 ">
-      Exceeded
-  </span>
-</td>
-{{item.targetStatus}} -->

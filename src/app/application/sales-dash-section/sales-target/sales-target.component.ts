@@ -33,6 +33,7 @@ export class SalesTargetComponent implements OnInit {
   searchText: string = '';
   selectDate: string = '';
   totalTarget!: number;
+  agentCount:number = 0;
 
   status = [
     { name: 'Completed' },
@@ -62,6 +63,11 @@ export class SalesTargetComponent implements OnInit {
 
 
   saveTarget() {
+    if(this.newTargetValue === 0){
+      Swal.fire('Warning','Target value can not be 0.', 'warning')
+      return;
+    }
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to save this target?',
@@ -81,6 +87,7 @@ export class SalesTargetComponent implements OnInit {
                 icon: 'success',
                 confirmButtonText: 'OK'
               });
+              this.newTargetValue = 0;
               this.fetchAllSalesAgents();
             } else {
               Swal.fire({
@@ -119,6 +126,8 @@ export class SalesTargetComponent implements OnInit {
       this.totalTarget = res.totalTarget.targetValue
       this.agentsArr = res.items;
       this.totalItems = res.total;
+      this.agentCount = res.items.length === undefined ? 0 : res.items.length
+      
       if (res.items.length === 0) {
         this.hasData = false;
       }

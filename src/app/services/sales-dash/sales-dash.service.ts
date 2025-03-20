@@ -67,6 +67,44 @@ export class SalesDashService {
   
   //   return this.http.get(url, { headers });
   // }
+
+  getAllOrders(
+    page: number,
+    limit: number,
+    orderStatus: string,
+    paymentMethod: string,
+    paymentStatus: string,
+    deliveryType: string,
+    searchText: string = '',
+   
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    
+    let url = `${this.apiUrl}dash/get-all-Orders?page=${page}&limit=${limit}`;
+
+    if (orderStatus) {
+      url += `&orderStatus=${orderStatus}`;
+    }
+
+    if (paymentMethod) {
+      url += `&paymentMethod=${paymentMethod}`;
+    }paymentStatus
+
+    if (paymentStatus) {
+      url += `&paymentStatus=${paymentStatus}`;
+    }
+
+    if (deliveryType) {
+      url += `&deliveryType=${deliveryType}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+    return this.http.get<any>(url, { headers });
+  }
 }
 
 

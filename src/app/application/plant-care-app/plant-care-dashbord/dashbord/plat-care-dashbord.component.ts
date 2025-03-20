@@ -8,6 +8,7 @@ import { PlantcareDashbordService } from '../../../../services/plant-care/plantc
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import Swal from 'sweetalert2';
 
 interface DashboardData {
   active_users: any;
@@ -86,56 +87,207 @@ export class PlatCareDashbordComponent implements OnInit {
     this.fetchDashboardData(district);
   }
 
-  captureScreenshot(): void {
-    console.log('Capturing screenshot...');
+  // captureScreenshot(): void {
+  //   console.log('Capturing screenshot...');
 
-    if (!this.reportSection) {
-      console.error('Error: reportSection is undefined!');
-      return;
-    }
+  //   if (!this.reportSection) {
+  //     console.error('Error: reportSection is undefined!');
+  //     return;
+  //   }
 
-    // Hide the "Export Report" button
-    const exportButton = document.querySelector('button') as HTMLElement;
-    if (exportButton) {
-      exportButton.style.display = 'none';
-    }
+  //   // Hide the "Export Report" button
+  //   const exportButton = document.querySelector('button') as HTMLElement;
+  //   if (exportButton) {
+  //     exportButton.style.display = 'none';
+  //   }
 
-    html2canvas(this.reportSection.nativeElement, {
-      scale: 2, // Higher scale for better quality
-      useCORS: true, // Handle cross-origin images
-      logging: true, // Enable logging for debugging
-      allowTaint: true, // Allow tainted images
-      imageTimeout: 15000, // Set a timeout for images to load
-    })
-      .then((canvas) => {
-        // Convert canvas to JPEG with reduced quality
-        const imgData = canvas.toDataURL('image/jpeg', 0.6); // Use JPEG format with quality setting
+  //   html2canvas(this.reportSection.nativeElement, {
+  //     scale: 2, // Higher scale for better quality
+  //     useCORS: true, // Handle cross-origin images
+  //     logging: true, // Enable logging for debugging
+  //     allowTaint: true, // Allow tainted images
+  //     imageTimeout: 15000, // Set a timeout for images to load
+  //   })
+  //     .then((canvas) => {
+  //       // Convert canvas to JPEG with reduced quality
+  //       const imgData = canvas.toDataURL('image/jpeg', 0.6); // Use JPEG format with quality setting
 
-        // Show the "Export Report" button again
-        if (exportButton) {
-          exportButton.style.display = 'block';
-        }
+  //       // Show the "Export Report" button again
+  //       if (exportButton) {
+  //         exportButton.style.display = 'block';
+  //       }
 
-        // Create a PDF and add the image with padding
-        const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait mode, millimeters, A4 size
-        const imgWidth = 190; // A4 width in mm minus padding (210 - 20)
-        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+  //       // Create a PDF and add the image with padding
+  //       const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait mode, millimeters, A4 size
+  //       const imgWidth = 190; // A4 width in mm minus padding (210 - 20)
+  //       const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
 
-        // Add padding (10mm on each side)
-        const padding = 10; // Padding in mm
-        const x = padding; // X coordinate with padding
-        const y = padding; // Y coordinate with padding
+  //       // Add padding (10mm on each side)
+  //       const padding = 10; // Padding in mm
+  //       const x = padding; // X coordinate with padding
+  //       const y = padding; // Y coordinate with padding
 
-        pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight); // Add image to PDF with padding
-        pdf.save('report.pdf'); // Download PDF file
-      })
-      .catch((error) => {
-        console.error('Error capturing screenshot:', error);
+  //       pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight); // Add image to PDF with padding
+  //       pdf.save('report.pdf'); // Download PDF file
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error capturing screenshot:', error);
 
-        // Ensure the button is shown again in case of error
-        if (exportButton) {
-          exportButton.style.display = 'block';
-        }
+  //       // Ensure the button is shown again in case of error
+  //       if (exportButton) {
+  //         exportButton.style.display = 'block';
+  //       }
+  //     });
+  // }
+
+  async captureScreenshot() {
+    try {
+      // Check if dashboardData is defined
+      if (!this.dashboardData) {
+        console.error('Error: dashboardData is undefined!');
+        return;
+      }
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const margin = 10;
+      const pageWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
+      const pageHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
+
+      // Add a title to the PDF
+      pdf.setFontSize(18);
+      pdf.text('Report', margin, margin);
+      let y = margin + 15;
+
+      // First row: 6 tiles
+      const firstRowTiles = 6;
+      const firstRowTileWidth = pageWidth / firstRowTiles;
+      const firstRowTileHeight = 40;
+
+      const firstRowData = [
+        {
+          title: 'Vegetable',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.vegCultivation,
+        },
+        {
+          title: 'Fruits',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.fruitCultivation,
+        },
+        {
+          title: 'Grains',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.grainCultivation,
+        },
+        {
+          title: 'Mushrooms',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.mushCultivation,
+        },
+        {
+          title: 'Active Users',
+          value: 'Today',
+          subValue: this.dashboardData.active_users,
+        },
+        {
+          title: 'New Users',
+          value: 'Today',
+          subValue: this.dashboardData.new_users,
+        },
+      ];
+
+      // Add first row tiles
+      for (let i = 0; i < firstRowTiles; i++) {
+        const x = margin + i * firstRowTileWidth;
+        const tileData = firstRowData[i];
+
+        // Draw tile border
+        pdf.rect(x, y, firstRowTileWidth, firstRowTileHeight);
+
+        // Add tile content
+        pdf.setFontSize(12);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(tileData.title, x + 5, y + 10);
+        pdf.setFontSize(10);
+        pdf.text(tileData.value, x + 5, y + 20);
+        pdf.setFontSize(14);
+        pdf.text(tileData.subValue?.toString() || '0', x + 5, y + 30); // Ensure subValue is a string
+      }
+
+      y += firstRowTileHeight + 10;
+
+      // Second row: 3 tiles
+      const secondRowTiles = 3;
+      const secondRowTileWidth = pageWidth / secondRowTiles;
+      const secondRowTileHeight = 50;
+
+      const secondRowData = [
+        {
+          title: 'Total Farmers',
+          value: this.dashboardData.allusers,
+          percentage: '133.33%',
+          description: 'Compared to last month',
+        },
+        {
+          title: 'Total farmers with QR',
+          value: this.dashboardData.qrUsers,
+          percentage: '33.33%',
+          description: 'Compared to last month',
+        },
+        {
+          title: 'Total Crop Enrollments',
+          value: this.dashboardData.farmerRegistrationCounts,
+          percentage: '100.00%',
+          description: 'Compared to last month',
+        },
+      ];
+
+      // Add second row tiles
+      for (let i = 0; i < secondRowTiles; i++) {
+        const x = margin + i * secondRowTileWidth;
+        const tileData = secondRowData[i];
+
+        // Draw tile border
+        pdf.rect(x, y, secondRowTileWidth, secondRowTileHeight);
+
+        // Add tile content
+        pdf.setFontSize(12);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(tileData.title, x + 5, y + 10);
+        pdf.setFontSize(14);
+        pdf.text(tileData.value?.toString() || '0', x + 5, y + 25); // Ensure value is a string
+        pdf.setFontSize(10);
+        pdf.text(tileData.percentage, x + 5, y + 35);
+        pdf.text(tileData.description, x + 5, y + 45);
+      }
+
+      // Add a footer with the current date and time
+      pdf.setFontSize(10);
+      pdf.setTextColor(100);
+      pdf.text(
+        `Report generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
+        margin,
+        pdf.internal.pageSize.getHeight() - margin
+      );
+
+      // Save the PDF
+      const fileName = `report_${new Date().toISOString().slice(0, 10)}.pdf`;
+      pdf.save(fileName);
+
+      // Show a success message
+      Swal.fire({
+        icon: 'success',
+        title: 'Download Complete',
+        html: `<b>${fileName}</b> has been downloaded successfully!`,
+        confirmButtonText: 'OK',
       });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while generating the PDF. Please try again.',
+      });
+    }
   }
 }

@@ -239,7 +239,7 @@ export class PlatCareDashbordComponent implements OnInit {
         },
         {
           title: 'Total Crop Enrollments',
-          value: this.dashboardData.farmerRegistrationCounts,
+          value: this.dashboardData.fruitCultivation + this.dashboardData.grainCultivation + this.dashboardData.vegCultivation + this.dashboardData.mushCultivation,
           percentage: '100.00%',
           description: 'Compared to last month',
         },

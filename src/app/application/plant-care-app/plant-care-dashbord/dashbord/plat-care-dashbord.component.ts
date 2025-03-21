@@ -95,17 +95,17 @@ export class PlatCareDashbordComponent implements OnInit {
         console.error('Error: dashboardData is undefined!');
         return;
       }
-
+  
       const pdf = new jsPDF('p', 'mm', 'a4');
       const margin = 10;
       const pageWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
       const pageHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
-
+  
       // Add a title to the PDF
       pdf.setFontSize(18);
       pdf.text('Report', margin, margin);
       let y = margin + 15;
-
+  
       // First row: 6 tiles
       const firstRowTiles = 6;
       const tileGap = 5; // Gap between tiles
@@ -113,7 +113,7 @@ export class PlatCareDashbordComponent implements OnInit {
         (pageWidth - (firstRowTiles - 1) * tileGap) / firstRowTiles; // Adjusted width to include gaps
       const firstRowTileHeight = 40;
       const borderRadius = 5; // Border radius for tiles
-
+  
       const firstRowData = [
         {
           title: 'Vegetable',
@@ -146,73 +146,84 @@ export class PlatCareDashbordComponent implements OnInit {
           subValue: this.dashboardData.new_users,
         },
       ];
-
+  
       // Define colors for each tile
       const tileColors = [
-        { bg: [34, 139, 34], text: [255, 255, 255] }, // Green for Vegetable
-        { bg: [255, 165, 0], text: [0, 0, 0] }, // Orange for Fruits
-        { bg: [210, 180, 140], text: [0, 0, 0] }, // Tan for Grains
-        { bg: [128, 0, 128], text: [255, 255, 255] }, // Purple for Mushrooms
-        { bg: [0, 123, 255], text: [255, 255, 255] }, // Blue for Active Users
-        { bg: [220, 53, 69], text: [255, 255, 255] }, // Red for New Users
+        { bg: [13, 148, 136], text: [255, 255, 255] }, // Green for Vegetable
+        { bg: [218, 98, 0], text: [255, 255, 255] }, // Orange for Fruits
+        { bg: [59, 130, 246], text: [255, 255, 255] }, // Tan for Grains
+        { bg: [160, 92, 166], text: [255, 255, 255] }, // Purple for Mushrooms
+        { bg: [0, 123, 255], text: [0, 0, 0] }, // Blue for Active Users
+        { bg: [220, 53, 69], text: [0, 0, 0] }, // Red for New Users
       ];
-
+  
       // Add first row tiles with colors, gaps, and border radius
       for (let i = 0; i < firstRowTiles; i++) {
         const x = margin + i * (firstRowTileWidth + tileGap); // Add gap between tiles
         const tileData = firstRowData[i];
         const tileColor = tileColors[i];
-
-        // Set background color
-        pdf.setFillColor(tileColor.bg[0], tileColor.bg[1], tileColor.bg[2]);
-        pdf.roundedRect(
-          x,
-          y,
-          firstRowTileWidth,
-          firstRowTileHeight,
-          borderRadius,
-          borderRadius,
-          'F'
-        );
-
+  
+        // Check if it's the last two tiles (Active Users and New Users)
+        const isLastTwoTiles = i >= firstRowTiles - 2;
+  
+        if (!isLastTwoTiles) {
+          // Set background color for tiles that are not the last two
+          pdf.setFillColor(tileColor.bg[0], tileColor.bg[1], tileColor.bg[2]);
+          pdf.roundedRect(
+            x,
+            y,
+            firstRowTileWidth,
+            firstRowTileHeight,
+            borderRadius,
+            borderRadius,
+            'F' // Fill the rectangle with the background color
+          );
+        } else {
+          // For the last two tiles, draw a border with a radius and no fill
+          pdf.setDrawColor(0, 0, 0); // Set border color to black
+          pdf.setLineWidth(0.5); // Set border thickness
+          pdf.roundedRect(
+            x,
+            y,
+            firstRowTileWidth,
+            firstRowTileHeight,
+            borderRadius,
+            borderRadius,
+            'S' // Stroke the rectangle (draw border)
+          );
+        }
+  
         // Set text color
-        pdf.setTextColor(
-          tileColor.text[0],
-          tileColor.text[1],
-          tileColor.text[2]
-        );
-
+        pdf.setTextColor(tileColor.text[0], tileColor.text[1], tileColor.text[2]);
+  
         // Center the text horizontally
-        const textWidth = (text: string) =>
+        const textWidth = (text:string) =>
           (pdf.getStringUnitWidth(text) * pdf.getFontSize()) /
           pdf.internal.scaleFactor;
-
+  
         // Add tile content
         pdf.setFontSize(10); // Reduced font size for title
         const titleX = x + (firstRowTileWidth - textWidth(tileData.title)) / 2;
         pdf.text(tileData.title, titleX, y + 10);
-
+  
         pdf.setFontSize(8); // Reduced font size for value
         const valueX = x + (firstRowTileWidth - textWidth(tileData.value)) / 2;
         pdf.text(tileData.value, valueX, y + 20);
-
+  
         pdf.setFontSize(12); // Adjusted font size for subValue
         const subValueX =
-          x +
-          (firstRowTileWidth -
-            textWidth(tileData.subValue?.toString() || '0')) /
-            2;
+          x + (firstRowTileWidth - textWidth(tileData.subValue?.toString() || '0')) / 2;
         pdf.text(tileData.subValue?.toString() || '0', subValueX, y + 30); // Ensure subValue is a string
       }
-
+  
       y += firstRowTileHeight + 10;
-
+  
       // Second row: 3 tiles
       const secondRowTiles = 3;
       const secondRowTileWidth =
         (pageWidth - (secondRowTiles - 1) * tileGap) / secondRowTiles; // Adjusted width to include gaps
       const secondRowTileHeight = 50;
-
+  
       const secondRowData = [
         {
           title: 'Total Farmers',
@@ -233,12 +244,12 @@ export class PlatCareDashbordComponent implements OnInit {
           description: 'Compared to last month',
         },
       ];
-
+  
       // Add second row tiles with border radius and gaps
       for (let i = 0; i < secondRowTiles; i++) {
         const x = margin + i * (secondRowTileWidth + tileGap); // Add gap between tiles
         const tileData = secondRowData[i];
-
+  
         // Draw tile border with rounded corners
         pdf.roundedRect(
           x,
@@ -248,7 +259,7 @@ export class PlatCareDashbordComponent implements OnInit {
           borderRadius,
           borderRadius
         );
-
+  
         // Add tile content
         pdf.setFontSize(12);
         pdf.setTextColor(0, 0, 0);
@@ -259,20 +270,27 @@ export class PlatCareDashbordComponent implements OnInit {
         pdf.text(tileData.percentage, x + 5, y + 35);
         pdf.text(tileData.description, x + 5, y + 45);
       }
-
+  
       y += secondRowTileHeight + 10;
-
+  
       // Third row: Bar Chart and Pie Chart
       const thirdRowHeight = 80; // Height for the third row
       const chartWidth = (pageWidth - tileGap) / 2; // Width for each chart
-
+  
       // Create a canvas element for the bar chart
       const barChartCanvas = document.createElement('canvas');
-      barChartCanvas.width = chartWidth * 2; // Higher resolution for better quality
-      barChartCanvas.height = thirdRowHeight * 2;
+      const scaleFactor = 3; // Increase resolution by 3x
+      const dpr = window.devicePixelRatio || 1; // Account for high-DPI displays
+      barChartCanvas.width = chartWidth * scaleFactor * dpr; // Higher resolution for better quality
+      barChartCanvas.height = thirdRowHeight * scaleFactor * dpr;
       const barChartCtx = barChartCanvas.getContext('2d');
-
+  
       if (barChartCtx) {
+        // Adjust for high-DPI displays
+        barChartCanvas.style.width = `${chartWidth}px`;
+        barChartCanvas.style.height = `${thirdRowHeight}px`;
+        barChartCtx.scale(dpr * scaleFactor, dpr * scaleFactor);
+  
         // Bar Chart Data (Registered/Unregistered)
         const barChartData = {
           labels: ['Registered', 'Unregistered'],
@@ -287,7 +305,7 @@ export class PlatCareDashbordComponent implements OnInit {
             },
           ],
         };
-
+  
         // Render Bar Chart
         new Chart(barChartCtx, {
           type: 'bar',
@@ -301,12 +319,12 @@ export class PlatCareDashbordComponent implements OnInit {
             },
           },
         });
-
+  
         // Wait for the bar chart to render
         await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
-
+  
         // Convert Bar Chart to image and add to PDF
-        const barChartImage = barChartCanvas.toDataURL('image/png');
+        const barChartImage = barChartCanvas.toDataURL('image/png', 1.0); // Use maximum quality
         pdf.addImage(
           barChartImage,
           'PNG',
@@ -315,13 +333,20 @@ export class PlatCareDashbordComponent implements OnInit {
           chartWidth,
           thirdRowHeight
         );
-
+  
         // Create a canvas element for the pie chart
         const pieChartCanvas = document.createElement('canvas');
-        pieChartCanvas.width = chartWidth * 2; // Higher resolution for better quality
-        pieChartCanvas.height = thirdRowHeight * 2;
+        pieChartCanvas.width = chartWidth * scaleFactor * dpr; // Higher resolution for better quality
+        pieChartCanvas.height = thirdRowHeight * scaleFactor * dpr;
         const pieChartCtx = pieChartCanvas.getContext('2d');
-
+  
+        // Adjust for high-DPI displays
+        pieChartCanvas.style.width = `${chartWidth}px`;
+        pieChartCanvas.style.height = `${thirdRowHeight}px`;
+        if (pieChartCtx) {
+          pieChartCtx.scale(dpr * scaleFactor, dpr * scaleFactor);
+        }
+  
         // Pie Chart Data (Crop Enrollments)
         const pieChartData = {
           labels: ['Vegetables', 'Fruits', 'Grains', 'Mushrooms'],
@@ -338,7 +363,7 @@ export class PlatCareDashbordComponent implements OnInit {
             },
           ],
         };
-
+  
         // Render Pie Chart
         if (pieChartCtx) {
           new Chart(pieChartCtx, {
@@ -354,12 +379,12 @@ export class PlatCareDashbordComponent implements OnInit {
               },
             },
           });
-
+  
           // Wait for the pie chart to render
           await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
-
+  
           // Convert Pie Chart to image and add to PDF
-          const pieChartImage = pieChartCanvas.toDataURL('image/png');
+          const pieChartImage = pieChartCanvas.toDataURL('image/png', 1.0); // Use maximum quality
           pdf.addImage(
             pieChartImage,
             'PNG',
@@ -369,9 +394,9 @@ export class PlatCareDashbordComponent implements OnInit {
             thirdRowHeight
           );
         }
-
+  
         y += thirdRowHeight + 10;
-
+  
         // Add a footer with the current date and time
         pdf.setFontSize(10);
         pdf.setTextColor(100);
@@ -380,11 +405,11 @@ export class PlatCareDashbordComponent implements OnInit {
           margin,
           pdf.internal.pageSize.getHeight() - margin
         );
-
+  
         // Save the PDF
         const fileName = `report_${new Date().toISOString().slice(0, 10)}.pdf`;
         pdf.save(fileName);
-
+  
         // Show a success message
         Swal.fire({
           icon: 'success',

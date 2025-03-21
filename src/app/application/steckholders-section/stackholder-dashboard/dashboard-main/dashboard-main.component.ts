@@ -126,9 +126,10 @@ export class DashboardMainComponent implements OnInit {
       value: string,
       // includeIcon: boolean = false
     ) => {
-      // Draw box
+      // Draw box with rounded corners
       doc.setFillColor(backgroundColor);
-      doc.rect(x, y, width, height, 'F'); // Filled rectangle
+      const cornerRadius = 2; // Adjust the corner radius as needed
+      doc.roundedRect(x, y, width, height, cornerRadius, cornerRadius, 'F'); // Filled rectangle with rounded corners
       
       // Calculate center positions
       const centerX = x + width / 2;
@@ -171,7 +172,7 @@ export class DashboardMainComponent implements OnInit {
   
     // Row 1 (Standard Height)
     drawBox(getX(0), getY(0), boxWidth, baseBoxHeight, colors.blue, colors.white, 'Admin Users', `Total: ${this.adminRowData.allAdminUsers}`);
-    drawBox(getX(1), getY(0), boxWidth, baseBoxHeight, colors.white, colors.black, 'Active Admins', `Total: ${this.adminRowData.allAdminUsers}`);
+    drawBox(getX(1), getY(0), boxWidth, baseBoxHeight, colors.white, colors.black, 'Active Admins', `Just Now: ${this.adminRowData.allAdminUsers}`);
     drawBox(getX(2), getY(0), boxWidth, baseBoxHeight, colors.white, colors.black, 'New Admins', `Total: ${this.adminRowData.newAdminUsers}`);
   
     // Split 4th box into two horizontally
@@ -183,7 +184,7 @@ export class DashboardMainComponent implements OnInit {
     drawBox(getX(4), getY(0) + halfBoxHeight + 4, boxWidth, halfBoxHeight, colors.white, colors.black, 'Total Manager', `${this.adminRowData.managerAdmins}`);
   
     // Row 2 (Increased Height)
-    drawBox(getX(0), getY(1), boxWidth, secondRowBoxHeight, colors.orange, colors.black, 'Plant Care Users', `Total: ${this.plantCareRowData.allPlantCareUsers}`);
+    drawBox(getX(0), getY(1), boxWidth, secondRowBoxHeight, colors.orange, colors.white, 'Plant Care Users', `Total: ${this.plantCareRowData.allPlantCareUsers}`);
     drawBox(getX(1), getY(1), boxWidth, secondRowBoxHeight, colors.white, colors.black, 'Active Users', `Just Now: ${this.plantCareRowData.activePlantCareUsers}`);
     drawBox(getX(2), getY(1), boxWidth, secondRowBoxHeight, colors.white, colors.black, 'Active Users', `Today: ${this.plantCareRowData.newPlantCareUsers}`);
   
@@ -191,13 +192,64 @@ export class DashboardMainComponent implements OnInit {
     drawBox(getX(3), getY(1), boxWidth, halfSecondRowBoxHeight, colors.white, colors.black, 'Qr Registered Users', `${this.plantCareRowData.plantCareUsersWithQrForOutput}`);
     drawBox(getX(3), getY(1) + halfSecondRowBoxHeight + 4, boxWidth, halfSecondRowBoxHeight, colors.white, colors.black, 'Unregistered Users', `${this.plantCareRowData.plantCareUsersWithOutQrForOutput}`);
   
-    drawBox(getX(4), getY(1), boxWidth, secondRowBoxHeight, colors.white, colors.black, 'New Admins', 'Today: 0');
+    // 5th box in 2nd row - QR Registration Chart
+    const box5X = getX(4);
+    const box5Y = getY(1);
+    
+    // Draw the box background with rounded corners
+    doc.setFillColor(colors.white);
+    doc.roundedRect(box5X, box5Y, boxWidth, secondRowBoxHeight, 2, 2, 'F');
+    
+    // Add title to the chart
+    doc.setTextColor(colors.black);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const chartTitle = 'QR Registration';
+    const chartTitleWidth = doc.getStringUnitWidth(chartTitle) * 10 / doc.internal.scaleFactor;
+    doc.text(chartTitle, box5X + (boxWidth/2) - (chartTitleWidth/2), box5Y + 8); // Moved up by 2 units
+    
+    // Get the data for chart
+    const QRpresentage = this.plantCareRowData.QRpresentageForOutput;
+    const nonQRpresentage = this.plantCareRowData.nonQRpresentageForOutput;
+    
+    // Draw the chart bars - Moved everything up by 5 units
+    const barWidth = boxWidth * 0.35;  // 35% of box width
+    const barMaxHeight = secondRowBoxHeight * 0.55;  // Reduced from 60% to 55% of box height
+    const startX = box5X + (boxWidth - (2 * barWidth + 5)) / 2;  // Center the bars
+    const startY = box5Y + 12;  // Reduced from 15 to 12
+    
+    // Draw the Registered bar
+    doc.setFillColor(0, 128, 128);  // Teal color
+    const registeredBarHeight = (barMaxHeight * QRpresentage) / 100;
+    doc.rect(startX, startY + (barMaxHeight - registeredBarHeight), barWidth, registeredBarHeight, 'F');
+    
+    // Draw the Unregistered bar
+    doc.setFillColor(118, 183, 178);  // Light teal color
+    const unregisteredBarHeight = (barMaxHeight * nonQRpresentage) / 100;
+    doc.rect(startX + barWidth + 5, startY + (barMaxHeight - unregisteredBarHeight), barWidth, unregisteredBarHeight, 'F');
+    
+    // Add labels below bars - now with more space before end of box
+    doc.setFontSize(8);
+    doc.setTextColor(colors.black);
+    const reg = 'Registered';
+    const regWidth = doc.getStringUnitWidth(reg) * 8 / doc.internal.scaleFactor;
+    doc.text(reg, startX + (barWidth/2) - (regWidth/2), startY + barMaxHeight + 5);
+    
+    const unreg = 'Unregistered';
+    const unregWidth = doc.getStringUnitWidth(unreg) * 8 / doc.internal.scaleFactor;
+    doc.text(unreg, startX + barWidth + 5 + (barWidth/2) - (unregWidth/2), startY + barMaxHeight + 5);
+    
+    // Add percentages on top of bars
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${QRpresentage}%`, startX + (barWidth/2) - 5, startY + (barMaxHeight - registeredBarHeight) - 2);
+    doc.text(`${nonQRpresentage}%`, startX + barWidth + 5 + (barWidth/2) - 5, startY + (barMaxHeight - unregisteredBarHeight) - 2);
   
     // Row 3 adjustment for the increased height of row 2
     const row3YAdjustment = getY(2) + (secondRowBoxHeight - baseBoxHeight);
   
     // Row 3 (Standard Height)
-    drawBox(getX(0), row3YAdjustment, boxWidth, baseBoxHeight, colors.teal, colors.black, 'Collection Officers', `Total: ${this.collectionOfficerRowData.allOfficers}`);
+    drawBox(getX(0), row3YAdjustment, boxWidth, baseBoxHeight, colors.teal, colors.white, 'Collection Officers', `Total: ${this.collectionOfficerRowData.allOfficers}`);
     drawBox(getX(1), row3YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'Active Officers', `Just Now: ${this.collectionOfficerRowData.activeOfficers}`);
     drawBox(getX(2), row3YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'New Officers', `Today: ${this.collectionOfficerRowData.newOfficers}`);
   
@@ -213,113 +265,13 @@ export class DashboardMainComponent implements OnInit {
     const row4YAdjustment = getY(3) + (secondRowBoxHeight - baseBoxHeight);
   
     // Row 4 (Standard Height)
-    drawBox(getX(0), row4YAdjustment, boxWidth, baseBoxHeight, colors.purple, colors.black, 'Center Head Officers', '7');
-    drawBox(getX(1), row4YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'Collection Officers', '10');
-    drawBox(getX(2), row4YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'Center Managers', '9');
-    drawBox(getX(3), row4YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'Customer Officers', '1');
-    drawBox(getX(4), row4YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'Customer Officers', '1');
+    drawBox(getX(0), row4YAdjustment, boxWidth, baseBoxHeight, colors.purple, colors.white, 'Sales Agents', `Total: ${this.salesAgentRowData.allSalesAgents}`);
+    drawBox(getX(1), row4YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'Active Agents', `Just Now: ${this.salesAgentRowData.activeSalesAgents}`);
+    drawBox(getX(2), row4YAdjustment, boxWidth, baseBoxHeight, colors.white, colors.black, 'New Agents', `Today: ${this.salesAgentRowData.newSalesAgents}`);
      
     // Save the PDF
     doc.save('dashboard-report.pdf');
   }
   
   
-
-  // exportReport(): void {
-  //   const doc = new jsPDF();
-
-  //   // const QRpresentage = this.plantCareRowData.QRpresentageForOutput
-  //   // const nonQRpresentage = this.plantCareRowData.nonQRpresentageForOutput
-
-  //   doc.setFontSize(14);
-
-  //   doc.text('Dashboard Report', 10, 10);
-
-  //   doc.setFontSize(12);
-    
-  
-    
-  
-  //   // // Save the PDF
-  //   doc.save('qr-registration-chart.pdf');
-
-  // }
-
-  // exportReport() {
-  //   const doc = new jsPDF();
-
-  //   // Add content to the PDF
-  //   doc.setFontSize(18);
-  //   doc.text('Dashboard Report', 10, 10);
-
-  //   doc.setFontSize(12);
-  //   doc.text('Admin Data:', 10, 20);
-  //   doc.text(`Active Users: ${this.adminRowData.allAdminUsers
-  //   }`, 10, 30);
-  //   doc.text(`New Admins Today: ${this.adminRowData.newAdminUsers}`, 10, 40);
-
-  //   doc.text('Collection Officer Data:', 10, 50);
-  //   doc.text(`Total Officers: ${this.collectionOfficerRowData.allOfficers}`, 10, 60);
-  //   doc.text(`Active Officers: ${this.collectionOfficerRowData.activeOfficers}`, 10, 70);
-
-  //   doc.text('Plant Care Data:', 10, 80);
-  //   doc.text(`Total Managers: ${this.plantCareRowData.centerHeadOfficers}`, 10, 90);
-  //   doc.text(`Center Managers: ${this.plantCareRowData.centerManagers}`, 10, 100);
-
-  //   doc.text('Sales Agent Data:', 10, 110);
-  //   doc.text(`QR Percentage: ${this.salesAgentRowData.QRpresentageForOutput}%`, 10, 120);
-  //   doc.text(`Non-QR Percentage: ${this.salesAgentRowData.nonQRpresentageForOutput}%`, 10, 130);
-
-  //   // Add a simple bar chart
-  //   const qrPercentage = parseFloat(this.salesAgentRowData.RpresentageForOutput);
-  //   const nonQRPercentage = parseFloat(this.salesAgentRowData.nonQRpresentageForOutput);
-
-  //   const chartWidth = 100;
-  //   const chartHeight = 50;
-  //   const chartX = 10;
-  //   const chartY = 140;
-
-  //   doc.setFillColor('#008080');
-  //   doc.rect(chartX, chartY, chartWidth * (qrPercentage / 100), chartHeight, 'F');
-  //   doc.setFillColor('#76B7B2');
-  //   doc.rect(chartX + chartWidth * (qrPercentage / 100), chartY, chartWidth * (nonQRPercentage / 100), chartHeight, 'F');
-
-  //   doc.text('QR Registered', chartX, chartY + chartHeight + 10);
-  //   doc.text('Non-QR Registered', chartX + chartWidth * (qrPercentage / 100), chartY + chartHeight + 10);
-
-  //   // Save the PDF
-  //   doc.save('dashboard_report.pdf');
-  // }
 }
-
-
-
-// // Set up the PDF document
-    // doc.setFontSize(16);
-    // doc.text('QR Registration', 10, 20);
-  
-    // // Draw the chart bars
-    // const barWidth = 40;
-    // const barHeight = 100;
-    // const startX = 20;
-    // const startY = 30;
-  
-    // // Draw the Registered bar
-    // doc.setFillColor(0, 128, 128); // Teal color
-    // doc.rect(startX, startY, barWidth, (barHeight * QRpresentage) / 100, 'F');
-  
-    // // Draw the Unregistered bar
-    // doc.setFillColor(118, 183, 178); // Light teal color
-    // doc.rect(startX + barWidth + 10, startY, barWidth, (barHeight * nonQRpresentage) / 100, 'F');
-  
-    // // Add labels
-    // doc.setFontSize(12);
-    // doc.text('Registered', startX, startY + barHeight + 10);
-    // doc.text('Unregistered', startX + barWidth + 10, startY + barHeight + 10);
-  
-    // // Add percentages
-    // doc.text(`${QRpresentage}%`, startX + 10, startY - 5);
-    // doc.text(`${nonQRpresentage}%`, startX + barWidth + 20, startY - 5);
-
-// doc.text(`Active Users: ${this.adminRowData.allAdminUsers}`, 20, 20);
-    // doc.text(`New Admins Today: ${this.adminRowData.newAdminUsers}`, 60, 20);

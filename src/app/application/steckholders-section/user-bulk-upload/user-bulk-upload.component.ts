@@ -103,30 +103,74 @@ export class UserBulkUploadComponent {
     this.errorMessage = '';
     this.successMessage = '';
   
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    // Read the file to check for duplicates before uploading
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      try {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
   
-    this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
+        // Check for duplicates
+        const phoneNumbers = new Map();
+        const nicNumbers = new Map();
+        const duplicates: ExistingUser[] = [];
   
-        if (response.existingUsers && response.existingUsers.length > 0) {
-          // Download existing users as an Excel file
-          this.downloadExcel(response.existingUsers, 'existing_users.xlsx');
-          this.existingUsers = response.existingUsers;
+        for (let i = 0; i < jsonData.length; i++) {
+          const row = jsonData[i];
+          const phoneNumber = String((row as { [key: string]: any })['Phone Number']);
+          const nicNumber = String((row as { [key: string]: any })['NIC Number']);
+
+          const firstName = String((row as { [key: string]: any })['First Name']);
+          const lastName = String((row as { [key: string]: any })['Last Name']);
+
+          // Check for duplicate phone numbers
+          if (phoneNumbers.has(phoneNumber)) {
+            duplicates.push({
+              firstName,
+              lastName,
+              phoneNumber,
+              NICnumber: nicNumber
+            });
+          } else {
+            phoneNumbers.set(phoneNumber, i);
+          }
   
+          // Check for duplicate NIC numbers
+          if (nicNumbers.has(nicNumber)) {
+            // Only add if not already added due to phone number
+            if (!duplicates.some(d => d.phoneNumber === phoneNumber && d.NICnumber === nicNumber)) {
+              duplicates.push({
+                firstName,
+                lastName,
+                phoneNumber,
+                NICnumber: nicNumber
+              });
+            }
+          } else {
+            nicNumbers.set(nicNumber, i);
+          }
+        }
+  
+        // If duplicates are found, show them and stop the upload
+        if (duplicates.length > 0) {
+          this.isLoading = false;
+          this.downloadExcel(duplicates, 'duplicate_entries.xlsx');
+          
           Swal.fire({
             icon: 'warning',
-            title: 'User Redundancy!',
+            title: 'Duplicate Entries Found!',
             html: `
-            <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
-             <br/>
-            <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}<p/>
+              <p>Please note: Your file contains duplicate NIC numbers or phone numbers.</p>
+              <br/>
+              <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}</p>
               
               <br/>
               <hr></hr>
               <br/>
-              <p style="text-align: right;">File with existing users downloaded.</p>
+              <p style="text-align: right;">File with duplicate entries downloaded.</p>
               <br/>
               <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
                 <thead>
@@ -138,98 +182,161 @@ export class UserBulkUploadComponent {
                   </tr>
                 </thead>
                 <tbody>
-                  ${this.existingUsers.map(user => `
+                  ${duplicates.map(user => `
                     <tr>
                       <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
                       <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
-                       <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+                      <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
                       <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
                     </tr>
                   `).join('')}
                 </tbody>
               </table>
               <br/>
-              <p style="text-align: left;">Successfully added <b>${response.newUsersInserted}</b> new users.</p>
-              <p style="text-align: left;">Found <b>${response.existingUsers.length}</b> existing users:</p>
-              
+              <p style="text-align: left;">Found <b>${duplicates.length}</b> duplicate entries.</p>
+              <p style="text-align: left;">Please fix duplicates and upload again.</p>
             `,
             width: '80%',
-            confirmButtonText: 'Close & Go Back',
+            confirmButtonText: 'Close',
           });
           
-        } else if(response.existingUsers){
-
-          this.downloadExcel(response.duplicateEntries, 'duplication_entries.xlsx');
-          this.duplicateEntries = response.duplicateEntries;
-
-          Swal.fire({
-            icon: 'warning',
-            title: 'Duplication Entries!',
-            html: `
-            <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
-             <br/>
-            <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}<p/>
-              
-              <br/>
-              <hr></hr>
-              <br/>
-              <p style="text-align: right;">File with duplicate entries users downloaded.</p>
-              <br/>
-              <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
-                <thead>
-                  <tr>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${this.duplicateEntries.map(user => `
-                    <tr>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
-                       <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-              <br/>
-              <p style="text-align: left;">Successfully added <b>${response.newUsersInserted}</b> new users.</p>
-              <p style="text-align: left;">Found <b>${response.duplicateEntries.length}</b> existing users:</p>
-              
-            `,
-            width: '80%',
-            confirmButtonText: 'Close & Go Back',
-          });
-
-
-        }
-        
-        
-        
-        
-        
-        
-        else {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: `Successfully uploaded ${response.rowsAffected} users!`,
-            confirmButtonText: 'OK'
-          });
+          return;
         }
   
-        this.selectedFile = null;
-        this.router.navigate(['/steckholders/action/farmers']);
-      },
-      error: (error) => {
-        this.downloadExcel(error.existingUsers, 'existing_users.xlsx');
-        console.error('hii 1');
-        this.handleError(error);
+        // If no duplicates found, proceed with the upload
+        const formData = new FormData();
+        formData.append('file', this.selectedFile!);
+        
+        this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
+          next: (response: any) => {
+            this.isLoading = false;
+        
+            if (response.existingUsers && response.existingUsers.length > 0) {
+              // Download existing users as an Excel file
+              this.downloadExcel(response.existingUsers, 'existing_users.xlsx');
+              this.existingUsers = response.existingUsers;
+        
+              Swal.fire({
+                icon: 'warning',
+                title: 'User Redundancy!',
+                html: `
+                <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
+                 <br/>
+                <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}<p/>
+                  
+                  <br/>
+                  <hr></hr>
+                  <br/>
+                  <p style="text-align: right;">File with existing users downloaded.</p>
+                  <br/>
+                  <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                      <tr>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${this.existingUsers.map(user => `
+                        <tr>
+                          <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
+                          <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
+                           <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+                          <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                  <br/>
+                  <p style="text-align: left;">Successfully added <b>${response.newUsersInserted}</b> new users.</p>
+                  <p style="text-align: left;">Found <b>${response.existingUsers.length}</b> existing users:</p>
+                  
+                `,
+                width: '80%',
+                confirmButtonText: 'Close & Go Back',
+              });
+              
+            } else if(response.existingUsers){
+    
+              this.downloadExcel(response.duplicateEntries, 'duplication_entries.xlsx');
+              this.duplicateEntries = response.duplicateEntries;
+    
+              Swal.fire({
+                icon: 'warning',
+                title: 'Duplication Entries!',
+                html: `
+                <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
+                 <br/>
+                <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}<p/>
+                  
+                  <br/>
+                  <hr></hr>
+                  <br/>
+                  <p style="text-align: right;">File with duplicate entries users downloaded.</p>
+                  <br/>
+                  <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                      <tr>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
+                        <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${this.duplicateEntries.map(user => `
+                        <tr>
+                          <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
+                          <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
+                           <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+                          <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                  <br/>
+                  <p style="text-align: left;">Successfully added <b>${response.newUsersInserted}</b> new users.</p>
+                  <p style="text-align: left;">Found <b>${response.duplicateEntries.length}</b> existing users:</p>
+                  
+                `,
+                width: '80%',
+                confirmButtonText: 'Close & Go Back',
+              });
+    
+    
+            } else {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: `Successfully uploaded ${response.rowsAffected} users!`,
+                confirmButtonText: 'OK'
+              });
+            }
+      
+            this.selectedFile = null;
+            this.router.navigate(['/steckholders/action/farmers']);
+          },
+          error: (error) => {
+            this.downloadExcel(error.existingUsers, 'existing_users.xlsx');
+            console.error('hii 1');
+            this.handleError(error);
+          }
+        });
+      } catch (error) {
+        this.isLoading = false;
+        console.error('Error reading file:', error);
+        this.handleError(new Error('Failed to process the file. Please check the file format.'));
       }
-    });
+    };
+  
+    reader.onerror = () => {
+      this.isLoading = false;
+      this.handleError(new Error('Error reading the file. Please try again.'));
+    };
+  
+    reader.readAsArrayBuffer(this.selectedFile);
   }
 
 

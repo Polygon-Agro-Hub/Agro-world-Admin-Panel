@@ -14,6 +14,9 @@ import { Chart } from 'chart.js';
 interface DashboardData {
   active_users: any;
   new_users: number;
+  allusersTillPreviousMonth: number;
+  user_increase_percentage: number;
+  qr_user_increase_percentage: number;
   vegCultivation: number;
   grainCultivation: number;
   fruitCultivation: number;
@@ -21,6 +24,8 @@ interface DashboardData {
   allusers: number;
   qrUsers: number;
   farmerRegistrationCounts: any;
+  total_cultivation_till_previous_month: number;
+  cultivation_increase_percentage: number;
 }
 
 @Component({
@@ -60,6 +65,7 @@ export class PlatCareDashbordComponent implements OnInit {
         if (data && data.data) {
           this.dashboardData = data.data;
           console.log('hit 01', this.dashboardData.farmerRegistrationCounts);
+          console.log(this.dashboardData);
           this.calculateTotalCultivation();
           this.hasData = true;
         } else {

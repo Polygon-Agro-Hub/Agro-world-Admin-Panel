@@ -7,36 +7,37 @@ import { response } from 'express';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 interface Customers {
   id: number;
   cusId: string;
-  title: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  empId: string;
+  created_at: string;
+  totOrders: number;
   email: string;
-  buildingType: string;
-  salesAgentEmpId: number;
   salesAgentFirstName: string;
   salesAgentLastName: string;
-  created_at: string;
+  buildingType: string;
   houseHouseNo: string;
   houseStreetName: string;
   houseCity: string;
   apartmentBuildingNo: string;
   apartmentBuildingName: string;
   apartmentUnitNo: string;
-  apartmentFloorNo: string;
   apartmentHouseNo: string;
   apartmentStreetName: string;
   apartmentCity: string;
+  apartmentFloorNo: string;
 }
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, FormsModule],
+  imports: [CommonModule, LoadingSpinnerComponent, FormsModule, NgxPaginationModule],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css',
 })
@@ -47,11 +48,16 @@ export class CustomersComponent {
   isPopupOpen = false;
   selectedCustomer: any = null;
 
+  page: number = 1;
+  totalItems: number = 0;
+  itemsPerPage: number = 10;
+  searchText: string = '';
+
   constructor(
     private customerService: CustomersService,
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllCustomers();
@@ -91,17 +97,31 @@ export class CustomersComponent {
       });
   }
 
-  fetchAllCustomers() {
-    this.customerService.getCustomers().subscribe(
+  fetchAllCustomers(page: number = this.page, limit: number = this.itemsPerPage, search: string = this.searchText) {
+    this.customerService.getCustomers(page, limit, search).subscribe(
       (response: any) => {
         console.log(response);
         this.isLoading = false;
-        this.customers = response;
+        this.customers = response.items;
       },
       (error) => {
         console.error('Error fetching customers', error);
         this.isLoading = false;
       }
     );
+  }
+
+  onSearch(){
+    this.fetchAllCustomers();
+  }
+
+  offSearch(){
+    this.searchText = '';
+    this.fetchAllCustomers();
+  }
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllCustomers();
   }
 }

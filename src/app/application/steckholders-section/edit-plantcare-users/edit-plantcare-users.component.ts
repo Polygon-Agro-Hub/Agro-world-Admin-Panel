@@ -45,6 +45,8 @@ export class EditPlantcareUsersComponent implements OnInit {
   plantCareUser: PlantCareUser[] = [];
 
   userForm: FormGroup;
+  isView: boolean = false;
+  isDisabled: boolean = true; 
 
   imagePreview: string = '';
   selectedImage: File | null = null;
@@ -117,7 +119,9 @@ export class EditPlantcareUsersComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params["id"] ? +params["id"] : null;
-      console.log("Received item ID:", this.itemId);
+      this.isView = params['isView'] === 'true';
+      console.log('Received item ID:', this.itemId);
+      console.log('recieved view state: ', this.isView);
     });
     if (this.itemId) {
       this.loadUserData(this.itemId);

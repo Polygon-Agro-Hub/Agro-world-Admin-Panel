@@ -124,19 +124,17 @@ export class AddPackageComponent implements OnInit {
 
   onCancel() {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'All unsaved changes will be lost. Do you want to cancel?',
       icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, cancel',
-      cancelButtonText: 'No, keep editing'
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
         this.inputPackageObj = new InputPackage();
         this.packageObj = new Package();
-        Swal.fire('Cancelled', 'Your changes have been discarded.', 'success');
+        this.router.navigate(['/market/action']);
       }
     });
   }

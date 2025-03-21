@@ -7,26 +7,7 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button
-  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-  (click)="navigatePath('/steckholders/action/sales-agents/create-sales-agents')"
->
-  <svg
-    class="w-5 h-5 mr-3"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 12H20M12 4V20"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-  Add New
-</button>
+
 <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-full w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <!-- Header and Filters Section -->
@@ -34,25 +15,68 @@
       <div class="flex justify-between items-center mb-5">
         <div>
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            Sales Agent Profiles ({{totalItems}})
+            All Orders ({{totalItems}})
           </h2>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+
+           <div>
+                <p-dropdown
+                  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+                  [options]="deliveryTypeArr"
+                  [checkmark]="true"
+                  optionLabel="deliveryType"
+                  optionValue="value"
+                  [showClear]="true"
+                  placeholder="delivery type"
+                  [(ngModel)]="deliveryTypeFilter"
+                  (onChange)="applydeliveryTypeFilters()"
+                />
+          </div>
+
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
-              [options]="statusArr"
+              [options]="paymentMethodArr"
               [checkmark]="true"
-              optionLabel="status"
+              optionLabel="paymentMethod"
               optionValue="value"
               [showClear]="true"
-              placeholder="status"
-              [(ngModel)]="statusFilter"
-              (onChange)="applyFilters()"
+              placeholder="payment method"
+              [(ngModel)]="paymentMethodFilter"
+              (onChange)="applyPaymentMethodFilters()"
+            />
+          </div>
+
+          <div>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+              [options]="paymentStatusArr"
+              [checkmark]="true"
+              optionLabel="paymentStatus"
+              optionValue="value"
+              [showClear]="true"
+              placeholder="payment status"
+              [(ngModel)]="paymentStatusFilter"
+              (onChange)="applyPaymentStatusFilters()"
+            />
+      </div>
+
+          <div>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+              [options]="orderStatusArr"
+              [checkmark]="true"
+              optionLabel="orderStatus"
+              optionValue="value"
+              [showClear]="true"
+              placeholder="order status"
+              [(ngModel)]="orderStatusFilter"
+              (onChange)="applyOrderStatusFilters()"
             />
           </div>
           <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
-            <input type="text" placeholder="Search by EMP ID, First / Last Name" [(ngModel)]="searchText" (keydown.enter)="onSearch()"
+            <input type="text" placeholder="Search..." [(ngModel)]="searchText" (keydown.enter)="onSearch()"
                 class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
                 (click)="onSearch()">
@@ -89,69 +113,77 @@
         <thead>
           <tr>
             <th
-            class="pr-5 font-normal text-textLight dark:text-textDark text-left"
+            class="ml-10 font-normal text-textLight dark:text-textDark text-left"
           >
-            No
+              Invoice No
           </th>
             <th
-              class="pl-3 font-normal text-textLight dark:text-textDark text-left"
+              class="font-normal text-textLight dark:text-textDark text-center pl-5"
             >
-              EMP ID
+              Customer ID
             </th>
             <th
-              class="pl-5 font-normal text-textLight dark:text-textDark text-left"
+              class="pl-5 font-normal text-textLight dark:text-textDark text-center"
             >
-              First Name
+              Customer Name
             </th>
             <th
-              class="pl-10 font-normal text-textLight dark:text-textDark text-left "
+              class="font-normal text-textLight dark:text-textDark text-center"
             >
-              Last Name
+              Agent ID
+            </th>
+            <th
+              class="font-normal text-textLight dark:text-textDark text-center "
+            >
+              Order Time
             </th>
             
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Status
+              Schedule
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Phone Number-1
+              Schedule
             </th>
             
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-            NIC
+              payment
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-             Activity Status
+              Payment Status
             </th>
             <th
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             >
+              Amount
+            </th>
+            <th
+              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
+            > 
+              Order Status
             </th>
             <th
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             >
+              Invoice
             </th>
-            <th
+            <!-- <th
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             >
-            </th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            >
-            </th>
+            </th> -->
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="
-              let item of salesAgentsArr
+              let item of ordersArr
                 | paginate
                   : {
                       itemsPerPage: itemsPerPage,
@@ -162,50 +194,88 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           > 
-            <td class="text-start text-textLight dark:text-textDark ">
+            <!-- <td class="text-start text-textLight dark:text-textDark ">
               {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(2, '0') }}
+            </td> -->
+            
+            <td class=" text-textLight dark:text-textDark text-left">
+              {{ item.invNo }}
             </td>
-            <td class="pl-3 text-textLight dark:text-textDark">{{ item.empId }}</td>
-            <td class="pl-5 text-textLight dark:text-textDark">
-              {{ item.firstName }}
+            <td class="text-center text-textLight dark:text-textDark pl-5">
+              {{ item.cusId }}
             </td>
-            <td class="pl-10 text-left text-textLight dark:text-textDark ">
-              {{ item.lastName }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <div>
-                <span
-                  [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
-                      item.status === 'Not Approved',
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg':
-                      item.status === 'Approved',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-lg':
-                      item.status === 'Rejected'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
-                  (click)="openPopup(item)"
-                >
-                  {{ item.status }}
-                </span>
-              </div>
+            <td class="pl-5 text-center text-textLight dark:text-textDark ">
+                {{ item.firstName + ' ' + item.lastName }}
+                
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.phoneCode1+ ''  + item.phoneNumber1}}
+              {{ item.empId }}
             </td>
             
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-                {{ item.nic }}
+                {{item.formattedCreatedDate}}
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-                <!-- {{ item.nic }} -->
-            </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <!-- View button commented out -->
+                {{item.deliveryType}}
             </td>
 
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                {{ item.timeSlot }}
+            </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                {{ item.paymentMethod }}
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                <div>
+                    <span
+                      [ngClass]="{
+                        'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg':
+                          item.paymentStatus === 1,
+                        'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-lg':
+                          item.paymentStatus === 0
+                      }"
+                      class="inline-block font-medium rounded-2xl min-w-24 px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                    >
+                    {{ item.paymentStatus == 1 ? 'Paid' : 'Pending' }}
+                    </span>
+                  </div>
+                
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                {{ item.fullTotal - item.fullDiscount }}
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                <div>
+                    <span
+                      [ngClass]="{
+                        'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
+                          item.orderStatus === 'Assigned',
+                        'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
+                          item.orderStatus === 'Delivered',
+                        'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-3xl':
+                          item.orderStatus === 'Failed',
+                        'font-bold px-3 py-1 text-sm bg-[#CFE1FF] text-[#3B82F6] rounded-3xl':
+                          item.orderStatus === 'Processing',
+                        'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
+                          item.orderStatus === 'Cancelled'
+                      }"
+                      class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                    >
+                      {{ item.orderStatus }}
+                    </span>
+                  </div>
+                <!-- {{ item.orderStatus }} -->
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                <i class="fa-solid fa-file-lines text-xl text-[#5C5C5C]"></i>
+            </td>
+
+            <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
               class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
               (click)="viewSalesAgent(item.id)"
@@ -267,7 +337,7 @@
                   />
                 </svg>
               </button>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
@@ -284,4 +354,5 @@
       </pagination-controls>
     </div>
   </div>
+
 </div>

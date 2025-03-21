@@ -279,7 +279,7 @@ export class PlatCareDashbordComponent implements OnInit {
 
       y += secondRowTileHeight + 10;
 
-      // Third row: Bar Chart and Pie Chart
+      // Third row: Bar Chart and Donut Chart
       const thirdRowHeight = 80; // Height for the third row
       const chartWidth = (pageWidth - tileGap) / 2; // Width for each chart
 
@@ -299,7 +299,7 @@ export class PlatCareDashbordComponent implements OnInit {
 
         // Bar Chart Data (Registered/Unregistered)
         const barChartData = {
-          labels: ['Registered', 'Unregistered'],
+          labels: ['QR Registered', 'Unregistered'],
           datasets: [
             {
               label: 'Farmers',
@@ -340,21 +340,21 @@ export class PlatCareDashbordComponent implements OnInit {
           thirdRowHeight
         );
 
-        // Create a canvas element for the pie chart
-        const pieChartCanvas = document.createElement('canvas');
-        pieChartCanvas.width = chartWidth * scaleFactor * dpr; // Higher resolution for better quality
-        pieChartCanvas.height = thirdRowHeight * scaleFactor * dpr;
-        const pieChartCtx = pieChartCanvas.getContext('2d');
+        // Create a canvas element for the donut chart
+        const donutChartCanvas = document.createElement('canvas');
+        donutChartCanvas.width = chartWidth * scaleFactor * dpr; // Higher resolution for better quality
+        donutChartCanvas.height = thirdRowHeight * scaleFactor * dpr;
+        const donutChartCtx = donutChartCanvas.getContext('2d');
 
         // Adjust for high-DPI displays
-        pieChartCanvas.style.width = `${chartWidth}px`;
-        pieChartCanvas.style.height = `${thirdRowHeight}px`;
-        if (pieChartCtx) {
-          pieChartCtx.scale(dpr * scaleFactor, dpr * scaleFactor);
+        donutChartCanvas.style.width = `${chartWidth}px`;
+        donutChartCanvas.style.height = `${thirdRowHeight}px`;
+        if (donutChartCtx) {
+          donutChartCtx.scale(dpr * scaleFactor, dpr * scaleFactor);
         }
 
-        // Pie Chart Data (Crop Enrollments)
-        const pieChartData = {
+        // Donut Chart Data (Crop Enrollments)
+        const donutChartData = {
           labels: ['Vegetables', 'Fruits', 'Grains', 'Mushrooms'],
           datasets: [
             {
@@ -370,11 +370,11 @@ export class PlatCareDashbordComponent implements OnInit {
           ],
         };
 
-        // Render Pie Chart
-        if (pieChartCtx) {
-          new Chart(pieChartCtx, {
-            type: 'pie',
-            data: pieChartData,
+        // Render Donut Chart
+        if (donutChartCtx) {
+          new Chart(donutChartCtx, {
+            type: 'doughnut',
+            data: donutChartData,
             options: {
               responsive: false,
               plugins: {
@@ -386,13 +386,13 @@ export class PlatCareDashbordComponent implements OnInit {
             },
           });
 
-          // Wait for the pie chart to render
+          // Wait for the donut chart to render
           await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
 
-          // Convert Pie Chart to image and add to PDF
-          const pieChartImage = pieChartCanvas.toDataURL('image/png', 1.0); // Use maximum quality
+          // Convert Donut Chart to image and add to PDF
+          const donutChartImage = donutChartCanvas.toDataURL('image/png', 1.0); // Use maximum quality
           pdf.addImage(
-            pieChartImage,
+            donutChartImage,
             'PNG',
             margin + chartWidth + tileGap,
             y,

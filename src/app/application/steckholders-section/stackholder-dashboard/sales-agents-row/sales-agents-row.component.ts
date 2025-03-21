@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges} from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter} from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
@@ -12,6 +12,7 @@ import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/
 })
 export class SalesAgentsRowComponent implements OnChanges {
   @Input() fourthRow: any = {};
+  @Output() salesAgentDataEmitted = new EventEmitter<any>();
 
   activeSalesAgents: number = 0;
   allSalesAgents : number = 0;
@@ -28,6 +29,12 @@ export class SalesAgentsRowComponent implements OnChanges {
     this.activeSalesAgents = data?.activeSalesAgents?.activeSalesAgents ?? 0;
     this.allSalesAgents = data?.allSalesAgents?.totalSaleAgents ?? 0;
     this.newSalesAgents = data?.newSalesAgents?.newSalesAgents ?? 0;
+
+    this.salesAgentDataEmitted.emit({
+      activeSalesAgents: this.activeSalesAgents,
+      allSalesAgents: this.allSalesAgents,
+      newSalesAgents: this.newSalesAgents
+    });
     
   }
 }

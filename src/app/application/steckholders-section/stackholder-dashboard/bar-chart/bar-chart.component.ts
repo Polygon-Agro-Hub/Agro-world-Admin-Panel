@@ -29,21 +29,11 @@ export class BarChartComponent implements OnChanges {
   ngOnChanges(): void {
     this.calculatePercentages();
     this.createChart();
-    // this.fetchPlantCareUserData(this.QRfarmers);
+    
   }
 
 
-  // fetchPlantCareUserData(data: any) {
-  //   const withQr = data.QrCode.count ?? 0;
-  //   const withoutQr = data.notQrCode.count ?? 0;
-  //   const total = withQr + withoutQr;
-
-  //   this.plantCareUsersWithQr = total > 0 ? Math.round((withQr / total) * 100) : 0;
-  //   this.plantCareUsersWithOutQr = total > 0 ? Math.round((withoutQr / total) * 100) : 0;
-
-  //   this.createChart();
-
-  // }
+  
 
   calculatePercentages(): void {
     const total = this.plantCareUsersWithQr + this.plantCareUsersWithOutQr;

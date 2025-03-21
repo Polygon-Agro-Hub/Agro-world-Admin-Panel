@@ -234,19 +234,19 @@ export class PlatCareDashbordComponent implements OnInit {
         {
           title: 'Total Farmers',
           value: this.dashboardData.allusers,
-          percentage: '133.33%',
+          percentage: this.dashboardData.user_increase_percentage,
           description: 'Compared to last month',
         },
         {
           title: 'Total farmers with QR',
           value: this.dashboardData.qrUsers,
-          percentage: '33.33%',
+          percentage: this.dashboardData.qr_user_increase_percentage,
           description: 'Compared to last month',
         },
         {
           title: 'Total Crop Enrollments',
           value: this.dashboardData.fruitCultivation + this.dashboardData.grainCultivation + this.dashboardData.vegCultivation + this.dashboardData.mushCultivation,
-          percentage: '100.00%',
+          percentage: this.dashboardData.cultivation_increase_percentage,
           description: 'Compared to last month',
         },
       ];
@@ -273,7 +273,7 @@ export class PlatCareDashbordComponent implements OnInit {
         pdf.setFontSize(14);
         pdf.text(tileData.value?.toString() || '0', x + 5, y + 25); // Ensure value is a string
         pdf.setFontSize(10);
-        pdf.text(tileData.percentage, x + 5, y + 35);
+        pdf.text(tileData.percentage.toString(), x + 5, y + 35);
         pdf.text(tileData.description, x + 5, y + 45);
       }
   

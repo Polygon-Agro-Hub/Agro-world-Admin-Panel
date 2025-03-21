@@ -49,6 +49,7 @@ export class PlatCareDashbordComponent implements OnInit {
   totalCultivationCount: number = 0;
   hasData: boolean = false;
   isLoading: boolean = true;
+  isDownloading: boolean = false;
 
   constructor(private dashbordService: PlantcareDashbordService) {}
 
@@ -94,7 +95,9 @@ export class PlatCareDashbordComponent implements OnInit {
     this.fetchDashboardData(district);
   }
 
-  async captureScreenshot() {
+  async captureScreenshot(): Promise<void> {
+    this.isDownloading = true; // Show spinner and disable button
+
     try {
       // Check if dashboardData is defined
       if (!this.dashboardData) {
@@ -203,7 +206,7 @@ export class PlatCareDashbordComponent implements OnInit {
         pdf.setTextColor(tileColor.text[0], tileColor.text[1], tileColor.text[2]);
 
         // Center the text horizontally
-        const textWidth = (text:string) =>
+        const textWidth = (text: string) =>
           (pdf.getStringUnitWidth(text) * pdf.getFontSize()) /
           pdf.internal.scaleFactor;
 
@@ -218,7 +221,8 @@ export class PlatCareDashbordComponent implements OnInit {
 
         pdf.setFontSize(12); // Adjusted font size for subValue
         const subValueX =
-          x + (firstRowTileWidth - textWidth(tileData.subValue?.toString() || '0')) / 2;
+          x +
+          (firstRowTileWidth - textWidth(tileData.subValue?.toString() || '0')) / 2;
         pdf.text(tileData.subValue?.toString() || '0', subValueX, y + 30); // Ensure subValue is a string
       }
 
@@ -245,7 +249,11 @@ export class PlatCareDashbordComponent implements OnInit {
         },
         {
           title: 'Total Crop Enrollments',
-          value: this.dashboardData.fruitCultivation + this.dashboardData.grainCultivation + this.dashboardData.vegCultivation + this.dashboardData.mushCultivation,
+          value:
+            this.dashboardData.fruitCultivation +
+            this.dashboardData.grainCultivation +
+            this.dashboardData.vegCultivation +
+            this.dashboardData.mushCultivation,
           percentage: this.dashboardData.cultivation_increase_percentage,
           description: 'Compared to last month',
         },
@@ -415,22 +423,11 @@ export class PlatCareDashbordComponent implements OnInit {
         // Save the PDF
         const fileName = `report_${new Date().toISOString().slice(0, 10)}.pdf`;
         pdf.save(fileName);
-
-        // Show a success message
-        Swal.fire({
-          icon: 'success',
-          title: 'Download Complete',
-          html: `<b>${fileName}</b> has been downloaded successfully!`,
-          confirmButtonText: 'OK',
-        });
       }
     } catch (error) {
       console.error('Error generating PDF:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while generating the PDF. Please try again.',
-      });
+    } finally {
+      this.isDownloading = false; // Hide spinner and enable button
     }
   }
 }

@@ -28,6 +28,7 @@ export class ViewCollectiveOfficerProfileComponent {
   showDisclaimView = false;
   isLoading = false;
   empHeader: string = '';
+  isGeneratingPDF = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -81,8 +82,11 @@ export class ViewCollectiveOfficerProfileComponent {
   }
   
   async generatePDF() {
+    this.isGeneratingPDF = true; // Show spinner and disable button
+
     const pdf = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
+
     function loadImageAsBase64(url: string): Promise<string> {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -94,7 +98,6 @@ export class ViewCollectiveOfficerProfileComponent {
           reader.readAsDataURL(xhr.response);
         };
         xhr.onerror = function () {
-          // If XHR fails, try loading image directly
           const img = new Image();
           img.crossOrigin = 'Anonymous';
           img.onload = function () {
@@ -107,7 +110,7 @@ export class ViewCollectiveOfficerProfileComponent {
           };
           img.onerror = function () {
             console.warn('Image load failed:', url);
-            resolve(''); // Resolve with empty string if image fails to load
+            resolve('');
           };
           img.src = url;
         };
@@ -122,39 +125,33 @@ export class ViewCollectiveOfficerProfileComponent {
         }
       });
     }
-    let y = margin;
 
+    let y = margin;
     const hasImage = !!this.officerObj.image;
 
     if (hasImage) {
-
       const appendCacheBuster = (url: string) => {
         if (!url) return '';
         const separator = url.includes('?') ? '&' : '?';
         return `${url}${separator}t=${new Date().getTime()}`;
       };
 
+      const img = new Image();
+      const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
+      img.src = await loadImageAsBase64(modifiedFarmerUrl);
 
-        const img = new Image();
+      const imgDiameter = 30;
+      const imgRadius = imgDiameter / 2;
+      const imgX = margin;
+      const imgY = y;
 
-        const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
-        img.src = await loadImageAsBase64(modifiedFarmerUrl);
-
-        const imgDiameter = 30;
-        const imgRadius = imgDiameter / 2;
-        const imgX = margin;
-        const imgY = y;
-
-        pdf.saveGraphicsState();
-
-        pdf.setDrawColor(255, 255, 255);
-        pdf.setFillColor(255, 255, 255);
-        pdf.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'S');
-        pdf.clip();
-
-        pdf.addImage(img, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
-
-        pdf.restoreGraphicsState();
+      pdf.saveGraphicsState();
+      pdf.setDrawColor(255, 255, 255);
+      pdf.setFillColor(255, 255, 255);
+      pdf.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'S');
+      pdf.clip();
+      pdf.addImage(img, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
+      pdf.restoreGraphicsState();
     }
 
     const detailsX = hasImage ? margin + 40 : margin;
@@ -236,21 +233,17 @@ export class ViewCollectiveOfficerProfileComponent {
     pdf.setFontSize(10);
     pdf.setTextColor(100);
     pdf.text(
-        `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
-        margin,
-        pdf.internal.pageSize.getHeight() - margin
+      `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
+      margin,
+      pdf.internal.pageSize.getHeight() - margin
     );
 
     const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader + this.officerObj.empId}).pdf`;
     pdf.save(fileName);
 
-    Swal.fire({
-        icon: 'success',
-        title: 'Download Complete',
-        html: `<b>${fileName}</b> has been downloaded successfully!`,
-        confirmButtonText: 'OK',
-    });
-}
+    this.isGeneratingPDF = false; // Hide spinner and enable button
+  }
+
 
   confirmDisclaim(id: number) {
     this.collectionOfficerService.disclaimOfficer(id).subscribe(

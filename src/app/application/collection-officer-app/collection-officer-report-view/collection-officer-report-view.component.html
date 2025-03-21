@@ -72,9 +72,15 @@
 
 </div>
 <div class="flex justify-center min-w-[1100px]">
-  <button (click)="downloadPDF()" class="bg-[#3980C0] hover:bg-[#2b6293] text-white font-bold py-2 px-4 rounded">
-    Download PDF
-  </button>
+  <button
+  (click)="downloadPDF()"
+  class="bg-[#3980C0] hover:bg-[#2b6293] text-white font-bold py-2 px-4 rounded"
+  [disabled]="isDownloading"
+>
+  <i class="fas fa-download" *ngIf="!isDownloading"></i>
+  <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
+  {{ isDownloading ? ' Downloading...' : ' Download PDF' }}
+</button>
 </div>
 
 <div class="h-[25px] min-w-[1100px]"></div>

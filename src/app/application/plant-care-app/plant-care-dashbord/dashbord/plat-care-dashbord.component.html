@@ -7,11 +7,14 @@
   <div *ngIf="hasData">
     <div class="flex justify-end mb-4">
       <button
-        (click)="captureScreenshot()"
-        class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
-      >
-        Export Report
-      </button>
+  (click)="captureScreenshot()"
+  class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+  [disabled]="isDownloading"
+>
+  <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+  <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+  {{ isDownloading ? ' Exporting...' : ' Export Report' }}
+</button>
     </div>
 
     <div #reportSection>

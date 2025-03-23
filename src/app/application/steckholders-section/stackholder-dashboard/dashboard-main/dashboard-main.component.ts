@@ -40,6 +40,8 @@ export class DashboardMainComponent implements OnInit {
   salesAgentRowData: any = {};
   plantCareRowData: any = {};
 
+  isDownloading: boolean = false;
+
   
   constructor(
     private stakeholderSrv: StakeholderService
@@ -92,6 +94,10 @@ export class DashboardMainComponent implements OnInit {
   }
 
   exportReport(): void {
+
+    this.isDownloading = true;
+    console.log(this.isDownloading);
+
     const doc = new jsPDF();
   
     // Set font for the title
@@ -271,6 +277,7 @@ export class DashboardMainComponent implements OnInit {
      
     // Save the PDF
     doc.save('dashboard-report.pdf');
+    this.isDownloading = false;
   }
   
   

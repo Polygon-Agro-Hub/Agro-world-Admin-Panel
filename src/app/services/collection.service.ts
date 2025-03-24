@@ -22,6 +22,7 @@ export class CollectionService {
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
     console.log(company);
 
@@ -45,6 +46,7 @@ export class CollectionService {
   fetchAllCollectionOfficerProfile(id:number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/get-collection-officer/${id}`;
@@ -60,6 +62,7 @@ export class CollectionService {
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
     console.log(company);
 
@@ -78,6 +81,7 @@ export class CollectionService {
   getCompanyNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-company-names`;
@@ -87,6 +91,7 @@ export class CollectionService {
   ChangeStatus(id: number, status: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/update-status/${id}/${status}`;
@@ -96,6 +101,7 @@ export class CollectionService {
   deleteOfficer(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/delete-officer/${id}`;
@@ -105,6 +111,7 @@ export class CollectionService {
   getCenterNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-center-names`;
@@ -114,6 +121,7 @@ export class CollectionService {
   getCollectionCenterManagerNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names`;

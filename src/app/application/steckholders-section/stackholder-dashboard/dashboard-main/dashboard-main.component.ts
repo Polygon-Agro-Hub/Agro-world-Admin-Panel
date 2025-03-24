@@ -155,7 +155,7 @@ export class DashboardMainComponent implements OnInit {
         doc.setFont('helvetica', 'bold');
         // Center the value text horizontally
         const valueWidth = doc.getStringUnitWidth(value) * 12 / doc.internal.scaleFactor;
-        doc.text(value, centerX - (valueWidth / 2), y + height * 0.65);
+        doc.text(value, centerX - (valueWidth / 2), y + height * 0.75); 
     };
   
     const pageWidth = 210; // A4 page width in mm

@@ -41,7 +41,7 @@ export class SalesDashService {
     });
   }
 
-  saveTarget(startDate: string, targetValue: number): Observable<any> {
+  saveTarget(targetValue: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -50,21 +50,60 @@ export class SalesDashService {
     const url = `${this.apiUrl}sales-agent-dash/save-target`;
   
     // Create request body
-    const body = { startDate, targetValue };
+    const body = {targetValue };
   
     
     return this.http.post(url, body, { headers });
   }
 
-  getDailyTarget(): Observable<any> {
+  //not useg should remove
+  // getDailyTarget(): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+  
+  //   const url = `${this.apiUrl}sales-agent-dash/get-daily-target`;
+  
+  //   return this.http.get(url, { headers });
+  // }
+
+  getAllOrders(
+    page: number,
+    limit: number,
+    orderStatus: string,
+    paymentMethod: string,
+    paymentStatus: string,
+    deliveryType: string,
+    searchText: string = '',
+   
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
     });
-  
-    const url = `${this.apiUrl}sales-agent-dash/get-daily-target`;
-  
-    return this.http.get(url, { headers });
+    
+    let url = `${this.apiUrl}dash/get-all-Orders?page=${page}&limit=${limit}`;
+
+    if (orderStatus) {
+      url += `&orderStatus=${orderStatus}`;
+    }
+
+    if (paymentMethod) {
+      url += `&paymentMethod=${paymentMethod}`;
+    }paymentStatus
+
+    if (paymentStatus) {
+      url += `&paymentStatus=${paymentStatus}`;
+    }
+
+    if (deliveryType) {
+      url += `&deliveryType=${deliveryType}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+    return this.http.get<any>(url, { headers });
   }
 }
 

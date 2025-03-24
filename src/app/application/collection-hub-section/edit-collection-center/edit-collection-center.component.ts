@@ -27,6 +27,7 @@ export class EditCollectionCenterComponent implements OnInit {
   selectDistrict: string = '';
   city: string = '';
   isLoading = false;
+  isView: boolean = false;
 
   constructor(
     private collectionCenterService: CollectionCenterService,
@@ -39,6 +40,7 @@ export class EditCollectionCenterComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCollectionCenter();
     this.getAllCompanies();
+    
   }
 
   ProvinceData = [
@@ -179,6 +181,7 @@ export class EditCollectionCenterComponent implements OnInit {
           this.centerFetchData = res.results;
           this.selectProvince = this.centerFetchData.province;
           this.existRegCode = this.centerFetchData.regCode;  // Store initial reg code
+          console.log('efkskfnksdfjdf', this.centerFetchData.companies)
           
           this.updateSelectedCompanies();
           this.onProvinceChange();
@@ -198,6 +201,7 @@ export class EditCollectionCenterComponent implements OnInit {
   updateSelectedCompanies() {
     if (this.centerFetchData.companies) {
       const companyNames = this.centerFetchData.companies.split(',').map(name => name.trim());
+
 
       this.selectedCompaniesIds = this.CompanyData
         .filter(company => companyNames.includes(company.companyNameEnglish))

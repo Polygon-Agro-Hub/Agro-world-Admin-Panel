@@ -79,6 +79,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   
   invalidFields: Set<string> = new Set();
 
+  languagesRequired: boolean = false;
+
+
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -610,6 +613,32 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  onCheckboxChange(lang: string, event: any) {
+    if (event.target.checked) {
+      if (this.personalData.languages) {
+        if (!this.personalData.languages.includes(lang)) {
+          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
+        }
+      } else {
+        this.personalData.languages = lang;
+      }
+    } else {
+      const languagesArray = this.personalData.languages.split(',');
+      const index = languagesArray.indexOf(lang);
+      if (index !== -1) {
+        languagesArray.splice(index, 1);
+      }
+      this.personalData.languages = languagesArray.join(',');
+    }
+
+    this.validateLanguages();
+
+  }
+
+  validateLanguages() {
+    this.languagesRequired = !this.personalData.languages || this.personalData.languages.trim() === '';
   }
 }
 

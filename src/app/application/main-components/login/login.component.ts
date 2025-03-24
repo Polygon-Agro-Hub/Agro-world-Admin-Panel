@@ -40,7 +40,23 @@ export class LoginComponent {
 
   ngOnInit() {
     this.tokenService.clearLoginDetails()
-    localStorage.removeItem("Login Token : ");
+    this.clearAllCookies();
+    
+  }
+
+
+
+  clearAllCookies() {
+    const cookies = document.cookie.split(";");
+    
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+
+   
   }
 
 
@@ -94,7 +110,8 @@ export class LoginComponent {
     
     this.authService.login(this.loginObj.email, this.loginObj.password).subscribe(
       (res: any) => {
-        console.log('Successfully logged in', res);
+        this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
+
         Swal.fire({
           icon: 'success',
           title: 'Logged In',
@@ -102,12 +119,11 @@ export class LoginComponent {
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
-          this.isLoading = false; 
+         
           this.router.navigate(['steckholders/dashboard']);
-          this.tokenService.saveLoginDetails(res.token, res.userName, res.userId, res.role, res.permissions, res.expiresIn);
-        
           
-          console.log('User logged in');
+          this.isLoading = false; 
+          
         });
   
         

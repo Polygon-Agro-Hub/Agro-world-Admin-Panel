@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
@@ -12,6 +12,7 @@ import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/
 })
 export class CollectionOfficerUsersRowComponent implements OnChanges {
   @Input() thirdRow: any = {};
+  @Output() collectionOfficerDataEmitted = new EventEmitter<any>();
 
   centerHeadOfficers: number = 0;
   centerManagers: number = 0;
@@ -35,6 +36,16 @@ export class CollectionOfficerUsersRowComponent implements OnChanges {
     this.newOfficers = data?.newOfficerCount ?? 0;
     this.allOfficers = this.totCount(this.centerHeadOfficers, this.centerManagers, this.collectionOfficers, this.customerOfficers);
     this.activeOfficers = data?.activeOfficers ?? 0;
+
+    this.collectionOfficerDataEmitted.emit({
+      centerHeadOfficers: this.centerHeadOfficers,
+      centerManagers: this.centerManagers,
+      collectionOfficers: this.collectionOfficers,
+      customerOfficers: this.customerOfficers,
+      newOfficers: this.newOfficers,
+      allOfficers: this.allOfficers,
+      activeOfficers: this.activeOfficers
+    });
   }
 
 

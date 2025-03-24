@@ -1,19 +1,19 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {
   HttpClient,
   HttpClientModule,
   HttpHeaders,
-} from "@angular/common/http";
-import { Component } from "@angular/core";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { environment } from "../../../environment/environment";
-import Swal from "sweetalert2";
-import { TokenService } from "../../../services/token/services/token.service";
-import { PermissionManagerService } from "../../../services/permission-manager/permission-manager.service";
-import { ToastModule } from "primeng/toast";
-import { MessageService } from "primeng/api";
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+} from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environment/environment';
+import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionManagerService } from '../../../services/permission-manager/permission-manager.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface Category {
   id: number;
@@ -21,7 +21,7 @@ interface Category {
 }
 
 @Component({
-  selector: "app-permission-area",
+  selector: 'app-permission-area',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,8 +31,8 @@ interface Category {
     ToastModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: "./permission-area.component.html",
-  styleUrl: "./permission-area.component.css",
+  templateUrl: './permission-area.component.html',
+  styleUrl: './permission-area.component.css',
   providers: [MessageService],
 })
 export class PermissionAreaComponent {
@@ -44,19 +44,16 @@ export class PermissionAreaComponent {
   editFeatureObj: Feature = new Feature();
   editCategoryObj: EditCategory = new EditCategory();
 
-
   role_id!: number;
   createCategroyObj: CreateCategory = new CreateCategory();
   categories: { id: number; category: string }[] = [];
-  selectedCategory: string = "";
-  newCategory: string = "";
+  selectedCategory: string = '';
+  newCategory: string = '';
   isFeatureEdit: boolean = false;
   existEditName: string = '';
 
   isCategoryEdit: boolean = false;
   existCategoryName: string = '';
-
-
 
   constructor(
     private fb: FormBuilder,
@@ -65,11 +62,11 @@ export class PermissionAreaComponent {
     private router: Router,
     private permissionManagerService: PermissionManagerService,
     private tokenService: TokenService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
-    this.role_id = this.route.snapshot.params["id"];
+    this.role_id = this.route.snapshot.params['id'];
     console.log(this.role_id);
     this.getAllPosition();
     this.getAllFeatures();
@@ -81,7 +78,7 @@ export class PermissionAreaComponent {
     this.isLoading = true;
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error("No token found");
+      console.error('No token found');
       return;
     }
     const headers = new HttpHeaders({
@@ -98,8 +95,8 @@ export class PermissionAreaComponent {
           console.log(response);
         },
         (error) => {
-          console.error("Error fetching news:", error);
-        },
+          console.error('Error fetching news:', error);
+        }
       );
   }
 
@@ -108,30 +105,32 @@ export class PermissionAreaComponent {
       .createCategory(
         this.createCategroyObj.category,
         this.selectedCategory,
-        this.newCategory,
+        this.newCategory
       )
       ?.subscribe(
         (response) => {
           Swal.fire({
-            title: "Success!",
-            text: "Category created successfully.",
-            icon: "success",
-            confirmButtonText: "OK",
+            title: 'Success!',
+            text: 'Category created successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK',
           }).then((result) => {
-            // Refresh the page after the user clicks "OK"
             if (result.isConfirmed) {
-              window.location.reload(); // Refresh the page
+              this.getAllPosition();
+              this.getAllFeatures();
+              this.getAllRoleFeatures();
+              this.getAllfeatureCategory();
             }
           });
         },
         (error) => {
           Swal.fire({
-            title: "Error!",
-            text: "Failed to create category.",
-            icon: "error",
-            confirmButtonText: "OK",
+            title: 'Error!',
+            text: 'Failed to create category.',
+            icon: 'error',
+            confirmButtonText: 'OK',
           });
-        },
+        }
       );
   }
 
@@ -139,7 +138,7 @@ export class PermissionAreaComponent {
     this.isLoading = true;
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error("No token found");
+      console.error('No token found');
       return;
     }
     const headers = new HttpHeaders({
@@ -153,34 +152,38 @@ export class PermissionAreaComponent {
       .subscribe(
         (response) => {
           // Transform API response to group features by category
-          console.log("Main responce -> ",response);
+          console.log('Main responce -> ', response);
           this.isLoading = false;
           const groupedFeatures = response.features.reduce(
             (acc: any[], feature: any) => {
               let category = acc.find((c) => c.category === feature.category);
               if (!category) {
-                category = { category: feature.category, categoryId:feature.categoryId, features: [] };
+                category = {
+                  category: feature.category,
+                  categoryId: feature.categoryId,
+                  features: [],
+                };
                 acc.push(category);
               }
               category.features.push(feature);
               return acc;
             },
-            [],
+            []
           );
 
           this.FeatureList = groupedFeatures;
           console.log(this.FeatureList);
         },
         (error) => {
-          console.error("Error fetching features:", error);
-        },
+          console.error('Error fetching features:', error);
+        }
       );
   }
 
   getAllRoleFeatures() {
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error("No token found");
+      console.error('No token found');
       return;
     }
     const headers = new HttpHeaders({
@@ -191,7 +194,7 @@ export class PermissionAreaComponent {
         `${environment.API_URL}permission/get-all-role-features/${this.role_id}`,
         {
           headers,
-        },
+        }
       )
       .subscribe(
         (response) => {
@@ -199,8 +202,8 @@ export class PermissionAreaComponent {
           console.log(response);
         },
         (error) => {
-          console.error("Error fetching news:", error);
-        },
+          console.error('Error fetching news:', error);
+        }
       );
   }
 
@@ -208,7 +211,7 @@ export class PermissionAreaComponent {
     return this.RoleFeatureList.some(
       (roleFeature) =>
         roleFeature.featureId === featureId &&
-        roleFeature.positionId === positionId,
+        roleFeature.positionId === positionId
     );
   }
 
@@ -223,7 +226,7 @@ export class PermissionAreaComponent {
 
       const token = this.tokenService.getToken();
       if (!token) {
-        console.error("No token found");
+        console.error('No token found');
         return;
       }
       const headers = new HttpHeaders({
@@ -234,12 +237,12 @@ export class PermissionAreaComponent {
         .post(
           `${environment.API_URL}permission/create-role-feature`,
           roleFeatureData,
-          { headers },
+          { headers }
         )
         .subscribe({
           next: (response: any) => {
             if (response.status) {
-              console.log("Give Permission successfully:", response);
+              console.log('Give Permission successfully:', response);
               this.RoleFeatureList.push({
                 feature_id: featureId,
                 position_id: positionId,
@@ -248,21 +251,21 @@ export class PermissionAreaComponent {
 
               // Display success Swal alert
               this.messageService.add({
-                severity: "success",
-                summary: "Success",
-                detail: "Give Permission successfully!",
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Give Permission successfully!',
                 life: 3000,
               });
             }
           },
           error: (error) => {
-            console.error("Error creating role feature:", error);
+            console.error('Error creating role feature:', error);
 
             // Display error Swal alert
             this.messageService.add({
-              severity: "error",
-              summary: "Error",
-              detail: "Failed to Give Permission. Please try again.",
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to Give Permission. Please try again.',
               life: 3000,
             });
           },
@@ -271,7 +274,7 @@ export class PermissionAreaComponent {
       // Handle the removal of a role feature
       const token = this.tokenService.getToken();
       if (!token) {
-        console.error("No token found");
+        console.error('No token found');
         return;
       }
       const headers = new HttpHeaders({
@@ -280,8 +283,7 @@ export class PermissionAreaComponent {
 
       // Find the role feature ID from the existing RoleFeatureList
       const roleFeature = this.RoleFeatureList.find(
-        (item) =>
-          item.featureId === featureId && item.positionId === positionId,
+        (item) => item.featureId === featureId && item.positionId === positionId
       );
 
       if (roleFeature) {
@@ -290,51 +292,51 @@ export class PermissionAreaComponent {
         this.http
           .delete(
             `${environment.API_URL}permission/delete-role-feature/${roleId}`,
-            { headers },
+            { headers }
           )
           .subscribe({
             next: (response: any) => {
-              console.log("Give Permission deleted successfully:", response);
+              console.log('Give Permission deleted successfully:', response);
 
               // Remove the deleted feature from the list
               this.RoleFeatureList = this.RoleFeatureList.filter(
-                (item) => item.id !== roleId,
+                (item) => item.id !== roleId
               );
 
               // Display success Swal alert
               this.messageService.add({
-                severity: "success",
-                summary: "Deleted",
-                detail: "Give Permission removed successfully!",
+                severity: 'success',
+                summary: 'Deleted',
+                detail: 'Give Permission removed successfully!',
                 life: 2000,
               });
             },
             error: (error) => {
-              console.error("Error deleting role feature:", error);
+              console.error('Error deleting role feature:', error);
 
               // Display error Swal alert
               this.messageService.add({
-                severity: "error",
-                summary: "Error",
-                detail: "Failed to delete role feature. Please try again.",
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Failed to delete role feature. Please try again.',
                 life: 3000,
               });
             },
           });
       } else {
-        console.error("Role feature not found for deletion");
+        console.error('Role feature not found for deletion');
       }
     }
   }
 
   onCategoryChange(event: any) {
-    console.log("Selected Category ID:", this.selectedCategory); // This will now log the string ID
-    if (this.selectedCategory !== "add_new" && this.selectedCategory !== "") {
+    console.log('Selected Category ID:', this.selectedCategory); // This will now log the string ID
+    if (this.selectedCategory !== 'add_new' && this.selectedCategory !== '') {
       const selectedCategoryObj = this.categories.find(
-        (cat) => cat.id.toString() === this.selectedCategory,
+        (cat) => cat.id.toString() === this.selectedCategory
       );
       if (selectedCategoryObj) {
-        console.log("Selected Category:", selectedCategoryObj.category);
+        console.log('Selected Category:', selectedCategoryObj.category);
       }
     }
   }
@@ -360,13 +362,13 @@ export class PermissionAreaComponent {
             category: cat.category,
           }));
         } else {
-          console.error("Invalid response structure:", response);
+          console.error('Invalid response structure:', response);
         }
       },
       (error) => {
         this.isLoading = false;
-        console.error("Error fetching categories:", error);
-      },
+        console.error('Error fetching categories:', error);
+      }
     );
   }
 
@@ -382,15 +384,15 @@ export class PermissionAreaComponent {
   editFeatureOnSubmit() {
     if (this.existEditName === this.editFeatureObj.name) {
       Swal.fire(
-        "Warning",
-        "The name is the same. Please edit the name before saving!",
-        "warning",
+        'Warning',
+        'The name is the same. Please edit the name before saving!',
+        'warning'
       );
       return;
     }
 
     if (!this.editFeatureObj.name) {
-      Swal.fire("Warning", "Please Fill the name before saving!", "warning");
+      Swal.fire('Warning', 'Please Fill the name before saving!', 'warning');
       return;
     }
 
@@ -398,7 +400,7 @@ export class PermissionAreaComponent {
       .editFeatureName(this.editFeatureObj)
       .subscribe((res) => {
         if (res.status) {
-          Swal.fire("Successfull", res.message, "success");
+          Swal.fire('Successfull', res.message, 'success');
           this.isFeatureEdit = false;
           this.editFeatureObj = new Feature();
           this.isLoading = true;
@@ -408,7 +410,7 @@ export class PermissionAreaComponent {
           this.getAllfeatureCategory();
           this.isLoading = false;
         } else {
-          Swal.fire("Error", res.message, "error");
+          Swal.fire('Error', res.message, 'error');
         }
       });
   }
@@ -418,13 +420,12 @@ export class PermissionAreaComponent {
     this.editFeatureObj = new Feature();
   }
 
-
   editCategory(id: number, categoryName: string) {
     this.editCategoryObj = {
       id: id,
-      name: categoryName
-    }
-    this.existCategoryName = categoryName
+      name: categoryName,
+    };
+    this.existCategoryName = categoryName;
     this.isCategoryEdit = true;
   }
 
@@ -435,9 +436,13 @@ export class PermissionAreaComponent {
 
   editCategoryOnSubmit() {
     console.log(this.editCategoryObj);
-    
+
     if (this.existCategoryName === this.editCategoryObj.name) {
-      Swal.fire('Warning', 'The name is the same. Please edit the name before saving!', 'warning');
+      Swal.fire(
+        'Warning',
+        'The name is the same. Please edit the name before saving!',
+        'warning'
+      );
       return;
     }
 
@@ -446,8 +451,9 @@ export class PermissionAreaComponent {
       return;
     }
 
-    this.permissionManagerService.editCategoryName(this.editCategoryObj).subscribe(
-      (res) => {
+    this.permissionManagerService
+      .editCategoryName(this.editCategoryObj)
+      .subscribe((res) => {
         if (res.status) {
           Swal.fire('Successfull', res.message, 'success');
           this.isCategoryEdit = false;
@@ -461,13 +467,8 @@ export class PermissionAreaComponent {
         } else {
           Swal.fire('Error', res.message, 'error');
         }
-      }
-    )
-
+      });
   }
-
-
-
 }
 
 export class CreateCategory {
@@ -479,7 +480,7 @@ class Feature {
   name!: string;
 }
 
-class EditCategory{
+class EditCategory {
   id!: number;
   name!: string;
 }

@@ -17,8 +17,8 @@ export class BarChartComponent implements OnChanges {
   @Input() plantCareUsersWithQr: any;
 
 
-  QRpresentage: number = 0;
-  nonQRpresentage: number = 0;
+  QRpresentage: any = 0;
+  nonQRpresentage: any = 0;
 
  
   chart: any;
@@ -29,29 +29,20 @@ export class BarChartComponent implements OnChanges {
   ngOnChanges(): void {
     this.calculatePercentages();
     this.createChart();
-    // this.fetchPlantCareUserData(this.QRfarmers);
+    
   }
 
 
-  // fetchPlantCareUserData(data: any) {
-  //   const withQr = data.QrCode.count ?? 0;
-  //   const withoutQr = data.notQrCode.count ?? 0;
-  //   const total = withQr + withoutQr;
-
-  //   this.plantCareUsersWithQr = total > 0 ? Math.round((withQr / total) * 100) : 0;
-  //   this.plantCareUsersWithOutQr = total > 0 ? Math.round((withoutQr / total) * 100) : 0;
-
-  //   this.createChart();
-
-  // }
+  
 
   calculatePercentages(): void {
     const total = this.plantCareUsersWithQr + this.plantCareUsersWithOutQr;
-    
-    // Calculate the percentage of QR and non-QR users
-    this.QRpresentage = total > 0 ? (this.plantCareUsersWithQr / total) * 100 : 0;
-    this.nonQRpresentage = total > 0 ? (this.plantCareUsersWithOutQr / total) * 100 : 0;
+  
+    // Calculate the percentage of QR and non-QR users and limit to one decimal place
+    this.QRpresentage = total > 0 ? ((this.plantCareUsersWithQr / total) * 100).toFixed(1) : '0.0';
+    this.nonQRpresentage = total > 0 ? ((this.plantCareUsersWithOutQr / total) * 100).toFixed(1) : '0.0';
   }
+  
 
 
   createChart(): void {

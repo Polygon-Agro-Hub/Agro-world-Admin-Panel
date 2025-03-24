@@ -53,7 +53,7 @@
           #feedbackEnglishInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required>
                   </textarea>
         <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
-          <div>English crop name is required</div>
+          <div>English feedback is required</div>
         </div>
         <!-- <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
@@ -68,7 +68,7 @@
           #feedbackSinahalaInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required>
                   </textarea>
         <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
-          <div>English crop name is required</div>
+          <div>Sinhala feedback is required</div>
         </div>
         <!-- <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
@@ -83,7 +83,7 @@
           #feedbackTamilInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required>
                   </textarea>
         <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
-          <div>English crop name is required</div>
+          <div>Tamil feedback is required</div>
         </div>
         <!-- <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
@@ -125,7 +125,7 @@
 
 </div> -->
 <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
-  <h2 class="text-2xl text-left mb-6 text-textLight dark:text-textDark">FEEDBACK OPTIONS</h2>
+  <h2 class="text-2xl text-left mb-6 text-textLight dark:text-textDark">Feedback Options</h2>
 
   <div cdkDropList class="w-full space-y-3" (cdkDropListDropped)="drop($event)">
     @for (feedback of feebackList; track feedback.id) {

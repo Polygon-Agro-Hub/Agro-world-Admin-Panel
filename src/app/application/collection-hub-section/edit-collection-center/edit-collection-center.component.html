@@ -9,7 +9,7 @@
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Update Collection Center</h2>
 
-  <form (ngSubmit)="onSubmit()">
+  <form (ngSubmit)="onSubmit() ">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
       <!-- Registration Code -->
@@ -56,9 +56,12 @@
 
 
       <div>
-        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
-          01</label>
+        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Contact Number 01
+        </label>
+        
         <div class="mt-1 flex">
+          <!-- Country Code Dropdown -->
           <select id="code1" [(ngModel)]="centerFetchData.code1" name="code1"
             class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
             <option value="+94">+94 (LK)</option>
@@ -66,14 +69,23 @@
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
+      
+          <!-- Contact Number Input -->
           <div class="flex flex-col">
-            <input type="number" [(ngModel)]="centerFetchData.contact01" id="contact01" name="contact01"
+            <input type="text" [(ngModel)]="centerFetchData.contact01" id="contact01" name="contact01"
+              #contact01="ngModel" required pattern="^[7][0-9]{8}$"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
-
+      
+            <!-- Validation Messages -->
+            <div *ngIf="contact01.invalid && contact01.touched" class="text-red-500 text-sm mt-1">
+              <span *ngIf="contact01.errors?.['required']">Contact number is required</span>
+              <span *ngIf="contact01.errors?.['pattern']">Please enter a valid phone number</span>
+            </div>
           </div>
         </div>
       </div>
+      
 
       <!-- Contact Number 02 -->
       <div>
@@ -89,9 +101,15 @@
           </select>
           <div class="flex flex-col">
             <input type="number" [(ngModel)]="centerFetchData.contact02" id="contact02" name="contact02"
+              
+              #contact02="ngModel" required pattern="^[7][0-9]{8}$"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
 
+              <div *ngIf="contact02.invalid && contact02.touched" class="text-red-500 text-sm mt-1">
+                <span *ngIf="contact02.errors?.['required']">Contact number is required</span>
+                <span *ngIf="contact02.errors?.['pattern']">Please enter a valid number</span>
+              </div>
           </div>
         </div>
       </div>
@@ -197,7 +215,7 @@
     </div>
     <div class="flex justify-end m-10">
       <div type="submit" class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md" (click)="onCancel()">Cancel</div>
-      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">Save</button>
+      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md" [disabled] = "!centerFetchData.centerName || !centerFetchData.buildingNumber || !centerFetchData.city || !centerFetchData.companies || !centerFetchData.contact01 || !centerFetchData.country || !centerFetchData.district || !centerFetchData.province || !centerFetchData.street " >Save</button>
     </div>
   </form>
 </div>

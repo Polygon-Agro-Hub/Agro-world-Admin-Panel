@@ -17,10 +17,12 @@ export class CollectionService {
     page: number,
     limit: number,
     searchNIC: string = '',
-    company: string
+    company: string,
+    role: string
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
     console.log(company);
 
@@ -29,6 +31,10 @@ export class CollectionService {
 
     if (company) {
       url += `&company=${company}`;
+    }
+
+    if (role) {
+      url += `&role=${role}`;
     }
 
     if (searchNIC) {
@@ -40,6 +46,7 @@ export class CollectionService {
   fetchAllCollectionOfficerProfile(id:number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/get-collection-officer/${id}`;
@@ -55,6 +62,7 @@ export class CollectionService {
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
     console.log(company);
 
@@ -73,6 +81,7 @@ export class CollectionService {
   getCompanyNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-company-names`;
@@ -82,6 +91,7 @@ export class CollectionService {
   ChangeStatus(id: number, status: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/update-status/${id}/${status}`;
@@ -91,9 +101,31 @@ export class CollectionService {
   deleteOfficer(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
 
     let url = `${this.apiUrl}auth/collection-officer/delete-officer/${id}`;
     return this.http.delete<any>(url, { headers });
   }
+
+  getCenterNames(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/collection-officer/get-all-center-names`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  getCollectionCenterManagerNames(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names`;
+    return this.http.get<any>(url, { headers });
+  }
+
 }

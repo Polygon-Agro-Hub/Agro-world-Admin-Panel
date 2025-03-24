@@ -13,12 +13,16 @@ export class CustomersService {
 
   constructor(private http:HttpClient, private tokenService:TokenService) { }
 
-  getCustomers():Observable<any>{
+  getCustomers(page: number = 1, limit: number = 10,searchText:string = ''):Observable<any>{
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
 
-    let url = `${this.apiUrl}dash/get-all-customers`
+    let url = `${this.apiUrl}dash/get-all-customers?page=${page}&limit=${limit}`
+
+    if(searchText){
+      url+=`&searchText=${searchText}`
+    }
     return this.http.get<any>(url, { headers: headers } );
   }
 }

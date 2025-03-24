@@ -79,7 +79,15 @@
   </ng-template>
 
     <div class="flex justify-center items-center my-10">
-      <button class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg" (click)="exportToPDF()"> <i class="fa-solid fa-download px-1"></i> Download</button>
+      <button
+  class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg"
+  (click)="exportToPDF()"
+  [disabled]="isDownloading"
+>
+  <i class="fa-solid fa-download px-1" *ngIf="!isDownloading"></i>
+  <i class="fa-solid fa-spinner fa-spin px-1" *ngIf="isDownloading"></i>
+  {{ isDownloading ? ' Downloading...' : ' Download' }}
+</button>
 
     </div>
   </div>

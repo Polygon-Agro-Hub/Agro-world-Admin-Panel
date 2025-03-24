@@ -231,6 +231,10 @@ export class CollectionAllViewComponent implements OnInit {
       `/collection-hub/add-daily-target/${item.id}/${item.centerName}/${companyId}`,
     ]);
   }
+
+  viewCollectionCenter(id: number) {
+    this.router.navigate([`/collection-hub/preview-collection-center/${id}`]);
+  }
   
 }
 

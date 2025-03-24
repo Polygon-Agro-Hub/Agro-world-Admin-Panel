@@ -8,16 +8,24 @@ import { PlantcareDashbordService } from '../../../../services/plant-care/plantc
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import Swal from 'sweetalert2';
+import { Chart } from 'chart.js';
 
 interface DashboardData {
   active_users: any;
   new_users: number;
+  allusersTillPreviousMonth: number;
+  user_increase_percentage: number;
+  qr_user_increase_percentage: number;
   vegCultivation: number;
   grainCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
   allusers: number;
   qrUsers: number;
+  farmerRegistrationCounts: any;
+  total_cultivation_till_previous_month: number;
+  cultivation_increase_percentage: number;
 }
 
 @Component({
@@ -41,6 +49,7 @@ export class PlatCareDashbordComponent implements OnInit {
   totalCultivationCount: number = 0;
   hasData: boolean = false;
   isLoading: boolean = true;
+  isDownloading: boolean = false;
 
   constructor(private dashbordService: PlantcareDashbordService) {}
 
@@ -48,12 +57,16 @@ export class PlatCareDashbordComponent implements OnInit {
     this.fetchDashboardData();
   }
 
-  fetchDashboardData(): void {
+  fetchDashboardData(district?: string): void {
     this.isLoading = true;
-    this.dashbordService.getDashboardData().subscribe(
+    this.dashbordService.getDashboardData(district).subscribe(
       (data: any) => {
+        console.log('dashboard data showing', data);
+
         if (data && data.data) {
           this.dashboardData = data.data;
+          console.log('hit 01', this.dashboardData.farmerRegistrationCounts);
+          console.log(this.dashboardData);
           this.calculateTotalCultivation();
           this.hasData = true;
         } else {
@@ -78,25 +91,343 @@ export class PlatCareDashbordComponent implements OnInit {
       this.dashboardData.mushCultivation;
   }
 
-  captureScreenshot(): void {
-    console.log('Capturing screenshot...');
+  onDistrictSelected(district: string): void {
+    this.fetchDashboardData(district);
+  }
 
-    if (!this.reportSection) {
-      console.error('Error: reportSection is undefined!');
-      return;
+  async captureScreenshot(): Promise<void> {
+    this.isDownloading = true; // Show spinner and disable button
+
+    try {
+      // Check if dashboardData is defined
+      if (!this.dashboardData) {
+        console.error('Error: dashboardData is undefined!');
+        return;
+      }
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const margin = 10;
+      const pageWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
+      const pageHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
+
+      // Add a title to the PDF
+      pdf.setFontSize(18);
+      pdf.text('Report', margin, margin);
+      let y = margin + 15;
+
+      // First row: 6 tiles
+      const firstRowTiles = 6;
+      const tileGap = 5; // Gap between tiles
+      const firstRowTileWidth =
+        (pageWidth - (firstRowTiles - 1) * tileGap) / firstRowTiles; // Adjusted width to include gaps
+      const firstRowTileHeight = 40;
+      const borderRadius = 5; // Border radius for tiles
+
+      const firstRowData = [
+        {
+          title: 'Vegetable',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.vegCultivation,
+        },
+        {
+          title: 'Fruits',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.fruitCultivation,
+        },
+        {
+          title: 'Grains',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.grainCultivation,
+        },
+        {
+          title: 'Mushrooms',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.mushCultivation,
+        },
+        {
+          title: 'Active Users',
+          value: 'Today',
+          subValue: this.dashboardData.active_users,
+        },
+        {
+          title: 'New Users',
+          value: 'Today',
+          subValue: this.dashboardData.new_users,
+        },
+      ];
+
+      // Define colors for each tile
+      const tileColors = [
+        { bg: [13, 148, 136], text: [255, 255, 255] }, // Green for Vegetable
+        { bg: [218, 98, 0], text: [255, 255, 255] }, // Orange for Fruits
+        { bg: [59, 130, 246], text: [255, 255, 255] }, // Tan for Grains
+        { bg: [160, 92, 166], text: [255, 255, 255] }, // Purple for Mushrooms
+        { bg: [0, 123, 255], text: [0, 0, 0] }, // Blue for Active Users
+        { bg: [220, 53, 69], text: [0, 0, 0] }, // Red for New Users
+      ];
+
+      // Add first row tiles with colors, gaps, and border radius
+      for (let i = 0; i < firstRowTiles; i++) {
+        const x = margin + i * (firstRowTileWidth + tileGap); // Add gap between tiles
+        const tileData = firstRowData[i];
+        const tileColor = tileColors[i];
+
+        // Check if it's the last two tiles (Active Users and New Users)
+        const isLastTwoTiles = i >= firstRowTiles - 2;
+
+        if (!isLastTwoTiles) {
+          // Set background color for tiles that are not the last two
+          pdf.setFillColor(tileColor.bg[0], tileColor.bg[1], tileColor.bg[2]);
+          pdf.roundedRect(
+            x,
+            y,
+            firstRowTileWidth,
+            firstRowTileHeight,
+            borderRadius,
+            borderRadius,
+            'F' // Fill the rectangle with the background color
+          );
+        } else {
+          // For the last two tiles, draw a border with a radius and no fill
+          pdf.setDrawColor(0, 0, 0); // Set border color to black
+          pdf.setLineWidth(0.5); // Set border thickness
+          pdf.roundedRect(
+            x,
+            y,
+            firstRowTileWidth,
+            firstRowTileHeight,
+            borderRadius,
+            borderRadius,
+            'S' // Stroke the rectangle (draw border)
+          );
+        }
+
+        // Set text color
+        pdf.setTextColor(tileColor.text[0], tileColor.text[1], tileColor.text[2]);
+
+        // Center the text horizontally
+        const textWidth = (text: string) =>
+          (pdf.getStringUnitWidth(text) * pdf.getFontSize()) /
+          pdf.internal.scaleFactor;
+
+        // Add tile content
+        pdf.setFontSize(10); // Reduced font size for title
+        const titleX = x + (firstRowTileWidth - textWidth(tileData.title)) / 2;
+        pdf.text(tileData.title, titleX, y + 10);
+
+        pdf.setFontSize(8); // Reduced font size for value
+        const valueX = x + (firstRowTileWidth - textWidth(tileData.value)) / 2;
+        pdf.text(tileData.value, valueX, y + 20);
+
+        pdf.setFontSize(12); // Adjusted font size for subValue
+        const subValueX =
+          x +
+          (firstRowTileWidth - textWidth(tileData.subValue?.toString() || '0')) / 2;
+        pdf.text(tileData.subValue?.toString() || '0', subValueX, y + 30); // Ensure subValue is a string
+      }
+
+      y += firstRowTileHeight + 10;
+
+      // Second row: 3 tiles
+      const secondRowTiles = 3;
+      const secondRowTileWidth =
+        (pageWidth - (secondRowTiles - 1) * tileGap) / secondRowTiles; // Adjusted width to include gaps
+      const secondRowTileHeight = 50;
+
+      const secondRowData = [
+        {
+          title: 'Total Farmers',
+          value: this.dashboardData.allusers,
+          percentage: this.dashboardData.user_increase_percentage,
+          description: 'Compared to last month',
+        },
+        {
+          title: 'Total farmers with QR',
+          value: this.dashboardData.qrUsers,
+          percentage: this.dashboardData.qr_user_increase_percentage,
+          description: 'Compared to last month',
+        },
+        {
+          title: 'Total Crop Enrollments',
+          value:
+            this.dashboardData.fruitCultivation +
+            this.dashboardData.grainCultivation +
+            this.dashboardData.vegCultivation +
+            this.dashboardData.mushCultivation,
+          percentage: this.dashboardData.cultivation_increase_percentage,
+          description: 'Compared to last month',
+        },
+      ];
+
+      // Add second row tiles with border radius and gaps
+      for (let i = 0; i < secondRowTiles; i++) {
+        const x = margin + i * (secondRowTileWidth + tileGap); // Add gap between tiles
+        const tileData = secondRowData[i];
+
+        // Draw tile border with rounded corners
+        pdf.roundedRect(
+          x,
+          y,
+          secondRowTileWidth,
+          secondRowTileHeight,
+          borderRadius,
+          borderRadius
+        );
+
+        // Add tile content
+        pdf.setFontSize(12);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(tileData.title, x + 5, y + 10);
+        pdf.setFontSize(14);
+        pdf.text(tileData.value?.toString() || '0', x + 5, y + 25); // Ensure value is a string
+        pdf.setFontSize(10);
+        pdf.text(tileData.percentage.toString(), x + 5, y + 35);
+        pdf.text(tileData.description, x + 5, y + 45);
+      }
+
+      y += secondRowTileHeight + 10;
+
+      // Third row: Bar Chart and Donut Chart
+      const thirdRowHeight = 80; // Height for the third row
+      const chartWidth = (pageWidth - tileGap) / 2; // Width for each chart
+
+      // Create a canvas element for the bar chart
+      const barChartCanvas = document.createElement('canvas');
+      const scaleFactor = 5; // Increase resolution by 3x
+      const dpr = window.devicePixelRatio || 1; // Account for high-DPI displays
+      barChartCanvas.width = chartWidth * scaleFactor * dpr; // Higher resolution for better quality
+      barChartCanvas.height = thirdRowHeight * scaleFactor * dpr;
+      const barChartCtx = barChartCanvas.getContext('2d');
+
+      if (barChartCtx) {
+        // Adjust for high-DPI displays
+        barChartCanvas.style.width = `${chartWidth}px`;
+        barChartCanvas.style.height = `${thirdRowHeight}px`;
+        barChartCtx.scale(dpr * scaleFactor, dpr * scaleFactor);
+
+        // Bar Chart Data (Registered/Unregistered)
+        const barChartData = {
+          labels: ['QR Registered', 'Unregistered'],
+          datasets: [
+            {
+              label: 'Farmers',
+              data: [
+                this.dashboardData.qrUsers,
+                this.dashboardData.allusers - this.dashboardData.qrUsers,
+              ],
+              backgroundColor: ['#1E90FF', '#FF6347'], // Blue for Registered, Red for Unregistered
+            },
+          ],
+        };
+
+        // Render Bar Chart
+        new Chart(barChartCtx, {
+          type: 'bar',
+          data: barChartData,
+          options: {
+            responsive: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+        // Wait for the bar chart to render
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
+
+        // Convert Bar Chart to image and add to PDF
+        const barChartImage = barChartCanvas.toDataURL('image/png', 1.0); // Use maximum quality
+        pdf.addImage(
+          barChartImage,
+          'PNG',
+          margin,
+          y,
+          chartWidth,
+          thirdRowHeight
+        );
+
+        // Create a canvas element for the donut chart
+        const donutChartCanvas = document.createElement('canvas');
+        donutChartCanvas.width = chartWidth * scaleFactor * dpr; // Higher resolution for better quality
+        donutChartCanvas.height = thirdRowHeight * scaleFactor * dpr;
+        const donutChartCtx = donutChartCanvas.getContext('2d');
+
+        // Adjust for high-DPI displays
+        donutChartCanvas.style.width = `${chartWidth}px`;
+        donutChartCanvas.style.height = `${thirdRowHeight}px`;
+        if (donutChartCtx) {
+          donutChartCtx.scale(dpr * scaleFactor, dpr * scaleFactor);
+        }
+
+        // Donut Chart Data (Crop Enrollments)
+        const donutChartData = {
+          labels: ['Vegetables', 'Fruits', 'Grains', 'Mushrooms'],
+          datasets: [
+            {
+              label: 'Crop Enrollments',
+              data: [
+                this.dashboardData.vegCultivation,
+                this.dashboardData.fruitCultivation,
+                this.dashboardData.grainCultivation,
+                this.dashboardData.mushCultivation,
+              ],
+              backgroundColor: ['#228B22', '#FFA500', '#D2B48C', '#800080'], // Colors for crops
+            },
+          ],
+        };
+
+        // Render Donut Chart
+        if (donutChartCtx) {
+          new Chart(donutChartCtx, {
+            type: 'doughnut',
+            data: donutChartData,
+            options: {
+              responsive: false,
+              plugins: {
+                datalabels: {
+                  color: '#fff',
+                  formatter: (value) => `${value}%`,
+                },
+              },
+            },
+          });
+
+          // Wait for the donut chart to render
+          await new Promise((resolve) => setTimeout(resolve, 500)); // Adjust the delay as needed
+
+          // Convert Donut Chart to image and add to PDF
+          const donutChartImage = donutChartCanvas.toDataURL('image/png', 1.0); // Use maximum quality
+          pdf.addImage(
+            donutChartImage,
+            'PNG',
+            margin + chartWidth + tileGap,
+            y,
+            chartWidth,
+            thirdRowHeight
+          );
+        }
+
+        y += thirdRowHeight + 10;
+
+        // Add a footer with the current date and time
+        pdf.setFontSize(10);
+        pdf.setTextColor(100);
+        pdf.text(
+          `Report generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
+          margin,
+          pdf.internal.pageSize.getHeight() - margin
+        );
+
+        // Save the PDF
+        const fileName = `report_${new Date().toISOString().slice(0, 10)}.pdf`;
+        pdf.save(fileName);
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      this.isDownloading = false; // Hide spinner and enable button
     }
-
-    html2canvas(this.reportSection.nativeElement, { scale: 2 }) // Higher scale for better quality
-      .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-
-        const pdf = new jsPDF('p', 'mm', 'a4'); // Portrait mode, millimeters, A4 size
-        const imgWidth = 210; // A4 width in mm
-        const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
-
-        pdf.addImage(imgData, 'PNG', 0, 10, imgWidth, imgHeight); // Add image to PDF
-        pdf.save('report.pdf'); // Download PDF file
-      })
-      .catch((error) => console.error('Error capturing screenshot:', error));
   }
 }

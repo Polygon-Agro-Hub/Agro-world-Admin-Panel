@@ -40,6 +40,8 @@ export class DashboardMainComponent implements OnInit {
   salesAgentRowData: any = {};
   plantCareRowData: any = {};
 
+  isDownloading: boolean = false;
+
   
   constructor(
     private stakeholderSrv: StakeholderService
@@ -92,12 +94,11 @@ export class DashboardMainComponent implements OnInit {
   }
 
   exportReport(): void {
+
+    this.isDownloading = true;
+    console.log(this.isDownloading);
+
     const doc = new jsPDF();
-  
-    // Set font for the title
-    doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Dashboard Report', 10, 15);
   
     // Colors used in the boxes
     const colors = {
@@ -111,8 +112,16 @@ export class DashboardMainComponent implements OnInit {
       background: '#f5f5f5', 
     };
   
+    // Set background first, so it doesn't cover text
     doc.setFillColor(colors.background);
     doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F'); // Full-page background
+  
+    // Set font for the main title
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(colors.black); // Ensure text color is set
+    doc.text('Stakeholder Dashboard Report', 10, 15);
+    
   
     // Function to draw a box with centered text and optional icon
     const drawBox = (
@@ -146,7 +155,7 @@ export class DashboardMainComponent implements OnInit {
         doc.setFont('helvetica', 'bold');
         // Center the value text horizontally
         const valueWidth = doc.getStringUnitWidth(value) * 12 / doc.internal.scaleFactor;
-        doc.text(value, centerX - (valueWidth / 2), y + height * 0.65);
+        doc.text(value, centerX - (valueWidth / 2), y + height * 0.75); 
     };
   
     const pageWidth = 210; // A4 page width in mm
@@ -163,8 +172,8 @@ export class DashboardMainComponent implements OnInit {
     const secondRowBoxHeight = 45; // Custom height for second row boxes
     const halfSecondRowBoxHeight = secondRowBoxHeight / 2 - 2; // Half height for divided boxes in second row
   
-    // Base Y-coordinate for the first row
-    const baseY = 25;
+    // Base Y-coordinate for the first row - adjusted to accommodate the Stakeholder Report text
+    const baseY = 25; 
   
     // Function to calculate X and Y coordinates for a specific box
     const getX = (index: number) => horizontalPadding + index * (boxWidth + spaceBetweenBoxes);
@@ -271,6 +280,7 @@ export class DashboardMainComponent implements OnInit {
      
     // Save the PDF
     doc.save('dashboard-report.pdf');
+    this.isDownloading = false;
   }
   
   

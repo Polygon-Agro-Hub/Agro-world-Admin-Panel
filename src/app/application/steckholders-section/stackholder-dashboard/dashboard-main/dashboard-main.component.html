@@ -3,29 +3,35 @@
 
 <div class="p-4" *ngIf="!isLoading">
   <div class="flex justify-end mb-4">
-    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" (click)="exportReport()">
-      Export Report
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" (click)="exportReport()"
+      [disabled]="isDownloading">
+      <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+      <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+      {{ isDownloading ? ' Exporting...' : ' Export Report' }}
     </button>
   </div>
 
   <!-- First row -->
-  
-    <app-admin-row [firstRow]="firstRow" (adminDataEmitted)="onAdminDataEmitted($event)"></app-admin-row>
+
+  <app-admin-row [firstRow]="firstRow" (adminDataEmitted)="onAdminDataEmitted($event)"></app-admin-row>
 
   <div class="h-4"></div>
 
 
-  <app-plantcare-users-row [secondRow]="secondRow" (plantCareDataEmitted)="onsPlantCareDataEmitted($event)"></app-plantcare-users-row>
+  <app-plantcare-users-row [secondRow]="secondRow"
+    (plantCareDataEmitted)="onsPlantCareDataEmitted($event)"></app-plantcare-users-row>
 
   <div class="h-4"></div>
-  
 
-  <app-collection-officer-users-row [thirdRow]="thirdRow" (collectionOfficerDataEmitted)="onCollectionOfficerDataEmitted($event)"></app-collection-officer-users-row>
-  
 
-  
-  <app-sales-agents-row [fourthRow]="fourthRow" (salesAgentDataEmitted)="onsalesAgentDataEmitted($event)"></app-sales-agents-row>
+  <app-collection-officer-users-row [thirdRow]="thirdRow"
+    (collectionOfficerDataEmitted)="onCollectionOfficerDataEmitted($event)"></app-collection-officer-users-row>
 
-  
-  
+
+
+  <app-sales-agents-row [fourthRow]="fourthRow"
+    (salesAgentDataEmitted)="onsalesAgentDataEmitted($event)"></app-sales-agents-row>
+
+
+
 </div>

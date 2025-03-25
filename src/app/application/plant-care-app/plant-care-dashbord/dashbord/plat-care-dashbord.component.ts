@@ -203,7 +203,11 @@ export class PlatCareDashbordComponent implements OnInit {
         }
 
         // Set text color
-        pdf.setTextColor(tileColor.text[0], tileColor.text[1], tileColor.text[2]);
+        pdf.setTextColor(
+          tileColor.text[0],
+          tileColor.text[1],
+          tileColor.text[2]
+        );
 
         // Center the text horizontally
         const textWidth = (text: string) =>
@@ -222,7 +226,9 @@ export class PlatCareDashbordComponent implements OnInit {
         pdf.setFontSize(12); // Adjusted font size for subValue
         const subValueX =
           x +
-          (firstRowTileWidth - textWidth(tileData.subValue?.toString() || '0')) / 2;
+          (firstRowTileWidth -
+            textWidth(tileData.subValue?.toString() || '0')) /
+            2;
         pdf.text(tileData.subValue?.toString() || '0', subValueX, y + 30); // Ensure subValue is a string
       }
 
@@ -315,7 +321,7 @@ export class PlatCareDashbordComponent implements OnInit {
                 this.dashboardData.qrUsers,
                 this.dashboardData.allusers - this.dashboardData.qrUsers,
               ],
-              backgroundColor: ['#1E90FF', '#FF6347'], // Blue for Registered, Red for Unregistered
+              backgroundColor: ['#90EE90', '#ADD8E6'], // Blue for Registered, Red for Unregistered
             },
           ],
         };
@@ -373,7 +379,7 @@ export class PlatCareDashbordComponent implements OnInit {
                 this.dashboardData.grainCultivation,
                 this.dashboardData.mushCultivation,
               ],
-              backgroundColor: ['#228B22', '#FFA500', '#D2B48C', '#800080'], // Colors for crops
+              backgroundColor: ['#4E9F78', '#E68A3D', '##3D75E6', '#9156A0'], // Colors for crops
             },
           ],
         };

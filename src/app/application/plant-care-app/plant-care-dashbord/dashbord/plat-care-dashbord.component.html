@@ -7,14 +7,14 @@
   <div *ngIf="hasData">
     <div class="flex justify-end mb-4">
       <button
-  (click)="captureScreenshot()"
-  class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
-  [disabled]="isDownloading"
->
-  <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
-  <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
-  {{ isDownloading ? ' Exporting...' : ' Export Report' }}
-</button>
+        (click)="captureScreenshot()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+        [disabled]="isDownloading"
+      >
+        <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+        <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+        {{ isDownloading ? " Exporting..." : " Export Report" }}
+      </button>
     </div>
 
     <div #reportSection>
@@ -32,14 +32,7 @@
       >
         <!-- Area Chart -->
         <div class="flex-1 h-full w-[60%]">
-          <app-dashbord-area-chart
-            class="h-full w-full"
-            [qrUsers]="dashboardData.farmerRegistrationCounts.registered_count"
-            [allusers]="
-              dashboardData.farmerRegistrationCounts.unregistered_count
-            "
-            (districtSelected)="onDistrictSelected($event)"
-          />
+          <app-dashbord-area-chart class="h-full w-full" />
         </div>
 
         <!-- Pie Chart -->

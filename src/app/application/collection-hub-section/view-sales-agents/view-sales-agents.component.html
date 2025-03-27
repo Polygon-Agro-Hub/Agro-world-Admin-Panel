@@ -305,17 +305,18 @@
           </tr>
         </tbody>
       </table>
-
-      <pagination-controls
-        (pageChange)="onPageChange($event)"
-        [responsive]="true"
-        [previousLabel]="'Previous'"
-        [nextLabel]="'Next'"
-        [screenReaderPaginationLabel]="'Pagination'"
-        [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'"
-      >
-      </pagination-controls>
+      <div class="dark:bg-[#262f45]">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
     </div>
   </div>
 </div>

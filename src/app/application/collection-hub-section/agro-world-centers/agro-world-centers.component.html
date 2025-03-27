@@ -5,7 +5,6 @@
   Back
 </button>
 
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
@@ -15,7 +14,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            Agro World Centers ({{ this.totalItems }})
+          Agro World Centers ({{ this.totalItems }})
         </h2>
       </div>
       <div class="flex items-center">
@@ -104,7 +103,7 @@
             >
               Center Name
             </th>
-            
+
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
@@ -128,7 +127,10 @@
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-              *ngIf="permissionService.hasPermission('Assign Center Target') || tokenService.getUserDetails().role === '1'"
+              *ngIf="
+                permissionService.hasPermission('Assign Center Target') ||
+                tokenService.getUserDetails().role === '1'
+              "
             >
               Assign Target
             </th>
@@ -164,15 +166,21 @@
               {{ item.street }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-             {{item.code1}} {{ item.contact01 }}
+              {{ item.code1 }} {{ item.contact01 }}
             </td>
-            <td *ngIf="permissionService.hasPermission('Assign Center Target') || tokenService.getUserDetails().role === '1'" 
-            class="px-4 py-3 text-center">
+            <td
+              *ngIf="
+                permissionService.hasPermission('Assign Center Target') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 text-center"
+            >
               <i
                 class="fa-solid fa-bullseye text-xl text-textLight"
                 (click)="isAgroworldPresent(item) && navigateAddTarget(item)"
                 [ngClass]="{
-                  'opacity-50 cursor-not-allowed hover:none': !isAgroworldPresent(item),
+                  'opacity-50 cursor-not-allowed hover:none':
+                    !isAgroworldPresent(item),
                   'cursor-pointer': isAgroworldPresent(item)
                 }"
               >
@@ -180,7 +188,10 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
-              *ngIf="permissionService.hasPermission('View Collection Center') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission('View Collection Center') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
                 (click)="
                   isAgroworldPresent(item) &&
@@ -234,15 +245,17 @@
         </p>
       </div>
     </div>
-    <pagination-controls
-      (pageChange)="onPageChange($event)"
-      [responsive]="true"
-      [previousLabel]="'Previous'"
-      [nextLabel]="'Next'"
-      [screenReaderPaginationLabel]="'Pagination'"
-      [screenReaderPageLabel]="'page'"
-      [screenReaderCurrentLabel]="'Youre on page'"
-    >
-    </pagination-controls>
+    <div class="dark:bg-[#262f45]">
+      <pagination-controls
+        (pageChange)="onPageChange($event)"
+        [responsive]="true"
+        [previousLabel]="'Previous'"
+        [nextLabel]="'Next'"
+        [screenReaderPaginationLabel]="'Pagination'"
+        [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'"
+      >
+      </pagination-controls>
+    </div>
   </div>
 </div>

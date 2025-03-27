@@ -465,10 +465,10 @@
                 permissionService.hasPermission('Delete Collection Officer') ||
                 tokenService.getUserDetails().role === '1'
               "
-              class="py-3 text-center"
+              class="text-center"
             >
               <button
-                class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
+                class="text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCollectionOfficer(item.id)"
               >
                 <svg
@@ -492,16 +492,18 @@
           </tr>
         </tbody>
       </table>
-      <pagination-controls
-        (pageChange)="onPageChange($event)"
-        [responsive]="true"
-        [previousLabel]="'Previous'"
-        [nextLabel]="'Next'"
-        [screenReaderPaginationLabel]="'Pagination'"
-        [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'"
-      >
-      </pagination-controls>
+      <div class="dark:bg-[#262f45]">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
     </div>
   </div>
 </div>

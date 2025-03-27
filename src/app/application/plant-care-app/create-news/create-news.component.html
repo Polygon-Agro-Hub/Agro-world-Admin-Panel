@@ -1,17 +1,12 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="itemId === null">
-  <button
-  (click)="back()"
-    class="mb-5 text-textLight dark:text-textDark"
-  >
+  <button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
-  <div
-    class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <h2
       class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold"
     >
@@ -29,7 +24,7 @@
           [(ngModel)]="createNewsObj.publishDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
+          class="ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           (change)="checkPublishDate(); checkPublishExpireDate()"
         />
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
@@ -46,7 +41,7 @@
           [(ngModel)]="createNewsObj.expireDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
+          class="ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           (change)="checkExpireDate(); checkPublishExpireDate()"
         />
       </div>
@@ -194,7 +189,7 @@
 
     <div
       *ngIf="selectedFileName"
-      class="mt-2  text-textLight dark:text-textDark"
+      class="mt-2 text-textLight dark:text-textDark"
     >
       {{ selectedFileName }}
       <div
@@ -229,17 +224,12 @@
 </div>
 
 <div *ngIf="itemId != null">
-  <button
-  (click)="backEdit()"
-    class="mb-5 text-textLight dark:text-textDark"
-  >
+  <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
-  <div
-    class="mx-auto p-6 rounded-lg shadow-md bg-tileLight dark:bg-tileBlack"
-  >
+  <div class="mx-auto p-6 rounded-lg shadow-md bg-tileLight dark:bg-tileBlack">
     <h2
       class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark"
     >
@@ -259,8 +249,9 @@
           type="date"
           class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
           for="sinhalaCropName"
-          (change)="checkPublishDateEditNews(); checkPublishExpireDateEditNews()"
-          
+          (change)="
+            checkPublishDateEditNews(); checkPublishExpireDateEditNews()
+          "
         />
         <div *ngIf="!isPublishAfterExpireValidEditNews" class="text-red-500">
           Publish Date cannot be later than Expiry Date.
@@ -301,13 +292,19 @@
           #titleEnglish="ngModel"
           required
         />
-        <div *ngIf="titleEnglish.invalid && titleEnglish.touched" class="text-red-500">
+        <div
+          *ngIf="titleEnglish.invalid && titleEnglish.touched"
+          class="text-red-500"
+        >
           English title is required.
         </div>
         <!-- <div *ngIf="!isEnglishValid" class="text-red-500">
           Title must contain English and not only numbers.
         </div> -->
-        <div *ngIf="titleEnglish.errors?.['pattern'] && titleEnglish.touched" class="text-red-500">
+        <div
+          *ngIf="titleEnglish.errors?.['pattern'] && titleEnglish.touched"
+          class="text-red-500"
+        >
           Title must contain English letters and not be only numbers.
         </div>
       </div>
@@ -328,7 +325,12 @@
             required
           ></angular-editor>
         </div>
-        <p *ngIf="descriptionEnglishField.invalid && descriptionEnglishField.touched" class="text-red-500 text-sm mt-1">
+        <p
+          *ngIf="
+            descriptionEnglishField.invalid && descriptionEnglishField.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           English Description is required.
         </p>
       </div>
@@ -355,16 +357,21 @@
           #titleSinhala="ngModel"
           required
         />
-        <div *ngIf="titleSinhala.invalid && titleSinhala.touched" class="text-red-500">
+        <div
+          *ngIf="titleSinhala.invalid && titleSinhala.touched"
+          class="text-red-500"
+        >
           Sinhala title is required.
         </div>
         <!-- <div *ngIf="!isSinhalaValid" class="text-red-500">
           Title must be in Sinhala and not only numbers.
         </div> -->
-        <div *ngIf="titleSinhala.errors?.['pattern'] && titleSinhala.touched" class="text-red-500">
+        <div
+          *ngIf="titleSinhala.errors?.['pattern'] && titleSinhala.touched"
+          class="text-red-500"
+        >
           Title must contain Sinhala letters and not be only numbers.
         </div>
-        
       </div>
 
       <div class="mb-4">
@@ -384,7 +391,12 @@
             required
           ></angular-editor>
         </div>
-        <p *ngIf="descriptionSinhalaField.invalid && descriptionSinhalaField.touched" class="text-red-500 text-sm mt-1">
+        <p
+          *ngIf="
+            descriptionSinhalaField.invalid && descriptionSinhalaField.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Sinhala Description is required.
         </p>
       </div>
@@ -411,13 +423,19 @@
           #titleTamil="ngModel"
           required
         />
-        <p *ngIf="titleTamil.invalid && titleTamil.touched" class="text-red-500 text-sm mt-1">
+        <p
+          *ngIf="titleTamil.invalid && titleTamil.touched"
+          class="text-red-500 text-sm mt-1"
+        >
           Title must contain Tamil letters and not be only numbers.
         </p>
         <!-- <div *ngIf="!isTamilValid" class="text-red-500">
           Title must be in Tamil and not only numbers.
         </div> -->
-        <div *ngIf="titleTamil.errors?.['pattern'] && titleTamil.touched" class="text-red-500">
+        <div
+          *ngIf="titleTamil.errors?.['pattern'] && titleTamil.touched"
+          class="text-red-500"
+        >
           Title must contain at least one Tamil character.
         </div>
       </div>
@@ -439,7 +457,10 @@
             required
           ></angular-editor>
         </div>
-        <p *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched" class="text-red-500 text-sm mt-1">
+        <p
+          *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched"
+          class="text-red-500 text-sm mt-1"
+        >
           Tamil Description is required.
         </p>
       </div>
@@ -509,11 +530,20 @@
       <button
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         type="button"
-        (click)="this.newsItems[0].titleEnglish && this.newsItems[0].descriptionEnglish && this.newsItems[0].titleSinhala && this.newsItems[0].descriptionSinhala && this.newsItems[0].titleTamil && this.newsItems[0].descriptionTamil && this.newsItems[0].publishDate && this.newsItems[0].expireDate && updateNews()"
-        
+        (click)="
+          this.newsItems[0].titleEnglish &&
+            this.newsItems[0].descriptionEnglish &&
+            this.newsItems[0].titleSinhala &&
+            this.newsItems[0].descriptionSinhala &&
+            this.newsItems[0].titleTamil &&
+            this.newsItems[0].descriptionTamil &&
+            this.newsItems[0].publishDate &&
+            this.newsItems[0].expireDate &&
+            updateNews()
+        "
       >
         Save
-      </button >
+      </button>
     </div>
   </div>
 </div>

@@ -32,7 +32,7 @@
     <div class="flex flex-row my-5">
       <div>
         <p-dropdown
-          styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
           [options]="crops"
           optionLabel="cropNameEnglish"
           [(ngModel)]="selectedCrop"
@@ -44,7 +44,7 @@
 
       <div class="mx-6">
         <p-dropdown
-          styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+          styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
           [options]="grades"
           optionLabel="Vgrade"
           [(ngModel)]="selectedGrade"
@@ -155,9 +155,7 @@
         <tbody>
           <tr
             class="border-b border-gray-200 dark:border-[#4B555A]"
-            *ngFor="
-              let item of market
-            "
+            *ngFor="let item of market"
           >
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.cropName }}
@@ -188,5 +186,6 @@
         </pagination-controls>
       </div>
     </div> -->
+    </div>
   </div>
 </div>

@@ -200,7 +200,7 @@
             </td>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.createdAt }}
+              {{ item.createdAt | date : "yyyy/MM/dd hh.mma" }}
             </td>
             <td class="px-4 py-3 text-green-500 text-center">
               <div *ngIf="item.status === 'Assigned'">

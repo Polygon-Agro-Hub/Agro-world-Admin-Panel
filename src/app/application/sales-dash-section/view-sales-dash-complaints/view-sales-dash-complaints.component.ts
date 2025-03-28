@@ -1,15 +1,15 @@
-import { CommonModule, DatePipe } from "@angular/common";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Dropdown, DropdownModule } from "primeng/dropdown";
-import { ComplaintsService } from "../../../services/complaints/complaints.service";
-import { NgxPaginationModule } from "ngx-pagination";
-import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
-import Swal from "sweetalert2";
-import { TokenService } from "../../../services/token/services/token.service";
-import { environment } from "../../../environment/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Dropdown, DropdownModule } from 'primeng/dropdown';
+import { ComplaintsService } from '../../../services/complaints/complaints.service';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { environment } from '../../../environment/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-view-sales-dash-complaints',
@@ -23,28 +23,27 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
   ],
   providers: [DatePipe],
   templateUrl: './view-sales-dash-complaints.component.html',
-  styleUrl: './view-sales-dash-complaints.component.css'
+  styleUrl: './view-sales-dash-complaints.component.css',
 })
-export class ViewSalesDashComplaintsComponent implements OnInit{
-
+export class ViewSalesDashComplaintsComponent implements OnInit {
   statusFilter: any;
   hasData: boolean = true;
   complainsData!: Complain[];
   complain: ComplainIn = new ComplainIn();
-  messageContent: string = "";
-  @ViewChild("dropdown") dropdown!: Dropdown;
+  messageContent: string = '';
+  @ViewChild('dropdown') dropdown!: Dropdown;
 
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
 
-  filterStatus: any = "";
+  filterStatus: any = '';
   filterCategory: any = {};
   filterComCategory: any = {};
   status!: Status[];
   category!: Category[];
 
-  searchText: string = "";
+  searchText: string = '';
   isLoading = false;
   comCategories: ComCategories[] = [];
 
@@ -54,34 +53,33 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
     private router: Router,
     // private tokenService: TokenService,
     private http: HttpClient,
-    public tokenService: TokenService,
+    public tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
     console.log('user role', this.tokenService.getUserDetails().role);
-    
 
     this.status = [
-      { id: 1, type: "Assigned" },
-      { id: 2, type: "Pending" },
-      { id: 3, type: "Closed" },
+      { id: 1, type: 'Assigned' },
+      { id: 2, type: 'Pending' },
+      { id: 3, type: 'Closed' },
     ];
 
     this.category = [
-      { id: 1, type: "Agriculture" },
-      { id: 2, type: "Finance" },
-      { id: 3, type: "Call Center" },
-      { id: 4, type: "Procuiment" },
+      { id: 1, type: 'Agriculture' },
+      { id: 2, type: 'Finance' },
+      { id: 3, type: 'Call Center' },
+      { id: 4, type: 'Procuiment' },
     ];
 
-    if (this.tokenService.getUserDetails().role === "2") {
-      this.filterCategory.type = "Agriculture";
-    } else if (this.tokenService.getUserDetails().role === "3") {
-      this.filterCategory.type = "Finance";
-    } else if (this.tokenService.getUserDetails().role === "4") {
-      this.filterCategory.type = "Call Center";
-    } else if (this.tokenService.getUserDetails().role === "5") {
-      this.filterCategory.type = "Procuiment";
+    if (this.tokenService.getUserDetails().role === '2') {
+      this.filterCategory.type = 'Agriculture';
+    } else if (this.tokenService.getUserDetails().role === '3') {
+      this.filterCategory.type = 'Finance';
+    } else if (this.tokenService.getUserDetails().role === '4') {
+      this.filterCategory.type = 'Call Center';
+    } else if (this.tokenService.getUserDetails().role === '5') {
+      this.filterCategory.type = 'Procuiment';
     }
 
     console.log(this.filterCategory);
@@ -91,8 +89,16 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    console.log('sending to backend', this.filterStatus, this.filterCategory, this.filterComCategory, this.searchText, page, limit)
-    
+    console.log(
+      'sending to backend',
+      this.filterStatus,
+      this.filterCategory,
+      this.filterComCategory,
+      this.searchText,
+      page,
+      limit
+    );
+
     this.complainSrv
       .getAllSalesComplain(
         page,
@@ -100,8 +106,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
         this.filterStatus?.type,
         this.filterCategory?.type,
         this.filterComCategory?.id,
-        this.searchText,
-        
+        this.searchText
       )
       .subscribe(
         (res) => {
@@ -110,15 +115,15 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
           // Map response data to ensure createdAt is in a readable date format
           this.complainsData = res.results.map((item: any) => ({
             ...item,
-            createdAt: this.datePipe.transform(item.createdAt, "yyyy-MM-dd"), // Convert date format
+            createdAt: this.datePipe.transform(item.createdAt, 'yyyy-MM-dd'), // Convert date format
           }));
           this.totalItems = res.total;
           this.isLoading = false;
         },
         (error) => {
-          console.log("Error: ", error);
+          console.log('Error: ', error);
           this.isLoading = false;
-        },
+        }
       );
   }
 
@@ -140,18 +145,16 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
   }
 
   clearSearch(): void {
-    this.searchText = "";
+    this.searchText = '';
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }
-
 
   navigationPath(path: string) {
     this.router.navigate([path]);
   }
 
   getAllComplainCategories() {
-
-    if(this.tokenService.getUserDetails().role === "1"){
+    if (this.tokenService.getUserDetails().role === '1') {
       const token = this.tokenService.getToken();
 
       if (!token) {
@@ -161,11 +164,14 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-  
+
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/4`, {
-          headers,
-        })
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list-super/4`,
+          {
+            headers,
+          }
+        )
         .subscribe(
           (response) => {
             this.comCategories = response;
@@ -175,7 +181,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
             console.error('Error fetching news:', error);
           }
         );
-    }else{
+    } else {
       const token = this.tokenService.getToken();
 
       if (!token) {
@@ -185,11 +191,16 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-  
+
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/4`, {
-          headers,
-        })
+        .get<any>(
+          `${environment.API_URL}auth/get-all-complain-category-list/${
+            this.tokenService.getUserDetails().role
+          }/4`,
+          {
+            headers,
+          }
+        )
         .subscribe(
           (response) => {
             this.comCategories = response;
@@ -200,7 +211,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
           }
         );
     }
- 
   }
 
   navigateSelectComplain(id: string, firstName: string) {
@@ -214,10 +224,17 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
     console.log('haa', id, firstName);
     this.isLoading = true;
     this.complainSrv.getComplainById(id).subscribe((res) => {
-      let formattedDate = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm a');
+      let formattedDate = this.datePipe.transform(
+        res.createdAt,
+        'yyyy-MM-dd hh:mm a'
+      );
       if (formattedDate) {
         // Replace colon with dot and remove space before AM/PM
-        res.createdAt = formattedDate.replace(':', '.').replace(' ', '').replace('AM', 'AM').replace('PM', 'PM');
+        res.createdAt = formattedDate
+          .replace(':', '.')
+          .replace(' ', '')
+          .replace('AM', 'AM')
+          .replace('PM', 'PM');
       }
       this.complain = res;
       console.log(res);
@@ -228,7 +245,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
 
   showReplyDialog(id: any, firstName: string) {
     Swal.fire({
-      title: "Reply as AgroWorld",
+      title: 'Reply as AgroWorld',
       html: `
         <div class="text-left">
           <p>Dear <strong>${firstName}</strong>,</p>
@@ -238,7 +255,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
             class="w-full p-2 border rounded mt-3 mb-3" 
             rows="5" 
             placeholder="Add your message here..."
-          >${this.complain.reply || ""}</textarea>
+          >${this.complain.reply || ''}</textarea>
           <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
           <p class="mt-3">
             Sincerely,<br/>
@@ -247,14 +264,16 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: "Send",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#3980C0", // Green color for Send button
-      cancelButtonColor: "#74788D", // Blue-gray for Cancel button
-      width: "600px",
+      confirmButtonText: 'Send',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#3980C0', // Green color for Send button
+      cancelButtonColor: '#74788D', // Blue-gray for Cancel button
+      width: '600px',
       reverseButtons: true, // Swap button positions
       preConfirm: () => {
-        const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
+        const textarea = document.getElementById(
+          'messageContent'
+        ) as HTMLTextAreaElement;
         return textarea.value;
       },
       didOpen: () => {
@@ -262,8 +281,11 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
         setTimeout(() => {
           const actionsElement = document.querySelector('.swal2-actions');
           if (actionsElement) {
-            actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
-            
+            actionsElement.setAttribute(
+              'style',
+              'display: flex; justify-content: flex-end !important; width: 100%;'
+            );
+
             // Also swap buttons if needed (in addition to reverseButtons)
             const cancelButton = document.querySelector('.swal2-cancel');
             const confirmButton = document.querySelector('.swal2-confirm');
@@ -271,8 +293,8 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
               actionsElement.insertBefore(cancelButton, confirmButton);
             }
           }
-        }, ); // Small delay to ensure DOM is ready
-      }
+        }); // Small delay to ensure DOM is ready
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.messageContent = result.value;
@@ -281,55 +303,56 @@ export class ViewSalesDashComplaintsComponent implements OnInit{
     });
   }
 
-submitComplaint(id: any) {
-  const token = this.tokenService.getToken();
-  if (!token) {
-    console.error("No token found");
-    return;
+  submitComplaint(id: any) {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    console.log(id);
+    console.log(this.messageContent);
+
+    const body = { reply: this.messageContent };
+
+    this.http
+      .put(`${environment.API_URL}complain/reply-complain/${id}`, body, {
+        headers,
+      })
+      .subscribe(
+        (res: any) => {
+          console.log('Sales Dash updated successfully', res);
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Sales Dash updated successfully!',
+          });
+          this.fetchAllComplain(this.page, this.itemsPerPage);
+        },
+        (error) => {
+          console.error('Error updating news', error);
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: 'Error updating Sales Dash',
+          });
+          this.fetchAllComplain(this.page, this.itemsPerPage);
+        }
+      );
   }
-
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-
-  console.log(id);
-  console.log(this.messageContent);
-
-  const body = { reply: this.messageContent };
-
-  this.http
-    .put(`${environment.API_URL}complain/reply-complain/${id}`, body, { headers })
-    .subscribe(
-      (res: any) => {
-        console.log("Sales Dash updated successfully", res);
-
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Sales Dash updated successfully!",
-        });
-        this.fetchAllComplain(this.page, this.itemsPerPage);
-      },
-      (error) => {
-        console.error("Error updating news", error);
-
-        Swal.fire({
-          icon: "error",
-          title: "Unsuccessful",
-          text: "Error updating Sales Dash",
-        });
-        this.fetchAllComplain(this.page, this.itemsPerPage);
-      },
-    );
-}
-
 }
 
 class Complain {
   id!: string;
   refNo!: string;
   complainCategory!: string;
-  AgentId!: string;
+  agentId!: string;
   firstName!: string;
   lastName!: string;
   complain!: string;
@@ -366,7 +389,6 @@ class ComplainIn {
   officerPhone!: string;
   farmerName!: string;
 }
-
 
 class ComCategories {
   id!: number;

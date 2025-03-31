@@ -22,6 +22,8 @@ export class CollectionHubComponent {
   popupVisibleAG = false;
   private token = this.tokenService.getToken();
 
+  isDownloading = false;
+
   constructor(
     private http: HttpClient,
     public tokenService: TokenService,
@@ -76,6 +78,7 @@ export class CollectionHubComponent {
   }
 
   downloadTemplate1() {
+    this.isDownloading = true;
     const apiUrl = `${environment.API_URL}market-price/download-crop-data`;
 
     // Trigger the download
@@ -109,6 +112,7 @@ export class CollectionHubComponent {
           title: "Downloaded",
           text: "Please check your downloads folder",
         });
+        this.isDownloading = false;
       })
       .catch((error) => {
         // Handle errors
@@ -117,6 +121,7 @@ export class CollectionHubComponent {
           title: "Download Failed",
           text: error.message,
         });
+        this.isDownloading = false;
       });
   }
 

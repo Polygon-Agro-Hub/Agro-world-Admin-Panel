@@ -248,10 +248,6 @@
             </td>
 
             <td
-              *ngIf="
-                permissionService.hasPermission('Approve Collection Officer') ||
-                tokenService.getUserDetails().role === '1'
-              "
               class="px-4 py-3 text-center"
             >
               <div>
@@ -275,6 +271,10 @@
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="viewFarmer(item.id, true)"
+                *ngIf="
+                  permissionService.hasPermission('View Plantcare User') ||
+                  tokenService.getUserDetails().role === '1'
+                "
               >
                 <svg
                   viewBox="0 0 24 24"

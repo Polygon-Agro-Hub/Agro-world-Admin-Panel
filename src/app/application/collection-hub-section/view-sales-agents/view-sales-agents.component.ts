@@ -18,6 +18,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { FormsModule } from '@angular/forms';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-sales-agents',
@@ -28,7 +30,8 @@ import { SalesAgentsService } from '../../../services/dash/sales-agents.service'
             LoadingSpinnerComponent,
             NgxPaginationModule,
             FormsModule,
-            DropdownModule
+            DropdownModule,
+            
   ],
   templateUrl: './view-sales-agents.component.html',
   styleUrl: './view-sales-agents.component.css'
@@ -59,7 +62,8 @@ export class ViewSalesAgentsComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    
+    public permissionService: PermissionService,
+    public tokenService: TokenService,
     private salesAgentsService: SalesAgentsService,
   ) {}
 

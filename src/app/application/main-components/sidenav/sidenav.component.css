@@ -69,7 +69,7 @@
     height: calc(100% - 3.65rem);
     cursor: pointer;
     overflow-y: auto;
-    max-height: 80vh;
+    max-height: 100vh;
 }
 
 .child-nav {

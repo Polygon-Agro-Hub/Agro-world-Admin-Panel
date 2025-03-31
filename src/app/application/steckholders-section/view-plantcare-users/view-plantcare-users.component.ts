@@ -238,7 +238,7 @@ export class ViewPlantcareUsersComponent {
   }
 
   viewFarmer(id: number, isView: boolean) {
-    this.router.navigate(['/steckholders/action/farmers/edit-plantcare-users'], {
+    this.router.navigate(['/steckholders/action/farmers/view-plantcare-users'], {
       queryParams: { id, isView },
     });
   }
@@ -248,7 +248,7 @@ export class ViewPlantcareUsersComponent {
   }
 
   navigateToAddUser(): void {
-    this.router.navigate(["/steckholders/action/farmers/edit-plantcare-users"]);
+    this.router.navigate(["/steckholders/action/farmers/create-plantcare-users"]);
   }
 
   bulkUpload(): void {

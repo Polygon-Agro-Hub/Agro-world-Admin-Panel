@@ -10,11 +10,12 @@ import { ChartModule } from 'primeng/chart';
 import { DropdownModule } from 'primeng/dropdown';
 import { PlantcareDashbordService } from '../../../../../services/plant-care/plantcare-dashbord.service';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashbord-area-chart',
   standalone: true,
-  imports: [ChartModule, DropdownModule, FormsModule],
+  imports: [ChartModule, DropdownModule, FormsModule, CommonModule],
   templateUrl: './dashbord-area-chart.component.html',
   styleUrls: ['./dashbord-area-chart.component.css'],
 })
@@ -55,6 +56,8 @@ export class DashbordAreaChartComponent implements OnChanges {
     { districtName: 'Kegalle' },
   ];
 
+  loading: boolean = true;
+
   constructor(private dashbordService: PlantcareDashbordService) {}
 
   ngOnInit() {
@@ -63,7 +66,7 @@ export class DashbordAreaChartComponent implements OnChanges {
 
   fetchDashboardData(district?: string): void {
     const apiDistrict = district === 'All' ? undefined : district;
-
+    this.loading = true; // Show skeleton
     this.dashbordService.getDashboardData(apiDistrict).subscribe(
       (data: any) => {
         console.log('These are the data', data);
@@ -76,6 +79,7 @@ export class DashbordAreaChartComponent implements OnChanges {
             const unregisteredCount =
               data.data.farmerRegistrationCounts.unregistered_count;
             this.initializeChart(registeredCount, unregisteredCount, true);
+            this.loading = false; 
           } else {
             // For "All" districts, use qrUsers and allusers
             this.qrUsers = data.data.qrUsers;
@@ -85,6 +89,7 @@ export class DashbordAreaChartComponent implements OnChanges {
               this.allusers - this.qrUsers,
               false
             );
+            this.loading = false; 
           }
         }
       },
@@ -160,6 +165,8 @@ export class DashbordAreaChartComponent implements OnChanges {
           },
         },
       },
+      height: 500,
     };
   }
+  
 }

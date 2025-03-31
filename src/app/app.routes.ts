@@ -484,7 +484,7 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
-            path: 'collection-center-dashboard/:id/:comid',
+            path: 'collection-center-dashboard/:id/:comid/:centerName',
             component: CollectionCenterDashboardComponent,
             canActivate: [ PermissionGuard],
             data: { permission: 'View Collection Center' },

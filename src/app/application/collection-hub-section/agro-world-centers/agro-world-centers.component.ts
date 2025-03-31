@@ -196,7 +196,7 @@ export class AgroWorldCentersComponent {
         this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
       }
     
-      assignTarget(items: any, centerId: number) {
+      assignTarget(items: any, centerId: number, centerName: string) {
        
         let comId;
         items?.some((company: Company) =>
@@ -206,7 +206,7 @@ export class AgroWorldCentersComponent {
         );
         console.log('companyID----->', comId);
         this.router.navigate([
-          `/collection-hub/collection-center-dashboard/${centerId}/${comId}`,
+          `/collection-hub/collection-center-dashboard/${centerId}/${comId}/${centerName}`,
         ]);
       }
     

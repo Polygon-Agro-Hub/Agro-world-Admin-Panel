@@ -16,6 +16,7 @@ export class CollectionCenterDashboardComponent {
   centerNameObj: CenterName = new CenterName();
   resentCollectionArr!: ResentCollection[];
   companyId!: number
+  centerName: string = '';
 
   selectTable: string = 'collection';
   centerId!: number;
@@ -34,6 +35,7 @@ export class CollectionCenterDashboardComponent {
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];
     this.companyId = this.route.snapshot.params['comid'];
+    this.centerName = this.route.snapshot.params['centerName'];
     this.fetchCenterDashbordDetails();
   }
 
@@ -68,7 +70,7 @@ export class CollectionCenterDashboardComponent {
   }
 
   navigateToMarketPrice() {
-    this.router.navigate([`collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerNameObj.centerName}`]);
+    this.router.navigate([`collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`]);
   }
 }
 

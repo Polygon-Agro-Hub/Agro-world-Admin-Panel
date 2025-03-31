@@ -64,7 +64,9 @@
             tokenService.getUserDetails().role === '1'
           "
         >
-          Download Template
+        <span *ngIf="!isDownloading">Download Template</span>
+          
+          <span *ngIf="isDownloading">Loading.....</span>
         </div>
       </div>
     </div>

@@ -289,19 +289,11 @@
               Center
             </th>
             <th
-            *ngIf="
-            permissionService.hasPermission('Claim Collection Officer') ||
-            tokenService.getUserDetails().role === '1'
-          " 
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Center Status
             </th>
             <th
-              *ngIf="
-                permissionService.hasPermission('Approve Collection Officer') ||
-                tokenService.getUserDetails().role === '1'
-              "
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Status
@@ -378,15 +370,13 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.centerName ? item.centerName : "---" }}
             </td>
-            <td *ngIf="
-            permissionService.hasPermission('Claim Collection Officer') ||
-            tokenService.getUserDetails().role === '1'
-          " 
+            <td 
           class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
-                  class="cursor-pointer"
-                  (click)="handleClaimButtonClick(item)"
+                [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Claim Collection Officer') || tokenService.getUserDetails().role === '1') ? handleClaimButtonClick(item) : null"
+                 
                   [ngClass]="{
                     'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
@@ -398,10 +388,6 @@
               </div>
             </td>
             <td
-              *ngIf="
-                permissionService.hasPermission('Approve Collection Officer') ||
-                tokenService.getUserDetails().role === '1'
-              "
               class="px-4 py-3 text-center"
             >
               <div>
@@ -414,8 +400,9 @@
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
                   }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
-                  (click)="openPopup(item)"
+                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
                 >
                   {{ item.status }}
                 </span>

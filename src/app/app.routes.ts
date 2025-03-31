@@ -394,17 +394,21 @@ export const routes: Routes = [
                   {
                     path: 'create-sales-agents',
                     component: CreateSalesAgentsComponent,
+                    canActivate: [ PermissionGuard],
+                    data: { permission: ['Add Sales Dash user'] }, 
                   },
                   {
                     path: 'edit-sales-agents/:id',
                     component: EditSalesAgentComponent,
-                    
+                    canActivate: [ PermissionGuard],
+                    data: { permission: ['Edit Sales Dash user'] }, 
                   },
 
                   {
                     path: 'preview-sales-agents/:id',
                     component: PreviewSalesAgentsComponent,
-                    
+                    canActivate: [ PermissionGuard],
+                    data: { permission: ['View Sales Dash user'] }, 
                   },
                 ],
               },

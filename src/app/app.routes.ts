@@ -420,10 +420,14 @@ export const routes: Routes = [
                   {
                     path: 'personal',
                     component: CollectiveofficersPersonalComponent,
+                    canActivate: [ PermissionGuard],
+                    data: { permission: 'Add Collection Officer' }, 
                   },
                   {
                     path: 'personal-edit/:id',
                     component: CollectiveofficersEditComponent,
+                    canActivate: [ PermissionGuard],
+                    data: { permission: 'Edit Collection Officer' }, 
                   },
                   {
                     path: 'company',
@@ -435,7 +439,9 @@ export const routes: Routes = [
                   },
                   {
                     path: 'collective-officer-profile/:id',
-                    component: ViewCollectiveOfficerProfileComponent
+                    component: ViewCollectiveOfficerProfileComponent,
+                    canActivate: [ PermissionGuard],
+                    data: { permission: 'View Collection Officer' }, 
                   },
                   {
                     path:'view-officer-targets/:officerId',

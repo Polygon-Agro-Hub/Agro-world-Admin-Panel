@@ -289,6 +289,10 @@
               Center
             </th>
             <th
+            *ngIf="
+            permissionService.hasPermission('Claim Collection Officer') ||
+            tokenService.getUserDetails().role === '1'
+          " 
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Center Status
@@ -312,6 +316,13 @@
             >
               NIC
             </th>
+            <th
+            *ngIf="
+              permissionService.hasPermission('View Collection Officer') ||
+              tokenService.getUserDetails().role === '1'
+            "
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+          ></th>
 
             <th
               *ngIf="
@@ -367,7 +378,11 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.centerName ? item.centerName : "---" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="
+            permissionService.hasPermission('Claim Collection Officer') ||
+            tokenService.getUserDetails().role === '1'
+          " 
+          class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
                   class="cursor-pointer"
@@ -414,7 +429,11 @@
               {{ item.nic }}
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td  *ngIf="
+            permissionService.hasPermission('View Collection Officer') ||
+            tokenService.getUserDetails().role === '1'
+          "
+          class="px-4 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewCollectiveOfficerProfile(item.id)"

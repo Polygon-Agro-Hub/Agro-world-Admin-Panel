@@ -166,7 +166,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of collectionObj; let i = index">
+          <tr
+            *ngFor="
+              let item of collectionObj
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            "
+          >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>

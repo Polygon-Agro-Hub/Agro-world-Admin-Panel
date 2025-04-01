@@ -1,5 +1,5 @@
-import { Router, ActivatedRoute } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import {
   HttpClient,
   HttpClientModule,
@@ -8,6 +8,7 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -27,15 +28,35 @@ interface PlantCareUser {
   created_at: string;
   district: string;
   membership: string;
+  accNumber: any;
+  accHolderName: String;
+  bankName: String;
+  branchName: String;
+}
+
+interface Branch {
+  bankID: number;
+  ID: number;
+  name: string;
+}
+
+interface Bank {
+  ID: number;
+  name: string;
+}
+
+interface BranchesData {
+  [key: string]: Branch[];
 }
 
 @Component({
-  selector: "app-edit-plantcare-users",
+  selector: 'app-edit-plantcare-users',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
+    FormsModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './edit-plantcare-users.component.html',
@@ -43,16 +64,22 @@ interface PlantCareUser {
 })
 export class EditPlantcareUsersComponent implements OnInit {
   plantCareUser: PlantCareUser[] = [];
-
+  selectedFile: File | null = null;
   userForm: FormGroup;
   isView: boolean = false;
-  isDisabled: boolean = true; 
-
+  isDisabled: boolean = true;
+  selectedFileName!: string;
   imagePreview: string = '';
   selectedImage: File | null = null;
   isLoading = false;
-
+  selectedBankId: number | null = null;
   itemId: number | null = null;
+  branches: Branch[] = [];
+  banks: Bank[] = [];
+  allBranches: BranchesData = {};
+  selectedBranchId: number | null = null;
+
+  invalidFields: Set<string> = new Set();
 
   constructor(
     private fb: FormBuilder,
@@ -117,8 +144,10 @@ export class EditPlantcareUsersComponent implements OnInit {
   ];
 
   ngOnInit() {
+    this.loadBanks();
+    this.loadBranches();
     this.route.queryParams.subscribe((params) => {
-      this.itemId = params["id"] ? +params["id"] : null;
+      this.itemId = params['id'] ? +params['id'] : null;
       this.isView = params['isView'] === 'true';
       console.log('Received item ID:', this.itemId);
       console.log('recieved view state: ', this.isView);
@@ -132,7 +161,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error("No token found");
+      console.error('No token found');
       return;
     }
 
@@ -174,7 +203,7 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
-      console.log("this is the form values.....", this.userForm.value);
+      console.log('this is the form values.....', this.userForm.value);
 
       if (this.selectedImage) {
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -275,7 +304,7 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onSubmitCreate() {
     if (this.userForm.valid) {
-      console.log("this is the form values.....", this.userForm.value);
+      console.log('this is the form values.....', this.userForm.value);
 
       if (this.selectedImage) {
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -367,6 +396,128 @@ export class EditPlantcareUsersComponent implements OnInit {
         const control = this.userForm.get(key);
         control!.markAsTouched();
       });
+    }
+  }
+
+  triggerFileInput(event: Event): void {
+    event.preventDefault();
+    const fileInput = document.getElementById('imageUpload');
+    fileInput?.click();
+  }
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        return;
+      }
+
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+
+      // Create an image preview
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+        this.selectedImage = file; // Store the file object
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      (data) => {
+        this.banks = data;
+      },
+      (error) => {
+        console.error('Error loading banks:', error);
+      }
+    );
+  }
+
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      (data) => {
+        this.allBranches = data;
+      },
+      (error) => {
+        console.error('Error loading branches:', error);
+      }
+    );
+  }
+
+  // onBankChange() {
+  //   if (this.selectedBankId) {
+  //     this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+
+  //     const selectedBank = this.banks.find(
+  //       (bank) => bank.ID === this.selectedBankId
+  //     );
+  //     if (selectedBank) {
+  //       this.plantCareUser[0].bankName = selectedBank.name;
+  //       this.invalidFields.delete('bankName');
+  //     }
+
+  //     this.selectedBankId = null;
+  //     this.plantCareUser[0].branchName = '';
+  //   } else {
+  //     this.branches = [];
+  //     this.plantCareUser[0].bankName = '';
+  //   }
+  // }
+
+  onBankChange() {
+    if (this.selectedBankId) {
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
+
+      console.log('hit 1', this.selectedBankId);
+
+      // Add null/undefined check for plantCareUser and its first element
+      if (selectedBank && this.plantCareUser && this.plantCareUser.length > 0) {
+        this.plantCareUser[0].bankName = selectedBank.name;
+        this.invalidFields.delete('bankName');
+      }
+
+      this.selectedBankId = null;
+
+      // Add null/undefined check before accessing branchName
+      if (this.plantCareUser && this.plantCareUser.length > 0) {
+        this.plantCareUser[0].branchName = '';
+      }
+    } else {
+      this.branches = [];
+      // Add null/undefined check before accessing bankName
+      if (this.plantCareUser && this.plantCareUser.length > 0) {
+        this.plantCareUser[0].bankName = '';
+      }
+    }
+  }
+
+  onBranchChange() {
+    if (this.selectedBranchId) {
+      console.log(this.selectedBranchId);
+
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
+      if (selectedBranch) {
+        this.plantCareUser[0].branchName = selectedBranch.name;
+        this.invalidFields.delete('branchName');
+      }
+    } else {
+      this.plantCareUser[0].branchName = '';
     }
   }
 }

@@ -1111,6 +1111,122 @@
             />
           </div>
 
+          <div>
+            <label
+              for="accHolderName"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Account Holder's Name</label
+            >
+            <input
+              formControlName="accHolderName"
+              id="accHolderName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="true"
+            />
+            <div
+              *ngIf="
+                userForm.get('accHolderName')?.invalid &&
+                (userForm.get('accHolderName')?.dirty ||
+                  userForm.get('accHolderName')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              Account holder name is required
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="accNumber"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
+              Account Number
+            </label>
+            <input
+              formControlName="accNumber"
+              id="accNumber"
+              type="number"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="true"
+            />
+            <div
+              *ngIf="
+                userForm.get('accNumber')?.invalid &&
+                (userForm.get('accNumber')?.dirty ||
+                  userForm.get('accNumber')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="userForm.get('accNumber')?.errors?.['required']">
+                Account number is required
+              </div>
+              <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
+                Please enter a valid account number
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="bankDropdown"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
+              Bank Name
+            </label>
+            <select
+              formControlName="bankName"
+              id="bankDropdown"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="true"
+              (change)="onBankChange()"
+            >
+              <option [ngValue]="null" disabled>Select a bank</option>
+              <option *ngFor="let bank of banks" [value]="bank.name">
+                {{ bank.name }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                userForm.get('bankName')?.invalid &&
+                (userForm.get('bankName')?.dirty ||
+                  userForm.get('bankName')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              Bank name is required
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="branchDropdown"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
+              Branch Name
+            </label>
+            <select
+              formControlName="branchName"
+              id="branchDropdown"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="true"
+              (change)="onBranchChange()"
+            >
+              <option [ngValue]="null" disabled>Select a branch</option>
+              <option *ngFor="let branch of branches" [value]="branch.name">
+                {{ branch.name }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                userForm.get('branchName')?.invalid &&
+                (userForm.get('branchName')?.dirty ||
+                  userForm.get('branchName')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              Branch name is required
+            </div>
+          </div>
           <!-- Image Upload -->
           <!-- <div>
                         <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark">Profile Image</label>

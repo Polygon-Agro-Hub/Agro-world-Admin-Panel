@@ -214,13 +214,23 @@
             <label
               for="accHolderName"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Account Holder’s Name</label
+              >Account Holder's Name</label
             >
             <input
+              formControlName="accHolderName"
               id="accHolderName"
-              name="accHolderName"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
+            <div
+              *ngIf="
+                userForm.get('accHolderName')?.invalid &&
+                (userForm.get('accHolderName')?.dirty ||
+                  userForm.get('accHolderName')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              Account holder name is required
+            </div>
           </div>
           <div>
             <label
@@ -230,12 +240,26 @@
               Account Number
             </label>
             <input
+              formControlName="accNumber"
               id="accNumber"
-              name="accNumber"
               type="number"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
-            <span class="text-red-600 text-sm"> </span>
+            <div
+              *ngIf="
+                userForm.get('accNumber')?.invalid &&
+                (userForm.get('accNumber')?.dirty ||
+                  userForm.get('accNumber')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              <div *ngIf="userForm.get('accNumber')?.errors?.['required']">
+                Account number is required
+              </div>
+              <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
+                Please enter a valid account number
+              </div>
+            </div>
           </div>
           <div>
             <label
@@ -245,14 +269,26 @@
               Bank Name
             </label>
             <select
+              formControlName="bankName"
               id="bankDropdown"
-              name="bankDropdown"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              (change)="onBankChange()"
             >
               <option [ngValue]="null" disabled>Select a bank</option>
-              <option></option>
+              <option *ngFor="let bank of banks" [value]="bank.name">
+                {{ bank.name }}
+              </option>
             </select>
-            <span class="text-red-600 text-sm"></span>
+            <div
+              *ngIf="
+                userForm.get('bankName')?.invalid &&
+                (userForm.get('bankName')?.dirty ||
+                  userForm.get('bankName')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              Bank name is required
+            </div>
           </div>
           <div>
             <label
@@ -262,14 +298,26 @@
               Branch Name
             </label>
             <select
+              formControlName="branchName"
               id="branchDropdown"
-              name="branchDropdown"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              (change)="onBranchChange()"
             >
               <option [ngValue]="null" disabled>Select a branch</option>
-              <option></option>
+              <option *ngFor="let branch of branches" [value]="branch.name">
+                {{ branch.name }}
+              </option>
             </select>
-            <span class="text-red-600 text-sm"> </span>
+            <div
+              *ngIf="
+                userForm.get('branchName')?.invalid &&
+                (userForm.get('branchName')?.dirty ||
+                  userForm.get('branchName')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+              Branch name is required
+            </div>
           </div>
         </div>
       </div>

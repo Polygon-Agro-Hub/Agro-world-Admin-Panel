@@ -106,6 +106,10 @@ export class EditPlantcareUsersComponent implements OnInit {
         [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
       ],
       profileImage: [''],
+      accHolderName: [''],
+      accNumber: [''],
+      bankName: [''],
+      branchName: [''],
     });
   }
 
@@ -440,35 +444,48 @@ export class EditPlantcareUsersComponent implements OnInit {
 
           // Create FormData with all required fields
           const formData = new FormData();
-          formData.append('firstName', this.userForm.get('firstName')?.value);
-          formData.append('lastName', this.userForm.get('lastName')?.value);
+          formData.append(
+            'firstName',
+            this.userForm.get('firstName')?.value || ''
+          );
+          formData.append(
+            'lastName',
+            this.userForm.get('lastName')?.value || ''
+          );
           formData.append(
             'phoneNumber',
-            this.userForm.get('phoneNumber')?.value
+            this.userForm.get('phoneNumber')?.value || ''
           );
-          formData.append('NICnumber', this.userForm.get('NICnumber')?.value);
-          formData.append('district', this.userForm.get('district')?.value);
-          formData.append('membership', this.userForm.get('membership')?.value);
+          formData.append(
+            'NICnumber',
+            this.userForm.get('NICnumber')?.value || ''
+          );
+          formData.append(
+            'district',
+            this.userForm.get('district')?.value || ''
+          );
+          formData.append(
+            'membership',
+            this.userForm.get('membership')?.value || ''
+          );
 
-          // Add bank details if available
-          if (this.userForm.get('accNumber')?.value) {
-            formData.append('accNumber', this.userForm.get('accNumber')?.value);
-          }
-          if (this.userForm.get('accHolderName')?.value) {
-            formData.append(
-              'accHolderName',
-              this.userForm.get('accHolderName')?.value
-            );
-          }
-          if (this.userForm.get('bankName')?.value) {
-            formData.append('bankName', this.userForm.get('bankName')?.value);
-          }
-          if (this.userForm.get('branchName')?.value) {
-            formData.append(
-              'branchName',
-              this.userForm.get('branchName')?.value
-            );
-          }
+          // Always append bank details (empty strings if not provided)
+          formData.append(
+            'accNumber',
+            this.userForm.get('accNumber')?.value || ''
+          );
+          formData.append(
+            'accHolderName',
+            this.userForm.get('accHolderName')?.value || ''
+          );
+          formData.append(
+            'bankName',
+            this.userForm.get('bankName')?.value || ''
+          );
+          formData.append(
+            'branchName',
+            this.userForm.get('branchName')?.value || ''
+          );
 
           // Add image if selected
           if (this.selectedImage) {

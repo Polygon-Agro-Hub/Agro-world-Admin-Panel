@@ -306,103 +306,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     this.router.navigate(['/steckholders/action/farmers']);
   }
 
-  // onSubmitCreate() {
-  //   if (this.userForm.valid) {
-  //     console.log('this is the form values.....', this.userForm.value);
-
-  //     if (this.selectedImage) {
-  //       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  //       if (!validImageTypes.includes(this.selectedImage.type)) {
-  //         Swal.fire({
-  //           title: 'Invalid File!',
-  //           text: 'Please upload a valid image file (jpg, png, gif).',
-  //           icon: 'error',
-  //           confirmButtonText: 'OK',
-  //         });
-  //         return;
-  //       }
-  //     }
-
-  //     const token = this.tokenService.getToken();
-  //     if (!token) {
-  //       console.error('No token found');
-  //       return;
-  //     }
-
-  //     Swal.fire({
-  //       title: 'Are you sure?',
-  //       text: 'Do you really want to create a new plant care user?',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3085d6',
-  //       cancelButtonColor: '#d33',
-  //       confirmButtonText: 'Yes, create it!',
-  //       cancelButtonText: 'Cancel',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         const headers = new HttpHeaders({
-  //           Authorization: `Bearer ${token}`,
-  //         });
-
-  //         const formData = new FormData();
-  //         formData.append('firstName', this.userForm.get('firstName')?.value);
-  //         formData.append('lastName', this.userForm.get('lastName')?.value);
-  //         formData.append(
-  //           'phoneNumber',
-  //           this.userForm.get('phoneNumber')?.value
-  //         );
-  //         formData.append('NICnumber', this.userForm.get('NICnumber')?.value);
-  //         formData.append('district', this.userForm.get('district')?.value);
-  //         formData.append('membership', this.userForm.get('membership')?.value);
-
-  //         if (this.selectedImage) {
-  //           formData.append('image', this.selectedImage);
-  //         }
-  //         this.isLoading = true;
-  //         this.http
-  //           .post(
-  //             `${environment.API_URL}auth/create-plant-care-user`,
-  //             formData,
-  //             { headers }
-  //           )
-  //           .subscribe(
-  //             (data) => {
-  //               this.isLoading = false;
-  //               this.userForm.patchValue(data);
-  //               Swal.fire(
-  //                 'Created!',
-  //                 'A new plant care user has been created.',
-  //                 'success'
-  //               ).then(() => {
-  //                 this.router.navigate(['/steckholders/action/farmers']);
-  //               });
-  //               this.loadUserData(this.itemId!);
-  //               this.userForm.reset();
-  //               this.imagePreview = '';
-  //               this.selectedImage = null;
-  //               this.itemId = null;
-  //             },
-  //             (error) => {
-  //               this.isLoading = false;
-  //               console.error('Error fetching user data:', error);
-  //               Swal.fire(
-  //                 'Error!',
-  //                 'There was an error creating the plant care user.',
-  //                 'error'
-  //               );
-  //             }
-  //           );
-  //       }
-  //     });
-  //   } else {
-  //     // Mark all fields as touched to trigger validation messages
-  //     Object.keys(this.userForm.controls).forEach((key) => {
-  //       const control = this.userForm.get(key);
-  //       control!.markAsTouched();
-  //     });
-  //   }
-  // }
-
   onSubmitCreate() {
     if (this.userForm.valid) {
       console.log('this is the form values.....', this.userForm.value);
@@ -612,26 +515,6 @@ export class EditPlantcareUsersComponent implements OnInit {
       }
     );
   }
-
-  // onBankChange() {
-  //   if (this.selectedBankId) {
-  //     this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-
-  //     const selectedBank = this.banks.find(
-  //       (bank) => bank.ID === this.selectedBankId
-  //     );
-  //     if (selectedBank) {
-  //       this.plantCareUser[0].bankName = selectedBank.name;
-  //       this.invalidFields.delete('bankName');
-  //     }
-
-  //     this.selectedBankId = null;
-  //     this.plantCareUser[0].branchName = '';
-  //   } else {
-  //     this.branches = [];
-  //     this.plantCareUser[0].bankName = '';
-  //   }
-  // }
 
   onBankChange() {
     if (this.selectedBankId) {

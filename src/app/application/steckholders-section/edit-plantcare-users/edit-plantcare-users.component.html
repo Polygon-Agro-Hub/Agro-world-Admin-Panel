@@ -17,9 +17,8 @@
 
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
       <div>
-        <div class="flex justify-between pt-3 pb-9">
+        <!-- <div class="flex justify-between pt-3 pb-9">
           <div class="w-5"></div>
-          <!-- Profile picture preview -->
           <img
             class="profile-pic"
             [src]="imagePreview"
@@ -28,6 +27,41 @@
             style="width: 100px; height: 100px; object-fit: cover"
           />
           <div class="w-5"></div>
+        </div> -->
+
+        <div class="flex justify-center pt-3 pb-9">
+          <div class="relative">
+            <input
+              type="file"
+              id="imageUpload"
+              accept="image/*"
+              class="hidden"
+              (change)="onFileSelected($event)"
+              #fileInput
+            />
+            <div
+              *ngIf="!imagePreview"
+              class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60"
+            >
+              <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
+            </div>
+            <img
+              *ngIf="imagePreview"
+              class="rounded-full w-60 h-60 object-cover"
+              [src]="imagePreview"
+              alt="Profile Picture"
+            />
+            <span
+              (click)="fileInput.click()"
+              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer"
+            >
+              <img
+                src="../../../../assets/images/editIcon.png"
+                alt="Edit Icon"
+                class="w-16 h-16"
+              />
+            </span>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -340,321 +374,6 @@
     </form>
   </div>
 </div>
-
-<!-- <div *ngIf="itemId === null">
-  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
-    <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">
-      Add Plant Care User
-    </h2>
-
-    <form [formGroup]="userForm" (ngSubmit)="onSubmitCreate()">
-      <div>
-        <div class="flex justify-center pt-3 pb-9">
-          <div class="relative">
-            <input
-              type="file"
-              id="imageUpload"
-              accept="image/*"
-              class="hidden"
-              (change)="onFileSelected($event)"
-              #fileInput
-            />
-            <div
-              *ngIf="!imagePreview"
-              class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60"
-            >
-              <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
-            </div>
-            <img
-              *ngIf="imagePreview"
-              class="rounded-full w-60 h-60 object-cover"
-              [src]="imagePreview"
-              alt="Profile Picture"
-            />
-            <span
-              (click)="fileInput.click()"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer"
-            >
-              <img
-                src="../../../../assets/images/editIcon.png"
-                alt="Edit Icon"
-                class="w-16 h-16"
-              />
-            </span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label
-              for="firstName"
-              class="block text-sm font-medium text-textLight dark:text-textDark text-left"
-              >First Name</label
-            >
-            <input
-              formControlName="firstName"
-              id="firstName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-            />
-            <div
-              *ngIf="
-                userForm.get('firstName')!.invalid &&
-                (userForm.get('firstName')!.dirty ||
-                  userForm.get('firstName')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div *ngIf="userForm.get('firstName')!.errors?.['required']">
-                First name is required.
-              </div>
-              <div *ngIf="userForm.get('firstName')!.errors?.['pattern']">
-                First name should only contain letters.
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label
-              for="lastName"
-              class="block text-sm font-medium text-textLight dark:text-textDark text-left"
-              >Last Name</label
-            >
-            <input
-              formControlName="lastName"
-              id="lastName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-            />
-            <div
-              *ngIf="
-                userForm.get('lastName')!.invalid &&
-                (userForm.get('lastName')!.dirty ||
-                  userForm.get('lastName')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div *ngIf="userForm.get('lastName')!.errors?.['required']">
-                Last name is required.
-              </div>
-              <div *ngIf="userForm.get('lastName')!.errors?.['pattern']">
-                Last name should only contain letters.
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label
-              for="phoneNumber"
-              class="block text-sm font-medium text-textLight dark:text-textDark text-left"
-              >Mobile Number</label
-            >
-            <input
-              formControlName="phoneNumber"
-              id="phoneNumber"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-              placeholder="+94 - XXXXXXXXX"
-            />
-            <div
-              *ngIf="
-                userForm.get('phoneNumber')!.invalid &&
-                (userForm.get('phoneNumber')!.dirty ||
-                  userForm.get('phoneNumber')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div *ngIf="userForm.get('phoneNumber')!.errors?.['required']">
-                Phone number is required.
-              </div>
-              <div *ngIf="userForm.get('phoneNumber')!.errors?.['pattern']">
-                Please enter a valid phone number starting with +94 followed by
-                9 digits.
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label
-              for="NICnumber"
-              class="block text-sm font-medium text-textLight dark:text-textDark text-left"
-              >NIC Number</label
-            >
-            <input
-              formControlName="NICnumber"
-              id="NICnumber"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-              placeholder="20XXXXXXXXXX  or  99XXXXXXXV"
-            />
-            <div
-              *ngIf="
-                userForm.get('NICnumber')!.invalid &&
-                (userForm.get('NICnumber')!.dirty ||
-                  userForm.get('NICnumber')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div *ngIf="userForm.get('NICnumber')!.errors?.['required']">
-                NIC number is required.
-              </div>
-              <div *ngIf="userForm.get('NICnumber')!.errors?.['pattern']">
-                Please enter a valid NIC number (12 digits or 10 digits followed
-                by 'V').
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label
-              for="district"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >District</label
-            >
-            <select
-              formControlName="district"
-              id="district"
-              name="district"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            >
-              <option selected disabled>-- select --</option>
-              <option *ngFor="let item of district" [value]="item.districtName">
-                {{ item.districtName }}
-              </option>
-            </select>
-            <div
-              *ngIf="
-                userForm.get('district')?.invalid &&
-                (userForm.get('district')?.dirty ||
-                  userForm.get('district')?.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              district is required
-            </div>
-          </div>
-
-          <div>
-            <label
-              for="membership"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Membership</label
-            >
-            <select
-              formControlName="membership"
-              id="membership"
-              name="membership"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            >
-              <option selected disabled>-- select --</option>
-              <option
-                *ngFor="let item of membership"
-                [value]="item.membershipName"
-              >
-                {{ item.membershipName }}
-              </option>
-            </select>
-            <div
-              *ngIf="
-                userForm.get('membership')?.invalid &&
-                (userForm.get('membership')?.dirty ||
-                  userForm.get('membership')?.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              membership is required
-            </div>
-          </div>
-        </div>
-        <div class="border-t border-gray-200 my-10"></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label
-              for="accHolderName"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Account Holder’s Name</label
-            >
-            <input
-              id="accHolderName"
-              name="accHolderName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-          </div>
-          <div>
-            <label
-              for="accNumber"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
-              Account Number
-            </label>
-            <input
-              id="accNumber"
-              name="accNumber"
-              type="number"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <span class="text-red-600 text-sm"> </span>
-          </div>
-          <div>
-            <label
-              for="bankDropdown"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
-              Bank Name
-            </label>
-            <select
-              id="bankDropdown"
-              name="bankDropdown"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              [(ngModel)]="selectedBankId"
-              (change)="onBankChange()"
-            >
-              <option [ngValue]="null" disabled>Select a bank</option>
-              <option *ngFor="let bank of banks" [ngValue]="bank.ID">
-                {{ bank.name }}
-              </option>
-            </select>
-            <span class="text-red-600 text-sm"></span>
-          </div>
-          <div>
-            <label
-              for="branchDropdown"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
-              Branch Name
-            </label>
-            <select
-              id="branchDropdown"
-              name="branchDropdown"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              [disabled]="!selectedBankId"
-              [(ngModel)]="selectedBranchId"
-              (change)="onBranchChange()"
-            >
-              <option [ngValue]="null" disabled>Select a branch</option>
-              <option *ngFor="let branch of branches" [ngValue]="branch.ID">
-                {{ branch.name }}
-              </option>
-            </select>
-            <span class="text-red-600 text-sm"> </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-end mt-6">
-        <button
-          type="button"
-          (click)="onCancel()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        >
-          Save
-        </button>
-      </div>
-    </form>
-  </div>
-</div> -->
 
 <div *ngIf="itemId === null">
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
@@ -1227,11 +946,6 @@
               Branch name is required
             </div>
           </div>
-          <!-- Image Upload -->
-          <!-- <div>
-                        <label for="profileImage" class="block text-sm font-medium text-textLight dark:text-textDark">Profile Image</label>
-                        <input type="file" id="profileImage" accept="image/*" (change)="onImageSelected($event)" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
-                    </div> -->
         </div>
       </div>
     </form>

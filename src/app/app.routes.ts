@@ -111,6 +111,7 @@ import { PreviewCollectionCenterComponent } from './application/collection-hub-s
 import { ViewOrdersComponent } from './application/sales-dash-section/view-orders/view-orders.component';
 import { ViewSalesDashComplaintsComponent } from './application/sales-dash-section/view-sales-dash-complaints/view-sales-dash-complaints.component';
 import { ViewSelectedSalesDashComplainComponent } from './application/sales-dash-section/view-selected-sales-dash-complain/view-selected-sales-dash-complain.component';
+import { PurchaseReportComponent } from './application/report-section/purchase-report/purchase-report.component';
 export const routes: Routes = [
   {
     path: '',
@@ -316,6 +317,10 @@ export const routes: Routes = [
             component: MonthlyReportComponent,
             canActivate: [ PermissionGuard],
             data: { permission: 'Collection Officer Monthly Report' }, 
+          },
+          {
+            path: 'purchase-report',
+            component: PurchaseReportComponent,
           },
         ],
       },

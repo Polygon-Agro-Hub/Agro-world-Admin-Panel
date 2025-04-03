@@ -128,4 +128,32 @@ export class CollectionService {
     return this.http.get<any>(url, { headers });
   }
 
+
+
+
+
+
+  fetchAllPurchaseReport(
+    page: number,
+    limit: number,
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    
+
+    let url = `${this.apiUrl}auth/get-purchase-report?page=${page}&limit=${limit}`;
+
+    // if (company) {
+    //   url += `&company=${company}`;
+    // }
+
+    // if (searchNIC) {
+    //   url += `&nic=${searchNIC}`;
+    // }
+    return this.http.get<any>(url, { headers });
+  }
+
 }

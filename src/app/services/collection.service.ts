@@ -136,7 +136,10 @@ export class CollectionService {
   fetchAllPurchaseReport(
     page: number,
     limit: number,
-
+    centerId: any,
+    monthNumber: any,
+    createdDate: any,
+    search: string
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -146,14 +149,36 @@ export class CollectionService {
 
     let url = `${this.apiUrl}auth/get-purchase-report?page=${page}&limit=${limit}`;
 
-    // if (company) {
-    //   url += `&company=${company}`;
-    // }
+    if (centerId) {
+      url += `&centerId=${centerId}`;
+    }
+
+    if (monthNumber) {
+      url += `&monthNumber=${monthNumber}`;
+    }
+
+    if (createdDate) {
+      url += `&createdDate=${createdDate}`;
+    }
+
+    if (search) {
+      url += `&search=${search}`;
+    }
 
     // if (searchNIC) {
     //   url += `&nic=${searchNIC}`;
     // }
     return this.http.get<any>(url, { headers });
   }
+
+
+  getAllCenters(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}auth/get-centers-for-purchase-report`, {headers});
+  }
+
+
 
 }

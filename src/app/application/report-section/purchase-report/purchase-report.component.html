@@ -14,7 +14,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          All Transactions
+          All Transactions ({{this.totalItems}})
         </h2>
       </div>
       <div class="flex items-center">
@@ -25,16 +25,44 @@
             />
           </svg>
         </i>
-        <!-- <div class="mr-5">
-                <label for="filter-by" class="mr-8 border-gray-500 text-gray-500">Filter By</label>
-                <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Company" (onChange)="applyFilters()" />
-            </div>
-            <div class="mr-5">
-                <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="District" (onChange)="applyFilters()" />
-            </div>
-            <div class="mr-5">
-                <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="NIC" (onChange)="applyFilters()" />
-            </div> -->
+
+
+        <div class="mx-6">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
+            [options]="centers"
+            optionLabel="centerName"
+            [(ngModel)]="selectedCenter"
+            [showClear]="true"
+            placeholder="Center"
+            (onChange)="applyFiltersCrop()"
+          />
+        </div>
+
+
+
+        <div class="mx-6">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
+            [options]="months"
+            optionLabel="monthName"
+            [(ngModel)]="selectedMonth"
+            [showClear]="true"
+            placeholder="Month"
+            (onChange)="applyFiltersMonth()"
+          />
+        </div>
+
+        <div class="mx-6">
+          <input
+            id="createdDateFilter"
+            type="date"
+            class="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10 px-2"
+            [(ngModel)]="createdDate"
+            (change)="onDateChange()"
+          />
+        </div>
+      
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
         >
@@ -42,12 +70,13 @@
             type="text"
             placeholder="Search.."
             class="bg-transparent outline-none w-full text-gray-600"
-            
+            [(ngModel)]="search"
+          (keydown.enter)="applysearch()"
           />
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-           
+            (click)="applysearch()"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +94,7 @@
             </svg>
           </button>
           <button
-            
+          (click)="clearSearch()"
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none"
           >
@@ -91,7 +120,7 @@
 
     <div class="flex justify-between items-center mb-5"> 
         <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Total : Rs 2,000,000.00
+        Total : Rs {{this.grandTotal | number:'1.2-2'}}
       </h4>
 
       <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center">
@@ -157,16 +186,17 @@
                       currentPage: page,
                       totalItems: totalItems
                     }
+                    let i = index
             "
           >
             <td class="py-3 text-gray-500 dark:text-textDark text-left">
-             1
+              {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
               {{ item.grnNumber }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.amount }}
+              {{ item.amount | number:'1.2-2'}}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.regCode }}
@@ -178,7 +208,7 @@
               {{ item.nic }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-                {{ item.nic }}
+                {{ item.createdAtFormatted }}
               </td>
            
           </tr>

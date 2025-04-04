@@ -238,12 +238,31 @@
             <p class="text-white">off</p>
           </div>
 
-          <!-- <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8"> -->
-          <img
-            *ngIf="productObj.varietyId > 0"
-            [src]="selectedImage"
-            class="w-full h-auto object-contain px-4 py-2 mt-8"
-          />
+          <!-- Image container with loading spinner -->
+          <div
+            class="relative w-full h-auto flex items-center justify-center mt-8"
+          >
+            <!-- Loading spinner -->
+            <div
+              *ngIf="isImageLoading"
+              class="absolute inset-0 flex items-center justify-center"
+            >
+              <div
+                class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00957D]"
+              ></div>
+            </div>
+
+            <!-- Image -->
+            <img
+              *ngIf="productObj.varietyId > 0"
+              [src]="selectedImage"
+              (load)="onImageLoad()"
+              (error)="onImageError()"
+              class="w-full h-auto object-contain px-4 py-2"
+              [class.opacity-0]="isImageLoading"
+              [class.opacity-100]="!isImageLoading"
+            />
+          </div>
 
           <p class="text-lg text-black my-2">{{ productObj.cropName }}</p>
 

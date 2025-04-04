@@ -28,6 +28,7 @@ export class MarketAddProductComponent implements OnInit {
   readonly templateKeywords = signal<string[]>([]);
   announcer = inject(LiveAnnouncer);
   productObj: MarketPrice = new MarketPrice();
+  isImageLoading: boolean = false;
 
   cropsObj: Crop[] = [];
   selectedVarieties!: Variety[];
@@ -69,12 +70,25 @@ export class MarketAddProductComponent implements OnInit {
     }
   }
 
+  onImageLoad() {
+    this.isImageLoading = false;
+  }
+
+  onImageError() {
+    this.isImageLoading = false;
+    // You can set a fallback image here if needed
+    // this.selectedImage = 'path/to/fallback-image.jpg';
+  }
+
   selectVerityImage() {
-    const sample = this.selectedVarieties.filter(
-      (verity) => verity.id === +this.productObj.varietyId
-    );
-    console.log(sample[0].image);
-    this.selectedImage = sample[0].image;
+    if (this.productObj.varietyId > 0) {
+      this.isImageLoading = true;
+      const sample = this.selectedVarieties.filter(
+        (verity) => verity.id === +this.productObj.varietyId
+      );
+      console.log(sample[0].image);
+      this.selectedImage = sample[0].image;
+    }
   }
 
   calculeSalePrice() {

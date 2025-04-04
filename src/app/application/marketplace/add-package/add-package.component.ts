@@ -23,10 +23,7 @@ export class AddPackageComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileName!: string;
 
-
-
-
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   ngOnInit(): void {
     this.getCropProductData();
@@ -65,7 +62,12 @@ export class AddPackageComponent implements OnInit {
   }
 
   onAdd() {
-    if (!this.inputPackageObj.qtytype || !this.inputPackageObj.mpItemId || !this.inputPackageObj.cID || !this.packageObj.name) {
+    if (
+      !this.inputPackageObj.qtytype ||
+      !this.inputPackageObj.mpItemId ||
+      !this.inputPackageObj.cID ||
+      !this.packageObj.displayName
+    ) {
       Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
       return;
     }
@@ -96,17 +98,17 @@ export class AddPackageComponent implements OnInit {
             icon: 'success',
             title: 'Package Created',
             text: 'The package was created successfully!',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
           }).then(() => {
             this.packageObj = new Package();
-            this.router.navigate(['/market/action/add-package'])
+            this.router.navigate(['/market/action/add-package']);
           });
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Package Not Created',
             text: 'The package could not be created. Please try again.',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
           });
         }
       },
@@ -115,12 +117,11 @@ export class AddPackageComponent implements OnInit {
           icon: 'error',
           title: 'An Error Occurred',
           text: 'There was an error while creating the package. Please try again later.',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
         });
       }
     );
   }
-
 
   onCancel() {
     Swal.fire({
@@ -146,26 +147,33 @@ export class AddPackageComponent implements OnInit {
   }
 
   decrementQuantity(index: number) {
-    if (this.packageObj.Items[index] && this.packageObj.Items[index].quantity > 0) {
+    if (
+      this.packageObj.Items[index] &&
+      this.packageObj.Items[index].quantity > 0
+    ) {
       this.packageObj.Items[index].quantity -= 1;
     }
   }
 
   decrementDiscount(index: number, step: number = 1.0) {
-    if (this.packageObj.Items[index] && this.packageObj.Items[index].discountedPrice > 0) {
+    if (
+      this.packageObj.Items[index] &&
+      this.packageObj.Items[index].discountedPrice > 0
+    ) {
       const newPrice = this.packageObj.Items[index].discountedPrice - step;
-      this.packageObj.Items[index].discountedPrice = newPrice >= 0 ? parseFloat(newPrice.toFixed(2)) : 0;
+      this.packageObj.Items[index].discountedPrice =
+        newPrice >= 0 ? parseFloat(newPrice.toFixed(2)) : 0;
     }
   }
 
   incrementDiscount(index: number) {
     if (this.packageObj.Items[index]) {
-      this.packageObj.Items[index].discountedPrice += 1.00;
-      this.packageObj.Items[index].discountedPrice = parseFloat(this.packageObj.Items[index].discountedPrice.toFixed(2));
+      this.packageObj.Items[index].discountedPrice += 1.0;
+      this.packageObj.Items[index].discountedPrice = parseFloat(
+        this.packageObj.Items[index].discountedPrice.toFixed(2)
+      );
     }
   }
-
-
 
   removeItem(index: number) {
     if (index >= 0 && index < this.packageObj.Items.length) {
@@ -177,7 +185,7 @@ export class AddPackageComponent implements OnInit {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, remove it!',
-        cancelButtonText: 'No, keep it'
+        cancelButtonText: 'No, keep it',
       }).then((result) => {
         if (result.isConfirmed) {
           this.packageObj.Items.splice(index, 1);
@@ -187,13 +195,12 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
-
   getTotalPrice(): number {
     return this.packageObj.Items.reduce((sum, item) => {
       let totalPrice;
       const actualPrice = item.normalPrice * item.quantity;
       const discountedValue = item.discountedPrice || 0;
-      totalPrice = sum + (actualPrice - discountedValue)
+      totalPrice = sum + (actualPrice - discountedValue);
       this.packageObj.total = totalPrice;
       return totalPrice;
     }, 0);
@@ -218,7 +225,6 @@ export class AddPackageComponent implements OnInit {
       this.selectedFileName = file.name;
       this.packageObj.selectedFileName = file.name;
 
-
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedImage = e.target.result;
@@ -232,7 +238,6 @@ export class AddPackageComponent implements OnInit {
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
   }
-
 }
 
 class Crop {
@@ -249,7 +254,7 @@ class Variety {
 }
 
 class Package {
-  name!: string;
+  displayName!: string;
   status: string = 'Disabled';
   Items: Items[] = [];
   cID!: number;
@@ -257,8 +262,6 @@ class Package {
   description!: string;
   image!: any;
   selectedFileName!: string;
-  portion!: string;
-  period!: string;
 }
 
 class Items {

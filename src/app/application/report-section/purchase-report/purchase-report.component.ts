@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environment/environment';
 
 
 interface PurchaseReport {
@@ -21,8 +22,11 @@ interface PurchaseReport {
   firstName: string;
   lastName: string;
   nic: string;
+  userId: number;
+  collQr: string;
   createdAt: string;
   createdAtFormatted: string | null;
+  
 }
 
 
@@ -46,6 +50,7 @@ export class PurchaseReportComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   grandTotal: number = 0;
+  isDownloading = false;
 
   centers!: Centers[];
   months: Months[]= [
@@ -152,7 +157,7 @@ export class PurchaseReportComponent {
 
     onDateChange(): void {
       this.selectedMonth = null; // Reset selected month when date changes
-      console.log(this.createdDate);
+      // console.log(this.createdDate);
       // if (this.createdDate === "") {
       //   Swal.fire({
       //     title: "Error!",
@@ -190,6 +195,76 @@ export class PurchaseReportComponent {
           }
         );
       }
+
+
+
+
+
+        downloadTemplate1() {
+          this.selectedCenter = null;
+          this.selectedMonth = null;
+          this.search = '';
+          if (this.createdDate === "") {
+            Swal.fire({
+              title: "Error!",
+              text: "Please select a date",
+              icon: "error",
+            })
+            return;
+          } 
+    
+          this.isDownloading = true;
+          const apiUrl = `${environment.API_URL}auth/download-purchase-report?createdDate=${this.createdDate}`;
+      
+          // Trigger the download
+          fetch(apiUrl, {
+            method: "GET",
+          })
+            .then((response) => {
+              if (response.ok) {
+                // Create a blob for the Excel file
+                return response.blob();
+              } else {
+                throw new Error("Failed to download the file");
+              }
+            })
+            .then((blob) => {
+              // Create a URL for the blob
+              const url = window.URL.createObjectURL(blob);
+      
+              // Create a temporary anchor element to trigger the download
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `Daily Collection Report (${this.createdDate}).xlsx`;
+              a.click();
+      
+              // Revoke the URL after the download is triggered
+              window.URL.revokeObjectURL(url);
+      
+              // Show success message
+              Swal.fire({
+                icon: "success",
+                title: "Downloaded",
+                text: "Please check your downloads folder",
+              });
+              this.isDownloading = false;
+            })
+            .catch((error) => {
+              // Handle errors
+              Swal.fire({
+                icon: "error",
+                title: "Download Failed",
+                text: error.message,
+              });
+              this.isDownloading = false;
+            });
+        }
+
+
+
+        navigateToFamerListReport(id: number, userId: number, QRcode: string) {
+          this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId, QRcode } });
+        }
 }
 
 

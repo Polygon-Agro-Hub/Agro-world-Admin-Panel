@@ -68,7 +68,7 @@
         >
           <input
             type="text"
-            placeholder="Search.."
+            placeholder="Search by all"
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="search"
           (keydown.enter)="applysearch()"
@@ -120,13 +120,14 @@
 
     <div class="flex justify-between items-center mb-5"> 
         <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Total : Rs {{this.grandTotal | number:'1.2-2'}}
+        Total : Rs. {{this.grandTotal | number:'1.2-2'}}
       </h4>
 
-      <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center">
-        <i class="fa-solid fa-download pr-4"></i>
-    Download
-  </button>
+      <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="downloadTemplate1()">
+        <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
+        <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
+        {{ isDownloading ? " Downloading..." : " Download" }}
+      </button>
     </div>
 
 
@@ -171,6 +172,9 @@
           >
           Collected Time
                   </th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+               
+            </th>
             
           
             
@@ -210,6 +214,11 @@
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                 {{ item.createdAtFormatted }}
               </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              <button (click)="navigateToFamerListReport(item.id, item.userId, item.collQr)">
+                <i class="fa-regular fa-pen-to-square text-blue-500"></i>
+              </button>
+            </td>
            
           </tr>
         </tbody>

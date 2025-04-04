@@ -98,6 +98,10 @@ export class PurchaseReportComponent {
       const centerId = this.selectedCenter?.id || '';
       const monthNumber = this.selectedMonth?.id || '';
 
+      if (this.createdDate === "" && this.selectedMonth == null){
+        this.createdDate = new Date().toISOString().split("T")[0];
+      }
+
 
       this.collectionoOfficer
         .fetchAllPurchaseReport(page, limit, centerId, monthNumber, this.createdDate, this.search)
@@ -152,6 +156,7 @@ export class PurchaseReportComponent {
 
   clearSearch(): void {
     this.search = '';
+    this.createdDate = new Date().toISOString().split("T")[0];
     this.fetchAllPurchaseReport();
   }
 

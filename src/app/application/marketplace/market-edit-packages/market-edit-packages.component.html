@@ -1,0 +1,197 @@
+<form>
+  <!-- save button -->
+  <div class="flex flex-row justify-between items-center mb-6">
+    <p class="text-lg text-black font-semibold dark:text-textDark">
+      Edit Package
+    </p>
+    <div>
+      <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2">
+        Cancel
+      </button>
+      <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2">
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-row justify-between">
+    <div
+      class="bg-[#FFFFFF] p-5 shadow-md rounded-md w-[70%] dark:bg-tileBlack"
+    >
+      <div class="flex flex-row justify-between items-center mb-6">
+        <div class="w-[70%]">
+          <label class="text-[#534E4E] dark:text-textDark"
+            >Display Package Name *</label
+          >
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Ex : Fruit Pack"
+            [(ngModel)]="packageData.displayName"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+
+        <div class="flex flex-row items-center gap-3">
+          <input type="file" id="imageUpload" accept="image/*" class="hidden" />
+          <label class="text-[#534E4E] dark:text-textDark">Add Image</label>
+          <div
+            class="py-1 px-2 rounded-lg shadow-lg border-[1px] border-[#3980C0]"
+          >
+            <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Description *</label>
+        <textarea
+          rows="4"
+          id="priceLimit"
+          name="description"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        ></textarea>
+      </div>
+
+      <hr class="my-8 border-[1px]" />
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
+        <select
+          id="selectId"
+          name="selectId"
+          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        >
+          <option selected disabled value="">--- Select Crop ---</option>
+          <option></option>
+        </select>
+      </div>
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Variety (Display Name) *</label
+        >
+        <select
+          id="variety"
+          name="variety"
+          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        >
+          <option selected disabled value="">--- Select Variety ---</option>
+          <option></option>
+        </select>
+      </div>
+
+      <div class="flex flex-row items-center mb-6">
+        <div class="w-[90%]">
+          <label class="text-[#534E4E] dark:text-textDark">Quantity *</label>
+          <input
+            type="number"
+            id="priceLimit"
+            name="priceLimit"
+            min="0"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+        <div class="flex justify-center items-center mt-6">
+          <select
+            class="bg-[#D9D9D9] py-3 px-3 rounded-lg mx-4 cursor-pointer"
+            name="qtytype"
+          >
+            <option selected value="" disabled>...</option>
+            <option value="Kg">Kg</option>
+            <option value="g">g</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Actual Price *</label>
+        <input
+          type="text"
+          id="priceLimit"
+          name="priceLimit"
+          disabled
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+      </div>
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Discount *</label>
+        <input
+          type="text"
+          id="priceLimit"
+          name="priceLimit"
+          disabled
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+      </div>
+
+      <div class="flex justify-center items-center">
+        <div
+          class="text-white text-lg bg-[#3980C0] py-3 px-7 rounded-lg cursor-pointer"
+        >
+          Add
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
+      <div class="rounded-lg shadow-lg px-12 py-6">
+        <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
+
+        <div
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl"
+        >
+          <!-- <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8"> -->
+          <img class="w-full h-auto object-cover px-4 py-2 mt-8" />
+
+          <div class="flex flex-col items-center justify-center gap-y-2">
+            <p class="text-xl text-black font-bold"></p>
+            <p class="text-lg text-[#00957D]"></p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack"
+      >
+        <label class="text-black font-semibold dark:text-textDark"
+          >Status</label
+        >
+        <div class="flex items-center space-x-2 my-5">
+          <!-- With Discount Radio Button -->
+          <input
+            class="w-5 h-5"
+            type="radio"
+            id="status"
+            name="status"
+            [value]="'Enabled'"
+          />
+          <label
+            for="withDiscount"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Enabled
+          </label>
+        </div>
+
+        <div class="flex items-center space-x-2 my-5">
+          <input
+            class="w-5 h-5"
+            type="radio"
+            id="status"
+            name="status"
+            [value]="'Disabled'"
+          />
+          <label
+            for="withDiscount"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Disabled
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,20 +1,17 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../environment/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { TokenService } from "../token/services/token.service";
+import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { TokenService } from '../token/services/token.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(
-    private http: HttpClient,
-    private tokenService: TokenService,
-  ) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -28,21 +25,21 @@ export class MarketPlaceService {
   createProduct(Data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     });
     return this.http.post(
       `${this.apiUrl}market-place/add-market-product`,
       Data,
       {
         headers,
-      },
+      }
     );
   }
 
   createCoupen(Data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     });
     return this.http.post(`${this.apiUrl}market-place/create-coupen`, Data, {
       headers,
@@ -54,7 +51,7 @@ export class MarketPlaceService {
     limit: number = 10,
     status: any,
     types: any,
-    search: string,
+    search: string
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -106,9 +103,8 @@ export class MarketPlaceService {
     const formData = new FormData();
     console.log(selectedImage);
 
-
     // Append the package data as a JSON string
-    formData.append("package", JSON.stringify(Data));
+    formData.append('package', JSON.stringify(Data));
 
     // Append the image file correctly
     if (selectedImage) {
@@ -141,24 +137,49 @@ export class MarketPlaceService {
     });
   }
 
-
   getProductById(id: number): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     let url = `${this.apiUrl}market-place/get-product-by-id/${id}`;
     return this.http.get<any>(url, { headers });
   }
 
-
   updateProduct(Data: any, id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.patch(`${this.apiUrl}market-place/edit-market-product/${id}`, Data, {
-      headers,
+    return this.http.patch(
+      `${this.apiUrl}market-place/edit-market-product/${id}`,
+      Data,
+      {
+        headers,
+      }
+    );
+  }
+
+  updatePackages(Data: any, id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
     });
+    return this.http.patch(
+      `${this.apiUrl}market-place/edit-market-packages/${id}`,
+      Data,
+      {
+        headers,
+      }
+    );
+  }
+
+  getPackageById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-package-by-id/${id}`;
+    return this.http.get<any>(url, { headers });
   }
 }

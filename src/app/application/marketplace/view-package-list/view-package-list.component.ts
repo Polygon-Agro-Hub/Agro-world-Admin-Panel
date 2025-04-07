@@ -69,6 +69,10 @@ export class ViewPackageListComponent {
     this.router.navigate([path]);
   }
 
+  editPackage(id: number) {
+    this.router.navigate([`/market/action/edit-packages/${id}`]);
+  }
+
   deletePackage(id: number) {
     Swal.fire({
       title: 'Are you sure?',

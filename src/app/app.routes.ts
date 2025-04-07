@@ -113,6 +113,7 @@ import { ViewSalesDashComplaintsComponent } from './application/sales-dash-secti
 import { ViewSelectedSalesDashComplainComponent } from './application/sales-dash-section/view-selected-sales-dash-complain/view-selected-sales-dash-complain.component';
 import { PurchaseReportComponent } from './application/report-section/purchase-report/purchase-report.component';
 import { ViewPackageListComponent } from './application/marketplace/view-package-list/view-package-list.component';
+import { MarketEditPackagesComponent } from './application/marketplace/market-edit-packages/market-edit-packages.component';
 export const routes: Routes = [
   {
     path: '',
@@ -612,6 +613,10 @@ export const routes: Routes = [
               {
                 path: 'view-packages-list',
                 component: ViewPackageListComponent,
+              },
+              {
+                path: 'edit-packages/:id',
+                component: MarketEditPackagesComponent,
               },
             ],
           },

@@ -108,7 +108,10 @@
                 </button>
               </td>
               <td>
-                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <button
+                  (click)="editPackage(pkg.id)"
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                >
                   <svg
                     fill="currentColor"
                     viewBox="0 0 32 32"

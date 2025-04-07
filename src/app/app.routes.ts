@@ -114,6 +114,7 @@ import { ViewSelectedSalesDashComplainComponent } from './application/sales-dash
 import { PurchaseReportComponent } from './application/report-section/purchase-report/purchase-report.component';
 import { ViewPackageListComponent } from './application/marketplace/view-package-list/view-package-list.component';
 import { MarketEditPackagesComponent } from './application/marketplace/market-edit-packages/market-edit-packages.component';
+import { CollectionReportComponent } from './application/report-section/collection-report/collection-report.component';
 export const routes: Routes = [
   {
     path: '',
@@ -323,6 +324,10 @@ export const routes: Routes = [
           {
             path: 'purchase-report',
             component: PurchaseReportComponent,
+          },
+          {
+            path: 'collection-report',
+            component: CollectionReportComponent,
           },
         ],
       },

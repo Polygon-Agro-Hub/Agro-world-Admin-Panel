@@ -216,13 +216,17 @@
               </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               <button (click)="navigateToFamerListReport(item.id, item.userId, item.collQr)">
-                <i class="fa-regular fa-pen-to-square text-blue-500"></i>
+               
+                <i class="fa fa-external-link text-blue-500" aria-hidden="true"></i>
               </button>
             </td>
            
           </tr>
         </tbody>
       </table>
+      <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
+        <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+      </div>
       <div class="dark:bg-[#262f45]">
         <pagination-controls
           (pageChange)="onPageChange($event)"

@@ -203,67 +203,188 @@ export class PurchaseReportComponent {
 
 
 
-
-
-        downloadTemplate1() {
-          this.selectedCenter = null;
-          this.selectedMonth = null;
-          this.search = '';
-          if (this.createdDate === "") {
-            Swal.fire({
-              title: "Error!",
-              text: "Please select a date",
-              icon: "error",
-            })
-            return;
-          } 
-    
-          this.isDownloading = true;
-          const apiUrl = `${environment.API_URL}auth/download-purchase-report?createdDate=${this.createdDate}`;
-      
-          // Trigger the download
-          fetch(apiUrl, {
-            method: "GET",
-          })
-            .then((response) => {
-              if (response.ok) {
-                // Create a blob for the Excel file
-                return response.blob();
-              } else {
-                throw new Error("Failed to download the file");
-              }
-            })
-            .then((blob) => {
-              // Create a URL for the blob
-              const url = window.URL.createObjectURL(blob);
-      
-              // Create a temporary anchor element to trigger the download
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = `Daily Collection Report (${this.createdDate}).xlsx`;
-              a.click();
-      
-              // Revoke the URL after the download is triggered
-              window.URL.revokeObjectURL(url);
-      
-              // Show success message
-              Swal.fire({
-                icon: "success",
-                title: "Downloaded",
-                text: "Please check your downloads folder",
-              });
-              this.isDownloading = false;
-            })
-            .catch((error) => {
-              // Handle errors
-              Swal.fire({
-                icon: "error",
-                title: "Download Failed",
-                text: error.message,
-              });
-              this.isDownloading = false;
-            });
+      downloadTemplate1() {
+        this.isDownloading = true;
+        
+        // Prepare query parameters
+        let queryParams = [];
+        
+        if (this.selectedCenter) {
+          queryParams.push(`centerId=${this.selectedCenter.id}`);
         }
+        
+        if (this.selectedMonth) {
+          queryParams.push(`monthNumber=${this.selectedMonth.id}`);
+        }
+        
+        if (this.createdDate) {
+          queryParams.push(`createdDate=${this.createdDate}`);
+        }
+        
+        if (this.search) {
+          queryParams.push(`search=${this.search}`);
+        }
+        
+        const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+        
+        const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
+        
+        // Trigger the download
+        fetch(apiUrl, {
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.blob();
+            } else {
+              throw new Error("Failed to download the file");
+            }
+          })
+          .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            
+            // Create a meaningful filename
+            let filename = 'Purchase_Report';
+            if (this.selectedMonth) {
+              filename += `_${this.selectedMonth.monthName}`;
+            }
+            if (this.createdDate) {
+              filename += `_${this.createdDate}`;
+            }
+            if (this.selectedCenter) {
+              filename += `_${this.selectedCenter.centerName}`;
+            }
+            filename += '.xlsx';
+            
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            Swal.fire({
+              icon: "success",
+              title: "Downloaded",
+              text: "Please check your downloads folder",
+            });
+            this.isDownloading = false;
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Download Failed",
+              text: error.message,
+            });
+            this.isDownloading = false;
+          });
+      }
+
+
+
+        // downloadTemplate1() {
+        //   this.selectedCenter = null;
+        //   // this.selectedMonth = null;
+        //   this.search = '';
+        //   if (this.createdDate != "" && this.selectedMonth?.id == null) {
+        //     console.log(this.createdDate);
+        //     this.isDownloading = true;
+        //   const apiUrl = `${environment.API_URL}auth/download-purchase-report?createdDate=${this.selectedMonth?.id}`;
+      
+        //   // Trigger the download
+        //   fetch(apiUrl, {
+        //     method: "GET",
+        //   })
+        //     .then((response) => {
+        //       if (response.ok) {
+        //         // Create a blob for the Excel file
+        //         return response.blob();
+        //       } else {
+        //         throw new Error("Failed to download the file");
+        //       }
+        //     })
+        //     .then((blob) => {
+        //       // Create a URL for the blob
+        //       const url = window.URL.createObjectURL(blob);
+      
+        //       // Create a temporary anchor element to trigger the download
+        //       const a = document.createElement("a");
+        //       a.href = url;
+        //       a.download = `Daily Collection Report (${this.selectedMonth?.monthName}).xlsx`;
+        //       a.click();
+      
+        //       // Revoke the URL after the download is triggered
+        //       window.URL.revokeObjectURL(url);
+      
+        //       // Show success message
+        //       Swal.fire({
+        //         icon: "success",
+        //         title: "Downloaded",
+        //         text: "Please check your downloads folder",
+        //       });
+        //       this.isDownloading = false;
+        //     })
+        //     .catch((error) => {
+        //       // Handle errors
+        //       Swal.fire({
+        //         icon: "error",
+        //         title: "Download Failed",
+        //         text: error.message,
+        //       });
+        //       this.isDownloading = false;
+        //     });
+        //   } 
+        //   else if (this.createdDate === "" && this.selectedMonth != null){
+
+        //     console.log('Hit 3',this.createdDate);
+        //     this.isDownloading = true;
+        //   const apiUrl = `${environment.API_URL}auth/download-purchase-report?createdDate=${this.createdDate}`;
+      
+        //   // Trigger the download
+        //   fetch(apiUrl, {
+        //     method: "GET",
+        //   })
+        //     .then((response) => {
+        //       if (response.ok) {
+        //         // Create a blob for the Excel file
+        //         return response.blob();
+        //       } else {
+        //         throw new Error("Failed to download the file");
+        //       }
+        //     })
+        //     .then((blob) => {
+        //       // Create a URL for the blob
+        //       const url = window.URL.createObjectURL(blob);
+      
+        //       // Create a temporary anchor element to trigger the download
+        //       const a = document.createElement("a");
+        //       a.href = url;
+        //       a.download = `Daily Collection Report (${this.createdDate}).xlsx`;
+        //       a.click();
+      
+        //       // Revoke the URL after the download is triggered
+        //       window.URL.revokeObjectURL(url);
+      
+        //       // Show success message
+        //       Swal.fire({
+        //         icon: "success",
+        //         title: "Downloaded",
+        //         text: "Please check your downloads folder",
+        //       });
+        //       this.isDownloading = false;
+        //     })
+        //     .catch((error) => {
+        //       // Handle errors
+        //       Swal.fire({
+        //         icon: "error",
+        //         title: "Download Failed",
+        //         text: error.message,
+        //       });
+        //       this.isDownloading = false;
+        //     });
+        //   }
+    
+          
+        // }
 
 
 

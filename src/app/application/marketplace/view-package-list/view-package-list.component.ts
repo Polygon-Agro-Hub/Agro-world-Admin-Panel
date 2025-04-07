@@ -4,10 +4,12 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { ViewPackageListService } from '../../../services/market-place/view-package-list.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../../services/token/services/token.service';
 import { response } from 'express';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-view-package-list',
@@ -65,6 +67,48 @@ export class ViewPackageListComponent {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  deletePackage(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this package? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        const token = this.tokenService.getToken();
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+        });
+
+        this.http
+          .delete(`${environment.API_URL}market-place/delete-packages/${id}`, {
+            headers,
+          })
+          .subscribe({
+            next: (response) => {
+              this.isLoading = false;
+              Swal.fire('Deleted!', 'The package has been deleted.', 'success');
+              this.fetchAllPackages();
+            },
+            error: (error) => {
+              this.isLoading = false;
+              console.error('Error deleting package:', error);
+              Swal.fire(
+                'Error',
+                'There was a problem deleting the package.',
+                'error'
+              );
+            },
+          });
+      }
+    });
   }
 
   get filteredPackages() {

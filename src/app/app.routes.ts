@@ -112,6 +112,8 @@ import { ViewOrdersComponent } from './application/sales-dash-section/view-order
 import { ViewSalesDashComplaintsComponent } from './application/sales-dash-section/view-sales-dash-complaints/view-sales-dash-complaints.component';
 import { ViewSelectedSalesDashComplainComponent } from './application/sales-dash-section/view-selected-sales-dash-complain/view-selected-sales-dash-complain.component';
 import { PurchaseReportComponent } from './application/report-section/purchase-report/purchase-report.component';
+import { ViewPackageListComponent } from './application/marketplace/view-package-list/view-package-list.component';
+import { MarketEditPackagesComponent } from './application/marketplace/market-edit-packages/market-edit-packages.component';
 export const routes: Routes = [
   {
     path: '',
@@ -120,7 +122,7 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
-  
+
   { path: 'status-451', component: Status451Component },
 
   {
@@ -285,38 +287,38 @@ export const routes: Routes = [
           {
             path: 'collective-officer-report/view/:id/:name',
             component: CollectionOfficerReportViewComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Collection Officer Daily Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Officer Daily Report' },
           },
           {
             path: 'collective-officer/district-report',
             component: CollectionofficerDistrictReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'District Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'District Report' },
           },
           {
             path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Collection Officer Farmer Report' },
           },
           {
             path: 'farmer-list-report',
             component: FarmerListReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Collection Officer Farmer Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Officer Farmer Report' },
           },
           {
             path: 'collective-officer/province-report',
             component: CollectionOfficerProvinceReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Province Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Province Report' },
           },
           {
             path: 'collective-officer-report/monthly-report/:id',
             component: MonthlyReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Collection Officer Monthly Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Officer Monthly Report' },
           },
           {
             path: 'purchase-report',
@@ -350,26 +352,26 @@ export const routes: Routes = [
                   {
                     path: 'edit-plantcare-users',
                     component: EditPlantcareUsersComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['Edit Plantcare User'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Edit Plantcare User'] },
                   },
                   {
                     path: 'create-plantcare-users',
                     component: EditPlantcareUsersComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['Add plantcare user'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Add plantcare user'] },
                   },
                   {
                     path: 'view-plantcare-users',
                     component: EditPlantcareUsersComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['View Plantcare User'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['View Plantcare User'] },
                   },
                   {
                     path: 'upload-farmers',
                     component: UserBulkUploadComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: 'Bulk Plantcare User Upload' }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Bulk Plantcare User Upload' },
                   },
                 ],
               },
@@ -399,25 +401,24 @@ export const routes: Routes = [
                   {
                     path: 'create-sales-agents',
                     component: CreateSalesAgentsComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['Add Sales Dash user'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Add Sales Dash user'] },
                   },
                   {
                     path: 'edit-sales-agents/:id',
                     component: EditSalesAgentComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['Edit Sales Dash user'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Edit Sales Dash user'] },
                   },
 
                   {
                     path: 'preview-sales-agents/:id',
                     component: PreviewSalesAgentsComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['View Sales Dash user'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['View Sales Dash user'] },
                   },
                 ],
               },
-
 
               {
                 path: 'collective-officer',
@@ -429,14 +430,14 @@ export const routes: Routes = [
                   {
                     path: 'personal',
                     component: CollectiveofficersPersonalComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: 'Add Collection Officer' }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Add Collection Officer' },
                   },
                   {
                     path: 'personal-edit/:id',
                     component: CollectiveofficersEditComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: 'Edit Collection Officer' }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Edit Collection Officer' },
                   },
                   {
                     path: 'company',
@@ -449,13 +450,13 @@ export const routes: Routes = [
                   {
                     path: 'collective-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: 'View Collection Officer' }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'View Collection Officer' },
                   },
                   {
-                    path:'view-officer-targets/:officerId',
-                    component: ViewOfficerTargetComponent
-                  }
+                    path: 'view-officer-targets/:officerId',
+                    component: ViewOfficerTargetComponent,
+                  },
                 ],
               },
             ],
@@ -483,19 +484,19 @@ export const routes: Routes = [
           {
             path: 'view-current-price',
             component: ViewCurrentMarketPriceComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'View Current Market Prices' },
           },
           {
             path: 'delete-bulk-price',
             component: MarketPriceBulkDeleteComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Delete Market Prices' },
           },
           {
             path: 'price-bulk-upload',
             component: MarketPriceBulkUploadComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Add Market Prices' },
           },
         ],
@@ -513,19 +514,19 @@ export const routes: Routes = [
           {
             path: 'collection-center-dashboard/:id/:comid/:centerName',
             component: CollectionCenterDashboardComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'View Collection Center' },
           },
           {
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Edit Collection Center' },
           },
           {
             path: 'create-company',
             component: CreateCompanyComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Add And Edit Company' },
           },
           {
@@ -535,13 +536,13 @@ export const routes: Routes = [
           {
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Add Collection Center' },
           },
           {
             path: 'add-daily-target/:id/:name/:comid',
             component: AddDailyTargetComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Assign Center Target' },
           },
           {
@@ -567,7 +568,6 @@ export const routes: Routes = [
           {
             path: 'preview-collection-center/:id',
             component: PreviewCollectionCenterComponent,
-            
           },
         ],
       },
@@ -609,6 +609,14 @@ export const routes: Routes = [
               {
                 path: 'edit-product/:id',
                 component: MarketEditProductComponent,
+              },
+              {
+                path: 'view-packages-list',
+                component: ViewPackageListComponent,
+              },
+              {
+                path: 'edit-packages/:id',
+                component: MarketEditPackagesComponent,
               },
             ],
           },

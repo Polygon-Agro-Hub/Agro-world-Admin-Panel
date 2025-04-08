@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environment/environment';
 
 interface PurchaseReport {
   id: number;
@@ -52,6 +53,7 @@ export class CollectionReportComponent {
   totalItems: number = 0;
   search: string = '';
   page: number = 1;
+  isDownloading = false;
 
      constructor(
         private collectionoOfficer: CollectionService,
@@ -139,6 +141,86 @@ export class CollectionReportComponent {
 
     this.fetchAllCollectionReport();
   }
+
+
+
+
+
+  downloadTemplate1() {
+          this.isDownloading = true;
+          
+          // Prepare query parameters
+          let queryParams = [];
+          
+          if (this.selectedCenter) {
+            queryParams.push(`centerId=${this.selectedCenter.id}`);
+          }
+          
+          if (this.fromDate) {
+            queryParams.push(`startDate=${this.fromDate}`);
+          }
+          
+          if (this.toDate) {
+            queryParams.push(`endDate=${this.toDate}`);
+          }
+          
+          if (this.search) {
+            queryParams.push(`search=${this.search}`);
+          }
+          
+          const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+          
+          const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+          
+          // Trigger the download
+          fetch(apiUrl, {
+            method: "GET",
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.blob();
+              } else {
+                throw new Error("Failed to download the file");
+              }
+            })
+            .then((blob) => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              
+              // Create a meaningful filename
+              let filename = 'Collection_Report';
+              if (this.fromDate) {
+                filename += `_${this.fromDate}`;
+              }
+              if (this.toDate) {
+                filename += `_${this.toDate}`;
+              }
+              if (this.selectedCenter) {
+                filename += `_${this.selectedCenter.regCode}`;
+              }
+              filename += '.xlsx';
+              
+              a.download = filename;
+              a.click();
+              window.URL.revokeObjectURL(url);
+              
+              Swal.fire({
+                icon: "success",
+                title: "Downloaded",
+                text: "Please check your downloads folder",
+              });
+              this.isDownloading = false;
+            })
+            .catch((error) => {
+              Swal.fire({
+                icon: "error",
+                title: "Download Failed",
+                text: error.message,
+              });
+              this.isDownloading = false;
+            });
+        }
 }
 
 

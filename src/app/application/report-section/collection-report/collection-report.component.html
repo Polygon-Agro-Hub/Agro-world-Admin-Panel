@@ -67,11 +67,11 @@
   <div class="flex justify-between items-center mb-5"> 
        
 
-    <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" >
+    <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="downloadTemplate1()">
       <i class="fa-solid fa-download px-2"></i>
-      Download
-      <!-- <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
-      {{ isDownloading ? " Downloading..." : " Download" }} -->
+     
+      <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
+      {{ isDownloading ? " Downloading..." : " Download" }}
     </button>
   </div>
 

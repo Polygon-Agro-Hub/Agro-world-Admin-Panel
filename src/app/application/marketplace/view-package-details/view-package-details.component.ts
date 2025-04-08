@@ -6,18 +6,19 @@ import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-view-package-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-package-details.component.html',
   styleUrls: ['./view-package-details.component.css'],
 })
 export class ViewPackageDetailsComponent implements OnInit {
   package: Package | null = null;
   packageDetails: PackageDetails[] = [];
-  loading = true;
+  loading = false;
   error: string | null = null;
 
   constructor(
@@ -28,69 +29,6 @@ export class ViewPackageDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.fetchPackageDetails();
   }
-
-  // fetchPackageDetails(): void {
-  //   this.loading = true;
-  //   this.error = null;
-
-  //   this.route.params.subscribe((params) => {
-  //     const id = +params['id'];
-
-  //     this.marketPlaceService
-  //       .getPackageWithDetailsById(id)
-  //       .pipe(
-  //         catchError((error) => {
-  //           this.error = error.message || 'Failed to load package details';
-  //           return of(null);
-  //         }),
-  //         finalize(() => {
-  //           this.loading = false;
-  //         })
-  //       )
-  //       .subscribe((response) => {
-  //         console.log('Package details response:', response);
-
-  //         if (response?.success && response.data) {
-  //           this.package = {
-  //             id: response.data.id,
-  //             displayName: response.data.displayName,
-  //             image: response.data.image,
-  //             description: response.data.description,
-  //             status: response.data.status,
-  //             total: parseFloat(response.data.total),
-  //             discount: response.data.discount
-  //               ? parseFloat(response.data.discount)
-  //               : null,
-  //             subtotal: parseFloat(response.data.subtotal),
-  //             createdAt: response.data.createdAt,
-  //           };
-
-  //           this.packageDetails =
-  //             response.data.packageDetails?.map(
-  //               (detail: {
-  //                 packageId: any;
-  //                 mpItemId: any;
-  //                 itemDisplayName: any;
-  //                 quantity: any;
-  //                 quantityType: any;
-  //                 price: string;
-  //                 createdAt: any;
-  //               }) => ({
-  //                 packageId: detail.packageId,
-  //                 mpItemId: detail.mpItemId,
-  //                 itemDisplayName: detail.itemDisplayName,
-  //                 quantity: detail.quantity,
-  //                 quantityType: detail.quantityType,
-  //                 price: parseFloat(detail.price),
-  //                 createdAt: detail.createdAt,
-  //               })
-  //             ) || [];
-  //         } else if (response && !response.success) {
-  //           this.error = response.message || 'Package not found';
-  //         }
-  //       });
-  //   });
-  // }
 
   fetchPackageDetails(): void {
     this.loading = true;

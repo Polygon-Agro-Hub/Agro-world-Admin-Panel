@@ -182,4 +182,13 @@ export class MarketPlaceService {
     let url = `${this.apiUrl}market-place/get-package-by-id/${id}`;
     return this.http.get<any>(url, { headers });
   }
+
+  getPackageWithDetailsById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const url = `${this.apiUrl}market-place/get-packagedetails-by-id/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
 }

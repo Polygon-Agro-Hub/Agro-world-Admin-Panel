@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-market-edit-packages',
@@ -18,20 +18,42 @@ export class MarketEditPackagesComponent {
   selectedImage: string | ArrayBuffer | null = null;
   displayName: any;
 
-  constructor(private markServ: MarketPlaceService) {}
+  constructor(
+    private markServ: MarketPlaceService,
+    private route: ActivatedRoute
+  ) {}
 
-  ngOnInit(): void {
-    this.fetchPackage(this.packageId);
+  ngOnInit() {
+    this.route.params.subscribe((params) => {
+      if (params && params['id']) {
+        this.packageId = +params['id']; // Convert string to number
+        if (this.packageId) {
+          this.getPackage();
+        } else {
+          console.error('No package ID provided');
+          this.error = 'No package ID provided';
+        }
+      } else {
+        console.error('Params are undefined');
+        this.error = 'Failed to retrieve route parameters';
+      }
+    });
   }
 
-  fetchPackage(id: number): void {
+  getPackage() {
+    if (!this.packageId) return; // Optional: guard against empty packageId
+
     this.markServ.getPackageById(this.packageId).subscribe({
-      next: (response) => {
-        this.packageData = response;
+      next: (res) => {
+        console.log('package:', res);
+        this.packageData = res;
+        this.selectedImage = res.image;
+        this.displayName = res.displayName;
+        // Add any other property assignments you need here
       },
       error: (err) => {
-        this.error = 'Failed to load package data';
         console.error('Error fetching package:', err);
+        this.error = 'Failed to load package details';
       },
     });
   }

@@ -51,6 +51,9 @@ export class PurchaseReportComponent {
   itemsPerPage: number = 10;
   grandTotal: number = 0;
   isDownloading = false;
+  fromDate: string = '';
+  toDate: string = '';
+  maxDate: string = '';
 
   centers!: Centers[];
   months: Months[]= [
@@ -87,8 +90,10 @@ export class PurchaseReportComponent {
 
 
     ngOnInit() {
-      this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
+      // this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
       this.getAllCenters();
+      const today = new Date();
+      this.maxDate = today.toISOString().split('T')[0];
     }
 
 
@@ -104,7 +109,7 @@ export class PurchaseReportComponent {
 
 
       this.collectionoOfficer
-        .fetchAllPurchaseReport(page, limit, centerId, monthNumber, this.createdDate, this.search)
+        .fetchAllPurchaseReport(page, limit, centerId, this.fromDate, this.toDate, this.search)
         .subscribe(
           (response) => {
             this.purchaseReport = response.items;
@@ -213,12 +218,12 @@ export class PurchaseReportComponent {
           queryParams.push(`centerId=${this.selectedCenter.id}`);
         }
         
-        if (this.selectedMonth) {
-          queryParams.push(`monthNumber=${this.selectedMonth.id}`);
+        if (this.fromDate) {
+          queryParams.push(`startDate=${this.fromDate}`);
         }
         
-        if (this.createdDate) {
-          queryParams.push(`createdDate=${this.createdDate}`);
+        if (this.toDate) {
+          queryParams.push(`endDate=${this.toDate}`);
         }
         
         if (this.search) {
@@ -247,14 +252,14 @@ export class PurchaseReportComponent {
             
             // Create a meaningful filename
             let filename = 'Purchase_Report';
-            if (this.selectedMonth) {
-              filename += `_${this.selectedMonth.monthName}`;
+            if (this.fromDate) {
+              filename += `_${this.fromDate}`;
             }
-            if (this.createdDate) {
-              filename += `_${this.createdDate}`;
+            if (this.toDate) {
+              filename += `_${this.toDate}`;
             }
             if (this.selectedCenter) {
-              filename += `_${this.selectedCenter.centerName}`;
+              filename += `_${this.selectedCenter.regCode}`;
             }
             filename += '.xlsx';
             
@@ -397,6 +402,7 @@ export class PurchaseReportComponent {
 class Centers {
   id!: string; // Updated to match `cropGroupId`
   centerName!: string;
+  regCode!: string;
 }
 
 interface Months {

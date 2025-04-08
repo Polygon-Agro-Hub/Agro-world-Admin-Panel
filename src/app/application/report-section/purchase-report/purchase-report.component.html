@@ -5,9 +5,69 @@
   Back
 </button>
 
+
+
+
+
+
+
+
+
+
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
+
+
+
+<div class="mx-auto min-w-[1200px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
+  <!-- From Date Input (Label and Input on the Same Line) -->
+  <div class="flex items-center gap-2">
+    <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
+    <input
+      id="fromDate"
+      type="date"
+      class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
+      placeholder="YYYY/MM/DD"
+      [(ngModel)]="fromDate"
+      [max]="maxDate"
+    />
+  </div>
+
+  <!-- To Date Input (Label and Input on the Same Line) -->
+  <div class="flex items-center gap-2">
+    <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
+    <input
+      id="toDate"
+      type="date"
+      class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
+      placeholder="YYYY/MM/DD"
+      [(ngModel)]="toDate"
+      [min]="fromDate"
+    />
+  </div>
+
+  <!-- Go Button -->
+  <div class="flex items-center">
+    <button
+    (click)="fetchAllPurchaseReport()"
+      class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
+    >
+      Go
+    </button>
+  </div>
+
+  <!-- Download Report Button (New Line) -->
+  
+</div>
+
+
+<div class="h-10"></div>
+
+
+
+
+
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
@@ -41,7 +101,7 @@
 
 
 
-        <div class="mx-6">
+        <!-- <div class="mx-6">
           <p-dropdown
             styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
             [options]="months"
@@ -51,9 +111,9 @@
             placeholder="Month"
             (onChange)="applyFiltersMonth()"
           />
-        </div>
+        </div> -->
 
-        <div class="mx-6">
+        <!-- <div class="mx-6">
           <input
             id="createdDateFilter"
             type="date"
@@ -61,7 +121,7 @@
             [(ngModel)]="createdDate"
             (change)="onDateChange()"
           />
-        </div>
+        </div> -->
       
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"

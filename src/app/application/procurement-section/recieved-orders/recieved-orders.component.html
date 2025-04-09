@@ -41,6 +41,22 @@
         </i>
 
 
+     
+  
+        <button class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center" (click)="showFilterDialog()">
+          
+          <i class="fa fa-filter px-2" aria-hidden="true"></i>
+
+          Filter By
+          <!-- <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
+          {{ isDownloading ? " Downloading..." : " Download" }} -->
+        </button>
+
+
+
+        <div class="w-5"></div>
+   
+
 
 
 
@@ -164,7 +180,7 @@
             
           </tr>
         </thead>
-        <!-- <tbody>
+        <tbody>
           <tr
             *ngFor="
               let item of purchaseReport
@@ -181,32 +197,30 @@
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.grnNumber }}
+              {{ item.cropNameEnglish }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.amount | number:'1.2-2'}}
+              {{ item.varietyNameEnglish}}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.regCode }}
+              {{ item.TotalQuantity }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.centerName }}
+              {{ item.orderDateFormatted }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.nic }}
+              {{ item.scheduleDateFormatted }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-                {{ item.createdAtFormatted }}
-              </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              <button (click)="navigateToFamerListReport(item.id, item.userId, item.collQr)">
-               
-                <i class="fa fa-external-link text-blue-500" aria-hidden="true"></i>
-              </button>
+                {{ item.toCollectionCenterFormatted }}
             </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.toDispatchCenterFormatted }}
+            </td>
+            
            
           </tr>
-        </tbody> -->
+        </tbody>
       </table>
       <!-- <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
         <p class="text-textLight dark:text-textDark text-lg">No data to display</p>

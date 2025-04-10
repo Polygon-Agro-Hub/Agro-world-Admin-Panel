@@ -102,31 +102,12 @@ export class MarketPlaceService {
   createPackage(Data: any, selectedImage: any): Observable<any> {
     const formData = new FormData();
     console.log(selectedImage);
-
-    // Append the package data as a JSON string
     formData.append('package', JSON.stringify(Data));
 
-    // Append the image file correctly
     if (selectedImage) {
-      // If selectedImage is a File object, append it directly
-
       formData.append('file', selectedImage);
-
-      // If selectedImage is a base64 string, convert it to a Blob and append it
-      // else if (typeof selectedImage === 'string' && selectedImage.startsWith('data:image')) {
-      //   const byteString = atob(selectedImage.split(',')[1]); // Decode base64
-      //   const mimeString = selectedImage.split(',')[0].split(':')[1].split(';')[0]; // Get MIME type
-      //   const ab = new ArrayBuffer(byteString.length);
-      //   const ia = new Uint8Array(ab);
-      //   for (let i = 0; i < byteString.length; i++) {
-      //     ia[i] = byteString.charCodeAt(i);
-      //   }
-      //   const blob = new Blob([ab], { type: mimeString });
-      //   formData.append('file', blob, 'image.png'); // Append as a Blob with a filename
-      // }
     }
 
-    // Set headers (do NOT set Content-Type manually for FormData)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

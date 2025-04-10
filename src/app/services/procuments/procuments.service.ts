@@ -17,7 +17,8 @@ export class ProcumentsService {
     page: number,
     limit: number,
     filterType: string = '',
-    date: string
+    date: string,
+    search: string
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -35,6 +36,11 @@ export class ProcumentsService {
 
     if (date) {
       url += `&date=${date}`;
+    }
+
+
+    if (search) {
+      url += `&search=${search}`;
     }
     return this.http.get<any>(url, { headers });
   }

@@ -11,6 +11,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
+import { environment } from '../../../environment/environment';
 
 
 interface PurchaseReport {
@@ -53,6 +54,7 @@ export class RecievedOrdersComponent {
   purchaseReport: PurchaseReport[] = [];
   filterType: string = '';
   date: string = '';
+  isDownloading = false;
 
 constructor(
   private procumentService: ProcumentsService,
@@ -193,6 +195,78 @@ showFilterDialog() {
 }
 
 
+
+
+downloadTemplate1() {
+        this.isDownloading = true;
+        
+        // Prepare query parameters
+        let queryParams = [];
+        
+        if (this.filterType) {
+          queryParams.push(`filterType=${this.filterType}`);
+        }
+        
+        if (this.date) {
+          queryParams.push(`date=${this.date}`);
+        }
+        
+        if (this.search) {
+          queryParams.push(`search=${this.search}`);
+        }
+      
+        
+        const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+        
+        const apiUrl = `${environment.API_URL}procument/download-order-quantity-report${queryString}`;
+        
+        // Trigger the download
+        fetch(apiUrl, {
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.blob();
+            } else {
+              throw new Error("Failed to download the file");
+            }
+          })
+          .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            
+            // Create a meaningful filename
+            let filename = 'Procument_Items_Report';
+            if (this.filterType) {
+              filename += `_${this.filterType}`;
+            }
+            if (this.date) {
+              filename += `_${this.date}`;
+            }
+        
+            filename += '.xlsx';
+            
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            Swal.fire({
+              icon: "success",
+              title: "Downloaded",
+              text: "Please check your downloads folder",
+            });
+            this.isDownloading = false;
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Download Failed",
+              text: error.message,
+            });
+            this.isDownloading = false;
+          });
+      }
 
 
 }

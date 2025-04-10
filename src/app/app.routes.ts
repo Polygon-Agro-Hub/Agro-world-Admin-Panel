@@ -118,6 +118,7 @@ import { CollectionReportComponent } from './application/report-section/collecti
 import { ProcurementComponent } from './application/procurement-section/procurement/procurement.component';
 import { DispatchComponent } from './application/dispatch-section/dispatch/dispatch.component';
 import { RecievedOrdersComponent } from './application/procurement-section/recieved-orders/recieved-orders.component';
+import { SalesdashOrdersComponent } from './application/dispatch-section/salesdash-orders/salesdash-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -602,6 +603,10 @@ export const routes: Routes = [
           {
             path: '',
             component: DispatchComponent,
+          },
+          {
+            path: 'salesdash-orders',
+            component: SalesdashOrdersComponent,
           },
           
         ],

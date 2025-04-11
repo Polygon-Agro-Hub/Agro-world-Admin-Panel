@@ -113,7 +113,7 @@ export class MarketPlaceService {
     });
 
     // Send the request
-    return this.http.post(`${this.apiUrl}market-place/add-product`, formData, {
+    return this.http.post(`${this.apiUrl}market-place/add-package`, formData, {
       headers,
     });
   }

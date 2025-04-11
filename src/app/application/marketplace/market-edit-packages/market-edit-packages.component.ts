@@ -3,6 +3,7 @@ import { MarketPlaceService } from '../../../services/market-place/market-place.
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-market-edit-packages',
@@ -21,6 +22,7 @@ export class MarketEditPackagesComponent {
   inputPackageObj: InputPackage = new InputPackage();
   selectedVarieties: Variety[] = [];
   packageItems: PackageItem[] = [];
+  selectedPrice: Variety = new Variety();
 
   constructor(
     private markServ: MarketPlaceService,
@@ -150,6 +152,17 @@ export class MarketEditPackagesComponent {
     }
   }
 
+  onPriceChange() {
+    const selectedVariety = this.selectedVarieties.find(
+      (variety) => variety.id === +this.inputPackageObj.mpItemId
+    );
+    if (selectedVariety) {
+      this.selectedPrice = selectedVariety;
+    } else {
+      this.selectedPrice = new Variety();
+    }
+  }
+
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -162,7 +175,74 @@ export class MarketEditPackagesComponent {
     }
   }
 
-  // Add any additional methods you need for form submission, etc.
+  onAdd() {
+    if (
+      !this.inputPackageObj.qtytype ||
+      !this.inputPackageObj.mpItemId ||
+      !this.inputPackageObj.cID ||
+      !this.packageData.displayName
+    ) {
+      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+      return;
+    }
+
+    // Find the selected variety to get all necessary details
+    const selectedVariety = this.selectedVarieties.find(
+      (v) => v.id === this.inputPackageObj.mpItemId
+    );
+
+    if (!selectedVariety) {
+      Swal.fire('Error', 'Selected item not found', 'error');
+      return;
+    }
+
+    // Create new package item
+    const newItem: PackageItem = {
+      id: 0, // Temporary ID, will be replaced with actual ID when saved
+      quantity: this.inputPackageObj.quantity,
+      quantityType: this.inputPackageObj.qtytype,
+      price: this.inputPackageObj.discountedPrice,
+      item: {
+        id: this.inputPackageObj.mpItemId,
+        varietyId: this.inputPackageObj.mpItemId, // Assuming varietyId is same as itemId
+        displayName: selectedVariety.displayName,
+        category: '', // You might need to add this to your Variety class
+        pricing: {
+          normalPrice: this.inputPackageObj.normalPrice,
+          discountedPrice: this.inputPackageObj.discountedPrice,
+          discount:
+            this.inputPackageObj.normalPrice -
+            this.inputPackageObj.discountedPrice,
+          promo: false, // You might want to calculate this
+        },
+        unitType: this.inputPackageObj.qtytype,
+      },
+    };
+
+    // Add to package items
+    this.packageItems.push(newItem);
+
+    // Recalculate package totals
+    this.calculatePackageTotals();
+
+    // Reset the input form
+    this.inputPackageObj = new InputPackage();
+    this.selectedVarieties = [];
+  }
+
+  calculatePackageTotals() {
+    let subtotal = 0;
+
+    // Calculate subtotal from all items
+    this.packageItems.forEach((item) => {
+      subtotal += item.price * item.quantity;
+    });
+
+    // Update package data
+    this.packageData.subtotal = subtotal;
+    this.packageData.discount = 0; // You might want to calculate this
+    this.packageData.total = subtotal - this.packageData.discount;
+  }
 }
 
 // Interface and Class Definitions

@@ -48,6 +48,27 @@ export class MarketEditPackagesComponent {
     });
   }
 
+  removeItem(index: number) {
+    if (index >= 0 && index < this.packageItems.length) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to remove this item?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!',
+        cancelButtonText: 'No, keep it',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.packageItems.splice(index, 1);
+          this.calculatePackageTotals();
+          Swal.fire('Removed!', 'The item has been removed.', 'success');
+        }
+      });
+    }
+  }
+
   incrementQuantity(index: number) {
     if (this.packageItems[index]) {
       this.packageItems[index].quantity += 1;

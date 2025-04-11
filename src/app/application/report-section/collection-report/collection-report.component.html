@@ -5,18 +5,10 @@
   Back
 </button>
 
-
-
-
-
-
-
-
-
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
+
 
 
 
@@ -50,7 +42,7 @@
   <!-- Go Button -->
   <div class="flex items-center">
     <button
-    (click)="fetchAllPurchaseReport()"
+    (click)="fetchAllCollectionReport()"
       class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
     >
       Go
@@ -71,10 +63,23 @@
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
+
+  <div class="flex justify-between items-center mb-5"> 
+       
+
+    <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="downloadTemplate1()">
+      <i class="fa-solid fa-download px-2"></i>
+     
+      <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
+      {{ isDownloading ? " Downloading..." : " Download" }}
+    </button>
+  </div>
+
+
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          All Transactions ({{this.totalItems}})
+          All  ({{this.totalItems}})
         </h2>
       </div>
       <div class="flex items-center">
@@ -104,12 +109,12 @@
         <!-- <div class="mx-6">
           <p-dropdown
             styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
-            [options]="months"
+            
             optionLabel="monthName"
-            [(ngModel)]="selectedMonth"
+          
             [showClear]="true"
             placeholder="Month"
-            (onChange)="applyFiltersMonth()"
+           
           />
         </div> -->
 
@@ -118,8 +123,7 @@
             id="createdDateFilter"
             type="date"
             class="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10 px-2"
-            [(ngModel)]="createdDate"
-            (change)="onDateChange()"
+           
           />
         </div> -->
       
@@ -131,7 +135,7 @@
             placeholder="Search by all"
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="search"
-          (keydown.enter)="applysearch()"
+            (keydown.enter)="applysearch()"
           />
           <button
             type="button"
@@ -178,17 +182,7 @@
     </div>
 
 
-    <div class="flex justify-between items-center mb-5"> 
-        <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Total : Rs. {{this.grandTotal | number:'1.2-2'}}
-      </h4>
-
-      <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="downloadTemplate1()">
-        <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
-        <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
-        {{ isDownloading ? " Downloading..." : " Download" }}
-      </button>
-    </div>
+    
 
 
 
@@ -205,32 +199,44 @@
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
             >
-            GRN No
+            Reg Code
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
-            >
-            Amount (Rs.)
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-            Center Code
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
             Center Name
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Farmer NIC
+           Crop
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Variety
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Quantity A (Kg)
             </th>
             <th
             class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Quantity B (Kg)
+            </th>
+            <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Quantity C (Kg)
+            </th>
+          
+          
+            <th
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
-          Collected Time
+          Amount (Kg)
                   </th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
                
@@ -257,29 +263,35 @@
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.grnNumber }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.amount | number:'1.2-2'}}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.centerName }}
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
+              {{ item.centerName}}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.nic }}
+              {{ item.cropGroupName }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.varietyName }}
+            </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.gradeAquan ? item.gradeAquan : '-' }}
+            </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.gradeBquan ? item.gradeBquan : '-' }}
+            </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.gradeCquan ? item.gradeCquan : '-' }}
+            </td>
+            <!-- <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                 {{ item.createdAtFormatted }}
+              </td> -->
+              <!-- <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+                {{ item.gradeCquan | number:'1.2-2'}} + {{item.gradeBquan | number:'1.2-2'}} +  {{item.gradeCquan | number:'1.2-2'}}
+              </td> -->
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+                {{ item.amount }}
               </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              <button (click)="navigateToFamerListReport(item.id, item.userId, item.collQr)">
-               
-                <i class="fa fa-external-link text-blue-500" aria-hidden="true"></i>
-              </button>
-            </td>
            
           </tr>
         </tbody>
@@ -289,7 +301,7 @@
       </div>
       <div class="dark:bg-[#262f45]">
         <pagination-controls
-          (pageChange)="onPageChange($event)"
+         
           [responsive]="true"
           [previousLabel]="'Previous'"
           [nextLabel]="'Next'"

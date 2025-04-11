@@ -137,8 +137,8 @@ export class CollectionService {
     page: number,
     limit: number,
     centerId: any,
-    monthNumber: any,
-    createdDate: any,
+    startDate: any,
+    endDate: any,
     search: string
   ): Observable<any> {
     const headers = new HttpHeaders({
@@ -153,12 +153,16 @@ export class CollectionService {
       url += `&centerId=${centerId}`;
     }
 
-    if (monthNumber) {
-      url += `&monthNumber=${monthNumber}`;
+    // if (monthNumber) {
+    //   url += `&monthNumber=${monthNumber}`;
+    // }
+
+    if (startDate) {
+      url += `&startDate=${startDate}`;
     }
 
-    if (createdDate) {
-      url += `&createdDate=${createdDate}`;
+    if (endDate) {
+      url += `&endDate=${endDate}`;
     }
 
     if (search) {
@@ -179,6 +183,48 @@ export class CollectionService {
     return this.http.get<any>(`${this.apiUrl}auth/get-centers-for-purchase-report`, {headers});
   }
 
+
+  fetchAllCollectionReport(
+    page: number,
+    limit: number,
+    centerId: any,
+    startDate: any,
+    endDate: any,
+    search: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    
+
+    let url = `${this.apiUrl}auth/get-collection-report?page=${page}&limit=${limit}`;
+
+    if (centerId) {
+      url += `&centerId=${centerId}`;
+    }
+
+    // if (monthNumber) {
+    //   url += `&monthNumber=${monthNumber}`;
+    // }
+
+    if (startDate) {
+      url += `&startDate=${startDate}`;
+    }
+
+    if (endDate) {
+      url += `&endDate=${endDate}`;
+    }
+
+    if (search) {
+      url += `&search=${search}`;
+    }
+
+    // if (searchNIC) {
+    //   url += `&nic=${searchNIC}`;
+    // }
+    return this.http.get<any>(url, { headers });
+  }
 
 
 }

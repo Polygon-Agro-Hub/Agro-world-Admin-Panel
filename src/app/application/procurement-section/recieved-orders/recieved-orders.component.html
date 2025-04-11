@@ -20,49 +20,7 @@
 
 
 
-<div class="mx-auto min-w-[1200px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
-  <!-- From Date Input (Label and Input on the Same Line) -->
-  <div class="flex items-center gap-2">
-    <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
-    <input
-      id="fromDate"
-      type="date"
-      class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
-      placeholder="YYYY/MM/DD"
-      [(ngModel)]="fromDate"
-      [max]="maxDate"
-    />
-  </div>
 
-  <!-- To Date Input (Label and Input on the Same Line) -->
-  <div class="flex items-center gap-2">
-    <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
-    <input
-      id="toDate"
-      type="date"
-      class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
-      placeholder="YYYY/MM/DD"
-      [(ngModel)]="toDate"
-      [min]="fromDate"
-    />
-  </div>
-
-  <!-- Go Button -->
-  <div class="flex items-center">
-    <button
-    (click)="fetchAllPurchaseReport()"
-      class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
-    >
-      Go
-    </button>
-  </div>
-
-  <!-- Download Report Button (New Line) -->
-  
-</div>
-
-
-<div class="h-10"></div>
 
 
 
@@ -71,12 +29,8 @@
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          All Transactions ({{this.totalItems}})
-        </h2>
-      </div>
+    <div class="flex justify-end items-right mb-8">
+     
       <div class="flex items-center">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -87,41 +41,59 @@
         </i>
 
 
-        <div class="mx-6">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
-            [options]="centers"
-            optionLabel="centerName"
-            [(ngModel)]="selectedCenter"
-            [showClear]="true"
-            placeholder="Center"
-            (onChange)="applyFiltersCrop()"
-          />
+     
+  
+        <button *ngIf="!this.filterType" class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center" (click)="showFilterDialog()">
+          
+          <i class="fa fa-filter px-2" aria-hidden="true"></i>
+
+          Filter By
+          <!-- <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
+          {{ isDownloading ? " Downloading..." : " Download" }} -->
+        </button>
+
+
+        
+
+        <div *ngIf="this.filterType" class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center">
+
+          <i class="fa fa-filter px-2" aria-hidden="true"></i>
+
+          {{this.filterType}} : {{this.date}}
+          <div class="w-2"></div>
+
+          <button
+          (click)="clearFilter()"
+            type="button"
+            class="text-white-500 hover:text-gray-700 focus:outline-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
         </div>
 
 
 
-        <!-- <div class="mx-6">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
-            [options]="months"
-            optionLabel="monthName"
-            [(ngModel)]="selectedMonth"
-            [showClear]="true"
-            placeholder="Month"
-            (onChange)="applyFiltersMonth()"
-          />
-        </div> -->
+        <div class="w-5"></div>
+   
 
-        <!-- <div class="mx-6">
-          <input
-            id="createdDateFilter"
-            type="date"
-            class="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10 px-2"
-            [(ngModel)]="createdDate"
-            (change)="onDateChange()"
-          />
-        </div> -->
+
+
+
+
       
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
@@ -180,7 +152,7 @@
 
     <div class="flex justify-between items-center mb-5"> 
         <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Total : Rs. {{this.grandTotal | number:'1.2-2'}}
+            All Transactions ({{this.totalItems}})
       </h4>
 
       <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="downloadTemplate1()">
@@ -205,35 +177,35 @@
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
             >
-            GRN No
+            Crop
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
             >
-            Amount (Rs.)
+            Variety
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Center Code
+            Quantity (kg)
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Center Name
+            Ordered On
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Farmer NIC
+            Scheduled Delivery Date
             </th>
             <th
             class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
-          Collected Time
+          To Collection Centre
                   </th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-               
+                To Dispatch Centre
             </th>
             
           
@@ -257,29 +229,27 @@
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.grnNumber }}
+              {{ item.cropNameEnglish }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.amount | number:'1.2-2'}}
+              {{ item.varietyNameEnglish}}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.regCode }}
+              {{ item.TotalQuantity }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.centerName }}
+              {{ item.orderDateFormatted }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.nic }}
+              {{ item.scheduleDateFormatted }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-                {{ item.createdAtFormatted }}
-              </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              <button (click)="navigateToFamerListReport(item.id, item.userId, item.collQr)">
-               
-                <i class="fa fa-external-link text-blue-500" aria-hidden="true"></i>
-              </button>
+                {{ item.toCollectionCenterFormatted }}
             </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ item.toDispatchCenterFormatted }}
+            </td>
+            
            
           </tr>
         </tbody>

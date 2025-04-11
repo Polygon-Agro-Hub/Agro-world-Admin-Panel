@@ -115,6 +115,11 @@ import { PurchaseReportComponent } from './application/report-section/purchase-r
 import { ViewPackageListComponent } from './application/marketplace/view-package-list/view-package-list.component';
 import { MarketEditPackagesComponent } from './application/marketplace/market-edit-packages/market-edit-packages.component';
 import { ViewPackageDetailsComponent } from './application/marketplace/view-package-details/view-package-details.component';
+import { CollectionReportComponent } from './application/report-section/collection-report/collection-report.component';
+import { ProcurementComponent } from './application/procurement-section/procurement/procurement.component';
+import { DispatchComponent } from './application/dispatch-section/dispatch/dispatch.component';
+import { RecievedOrdersComponent } from './application/procurement-section/recieved-orders/recieved-orders.component';
+import { SalesdashOrdersComponent } from './application/dispatch-section/salesdash-orders/salesdash-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -324,6 +329,10 @@ export const routes: Routes = [
           {
             path: 'purchase-report',
             component: PurchaseReportComponent,
+          },
+          {
+            path: 'collection-report',
+            component: CollectionReportComponent,
           },
         ],
       },
@@ -570,6 +579,37 @@ export const routes: Routes = [
             path: 'preview-collection-center/:id',
             component: PreviewCollectionCenterComponent,
           },
+        ],
+      },
+
+
+      {
+        path: 'procurement',
+        children: [
+          {
+            path: '',
+            component: ProcurementComponent,
+          },
+          {
+            path: 'received-orders',
+            component: RecievedOrdersComponent,
+          },
+          
+        ],
+      },
+
+      {
+        path: 'dispatch',
+        children: [
+          {
+            path: '',
+            component: DispatchComponent,
+          },
+          {
+            path: 'salesdash-orders',
+            component: SalesdashOrdersComponent,
+          },
+          
         ],
       },
 

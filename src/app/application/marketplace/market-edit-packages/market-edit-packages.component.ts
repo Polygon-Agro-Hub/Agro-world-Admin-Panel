@@ -249,6 +249,19 @@ export class MarketEditPackagesComponent {
     this.selectedVarieties = [];
     this.selectedPrice = new Variety();
   }
+
+  numberOnly(event: KeyboardEvent): boolean {
+    return /^\d*$/.test(event.key);
+  }
+
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
+    if (/^\d+$/.test(pastedText)) {
+      this.inputPackageObj.quantity = parseInt(pastedText, 10);
+    }
+  }
 }
 
 // Interface and Class Definitions

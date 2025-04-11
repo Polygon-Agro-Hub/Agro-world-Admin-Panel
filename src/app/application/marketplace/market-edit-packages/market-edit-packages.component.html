@@ -30,6 +30,7 @@
             placeholder="Ex : Fruit Pack"
             [(ngModel)]="packageData.displayName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            required
           />
         </div>
 
@@ -64,6 +65,7 @@
           name="description"
           [(ngModel)]="packageData.description"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          required
         ></textarea>
       </div>
 
@@ -77,8 +79,11 @@
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [(ngModel)]="inputPackageObj.cID"
           (change)="onCropChange()"
+          required
         >
-          <option selected disabled value="">--- Select Crop ---</option>
+          <option [ngValue]="null" selected disabled>
+            --- Select Crop ---
+          </option>
           <option *ngFor="let crop of cropObj" [value]="crop.cropId">
             {{ crop.cropNameEnglish }}
           </option>
@@ -95,8 +100,12 @@
           [(ngModel)]="inputPackageObj.mpItemId"
           (change)="onPriceChange()"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [disabled]="!inputPackageObj.cID"
+          required
         >
-          <option selected disabled value="">--- Select Variety ---</option>
+          <option [ngValue]="null" selected disabled>
+            --- Select Variety ---
+          </option>
           <option
             *ngFor="let variety of selectedVarieties"
             [value]="variety.id"
@@ -111,11 +120,13 @@
           <label class="text-[#534E4E] dark:text-textDark">Quantity *</label>
           <input
             type="number"
-            id="priceLimit"
-            name="priceLimit"
-            min="0"
-            [(ngModel)]="this.inputPackageObj.quantity"
+            id="quantity"
+            name="quantity"
+            min="1"
+            [(ngModel)]="inputPackageObj.quantity"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [disabled]="!inputPackageObj.mpItemId"
+            required
           />
         </div>
         <div class="flex justify-center items-center mt-6">
@@ -123,8 +134,10 @@
             class="bg-[#D9D9D9] py-3 px-3 rounded-lg mx-4 cursor-pointer"
             name="qtytype"
             [(ngModel)]="inputPackageObj.qtytype"
+            [disabled]="!inputPackageObj.mpItemId"
+            required
           >
-            <option selected value="" disabled>...</option>
+            <option [ngValue]="null" selected disabled>...</option>
             <option value="Kg">Kg</option>
             <option value="g">g</option>
           </select>
@@ -135,8 +148,8 @@
         <label class="text-[#534E4E] dark:text-textDark">Actual Price *</label>
         <input
           type="text"
-          id="priceLimit"
-          name="priceLimit"
+          id="normalPrice"
+          name="normalPrice"
           [value]="selectedPrice.normalPrice"
           disabled
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -144,27 +157,31 @@
       </div>
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount *</label>
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Discount Price *</label
+        >
         <input
-          [(ngModel)]="selectedPrice.discountedPrice"
           type="text"
-          id="priceLimit"
-          name="priceLimit"
+          id="discountedPrice"
+          name="discountedPrice"
+          [value]="selectedPrice.discountedPrice"
           disabled
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>
 
       <div class="flex justify-center items-center">
-        <div
+        <button
+          type="button"
           class="text-white text-lg bg-[#3980C0] py-3 px-7 rounded-lg cursor-pointer"
           (click)="onAdd()"
         >
           Add
-        </div>
+        </button>
       </div>
     </div>
 
+    <!-- Preview section remains the same -->
     <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
       <div class="rounded-lg shadow-lg px-12 py-6">
         <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
@@ -179,9 +196,11 @@
 
           <div class="flex flex-col items-center justify-center gap-y-2">
             <p class="text-xl text-black font-bold">
-              {{ packageData.displayName }}
+              {{ packageData.displayName || "Package Name" }}
             </p>
-            <p class="text-lg text-[#00957D]">Rs. {{ packageData.total }}</p>
+            <p class="text-lg text-[#00957D]">
+              Rs. {{ packageData.total || "0.00" }}
+            </p>
           </div>
         </div>
       </div>
@@ -193,7 +212,6 @@
           >Status</label
         >
         <div class="flex items-center space-x-2 my-5">
-          <!-- With Discount Radio Button -->
           <input
             class="w-5 h-5"
             type="radio"
@@ -230,8 +248,10 @@
     </div>
   </div>
 </form>
+
 <hr class="border-[2px] my-6" />
 
+<!-- Items table remains the same -->
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
   <table class="w-full text-gray-500 dark:text-gray-400">
     <thead

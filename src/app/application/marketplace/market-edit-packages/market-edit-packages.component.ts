@@ -146,22 +146,16 @@ export class MarketEditPackagesComponent {
     this.selectedPrice = new Variety();
 
     const selectedCrop = this.cropObj.find(
-      (crop) =>
-        this.inputPackageObj.cID !== null &&
-        crop.cropId === +this.inputPackageObj.cID
+      (crop) => crop.cropId === +this.inputPackageObj.cID!
     );
-    if (selectedCrop) {
-      this.selectedVarieties = selectedCrop.variety;
-    } else {
-      this.selectedVarieties = [];
-    }
+
+    this.selectedVarieties = selectedCrop ? [...selectedCrop.variety] : [];
+    console.log('Varieties after crop change:', this.selectedVarieties);
   }
 
   onPriceChange() {
     const selectedVariety = this.selectedVarieties.find(
-      (variety) =>
-        this.inputPackageObj.mpItemId !== null &&
-        variety.id === +this.inputPackageObj.mpItemId
+      (variety) => variety.id === +this.inputPackageObj.mpItemId!
     );
     if (selectedVariety) {
       this.selectedPrice = selectedVariety;
@@ -185,7 +179,6 @@ export class MarketEditPackagesComponent {
       reader.readAsDataURL(file);
     }
   }
-
   onAdd() {
     if (
       !this.inputPackageObj.qtytype ||
@@ -198,11 +191,18 @@ export class MarketEditPackagesComponent {
       return;
     }
 
+    console.log('Selected varieties:', this.selectedVarieties);
+    console.log('Looking for item ID:', this.inputPackageObj.mpItemId);
+
     const selectedVariety = this.selectedVarieties.find(
-      (v) => v.id === this.inputPackageObj.mpItemId
+      (v) => v.id === +this.inputPackageObj.mpItemId!
     );
 
     if (!selectedVariety) {
+      console.error(
+        'Available variety IDs:',
+        this.selectedVarieties.map((v) => v.id)
+      );
       Swal.fire('Error', 'Selected item not found', 'error');
       return;
     }

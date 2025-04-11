@@ -319,24 +319,20 @@
           >
             <i
               class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
+              (click)="decrementDiscount(i)"
             ></i>
             <p class="dark:text-textDark">
               {{ item.item.pricing.discountedPrice }}
             </p>
             <i
               class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
+              (click)="incrementDiscount(i)"
             ></i>
           </div>
         </td>
         <td class="px-6 py-4 text-center">
           <p class="text-[#006C5A] dark:text-textDark">
-            {{ item.item.pricing.discount > 0 ? "Yes" : "No" }}
-          </p>
-          <p
-            class="text-[#006C5A] dark:text-textDark"
-            *ngIf="item.item.pricing.discount > 0"
-          >
-            {{ item.item.pricing.discount }}%
+            {{ item.item.pricing.discount }} %
           </p>
         </td>
 

@@ -388,6 +388,29 @@ export class MarketEditPackagesComponent {
     }
   }
 
+  decrementDiscount(index: number, step: number = 1.0) {
+    if (
+      this.packageItems[index] &&
+      this.packageItems[index].item.pricing.discountedPrice > 0
+    ) {
+      const newPrice =
+        this.packageItems[index].item.pricing.discountedPrice - step;
+      this.packageItems[index].item.pricing.discountedPrice =
+        newPrice >= 0 ? parseFloat(newPrice.toFixed(2)) : 0;
+      this.calculatePackageTotals();
+    }
+  }
+
+  incrementDiscount(index: number, step: number = 1.0) {
+    if (this.packageItems[index]) {
+      this.packageItems[index].item.pricing.discountedPrice += step;
+      this.packageItems[index].item.pricing.discountedPrice = parseFloat(
+        this.packageItems[index].item.pricing.discountedPrice.toFixed(2)
+      );
+      this.calculatePackageTotals();
+    }
+  }
+
   getPackage() {
     if (!this.packageId) return;
 

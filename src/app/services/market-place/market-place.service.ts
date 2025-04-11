@@ -172,4 +172,34 @@ export class MarketPlaceService {
     const url = `${this.apiUrl}market-place/get-packagedetails-by-id/${id}`;
     return this.http.get<any>(url, { headers });
   }
+
+  // In your MarketPlaceService
+  updatePackage(data: any, id: number, base64Image?: string): Observable<any> {
+    // Ensure all numeric values are properly converted
+    const cleanedData = {
+      ...data,
+      Items: data.Items.map((item: any) => ({
+        ...item,
+        mpItemId: Number(item.mpItemId), // Ensure mpItemId is a number
+        quantity: Number(item.quantity), // Ensure quantity is a number
+        discountedPrice: Number(item.discountedPrice), // Ensure price is a number
+      })),
+    };
+
+    const requestBody = {
+      package: JSON.stringify(cleanedData), // Stringify the cleaned data
+      file: base64Image,
+    };
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.patch(
+      `${this.apiUrl}market-place/edit-product/${id}`,
+      requestBody,
+      { headers }
+    );
+  }
 }

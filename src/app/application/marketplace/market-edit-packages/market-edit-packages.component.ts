@@ -132,6 +132,8 @@ export class MarketEditPackagesComponent {
           this.displayName = packageData.displayName;
           this.packageItems = packageData.items || [];
 
+          console.log('My data', packageData);
+
           // Initialize form - will be empty if keepFormEmptyOnLoad is true
           if (this.packageItems.length > 0 && !this.keepFormEmptyOnLoad) {
             this.initFormWithFirstItem();
@@ -272,6 +274,7 @@ export class MarketEditPackagesComponent {
       price: this.inputPackageObj.discountedPrice,
       item: {
         id: this.inputPackageObj.mpItemId,
+        mpItemId: this.inputPackageObj.mpItemId!, // Ensure mpItemId is included
         varietyId: this.inputPackageObj.mpItemId,
         displayName: selectedVariety.displayName,
         category: '',
@@ -320,6 +323,71 @@ export class MarketEditPackagesComponent {
       this.inputPackageObj.quantity = parseInt(pastedText, 10);
     }
   }
+
+  onSave() {
+    if (!this.packageData.displayName || !this.packageItems.length) {
+      Swal.fire(
+        'Warning',
+        'Package name and at least one item are required',
+        'warning'
+      );
+      return;
+    }
+
+    // Prepare the package data
+    const packageData = {
+      displayName: this.packageData.displayName,
+      status: this.packageData.status,
+      description: this.packageData.description || '',
+      discount: Number(this.packageData.discount) || 0,
+      total: Number(this.packageData.total) || 0,
+      packageId: this.packageId,
+      existingImage: this.packageData.image,
+      Items: this.packageItems.map((item) => ({
+        mpItemId: Number(item.item.mpItemId), // Ensure this is a number
+        quantity: Number(item.quantity), // Ensure this is a number
+        qtytype: item.quantityType,
+        discountedPrice: Number(item.price), // Ensure this is a number
+      })),
+    };
+
+    console.log('this is package data', packageData);
+
+    // Handle image
+    let imageToUpload: string | undefined = undefined;
+    if (
+      typeof this.selectedImage === 'string' &&
+      this.selectedImage.startsWith('data:image')
+    ) {
+      imageToUpload = this.selectedImage || undefined;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to update this package',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, update it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.showLoading();
+
+        this.markServ
+          .updatePackage(packageData, this.packageId, imageToUpload)
+          .subscribe({
+            next: (res) => {
+              Swal.fire('Success!', 'Package updated successfully', 'success');
+            },
+            error: (err) => {
+              console.error('Error updating package:', err);
+              Swal.fire('Error!', 'Failed to update package', 'error');
+            },
+          });
+      }
+    });
+  }
 }
 
 // Interface and Class Definitions
@@ -330,6 +398,7 @@ interface PackageItem {
   price: number;
   item: {
     id: number;
+    mpItemId: number;
     varietyId: number;
     displayName: string;
     category: string;

@@ -103,7 +103,7 @@ export class AddPackageComponent implements OnInit {
             confirmButtonText: 'OK',
           }).then(() => {
             this.packageObj = new Package();
-            this.router.navigate(['/market/action/add-package']);
+            this.router.navigate(['/market/action/view-packages-list']);
           });
         } else {
           Swal.fire({

@@ -81,6 +81,19 @@ export class SalesdashOrdersComponent {
   datesl: string = '';
   itemsPerPagesl: number = 10;
   searchsl: string = '';
+
+
+  showPopup = false;
+packItems: any[] = [];
+selectedInvoice = '';
+totalPrice = 0;
+
+
+originalPackItems: any[] = []; // Deep copy to track original values
+selectedInvoiceId: number = 0; // Used when sending save API
+
+
+isUpdating: boolean = false;
   
 
 
@@ -233,6 +246,80 @@ applyStatussl() {
 
   back(): void {
     this.router.navigate(['/procurement']);
+  }
+
+
+
+
+ openPopup(invoiceId: number, invoiceNum: string, total: any) {
+  this.isLoading = true;
+  this.selectedInvoice = invoiceNum;
+  this.totalPrice = total;
+
+  this.dispatchService.getCustomPackItems(invoiceId).subscribe({
+    next: (data: any) => {
+      this.originalPackItems = JSON.parse(JSON.stringify(data)); // Deep copy for comparison
+      this.packItems = data; // This will be bound to the checkboxes
+      this.selectedInvoiceId = invoiceId;
+      this.isLoading = false;
+      this.showPopup = true;
+    },
+    error: (err: any) => {
+      console.error('Failed to fetch custom pack items:', err);
+      this.isLoading = false;
+    }
+  });
+}
+
+  
+  closePopup() {
+    this.showPopup = false;
+  }
+  
+  saveData() {
+    // Implement save logic if needed
+    this.closePopup();
+  }
+
+
+  savePackedItems() {
+    this.isUpdating = true;
+    const changedItems = this.packItems
+      .filter((item, index) => item.isPacked !== this.originalPackItems[index].isPacked)
+      .map(item => ({
+        id: item.id,              // Only include the item's ID
+        isPacked: item.isPacked   // And the updated isPacked status
+      }));
+  
+    if (changedItems.length === 0) {
+      console.log('No changes to save.');
+      this.showPopup = false;
+      return;
+    }
+  
+    this.dispatchService.updateCustomPackItems(this.selectedInvoiceId, changedItems).subscribe({
+      next: () => {
+        console.log('Successfully updated packed items.');
+        this.isUpdating = false;
+        this.showPopup = false;
+        this.getSelectedPackages();
+      },
+      error: (err: any) => {
+        console.error('Failed to update packed items:', err);
+        this.getSelectedPackages();
+      }
+    });
+  }
+  
+  
+
+
+  onCheckboxChange(event: Event, index: any): void {
+    const target = event.target as HTMLInputElement;
+  
+    if (target != null) {
+      this.packItems[index].isPacked = target.checked ? 1 : 0;
+    }
   }
 
 }

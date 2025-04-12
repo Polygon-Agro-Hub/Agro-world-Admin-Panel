@@ -552,6 +552,7 @@
             >
             <button
             class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
+            (click)="openPopup(item.id, item.invoiceNum, item.totalPrice)"
           >
             <svg
               viewBox="0 0 24 24"
@@ -647,3 +648,131 @@
 
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal Background -->
+<div
+  *ngIf="showPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <!-- Modal Box -->
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg w-[900px] max-h-[90vh] overflow-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center p-5 border-b border-gray-200">
+      <div class="font-bold text-lg dark:text-white">
+        INV No : {{ selectedInvoice }}
+      </div>
+      <div class="text-md font-semibold text-gray-700 dark:text-gray-300">
+        Custom Pack : Rs.{{ totalPrice }}
+      </div>
+    </div>
+
+    <!-- Table -->
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
+      <thead class="text-xs text-gray-700 bg-gray-100 dark:bg-darkLayer dark:text-gray-200">
+        <tr>
+          <th class="px-4 py-3">ITEM</th>
+          <th class="px-4 py-3">QUANTITY</th>
+          <th class="px-4 py-3">UNIT PRICE</th>
+          <th class="px-4 py-3">TOTAL</th>
+          <th class="px-4 py-3 text-center">PACKED</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let item of packItems; let i = index"
+          class="border-b border-gray-200 dark:border-gray-700"
+        >
+          <td class="px-4 py-3">{{ item.item }}</td>
+          <td class="px-4 py-3">{{ item.quantity }}</td>
+          <td class="px-4 py-3">Rs.{{ item.UnitPrice | number: '1.2-2' }}</td>
+          <td class="px-4 py-3">Rs.{{ item.subtotal | number: '1.2-2' }}</td>
+          <td class="text-center py-3">
+            <input
+              type="checkbox"
+              
+              [checked]="item.isPacked == 1"
+                (change)="onCheckboxChange($event, i)"
+              class="w-5 h-5 rounded border-blue-500 text-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            />
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="flex justify-end p-4 border-t border-gray-200 gap-2">
+      <button
+        (click)="closePopup()"
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+      >
+        Cancel
+      </button>
+      <button
+      *ngIf="!isUpdating"
+        (click)="savePackedItems()"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Save
+      </button>
+      <button *ngIf="isUpdating"
+      
+      class="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    </button>
+    </div>
+  </div>
+</div>
+

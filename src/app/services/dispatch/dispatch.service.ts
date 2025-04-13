@@ -124,6 +124,19 @@ export class DispatchService {
     }
     
     
+
+
+
+
+    getPackageOrderDetailsById(id: number) {
+
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+
+      return this.http.get<any[]>(`${this.apiUrl}dispatch/get-additional-pack-items/${id}`, { headers });
+    }
     
 
 

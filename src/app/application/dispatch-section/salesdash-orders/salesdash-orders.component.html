@@ -282,33 +282,26 @@
           >
           {{ item.packagePrice }}
           </td>
-          <td
-            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-          >
-          <button
-                class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-          
+          <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            <button 
+              class="w-6 h-6 mr-3" 
+              [ngClass]="item.additionalPrice > 0 ? 'text-blue-500 hover:text-blue-700' : 'text-gray-300 cursor-not-allowed'"
+              [disabled]="item.additionalPrice === 0.00"
+              (click)="openPopupAdditional(item.orderPackageItemsId, item.invoiceNum, item.additionalPrice)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z" 
+                  stroke="currentColor" 
+                  stroke-width="2" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
           </td>
-          <td
-          class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-        >
-        {{ item.additionalPrice }}
-                </td>
+          <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            {{ item.additionalPrice }}
+          </td>
+          
           <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
             {{ item.scheduleDateFormatted }}
           </td>
@@ -368,6 +361,12 @@
 
 
 
+
+
+
+
+
+
 <div *ngIf="!isPremade">
 
     <div class="flex justify-end items-right mb-8">
@@ -407,21 +406,10 @@
               />
             </div>
   
-  
-          
-  
-          
-  
-  
-  
+
           <div class="w-5"></div>
      
-  
-  
-  
-  
-  
-        
+
           <div
             class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
           >
@@ -547,29 +535,32 @@
             >
             {{ item.invoiceNum }}
             </td>
-            <td
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-            <button
-            class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
-            (click)="openPopup(item.id, item.invoiceNum, item.totalPrice)"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-           
-            </td>
+            <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                <button
+                  class="w-6 h-6 mr-3"
+                  [class.text-yellow-500]="item.packageStatus === 'Opened'"
+                  [class.text-green-500]="item.packageStatus === 'Completed'"
+                  [class.text-red-500]="item.packageStatus === 'Pending'"
+                  [class.hover:text-yellow-700]="item.packageStatus === 'Opened'"
+                  [class.hover:text-green-700]="item.packageStatus === 'Completed'"
+                  [class.hover:text-red-700]="item.packageStatus === 'Pending'"
+                  (click)="openPopup(item.id, item.invoiceNum, item.totalPrice)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
             <td
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
@@ -698,7 +689,7 @@
 
 
 
-
+<!-- Custum pachage Popup -->
 
 <!-- Modal Background -->
 <div
@@ -719,7 +710,7 @@
 
     <!-- Table -->
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
-      <thead class="text-xs text-gray-700 bg-gray-100 dark:bg-darkLayer dark:text-gray-200">
+      <thead class="text-xs text-gray-700 bg-gray-100 dark:bg-gray-900 dark:text-gray-200">
         <tr>
           <th class="px-4 py-3">ITEM</th>
           <th class="px-4 py-3">QUANTITY</th>
@@ -755,6 +746,94 @@
     <div class="flex justify-end p-4 border-t border-gray-200 gap-2">
       <button
         (click)="closePopup()"
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+      >
+        Cancel
+      </button>
+      <button
+      *ngIf="!isUpdating"
+        (click)="savePackedItems()"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Save
+      </button>
+      <button *ngIf="isUpdating"
+      
+      class="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Additional Items Popup -->
+
+<div
+  *ngIf="showPopupAdditional"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <!-- Modal Box -->
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg w-[900px] max-h-[90vh] overflow-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center p-5 border-b border-gray-200">
+      <div class="font-bold text-lg dark:text-white">
+        INV No : {{ selectedInvoiceAdditional }}
+      </div>
+      <div class="text-md font-semibold text-gray-700 dark:text-gray-300">
+        Additional Items : Rs.{{ totalPriceAdditional }}
+      </div>
+    </div>
+
+    <!-- Table -->
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
+      <thead class="text-xs text-gray-700 bg-gray-100 dark:bg-gray-900 dark:text-gray-200">
+        <tr>
+          <th class="px-4 py-3">ITEM</th>
+          <th class="px-4 py-3">QUANTITY</th>
+          <th class="px-4 py-3">UNIT PRICE</th>
+          <th class="px-4 py-3">TOTAL</th>
+          <th class="px-4 py-3 text-center">PACKED</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let item of packItemsAdditional; let i = index"
+          class="border-b border-gray-200 dark:border-gray-700"
+        >
+          <td class="px-4 py-3">{{ item.item }}</td>
+          <td class="px-4 py-3">{{ item.quantity }}</td>
+          <td class="px-4 py-3">Rs.{{ item.UnitPrice | number: '1.2-2' }}</td>
+          <td class="px-4 py-3">Rs.{{ item.subtotal | number: '1.2-2' }}</td>
+          <td class="text-center py-3">
+            <input
+              type="checkbox"
+              
+              [checked]="item.isPacked == 1"
+                (change)="onCheckboxChange($event, i)"
+              class="w-5 h-5 rounded border-blue-500 text-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            />
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="flex justify-end p-4 border-t border-gray-200 gap-2">
+      <button
+        (click)="closePopupAdditional()"
         class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
       >
         Cancel

@@ -17,11 +17,12 @@ interface PremadePackages {
   invoiceNum: string;
   packageName:string;
   packagePrice: string;
-  additionalPrice: string;
+  additionalPrice: any;
   scheduleDate: string;
   fullSubTotal: string;
   totalPrice: string;
   packageStatus: string;
+  orderPackageItemsId: any;
 
 
   scheduleDateFormatted?: string;
@@ -94,6 +95,14 @@ selectedInvoiceId: number = 0; // Used when sending save API
 
 
 isUpdating: boolean = false;
+
+showPopupAdditional = false;
+packItemsAdditional: any[] = [];
+selectedInvoiceAdditional = '';
+totalPriceAdditional = 0;
+
+originalPackItemsAdditional: any[] = []; // Deep copy to track original values
+selectedInvoiceIdAdditional: number = 0;
   
 
 
@@ -320,6 +329,41 @@ applyStatussl() {
     if (target != null) {
       this.packItems[index].isPacked = target.checked ? 1 : 0;
     }
+  }
+
+
+
+
+
+
+
+
+
+
+
+  openPopupAdditional(id: number, invoiceNum: string, total: any) {
+    this.isLoading = true;
+    this.selectedInvoiceAdditional = invoiceNum;
+    this.totalPriceAdditional = total;
+  
+    this.dispatchService.getPackageOrderDetailsById(id).subscribe({
+      next: (data: any) => {
+        this.originalPackItemsAdditional = JSON.parse(JSON.stringify(data)); // Deep copy for comparison
+        this.packItemsAdditional = data; // This will be bound to the checkboxes
+        this.selectedInvoiceIdAdditional = id;
+        this.isLoading = false;
+        this.showPopupAdditional = true;
+      },
+      error: (err: any) => {
+        console.error('Failed to fetch custom pack items:', err);
+        this.isLoading = false;
+      }
+    });
+  }
+
+
+  closePopupAdditional() {
+    this.showPopupAdditional = false;
   }
 
 }

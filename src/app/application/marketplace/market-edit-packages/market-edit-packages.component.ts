@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-market-edit-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './market-edit-packages.component.html',
   styleUrl: './market-edit-packages.component.css',
 })
@@ -23,7 +24,8 @@ export class MarketEditPackagesComponent {
   selectedVarieties: Variety[] = [];
   packageItems: PackageItem[] = [];
   selectedPrice: Variety = new Variety();
-  keepFormEmptyOnLoad: boolean = true; // Control whether form starts empty
+  keepFormEmptyOnLoad: boolean = true;
+  loading = false;
 
   constructor(
     private markServ: MarketPlaceService,
@@ -108,6 +110,7 @@ export class MarketEditPackagesComponent {
 
   getPackage() {
     if (!this.packageId) return;
+    this.loading = true;
 
     this.markServ.getPackageById(this.packageId).subscribe({
       next: (res) => {
@@ -139,10 +142,12 @@ export class MarketEditPackagesComponent {
             this.initFormWithFirstItem();
           }
         }
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error fetching package:', err);
         this.error = 'Failed to load package details';
+        this.loading = false;
       },
     });
   }
@@ -171,13 +176,16 @@ export class MarketEditPackagesComponent {
   }
 
   getCropProductData() {
+    this.loading = true;
     this.markServ.getProuctCropVerity().subscribe({
       next: (res) => {
         this.cropObj = res;
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error fetching crop data:', err);
         this.error = 'Failed to load crop data';
+        this.loading = false;
       },
     });
   }
@@ -385,6 +393,28 @@ export class MarketEditPackagesComponent {
               Swal.fire('Error!', 'Failed to update package', 'error');
             },
           });
+      }
+    });
+  }
+
+  onCancel() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'All unsaved changes will be lost. This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, discard changes',
+      cancelButtonText: 'No, keep editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Reload the component to reset all changes
+        window.location.reload();
+
+        // Alternatively, you could manually reset all form fields:
+        // this.resetForm();
+        // this.getPackage(); // Reload original data
       }
     });
   }

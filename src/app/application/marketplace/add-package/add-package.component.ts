@@ -93,6 +93,8 @@ export class AddPackageComponent implements OnInit {
 
     this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
       (res) => {
+        console.log('this is the created data', res);
+
         if (res.status) {
           Swal.fire({
             icon: 'success',
@@ -101,7 +103,7 @@ export class AddPackageComponent implements OnInit {
             confirmButtonText: 'OK',
           }).then(() => {
             this.packageObj = new Package();
-            this.router.navigate(['/market/action/add-package']);
+            this.router.navigate(['/market/action/view-packages-list']);
           });
         } else {
           Swal.fire({

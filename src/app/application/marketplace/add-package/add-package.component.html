@@ -324,7 +324,16 @@
             class="text-[#006C5A] dark:text-textDark"
             *ngIf="item.discountedPrice !== 0"
           >
-            Rs.{{ item.normalPrice - item.discountedPrice }}
+            <span
+              class="bg-green-100 text-green-800 px-1 rounded mt-1 dark:bg-green-900 dark:text-green-200"
+            >
+              {{
+                calculateDiscountPercentage(
+                  item.normalPrice,
+                  item.discountedPrice
+                )
+              }}%
+            </span>
           </p>
         </td>
 

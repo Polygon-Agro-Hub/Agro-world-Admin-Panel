@@ -363,6 +363,14 @@ export class AddPackageComponent implements OnInit {
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
   }
+
+  calculateDiscountPercentage(
+    normalPrice: number,
+    discountedPrice: number
+  ): number {
+    if (normalPrice <= 0) return 0;
+    return Math.round(((normalPrice - discountedPrice) / normalPrice) * 100);
+  }
 }
 
 class Crop {

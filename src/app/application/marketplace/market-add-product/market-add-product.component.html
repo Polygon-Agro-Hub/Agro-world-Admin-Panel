@@ -183,33 +183,25 @@
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Tags *</label>
-        <section>
-          <mat-form-field class="w-[100%]">
-            <mat-label>tags</mat-label>
-            <mat-chip-grid
-              #templateChipGrid
-              aria-label="Enter template form keywords"
-              [(ngModel)]="templateKeywords"
-            >
-              @for (keyword of templateKeywords(); track keyword) {
+        <mat-form-field class="w-[100%]">
+          <mat-label>Tags</mat-label>
+          <mat-chip-grid #templateChipGrid>
+            @for (keyword of templateKeywords(); track keyword) {
               <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
                 {{ keyword }}
-                <button
-                  matChipRemove
-                  aria-label="'remove template form' + keyword"
-                >
+                <button matChipRemove [attr.aria-label]="'remove ' + keyword">
                   <mat-icon>cancel</mat-icon>
                 </button>
               </mat-chip-row>
-              }
-            </mat-chip-grid>
-            <input
-              placeholder="New keyword..."
-              [matChipInputFor]="templateChipGrid"
-              (matChipInputTokenEnd)="addTemplateKeyword($event)"
-            />
-          </mat-form-field>
-        </section>
+            }
+          </mat-chip-grid>
+          <input 
+            matInput
+            placeholder="New keyword..."
+            [matChipInputFor]="templateChipGrid"
+            (matChipInputTokenEnd)="addTemplateKeyword($event)"
+          />
+        </mat-form-field>
       </div>
     </div>
 

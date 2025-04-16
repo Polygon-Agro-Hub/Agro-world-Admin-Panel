@@ -148,6 +148,7 @@ class ProductList {
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
   startValue!: number;
+  discount!: number;
   normalPrice!: number;
   promo!: number;
   unitType!: string;

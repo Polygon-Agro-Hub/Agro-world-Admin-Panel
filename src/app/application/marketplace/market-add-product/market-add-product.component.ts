@@ -10,6 +10,10 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
+import { MatInputModule } from '@angular/material/input'; // Add this import
+import { COMMA, ENTER } from '@angular/cdk/keycodes'; // Add this for chip separators
+
+
 @Component({
   selector: 'app-market-add-product',
   standalone: true,
@@ -20,6 +24,7 @@ import { Router } from '@angular/router';
     FormsModule,
     MatIconModule,
     CommonModule,
+    MatInputModule
   ],
   templateUrl: './market-add-product.component.html',
   styleUrls: ['./market-add-product.component.css'],

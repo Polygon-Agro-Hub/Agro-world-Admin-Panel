@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-add-package',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './add-package.component.html',
   styleUrls: ['./add-package.component.css'],
 })
@@ -22,6 +23,7 @@ export class AddPackageComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   selectedFileName!: string;
+  isLoading: boolean = false;
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
@@ -50,12 +52,24 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
+  // onPriceChange() {
+  //   const selectedVariety = this.selectedVarieties.find(
+  //     (variety) => variety.id === +this.inputPackageObj.mpItemId
+  //   );
+  //   if (selectedVariety) {
+  //     this.selectedPrice = selectedVariety;
+  //   } else {
+  //     this.selectedPrice = new Variety();
+  //   }
+  // }
+
   onPriceChange() {
     const selectedVariety = this.selectedVarieties.find(
       (variety) => variety.id === +this.inputPackageObj.mpItemId
     );
     if (selectedVariety) {
-      this.selectedPrice = selectedVariety;
+      // Create a new object to force change detection
+      this.selectedPrice = { ...selectedVariety };
     } else {
       this.selectedPrice = new Variety();
     }
@@ -117,8 +131,11 @@ export class AddPackageComponent implements OnInit {
       itemName: this.selectedPrice.displayName,
       normalPrice: this.selectedPrice.normalPrice,
     });
+
+    // Reset all relevant fields
     this.inputPackageObj = new InputPackage();
     this.selectedPrice = new Variety();
+    this.selectedVarieties = [];
   }
 
   // onSubmit() {
@@ -162,6 +179,7 @@ export class AddPackageComponent implements OnInit {
   // }
 
   onSubmit() {
+    this.isLoading = true;
     // Check all required fields
     if (
       !this.packageObj.displayName ||
@@ -207,6 +225,7 @@ export class AddPackageComponent implements OnInit {
             this.packageObj = new Package();
             this.router.navigate(['/market/action/view-packages-list']);
           });
+          this.isLoading = false;
         } else {
           Swal.fire({
             icon: 'error',
@@ -214,6 +233,7 @@ export class AddPackageComponent implements OnInit {
             text: 'The package could not be created. Please try again.',
             confirmButtonText: 'OK',
           });
+          this.isLoading = false;
         }
       },
       (error) => {
@@ -223,6 +243,7 @@ export class AddPackageComponent implements OnInit {
           text: 'There was an error while creating the package. Please try again later.',
           confirmButtonText: 'OK',
         });
+        this.isLoading = false;
       }
     );
   }

@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <form>
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
@@ -132,25 +134,27 @@
         </div>
       </div>
 
+      <!-- Actual Price field -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Actual Price *</label>
         <input
           type="text"
           id="priceLimit"
           name="priceLimit"
-          [value]="selectedPrice.normalPrice"
+          [value]="selectedPrice?.normalPrice || ''"
           disabled
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>
 
+      <!-- Discount field -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Discount *</label>
         <input
           type="text"
           id="priceLimit"
           name="priceLimit"
-          [value]="selectedPrice.discountedPrice"
+          [value]="selectedPrice?.discountedPrice || ''"
           disabled
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />

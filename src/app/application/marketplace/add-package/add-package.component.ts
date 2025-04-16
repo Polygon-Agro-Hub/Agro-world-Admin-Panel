@@ -371,6 +371,13 @@ export class AddPackageComponent implements OnInit {
     if (normalPrice <= 0) return 0;
     return Math.round(((normalPrice - discountedPrice) / normalPrice) * 100);
   }
+
+  preventNegativeNumbers(event: KeyboardEvent) {
+    // Prevent minus key
+    if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+      event.preventDefault();
+    }
+  }
 }
 
 class Crop {

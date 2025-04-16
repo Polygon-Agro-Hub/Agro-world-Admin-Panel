@@ -324,7 +324,7 @@
             class="text-[#006C5A] dark:text-textDark"
             *ngIf="item.discountedPrice !== 0"
           >
-            Rs.{{ item.discountedPrice }}
+            Rs.{{ item.normalPrice - item.discountedPrice }}
           </p>
         </td>
 

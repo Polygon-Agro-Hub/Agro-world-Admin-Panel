@@ -61,14 +61,50 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
+  // onAdd() {
+  //   if (
+  //     !this.inputPackageObj.qtytype ||
+  //     !this.inputPackageObj.mpItemId ||
+  //     !this.inputPackageObj.cID ||
+  //     !this.packageObj.displayName
+  //   ) {
+  //     Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+  //     return;
+  //   }
+
+  //   this.packageObj.Items.push({
+  //     displayName: this.selectedPrice.displayName,
+  //     mpItemId: this.inputPackageObj.mpItemId,
+  //     quantity: this.inputPackageObj.quantity,
+  //     discountedPrice: this.selectedPrice.discountedPrice,
+  //     qtytype: this.inputPackageObj.qtytype,
+  //     itemName: this.selectedPrice.displayName,
+  //     normalPrice: this.selectedPrice.normalPrice,
+  //   });
+  //   this.inputPackageObj = new InputPackage();
+  //   this.selectedPrice = new Variety();
+  // }
+
   onAdd() {
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
       !this.inputPackageObj.cID ||
-      !this.packageObj.displayName
+      !this.inputPackageObj.quantity
     ) {
-      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+      let errorMessage = 'Please fill in all the required fields:';
+
+      if (!this.inputPackageObj.qtytype) errorMessage += '<br>- Quantity Type';
+      if (!this.inputPackageObj.mpItemId) errorMessage += '<br>- Variety';
+      if (!this.inputPackageObj.cID) errorMessage += '<br>- Crop';
+      if (!this.inputPackageObj.quantity) errorMessage += '<br>- Quantity';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -85,9 +121,75 @@ export class AddPackageComponent implements OnInit {
     this.selectedPrice = new Variety();
   }
 
+  // onSubmit() {
+  //   if (this.packageObj.Items.length === 0) {
+  //     Swal.fire('Error!', 'Pleace add product before submit', 'error');
+  //     return;
+  //   }
+
+  //   this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
+  //     (res) => {
+  //       console.log('this is the created data', res);
+
+  //       if (res.status) {
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Package Created',
+  //           text: 'The package was created successfully!',
+  //           confirmButtonText: 'OK',
+  //         }).then(() => {
+  //           this.packageObj = new Package();
+  //           this.router.navigate(['/market/action/view-packages-list']);
+  //         });
+  //       } else {
+  //         Swal.fire({
+  //           icon: 'error',
+  //           title: 'Package Not Created',
+  //           text: 'The package could not be created. Please try again.',
+  //           confirmButtonText: 'OK',
+  //         });
+  //       }
+  //     },
+  //     (error) => {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'An Error Occurred',
+  //         text: 'There was an error while creating the package. Please try again later.',
+  //         confirmButtonText: 'OK',
+  //       });
+  //     }
+  //   );
+  // }
+
   onSubmit() {
-    if (this.packageObj.Items.length === 0) {
-      Swal.fire('Error!', 'Pleace add product before submit', 'error');
+    // Check all required fields
+    if (
+      !this.packageObj.displayName ||
+      !this.packageObj.description ||
+      !this.selectedImage ||
+      this.packageObj.Items.length === 0
+    ) {
+      let errorMessage = '';
+
+      if (!this.packageObj.displayName) {
+        errorMessage += 'Display Package Name is required.<br>';
+      }
+      if (!this.packageObj.description) {
+        errorMessage += 'Description is required.<br>';
+      }
+      if (!this.selectedImage) {
+        errorMessage += 'Package Image is required.<br>';
+      }
+      if (this.packageObj.Items.length === 0) {
+        errorMessage += 'Please add at least one product item.<br>';
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
       return;
     }
 

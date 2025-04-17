@@ -36,7 +36,7 @@
         >
           <option selected disabled value="">--Display type--</option>
           <option value="Retail">Retail</option>
-          <option value="Retail">WholeSale</option>
+          <option value="WholeSale">WholeSale</option>
         </select>
       </div>
 
@@ -132,6 +132,7 @@
         <select
           id="displaytype"
           name="displaytype"
+          (change)="changeType()"
           [(ngModel)]="productObj.displaytype"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         >
@@ -144,7 +145,7 @@
         </select>
       </div>
 
-      <div class="mb-6" *ngIf="productObj.promo">
+      <div class="mb-6" *ngIf="(productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D') && productObj.promo">
         <label class="text-[#534E4E]">Discount Percentage *</label>
         <input
           type="number"
@@ -152,6 +153,20 @@
           id="discountedPrice"
           name="discountedPrice"
           [(ngModel)]="productObj.discountedPrice"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+      </div>
+
+
+
+      <div class="mb-6" *ngIf="productObj.displaytype === 'AP&SP' && productObj.promo">
+        <label class="text-[#534E4E]">Discount Value*</label>
+        <input
+          type="number"
+          min="0.0"
+          id="discountValue"
+          name="discountValue"
+          [(ngModel)]="productObj.discountValue"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>
@@ -215,7 +230,7 @@
         >
           <div
             *ngIf="
-              productObj.displaytype === 'AP&SP' ||
+              productObj.displaytype === 'D&AP' ||
               productObj.displaytype === 'AP&SP&D'
             "
             class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
@@ -260,7 +275,7 @@
 
           <p
             *ngIf="
-              (productObj.displaytype === 'D&AP' ||
+              (productObj.displaytype === 'AP&SP' ||
                 productObj.displaytype === 'AP&SP&D') &&
               productObj.salePrice !== 0
             "

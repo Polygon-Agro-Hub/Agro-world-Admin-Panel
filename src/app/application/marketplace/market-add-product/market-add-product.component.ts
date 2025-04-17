@@ -97,12 +97,37 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   calculeSalePrice() {
-    this.productObj.discount =
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    this.productObj.salePrice =
-      this.productObj.normalPrice -
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+    if (this.productObj.displaytype === 'AP&SP') {
+      this.productObj.discount = this.productObj.discountValue;
+      this.productObj.salePrice =  this.productObj.normalPrice -this.productObj.discountValue;
+    }else{
+      this.productObj.discount = (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+    this.productObj.salePrice =  this.productObj.normalPrice -(this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+    }
+
+
+    
     console.log(this.productObj.salePrice);
+  }
+
+
+  dispresent(){
+    if (this.productObj.discountValue){
+      this.productObj.discountedPrice = 0;
+    }
+  }
+
+  disvalue(){
+    if (this.productObj.discountedPrice){
+      this.productObj.discountedPrice = 0;
+    }
+  }
+
+  changeType(){
+    this.productObj.normalPrice = 0;
+    this.productObj.salePrice = 0;
+    this.productObj.discountedPrice = 0;
+    this.productObj.discountedPrice = 0;
   }
 
   // displayType
@@ -176,6 +201,14 @@ export class MarketAddProductComponent implements OnInit {
         return;
       }
     }
+
+    if(this.productObj.unitType == 'g'){
+      this.productObj.startValue = this.productObj.startValue / 1000;
+      this.productObj.changeby = this.productObj.changeby / 1000;
+      this.productObj.unitType = 'Kg';
+    }
+
+
 
     this.marketSrv.createProduct(this.productObj).subscribe(
       (res) => {
@@ -251,6 +284,8 @@ class MarketPrice {
   displaytype!: string;
   salePrice: number = 0;
   discount: number = 0.0;
+
+  discountValue: number = 0;
 }
 
 class Variety {

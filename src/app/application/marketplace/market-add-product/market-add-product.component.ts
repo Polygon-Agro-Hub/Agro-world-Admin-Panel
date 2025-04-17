@@ -173,7 +173,6 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        !this.productObj.discountedPrice ||
         !this.productObj.salePrice
       ) {
         Swal.fire(

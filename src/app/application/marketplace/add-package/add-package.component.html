@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <form>
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
@@ -49,7 +51,7 @@
           />
           <label class="text-[#534E4E] dark:text-textDark">Add Image</label>
           <div
-            class="py-1 px-2 rounded-lg shadow-lg border-[1px] border-[#3980C0]"
+            class="py-1 px-2 rounded-lg shadow-lg border-[1px] border-[#3980C0] cursor-pointer"
             (click)="triggerFileInput($event)"
           >
             <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
@@ -116,6 +118,7 @@
             name="priceLimit"
             min="0"
             [(ngModel)]="this.inputPackageObj.quantity"
+            (keydown)="preventNegativeNumbers($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
         </div>
@@ -132,25 +135,27 @@
         </div>
       </div>
 
+      <!-- Actual Price field -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Actual Price *</label>
         <input
           type="text"
           id="priceLimit"
           name="priceLimit"
-          [value]="selectedPrice.normalPrice"
+          [value]="selectedPrice?.normalPrice || ''"
           disabled
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>
 
+      <!-- Discount field -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Discount *</label>
         <input
           type="text"
           id="priceLimit"
           name="priceLimit"
-          [value]="selectedPrice.discountedPrice"
+          [value]="selectedPrice.discountedPrice || ''"
           disabled
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -320,7 +325,16 @@
             class="text-[#006C5A] dark:text-textDark"
             *ngIf="item.discountedPrice !== 0"
           >
-            Rs.{{ item.discountedPrice }}
+            <span
+              class="bg-green-100 text-green-800 px-1 rounded mt-1 dark:bg-green-900 dark:text-green-200"
+            >
+              {{
+                calculateDiscountPercentage(
+                  item.normalPrice,
+                  item.discountedPrice
+                )
+              }}%
+            </span>
           </p>
         </td>
 

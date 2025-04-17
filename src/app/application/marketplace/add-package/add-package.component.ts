@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-add-package',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './add-package.component.html',
   styleUrls: ['./add-package.component.css'],
 })
@@ -22,6 +23,7 @@ export class AddPackageComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   selectedFileName!: string;
+  isLoading: boolean = false;
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
@@ -50,25 +52,73 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
+  // onPriceChange() {
+  //   const selectedVariety = this.selectedVarieties.find(
+  //     (variety) => variety.id === +this.inputPackageObj.mpItemId
+  //   );
+  //   if (selectedVariety) {
+  //     this.selectedPrice = selectedVariety;
+  //   } else {
+  //     this.selectedPrice = new Variety();
+  //   }
+  // }
+
   onPriceChange() {
     const selectedVariety = this.selectedVarieties.find(
       (variety) => variety.id === +this.inputPackageObj.mpItemId
     );
     if (selectedVariety) {
-      this.selectedPrice = selectedVariety;
+      // Create a new object to force change detection
+      this.selectedPrice = { ...selectedVariety };
     } else {
       this.selectedPrice = new Variety();
     }
   }
+
+  // onAdd() {
+  //   if (
+  //     !this.inputPackageObj.qtytype ||
+  //     !this.inputPackageObj.mpItemId ||
+  //     !this.inputPackageObj.cID ||
+  //     !this.packageObj.displayName
+  //   ) {
+  //     Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+  //     return;
+  //   }
+
+  //   this.packageObj.Items.push({
+  //     displayName: this.selectedPrice.displayName,
+  //     mpItemId: this.inputPackageObj.mpItemId,
+  //     quantity: this.inputPackageObj.quantity,
+  //     discountedPrice: this.selectedPrice.discountedPrice,
+  //     qtytype: this.inputPackageObj.qtytype,
+  //     itemName: this.selectedPrice.displayName,
+  //     normalPrice: this.selectedPrice.normalPrice,
+  //   });
+  //   this.inputPackageObj = new InputPackage();
+  //   this.selectedPrice = new Variety();
+  // }
 
   onAdd() {
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
       !this.inputPackageObj.cID ||
-      !this.packageObj.displayName
+      !this.inputPackageObj.quantity
     ) {
-      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+      let errorMessage = 'Please fill in all the required fields:';
+
+      if (!this.inputPackageObj.qtytype) errorMessage += '<br>- Quantity Type';
+      if (!this.inputPackageObj.mpItemId) errorMessage += '<br>- Variety';
+      if (!this.inputPackageObj.cID) errorMessage += '<br>- Crop';
+      if (!this.inputPackageObj.quantity) errorMessage += '<br>- Quantity';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -81,13 +131,83 @@ export class AddPackageComponent implements OnInit {
       itemName: this.selectedPrice.displayName,
       normalPrice: this.selectedPrice.normalPrice,
     });
+
+    // Reset all relevant fields
     this.inputPackageObj = new InputPackage();
     this.selectedPrice = new Variety();
+    this.selectedVarieties = [];
   }
 
+  // onSubmit() {
+  //   if (this.packageObj.Items.length === 0) {
+  //     Swal.fire('Error!', 'Pleace add product before submit', 'error');
+  //     return;
+  //   }
+
+  //   this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
+  //     (res) => {
+  //       console.log('this is the created data', res);
+
+  //       if (res.status) {
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Package Created',
+  //           text: 'The package was created successfully!',
+  //           confirmButtonText: 'OK',
+  //         }).then(() => {
+  //           this.packageObj = new Package();
+  //           this.router.navigate(['/market/action/view-packages-list']);
+  //         });
+  //       } else {
+  //         Swal.fire({
+  //           icon: 'error',
+  //           title: 'Package Not Created',
+  //           text: 'The package could not be created. Please try again.',
+  //           confirmButtonText: 'OK',
+  //         });
+  //       }
+  //     },
+  //     (error) => {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'An Error Occurred',
+  //         text: 'There was an error while creating the package. Please try again later.',
+  //         confirmButtonText: 'OK',
+  //       });
+  //     }
+  //   );
+  // }
+
   onSubmit() {
-    if (this.packageObj.Items.length === 0) {
-      Swal.fire('Error!', 'Pleace add product before submit', 'error');
+    this.isLoading = true;
+    // Check all required fields
+    if (
+      !this.packageObj.displayName ||
+      !this.packageObj.description ||
+      !this.selectedImage ||
+      this.packageObj.Items.length === 0
+    ) {
+      let errorMessage = '';
+
+      if (!this.packageObj.displayName) {
+        errorMessage += 'Display Package Name is required.<br>';
+      }
+      if (!this.packageObj.description) {
+        errorMessage += 'Description is required.<br>';
+      }
+      if (!this.selectedImage) {
+        errorMessage += 'Package Image is required.<br>';
+      }
+      if (this.packageObj.Items.length === 0) {
+        errorMessage += 'Please add at least one product item.<br>';
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
@@ -105,6 +225,7 @@ export class AddPackageComponent implements OnInit {
             this.packageObj = new Package();
             this.router.navigate(['/market/action/view-packages-list']);
           });
+          this.isLoading = false;
         } else {
           Swal.fire({
             icon: 'error',
@@ -112,6 +233,7 @@ export class AddPackageComponent implements OnInit {
             text: 'The package could not be created. Please try again.',
             confirmButtonText: 'OK',
           });
+          this.isLoading = false;
         }
       },
       (error) => {
@@ -121,6 +243,7 @@ export class AddPackageComponent implements OnInit {
           text: 'There was an error while creating the package. Please try again later.',
           confirmButtonText: 'OK',
         });
+        this.isLoading = false;
       }
     );
   }
@@ -239,6 +362,21 @@ export class AddPackageComponent implements OnInit {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
+  }
+
+  calculateDiscountPercentage(
+    normalPrice: number,
+    discountedPrice: number
+  ): number {
+    if (normalPrice <= 0) return 0;
+    return Math.round(((normalPrice - discountedPrice) / normalPrice) * 100);
+  }
+
+  preventNegativeNumbers(event: KeyboardEvent) {
+    // Prevent minus key
+    if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+      event.preventDefault();
+    }
   }
 }
 

@@ -322,25 +322,27 @@
           Rs. {{ item.item.pricing.normalPrice }}
         </td>
         <td class="px-6 py-4 text-center">
-          <div
-            class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3 mx-12"
-          >
+          <!-- Display discount percentage with increment and decrement buttons -->
+          <div class="flex justify-center items-center">
             <i
               class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
-              (click)="decrementDiscount(i)"
+              (click)="decrementDiscountValue(i, 1)"
             ></i>
-            <p class="dark:text-textDark">
-              {{ item.item.pricing.discountedPrice }}
+            <p class="mx-2 text-[#006C5A] dark:text-textDark">
+              {{ getDiscountPercentage(item) | number: '1.0-2' }} %
             </p>
             <i
               class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
-              (click)="incrementDiscount(i)"
+              (click)="incrementDiscountValue(i, 1)"
             ></i>
           </div>
         </td>
         <td class="px-6 py-4 text-center">
+          <!-- Display total discount value for all quantities -->
           <p class="text-[#006C5A] dark:text-textDark">
-            {{ item.item.pricing.discount }} %
+            Rs. {{
+              getDiscountAmount(item) | number: '1.2-2'
+            }}
           </p>
         </td>
 

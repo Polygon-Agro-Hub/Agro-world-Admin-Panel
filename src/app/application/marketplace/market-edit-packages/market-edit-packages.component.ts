@@ -50,68 +50,87 @@ export class MarketEditPackagesComponent {
     });
   }
 
+  
 
 
-  toggleUnitType(index: number, unit: 'g' | 'Kg') {
-    const item = this.packageItems[index];
-    if (item.quantityType === unit) return;
-    
-    // Store the original quantity value
-    const originalQuantity = item.quantity;
-    
-    // Update the unit type
-    item.quantityType = unit;
-    
-    // Adjust the display quantity based on the new unit
-    if (unit === 'g') {
-      // Converting from Kg to g (multiply by 1000)
-      item.quantity = originalQuantity * 1000;
-    } else {
-      // Converting from g to Kg (divide by 1000)
-      item.quantity = originalQuantity / 1000;
-    }
-    
-    // Round to 2 decimal places for Kg or whole number for g
-    item.quantity = unit === 'Kg' 
-      ? parseFloat(item.quantity.toFixed(2)) 
-      : Math.round(item.quantity);
+  getDiscountPercentage(item: any): number {
+    const normal = item.item.pricing.normalPrice;
+    const discounted = item.item.pricing.discountedPrice;
+    return ((normal - discounted) / normal) * 100;
   }
   
-  // Updated increment/decrement quantity methods
-  incrementQuantity(index: number) {
-    const item = this.packageItems[index];
-    if (item.quantityType === 'g') {
-      // Add 100g
-      item.quantity += 100;
-    } else {
-      // Add 0.1kg
-      item.quantity += 0.1;
-      item.quantity = parseFloat(item.quantity.toFixed(2));
-    }
-    this.calculatePackageTotals();
+  getDiscountAmount(item: any): number {
+    const normal = item.item.pricing.normalPrice;
+    const discounted = item.item.pricing.discountedPrice;
+    return (normal - discounted) * Number(item.quantity || 0);
   }
   
-  decrementQuantity(index: number) {
+
+  // Method to increment the discount value for an item
+  incrementDiscountValue(index: number, step: number = 1) {
     const item = this.packageItems[index];
-    const minValue = item.quantityType === 'g' ? 100 : 0.1;
-    
-    if (item.quantity > minValue) {
-      if (item.quantityType === 'g') {
-        // Subtract 100g
-        item.quantity -= 100;
-      } else {
-        // Subtract 0.1kg
-        item.quantity -= 0.1;
-        item.quantity = parseFloat(item.quantity.toFixed(2));
-      }
+    const { normalPrice, discountedPrice } = item.item.pricing;
+  
+    // Calculate the new discounted price based on the percentage step
+    const discountPercentage = ((normalPrice - discountedPrice) / normalPrice) * 100;
+    const newDiscountPercentage = discountPercentage + step;
+  
+    if (newDiscountPercentage <= 100) {
+      item.item.pricing.discountedPrice = parseFloat(
+        (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
+      );
       this.calculatePackageTotals();
     }
   }
-  
-  // Add this helper method to display the quantity properly in the template
-  getDisplayQuantity(item: PackageItem): number {
-    return item.quantity;
+
+// Method to decrement the discount value for an item
+decrementDiscountValue(index: number, step: number = 1) {
+  const item = this.packageItems[index];
+  const { normalPrice, discountedPrice } = item.item.pricing;
+
+  // Calculate the new discounted price based on the percentage step
+  const discountPercentage = ((normalPrice - discountedPrice) / normalPrice) * 100;
+  const newDiscountPercentage = discountPercentage - step;
+
+  if (newDiscountPercentage >= 0) {
+    item.item.pricing.discountedPrice = parseFloat(
+      (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
+    );
+    this.calculatePackageTotals();
   }
+}
+
+
+
+
+toggleUnitType(index: number, unit: string) {
+  this.packageItems[index].quantityType = unit;
+}
+
+
+
+
+incrementQuantity(index: number) {
+  const item = this.packageItems[index];
+  item.quantity = Number(item.quantity || 0) + 1;
+}
+
+decrementQuantity(index: number) {
+  const item = this.packageItems[index];
+  if (item.quantity > 1) {
+    item.quantity = Number(item.quantity || 0) - 1;
+  }
+}
+
+
+  // Add this helper method to display the quantity properly in the template
+  getDisplayQuantity(item: any): number {
+    const quantity = Number(item.quantity || 0);
+    return item.quantityType === 'g' ? quantity * 1000 : quantity;
+  }
+  
+  
+  
 
   removeItem(index: number) {
     if (index >= 0 && index < this.packageItems.length) {
@@ -310,6 +329,9 @@ export class MarketEditPackagesComponent {
       reader.readAsDataURL(file);
     }
   }
+
+
+
   onAdd() {
     if (
       !this.inputPackageObj.qtytype ||
@@ -321,14 +343,14 @@ export class MarketEditPackagesComponent {
       Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
       return;
     }
-
+  
     console.log('Selected varieties:', this.selectedVarieties);
     console.log('Looking for item ID:', this.inputPackageObj.mpItemId);
-
+  
     const selectedVariety = this.selectedVarieties.find(
       (v) => v.id === +this.inputPackageObj.mpItemId!
     );
-
+  
     if (!selectedVariety) {
       console.error(
         'Available variety IDs:',
@@ -337,7 +359,7 @@ export class MarketEditPackagesComponent {
       Swal.fire('Error', 'Selected item not found', 'error');
       return;
     }
-
+  
     const newItem: PackageItem = {
       id: 0,
       quantity: this.inputPackageObj.quantity,
@@ -352,15 +374,17 @@ export class MarketEditPackagesComponent {
         pricing: {
           normalPrice: this.inputPackageObj.normalPrice,
           discountedPrice: this.inputPackageObj.discountedPrice,
-          discount:
-            this.inputPackageObj.normalPrice -
+          discount: this.inputPackageObj.normalPrice -
             this.inputPackageObj.discountedPrice,
           promo: false,
         },
         unitType: this.inputPackageObj.qtytype,
       },
+      baseQuantity: this.inputPackageObj.qtytype === 'g'
+        ? this.inputPackageObj.quantity! / 1000 // Convert g to Kg
+        : this.inputPackageObj.quantity!, // Keep as Kg
     };
-
+  
     this.packageItems.push(newItem);
     this.calculatePackageTotals();
     this.resetInputForm();
@@ -368,12 +392,22 @@ export class MarketEditPackagesComponent {
 
   calculatePackageTotals() {
     let subtotal = 0;
+    let totalDiscount = 0;
+  
     this.packageItems.forEach((item) => {
-      subtotal += item.price * item.quantity;
+      // Use baseQuantity for calculations
+      const itemTotal = item.item.pricing.discountedPrice * item.baseQuantity;
+      const itemDiscount =
+        (item.item.pricing.normalPrice - item.item.pricing.discountedPrice) *
+        item.baseQuantity;
+  
+      subtotal += itemTotal;
+      totalDiscount += itemDiscount;
     });
+  
     this.packageData.subtotal = subtotal;
-    this.packageData.discount = 0;
-    this.packageData.total = subtotal - this.packageData.discount;
+    this.packageData.discount = totalDiscount; // Total discount for all items
+    this.packageData.total = subtotal; // Total after applying discounts
   }
 
   resetInputForm() {
@@ -486,7 +520,8 @@ export class MarketEditPackagesComponent {
 // Interface and Class Definitions
 interface PackageItem {
   id: number;
-  quantity: number;
+  quantity: number; // Display quantity (e.g., 2 Kg or 2000 g)
+  baseQuantity: number; // Base quantity used for calculations (e.g., always in Kg)
   quantityType: string;
   price: number;
   item: {

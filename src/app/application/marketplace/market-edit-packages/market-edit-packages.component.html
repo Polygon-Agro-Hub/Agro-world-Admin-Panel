@@ -288,16 +288,16 @@
         <td class="px-6 py-4 text-center">
           <div class="flex justify-center items-center">
             <div
-              class="py-2 px-3 mx-1 border-[1px] shadow-lg rounded-md"
-              [class.bg-[#3980C0]]="item.quantityType === 'Kg'"
-              [class.text-white]="item.quantityType === 'Kg'"
+              class="py-2 px-3 mx-1 border-[1px] shadow-lg rounded-md cursor-pointer"
+              [ngClass]="{ 'bg-[#CCEAE5]': item.quantityType === 'Kg' }"
+              (click)="toggleUnitType(i, 'Kg')"
             >
               kg
             </div>
             <div
-              class="py-2 px-4 mx-1 border-[1px] shadow-lg rounded-md"
-              [class.bg-[#3980C0]]="item.quantityType === 'g'"
-              [class.text-white]="item.quantityType === 'g'"
+              class="py-2 px-4 mx-1 border-[1px] shadow-lg rounded-md cursor-pointer"
+              [ngClass]="{ 'bg-[#CCEAE5]': item.quantityType === 'g' }"
+              (click)="toggleUnitType(i, 'g')"
             >
               g
             </div>
@@ -311,7 +311,7 @@
               class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
               (click)="decrementQuantity(i)"
             ></i>
-            <p class="dark:text-textDark">{{ item.quantity }}</p>
+            <p class="dark:text-textDark">{{ getDisplayQuantity(item) }}</p>
             <i
               class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
               (click)="incrementQuantity(i)"

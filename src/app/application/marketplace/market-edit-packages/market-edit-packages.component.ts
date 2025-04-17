@@ -50,6 +50,69 @@ export class MarketEditPackagesComponent {
     });
   }
 
+
+
+  toggleUnitType(index: number, unit: 'g' | 'Kg') {
+    const item = this.packageItems[index];
+    if (item.quantityType === unit) return;
+    
+    // Store the original quantity value
+    const originalQuantity = item.quantity;
+    
+    // Update the unit type
+    item.quantityType = unit;
+    
+    // Adjust the display quantity based on the new unit
+    if (unit === 'g') {
+      // Converting from Kg to g (multiply by 1000)
+      item.quantity = originalQuantity * 1000;
+    } else {
+      // Converting from g to Kg (divide by 1000)
+      item.quantity = originalQuantity / 1000;
+    }
+    
+    // Round to 2 decimal places for Kg or whole number for g
+    item.quantity = unit === 'Kg' 
+      ? parseFloat(item.quantity.toFixed(2)) 
+      : Math.round(item.quantity);
+  }
+  
+  // Updated increment/decrement quantity methods
+  incrementQuantity(index: number) {
+    const item = this.packageItems[index];
+    if (item.quantityType === 'g') {
+      // Add 100g
+      item.quantity += 100;
+    } else {
+      // Add 0.1kg
+      item.quantity += 0.1;
+      item.quantity = parseFloat(item.quantity.toFixed(2));
+    }
+    this.calculatePackageTotals();
+  }
+  
+  decrementQuantity(index: number) {
+    const item = this.packageItems[index];
+    const minValue = item.quantityType === 'g' ? 100 : 0.1;
+    
+    if (item.quantity > minValue) {
+      if (item.quantityType === 'g') {
+        // Subtract 100g
+        item.quantity -= 100;
+      } else {
+        // Subtract 0.1kg
+        item.quantity -= 0.1;
+        item.quantity = parseFloat(item.quantity.toFixed(2));
+      }
+      this.calculatePackageTotals();
+    }
+  }
+  
+  // Add this helper method to display the quantity properly in the template
+  getDisplayQuantity(item: PackageItem): number {
+    return item.quantity;
+  }
+
   removeItem(index: number) {
     if (index >= 0 && index < this.packageItems.length) {
       Swal.fire({
@@ -71,19 +134,19 @@ export class MarketEditPackagesComponent {
     }
   }
 
-  incrementQuantity(index: number) {
-    if (this.packageItems[index]) {
-      this.packageItems[index].quantity += 1;
-      this.calculatePackageTotals();
-    }
-  }
+  // incrementQuantity(index: number) {
+  //   if (this.packageItems[index]) {
+  //     this.packageItems[index].quantity += 1;
+  //     this.calculatePackageTotals();
+  //   }
+  // }
 
-  decrementQuantity(index: number) {
-    if (this.packageItems[index] && this.packageItems[index].quantity > 0) {
-      this.packageItems[index].quantity -= 1;
-      this.calculatePackageTotals();
-    }
-  }
+  // decrementQuantity(index: number) {
+  //   if (this.packageItems[index] && this.packageItems[index].quantity > 0) {
+  //     this.packageItems[index].quantity -= 1;
+  //     this.calculatePackageTotals();
+  //   }
+  // }
 
   decrementDiscount(index: number, step: number = 1.0) {
     if (

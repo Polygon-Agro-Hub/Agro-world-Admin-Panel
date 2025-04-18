@@ -102,37 +102,18 @@ export class MarketPlaceService {
   createPackage(Data: any, selectedImage: any): Observable<any> {
     const formData = new FormData();
     console.log(selectedImage);
-
-    // Append the package data as a JSON string
     formData.append('package', JSON.stringify(Data));
 
-    // Append the image file correctly
     if (selectedImage) {
-      // If selectedImage is a File object, append it directly
-
       formData.append('file', selectedImage);
-
-      // If selectedImage is a base64 string, convert it to a Blob and append it
-      // else if (typeof selectedImage === 'string' && selectedImage.startsWith('data:image')) {
-      //   const byteString = atob(selectedImage.split(',')[1]); // Decode base64
-      //   const mimeString = selectedImage.split(',')[0].split(':')[1].split(';')[0]; // Get MIME type
-      //   const ab = new ArrayBuffer(byteString.length);
-      //   const ia = new Uint8Array(ab);
-      //   for (let i = 0; i < byteString.length; i++) {
-      //     ia[i] = byteString.charCodeAt(i);
-      //   }
-      //   const blob = new Blob([ab], { type: mimeString });
-      //   formData.append('file', blob, 'image.png'); // Append as a Blob with a filename
-      // }
     }
 
-    // Set headers (do NOT set Content-Type manually for FormData)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     // Send the request
-    return this.http.post(`${this.apiUrl}market-place/add-product`, formData, {
+    return this.http.post(`${this.apiUrl}market-place/add-package`, formData, {
       headers,
     });
   }
@@ -190,5 +171,35 @@ export class MarketPlaceService {
 
     const url = `${this.apiUrl}market-place/get-packagedetails-by-id/${id}`;
     return this.http.get<any>(url, { headers });
+  }
+
+  // In your MarketPlaceService
+  updatePackage(data: any, id: number, base64Image?: string): Observable<any> {
+    // Ensure all numeric values are properly converted
+    const cleanedData = {
+      ...data,
+      Items: data.Items.map((item: any) => ({
+        ...item,
+        mpItemId: Number(item.mpItemId), // Ensure mpItemId is a number
+        quantity: Number(item.quantity), // Ensure quantity is a number
+        discountedPrice: Number(item.discountedPrice), // Ensure price is a number
+      })),
+    };
+
+    const requestBody = {
+      package: JSON.stringify(cleanedData), // Stringify the cleaned data
+      file: base64Image,
+    };
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.patch(
+      `${this.apiUrl}market-place/edit-product/${id}`,
+      requestBody,
+      { headers }
+    );
   }
 }

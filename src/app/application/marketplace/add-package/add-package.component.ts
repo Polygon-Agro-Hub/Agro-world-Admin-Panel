@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-add-package',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './add-package.component.html',
   styleUrls: ['./add-package.component.css'],
 })
@@ -22,19 +23,17 @@ export class AddPackageComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   selectedFileName!: string;
+  isLoading: boolean = false;
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   ngOnInit(): void {
     this.getCropProductData();
-    this.packageObj.Items = [new Items()];
-    this.packageObj.Items.pop();
+    this.packageObj.Items = [];
   }
 
   getCropProductData() {
     this.marketSrv.getProuctCropVerity().subscribe((res) => {
-      console.log(res);
-
       this.cropObj = res;
     });
   }
@@ -55,7 +54,7 @@ export class AddPackageComponent implements OnInit {
       (variety) => variety.id === +this.inputPackageObj.mpItemId
     );
     if (selectedVariety) {
-      this.selectedPrice = selectedVariety;
+      this.selectedPrice = { ...selectedVariety };
     } else {
       this.selectedPrice = new Variety();
     }
@@ -66,113 +65,159 @@ export class AddPackageComponent implements OnInit {
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
       !this.inputPackageObj.cID ||
-      !this.packageObj.displayName
+      !this.inputPackageObj.quantity
     ) {
-      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+      let errorMessage = 'Please fill in all the required fields:';
+
+      if (!this.inputPackageObj.qtytype) errorMessage += '<br>- Quantity Type';
+      if (!this.inputPackageObj.mpItemId) errorMessage += '<br>- Variety';
+      if (!this.inputPackageObj.cID) errorMessage += '<br>- Crop';
+      if (!this.inputPackageObj.quantity) errorMessage += '<br>- Quantity';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
       return;
     }
+
+    // Convert input quantity to kg if grams are selected
+    const quantityInKg = this.inputPackageObj.qtytype === 'g' 
+      ? this.inputPackageObj.quantity / 1000 
+      : this.inputPackageObj.quantity;
+
+    // Calculate initial discount percentage
+    const initialDiscountPercentage = this.selectedPrice.normalPrice > 0 
+      ? Math.round((this.selectedPrice.discount / this.selectedPrice.normalPrice) * 100) 
+      : 0;
 
     this.packageObj.Items.push({
       displayName: this.selectedPrice.displayName,
       mpItemId: this.inputPackageObj.mpItemId,
-      quantity: this.inputPackageObj.quantity,
-      discountedPrice: this.selectedPrice.discountedPrice,
-      qtytype: this.inputPackageObj.qtytype,
+      quantity: quantityInKg, // Always stored in kg
+      qtytype: this.inputPackageObj.qtytype as 'g' | 'Kg',
       itemName: this.selectedPrice.displayName,
-      normalPrice: this.selectedPrice.normalPrice,
+      normalPrice: this.selectedPrice.normalPrice, // Price per kg
+      discount: this.selectedPrice.discount, // Discount per kg
+      discountPercentage: initialDiscountPercentage,
     });
+
+    // Reset form fields
     this.inputPackageObj = new InputPackage();
     this.selectedPrice = new Variety();
+    this.selectedVarieties = [];
   }
 
-  onSubmit() {
-    if (this.packageObj.Items.length === 0) {
-      Swal.fire('Error!', 'Pleace add product before submit', 'error');
-      return;
-    }
+  toggleUnitType(index: number, unit: 'g' | 'Kg') {
+    const item = this.packageObj.Items[index];
+    if (item.qtytype === unit) return;
+    
+    item.qtytype = unit;
+  }
 
-    this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
-      (res) => {
-        if (res.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Package Created',
-            text: 'The package was created successfully!',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            this.packageObj = new Package();
-            this.router.navigate(['/market/action/add-package']);
-          });
+  onQuantityChange(index: number, event: any) {
+    const newValue = parseFloat(event.target.value);
+    const item = this.packageObj.Items[index];
+    
+    if (!isNaN(newValue)) {
+      if (item.qtytype === 'g') {
+        // Convert grams to kg for storage
+        item.quantity = newValue / 1000;
+      } else {
+        // Keep kg value as is
+        item.quantity = newValue;
+      }
+      
+      // Ensure minimum quantity (100g or 0.1kg)
+      if (item.quantity < 0.1) {
+        item.quantity = 0.1;
+        if (item.qtytype === 'g') {
+          event.target.value = 100; // Show 100g in input
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Package Not Created',
-            text: 'The package could not be created. Please try again.',
-            confirmButtonText: 'OK',
-          });
+          event.target.value = 0.1; // Show 0.1kg in input
         }
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'An Error Occurred',
-          text: 'There was an error while creating the package. Please try again later.',
-          confirmButtonText: 'OK',
-        });
       }
-    );
+    }
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.inputPackageObj = new InputPackage();
-        this.packageObj = new Package();
-        this.router.navigate(['/market/action']);
+  onDiscountPercentageChange(index: number, event: any) {
+    const newValue = parseInt(event.target.value);
+    const item = this.packageObj.Items[index];
+    
+    if (!isNaN(newValue)) {
+      // Ensure value stays between 0-100
+      if (newValue >= 0 && newValue <= 100) {
+        item.discountPercentage = newValue;
+        this.updateDiscountFromPercentage(index);
+      } else {
+        // Reset to previous value if invalid
+        event.target.value = item.discountPercentage;
       }
-    });
+    }
   }
 
   incrementQuantity(index: number) {
-    if (this.packageObj.Items[index]) {
-      this.packageObj.Items[index].quantity += 1;
+    const item = this.packageObj.Items[index];
+    if (item.qtytype === 'g') {
+      item.quantity += 0.1; // Add 100g (0.1kg)
+    } else {
+      item.quantity += 0.1; // Add 0.1kg
     }
+    item.quantity = parseFloat(item.quantity.toFixed(2));
   }
 
   decrementQuantity(index: number) {
-    if (
-      this.packageObj.Items[index] &&
-      this.packageObj.Items[index].quantity > 0
-    ) {
-      this.packageObj.Items[index].quantity -= 1;
+    const item = this.packageObj.Items[index];
+    const minValue = 0.1; // Minimum 100g or 0.1kg
+    
+    if (item.quantity > minValue) {
+      if (item.qtytype === 'g') {
+        item.quantity -= 0.1; // Subtract 100g (0.1kg)
+      } else {
+        item.quantity -= 0.1; // Subtract 0.1kg
+      }
+      item.quantity = parseFloat(item.quantity.toFixed(2));
     }
   }
 
-  decrementDiscount(index: number, step: number = 1.0) {
-    if (
-      this.packageObj.Items[index] &&
-      this.packageObj.Items[index].discountedPrice > 0
-    ) {
-      const newPrice = this.packageObj.Items[index].discountedPrice - step;
-      this.packageObj.Items[index].discountedPrice =
-        newPrice >= 0 ? parseFloat(newPrice.toFixed(2)) : 0;
-    }
-  }
-
-  incrementDiscount(index: number) {
+  incrementDiscountPercentage(index: number) {
     if (this.packageObj.Items[index]) {
-      this.packageObj.Items[index].discountedPrice += 1.0;
-      this.packageObj.Items[index].discountedPrice = parseFloat(
-        this.packageObj.Items[index].discountedPrice.toFixed(2)
-      );
+      if (this.packageObj.Items[index].discountPercentage < 100) {
+        this.packageObj.Items[index].discountPercentage += 1;
+        this.updateDiscountFromPercentage(index);
+      }
     }
+  }
+
+  decrementDiscountPercentage(index: number) {
+    if (this.packageObj.Items[index]) {
+      if (this.packageObj.Items[index].discountPercentage > 0) {
+        this.packageObj.Items[index].discountPercentage -= 1;
+        this.updateDiscountFromPercentage(index);
+      }
+    }
+  }
+
+  updateDiscountFromPercentage(index: number) {
+    const item = this.packageObj.Items[index];
+    item.discount = (item.discountPercentage / 100) * item.normalPrice;
+    item.discount = parseFloat(item.discount.toFixed(2));
+  }
+
+  getDisplayQuantity(item: Items): number {
+    return item.qtytype === 'g' ? item.quantity * 1000 : item.quantity;
+  }
+
+  getTotalPrice(): number {
+    return this.packageObj.Items.reduce((sum, item) => {
+      const actualPrice = item.normalPrice * item.quantity;
+      const totalDiscount = (item.discountPercentage / 100) * actualPrice;
+      const totalPrice = sum + (actualPrice - totalDiscount);
+      this.packageObj.total = parseFloat(totalPrice.toFixed(2));
+      return this.packageObj.total;
+    }, 0);
   }
 
   removeItem(index: number) {
@@ -195,15 +240,81 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
-  getTotalPrice(): number {
-    return this.packageObj.Items.reduce((sum, item) => {
-      let totalPrice;
-      const actualPrice = item.normalPrice * item.quantity;
-      const discountedValue = item.discountedPrice || 0;
-      totalPrice = sum + (actualPrice - discountedValue);
-      this.packageObj.total = totalPrice;
-      return totalPrice;
-    }, 0);
+  onSubmit() {
+    this.isLoading = true;
+    if (
+      !this.packageObj.displayName ||
+      !this.packageObj.description ||
+      !this.selectedImage ||
+      this.packageObj.Items.length === 0
+    ) {
+      let errorMessage = '';
+
+      if (!this.packageObj.displayName) errorMessage += 'Display Package Name is required.<br>';
+      if (!this.packageObj.description) errorMessage += 'Description is required.<br>';
+      if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
+      if (this.packageObj.Items.length === 0) errorMessage += 'Please add at least one product item.<br>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
+      this.isLoading = false;
+      return;
+    }
+
+    // All quantities are already stored in kg, no conversion needed before submit
+    this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Package Created',
+            text: 'The package was created successfully!',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            this.packageObj = new Package();
+            this.router.navigate(['/market/action/view-packages-list']);
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Package Not Created',
+            text: 'The package could not be created. Please try again.',
+            confirmButtonText: 'OK',
+          });
+        }
+        this.isLoading = false;
+      },
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'An Error Occurred',
+          text: 'There was an error while creating the package. Please try again later.',
+          confirmButtonText: 'OK',
+        });
+        this.isLoading = false;
+      }
+    );
+  }
+
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.inputPackageObj = new InputPackage();
+        this.packageObj = new Package();
+        this.router.navigate(['/market/action']);
+      }
+    });
   }
 
   onFileSelected(event: any): void {
@@ -238,6 +349,12 @@ export class AddPackageComponent implements OnInit {
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
   }
+
+  preventNegativeNumbers(event: KeyboardEvent) {
+    if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+      event.preventDefault();
+    }
+  }
 }
 
 class Crop {
@@ -251,6 +368,7 @@ class Variety {
   displayName: string = '';
   normalPrice: number = 0;
   discountedPrice: number = 0;
+  discount: number = 0;
 }
 
 class Package {
@@ -267,11 +385,12 @@ class Package {
 class Items {
   displayName: string | undefined = undefined;
   mpItemId!: number;
-  quantity: number = 0;
-  discountedPrice: number = 0;
-  qtytype: string = '';
+  quantity: number = 0; // Always stored in kg
+  qtytype: 'g' | 'Kg' = 'Kg'; // Current display unit
   itemName: string | undefined = '';
-  normalPrice: number = 0;
+  normalPrice: number = 0; // Price per kg
+  discount: number = 0; // Discount per kg
+  discountPercentage: number = 0;
 }
 
 class InputPackage {
@@ -285,4 +404,5 @@ class InputPackage {
   qtytype: string = '';
   itemName!: string;
   normalPrice!: number;
+  discount: number = 0;
 }

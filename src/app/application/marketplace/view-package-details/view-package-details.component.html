@@ -79,7 +79,7 @@
             <th class="px-6 py-3 text-center">ITEM</th>
             <th class="px-8 py-3 text-center">QUANTITY</th>
             <th class="px-6 py-3 text-center">UNIT</th>
-            <th class="px-6 py-3 text-center">ACTUAL PRICE</th>
+            <th class="px-6 py-3 text-center">ACTUAL PRICE PER 1Kg</th>
             <th class="px-6 py-3 text-center">DISCOUNT VALUE (%)</th>
             <th class="px-6 py-3 text-center">TOTAL</th>
           </tr>
@@ -99,7 +99,7 @@
             <td class="px-6 py-4 text-center text-black dark:text-textDark">
               Rs {{ detail.normalPrice }}
             </td>
-            <td class="px-6 py-4 text-center">{{ package?.discount || 0 }}</td>
+            <td class="px-6 py-4 text-center">{{  (((detail.quantity*detail.normalPrice)-detail.price)/(detail.quantity*detail.normalPrice))*100   }}</td>
             <td class="px-6 py-4 text-center">Rs {{ detail.price }}</td>
           </tr>
         </tbody>

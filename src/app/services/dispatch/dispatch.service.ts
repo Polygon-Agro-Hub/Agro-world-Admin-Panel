@@ -89,4 +89,55 @@ export class DispatchService {
 
 
 
+
+    getCustomPackItems(invoiceId: number) {
+
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+
+      return this.http.get<any[]>(`${this.apiUrl}dispatch/get-custom-pack-items/${invoiceId}`, { headers });
+    }
+
+
+
+
+
+
+    updateCustomPackItems(invoiceId: number, updatedItems: { id: number, isPacked: number }[]) {
+      const token = this.token; // Ensure token is accessible or injected here
+    
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+    
+      const url = `${this.apiUrl}dispatch/update-custom-pack-items`;
+    
+      const body = {
+        invoiceId,
+        updatedItems,
+      };
+    
+      return this.http.post(url, body, { headers });
+    }
+    
+    
+
+
+
+
+    getPackageOrderDetailsById(id: number) {
+
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+
+      return this.http.get<any[]>(`${this.apiUrl}dispatch/get-additional-pack-items/${id}`, { headers });
+    }
+    
+
+
 }

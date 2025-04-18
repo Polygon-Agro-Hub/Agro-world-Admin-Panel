@@ -274,6 +274,7 @@
         <th class="px-6 py-3 text-center">ACTUAL PRICE</th>
         <th class="px-6 py-3 text-center">DISCOUNT VALUE</th>
         <th class="px-6 py-3 text-center">DISCOUNT</th>
+        <th class="px-6 py-3 text-center">DISCOUNTED PRICE</th>
         <th class="px-6 py-3 text-center"></th>
       </tr>
     </thead>
@@ -319,8 +320,14 @@
           </div>
         </td>
         <td class="px-6 py-4 text-center text-black dark:text-textDark">
-          Rs. {{ item.item.pricing.normalPrice }}
+          <div *ngIf = "item.quantityType === 'g'" >
+            Rs. {{ (item.item.pricing.normalPrice * (item.quantity))/1000 }}
+          </div>
+          <div *ngIf = "item.quantityType === 'Kg'">
+            Rs. {{ item.item.pricing.normalPrice * (item.quantity) }}
+          </div>
         </td>
+        
         <td class="px-6 py-4 text-center">
           <!-- Display discount percentage with increment and decrement buttons -->
           <div class="flex justify-center items-center">
@@ -341,7 +348,16 @@
           <!-- Display total discount value for all quantities -->
           <p class="text-[#006C5A] dark:text-textDark">
             Rs. {{
-              getDiscountAmount(item) | number: '1.2-2'
+              getDiscountAmount(item, item.quantityType) | number: '1.2-2'
+            }}
+          </p>
+        </td>
+
+        <td class="px-6 py-4 text-center">
+          <!-- Display total discount value for all quantities -->
+          <p class="text-[#006C5A] dark:text-textDark">
+            Rs. {{
+              (item.item.pricing.normalPrice * (item.quantity))-getDiscountAmount(item, item.quantityType) | number: '1.2-2'
             }}
           </p>
         </td>

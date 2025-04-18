@@ -59,11 +59,23 @@ export class MarketEditPackagesComponent {
     return ((normal - discounted) / normal) * 100;
   }
   
-  getDiscountAmount(item: any): number {
+  getDiscountAmount(item: any, type: any): number {
     const normal = item.item.pricing.normalPrice;
     const discounted = item.item.pricing.discountedPrice;
-    return (normal - discounted) * Number(item.quantity || 0);
+  
+    let finalDis = 0;
+  
+    if (type === 'g') {
+      // For grams, we divide by 1000 to convert to kilograms.
+      finalDis = (normal - discounted) * (Number(item.quantity || 0) / 1000);
+    } else {
+      // For kilograms, we use the quantity as is.
+      finalDis = (normal - discounted) * Number(item.quantity || 0);
+    }
+  
+    return finalDis;
   }
+  
   
 
   // Method to increment the discount value for an item
@@ -102,31 +114,70 @@ decrementDiscountValue(index: number, step: number = 1) {
 
 
 
-
 toggleUnitType(index: number, unit: string) {
-  this.packageItems[index].quantityType = unit;
-}
-
-
-
-
-incrementQuantity(index: number) {
   const item = this.packageItems[index];
-  item.quantity = Number(item.quantity || 0) + 1;
-}
+  if (!item || item.quantityType === unit) return;
 
-decrementQuantity(index: number) {
-  const item = this.packageItems[index];
-  if (item.quantity > 1) {
-    item.quantity = Number(item.quantity || 0) - 1;
+  // Convert between units
+  if (unit === 'Kg') {
+    // Convert g to Kg
+    item.quantity = parseFloat((item.quantity / 1000).toFixed(2));
+  } else {
+    // Convert Kg to g
+    item.quantity = Math.round(item.quantity * 1000);
   }
+  
+  item.quantityType = unit;
+  this.calculatePackageTotals();
 }
+
+
+
+
+
+// incrementQuantity(index: number) {
+//   const item = this.packageItems[index];
+//   if (item.quantityType === 'g') {
+//     // Increase by 100g (0.1 Kg in baseQuantity)
+//     item.baseQuantity += 0.1;
+//     item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
+//   } else {
+//     // Increase by 0.1 Kg
+//     item.quantity += 0.1;
+   
+//   }
+
+//   this.calculatePackageTotals(); // Recalculate totals after quantity change
+// }
+
+// decrementQuantity(index: number) {
+//   const item = this.packageItems[index];
+//   if (item.quantityType === 'g') {
+//     // Decrease by 100g (0.1 Kg in baseQuantity)
+//     const newQuantity = item.baseQuantity - 0.1;
+//     if (newQuantity >= 0) {
+//       item.baseQuantity = newQuantity;
+//       item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
+//     }
+//   } else {
+//     // Decrease by 0.1 Kg
+//     const newQuantity = item.baseQuantity - 0.1;
+//     if (newQuantity >= 0) {
+//       item.baseQuantity = newQuantity;
+//       item.quantity = parseFloat(item.baseQuantity.toFixed(2)); // Update display quantity in Kg
+//     }
+//   }
+
+//   this.calculatePackageTotals(); // Recalculate totals after quantity change
+// }
 
 
   // Add this helper method to display the quantity properly in the template
+
+
   getDisplayQuantity(item: any): number {
-    const quantity = Number(item.quantity || 0);
-    return item.quantityType === 'g' ? quantity * 1000 : quantity;
+    // Simply return the stored quantity - we're now handling conversions properly
+    return item.quantity || 0;
   }
   
   
@@ -153,19 +204,49 @@ decrementQuantity(index: number) {
     }
   }
 
-  // incrementQuantity(index: number) {
-  //   if (this.packageItems[index]) {
-  //     this.packageItems[index].quantity += 1;
-  //     this.calculatePackageTotals();
-  //   }
-  // }
-
-  // decrementQuantity(index: number) {
-  //   if (this.packageItems[index] && this.packageItems[index].quantity > 0) {
-  //     this.packageItems[index].quantity -= 1;
-  //     this.calculatePackageTotals();
-  //   }
-  // }
+  incrementQuantity(index: number) {
+    const item = this.packageItems[index];
+    if (!item) return;
+  
+    // Determine the increment step based on unit type
+    const step = item.quantityType === 'Kg' ? 0.1 : 100;
+    
+    // Convert to grams if needed for calculation
+    const currentValue = item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
+    const newValue = currentValue + (item.quantityType === 'Kg' ? step : step / 1000);
+    
+    // Update the quantity based on unit type
+    item.quantity = item.quantityType === 'Kg' ? 
+      parseFloat(newValue.toFixed(2)) : 
+      Math.round(newValue * 1000);
+    
+    this.calculatePackageTotals();
+  }
+  
+  decrementQuantity(index: number) {
+    const item = this.packageItems[index];
+    if (!item || item.quantity <= 0) return;
+  
+    // Determine the decrement step based on unit type
+    const step = item.quantityType === 'Kg' ? 0.1 : 100;
+    
+    // Convert to grams if needed for calculation
+    const currentValue = item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
+    let newValue = currentValue - (item.quantityType === 'Kg' ? step : step / 1000);
+    
+    // Ensure we don't go below 0
+    newValue = Math.max(0, newValue);
+    
+    // Update the quantity based on unit type
+    item.quantity = item.quantityType === 'Kg' ? 
+      parseFloat(newValue.toFixed(2)) : 
+      Math.round(newValue * 1000);
+    
+    this.calculatePackageTotals();
+  }
+  
+  
+  
 
   decrementDiscount(index: number, step: number = 1.0) {
     if (

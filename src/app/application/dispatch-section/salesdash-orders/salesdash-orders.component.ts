@@ -334,7 +334,7 @@ selectedInvoiceIdAdditional: number = 0;
   
 
 
-  onCheckboxChange(event: Event, index: any): void {
+  onPackItemsCheckboxChange(event: Event, index: any): void {
     const target = event.target as HTMLInputElement;
   
     if (target != null) {

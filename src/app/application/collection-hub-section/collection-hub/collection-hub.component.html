@@ -1,13 +1,16 @@
 <div class="flex justify-center items-center">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
-
     <div class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        (click)="togglePopupMarketPrice()">
+        (click)="togglePopupMarketPrice()"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-align-center" style="color: #4a90e2"></i>
+            <i
+              class="fa-solid fa-hand-holding-dollar"
+              style="color: #4a90e2"
+            ></i>
           </div>
           <span class="ml-3">Market Price</span>
         </div>
@@ -15,49 +18,67 @@
       </div>
       <div
         class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] h-[160px] absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="popupVisibleMarketPrice">
-        <div class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="viewPrice()"
-        *ngIf="permissionService.hasPermission('View Current Market Prices') || tokenService.getUserDetails().role === '1'"
+        *ngIf="popupVisibleMarketPrice"
+      >
+        <div
+          class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="viewPrice()"
+          *ngIf="
+            permissionService.hasPermission('View Current Market Prices') ||
+            tokenService.getUserDetails().role === '1'
+          "
         >
           View Current Market Prices
         </div>
 
         <hr />
-        <div class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="addPrice()"
-        *ngIf="permissionService.hasPermission('Add Market Prices') || tokenService.getUserDetails().role === '1'"
+        <div
+          class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="addPrice()"
+          *ngIf="
+            permissionService.hasPermission('Add Market Prices') ||
+            tokenService.getUserDetails().role === '1'
+          "
         >
           Add Market Prices
         </div>
 
         <hr />
-        <div class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="deletePrice()"
-        *ngIf="permissionService.hasPermission('Delete Market Prices') || tokenService.getUserDetails().role === '1'"
+        <div
+          class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="deletePrice()"
+          *ngIf="
+            permissionService.hasPermission('Delete Market Prices') ||
+            tokenService.getUserDetails().role === '1'
+          "
         >
           Delete Market Prices
         </div>
 
         <hr />
-        <div class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-         (click)="downloadTemplate1()"
-         *ngIf="permissionService.hasPermission('Download Template') || tokenService.getUserDetails().role === '1'"
-         >
-          Download Template
+        <div
+          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="downloadTemplate1()"
+          *ngIf="
+            permissionService.hasPermission('Download Template') ||
+            tokenService.getUserDetails().role === '1'
+          "
+        >
+        <span *ngIf="!isDownloading">Download Template</span>
+          
+          <span *ngIf="isDownloading">Loading.....</span>
         </div>
-
-        
       </div>
     </div>
 
     <div class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        (click)="togglePopupCompanys()">
+        (click)="togglePopupCompanys()"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-align-center" style="color: #4a90e2"></i>
+            <i class="fa-solid fa-building" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Companies</span>
         </div>
@@ -65,17 +86,22 @@
       </div>
       <div
         class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] h-[80px] absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="popupVisibleCompanys">
-        <div class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="addCom()"
-        *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
+        *ngIf="popupVisibleCompanys"
+      >
+        <div
+          class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="addCom()"
+          *ngIf="
+            permissionService.hasPermission('Add And Edit Company') ||
+            tokenService.getUserDetails().role === '1'
+          "
         >
           Add a Company
         </div>
         <hr />
-        <div class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="viewCom()"
-        
+        <div
+          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="viewCom()"
         >
           View Company List
         </div>
@@ -85,10 +111,11 @@
     <div class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        (click)="togglePopupCollectionCenter()">
+        (click)="togglePopupCollectionCenter()"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-align-center" style="color: #4a90e2"></i>
+            <i class="fa-solid fa-shop" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Collection Centers</span>
         </div>
@@ -96,29 +123,36 @@
       </div>
       <div
         class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] h-[80px] absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="popupVisibleCollectionCenter">
-        <div class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="viewCenter()">
+        *ngIf="popupVisibleCollectionCenter"
+      >
+        <div
+          class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="viewCenter()"
+        >
           View Collection Center
         </div>
         <hr />
-        <div class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="addCenter()"
-        *ngIf="permissionService.hasPermission('Add Collection Center') || tokenService.getUserDetails().role === '1'"
+        <div
+          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="addCenter()"
+          *ngIf="
+            permissionService.hasPermission('Add Collection Center') ||
+            tokenService.getUserDetails().role === '1'
+          "
         >
           Add Collection Center
         </div>
       </div>
     </div>
 
-
     <div class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        (click)="togglePopupAG()">
+        (click)="togglePopupAG()"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-align-center" style="color: #4a90e2"></i>
+            <i class="fa-solid fa-a" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Agro World Centers</span>
         </div>
@@ -126,15 +160,15 @@
       </div>
       <div
         class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] h-[40px] absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="popupVisibleAG">
-        <div class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-        (click)="viewAgroworldCenters()">
-        View Agro World Centers
+        *ngIf="popupVisibleAG"
+      >
+        <div
+          class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          (click)="viewAgroworldCenters()"
+        >
+          View Agro World Centers
         </div>
-        
-        
       </div>
     </div>
-
   </div>
 </div>

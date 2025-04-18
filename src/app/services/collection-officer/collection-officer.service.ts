@@ -124,4 +124,16 @@ export class CollectionOfficerService {
       }
     );
   }
+
+  claimOfficer(id: number, payload: { centerId: string; irmId?: string }): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+  
+    return this.http.put(
+      `${this.apiUrl}auth/claim-officer/${id}`,
+      payload, // Include the payload in the request body
+      { headers }
+    );
+  }
 }

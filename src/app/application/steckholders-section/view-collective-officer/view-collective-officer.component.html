@@ -51,15 +51,22 @@
         >Select Center</label
       >
       <select
-        name="role"
+        name="center"
         required
+        [(ngModel)]="selectedCenterId"
         class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
       >
-        <option></option>
+        <option *ngFor="let center of centerNames" [value]="center.id">
+          {{ center.centerName }}
+        </option>
       </select>
     </div>
 
-    <div class="flex mt-4 align-middle justify-center items-center">
+    <!-- Conditionally show/hide the Select Manager section -->
+    <div
+      *ngIf="selectedOfficer && !selectedOfficer.empId.startsWith('CCM')"
+      class="flex mt-4 align-middle justify-center items-center"
+    >
       <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
         >Select Manager</label
       >
@@ -68,7 +75,12 @@
         required
         class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
       >
-        <option></option>
+        <option
+          *ngFor="let manager of collectionCenterManagerNames"
+          [value]="manager.id"
+        >
+          {{ manager.firstNameEnglish }} {{ manager.lastNameEnglish }}
+        </option>
       </select>
     </div>
 
@@ -81,9 +93,65 @@
       </button>
       <button
         class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
+        (click)="claimOfficer()"
       >
         Claim
       </button>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="showDisclaimView"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
+    <div>
+      <!-- Icon -->
+      <div class="mb-4 flex justify-center">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+
+      <div class="mb-4 text-center">
+        <p class="text-lg mb-2">
+          Are you sure you want to Discharge the officer
+        </p>
+        <p class="font-semibold text-lg">
+          "{{ selectedOfficer?.firstNameEnglish }}
+          {{ selectedOfficer?.lastNameEnglish }}" (EMP ID -
+          {{ selectedOfficer?.empId }})"
+          <span class="font-normal">from center</span> <br />
+          <span class="font-semibold text-lg">
+            "{{ selectedOfficer?.centerName }}"?</span
+          >
+        </p>
+
+        <p class="text-red-500 mb-6 italic">
+          Please note that the officer will no longer be under your monitoring.
+        </p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-center gap-4">
+        <button
+          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="confirmDisclaim()"
+        >
+          <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
+          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
+            >Discharge</span
+          >
+        </button>
+        <button
+          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="closeDisclaimView()"
+        >
+          <span class="font-semibold text-white">No,</span> <br />
+          <span class="text-light text-whight-700 button-text text-white"
+            >Go Back</span
+          >
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -103,20 +171,20 @@
       <div class="flex items-center">
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="jobRole"
             [checkmark]="true"
             optionLabel="jobRole"
             [showClear]="true"
             placeholder="Role"
-            [(ngModel)]="statusFilter"
+            [(ngModel)]="role"
             (onChange)="applyFilters()"
           />
         </div>
 
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="companyArr"
             [checkmark]="true"
             optionLabel="companyNameEnglish"
@@ -226,10 +294,6 @@
               Center Status
             </th>
             <th
-              *ngIf="
-                permissionService.hasPermission('Approve Collection Officer') ||
-                tokenService.getUserDetails().role === '1'
-              "
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Status
@@ -244,6 +308,13 @@
             >
               NIC
             </th>
+            <th
+            *ngIf="
+              permissionService.hasPermission('View Collection Officer') ||
+              tokenService.getUserDetails().role === '1'
+            "
+            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+          ></th>
 
             <th
               *ngIf="
@@ -299,11 +370,13 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.centerName ? item.centerName : "---" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+          class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
-                  class="cursor-pointer"
-                  (click)="editModalOpen(item)"
+                [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Claim Collection Officer') || tokenService.getUserDetails().role === '1') ? handleClaimButtonClick(item) : null"
+                 
                   [ngClass]="{
                     'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
@@ -315,10 +388,6 @@
               </div>
             </td>
             <td
-              *ngIf="
-                permissionService.hasPermission('Approve Collection Officer') ||
-                tokenService.getUserDetails().role === '1'
-              "
               class="px-4 py-3 text-center"
             >
               <div>
@@ -331,8 +400,9 @@
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
                   }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
-                  (click)="openPopup(item)"
+                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
                 >
                   {{ item.status }}
                 </span>
@@ -346,7 +416,11 @@
               {{ item.nic }}
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td  *ngIf="
+            permissionService.hasPermission('View Collection Officer') ||
+            tokenService.getUserDetails().role === '1'
+          "
+          class="px-4 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewCollectiveOfficerProfile(item.id)"
@@ -397,10 +471,10 @@
                 permissionService.hasPermission('Delete Collection Officer') ||
                 tokenService.getUserDetails().role === '1'
               "
-              class="py-3 text-center"
+              class="text-center"
             >
               <button
-                class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
+                class="text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCollectionOfficer(item.id)"
               >
                 <svg
@@ -424,16 +498,18 @@
           </tr>
         </tbody>
       </table>
-      <pagination-controls
-        (pageChange)="onPageChange($event)"
-        [responsive]="true"
-        [previousLabel]="'Previous'"
-        [nextLabel]="'Next'"
-        [screenReaderPaginationLabel]="'Pagination'"
-        [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'"
-      >
-      </pagination-controls>
+      <div class="dark:bg-[#262f45]">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
     </div>
   </div>
 </div>

@@ -51,7 +51,7 @@
           <div
             class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           >
-            Search by name, nic and telphone
+            Search by company
           </div>
       
           <!-- Input field -->
@@ -131,11 +131,11 @@
             >
               Company Email
             </th>
-            <th
+            <!-- <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Status
-            </th>
+            </th> -->
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
@@ -188,10 +188,11 @@
             <td *ngIf='item.companyEmail' class="px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ item.companyEmail }}
             </td>
-            <td *ngIf='!item.companyEmail' class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold">
-              No Email Provide
+            <td *ngIf='!item.companyEmail' class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold italic">
+              Email added by default
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            
+            <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.status === 1">
                 <span
                   class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
@@ -206,7 +207,7 @@
                   Deactive
                 </span>
               </div>
-            </td>
+            </td> -->
 
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.numOfCenters }}
@@ -257,6 +258,8 @@
               *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompany(item.id)"
+                [disabled]="item.id === 1"
+                [ngStyle]="{'opacity': item.id === 1 ? '0.5' : '1'}"
               >
                 <svg
                   fill="currentColor"
@@ -276,6 +279,8 @@
               *ngIf="permissionService.hasPermission('Delete Company') || tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCompany(item.id)"
+                [disabled]="item.id === 1"
+                [ngStyle]="{'opacity': item.id === 1 ? '0.5' : '1'}"
               >
                 <svg
                   aria-hidden="true"

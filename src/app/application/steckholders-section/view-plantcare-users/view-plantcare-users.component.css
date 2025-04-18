@@ -2,6 +2,6 @@
     background-color: #fff;
     width: 3em;
     height: 3em;
-    border-radius: 50%;
-    /* Use 50% for a perfect circle */
+    border-radius: 50%; /* Perfect circle */
+    object-fit: cover; /* Ensures the image fills the container without distortion */
 }

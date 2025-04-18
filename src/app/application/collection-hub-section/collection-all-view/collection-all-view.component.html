@@ -5,7 +5,10 @@
   Back
 </button>
 <button
-*ngIf="permissionService.hasPermission('Add Collection Center') || tokenService.getUserDetails().role === '1'"
+  *ngIf="
+    permissionService.hasPermission('Add Collection Center') ||
+    tokenService.getUserDetails().role === '1'
+  "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add()"
 >
@@ -150,8 +153,10 @@
             >
               Contact Number 01
             </th>
-       
 
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            ></th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             ></th>
@@ -161,7 +166,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of collectionObj; let i = index">
+          <tr
+            *ngFor="
+              let item of collectionObj
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            "
+          >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
@@ -191,13 +207,36 @@
               {{ item.street }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-             {{item.code1}} {{ item.contact01 }}
+              {{ item.code1 }} {{ item.contact01 }}
             </td>
-           
-            
+
+            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewCollectionCenter(item.id)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
-              *ngIf="permissionService.hasPermission('Edit Collection Center') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission('Edit Collection Center') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="text-blue-400 hover:text-blue-700"
                 (click)="navigateEdit(item.id)"
               >
@@ -206,7 +245,10 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
-              *ngIf="permissionService.hasPermission('Delete Collection Center') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission('Delete Collection Center') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="text-red-500 hover:text-red-700"
                 (click)="deleteCollectionCenter(item.id)"
               >
@@ -227,15 +269,17 @@
         </p>
       </div>
     </div>
-    <pagination-controls
-      (pageChange)="onPageChange($event)"
-      [responsive]="true"
-      [previousLabel]="'Previous'"
-      [nextLabel]="'Next'"
-      [screenReaderPaginationLabel]="'Pagination'"
-      [screenReaderPageLabel]="'page'"
-      [screenReaderCurrentLabel]="'Youre on page'"
-    >
-    </pagination-controls>
+    <div class="dark:bg-[#262f45]">
+      <pagination-controls
+        (pageChange)="onPageChange($event)"
+        [responsive]="true"
+        [previousLabel]="'Previous'"
+        [nextLabel]="'Next'"
+        [screenReaderPaginationLabel]="'Pagination'"
+        [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'"
+      >
+      </pagination-controls>
+    </div>
   </div>
 </div>

@@ -22,7 +22,7 @@
       <div class="flex items-center">
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [checkmark]="true"
             optionLabel="name"
             [showClear]="true"
@@ -120,10 +120,10 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="py-3">
+            <td class="py-3 dark:text-textDark">
               {{ item.displayName }}
             </td>
-            <td class="py-3">
+            <td class="py-3 dark:text-textDark">
               {{ item.category }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
@@ -206,16 +206,18 @@
           </tr>
         </tbody>
       </table>
-      <pagination-controls
-        (pageChange)="onPageChange($event)"
-        [responsive]="true"
-        [previousLabel]="'Previous'"
-        [nextLabel]="'Next'"
-        [screenReaderPaginationLabel]="'Pagination'"
-        [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'"
-      >
-      </pagination-controls>
+      <div class="dark:bg-[#262f45]">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
     </div>
   </div>
 </div>

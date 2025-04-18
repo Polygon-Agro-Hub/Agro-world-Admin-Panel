@@ -5,124 +5,118 @@
     class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40"
     *ngIf="isPopupVisible"
   >
-  <div
-  class="bg-tileLight dark:bg-tileBlack w-full max-w-7xl mx-auto rounded-lg shadow-lg p-4 max-h-screen overflow-hidden"
->
-  <div class="flex justify-between items-center border-b pb-3">
-    <h2 class="text-lg font-semibold text-textLight dark:text-textDark">
-      Selected News
-    </h2>
-    <button
-      class="text-textLight dark:text-textDark hover:text-gray-700"
-      (click)="closePopup()"
+    <div
+      class="bg-tileLight dark:bg-tileBlack w-full max-w-7xl mx-auto rounded-lg shadow-lg p-4 max-h-screen overflow-hidden"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+      <div class="flex justify-between items-center border-b pb-3">
+        <h2 class="text-lg font-semibold text-textLight dark:text-textDark">
+          Selected News
+        </h2>
+        <button
+          class="text-textLight dark:text-textDark hover:text-gray-700"
+          (click)="closePopup()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Scrollable content area -->
+      <div
+        class="overflow-y-auto max-w-7xl h-screen p-4 bg-tileLight dark:bg-tileBlack scrollbar-thin scrollbar-[#8AC440] scrollbar-track-gray-200 dark:scrollbar-thumb-[#8AC440] dark:scrollbar-track-gray-900"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-  </div>
+        <div class="flex justify-center my-4">
+          <img
+            [src]="newsItems[0].image"
+            alt="Market Price Image"
+            class="w-2/3 h-auto rounded-lg shadow-lg"
+          />
+        </div>
 
-  <!-- Scrollable content area -->
-  <div
-    class="overflow-y-auto max-w-7xl h-screen p-4 bg-tileLight dark:bg-tileBlack 
-    scrollbar-thin scrollbar-[#8AC440] scrollbar-track-gray-200 
-    dark:scrollbar-thumb-[#8AC440] dark:scrollbar-track-gray-900"
-  >
-    <div class="flex justify-center my-4">
-      <img
-        [src]="newsItems[0].image"
-        alt="Market Price Image"
-        class="w-2/3 h-auto rounded-lg shadow-lg"
-      />
-    </div>
+        <div>
+          <div class="text-md text-textLight dark:text-textDark ml-2">
+            News in English
+          </div>
+          <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
 
-    <div>
-      <div class="text-md text-textLight  dark:text-textDark ml-2">
-        News in English
-      </div>
-      <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
+          <div class="text-sm mt-2">
+            <h3
+              class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
+            >
+              {{ newsItems[0].titleEnglish }}
+            </h3>
+            <div
+              [innerHTML]="safeHtmlDescriptionEnglish"
+              class="text-textLight dark:text-textDark text-left ml-2 w-full"
+            ></div>
+          </div>
+        </div>
 
-      <div class="text-sm mt-2">
-        <h3
-          class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
-        >
-          {{ newsItems[0].titleEnglish }}
-        </h3>
-        <div
-          [innerHTML]="safeHtmlDescriptionEnglish"
-          class="text-textLight dark:text-textDark text-left ml-2 w-full"
-        ></div>
-      </div>
-    </div>
+        <div class="h-[35px]"></div>
 
-    <div class="h-[35px]"></div>
+        <div>
+          <div class="text-md text-textLight dark:text-textDark ml-2">
+            News in Sinhala
+          </div>
+          <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
 
-    <div>
-      <div class="text-md text-textLight  dark:text-textDark ml-2">
-        News in Sinhala
-      </div>
-      <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
+          <div class="text-sm mt-2">
+            <h3
+              class="text-lg font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
+            >
+              {{ newsItems[0].titleSinhala }}
+            </h3>
+            <div
+              [innerHTML]="safeHtmlDescriptionSinhala"
+              class="text-textLight dark:text-textDark text-left ml-2 w-full"
+            ></div>
+          </div>
+        </div>
 
-      <div class="text-sm mt-2">
-        <h3
-          class="text-lg font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
-        >
-          {{ newsItems[0].titleSinhala }}
-        </h3>
-        <div
-          [innerHTML]="safeHtmlDescriptionSinhala"
-          class="text-textLight dark:text-textDark text-left ml-2 w-full"
-        ></div>
-      </div>
-    </div>
+        <div class="h-[35px]"></div>
 
-    <div class="h-[35px]"></div>
+        <div>
+          <div class="text-md text-textLight dark:text-textDark ml-2">
+            News in Tamil
+          </div>
+          <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
 
-    <div>
-      <div class="text-md text-textLight dark:text-textDark ml-2">
-        News in Tamil
-      </div>
-      <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
-
-      <div class="text-sm mt-2 pb-20">
-        <h3
-          class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2"
-        >
-          {{ newsItems[0].titleTamil }}
-        </h3>
-        <div
-          [innerHTML]="safeHtmlDescriptionTamil"
-          class="text-textLight dark:text-textDark text-left ml-2 w-full"
-        ></div>
+          <div class="text-sm mt-2 pb-20">
+            <h3
+              class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2"
+            >
+              {{ newsItems[0].titleTamil }}
+            </h3>
+            <div
+              [innerHTML]="safeHtmlDescriptionTamil"
+              class="text-textLight dark:text-textDark text-left ml-2 w-full"
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-
-  </div>
-
-  <button
-    class="mb-5 text-textLight dark:text-textDark"
-    (click)="back()"
-  >
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
 
-  <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
+  <div
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  >
     <div
       class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
     >
@@ -145,7 +139,7 @@
 
           <div class="mr-5">
             <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [options]="status"
               [(ngModel)]="statusFilter"
               [checkmark]="true"
@@ -189,7 +183,7 @@
               <th
                 class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
               >
-                View 
+                View
               </th>
               <th
                 class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
@@ -243,19 +237,19 @@
                   class="w-5 h-5 text-blue-500 hover:text-blue-700"
                   (click)="openPopup(item.id)"
                 >
-                <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </button>
               </td>
               <td class="px-4 py-3 text-green-500 text-center">
@@ -329,15 +323,17 @@
             </tr>
           </tbody>
         </table>
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          screenReaderPaginationLabel="'Pagination'"
-          screenReaderPageLabel="'page"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        ></pagination-controls>
+        <div class="dark:bg-[#262f45]">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            [responsive]="true"
+            [previousLabel]="'Previous'"
+            [nextLabel]="'Next'"
+            screenReaderPaginationLabel="'Pagination'"
+            screenReaderPageLabel="'page"
+            [screenReaderCurrentLabel]="'Youre on page'"
+          ></pagination-controls>
+        </div>
       </div>
     </div>
   </div>

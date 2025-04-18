@@ -15,6 +15,8 @@ import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { response } from 'express';
+import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 
 interface CollectionOfficers {
   id: number;
@@ -32,10 +34,12 @@ interface CollectionOfficers {
   centerName: string;
 }
 
+
 interface JobRole {
   id: number;
   jobRole: string;
 }
+
 
 @Component({
   selector: 'app-view-collective-officer',
@@ -53,7 +57,13 @@ interface JobRole {
 })
 export class ViewCollectiveOfficerComponent {
   collectionOfficers: CollectionOfficers[] = [];
-  jobRole: JobRole[] = [];
+  jobRole: JobRole[] = [
+    { id: 1, jobRole: 'Collection Officer' },
+    { id: 2, jobRole: 'Collection Center Manager' },
+    { id: 3, jobRole: 'Customer Officer' }
+  ];
+  centerNames: CenterName[] = [];
+  collectionCenterManagerNames: ManagerNames[] = [];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
@@ -61,16 +71,26 @@ export class ViewCollectiveOfficerComponent {
   isPopupVisible = false;
   status!: Company[];
   statusFilter: any = '';
+  role: any = '';
+  showDisclaimView = false;
+  officerId!: number;
+  selectOfficerId!: number;
 
   companyArr: Company[] = [];
   isLoading = false;
   iseditModalOpen: boolean = false;
 
+  selectedOfficer: CollectionOfficers | null = null;
+
+  selectedCenterId: string | null = null; // Store selected center ID
+  selectedIrmId: string | null = null;
+
   constructor(
     private router: Router,
     private collectionService: CollectionService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private collectionOfficerService: CollectionOfficerService
   ) {}
 
   fetchAllCollectionOfficer(
@@ -83,7 +103,8 @@ export class ViewCollectiveOfficerComponent {
         page,
         limit,
         this.searchNIC,
-        this.statusFilter?.id
+        this.statusFilter?.id,
+        this.role?.jobRole
       )
       .subscribe(
         (response) => {
@@ -103,9 +124,36 @@ export class ViewCollectiveOfficerComponent {
       );
   }
 
+  fetchCenterNames() {
+    this.collectionService.getCenterNames().subscribe(
+      (response) => {
+        console.log(response);
+        this.centerNames = response;
+      },
+      (error) => {
+        console.error('Error fetching center names:', error);
+      }
+    );
+  }
+
+  fetchManagerNames() {
+    this.collectionService.getCollectionCenterManagerNames().subscribe(
+      (response) => {
+        console.log('Hello Manager', response);
+
+        this.collectionCenterManagerNames = response;
+      },
+      (error) => {
+        console.error('Error fetching manager names:', error);
+      }
+    );
+  }
+
   ngOnInit() {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
+    this.fetchCenterNames();
+    this.fetchManagerNames();
   }
 
   onPageChange(event: number) {
@@ -326,15 +374,124 @@ export class ViewCollectiveOfficerComponent {
   }
 
   editCloseModel() {
+    this.selectedOfficer = null;
     this.iseditModalOpen = false;
   }
 
   editModalOpen(role: any) {
+    this.selectedOfficer = role;
     this.iseditModalOpen = true;
+  }
+
+  closeDisclaimView() {
+    this.showDisclaimView = false;
+  }
+
+  handleClaimButtonClick(item: CollectionOfficers) {
+    console.log('Hello World', item);
+
+    this.selectedOfficer = item;
+    this.selectOfficerId = item.id;
+    console.log('select officer', this.selectedOfficer);
+
+    if (item.claimStatus === 0) {
+      this.iseditModalOpen = true;
+    } else if (item.claimStatus === 1) {
+      this.showDisclaimView = true;
+    }
+  }
+
+  confirmDisclaim() {
+    this.collectionOfficerService
+      .disclaimOfficer(this.selectOfficerId)
+      .subscribe(
+        (response) => {
+          console.log('Officer ID sent successfully:', response);
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Officer ID sent successfully!',
+            confirmButtonText: 'OK',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Refresh the page after the user clicks "OK"
+              window.location.reload();
+            }
+          });
+
+          this.showDisclaimView = false;
+        },
+        (error) => {
+          console.error('Error sending Officer ID:', error);
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to send Officer ID!',
+            confirmButtonText: 'Try Again',
+          });
+        }
+      );
+  }
+
+  claimOfficer() {
+    if (!this.selectedCenterId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please select a center.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+    const payload = {
+      centerId: this.selectedCenterId,
+    };
+
+    this.collectionOfficerService.claimOfficer(this.selectOfficerId, payload).subscribe(
+      (response) => {
+        console.log('Officer claimed successfully:', response);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Officer claimed successfully!',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.iseditModalOpen = false; // Close the modal
+            this.fetchAllCollectionOfficer(this.page, this.itemsPerPage); // Refresh the list
+          }
+        });
+      },
+      (error) => {
+        console.error('Error claiming officer:', error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to claim officer!',
+          confirmButtonText: 'Try Again',
+        });
+      }
+    );
   }
 }
 
 class Company {
   id!: string;
   companyNameEnglish!: string;
+}
+
+class CenterName {
+  id!: string;
+  centerName!: string;
+}
+
+class ManagerNames {
+  id!: string;
+  firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }

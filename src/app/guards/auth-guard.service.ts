@@ -12,19 +12,22 @@ export class AuthGuard implements CanActivate {
     const token = this.tokenService.getToken();
     const tokenExpiration = this.tokenService.getUserDetails().tokenExpiration;
 
+
     if (token && tokenExpiration) {
-      const isExpired = new Date().getTime() > Number(tokenExpiration);
+      const isExpired = this.tokenService.isTokenExpired();
 
       if (!isExpired) {
         return true; // Token is valid and not expired
       } else {
         // Token expired, remove token and redirect to login
         this.tokenService.clearLoginDetails()
+        this.router.navigate(['login']);
         return false;
       }
     } else {
       // If no token or expiration, redirect to the login page
-      this.router.navigate(['/login']);
+      this.tokenService.clearLoginDetails()
+      this.router.navigate(['login']);
       return false;
     }
   }

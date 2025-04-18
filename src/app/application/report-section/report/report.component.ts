@@ -27,4 +27,12 @@ export class ReportComponent {
     this.router.navigate(['/reports/collective-officer/province-report']);
   }
 
+  purchaseReport(): void {
+    this.router.navigate(['/reports/purchase-report']);
+  }
+
+
+  collectionReport(): void {
+    this.router.navigate(['/reports/collection-report']);
+  }
 }

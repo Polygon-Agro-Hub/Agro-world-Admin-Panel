@@ -1,15 +1,19 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div *ngIf="!hasData" class="text-center py-8" >
+<div *ngIf="!hasData" class="text-center py-8">
   <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
 </div>
-<div *ngIf="!isLoading" >
-  <div *ngIf="hasData" >
+<div *ngIf="!isLoading">
+  <div *ngIf="hasData">
     <div class="flex justify-end mb-4">
-      <button (click)="captureScreenshot()"
+      <button
+        (click)="captureScreenshot()"
         class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition"
+        [disabled]="isDownloading"
       >
-        Export Report
+        <i class="fa-solid fa-download" *ngIf="!isDownloading"></i>
+        <i class="fa-solid fa-spinner fa-spin" *ngIf="isDownloading"></i>
+        {{ isDownloading ? " Exporting..." : " Export Report" }}
       </button>
     </div>
 
@@ -23,22 +27,22 @@
           [totalCultivationCount]="totalCultivationCount"
         />
       </div>
-      <div class="flex flex-row justify-between gap-10 items-stretch my-10 w-full">
+      <div
+        class="flex flex-row justify-between gap-10 items-stretch my-10 w-full"
+      >
         <!-- Area Chart -->
         <div class="flex-1 h-full w-[60%]">
-          <app-dashbord-area-chart
-            class="h-full w-full"
-            [qrUsers]="dashboardData.qrUsers"
-            [allusers]="dashboardData.allusers"
-          />
+          <app-dashbord-area-chart class="h-full w-full" />
         </div>
-      
+
         <!-- Pie Chart -->
         <div class="flex-1 h-full w-[35%]">
-          <app-dashbord-pie-chart class="h-full w-full" [dashboardData]="dashboardData" />
+          <app-dashbord-pie-chart
+            class="h-full w-full"
+            [dashboardData]="dashboardData"
+          />
         </div>
       </div>
     </div>
-    
   </div>
 </div>

@@ -53,5 +53,6 @@ export class ManageComplaintsCategoriesComponent implements OnInit {
 
 class Categories {
   id!: number;
+  role!: string;
   categoryEnglish!: string;
 }

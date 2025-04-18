@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Output, EventEmitter } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -20,6 +20,7 @@ import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/
 export class AdminRowComponent implements OnChanges {
 
   @Input() firstRow: any = {}
+  @Output() adminDataEmitted = new EventEmitter<any>();
 
   associateAdmins: number = 0;
   executiveAdmins: number = 0;
@@ -51,6 +52,15 @@ export class AdminRowComponent implements OnChanges {
         this.managerAdmins,
         this.officerAdmins
     );
+
+    this.adminDataEmitted.emit({
+      associateAdmins: this.associateAdmins,
+      executiveAdmins: this.executiveAdmins,
+      managerAdmins: this.managerAdmins,
+      officerAdmins: this.officerAdmins,
+      newAdminUsers: this.newAdminUsers,
+      allAdminUsers: this.allAdminUsers
+    });
 
 }
 

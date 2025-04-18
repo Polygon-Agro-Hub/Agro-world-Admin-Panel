@@ -1,0 +1,109 @@
+<app-loading-spinner *ngIf="loading"></app-loading-spinner>
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 w-100 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="w-3/4">
+        <div class="flex flex-col">
+          <div class="flex items-start pt-6">
+            <h2 class="text-2xl font-bold text-textLight dark:text-textDark">
+              {{ package?.displayName }}
+            </h2>
+            <h2 class="text-2xl font-bold px-5 dark:text-textDark">-</h2>
+            <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
+              Rs {{ package?.total }}
+            </h2>
+          </div>
+          <div class="flex flex-col pt-2">
+            <div
+              class="text-[#0D9488]"
+              [class.text-green-500]="package?.status === 'Disabled'"
+              [class.text-red-500]="package?.status !== 'Enabled'"
+            >
+              <span>{{ package?.status }}</span>
+            </div>
+            <div class="pt-2">
+              <p class="whitespace-pre-line dark:text-textDark">
+                {{ package?.description }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex w-1/4 items-center justify-center align-middle h-full">
+        <img
+          *ngIf="package?.image"
+          class="h-auto max-h-48 flex items-center"
+          [src]="package?.image"
+          [alt]="package?.displayName"
+        />
+        <img
+          *ngIf="package?.image"
+          [src]="package?.image"
+          class="h-auto max-h-48 flex items-center fixed"
+          alt="Package image"
+        />
+        <svg
+          *ngIf="!package?.image"
+          class="h-auto max-h-24 flex items-center"
+          fill="#afafaf"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          data-name="Layer 1"
+          stroke="#afafaf"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M19.5,4H10a1,1,0,0,0,0,2H19.5a1,1,0,0,1,1,1v6.76l-1.88-1.88a3,3,0,0,0-1.14-.71,1,1,0,1,0-.64,1.9.82.82,0,0,1,.36.23l3.31,3.29a.66.66,0,0,0,0,.15.83.83,0,0,0,0,.15,1.18,1.18,0,0,0,.13.18.48.48,0,0,0,.09.11.9.9,0,0,0,.2.14.6.6,0,0,0,.11.06.91.91,0,0,0,.37.08,1,1,0,0,0,1-1V7A3,3,0,0,0,19.5,4ZM3.21,2.29A1,1,0,0,0,1.79,3.71L3.18,5.1A3,3,0,0,0,2.5,7V17a3,3,0,0,0,3,3H18.09l1.7,1.71a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42ZM4.5,7a1,1,0,0,1,.12-.46L7.34,9.25a3,3,0,0,0-1,.63L4.5,11.76Zm1,11a1,1,0,0,1-1-1V14.58l3.3-3.29a1,1,0,0,1,1.4,0L15.91,18Z"
+            ></path>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10">
+      <table class="w-full text-gray-500 dark:text-gray-400">
+        <thead
+          class="text-[#8492A3] bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-4"
+        >
+          <tr>
+            <th class="px-6 py-3 text-center">ITEM</th>
+            <th class="px-8 py-3 text-center">QUANTITY</th>
+            <th class="px-6 py-3 text-center">UNIT</th>
+            <th class="px-6 py-3 text-center">ACTUAL PRICE</th>
+            <th class="px-6 py-3 text-center">DISCOUNT VALUE (%)</th>
+            <th class="px-6 py-3 text-center">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let detail of packageDetails"
+            class="bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          >
+            <td class="px-6 py-4 text-center text-gray-900 dark:text-white">
+              {{ detail.itemDisplayName }}
+            </td>
+            <td class="px-6 py-4 text-center">
+              {{ detail.quantity }}
+            </td>
+            <td class="px-6 py-4 text-center">{{ detail.quantityType }}</td>
+            <td class="px-6 py-4 text-center text-black dark:text-textDark">
+              Rs {{ detail.normalPrice }}
+            </td>
+            <td class="px-6 py-4 text-center">{{ package?.discount || 0 }}</td>
+            <td class="px-6 py-4 text-center">Rs {{ detail.price }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -24,8 +24,7 @@ export class TokenService {
     localStorage.setItem(this.EXPIRATION_KEY, expirationTime.toString());
 
     console.log('Saved login credentials');
-    console.log(localStorage.getItem(this.USERNAME_KEY));
-    console.log(this.USERID_KEY);
+
   }
 
 

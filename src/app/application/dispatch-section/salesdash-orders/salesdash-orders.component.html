@@ -1,0 +1,649 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+
+
+
+
+
+
+
+
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+
+
+
+
+
+
+
+
+
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+
+
+  <div class="flex space-x-4 pb-5 border-b border-gray-300">
+    <button
+      (click)="togglePackageType(true)"
+      [ngClass]="isPremade ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+      class="h-10 w-64 flex items-center justify-center rounded-xl gap-2 "
+    >
+    <i *ngIf="isPremade" class="fa fa-check"></i>
+      Premade Packages
+    </button>
+
+    <button
+      (click)="togglePackageType(false)"
+      [ngClass]="!isPremade ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+      class="h-10 w-64 flex items-center justify-center rounded-xl gap-2 "
+    >
+    <i *ngIf="!isPremade" class="fa fa-check"></i>
+      Custom Packages
+    </button>
+  </div>
+  
+  
+  <div class="h-5"></div>
+
+
+<div  *ngIf="isPremade">
+
+    <div class="flex justify-end items-right mb-8">
+     
+      <div class="flex items-center">
+        <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+            />
+          </svg>
+        </i>
+
+
+     
+  
+        <div class="mx-6">
+            <p-dropdown
+              styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
+              [options]="status"
+              
+              [(ngModel)]="selectedStatus"
+              [showClear]="true"
+              placeholder="Status"
+              (onChange)="applyStatus()"
+            />
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input
+              id="toDate"
+              type="date"
+              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64"
+              placeholder="Delivery Date"
+              [(ngModel)]="date"
+              (change)="applyStatus()"
+            />
+          </div>
+
+
+        
+
+        
+
+
+
+        <div class="w-5"></div>
+   
+
+
+
+
+
+      
+        <div
+          class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
+        >
+          <input
+            type="text"
+            placeholder="Search by all"
+            class="bg-transparent outline-none w-full text-gray-600"
+            [(ngModel)]="search"
+          (keydown.enter)="applysearch()"
+          />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="applysearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <button
+          (click)="clearSearch()"
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="flex justify-between items-center mb-5"> 
+        <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
+            All Pre Made Orders ({{this.totalItems}})
+      </h4>
+
+      
+    </div>
+
+
+
+    <div>
+
+      <table class="min-w-full divide-y divide-gray-200 table-auto">
+        <thead>
+          <tr>
+            <th
+              class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+            >
+            Invoice No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+            >
+            Package Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Package Items
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Package Price
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Additional Items
+            </th>
+            <th
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+          >
+          Additional Items Price (Rs.)
+                  </th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                Schedules Dilevery Date
+            </th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                Total Price (Rs.)
+            </th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                Package Status
+            </th>
+          
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let item of premadePackages
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    }
+                    let i = index
+            "
+          >
+            <td class="py-3 text-gray-500 dark:text-textDark text-left">
+              {{ (page - 1) * itemsPerPage + i + 1 }}
+            </td>
+
+            <td
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+          >
+          {{ item.invoiceNum }}
+          </td>
+          <td
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+          >
+         {{ item.packageName }}
+          </td>
+          <td
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+          >
+
+          <button
+                class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+          
+          </td>
+          <td
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+          >
+          {{ item.packagePrice }}
+          </td>
+          <td
+            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+          >
+          <button
+                class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+          
+          </td>
+          <td
+          class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+        >
+        {{ item.additionalPrice }}
+                </td>
+          <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            {{ item.scheduleDateFormatted }}
+          </td>
+          <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            {{ item.totalPrice }}
+          </td>
+          <td class="px-4 py-3 text-green-500 text-center">
+            <div *ngIf="item.packageStatus == 'Completed'">
+              <span
+                class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
+              >
+                {{ item.packageStatus }}
+              </span>
+            </div>
+            <div *ngIf="item.packageStatus == 'Pending'">
+              <span
+                class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
+              >
+                {{ item.packageStatus }}
+              </span>
+            </div>
+            <div *ngIf="item.packageStatus == 'Opened'">
+                <span
+                  class="w-24 h-7 inline-block bg-yellow-100 text-yellow-500 font-medium rounded-md px-3 py-1 text-sm"
+                >
+                  {{ item.packageStatus }}
+                </span>
+              </div>
+          </td>
+           
+            
+           
+          </tr>
+        </tbody>
+      </table>
+      <!-- <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
+        <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+      </div> -->
+      <div class="dark:bg-[#262f45]">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+<div *ngIf="!isPremade">
+
+    <div class="flex justify-end items-right mb-8">
+     
+        <div class="flex items-center">
+          <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path
+                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+              />
+            </svg>
+          </i>
+  
+  
+       
+    
+          <div class="mx-6">
+              <p-dropdown
+                styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
+                [options]="status"
+                
+                [(ngModel)]="selectedStatussl"
+                [showClear]="true"
+                placeholder="Status"
+                (onChange)="applyStatussl()"
+              />
+            </div>
+  
+            <div class="flex items-center gap-2">
+              <input
+                id="toDate"
+                type="date"
+                class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64"
+                placeholder="Delivery Date"
+                [(ngModel)]="datesl"
+                (change)="applyStatussl()"
+              />
+            </div>
+  
+  
+          
+  
+          
+  
+  
+  
+          <div class="w-5"></div>
+     
+  
+  
+  
+  
+  
+        
+          <div
+            class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
+          >
+            <input
+              type="text"
+              placeholder="Search by all"
+              class="bg-transparent outline-none w-full text-gray-600"
+              [(ngModel)]="searchsl"
+            (keydown.enter)="applysearchsl()"
+            />
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="applysearchsl()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
+              </svg>
+            </button>
+            <button
+            (click)="clearSearchsl()"
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+  
+  
+      <div class="flex justify-between items-center mb-5"> 
+          <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
+              All Custom Orders ({{this.totalItemssl}})
+        </h4>
+  
+        
+      </div>
+  
+  
+  
+      <div>
+  
+        <table class="min-w-full divide-y divide-gray-200 table-auto">
+          <thead>
+            <tr>
+              <th
+                class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              >
+                No
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+              >
+              Invoice No
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+              Custom Items
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+              Scheduled Delivery Date
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+             Total Price (Rs.)
+              </th>
+    
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                  Package Status
+              </th>
+            
+              
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let item of selectdPackage
+                  | paginate
+                    : {
+                        itemsPerPage: itemsPerPagesl,
+                        currentPage: pagesl,
+                        totalItems: totalItemssl
+                      }
+                      let i = index
+              "
+            >
+              <td class="py-3 text-gray-500 dark:text-textDark text-left">
+                {{ (pagesl - 1) * itemsPerPagesl + i + 1 }}
+              </td>
+  
+              <td
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+            >
+            {{ item.invoiceNum }}
+            </td>
+            <td
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            <button
+            class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+           
+            </td>
+            <td
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            {{ item.scheduleDateFormattedSL }}
+            
+            </td>
+            <td
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            {{ item.totalPrice }}
+            </td>
+            <td
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            <div *ngIf="item.packageStatus == 'Completed'">
+                <span
+                  class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
+                >
+                  {{ item.packageStatus }}
+                </span>
+              </div>
+              <div *ngIf="item.packageStatus == 'Pending'">
+                <span
+                  class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
+                >
+                  {{ item.packageStatus }}
+                </span>
+              </div>
+              <div *ngIf="item.packageStatus == 'Opened'">
+                  <span
+                    class="w-24 h-7 inline-block bg-yellow-100 text-yellow-500 font-medium rounded-md px-3 py-1 text-sm"
+                  >
+                    {{ item.packageStatus }}
+                  </span>
+                </div>
+            
+            
+            </td>
+            
+            
+            
+             
+              
+             
+            </tr>
+          </tbody>
+        </table>
+        <!-- <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
+          <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+        </div> -->
+        <div class="dark:bg-[#262f45]">
+          <pagination-controls
+            (pageChange)="onPageChangesl($event)"
+            [responsive]="true"
+            [previousLabel]="'Previous'"
+            [nextLabel]="'Next'"
+            [screenReaderPaginationLabel]="'Pagination'"
+            [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'"
+          >
+          </pagination-controls>
+        </div>
+      </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>

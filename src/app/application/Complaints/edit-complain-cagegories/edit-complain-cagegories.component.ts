@@ -4,11 +4,12 @@ import { ComplaintsService } from '../../../services/complaints/complaints.servi
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-edit-complain-cagegories',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './edit-complain-cagegories.component.html',
   styleUrl: './edit-complain-cagegories.component.css'
 })
@@ -17,6 +18,7 @@ export class EditComplainCagegoriesComponent implements OnInit {
   roleArr: Roles[] = [];
   appsArr: Apps[] = [];
   complainObj: ComplainCategory = new ComplainCategory();
+  isLoading:boolean = true;
 
 
   constructor(
@@ -32,6 +34,7 @@ export class EditComplainCagegoriesComponent implements OnInit {
   }
 
   fetchComplainCategory() {
+    
     this.complaintSrv.getAdminComplainCategoryForCreate().subscribe(
       (res) => {
         console.log(res);
@@ -44,11 +47,12 @@ export class EditComplainCagegoriesComponent implements OnInit {
   }
 
   fetchCategoriDetails() {
+    this.isLoading=true
     this.complaintSrv.getCategoieDetailsById(this.categorieId).subscribe(
       (res) => {
         console.log(res);
         this.complainObj = res
-
+        this.isLoading=false
       }
     )
   }

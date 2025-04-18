@@ -106,8 +106,20 @@ import { CreateSalesAgentsComponent } from './application/sales-dash-section/cre
 import { EditSalesAgentComponent } from './application/sales-dash-section/edit-sales-agent/edit-sales-agent.component';
 import { AgroWorldCentersComponent } from './application/collection-hub-section/agro-world-centers/agro-world-centers.component';
 import { ViewCenterPriceComponent } from './application/collection-hub-section/view-center-price/view-center-price.component';
+import { PreviewSalesAgentsComponent } from './application/sales-dash-section/preview-sales-agents/preview-sales-agents.component';
+import { PreviewCollectionCenterComponent } from './application/collection-hub-section/preview-collection-center/preview-collection-center.component';
+import { ViewOrdersComponent } from './application/sales-dash-section/view-orders/view-orders.component';
 import { ViewSalesDashComplaintsComponent } from './application/sales-dash-section/view-sales-dash-complaints/view-sales-dash-complaints.component';
 import { ViewSelectedSalesDashComplainComponent } from './application/sales-dash-section/view-selected-sales-dash-complain/view-selected-sales-dash-complain.component';
+import { PurchaseReportComponent } from './application/report-section/purchase-report/purchase-report.component';
+import { ViewPackageListComponent } from './application/marketplace/view-package-list/view-package-list.component';
+import { MarketEditPackagesComponent } from './application/marketplace/market-edit-packages/market-edit-packages.component';
+import { ViewPackageDetailsComponent } from './application/marketplace/view-package-details/view-package-details.component';
+import { CollectionReportComponent } from './application/report-section/collection-report/collection-report.component';
+import { ProcurementComponent } from './application/procurement-section/procurement/procurement.component';
+import { DispatchComponent } from './application/dispatch-section/dispatch/dispatch.component';
+import { RecievedOrdersComponent } from './application/procurement-section/recieved-orders/recieved-orders.component';
+import { SalesdashOrdersComponent } from './application/dispatch-section/salesdash-orders/salesdash-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -116,7 +128,7 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: LoginComponent },
-  
+
   { path: 'status-451', component: Status451Component },
 
   {
@@ -281,38 +293,46 @@ export const routes: Routes = [
           {
             path: 'collective-officer-report/view/:id/:name',
             component: CollectionOfficerReportViewComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Collection Officer Daily Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Officer Daily Report' },
           },
           {
             path: 'collective-officer/district-report',
             component: CollectionofficerDistrictReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'District Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'District Report' },
           },
           {
             path: 'payment-slip-report/:id',
             component: PaymentSlipReportComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Collection Officer Farmer Report' },
           },
           {
             path: 'farmer-list-report',
             component: FarmerListReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Collection Officer Farmer Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Officer Farmer Report' },
           },
           {
             path: 'collective-officer/province-report',
             component: CollectionOfficerProvinceReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Province Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Province Report' },
           },
           {
             path: 'collective-officer-report/monthly-report/:id',
             component: MonthlyReportComponent,
-            canActivate: [ PermissionGuard],
-            data: { permission: 'Collection Officer Monthly Report' }, 
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Officer Monthly Report' },
+          },
+          {
+            path: 'purchase-report',
+            component: PurchaseReportComponent,
+          },
+          {
+            path: 'collection-report',
+            component: CollectionReportComponent,
           },
         ],
       },
@@ -342,14 +362,26 @@ export const routes: Routes = [
                   {
                     path: 'edit-plantcare-users',
                     component: EditPlantcareUsersComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: ['Add plantcare user', 'Edit Plantcare User'] }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Edit Plantcare User'] },
+                  },
+                  {
+                    path: 'create-plantcare-users',
+                    component: EditPlantcareUsersComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Add plantcare user'] },
+                  },
+                  {
+                    path: 'view-plantcare-users',
+                    component: EditPlantcareUsersComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['View Plantcare User'] },
                   },
                   {
                     path: 'upload-farmers',
                     component: UserBulkUploadComponent,
-                    canActivate: [ PermissionGuard],
-                    data: { permission: 'Bulk Plantcare User Upload' }, 
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Bulk Plantcare User Upload' },
                   },
                 ],
               },
@@ -379,15 +411,24 @@ export const routes: Routes = [
                   {
                     path: 'create-sales-agents',
                     component: CreateSalesAgentsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Add Sales Dash user'] },
                   },
                   {
                     path: 'edit-sales-agents/:id',
                     component: EditSalesAgentComponent,
-                    
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['Edit Sales Dash user'] },
+                  },
+
+                  {
+                    path: 'preview-sales-agents/:id',
+                    component: PreviewSalesAgentsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['View Sales Dash user'] },
                   },
                 ],
               },
-
 
               {
                 path: 'collective-officer',
@@ -399,10 +440,14 @@ export const routes: Routes = [
                   {
                     path: 'personal',
                     component: CollectiveofficersPersonalComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Add Collection Officer' },
                   },
                   {
                     path: 'personal-edit/:id',
                     component: CollectiveofficersEditComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Edit Collection Officer' },
                   },
                   {
                     path: 'company',
@@ -414,12 +459,14 @@ export const routes: Routes = [
                   },
                   {
                     path: 'collective-officer-profile/:id',
-                    component: ViewCollectiveOfficerProfileComponent
+                    component: ViewCollectiveOfficerProfileComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'View Collection Officer' },
                   },
                   {
-                    path:'view-officer-targets/:officerId',
-                    component: ViewOfficerTargetComponent
-                  }
+                    path: 'view-officer-targets/:officerId',
+                    component: ViewOfficerTargetComponent,
+                  },
                 ],
               },
             ],
@@ -447,19 +494,19 @@ export const routes: Routes = [
           {
             path: 'view-current-price',
             component: ViewCurrentMarketPriceComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'View Current Market Prices' },
           },
           {
             path: 'delete-bulk-price',
             component: MarketPriceBulkDeleteComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Delete Market Prices' },
           },
           {
             path: 'price-bulk-upload',
             component: MarketPriceBulkUploadComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Add Market Prices' },
           },
         ],
@@ -475,21 +522,21 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
-            path: 'collection-center-dashboard/:id/:comid',
+            path: 'collection-center-dashboard/:id/:comid/:centerName',
             component: CollectionCenterDashboardComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'View Collection Center' },
           },
           {
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Edit Collection Center' },
           },
           {
             path: 'create-company',
             component: CreateCompanyComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Add And Edit Company' },
           },
           {
@@ -499,13 +546,13 @@ export const routes: Routes = [
           {
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Add Collection Center' },
           },
           {
             path: 'add-daily-target/:id/:name/:comid',
             component: AddDailyTargetComponent,
-            canActivate: [ PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Assign Center Target' },
           },
           {
@@ -528,6 +575,41 @@ export const routes: Routes = [
             path: 'agro-world-center-price/:centerId/:companyId/:centerName',
             component: ViewCenterPriceComponent,
           },
+          {
+            path: 'preview-collection-center/:id',
+            component: PreviewCollectionCenterComponent,
+          },
+        ],
+      },
+
+
+      {
+        path: 'procurement',
+        children: [
+          {
+            path: '',
+            component: ProcurementComponent,
+          },
+          {
+            path: 'received-orders',
+            component: RecievedOrdersComponent,
+          },
+          
+        ],
+      },
+
+      {
+        path: 'dispatch',
+        children: [
+          {
+            path: '',
+            component: DispatchComponent,
+          },
+          {
+            path: 'salesdash-orders',
+            component: SalesdashOrdersComponent,
+          },
+          
         ],
       },
 
@@ -569,6 +651,18 @@ export const routes: Routes = [
                 path: 'edit-product/:id',
                 component: MarketEditProductComponent,
               },
+              {
+                path: 'view-packages-list',
+                component: ViewPackageListComponent,
+              },
+              {
+                path: 'edit-packages/:id',
+                component: MarketEditPackagesComponent,
+              },
+              {
+                path: 'view-package-details/:id',
+                component: ViewPackageDetailsComponent,
+              },
             ],
           },
         ],
@@ -583,6 +677,11 @@ export const routes: Routes = [
           {
             path: 'customer',
             component: CustomersComponent,
+          },
+
+          {
+            path: 'view-orders',
+            component: ViewOrdersComponent,
           },
 
           {

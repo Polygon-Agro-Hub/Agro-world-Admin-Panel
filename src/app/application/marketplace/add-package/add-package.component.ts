@@ -3,6 +3,7 @@ import { MarketPlaceService } from '../../../services/market-place/market-place.
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-package',
@@ -18,7 +19,11 @@ export class AddPackageComponent implements OnInit {
   packageObj: Package = new Package();
   inputPackageObj: InputPackage = new InputPackage();
 
-  constructor(private marketSrv: MarketPlaceService) { }
+  selectedImage: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null;
+  selectedFileName!: string;
+
+  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   ngOnInit(): void {
     this.getCropProductData();
@@ -29,7 +34,7 @@ export class AddPackageComponent implements OnInit {
   getCropProductData() {
     this.marketSrv.getProuctCropVerity().subscribe((res) => {
       console.log(res);
-      
+
       this.cropObj = res;
     });
   }
@@ -57,7 +62,12 @@ export class AddPackageComponent implements OnInit {
   }
 
   onAdd() {
-    if (!this.inputPackageObj.qtytype || !this.inputPackageObj.mpItemId || !this.inputPackageObj.cID || !this.packageObj.name) {
+    if (
+      !this.inputPackageObj.qtytype ||
+      !this.inputPackageObj.mpItemId ||
+      !this.inputPackageObj.cID ||
+      !this.packageObj.displayName
+    ) {
       Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
       return;
     }
@@ -81,23 +91,24 @@ export class AddPackageComponent implements OnInit {
       return;
     }
 
-    this.marketSrv.createPackage(this.packageObj).subscribe(
+    this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
       (res) => {
         if (res.status) {
           Swal.fire({
             icon: 'success',
             title: 'Package Created',
             text: 'The package was created successfully!',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
           }).then(() => {
             this.packageObj = new Package();
+            this.router.navigate(['/market/action/add-package']);
           });
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Package Not Created',
             text: 'The package could not be created. Please try again.',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
           });
         }
       },
@@ -106,28 +117,25 @@ export class AddPackageComponent implements OnInit {
           icon: 'error',
           title: 'An Error Occurred',
           text: 'There was an error while creating the package. Please try again later.',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
         });
       }
     );
   }
 
-
   onCancel() {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'All unsaved changes will be lost. Do you want to cancel?',
       icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, cancel',
-      cancelButtonText: 'No, keep editing'
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
         this.inputPackageObj = new InputPackage();
         this.packageObj = new Package();
-        Swal.fire('Cancelled', 'Your changes have been discarded.', 'success');
+        this.router.navigate(['/market/action']);
       }
     });
   }
@@ -139,26 +147,33 @@ export class AddPackageComponent implements OnInit {
   }
 
   decrementQuantity(index: number) {
-    if (this.packageObj.Items[index] && this.packageObj.Items[index].quantity > 0) {
+    if (
+      this.packageObj.Items[index] &&
+      this.packageObj.Items[index].quantity > 0
+    ) {
       this.packageObj.Items[index].quantity -= 1;
     }
   }
 
   decrementDiscount(index: number, step: number = 1.0) {
-    if (this.packageObj.Items[index] && this.packageObj.Items[index].discountedPrice > 0) {
+    if (
+      this.packageObj.Items[index] &&
+      this.packageObj.Items[index].discountedPrice > 0
+    ) {
       const newPrice = this.packageObj.Items[index].discountedPrice - step;
-      this.packageObj.Items[index].discountedPrice = newPrice >= 0 ? parseFloat(newPrice.toFixed(2)) : 0;
+      this.packageObj.Items[index].discountedPrice =
+        newPrice >= 0 ? parseFloat(newPrice.toFixed(2)) : 0;
     }
   }
 
   incrementDiscount(index: number) {
     if (this.packageObj.Items[index]) {
-      this.packageObj.Items[index].discountedPrice += 1.00;
-      this.packageObj.Items[index].discountedPrice = parseFloat(this.packageObj.Items[index].discountedPrice.toFixed(2));
+      this.packageObj.Items[index].discountedPrice += 1.0;
+      this.packageObj.Items[index].discountedPrice = parseFloat(
+        this.packageObj.Items[index].discountedPrice.toFixed(2)
+      );
     }
   }
-
-
 
   removeItem(index: number) {
     if (index >= 0 && index < this.packageObj.Items.length) {
@@ -170,7 +185,7 @@ export class AddPackageComponent implements OnInit {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, remove it!',
-        cancelButtonText: 'No, keep it'
+        cancelButtonText: 'No, keep it',
       }).then((result) => {
         if (result.isConfirmed) {
           this.packageObj.Items.splice(index, 1);
@@ -180,18 +195,49 @@ export class AddPackageComponent implements OnInit {
     }
   }
 
-
   getTotalPrice(): number {
     return this.packageObj.Items.reduce((sum, item) => {
       let totalPrice;
       const actualPrice = item.normalPrice * item.quantity;
       const discountedValue = item.discountedPrice || 0;
-      totalPrice = sum + (actualPrice - discountedValue)
+      totalPrice = sum + (actualPrice - discountedValue);
       this.packageObj.total = totalPrice;
       return totalPrice;
     }, 0);
   }
 
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        return;
+      }
+
+      this.selectedFile = file;
+      this.packageObj.image = file;
+      this.selectedFileName = file.name;
+      this.packageObj.selectedFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  triggerFileInput(event: Event): void {
+    event.preventDefault();
+    const fileInput = document.getElementById('imageUpload');
+    fileInput?.click();
+  }
 }
 
 class Crop {
@@ -208,11 +254,14 @@ class Variety {
 }
 
 class Package {
-  name!: string;
+  displayName!: string;
   status: string = 'Disabled';
   Items: Items[] = [];
   cID!: number;
   total!: number;
+  description!: string;
+  image!: any;
+  selectedFileName!: string;
 }
 
 class Items {

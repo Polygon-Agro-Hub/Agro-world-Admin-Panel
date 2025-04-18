@@ -22,6 +22,9 @@ interface PlantCareUser {
   lastName: string;
   phoneNumber: string;
   NICnumber: string;
+  district: string;
+  farmerQr: string;
+  activeStatus: string;
   profileImage: string;
   created_at: string;
 }
@@ -234,12 +237,18 @@ export class ViewPlantcareUsersComponent {
     );
   }
 
+  viewFarmer(id: number, isView: boolean) {
+    this.router.navigate(['/steckholders/action/farmers/view-plantcare-users'], {
+      queryParams: { id, isView },
+    });
+  }
+
   navigateToBack(): void {
     this.router.navigate(["/steckholders/action"]);
   }
 
   navigateToAddUser(): void {
-    this.router.navigate(["/steckholders/action/farmers/edit-plantcare-users"]);
+    this.router.navigate(["/steckholders/action/farmers/create-plantcare-users"]);
   }
 
   bulkUpload(): void {

@@ -145,7 +145,7 @@ export class EditSalesAgentComponent implements OnInit{
           // Additional fields
           
           this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-4);
+          this.lastID = this.personalData.empId.slice(-5);
           console.log('cutted empId', this.lastID);
           // this.lastID = this.personalData.empId;
           

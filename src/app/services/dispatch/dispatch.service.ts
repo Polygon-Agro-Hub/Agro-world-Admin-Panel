@@ -84,6 +84,32 @@ export class DispatchService {
       return this.http.get<any>(url, { headers });
     }
 
+    getPackageItems(
+      id: number
+    ): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+  
+  
+      let url = `${this.apiUrl}dispatch/get-package-items?id=${id}`;
+  
+      return this.http.get<any>(url, { headers });
+    }
+
+    updateIsPacked(array: any): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+    
+      const url = `${this.apiUrl}dispatch/update-is-packed`;
+    
+      // Send the array as a named field in the body
+      return this.http.post<any>(url, { packedItems: array }, { headers });
+    }
+
 
 
 

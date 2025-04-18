@@ -15,7 +15,7 @@ import { DispatchService } from '../../../services/dispatch/dispatch.service';
 interface PremadePackages {
   id: number;
   invoiceNum: string;
-  packageName:string;
+  packageName: string;
   packagePrice: string;
   additionalPrice: string;
   scheduleDate: string;
@@ -50,12 +50,12 @@ interface SelectdPackage {
   selector: 'app-salesdash-orders',
   standalone: true,
   imports: [LoadingSpinnerComponent,
-            CommonModule,
-            HttpClientModule,
-            NgxPaginationModule,
-            DropdownModule,
-            FormsModule,
-            DatePipe
+    CommonModule,
+    HttpClientModule,
+    NgxPaginationModule,
+    DropdownModule,
+    FormsModule,
+    DatePipe
   ],
   templateUrl: './salesdash-orders.component.html',
   styleUrl: './salesdash-orders.component.css'
@@ -64,7 +64,7 @@ export class SalesdashOrdersComponent {
   search: string = '';
   isLoading = false;
   status = ['Pending', 'Completed', 'Opened'];
-  selectedStatus : any = '';
+  selectedStatus: any = '';
   date: string = '';
   itemsPerPage: number = 10;
   premadePackages: PremadePackages[] = [];
@@ -73,166 +73,294 @@ export class SalesdashOrdersComponent {
   page: number = 1;
   isPremade = true;
 
+  orderId: number = 0;
+  orderName: string = '';
+  orderPrice: string = '';
+  orderInv: string = '';
+
+  totalPackageItems: number = 0;
+
+  packedItems: PackedItems[] = [];
+
 
   totalItemssl: number = 0;
   pagesl: number = 1;
   statussl = ['Pending', 'Completed', 'Opened'];
-  selectedStatussl : any = '';
+  selectedStatussl: any = '';
   datesl: string = '';
   itemsPerPagesl: number = 10;
   searchsl: string = '';
-  
+
+  isViewPackageItemsPopupOpen: boolean = false;
+
+  packageItemsArr: packageItems[] = [];
+
+  constructor(
+    private dispatchService: DispatchService,
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
 
-constructor(
-  private dispatchService: DispatchService,
-  private router: Router,
-  public tokenService: TokenService,
-  public permissionService: PermissionService,
-) {}
+  getPreMadePackages(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
 
 
-getPreMadePackages(page: number = 1, limit: number = this.itemsPerPage) {
-  this.isLoading = true;
-
-
-  this.dispatchService
-    .getPreMadePackages(page, limit, this.selectedStatus, this.date, this.search)
-    .subscribe(
-      (response) => {
-        this.premadePackages = response.items.map((item: { scheduleDate: string; }) => {
-          return {
-            ...item,
-            scheduleDateFormatted: this.formatDate(item.scheduleDate)
-          };
-        });
-        this.totalItems = response.total;
-        console.log(this.premadePackages)
-        // this.purchaseReport.forEach((head) => {
-        //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-        // });
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching ongoing cultivations:', error);
-        if (error.status === 401) {
+    this.dispatchService
+      .getPreMadePackages(page, limit, this.selectedStatus, this.date, this.search)
+      .subscribe(
+        (response) => {
+          this.premadePackages = response.items.map((item: { scheduleDate: string; }) => {
+            return {
+              ...item,
+              scheduleDateFormatted: this.formatDate(item.scheduleDate)
+            };
+          });
+          this.totalItems = response.total;
+          console.log(this.premadePackages)
+          // this.purchaseReport.forEach((head) => {
+          //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
+          // });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching ongoing cultivations:', error);
+          if (error.status === 401) {
+          }
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      }
-    );
-}
+      );
+  }
 
 
 
 
 
 
-getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
-  this.isLoading = true;
+  getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
+    this.isLoading = true;
 
 
-  this.dispatchService
-    .getSelectedPackages(pagesl, limitsl, this.selectedStatussl, this.datesl, this.searchsl)
-    .subscribe(
-      (response) => {
-        this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
-          return {
-            ...item,
-            scheduleDateFormattedSL: this.formatDate(item.scheduleDate)
-          };
-        });
-        this.totalItemssl = response.total;
-        console.log(this.selectdPackage)
-        // this.purchaseReport.forEach((head) => {
-        //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-        // });
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching ongoing cultivations:', error);
-        if (error.status === 401) {
+    this.dispatchService
+      .getSelectedPackages(pagesl, limitsl, this.selectedStatussl, this.datesl, this.searchsl)
+      .subscribe(
+        (response) => {
+          this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
+            return {
+              ...item,
+              scheduleDateFormattedSL: this.formatDate(item.scheduleDate)
+            };
+          });
+          this.totalItemssl = response.total;
+          console.log(this.selectdPackage)
+          // this.purchaseReport.forEach((head) => {
+          //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
+          // });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching ongoing cultivations:', error);
+          if (error.status === 401) {
+          }
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      }
-    );
-}
+      );
+  }
 
 
-togglePackageType(isPremade: boolean) {
-  this.isPremade = isPremade;
-}
+  togglePackageType(isPremade: boolean) {
+    this.isPremade = isPremade;
+  }
 
-ngOnInit() {
-  // this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
-  this.getPreMadePackages();
-  this.getSelectedPackages();
-  // const today = new Date();
-  // this.maxDate = today.toISOString().split('T')[0];
-}
+  ngOnInit() {
+    // this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
+    this.getPreMadePackages();
+    this.getSelectedPackages();
+    // const today = new Date();
+    // this.maxDate = today.toISOString().split('T')[0];
+  }
 
 
-private formatDate(dateString: string): string {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  return new DatePipe('en-US').transform(date, 'd MMM, yyyy') || '';
-}
+  private formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return new DatePipe('en-US').transform(date, 'd MMM, yyyy') || '';
+  }
 
 
 
-applysearch() {
-  this.getPreMadePackages();
+  applysearch() {
+    this.getPreMadePackages();
 
-}
+  }
 
-clearSearch(): void {
-  this.search = '';
-  this.getPreMadePackages();
-}
+  clearSearch(): void {
+    this.search = '';
+    this.getPreMadePackages();
+  }
 
-onPageChange(event: number) {
-  this.page = event;
-  this.getPreMadePackages(this.page, this.itemsPerPage);
- 
-}
+  onPageChange(event: number) {
+    this.page = event;
+    this.getPreMadePackages(this.page, this.itemsPerPage);
+
+  }
 
 
-applyStatus() {
-    
-  this.getPreMadePackages();
+  applyStatus() {
 
-}
+    this.getPreMadePackages();
+
+  }
 
 
 
 
-// This is for selected packages
+  // This is for selected packages
 
-applysearchsl() {
-  this.getSelectedPackages();
+  applysearchsl() {
+    this.getSelectedPackages();
 
-}
+  }
 
-clearSearchsl(): void {
-  this.searchsl = '';
-  this.getSelectedPackages();
-}
+  clearSearchsl(): void {
+    this.searchsl = '';
+    this.getSelectedPackages();
+  }
 
-onPageChangesl(event: number) {
-  this.pagesl = event;
-  this.getSelectedPackages(this.pagesl, this.itemsPerPagesl);
- 
-}
+  onPageChangesl(event: number) {
+    this.pagesl = event;
+    this.getSelectedPackages(this.pagesl, this.itemsPerPagesl);
+
+  }
 
 
-applyStatussl() {
-    
-  this.getSelectedPackages();
+  applyStatussl() {
 
-}
+    this.getSelectedPackages();
+
+  }
 
 
   back(): void {
     this.router.navigate(['/procurement']);
   }
 
+  openViewPackageItemPopup(id: number, name: string, price: string, inv: string) {
+
+    this.isViewPackageItemsPopupOpen = true;
+    console.log(this.isViewPackageItemsPopupOpen)
+    console.log(id, name, inv)
+    this.orderId = id;
+    this.orderPrice = price;
+    this.orderName = name;
+    this.orderInv = inv;
+
+
+    this.fetchPackageItems(id)
+  }
+
+  fetchPackageItems(id: number) {
+    this.isLoading = true;
+  
+    this.dispatchService.getPackageItems(id).subscribe(
+      (response) => {
+        console.log(response);
+  
+        // Add a `total` string with exactly 2 decimal places
+        this.packageItemsArr = response.items.map((item: packageItems) => {
+          const total = item.quantity * item.price;
+          return {
+            ...item,
+            total: total.toFixed(2) // Keep as string to retain 2 decimal places
+          };
+        });
+  
+        this.totalPackageItems = response.total;
+        this.isLoading = false;
+  
+        console.log('array', this.packageItemsArr);
+      },
+      (error) => {
+        console.error('Error fetching ongoing cultivations:', error);
+        if (error.status === 401) {
+          // Handle unauthorized error if needed
+        }
+        this.isLoading = false;
+      }
+    );
+  }
+  
+  
+
+  onCheckboxChange(item: packageItems) {
+    item.isPacking = item.isPacking === 1 ? 0 : 1;
+  }
+  saveCheckedItems() {
+    console.log('All items:', this.packageItemsArr);
+  
+    // Create PackedItems for all items, regardless of isPacking value
+    this.packedItems = this.packageItemsArr.map(item => {
+      const packedItem = new PackedItems();
+      packedItem.id = item.packageListId;
+      packedItem.isPacked = item.isPacking; // can be 0 or 1
+      return packedItem;
+    });
+  
+    console.log('Packed items:', this.packedItems);
+    console.log('All items:', this.packageItemsArr);
+  
+    this.isViewPackageItemsPopupOpen = false;
+    this.setIsPacked(this.packedItems);
+  }
+  
+  
+
+  setIsPacked(array: PackedItems[]) {
+    this.isLoading = true;
+  
+    this.dispatchService
+      .updateIsPacked(this.packedItems)
+      .subscribe(
+        (response) => {
+          if (response && response.success) {
+            console.log('Items updated successfully:', response.message || response);
+             
+          } else {
+            console.log('Update failed:', response.message || 'Unknown error occurred');
+          }
+          this.isLoading = false;
+        },
+        (error) => {
+          if (error.status === 401) {
+            console.log('Unauthorized access. Maybe redirect to login?');
+          } else {
+            console.log('An unexpected error occurred while updating items.');
+          }
+          this.isLoading = false;
+        }
+      );
+      this.getPreMadePackages(this.page, this.itemsPerPage);;
+  }
+  
+
 }
+
+class PackedItems {
+  id!: number;
+  isPacked!: number;
+}
+
+class packageItems {
+  packageListId!: number;
+  orderId!: number;
+  invoiceNum!: string;
+  quantity!: number;
+  price!: number;
+  isPacking!: number;
+  displayName!: string;
+  total!: string;
+}
+
+
+

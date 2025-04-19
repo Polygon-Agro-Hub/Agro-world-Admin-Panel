@@ -313,6 +313,7 @@ selectedInvoiceIdAdditional: number = 0;
   
     if (changedItems.length === 0) {
       console.log('No changes to save.');
+      this.isUpdating = false;
       this.showPopup = false;
       return;
     }
@@ -427,6 +428,18 @@ selectedInvoiceIdAdditional: number = 0;
   onCheckboxChange(item: packageItems) {
     item.isPacking = item.isPacking === 1 ? 0 : 1;
   }
+
+
+  onCheckboxChangeCh(event: Event, index: any): void {
+    const target = event.target as HTMLInputElement;
+    console.log('hit 01');
+  
+    if (target != null) {
+      this.packItems[index].isPacked = target.checked ? 1 : 0;
+      console.log('hit 02');
+    }
+  }
+
   saveCheckedItems() {
     console.log('All items:', this.packageItemsArr);
   
@@ -473,6 +486,60 @@ selectedInvoiceIdAdditional: number = 0;
       );
       this.getPreMadePackages(this.page, this.itemsPerPage);;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+  onCheckboxChangeChAdditional(event: Event, item: any): void {
+    const target = event.target as HTMLInputElement;
+    if (target != null && item) {
+      item.isPacked = target.checked ? 1 : 0;
+    }
+  }
+  
+  
+
+
+  savePackedItemsAdditional() {
+    this.isUpdating = true;
+  
+    const changedItems = this.packItemsAdditional
+      .filter((item, index) => item.isPacked !== this.originalPackItemsAdditional?.[index]?.isPacked)
+      .map(item => ({
+        id: item.id,
+        isPacked: item.isPacked
+      }));
+  
+    if (changedItems.length === 0) {
+      console.log('No changes to save.');
+      this.isUpdating = false;
+      this.showPopupAdditional = false;
+      return;
+    }
+  
+    this.dispatchService.updatePackItemsAdditional(this.selectedInvoiceId, changedItems).subscribe({
+      next: () => {
+        console.log('Successfully updated packed items.');
+        this.isUpdating = false;
+        this.showPopupAdditional = false;
+        this.getSelectedPackages(); // Reload data
+      },
+      error: (err: any) => {
+        console.error('Failed to update packed items:', err);
+        this.isUpdating = false;
+        this.getSelectedPackages(); // Still reload to refresh UI
+      }
+    });
+  }
+  
   
 
 }

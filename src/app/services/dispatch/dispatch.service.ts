@@ -166,4 +166,25 @@ export class DispatchService {
     
 
 
+
+    updatePackItemsAdditional(invoiceId: number, updatedItems: { id: number, isPacked: number }[]) {
+      const token = this.token; // Make sure `token` is initialized and valid
+    
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+    
+      const url = `${this.apiUrl}dispatch/update-pack-additiona-items`;
+    
+      const body = {
+        invoiceId,
+        updatedItems,
+      };
+    
+      return this.http.post(url, body, { headers });
+    }
+    
+
+
 }

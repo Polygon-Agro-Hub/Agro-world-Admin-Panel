@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  API_URL: "https://dev.agroworld.lk/agro-api/admin-api/api/",
+  API_URL: "https://api.dev.agroworld.lk/admin/agro-api/admin-api/api/",
 };

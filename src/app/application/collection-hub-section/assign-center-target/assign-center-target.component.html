@@ -77,7 +77,10 @@
     </div>
   </div>
 
-  <div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack rounded-lg my-8">
+  <div
+    *ngIf="hasData"
+    class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack rounded-lg my-8"
+  >
     <div
       class="overflow-x-auto mt-8 mr-5 border-gray-100 border-[2px] rounded-lg"
     >

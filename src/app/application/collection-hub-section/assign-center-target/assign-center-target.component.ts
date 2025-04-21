@@ -22,6 +22,7 @@ export class AssignCenterTargetComponent {
   isNew: boolean = true;
   companyCenterId!: number;
   isFormValid: boolean = false;
+  hasData: boolean = false;
 
   constructor(private TargetSrv: TargetService) {}
 
@@ -42,6 +43,7 @@ export class AssignCenterTargetComponent {
       this.countCrops = res.result.data.length;
       this.isNew = res.result.isNew;
       this.companyCenterId = res.companyCenterId;
+      this.hasData = res.result.data.length > 0 ? true : false;
     });
   }
 

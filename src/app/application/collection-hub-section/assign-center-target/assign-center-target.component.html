@@ -26,6 +26,7 @@
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]"
       >
         <input
+          [(ngModel)]="searchText"
           (keyup.enter)="onSearch()"
           (keyup.esc)="offSearch()"
           type="text"

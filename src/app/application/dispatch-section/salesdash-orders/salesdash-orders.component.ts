@@ -22,6 +22,8 @@ interface PremadePackages {
   fullSubTotal: string;
   totalPrice: string;
   packageStatus: string;
+  packItemStatus: string;
+  addItemStatus: string;
   orderPackageItemsId: any;
 
 

@@ -403,7 +403,7 @@ selectedInvoiceIdAdditional: number = 0;
   
         // Add a `total` string with exactly 2 decimal places
         this.packageItemsArr = response.items.map((item: packageItems) => {
-          const total = item.quantity * item.price;
+          const total = item.quantity * item.discountedPrice;
           return {
             ...item,
             total: total.toFixed(2) // Keep as string to retain 2 decimal places
@@ -476,6 +476,9 @@ selectedInvoiceIdAdditional: number = 0;
             console.log('Update failed:', response.message || 'Unknown error occurred');
           }
           this.isLoading = false;
+
+          // window.location.reload();
+          this.getPreMadePackages(this.page, this.itemsPerPage);
         },
         (error) => {
           if (error.status === 401) {
@@ -484,9 +487,12 @@ selectedInvoiceIdAdditional: number = 0;
             console.log('An unexpected error occurred while updating items.');
           }
           this.isLoading = false;
+          this.getPreMadePackages(this.page, this.itemsPerPage);
+          // window.location.reload();
         }
       );
-      this.getPreMadePackages(this.page, this.itemsPerPage);;
+      
+      this.getPreMadePackages(this.page, this.itemsPerPage);
   }
 
 
@@ -557,6 +563,7 @@ class packageItems {
   invoiceNum!: string;
   quantity!: number;
   price!: number;
+  discountedPrice!: number;
   isPacking!: number;
   displayName!: string;
   total!: string;

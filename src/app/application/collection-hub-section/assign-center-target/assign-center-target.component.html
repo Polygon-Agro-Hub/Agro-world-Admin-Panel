@@ -1,0 +1,212 @@
+<div class="h-screen py-8">
+  <div class="flex flex-row justify-between items-center">
+    <p class="text-xl font-bold dark:text-white text-[#030308]">
+      {{ centerDetails.regCode }} {{ centerDetails.centerName }}
+    </p>
+    <div class="flex flex-row items-center gap-5">
+      <i class="fa-solid fa-list text-2xl dark:text-white ml-8"></i>
+
+      <p class="font-normal dark:text-white">Filter By</p>
+
+      <div class="relative w-46">
+        <div
+          class="border-2 rounded-xl dark:bg-[#292929] text-textLight dark:text-textDark flex flex-row justify-between items-center"
+        >
+          <input
+            [(ngModel)]="selectDate"
+            (change)="fetchSavedCenterCrops()"
+            type="date"
+            name="selectDate"
+            class="block w-auto appearance-none dark:bg-[#292929] text-textLight dark:text-textDark px-3 py-2 rounded-xl focus:outline-none cursor-pointer"
+          />
+        </div>
+      </div>
+
+      <div
+        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]"
+      >
+        <input
+          (keyup.enter)="onSearch()"
+          (keyup.esc)="offSearch()"
+          type="text"
+          placeholder="Search by Variety Name"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+        />
+        <button
+          (click)="onSearch()"
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+            />
+          </svg>
+        </button>
+        <button
+          (click)="offSearch()"
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack rounded-lg my-8">
+    <div
+      class="overflow-x-auto mt-8 mr-5 border-gray-100 border-[2px] rounded-lg"
+    >
+      <table class="w-full divide-y-2 overflow-hidden">
+        <thead class="dark:bg-[#272F45] text-gray-700 dark:text-gray-300">
+          <tr>
+            <th class="px-6 py-3 text-left font-medium">
+              ITEM ({{ countCrops < 10 ? "0" + countCrops : countCrops }})
+            </th>
+            <th class="px-6 py-3 text-left font-medium">Crop</th>
+            <th class="px-6 py-3 text-left font-medium">Variety</th>
+            <th class="px-6 py-3 text-left font-medium">Grade A</th>
+            <th class="px-6 py-3 text-left font-medium">Grade B</th>
+            <th class="px-6 py-3 text-left font-medium">Grade C</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-[#1E293B]">
+          <tr *ngFor="let item of assignCropsArr; let i = index">
+            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+              {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+              {{ item.cropNameEnglish }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+              {{ item.varietyNameEnglish }}
+            </td>
+
+            <!-- Grade A Column -->
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+              <input
+                [(ngModel)]="item.targetA"
+                type="number"
+                name="targetA"
+                min="0"
+                class="border-[#415CFF] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                [disabled]="!isNew && !item.editingA"
+                (change)="validateForm()"
+              />
+              <button
+                *ngIf="!isNew && !item.editingA && isDateValid"
+                (click)="item.editingA = true"
+              >
+                <i class="fa-solid fa-pen-to-square text-[#415CFF] text-xl"></i>
+              </button>
+              <button
+                *ngIf="!isNew && item.editingA && isDateValid"
+                class="bg-[#415CFF] px-3 py-2 text-white rounded-lg"
+                (click)="saveGrade('A', item, item.targetA, item.idA)"
+              >
+                Save
+              </button>
+            </td>
+
+            <!-- Grade B Column -->
+            <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
+              <input
+                [(ngModel)]="item.targetB"
+                type="number"
+                name="targetB"
+                min="0"
+                class="border-[#415CFF] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                [disabled]="!isNew && !item.editingB"
+                (change)="validateForm()"
+              />
+              <button
+                *ngIf="!isNew && !item.editingB && isDateValid"
+                (click)="item.editingB = true"
+              >
+                <i class="fa-solid fa-pen-to-square text-[#415CFF] text-xl"></i>
+              </button>
+              <button
+                *ngIf="!isNew && item.editingB && isDateValid"
+                class="bg-[#415CFF] px-3 py-2 text-white rounded-lg"
+                (click)="saveGrade('B', item, item.targetB, item.idB)"
+              >
+                Save
+              </button>
+            </td>
+
+            <!-- Grade C Column -->
+            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+              <input
+                [(ngModel)]="item.targetC"
+                type="number"
+                name="targetC"
+                min="0"
+                class="border-[#415CFF] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
+                [disabled]="!isNew && !item.editingC"
+                (change)="validateForm()"
+              />
+              <button
+                *ngIf="!isNew && !item.editingC && isDateValid"
+                (click)="item.editingC = true"
+              >
+                <i class="fa-solid fa-pen-to-square text-[#415CFF] text-xl"></i>
+              </button>
+              <button
+                *ngIf="!isNew && item.editingC && isDateValid"
+                class="bg-[#415CFF] px-3 py-2 text-white rounded-lg"
+                (click)="saveGrade('C', item, item.targetC, item.idC)"
+              >
+                Save
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      *ngIf="isNew && isDateValid"
+      class="flex flex-row justify-center items-center my-7 gap-8"
+    >
+      <button
+        class="bg-[#FFFFFF] text-[#6B7D8C] border-[2px] border-[#95A1AC] rounded-lg px-5 py-2"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        class="rounded-lg px-7 py-2"
+        [ngClass]="
+          isFormValid
+            ? 'bg-[#415CFF] text-[#FFFFFF]'
+            : 'bg-[#95A1AC] text-[#6B7D8C]'
+        "
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

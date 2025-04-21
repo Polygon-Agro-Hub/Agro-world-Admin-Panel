@@ -550,7 +550,7 @@ export const routes: Routes = [
             data: { permission: 'Add Collection Center' },
           },
           {
-            path: 'add-daily-target/:id/:name/:comid',
+            path: 'add-daily-target/:id/:name/:regCode',
             component: AddDailyTargetComponent,
             canActivate: [PermissionGuard],
             data: { permission: 'Assign Center Target' },
@@ -582,7 +582,6 @@ export const routes: Routes = [
         ],
       },
 
-
       {
         path: 'procurement',
         children: [
@@ -594,7 +593,6 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
           },
-          
         ],
       },
 
@@ -609,7 +607,6 @@ export const routes: Routes = [
             path: 'salesdash-orders',
             component: SalesdashOrdersComponent,
           },
-          
         ],
       },
 

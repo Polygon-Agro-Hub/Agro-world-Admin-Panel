@@ -3,11 +3,12 @@ import { TargetService } from '../../../services/target-service/target.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-assign-center-target',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './assign-center-target.component.html',
   styleUrl: './assign-center-target.component.css',
 })
@@ -23,6 +24,7 @@ export class AssignCenterTargetComponent {
   companyCenterId!: number;
   isFormValid: boolean = false;
   hasData: boolean = false;
+  isLoading = false;
 
   constructor(private TargetSrv: TargetService) {}
 
@@ -31,12 +33,14 @@ export class AssignCenterTargetComponent {
   }
 
   fetchSavedCenterCrops() {
+    this.isLoading = true;
     this.validateSelectDate();
     this.TargetSrv.getSavedCenterCrops(
       this.centerDetails.centerId,
       this.selectDate,
       this.searchText
     ).subscribe((res) => {
+      this.isLoading = false;
       console.log('res', res);
 
       this.assignCropsArr = res.result.data;

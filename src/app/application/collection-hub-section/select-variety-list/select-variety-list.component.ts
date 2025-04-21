@@ -4,11 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TargetService } from '../../../services/target-service/target.service';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-select-variety-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgxPaginationModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './select-variety-list.component.html',
   styleUrl: './select-variety-list.component.css',
 })
@@ -21,6 +27,7 @@ export class SelectVarietyListComponent {
   itemsPerPage: number = 10;
   cropCount: number = 0;
   searchText: string = '';
+  isLoading = false;
 
   constructor(private TargetSrv: TargetService) {}
 
@@ -33,12 +40,14 @@ export class SelectVarietyListComponent {
     limit: number = this.itemsPerPage,
     search: string = this.searchText
   ) {
+    this.isLoading = true;
     this.TargetSrv.getCenterCrops(
       this.centerDetails.centerId,
       page,
       limit,
       search
     ).subscribe((res) => {
+      this.isLoading = false;
       console.log(res);
       this.cropsArr = res.items;
       this.cropCount = res.items.length;

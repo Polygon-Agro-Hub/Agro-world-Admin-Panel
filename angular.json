@@ -30,8 +30,6 @@
             "server": "src/main.server.ts",
             "prerender": false,
             "ssr": false,
-            "baseHref": "/admin/",
-            "deployUrl": "/admin/"
           },
           "configurations": {
             "production": {

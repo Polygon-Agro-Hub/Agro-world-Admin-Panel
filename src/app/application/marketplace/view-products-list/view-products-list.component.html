@@ -135,7 +135,21 @@
               {{ item.varietyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.displayType }}
+              <span *ngIf="!item.displayType">No</span>
+              <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
+              <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
+              <span *ngIf="item.displayType === 'D&AP&SP'"
+                >%, Actual, Sale</span
+              >
+              <span
+                *ngIf="
+                  item.displayType &&
+                  item.displayType !== 'D&AP' &&
+                  item.displayType !== 'AP&SP' &&
+                  item.displayType !== 'D&AP&SP'
+                "
+                >{{ item.displayType }}</span
+              >
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ ((item.discount / item.normalPrice) * 100).toFixed(2) }}%

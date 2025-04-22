@@ -15,7 +15,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 export class CollectionCenterDashboardComponent {
   centerNameObj: CenterName = new CenterName();
   resentCollectionArr!: ResentCollection[];
-  companyId!: number
+  companyId!: number;
   centerName: string = '';
 
   selectTable: string = 'collection';
@@ -30,7 +30,7 @@ export class CollectionCenterDashboardComponent {
     private router: Router,
     private route: ActivatedRoute,
     private TargetSrv: CollectionCenterService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];
@@ -44,7 +44,7 @@ export class CollectionCenterDashboardComponent {
     this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
       console.log(res);
       this.isLoading = false;
-      
+
       this.centerNameObj = res.officerCount;
       this.transCount = res.transCount.transactionCount;
       this.transAmount = res.transAmountCount.transAmountCount;
@@ -65,18 +65,21 @@ export class CollectionCenterDashboardComponent {
 
   navigateAddTarget() {
     this.router.navigate([
-      `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.companyId}`,
+      `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.centerNameObj.regCode}`,
     ]);
   }
 
   navigateToMarketPrice() {
-    this.router.navigate([`collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`]);
+    this.router.navigate([
+      `collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`,
+    ]);
   }
 }
 
 class CenterName {
   id!: number;
   centerName!: string;
+  regCode!: string;
   officerCount!: number;
 }
 

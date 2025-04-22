@@ -9,11 +9,13 @@ import { environment } from '../../../environment/environment';
 import { error } from 'console';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TokenService } from '../../../services/token/services/token.service';
+import { FormsModule } from '@angular/forms';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-view-products-list',
   standalone: true,
-  imports: [CommonModule, DropdownModule, NgxPaginationModule],
+  imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-products-list.component.html',
   styleUrl: './view-products-list.component.css',
 })
@@ -24,6 +26,19 @@ export class ViewProductsListComponent {
   itemsPerPage: number = 10;
   hasData: boolean = true;
   totalItems: number = 0;
+  displayOptions = [
+    { name: '%, Actual', value: 'D&AP' },
+    { name: 'Actual, Sale', value: 'AP&SP' },
+    { name: '%, Actual, Sale', value: 'AP&SP&D' }
+  ];
+  selectedDisplayType: any = null;
+
+  categoryOption = [
+    { name: 'Retail', value: 'Retail' },
+    { name: 'WholeSale', value: 'WholeSale' }
+  ];
+  selectedCategoryOption: any = null;
+  isLoading = false;
 
   constructor(
     private viewProductsList: ViewProductListService,
@@ -33,21 +48,31 @@ export class ViewProductsListComponent {
   ) {}
 
   fetchAllProducts(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
+    const displayTypeValue = this.selectedDisplayType ? this.selectedDisplayType.value : '';
+    const categoryValue = this.selectedCategoryOption ? this.selectedCategoryOption.value : '';
     this.viewProductsList
-      .getProductList(page, limit, this.searchVariety)
+      .getProductList(page, limit, this.searchVariety, displayTypeValue, categoryValue)
       .subscribe(
         (response) => {
           console.log('hello world', response);
           this.viewProductList = response.items;
           this.hasData = this.viewProductList.length > 0;
           this.totalItems = response.total;
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching all Products', error);
           if (error.status === 401) {
           }
+          this.isLoading = false;
         }
       );
+  }
+
+  onDisplayTypeChange() {
+    this.page = 1; // Reset to first page when filter changes
+    this.fetchAllProducts();
   }
 
   ngOnInit() {

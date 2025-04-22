@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
   style="min-width: 1200px"
@@ -20,14 +22,32 @@
         </h2>
       </div>
       <div class="flex items-center">
+
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [checkmark]="true"
-            optionLabel="name"
-            [showClear]="true"
-            placeholder="Display"
-          />
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+          [options]="categoryOption"
+          [(ngModel)]="selectedCategoryOption"
+          (onChange)="onDisplayTypeChange()"
+          [checkmark]="true"
+          optionLabel="name"
+          [showClear]="true"
+          placeholder="Category"
+        ></p-dropdown>
+        </div>
+
+
+        <div class="mr-5">
+          <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+          [options]="displayOptions"
+          [(ngModel)]="selectedDisplayType"
+          (onChange)="onDisplayTypeChange()"
+          [checkmark]="true"
+          optionLabel="name"
+          [showClear]="true"
+          placeholder="Display"
+        ></p-dropdown>
         </div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
@@ -36,11 +56,14 @@
             type="text"
             placeholder="Search.."
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [(ngModel)]="searchVariety"
+            (keydown.enter)="searchProduct()"
           />
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchProduct()"
+
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

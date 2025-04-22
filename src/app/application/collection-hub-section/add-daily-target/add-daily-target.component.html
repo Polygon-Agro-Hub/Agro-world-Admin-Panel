@@ -1,33 +1,42 @@
 <div
-  class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg mt-6 h-full"
+  class="w-full overflow-x-auto scrollbar-thin overflow-y-hidden scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
-  <div class="flex flex-row justify-between items-center">
-    <div class="flex flex-row gap-6">
-      <div
-        class="flex flex-row items-center gap-2 border-[2px] rounded-2xl px-4 py-2 dark:bg-[#292929] cursor-pointer"
-        [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isAssignTarget }"
-        (click)="selectAssignTarget()"
-      >
-        <i *ngIf="isAssignTarget" class="fa-solid fa-check"></i>
-        <p class="dark:text-white">Center Target</p>
-      </div>
-      <div
-        class="flex flex-row items-center gap-2 border-[2px] rounded-2xl px-4 py-2 dark:bg-[#292929] cursor-pointer"
-        [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isVariety }"
-        (click)="selectVariety()"
-      >
-        <i *ngIf="isVariety" class="fa-solid fa-check"></i>
-        <p class="dark:text-white">Variety List</p>
+  <div
+    class="pt-5 pb-5 min-w-[320px] md:min-w-[768px] lg:min-w-[1024px] xl:min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg h-auto"
+  >
+    <div
+      class="flex px-3 flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+    >
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
+        <div
+          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#292929] cursor-pointer transition-colors duration-200"
+          [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isAssignTarget }"
+          (click)="selectAssignTarget()"
+        >
+          <i *ngIf="isAssignTarget" class="fa-solid fa-check"></i>
+          <p class="dark:text-white">Center Target</p>
+        </div>
+        <div
+          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#292929] cursor-pointer transition-colors duration-200"
+          [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isVariety }"
+          (click)="selectVariety()"
+        >
+          <i *ngIf="isVariety" class="fa-solid fa-check"></i>
+          <p class="dark:text-white">Variety List</p>
+        </div>
       </div>
     </div>
+
+    <hr class="my-6 border border-[#7F7F7F] dark:border-[#292929]" />
+
+    <app-assign-center-target
+      [centerDetails]="dailyTartgetObj"
+      *ngIf="isAssignTarget"
+    ></app-assign-center-target>
+
+    <app-select-variety-list
+      [centerDetails]="dailyTartgetObj"
+      *ngIf="isVariety"
+    ></app-select-variety-list>
   </div>
-  <hr class="my-8 border-[1px] border-[#7F7F7F] dark:border-[#292929]" />
-  <app-assign-center-target
-    [centerDetails]="dailyTartgetObj"
-    *ngIf="isAssignTarget"
-  />
-  <app-select-variety-list
-    [centerDetails]="dailyTartgetObj"
-    *ngIf="isVariety"
-  />
 </div>

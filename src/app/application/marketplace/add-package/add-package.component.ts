@@ -66,6 +66,7 @@ export class AddPackageComponent implements OnInit {
   }
 
   onAdd() {
+    // Check for required fields
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
@@ -93,6 +94,21 @@ export class AddPackageComponent implements OnInit {
       this.inputPackageObj.qtytype === 'g'
         ? this.inputPackageObj.quantity / 1000
         : this.inputPackageObj.quantity;
+
+    // Check if item already exists in the package
+    const existingItemIndex = this.packageObj.Items.findIndex(
+      (item) => item.mpItemId === this.inputPackageObj.mpItemId
+    );
+
+    if (existingItemIndex !== -1) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Item Already Exists',
+        html: `This item (${this.selectedPrice.displayName}) is already in the package.`,
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
     // Calculate initial discount percentage
     const initialDiscountPercentage =

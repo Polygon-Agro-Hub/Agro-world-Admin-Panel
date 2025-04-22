@@ -137,7 +137,9 @@
 
       <!-- Actual Price field -->
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Actual Price Per Kg *</label>
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Actual Price Per Kg *</label
+        >
         <input
           type="text"
           id="priceLimit"
@@ -150,7 +152,9 @@
 
       <!-- Discount field -->
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Per Kg *</label>
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Discount Per Kg *</label
+        >
         <input
           type="text"
           id="priceLimit"
@@ -254,6 +258,7 @@
         <th class="px-6 py-3 text-center">ACTUAL PRICE</th>
         <th class="px-6 py-3 text-center">DISCOUNT VALUE</th>
         <th class="px-6 py-3 text-center">DISCOUNT</th>
+        <th class="px-6 py-3 text-center">DISCOUNT PRICE</th>
         <th class="px-6 py-3 text-center"></th>
       </tr>
     </thead>
@@ -284,7 +289,8 @@
           </div>
         </td>
         <td class="px-6 py-4 text-center">
-          <div *ngIf="item.qtytype === 'Kg'" 
+          <div
+            *ngIf="item.qtytype === 'Kg'"
             class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3"
           >
             <i
@@ -298,42 +304,66 @@
             ></i>
           </div>
 
-
-          <div *ngIf="item.qtytype === 'g'" 
-          class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3"
-        >
-          <i
-            class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
-            (click)="decrementQuantity(i)"
-          ></i>
-          <p class="dark:text-textDark">{{ item.quantity * 1000 }}</p>
-          <i
-            class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
-            (click)="incrementQuantity(i)"
-          ></i>
-        </div>
+          <div
+            *ngIf="item.qtytype === 'g'"
+            class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3"
+          >
+            <i
+              class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
+              (click)="decrementQuantity(i)"
+            ></i>
+            <p class="dark:text-textDark">{{ item.quantity * 1000 }}</p>
+            <i
+              class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
+              (click)="incrementQuantity(i)"
+            ></i>
+          </div>
         </td>
         <td class="px-6 py-4 text-center text-black dark:text-textDark">
-          {{ item.normalPrice * item.quantity | number : '1.2-2' }}
+          {{ item.normalPrice * item.quantity | number : "1.2-2" }}
         </td>
         <td class="px-6 py-4 text-center">
-          <div class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3 mx-12">
-            <i class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
-               (click)="decrementDiscountPercentage(i)"></i>
+          <div
+            class="flex justify-between items-center rounded-lg shadow-lg border-[1px] py-2 px-3 mx-12"
+          >
+            <i
+              class="fa-solid fa-minus text-black text-lg cursor-pointer dark:text-textDark"
+              (click)="decrementDiscountPercentage(i)"
+            ></i>
             <p class="dark:text-textDark">{{ item.discountPercentage }}%</p>
-            <i class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
-               (click)="incrementDiscountPercentage(i)"></i>
+            <i
+              class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
+              (click)="incrementDiscountPercentage(i)"
+            ></i>
           </div>
         </td>
         <td class="px-6 py-4 text-center">
-          <p class="text-[#006C5A] dark:text-textDark" *ngIf="item.discount === 0">
+          <p
+            class="text-[#006C5A] dark:text-textDark"
+            *ngIf="item.discount === 0"
+          >
             No
           </p>
-          <p class="text-[#006C5A] dark:text-textDark" *ngIf="item.discount !== 0">
-            <span class="bg-green-100 text-green-800 px-1 rounded mt-1 dark:bg-green-900 dark:text-green-200">
-              {{ (item.discountPercentage * (item.normalPrice * item.quantity)) / 100 | number : '1.2-2' }}
+          <p
+            class="text-[#006C5A] dark:text-textDark"
+            *ngIf="item.discount !== 0"
+          >
+            <span
+              class="bg-green-100 text-green-800 px-1 rounded mt-1 dark:bg-green-900 dark:text-green-200"
+            >
+              {{
+                (item.discountPercentage * (item.normalPrice * item.quantity)) /
+                  100 | number : "1.2-2"
+              }}
             </span>
           </p>
+        </td>
+        <td class="px-6 py-4 text-center">
+          {{
+            item.normalPrice *
+              item.quantity *
+              (1 - item.discountPercentage / 100) | number : "1.2-2"
+          }}
         </td>
 
         <td class="px-6 py-4 text-center">

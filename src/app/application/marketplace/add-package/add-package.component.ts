@@ -46,12 +46,14 @@ export class AddPackageComponent implements OnInit {
       (crop) => crop.cropId === +this.inputPackageObj.cID
     );
     if (selectedCrop) {
-      this.selectedVarieties = selectedCrop.variety;
+      // Sort varieties by displayName in ascending order
+      this.selectedVarieties = selectedCrop.variety.sort((a, b) =>
+        a.displayName.localeCompare(b.displayName)
+      );
     } else {
       this.selectedVarieties = [];
     }
   }
-
   onPriceChange() {
     const selectedVariety = this.selectedVarieties.find(
       (variety) => variety.id === +this.inputPackageObj.mpItemId

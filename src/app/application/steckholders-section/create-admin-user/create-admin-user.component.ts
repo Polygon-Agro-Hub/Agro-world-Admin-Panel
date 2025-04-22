@@ -78,13 +78,31 @@ export class CreateAdminUserComponent implements OnInit {
       this.itemId = params["id"] ? +params["id"] : null;
       console.log("Received item ID:", this.itemId);
     });
+  
     if (this.itemId) {
       this.getAdminById(this.itemId);
     }
-
+  
     this.getAllRoles();
     this.getAllPosition();
+  
+    // Watch for role change
+    this.userForm.get('role')?.valueChanges.subscribe((roleId) => {
+      if (+roleId === 1) {
+        this.userForm.get('position')?.setValue(1);
+        this.userForm.get('position')?.disable(); // Optional: prevent user change
+      } else {
+        this.userForm.get('position')?.enable();
+      }
+    });
   }
+
+
+  get isSuperAdminSelected(): boolean {
+    return +this.userForm.get('role')?.value === 1;
+  }
+  
+  
 
   getAllRoles() {
     const token = this.tokenService.getToken();

@@ -95,8 +95,9 @@
               Discount(%)
             </th>
             <th class="py-3 font-normal text-gray-500 text-center">Actual</th>
-            <th class="py-3 font-normal text-gray-500 text-center">Discounted Price</th>
-            <th class="py-3 font-normal text-gray-500 text-center">Sale</th>
+            <th class="py-3 font-normal text-gray-500 text-center">
+              Discounted Price
+            </th>
             <th class="py-3 font-normal text-gray-500 text-center">Unit</th>
             <th class="py-3 font-normal text-gray-500 text-center">
               Start Value
@@ -134,29 +135,16 @@
               {{ item.varietyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <!-- <div *ngIf="item.discountedPrice > 0">
-              <span> %</span>
-              <span> Actual</span>
-              <span> Sale</span>
-            </div>
-            <div *ngIf="item.discountedPrice === 0.0">
-              <span> Actual</span>
-              <span> Sale</span>
-            </div> -->
-              {{ checkDiscount(item.discountedPrice) }}
+              {{ item.displayType }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.discount/item.normalPrice * 100 }}
-
+              {{ ((item.discount / item.normalPrice) * 100).toFixed(2) }}%
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.normalPrice }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.discountedPrice }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ calculateSalePrice(item.startValue, item.normalPrice) }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.unitType }}

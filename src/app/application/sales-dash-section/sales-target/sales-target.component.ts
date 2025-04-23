@@ -12,12 +12,18 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-sales-target',
   standalone: true,
-  imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    NgxPaginationModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+  ],
   templateUrl: './sales-target.component.html',
   styleUrl: './sales-target.component.css',
 })
 export class SalesTargetComponent implements OnInit {
-
   // targetForm: FormGroup;
   currentDailyTarget!: number;
   newTargetValue: number = 0;
@@ -33,18 +39,13 @@ export class SalesTargetComponent implements OnInit {
   searchText: string = '';
   selectDate: string = '';
   totalTarget!: number;
-  agentCount:number = 0;
+  agentCount: number = 0;
 
-  status = [
-    { name: 'Completed' },
-    { name: 'Pending' },
-    { name: 'Exceeded' },
-
-  ];
+  status = [{ name: 'Completed' }, { name: 'Pending' }, { name: 'Exceeded' }];
 
   constructor(
     private fb: FormBuilder,
-    private salesDashSrv: SalesDashService,
+    private salesDashSrv: SalesDashService
   ) {}
 
   ngOnInit(): void {
@@ -60,11 +61,9 @@ export class SalesTargetComponent implements OnInit {
     return selectedDate >= today ? null : { pastDate: true };
   }
 
-
-
   saveTarget() {
-    if(this.newTargetValue === 0){
-      Swal.fire('Warning','Target value can not be 0.', 'warning')
+    if (this.newTargetValue === 0) {
+      Swal.fire('Warning', 'Target value can not be 0.', 'warning');
       return;
     }
 
@@ -75,7 +74,7 @@ export class SalesTargetComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'Cancel',
-      reverseButtons: true
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
@@ -85,7 +84,7 @@ export class SalesTargetComponent implements OnInit {
                 title: 'Success!',
                 text: response.message,
                 icon: 'success',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
               });
               this.newTargetValue = 0;
               this.fetchAllSalesAgents();
@@ -94,7 +93,7 @@ export class SalesTargetComponent implements OnInit {
                 title: 'Error!',
                 text: response.message,
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
               });
               this.fetchAllSalesAgents();
             }
@@ -105,7 +104,7 @@ export class SalesTargetComponent implements OnInit {
               title: 'Failed!',
               text: 'Failed to save target.',
               icon: 'error',
-              confirmButtonText: 'OK'
+              confirmButtonText: 'OK',
             });
           }
         );
@@ -113,55 +112,87 @@ export class SalesTargetComponent implements OnInit {
     });
   }
 
+  fetchAllSalesAgents(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchText,
+    status: string = this.selectStatus,
+    date: string = this.selectDate
+  ) {
+    this.salesDashSrv
+      .getAllSalesAgents(page, limit, search, status, date)
+      .subscribe((res) => {
+        console.log(res);
 
- 
+        // Convert to integer using parseInt() or Math.round()
+        this.totalTarget = Math.round(res.totalTarget.targetValue); // or parseInt(res.totalTarget.targetValue, 10)
 
+        this.agentsArr = res.items;
+        this.totalItems = res.total;
+        this.agentCount = res.items.length === undefined ? 0 : res.items.length;
 
-
-  fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.selectStatus, date: string = this.selectDate) {
-    this.salesDashSrv.getAllSalesAgents(page, limit, search, status, date).subscribe((res) => {
-
-      console.log(res);
-
-      this.totalTarget = res.totalTarget.targetValue
-      this.agentsArr = res.items;
-      this.totalItems = res.total;
-      this.agentCount = res.items.length === undefined ? 0 : res.items.length
-      
-      if (res.items.length === 0) {
-        this.hasData = false;
-      }
-    });
+        if (res.items.length === 0) {
+          this.hasData = false;
+        }
+      });
   }
-
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   onSearch() {
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   offSearch() {
-
     this.searchText = '';
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   filterStatus() {
     if (!this.selectStatus) {
       this.selectStatus = ''; // Ensure it's always an empty string
     }
-    console.log("Selected Status:", this.selectStatus);
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    console.log('Selected Status:', this.selectStatus);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   onDateChange(event: any) {
     this.selectDate = event.target.value || '';
-    console.log("Selected Status:", this.selectDate);
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    console.log('Selected Status:', this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   // get formControls(): { [key: string]: any } {
@@ -176,10 +207,4 @@ class Agents {
   lastName!: string;
   target!: number;
   targetComplete!: number;
-
 }
-
-
-
-
-

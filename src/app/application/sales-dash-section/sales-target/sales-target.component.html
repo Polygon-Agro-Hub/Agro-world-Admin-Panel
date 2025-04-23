@@ -98,6 +98,7 @@
           type="text"
           placeholder="First name/ Last name/ EMP ID"
           [(ngModel)]="searchText"
+          (keydown.enter)="onSearch()"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
         />
         <button

@@ -61,58 +61,6 @@ export class SalesTargetComponent implements OnInit {
     return selectedDate >= today ? null : { pastDate: true };
   }
 
-  // saveTarget() {
-  //   this.validateTargetInput();
-  //   if (this.newTargetValue <= 0) {
-  //     Swal.fire('Warning', 'Target value can not be 0.', 'warning');
-  //     return;
-  //   }
-
-  //   Swal.fire({
-  //     title: 'Are you sure?',
-  //     text: 'Do you want to save this target?',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Yes, Save it!',
-  //     cancelButtonText: 'Cancel',
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
-  //         (response) => {
-  //           if (response.status) {
-  //             Swal.fire({
-  //               title: 'Success!',
-  //               text: response.message,
-  //               icon: 'success',
-  //               confirmButtonText: 'OK',
-  //             });
-  //             this.newTargetValue = 0;
-  //             this.fetchAllSalesAgents();
-  //           } else {
-  //             Swal.fire({
-  //               title: 'Error!',
-  //               text: response.message,
-  //               icon: 'error',
-  //               confirmButtonText: 'OK',
-  //             });
-  //             this.fetchAllSalesAgents();
-  //           }
-  //         },
-  //         (error) => {
-  //           console.error('Error saving target:', error);
-  //           Swal.fire({
-  //             title: 'Failed!',
-  //             text: 'Failed to save target.',
-  //             icon: 'error',
-  //             confirmButtonText: 'OK',
-  //           });
-  //         }
-  //       );
-  //     }
-  //   });
-  // }
-
   saveTarget() {
     // First validate the input
     this.validateTargetInput();
@@ -173,6 +121,9 @@ export class SalesTargetComponent implements OnInit {
             });
           }
         );
+      } else {
+        // Add this else block to clear the input when canceled
+        this.newTargetValue = 0;
       }
     });
   }

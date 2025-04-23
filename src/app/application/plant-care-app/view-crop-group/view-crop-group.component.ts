@@ -86,7 +86,7 @@ export class ViewCropGroupComponent {
   fetchAllCropGroups(
     page: number = 1,
     limit: number = this.itemsPerPage,
-    searchTerm: string = ''
+    searchTerm: string = this.searchTerm
   ) {
     console.log(
       'Fetching market prices for page:',

@@ -19,16 +19,29 @@ export class ViewProductListService {
   getProductList(
     page: number,
     limit: number,
-    searchVariety: string = "",
+    search: string = "",
+    displayTypeValue: string = "",
+    categoryValue: string = ""
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-
-    let url = `${this.apiUrl}market-place/get-market-items`;
-    if (searchVariety) {
-      url += `&cropVarietyEnglish=${searchVariety}`;
+  
+    let url = `${this.apiUrl}market-place/get-market-items?page=${page}&limit=${limit}`;
+    
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
     }
+  
+    if (displayTypeValue) {
+      url += `&displayTypeValue=${encodeURIComponent(displayTypeValue)}`;
+    }
+
+
+    if (categoryValue) {
+      url += `&categoryValue=${encodeURIComponent(categoryValue)}`;
+    }
+    
     return this.http.get<any>(url, { headers });
   }
 }

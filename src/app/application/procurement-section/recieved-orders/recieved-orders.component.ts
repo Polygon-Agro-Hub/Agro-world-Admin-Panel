@@ -152,23 +152,23 @@ back(): void {
 
 
 showFilterDialog() {
-  Swal.fire({
+  const dialog = Swal.fire({
     title: 'Select Filter',
     html: `
       <div style="text-align: left;">
         <div class="mb-4">
-          <label class="block text-gray-700 dark:text-gray-200 mb-2">Filter By</label>
-          <select id="filterTypeSelect" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
+          <label class="block text-gray-700 mb-2">Filter By</label>
+          <select id="filterTypeSelect" class="w-full p-2 border rounded">
             <option value="">--Filter By--</option>
             <option value="OrderDate">Order Date</option>
-            <option value="scheduleDate">Schedule Date</option>
-            <option value="toCollectionCenter">To Collection Center</option>
-            <option value="toDispatchCenter">To Dispatch Center</option>
+            <option value="scheduleDate">Scheduled Date</option>
+            <option value="toCollectionCenter">To Collection Centre</option>
+            <option value="toDispatchCenter">To Dispatch Centre</option>
           </select>
         </div>
         <div>
-          <label class="block text-gray-700 dark:text-gray-200 mb-2">Select Date</label>
-          <input type="date" id="filterDateInput" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
+          <label class="block text-gray-700  mb-2">Select Date</label>
+          <input type="date" id="filterDateInput" class="w-full p-2 border rounded ">
         </div>
       </div>
     `,
@@ -178,11 +178,37 @@ showFilterDialog() {
     buttonsStyling: false,
     customClass: {
       confirmButton: 'bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg mx-2',
-      cancelButton: 'bg-gray-200 text-gray-800 font-medium py-2 px-5 rounded-md text-lg mx-2 dark:bg-gray-600 dark:text-white'
+      cancelButton: 'bg-gray-200 text-gray-800 font-medium py-2 px-5 rounded-md text-lg mx-2'
+    },
+    didOpen: () => {
+      const filterTypeSelect = document.getElementById('filterTypeSelect') as HTMLSelectElement;
+      const filterDateInput = document.getElementById('filterDateInput') as HTMLInputElement;
+      const confirmButton = Swal.getConfirmButton();
+
+      // Initially disable the confirm button
+      if (confirmButton) {
+        confirmButton.disabled = true;
+      }
+
+      // Add event listeners to both inputs
+      const validateInputs = () => {
+        if (confirmButton) {
+          confirmButton.disabled = !(filterTypeSelect.value && filterDateInput.value);
+        }
+      };
+
+      filterTypeSelect.addEventListener('change', validateInputs);
+      filterDateInput.addEventListener('input', validateInputs);
     },
     preConfirm: () => {
       const filterType = (document.getElementById('filterTypeSelect') as HTMLSelectElement).value;
       const date = (document.getElementById('filterDateInput') as HTMLInputElement).value;
+      
+      if (!filterType || !date) {
+        Swal.showValidationMessage('Please select both filter type and date');
+        return false;
+      }
+      
       return { filterType, date };
     }
   }).then((result) => {

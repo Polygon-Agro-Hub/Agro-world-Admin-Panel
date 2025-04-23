@@ -267,7 +267,7 @@ selectedInvoiceIdAdditional: number = 0;
 
 
   back(): void {
-    this.router.navigate(['/procurement']);
+    this.router.navigate(['/dispatch']);
   }
 
 

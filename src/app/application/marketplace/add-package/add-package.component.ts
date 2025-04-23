@@ -34,7 +34,10 @@ export class AddPackageComponent implements OnInit {
 
   getCropProductData() {
     this.marketSrv.getProuctCropVerity().subscribe((res) => {
-      this.cropObj = res;
+      this.cropObj = res.sort(
+        (a: { cropNameEnglish: string }, b: { cropNameEnglish: any }) =>
+          a.cropNameEnglish.localeCompare(b.cropNameEnglish)
+      );
     });
   }
 
@@ -43,12 +46,14 @@ export class AddPackageComponent implements OnInit {
       (crop) => crop.cropId === +this.inputPackageObj.cID
     );
     if (selectedCrop) {
-      this.selectedVarieties = selectedCrop.variety;
+      // Sort varieties by displayName in ascending order
+      this.selectedVarieties = selectedCrop.variety.sort((a, b) =>
+        a.displayName.localeCompare(b.displayName)
+      );
     } else {
       this.selectedVarieties = [];
     }
   }
-
   onPriceChange() {
     const selectedVariety = this.selectedVarieties.find(
       (variety) => variety.id === +this.inputPackageObj.mpItemId
@@ -61,6 +66,7 @@ export class AddPackageComponent implements OnInit {
   }
 
   onAdd() {
+    // Check for required fields
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
@@ -84,14 +90,33 @@ export class AddPackageComponent implements OnInit {
     }
 
     // Convert input quantity to kg if grams are selected
-    const quantityInKg = this.inputPackageObj.qtytype === 'g' 
-      ? this.inputPackageObj.quantity / 1000 
-      : this.inputPackageObj.quantity;
+    const quantityInKg =
+      this.inputPackageObj.qtytype === 'g'
+        ? this.inputPackageObj.quantity / 1000
+        : this.inputPackageObj.quantity;
+
+    // Check if item already exists in the package
+    const existingItemIndex = this.packageObj.Items.findIndex(
+      (item) => item.mpItemId === this.inputPackageObj.mpItemId
+    );
+
+    if (existingItemIndex !== -1) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Item Already Exists',
+        html: `This item (${this.selectedPrice.displayName}) is already in the package.`,
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
     // Calculate initial discount percentage
-    const initialDiscountPercentage = this.selectedPrice.normalPrice > 0 
-      ? Math.round((this.selectedPrice.discount / this.selectedPrice.normalPrice) * 100) 
-      : 0;
+    const initialDiscountPercentage =
+      this.selectedPrice.normalPrice > 0
+        ? Math.round(
+            (this.selectedPrice.discount / this.selectedPrice.normalPrice) * 100
+          )
+        : 0;
 
     this.packageObj.Items.push({
       displayName: this.selectedPrice.displayName,
@@ -113,14 +138,14 @@ export class AddPackageComponent implements OnInit {
   toggleUnitType(index: number, unit: 'g' | 'Kg') {
     const item = this.packageObj.Items[index];
     if (item.qtytype === unit) return;
-    
+
     item.qtytype = unit;
   }
 
   onQuantityChange(index: number, event: any) {
     const newValue = parseFloat(event.target.value);
     const item = this.packageObj.Items[index];
-    
+
     if (!isNaN(newValue)) {
       if (item.qtytype === 'g') {
         // Convert grams to kg for storage
@@ -129,7 +154,7 @@ export class AddPackageComponent implements OnInit {
         // Keep kg value as is
         item.quantity = newValue;
       }
-      
+
       // Ensure minimum quantity (100g or 0.1kg)
       if (item.quantity < 0.1) {
         item.quantity = 0.1;
@@ -145,7 +170,7 @@ export class AddPackageComponent implements OnInit {
   onDiscountPercentageChange(index: number, event: any) {
     const newValue = parseInt(event.target.value);
     const item = this.packageObj.Items[index];
-    
+
     if (!isNaN(newValue)) {
       // Ensure value stays between 0-100
       if (newValue >= 0 && newValue <= 100) {
@@ -171,7 +196,7 @@ export class AddPackageComponent implements OnInit {
   decrementQuantity(index: number) {
     const item = this.packageObj.Items[index];
     const minValue = 0.1; // Minimum 100g or 0.1kg
-    
+
     if (item.quantity > minValue) {
       if (item.qtytype === 'g') {
         item.quantity -= 0.1; // Subtract 100g (0.1kg)
@@ -250,10 +275,13 @@ export class AddPackageComponent implements OnInit {
     ) {
       let errorMessage = '';
 
-      if (!this.packageObj.displayName) errorMessage += 'Display Package Name is required.<br>';
-      if (!this.packageObj.description) errorMessage += 'Description is required.<br>';
+      if (!this.packageObj.displayName)
+        errorMessage += 'Display Package Name is required.<br>';
+      if (!this.packageObj.description)
+        errorMessage += 'Description is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
-      if (this.packageObj.Items.length === 0) errorMessage += 'Please add at least one product item.<br>';
+      if (this.packageObj.Items.length === 0)
+        errorMessage += 'Please add at least one product item.<br>';
 
       Swal.fire({
         icon: 'error',

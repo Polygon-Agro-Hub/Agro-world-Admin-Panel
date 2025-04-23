@@ -61,16 +61,81 @@ export class SalesTargetComponent implements OnInit {
     return selectedDate >= today ? null : { pastDate: true };
   }
 
+  // saveTarget() {
+  //   this.validateTargetInput();
+  //   if (this.newTargetValue <= 0) {
+  //     Swal.fire('Warning', 'Target value can not be 0.', 'warning');
+  //     return;
+  //   }
+
+  //   Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: 'Do you want to save this target?',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes, Save it!',
+  //     cancelButtonText: 'Cancel',
+  //     reverseButtons: true,
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
+  //         (response) => {
+  //           if (response.status) {
+  //             Swal.fire({
+  //               title: 'Success!',
+  //               text: response.message,
+  //               icon: 'success',
+  //               confirmButtonText: 'OK',
+  //             });
+  //             this.newTargetValue = 0;
+  //             this.fetchAllSalesAgents();
+  //           } else {
+  //             Swal.fire({
+  //               title: 'Error!',
+  //               text: response.message,
+  //               icon: 'error',
+  //               confirmButtonText: 'OK',
+  //             });
+  //             this.fetchAllSalesAgents();
+  //           }
+  //         },
+  //         (error) => {
+  //           console.error('Error saving target:', error);
+  //           Swal.fire({
+  //             title: 'Failed!',
+  //             text: 'Failed to save target.',
+  //             icon: 'error',
+  //             confirmButtonText: 'OK',
+  //           });
+  //         }
+  //       );
+  //     }
+  //   });
+  // }
+
   saveTarget() {
+    // First validate the input
     this.validateTargetInput();
-    if (this.newTargetValue <= 0) {
-      Swal.fire('Warning', 'Target value can not be 0.', 'warning');
-      return;
+
+    // Check for invalid values (0, empty, or NaN)
+    if (
+      !this.newTargetValue ||
+      this.newTargetValue <= 0 ||
+      isNaN(this.newTargetValue)
+    ) {
+      Swal.fire({
+        title: 'Invalid Target',
+        text: 'Target value must be greater than 0. Please enter a valid target.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return; // Exit the function early
     }
 
+    // Only proceed with save if value is valid
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to save this target?',
+      text: `Do you want to save the target of ${this.newTargetValue}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
@@ -96,7 +161,6 @@ export class SalesTargetComponent implements OnInit {
                 icon: 'error',
                 confirmButtonText: 'OK',
               });
-              this.fetchAllSalesAgents();
             }
           },
           (error) => {
@@ -204,16 +268,17 @@ export class SalesTargetComponent implements OnInit {
   }
 
   validateTargetInput() {
-    // Round to nearest integer if decimal was somehow entered
+    // If value is not a number, set to 0
+    if (isNaN(this.newTargetValue)) {
+      this.newTargetValue = 0;
+      return;
+    }
+
+    // Round to nearest integer
     this.newTargetValue = Math.round(this.newTargetValue);
 
     // Ensure minimum value of 1
     if (this.newTargetValue < 1) {
-      this.newTargetValue = 1;
-    }
-
-    // If somehow NaN (when user clears input)
-    if (isNaN(this.newTargetValue)) {
       this.newTargetValue = 0;
     }
   }

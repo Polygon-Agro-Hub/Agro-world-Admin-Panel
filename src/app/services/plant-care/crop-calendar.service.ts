@@ -178,8 +178,10 @@ export class CropCalendarService {
     let url = `${this.apiUrl}crop-calendar/get-all-crop-groups?page=${page}&limit=${limit}`;
 
     // Add search parameter if cropNameEnglish is provided
-    if (cropNameEnglish.trim()) {
-      url += `&cropNameEnglish=${encodeURIComponent(cropNameEnglish)}`;
+    if (cropNameEnglish) {
+      console.log(cropNameEnglish);
+      
+      url += `&searchText=${cropNameEnglish}`;
     }
 
     return this.http.get<{ items: NewCropGroup[]; total: number }>(url, {

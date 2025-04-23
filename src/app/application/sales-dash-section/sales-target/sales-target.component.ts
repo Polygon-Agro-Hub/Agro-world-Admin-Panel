@@ -12,12 +12,22 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-sales-target',
   standalone: true,
-  imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule, ReactiveFormsModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    NgxPaginationModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+  ],
   templateUrl: './sales-target.component.html',
   styleUrl: './sales-target.component.css',
 })
 export class SalesTargetComponent implements OnInit {
-
+  loading: any;
+  resetFilters() {
+    throw new Error('Method not implemented.');
+  }
   // targetForm: FormGroup;
   currentDailyTarget!: number;
   newTargetValue: number = 0;
@@ -33,18 +43,13 @@ export class SalesTargetComponent implements OnInit {
   searchText: string = '';
   selectDate: string = '';
   totalTarget!: number;
-  agentCount:number = 0;
+  agentCount: number = 0;
 
-  status = [
-    { name: 'Completed' },
-    { name: 'Pending' },
-    { name: 'Exceeded' },
-
-  ];
+  status = [{ name: 'Completed' }, { name: 'Pending' }, { name: 'Exceeded' }];
 
   constructor(
     private fb: FormBuilder,
-    private salesDashSrv: SalesDashService,
+    private salesDashSrv: SalesDashService
   ) {}
 
   ngOnInit(): void {
@@ -60,22 +65,34 @@ export class SalesTargetComponent implements OnInit {
     return selectedDate >= today ? null : { pastDate: true };
   }
 
-
-
   saveTarget() {
-    if(this.newTargetValue === 0){
-      Swal.fire('Warning','Target value can not be 0.', 'warning')
-      return;
+    // First validate the input
+    this.validateTargetInput();
+
+    // Check for invalid values (0, empty, or NaN)
+    if (
+      !this.newTargetValue ||
+      this.newTargetValue <= 0 ||
+      isNaN(this.newTargetValue)
+    ) {
+      Swal.fire({
+        title: 'Invalid Target',
+        text: 'Target value must be greater than 0. Please enter a valid target.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return; // Exit the function early
     }
 
+    // Only proceed with save if value is valid
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to save this target?',
+      text: `Do you want to save the target of ${this.newTargetValue}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'Cancel',
-      reverseButtons: true
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
@@ -85,7 +102,7 @@ export class SalesTargetComponent implements OnInit {
                 title: 'Success!',
                 text: response.message,
                 icon: 'success',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
               });
               this.newTargetValue = 0;
               this.fetchAllSalesAgents();
@@ -94,9 +111,8 @@ export class SalesTargetComponent implements OnInit {
                 title: 'Error!',
                 text: response.message,
                 icon: 'error',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
               });
-              this.fetchAllSalesAgents();
             }
           },
           (error) => {
@@ -105,63 +121,126 @@ export class SalesTargetComponent implements OnInit {
               title: 'Failed!',
               text: 'Failed to save target.',
               icon: 'error',
-              confirmButtonText: 'OK'
+              confirmButtonText: 'OK',
             });
           }
         );
+      } else {
+        // Add this else block to clear the input when canceled
+        this.newTargetValue = 0;
       }
     });
   }
 
+  fetchAllSalesAgents(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchText,
+    status: string = this.selectStatus,
+    date: string = this.selectDate
+  ) {
+    this.salesDashSrv
+      .getAllSalesAgents(page, limit, search, status, date)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
 
- 
-
-
-
-  fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.selectStatus, date: string = this.selectDate) {
-    this.salesDashSrv.getAllSalesAgents(page, limit, search, status, date).subscribe((res) => {
-
-      console.log(res);
-
-      this.totalTarget = res.totalTarget.targetValue
-      this.agentsArr = res.items;
-      this.totalItems = res.total;
-      this.agentCount = res.items.length === undefined ? 0 : res.items.length
-      
-      if (res.items.length === 0) {
-        this.hasData = false;
-      }
-    });
+          this.totalTarget = res.totalTarget
+            ? Math.round(res.totalTarget.targetValue)
+            : 0;
+          this.agentsArr = res.items || [];
+          this.totalItems = res.total || 0;
+          this.agentCount = this.agentsArr.length;
+        },
+        error: (err) => {
+          console.error('Error fetching agents:', err);
+          this.agentsArr = [];
+          this.totalItems = 0;
+          this.agentCount = 0;
+          this.totalTarget = 0;
+        },
+      });
   }
-
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   onSearch() {
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   offSearch() {
-
     this.searchText = '';
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   filterStatus() {
     if (!this.selectStatus) {
       this.selectStatus = ''; // Ensure it's always an empty string
     }
-    console.log("Selected Status:", this.selectStatus);
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    console.log('Selected Status:', this.selectStatus);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
   }
 
   onDateChange(event: any) {
     this.selectDate = event.target.value || '';
-    console.log("Selected Status:", this.selectDate);
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.selectStatus, this.selectDate);
+    console.log('Selected Status:', this.selectDate);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.selectStatus,
+      this.selectDate
+    );
+  }
+
+  preventDecimalInput(event: KeyboardEvent) {
+    const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
+    if (forbiddenKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  validateTargetInput() {
+    // If value is not a number, set to 0
+    if (isNaN(this.newTargetValue)) {
+      this.newTargetValue = 0;
+      return;
+    }
+
+    // Round to nearest integer
+    this.newTargetValue = Math.round(this.newTargetValue);
+
+    // Ensure minimum value of 1
+    if (this.newTargetValue < 1) {
+      this.newTargetValue = 0;
+    }
   }
 
   // get formControls(): { [key: string]: any } {
@@ -176,10 +255,4 @@ class Agents {
   lastName!: string;
   target!: number;
   targetComplete!: number;
-
 }
-
-
-
-
-

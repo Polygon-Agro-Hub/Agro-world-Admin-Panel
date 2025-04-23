@@ -40,6 +40,8 @@ export class MarketAddProductComponent implements OnInit {
   isVerityVisible = false;
   selectedImage!: any;
 
+  isNoDiscount: boolean = true;
+
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   ngOnInit(): void {
@@ -96,19 +98,49 @@ export class MarketAddProductComponent implements OnInit {
     }
   }
 
-  calculeSalePrice() {
-    if (this.productObj.displaytype === 'AP&SP') {
-      this.productObj.discount = this.productObj.discountValue;
-      this.productObj.salePrice =  this.productObj.normalPrice -this.productObj.discountValue;
-    }else{
-      this.productObj.discount = (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    this.productObj.salePrice =  this.productObj.normalPrice -(this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    }
+  // calculeSalePrice() {
+  //   if (this.productObj.displaytype === 'AP&SP') {
+  //     this.productObj.discount = this.productObj.discountValue;
+  //     this.productObj.salePrice =  this.productObj.normalPrice -this.productObj.discountValue;
+  //   }else{
+  //     this.productObj.discount = (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+  //   this.productObj.salePrice =  this.productObj.normalPrice -(this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+  //   }
 
 
     
-    console.log(this.productObj.salePrice);
+  //   console.log(this.productObj.salePrice);
+  // }
+
+  calculeSalePrice() {
+    console.log('this is sale price ', this.productObj.salePrice);
+    if (this.productObj.displaytype === 'D&AP' || this.productObj.displaytype === 'AP&SP&D') {
+      this.productObj.salePrice =
+      this.productObj.normalPrice -
+      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+
+      this.productObj.discount = (this.productObj.normalPrice * this.productObj.discountedPrice) / 100
+      console.log('this is discount', this.productObj.discount);
+    console.log('this is sale price ', this.productObj.salePrice);
+    }else if (this.productObj.displaytype === 'AP&SP') {
+      this.productObj.discount = this.productObj.normalPrice - this.productObj.salePrice;
+      console.log('this is discount', this.productObj.discount);
+    console.log('this is sale price ',this.productObj.salePrice);
+    console.log('this is normal price ',this.productObj.normalPrice);
+
+    }else {
+      console.log('discount', this.productObj.discount)
+      this.productObj.salePrice = this.productObj.normalPrice - this.productObj.discount
+      console.log('actual price', this.productObj.normalPrice)
+    }
+   
   }
+
+  // calculediscount() {
+  //   console.log('this is sale price ',this.productObj.salePrice);
+    
+   
+  // }
 
 
   dispresent(){
@@ -128,6 +160,22 @@ export class MarketAddProductComponent implements OnInit {
     this.productObj.salePrice = 0;
     this.productObj.discountedPrice = 0;
     this.productObj.discountedPrice = 0;
+  }
+
+  applyDiscount() {
+    this.isNoDiscount = false;
+    console.log('discointe', this.isNoDiscount);
+  }
+
+  compaireDiscount(){
+    this.productObj.displaytype='';
+    this.productObj.discount= 0.00;
+    this.productObj.discountedPrice= 0.00;
+    console.log(this.productObj.discount);
+    this.isNoDiscount = true;
+    this.productObj.salePrice = this.productObj.normalPrice - this.productObj.discount
+    console.log('discointe', this.productObj.salePrice);
+    console.log('discointe', this.isNoDiscount);
   }
 
   // displayType
@@ -152,6 +200,10 @@ export class MarketAddProductComponent implements OnInit {
     });
   }
 
+  seeCategory() {
+    console.log('cateogy', this.productObj.category)
+  }
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
@@ -161,8 +213,27 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.productObj)
     this.updateTags();
+
+    if (this.templateKeywords().length === 0) {
+      Swal.fire(
+        'Warning',
+        'Please add at least one keyword before submitting.',
+        'warning'
+      );
+      return;
+    }
     console.log(this.productObj.promo);
+
+    if (this.productObj.salePrice <= 0)  {
+      Swal.fire(
+        'Invalid Value',
+        'sale Price must be greater than 0, check the discount you applied',
+        'warning'
+      );
+      return;
+    }
 
     if (this.productObj.promo) {
       if (
@@ -257,6 +328,10 @@ export class MarketAddProductComponent implements OnInit {
       this.announcer.announce(`removed ${keyword} from template form`);
       return [...keywords];
     });
+  }
+
+  back(): void {
+    this.router.navigate(['/market/action']);
   }
 }
 

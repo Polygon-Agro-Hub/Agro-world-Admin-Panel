@@ -113,11 +113,27 @@ export class MarketEditProductComponent implements OnInit {
   }
 
   onCancel() {
-    this.productObj = new MarketPrice();
-    this.selectedVarieties = [];
-    this.isVerityVisible = false;
-    this.templateKeywords.update(() => []);
-    this.updateTags();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productObj = new MarketPrice();
+        this.selectedVarieties = [];
+        this.isVerityVisible = false;
+        this.templateKeywords.update(() => []);
+        this.updateTags();
+        this.navigatePath('/market/action/view-products-list');
+      }
+    });
+  }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 
   private updateTags() {
@@ -172,7 +188,7 @@ export class MarketEditProductComponent implements OnInit {
           Swal.fire('Success', 'Product Created Successfully', 'success');
           this.router.navigate(['/market/action/view-products-list']);
 
-          this.onCancel();
+          
         } else {
           Swal.fire('Error', 'Product Creation Failed', 'error');
         }

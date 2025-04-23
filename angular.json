@@ -29,9 +29,7 @@
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": false,
-            "ssr": false,
-            "baseHref": "/admin/",
-            "deployUrl": "/admin/"
+            "ssr": false
           },
           "configurations": {
             "production": {
@@ -53,9 +51,7 @@
                   "maximumError": "40kb"
                 }
               ],
-              "outputHashing": "all",
-              "baseHref": "/admin/",
-              "deployUrl": "/admin/"
+              "outputHashing": "all"
             },
             "development": {
               "fileReplacements": [
@@ -66,9 +62,7 @@
               ],
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "baseHref": "/admin/",
-              "deployUrl": "/admin/"
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"

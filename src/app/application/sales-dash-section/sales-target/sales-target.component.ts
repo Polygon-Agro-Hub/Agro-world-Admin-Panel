@@ -24,6 +24,10 @@ import Swal from 'sweetalert2';
   styleUrl: './sales-target.component.css',
 })
 export class SalesTargetComponent implements OnInit {
+  loading: any;
+  resetFilters() {
+    throw new Error('Method not implemented.');
+  }
   // targetForm: FormGroup;
   currentDailyTarget!: number;
   newTargetValue: number = 0;
@@ -137,19 +141,24 @@ export class SalesTargetComponent implements OnInit {
   ) {
     this.salesDashSrv
       .getAllSalesAgents(page, limit, search, status, date)
-      .subscribe((res) => {
-        console.log(res);
+      .subscribe({
+        next: (res) => {
+          console.log(res);
 
-        // Convert to integer using parseInt() or Math.round()
-        this.totalTarget = Math.round(res.totalTarget.targetValue); // or parseInt(res.totalTarget.targetValue, 10)
-
-        this.agentsArr = res.items;
-        this.totalItems = res.total;
-        this.agentCount = res.items.length === undefined ? 0 : res.items.length;
-
-        if (res.items.length === 0) {
-          this.hasData = false;
-        }
+          this.totalTarget = res.totalTarget
+            ? Math.round(res.totalTarget.targetValue)
+            : 0;
+          this.agentsArr = res.items || [];
+          this.totalItems = res.total || 0;
+          this.agentCount = this.agentsArr.length;
+        },
+        error: (err) => {
+          console.error('Error fetching agents:', err);
+          this.agentsArr = [];
+          this.totalItems = 0;
+          this.agentCount = 0;
+          this.totalTarget = 0;
+        },
       });
   }
 

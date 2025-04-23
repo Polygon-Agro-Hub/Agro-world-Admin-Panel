@@ -19,10 +19,6 @@
         (keydown)="preventDecimalInput($event)"
         (blur)="validateTargetInput()"
       />
-      <!-- <p *ngIf="formControls['targetValue'].invalid && formControls['targetValue'].touched" class="text-red-500">
-      {{ formControls['targetValue'].errors?.required ? 'Target value is required.' : '' }}
-      {{ formControls['targetValue'].errors?.min ? 'Target must be at least 1.' : '' }}
-      </p> -->
     </div>
 
     <!-- Submit Button -->
@@ -144,105 +140,148 @@
       </div>
     </div>
   </div>
-  <div>
-    <table
-      class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
-    >
-      <thead>
-        <tr>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            No
-          </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            EMP ID
-          </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            First Name
-          </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Last Name
-          </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Target Completion
-          </th>
-          <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
-            Status
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="border-b border-gray-200 dark:border-[#4B555A]"
-          *ngFor="
-            let item of agentsArr
-              | paginate
-                : {
-                    itemsPerPage: itemsPerPage,
-                    currentPage: page,
-                    totalItems: totalItems
-                  };
-            let i = index
-          "
-        >
-          <td class="py-3 dark:text-textDark text-center">
-            {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }}
-          </td>
-          <td class="py-3 dark:text-textDark text-center">{{ item.empId }}</td>
-          <td class="py-3 dark:text-textDark text-center">
-            {{ item.firstName }}
-          </td>
-          <td class="py-3 dark:text-textDark text-center">
-            {{ item.lastName }}
-          </td>
-          <td class="py-3 dark:text-textDark text-center">
-            {{ item.targetComplete }}/{{ totalTarget }}
-          </td>
-          <td class="py-3 dark:text-textDark text-center">
-            <span
-              *ngIf="item.targetComplete < totalTarget"
-              class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 w-24"
-            >
-              Pending
-            </span>
-            <span
-              *ngIf="item.targetComplete === totalTarget"
-              class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 w-24"
-            >
-              Completed
-            </span>
-            <span
-              *ngIf="item.targetComplete > totalTarget"
-              class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 w-24"
-            >
-              Exceeded
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center py-12">
+    <div
+      class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+    ></div>
   </div>
-  <div class="flex items-center justify-end mr-5 dark:bg-[#262f45]">
-    <pagination-controls
-      (pageChange)="onPageChange($event)"
-      [responsive]="true"
-      [previousLabel]="'Previous'"
-      [nextLabel]="'Next'"
-      [screenReaderPaginationLabel]="'Pagination'"
-      [screenReaderPageLabel]="'page'"
-      [screenReaderCurrentLabel]="'Youre on page'"
-    >
-    </pagination-controls>
+
+  <!-- Content Area -->
+  <div *ngIf="!loading">
+    <div *ngIf="agentsArr.length > 0; else noDataFound">
+      <table
+        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      >
+        <thead>
+          <tr>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              No
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              EMP ID
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              First Name
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Last Name
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Target Completion
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+            *ngFor="
+              let item of agentsArr
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            "
+          >
+            <td class="py-3 dark:text-textDark text-center">
+              {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }}
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              {{ item.empId }}
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              {{ item.firstName }}
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              {{ item.lastName }}
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              {{ item.targetComplete }}/{{ totalTarget }}
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              <span
+                *ngIf="item.targetComplete < totalTarget"
+                class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-1 w-24"
+              >
+                Pending
+              </span>
+              <span
+                *ngIf="item.targetComplete === totalTarget"
+                class="bg-[#B7FFBE] text-[#02BB3D] text-center rounded-lg px-4 py-1 w-24"
+              >
+                Completed
+              </span>
+              <span
+                *ngIf="item.targetComplete > totalTarget"
+                class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-5 py-1 w-24"
+              >
+                Exceeded
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="flex items-center justify-end mr-5 dark:bg-[#262f45] mt-4">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        ></pagination-controls>
+      </div>
+    </div>
+
+    <ng-template #noDataFound>
+      <div class="flex flex-col items-center justify-center py-12">
+        <div class="text-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-16 w-16 mx-auto text-gray-400 mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h3
+            class="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2"
+          >
+            No Agents Found
+          </h3>
+          <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+            No agents match your search criteria. Try adjusting your search or
+            filters.
+          </p>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>

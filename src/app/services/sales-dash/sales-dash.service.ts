@@ -76,6 +76,7 @@ export class SalesDashService {
     paymentStatus: string,
     deliveryType: string,
     searchText: string = '',
+    date: string
    
   ): Observable<any> {
     const headers = new HttpHeaders({
@@ -102,6 +103,10 @@ export class SalesDashService {
 
     if (searchText) {
       url += `&searchText=${searchText}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
     }
     return this.http.get<any>(url, { headers });
   }

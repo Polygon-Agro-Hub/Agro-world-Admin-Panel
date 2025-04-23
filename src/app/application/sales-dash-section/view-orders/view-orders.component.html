@@ -20,7 +20,7 @@
           </h2>
         </div>
         <div class="flex items-center gap-3">
-          <div>
+          <!-- <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [options]="deliveryTypeArr"
@@ -32,7 +32,13 @@
               [(ngModel)]="deliveryTypeFilter"
               (onChange)="applydeliveryTypeFilters()"
             />
+          </div> -->
+          <div class="flex items-center gap-2">
+            <input id="toDate" type="date"
+              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64"
+              placeholder="Delivery Date" [(ngModel)]="date" (change)="dateFilter()" />
           </div>
+
 
           <div>
             <p-dropdown
@@ -168,17 +174,22 @@
             >
               Order Time
             </th>
+            <th
+              class="font-normal text-textLight dark:text-textDark text-center"
+            >
+              Delivery date
+            </th>
 
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Schedule
             </th>
-            <th
+            <!-- <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Schedule
-            </th>
+            </th> -->
 
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -245,14 +256,17 @@
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.formattedCreatedDate }}
             </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.scheduleDateFormattedSL }}
+            </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.deliveryType }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <!-- <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.timeSlot }}
-            </td>
+            </td> -->
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.paymentMethod }}
             </td>
@@ -261,12 +275,12 @@
               <div>
                 <span
                   [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
                       item.paymentStatus === 1,
-                    'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
                       item.paymentStatus === 0
                   }"
-                  class="inline-block font-medium rounded-2xl min-w-24 px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center"
                 >
                   {{ item.paymentStatus == 1 ? "Paid" : "Pending" }}
                 </span>
@@ -274,7 +288,8 @@
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.fullTotal - item.fullDiscount }}
+              {{ item.fullTotal - item.fullDiscount | number:'1.2-2' }}
+
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
@@ -282,17 +297,17 @@
                 <span
                   [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
-                      item.orderStatus === 'Assigned',
+                      item.orderStatus === 'On the way',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
                       item.orderStatus === 'Delivered',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-3xl':
-                      item.orderStatus === 'Failed',
+                      item.orderStatus === 'Cancelled',
                     'font-bold px-3 py-1 text-sm bg-[#CFE1FF] text-[#3B82F6] rounded-3xl':
                       item.orderStatus === 'Processing',
                     'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
-                      item.orderStatus === 'Cancelled'
+                      item.orderStatus === 'Ordered'
                   }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center"
                 >
                   {{ item.orderStatus }}
                 </span>

@@ -29,12 +29,19 @@ export class MarketEditProductComponent implements OnInit {
   announcer = inject(LiveAnnouncer);
   productObj: MarketPrice = new MarketPrice();
 
+  discountPercentage: number = 0.00;
+
+  isDisplayNameOnlyNumbers: boolean = false;
+
+
   productId!: number;
 
   cropsObj: Crop[] = [];
   selectedVarieties!: Variety[];
   isVerityVisible = false;
   selectedImage!: any;
+
+  isNoDiscount: boolean = false;
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -56,8 +63,17 @@ export class MarketEditProductComponent implements OnInit {
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.onCropChange();
-      this.productObj.varietyId = res.cropId;
+      // this.productObj.varietyId = res.cropId;
+      console.log('product object', this.productObj)
       this.templateKeywords.update(() => res.tags || []);
+      if (res.normalPrice && res.discount) {
+        this.discountPercentage = this.calculateDiscountPercentage(
+          res.normalPrice,
+          res.discount
+        );
+      } else {
+        this.discountPercentage = 0.00; // Default to 0 if no discount
+      }
       this.calculeSalePrice();
       if (res.promo) {
         this.productObj.promo = true;
@@ -66,6 +82,13 @@ export class MarketEditProductComponent implements OnInit {
       }
     });
   }
+
+  calculateDiscountPercentage(normalPrice: number, discountAmount: number): number {
+    console.log(discountAmount);
+    if (normalPrice <= 0) return 0;
+    const percentage = (discountAmount / normalPrice) * 100;
+    return parseFloat(percentage.toFixed(2)); // Ensures 2 decimal places
+}
 
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
@@ -105,11 +128,18 @@ export class MarketEditProductComponent implements OnInit {
 
   calculeSalePrice() {
     this.productObj.discount =
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    this.productObj.salePrice =
+      (this.productObj.normalPrice * this.discountPercentage) / 100;
+    this.productObj.discountedPrice =
       this.productObj.normalPrice -
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    console.log(this.productObj.salePrice);
+      (this.productObj.normalPrice * this.discountPercentage) / 100;
+    console.log(this.productObj.discountedPrice);
+  }
+
+  calculeSalePriceForDiscountValue() {
+  
+    this.productObj.discountedPrice =
+      this.productObj.normalPrice - this.productObj.discount;
+    console.log(this.productObj.discountedPrice);
   }
 
   onCancel() {
@@ -127,9 +157,62 @@ export class MarketEditProductComponent implements OnInit {
   onSubmit() {
     this.updateTags();
     console.log(this.productObj.promo);
+    console.log('this is product object', this.productObj)
+
+    if (this.productObj.startValue <= 0) {
+      Swal.fire(
+        'Invalid Value',
+        'Starting Value must be greater than 0',
+        'warning'
+      );
+      return;
+    }
+  
+    // Check if changeby is invalid
+    if (this.productObj.changeby <= 0) {
+      Swal.fire(
+        'Invalid Value',
+        'Change By value must be greater than 0',
+        'warning'
+      );
+      return;
+    }
+
+    if (this.productObj.normalPrice <= 0) {
+      Swal.fire(
+        'Invalid Value',
+        'Actual value must be greater than 0',
+        'warning'
+      );
+      return;
+    }
+
+    if (this.discountPercentage < 0 || (!this.isNoDiscount && this.discountPercentage === 0)) {
+      Swal.fire(
+        'Invalid Value',
+        this.discountPercentage < 0
+          ? 'Discount percentage cannot be less than 0'
+          : 'Discount percentage must be greater than 0',
+        'warning'
+      );
+      return;
+    }
+
+
+    if (this.productObj.discount < 0 || (!this.isNoDiscount && this.productObj.discount === 0)) {
+      Swal.fire(
+        'Invalid Value',
+        this.productObj.discount < 0
+          ? 'Discount value cannot be less than 0'
+          : 'Discount value must be greater than 0',
+        'warning'
+      );
+      return;
+    }
 
     if (this.productObj.promo) {
       if (
+        this.isDisplayNameOnlyNumbers ||
         !this.productObj.category ||
         !this.productObj.cropName ||
         !this.productObj.varietyId ||
@@ -137,18 +220,19 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        !this.productObj.discountedPrice ||
-        !this.productObj.salePrice
+        !this.productObj.discountedPrice
+        // !this.productObj.salePrice
       ) {
         Swal.fire(
           'Warning',
-          'Please fill in all the required fields',
+          'Please fill in all the required fields correctly',
           'warning'
         );
         return;
       }
     } else {
       if (
+        this.isDisplayNameOnlyNumbers ||
         !this.productObj.category ||
         !this.productObj.cropName ||
         !this.productObj.varietyId ||
@@ -159,7 +243,7 @@ export class MarketEditProductComponent implements OnInit {
       ) {
         Swal.fire(
           'Warning',
-          'Please fill in all the required fields',
+          'Please fill in all the required fields correctly',
           'warning'
         );
         return;
@@ -217,6 +301,28 @@ export class MarketEditProductComponent implements OnInit {
       return [...keywords];
     });
   }
+
+
+  compaireDiscount(){
+    this.productObj.displaytype='';
+    this.productObj.discount= 0.00;
+    this.discountPercentage= 0.00;
+    console.log(this.productObj.discount);
+    this.isNoDiscount = true;
+    this.productObj.discountedPrice = this.productObj.normalPrice - this.productObj.discount
+    console.log('discointe', this.productObj.discountedPrice);
+  }
+
+  
+
+validateDisplayName() {
+  if (this.productObj.cropName) {
+    // Check if the display name contains only digits
+    this.isDisplayNameOnlyNumbers = /^\d+$/.test(this.productObj.cropName);
+  } else {
+    this.isDisplayNameOnlyNumbers = false;
+  }
+}
 }
 
 class Crop {
@@ -229,8 +335,8 @@ class MarketPrice {
   cropName!: string;
   varietyId!: number;
   displayName!: string;
-  normalPrice: number = 0;
-  discountedPrice: number = 0;
+  normalPrice!: number;
+  discountedPrice!: number;
   promo: boolean = false;
   unitType!: string;
   startValue!: number;
@@ -240,8 +346,8 @@ class MarketPrice {
 
   selectId!: number;
   displaytype!: string;
-  salePrice: number = 0;
-  discount: number = 0.0;
+  // salePrice: number = 0;
+  discount!: number;
 }
 
 class Variety {

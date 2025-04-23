@@ -839,8 +839,8 @@
             <input
               formControlName="accHolderName"
               id="accHolderName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
             />
             <div
               *ngIf="
@@ -865,8 +865,8 @@
               formControlName="accNumber"
               id="accNumber"
               type="number"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
             />
             <div
               *ngIf="
@@ -885,25 +885,21 @@
             </div>
           </div>
 
+          <!-- Bank Name Dropdown -->
+          <!-- Bank Name Field (converted from dropdown) -->
           <div>
             <label
-              for="bankDropdown"
+              for="bankName"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >
               Bank Name
             </label>
-            <select
+            <input
               formControlName="bankName"
-              id="bankDropdown"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
-              (change)="onBankChange()"
-            >
-              <option [ngValue]="null" disabled>Select a bank</option>
-              <option *ngFor="let bank of banks" [value]="bank.name">
-                {{ bank.name }}
-              </option>
-            </select>
+              id="bankName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
+            />
             <div
               *ngIf="
                 userForm.get('bankName')?.invalid &&
@@ -916,25 +912,20 @@
             </div>
           </div>
 
+          <!-- Branch Name Field (converted from dropdown) -->
           <div>
             <label
-              for="branchDropdown"
+              for="branchName"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >
               Branch Name
             </label>
-            <select
+            <input
               formControlName="branchName"
-              id="branchDropdown"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
-              (change)="onBranchChange()"
-            >
-              <option [ngValue]="null" disabled>Select a branch</option>
-              <option *ngFor="let branch of branches" [value]="branch.name">
-                {{ branch.name }}
-              </option>
-            </select>
+              id="branchName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
+            />
             <div
               *ngIf="
                 userForm.get('branchName')?.invalid &&

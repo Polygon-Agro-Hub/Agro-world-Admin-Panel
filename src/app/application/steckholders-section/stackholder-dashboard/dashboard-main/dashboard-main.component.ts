@@ -39,6 +39,7 @@ export class DashboardMainComponent implements OnInit {
   plantCareRowData: any = {};
 
   isDownloading: boolean = false;
+ currentDate = new Date().toISOString().split('T')[0];
 
   constructor(private stakeholderSrv: StakeholderService) {}
 
@@ -131,11 +132,17 @@ export class DashboardMainComponent implements OnInit {
           'F'
         );
 
+        const currentDate = new Date().toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+
         // Main title
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(colors.black);
-        doc.text('Stakeholder Dashboard Report', 10, 15);
+        doc.text(`Stakeholder Dashboard Report on ${currentDate}`, 10, 15);
 
         // Function to draw a box with centered text
         const drawBox = (

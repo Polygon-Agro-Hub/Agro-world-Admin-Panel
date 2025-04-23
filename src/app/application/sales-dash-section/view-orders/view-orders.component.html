@@ -33,9 +33,9 @@
               (onChange)="applydeliveryTypeFilters()"
             />
           </div> -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 h-8">
             <input id="toDate" type="date"
-              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64"
+              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64 h-8"
               placeholder="Delivery Date" [(ngModel)]="date" (change)="dateFilter()" />
           </div>
 
@@ -81,6 +81,7 @@
               (onChange)="applyOrderStatusFilters()"
             />
           </div>
+          
           <div
             class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
           >
@@ -132,6 +133,8 @@
               </svg>
             </button>
           </div>
+
+
         </div>
       </div>
     </div>

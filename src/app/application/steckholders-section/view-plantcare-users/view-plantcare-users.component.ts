@@ -15,6 +15,7 @@ import { PlantcareUsersService } from "../../../services/plant-care/plantcare-us
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import { PermissionService } from "../../../services/roles-permission/permission.service";
 import { TokenService } from "../../../services/token/services/token.service";
+import { DropdownModule } from "primeng/dropdown";
 
 interface PlantCareUser {
   id: number;
@@ -63,6 +64,7 @@ interface TotalFixed {
     NgxPaginationModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule
   ],
   templateUrl: "./view-plantcare-users.component.html",
   styleUrl: "./view-plantcare-users.component.css",
@@ -90,6 +92,45 @@ export class ViewPlantcareUsersComponent {
   isLoading = false;
   hasData: boolean = true;
 
+  registerStatusFilter = [
+    { status: 'Registered', value: 'Registered' },
+    { status: 'Unregistered', value: 'Unregistered' },
+    
+  ];
+
+  districtFilter = [
+    { status: 'Colombo', value: 'Colombo' },
+    { status: 'Kalutara', value: 'Kalutara' },
+    { status: 'Gampaha', value: 'Gampaha' },
+    { status: 'Kandy', value: 'Kandy' },
+    { status: 'Matale', value: 'Matale' },
+    { status: 'Nuwara Eliya', value: 'Nuwara Eliya' },
+    { status: 'Galle', value: 'Galle' },
+    { status: 'Matara', value: 'Matara' },
+    { status: 'Hambantota', value: 'Hambantota' },
+    { status: 'Jaffna', value: 'Jaffna' },
+    { status: 'Mannar', value: 'Mannar' },
+    { status: 'Vavuniya', value: 'Vavuniya' },
+    { status: 'Kilinochchi', value: 'Kilinochchi' },
+    { status: 'Mullaitivu', value: 'Mullaitivu' },
+    { status: 'Batticaloa', value: 'Batticaloa' },
+    { status: 'Ampara', value: 'Ampara' },
+    { status: 'Trincomalee', value: 'Trincomalee' },
+    { status: 'Badulla', value: 'Badulla' },
+    { status: 'Moneragala', value: 'Moneragala' },
+    { status: 'Kurunegala', value: 'Kurunegala' },
+    { status: 'Puttalam', value: 'Puttalam' },
+    { status: 'Anuradhapura', value: 'Anuradhapura' },
+    { status: 'Polonnaruwa', value: 'Polonnaruwa' },
+    { status: 'Rathnapura', value: 'Rathnapura' },
+    { status: 'Kegalle', value: 'Kegalle' },
+    
+  ];
+
+  regStatus: string = '';
+
+  district: string = '';
+
   constructor(
     public tokenService: TokenService,
     private plantcareService: PlantcareUsersService,
@@ -101,7 +142,7 @@ export class ViewPlantcareUsersComponent {
   fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     this.plantcareService
-      .getAllPlantCareUsers(page, limit, this.searchNIC)
+      .getAllPlantCareUsers(page, limit, this.searchNIC, this.regStatus, this.district)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -121,6 +162,11 @@ export class ViewPlantcareUsersComponent {
   }
 
   ngOnInit() {
+    this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
+  }
+
+  regStatusFil() {
+    console.log(this.regStatus)
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 

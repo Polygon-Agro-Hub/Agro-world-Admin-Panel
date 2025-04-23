@@ -50,6 +50,8 @@ export class PlantcareUsersService {
     page: number,
     limit: number,
     searchNIC: string = "",
+    regStatus: string = "",
+    district: string = "",
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -58,6 +60,14 @@ export class PlantcareUsersService {
     let url = `${this.apiUrl}auth/get-all-users?page=${page}&limit=${limit}`;
     if (searchNIC) {
       url += `&nic=${searchNIC}`;
+    }
+
+    if (regStatus) {
+      url += `&regStatus=${regStatus}`;
+    }
+
+    if (district) {
+      url += `&district=${district}`;
     }
 
     return this.http.get<any>(url, { headers });

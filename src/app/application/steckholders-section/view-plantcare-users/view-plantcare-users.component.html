@@ -59,7 +59,42 @@
           Plant Care Users ({{ this.totalItems }})
         </h2>
       </div>
-      <div class="mr-8">
+
+      <div class="flex items-center gap-3">
+
+        <div>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="registerStatusFilter"
+            [checkmark]="true"
+            optionLabel="status"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="Register Status"
+            [(ngModel)]="regStatus"
+            (onChange)="regStatusFil()"
+          />
+        </div>
+
+
+
+        <div>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="districtFilter"
+            [checkmark]="true"
+            optionLabel="status"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="District"
+            [(ngModel)]="district"
+            (onChange)="regStatusFil()"
+          />
+        </div>
+
+
+
+      
         <div
           class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
         >
@@ -123,7 +158,15 @@
             </svg>
           </button>
         </div>
+
+
+
+
+        
+
       </div>
+
+     
     </div>
 
     <div *ngIf="!hasData" class="text-center py-8">
@@ -152,17 +195,17 @@
               Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               NIC
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Distrct
             </th>
@@ -225,13 +268,13 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.firstName }} {{ item.lastName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.phoneNumber }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.NICnumber }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.district }}
             </td>
             <td

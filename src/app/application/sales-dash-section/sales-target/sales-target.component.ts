@@ -62,7 +62,8 @@ export class SalesTargetComponent implements OnInit {
   }
 
   saveTarget() {
-    if (this.newTargetValue === 0) {
+    this.validateTargetInput();
+    if (this.newTargetValue <= 0) {
       Swal.fire('Warning', 'Target value can not be 0.', 'warning');
       return;
     }
@@ -193,6 +194,28 @@ export class SalesTargetComponent implements OnInit {
       this.selectStatus,
       this.selectDate
     );
+  }
+
+  preventDecimalInput(event: KeyboardEvent) {
+    const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
+    if (forbiddenKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  validateTargetInput() {
+    // Round to nearest integer if decimal was somehow entered
+    this.newTargetValue = Math.round(this.newTargetValue);
+
+    // Ensure minimum value of 1
+    if (this.newTargetValue < 1) {
+      this.newTargetValue = 1;
+    }
+
+    // If somehow NaN (when user clears input)
+    if (isNaN(this.newTargetValue)) {
+      this.newTargetValue = 0;
+    }
   }
 
   // get formControls(): { [key: string]: any } {

@@ -14,6 +14,10 @@
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         [(ngModel)]="newTargetValue"
         name="newTargetValue"
+        step="1"
+        min="1"
+        (keydown)="preventDecimalInput($event)"
+        (blur)="validateTargetInput()"
       />
       <!-- <p *ngIf="formControls['targetValue'].invalid && formControls['targetValue'].touched" class="text-red-500">
       {{ formControls['targetValue'].errors?.required ? 'Target value is required.' : '' }}

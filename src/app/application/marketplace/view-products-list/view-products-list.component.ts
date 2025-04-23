@@ -162,6 +162,10 @@ export class ViewProductsListComponent {
   editProduct(id: number) {
     this.router.navigate([`/market/action/edit-product/${id}`]);
   }
+
+  navigateToAddProduct(): void {
+    this.router.navigate(["/market/action/add-product"]);
+  }
 }
 
 class ProductList {

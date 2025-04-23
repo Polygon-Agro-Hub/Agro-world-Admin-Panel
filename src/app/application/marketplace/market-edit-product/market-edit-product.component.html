@@ -5,17 +5,10 @@
       Edit Product
     </p>
     <div>
-      <button
-        class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
-        (click)="onCancel()"
-      >
+      <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2"
-        type="submit"
-        (click)="onSubmit()"
-      >
+      <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">
         Save
       </button>
     </div>
@@ -23,44 +16,46 @@
 
   <div class="flex flex-row justify-between">
     <!-- form component -->
-    <div
-      class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]"
-    >
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
-        <select
-          id="category"
-          name="category"
+        <select id="category" name="category"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.category"
-        >
+          [(ngModel)]="productObj.category">
           <option selected disabled value="">--Display type--</option>
           <option value="Retail">Retail</option>
           <option value="Retail">WholeSale</option>
         </select>
+
       </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
-        <input
-          type="text"
-          id="cropName"
-          name="cropName"
-          [(ngModel)]="productObj.cropName"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        <input 
+          type="text" 
+          id="cropName" 
+          name="cropName" 
+          [(ngModel)]="productObj.cropName" 
+          required 
+          #displayNameField="ngModel" 
+          (input)="validateDisplayName()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
         />
+      
+        <!-- Validation messages -->
+        <div *ngIf="displayNameField.touched && !productObj.cropName" class="text-red-500 mt-1 text-sm">
+          Display Name is required.
+        </div>
+        <div *ngIf="displayNameField.touched && isDisplayNameOnlyNumbers" class="text-red-500 mt-1 text-sm">
+          Display Name cannot be only numbers.
+        </div>
       </div>
-
       <!-- Crop Selection -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-        <select
-          id="selectId"
-          name="selectId"
+        <select id="selectId" name="selectId"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.selectId"
-          (change)="onCropChange()"
-        >
+          [(ngModel)]="productObj.selectId" (change)="onCropChange()">
           <option selected disabled value="">--- Select Crop ---</option>
           <option *ngFor="let cropItem of cropsObj" [value]="cropItem.cropId">
             {{ cropItem.cropNameEnglish }}
@@ -70,18 +65,11 @@
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-        <select
-          id="variety"
-          name="variety"
+        <select id="variety" name="variety"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.varietyId"
-          (change)="selectVerityImage()"
-        >
+          [(ngModel)]="productObj.varietyId" (change)="selectVerityImage()">
           <option selected disabled>--- Select Variety ---</option>
-          <option
-            *ngFor="let variety of selectedVarieties"
-            [value]="variety.id"
-          >
+          <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
             {{ variety.varietyEnglish }}
           </option>
         </select>
@@ -92,35 +80,17 @@
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input
-              class="w-5 h-5"
-              type="radio"
-              id="withDiscount"
-              name="priceType"
-              [(ngModel)]="productObj.promo"
-              [value]="true"
-            />
-            <label
-              for="withDiscount"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5" type="radio" id="withDiscount" name="priceType" [(ngModel)]="productObj.promo"
+              [value]="true" />
+            <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               With Discount
             </label>
           </div>
           <div class="flex items-center space-x-2">
             <!-- No Discount Radio Button -->
-            <input
-              class="w-5 h-5"
-              type="radio"
-              id="noDiscount"
-              name="priceType"
-              [(ngModel)]="productObj.promo"
-              [value]="false"
-            />
-            <label
-              for="noDiscount"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5" type="radio" id="noDiscount" name="priceType" [(ngModel)]="productObj.promo" (change)="compaireDiscount()"
+              [value]="false" />
+            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               No Discount
             </label>
           </div>
@@ -129,12 +99,8 @@
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
-        <select
-          id="displaytype"
-          name="displaytype"
-          [(ngModel)]="productObj.displaytype"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+        <select id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
+          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
           <option selected></option>
           <option value="D&AP">With Discount and Actual Price</option>
           <option value="AP&SP">With Actual Price and Sale Price</option>
@@ -144,42 +110,63 @@
         </select>
       </div>
 
-      <div class="mb-6" *ngIf="productObj.promo">
+      <!-- <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E]">Discount Percentage *</label>
-        <input
-          type="number"
-          min="0.0"
-          id="discountedPrice"
-          name="discountedPrice"
-          [(ngModel)]="productObj.discountedPrice"
+        <input type="number" min="0.0" id="discountedPrice" name="discountedPrice" [(ngModel)]="discountPercentage"
           (change)="calculeSalePrice()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div> -->
+
+      <!-- Discount input when displaytype is AP&SP -->
+      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
+        <label class="text-[#534E4E]">Discount Value *</label>
+        <input 
+          type="number" 
+          min="0.00" 
+          step="0.01"  
+          id="discountValue" 
+          name="discountValue" 
+          [(ngModel)]="productObj.discount " 
+          required 
+          #discountValueField="ngModel" 
+          (change)="calculeSalePriceForDiscountValue()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
         />
+      
+        <div *ngIf="discountValueField.touched && !productObj.discount" class="text-red-500 mt-1 text-sm">
+          Discount Value is required.
+        </div>
       </div>
+
+      <!-- Discount input when displaytype is NOT AP&SP (default: percentage) -->
+      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype !== 'AP&SP'">
+        <label class="text-[#534E4E]">Discount Percentage *</label>
+        <input type="number" min="0.00" step="0.01" id="discountedPrice" name="discountedPrice" 
+               [(ngModel)]="discountPercentage" required #discountPercentageField="ngModel" 
+               (change)="calculeSalePrice()"
+               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      
+        <div *ngIf="discountPercentageField.touched && !discountPercentage" class="text-red-500 mt-1 text-sm">
+          Discount Percentage is required.
+        </div>
+      </div>
+
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Actual Price *</label>
-        <input
-          type="number"
-          min="0.0"
-          id="normalPrice"
-          name="normalPrice"
-          (change)="calculeSalePrice()"
-          [(ngModel)]="productObj.normalPrice"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <input type="number" min="0.0" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()"
+          [(ngModel)]="productObj.normalPrice" required #actualValueField="ngModel"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="actualValueField.touched && !productObj.normalPrice" class="text-red-500 mt-1 text-sm">
+           Actual Price is required.
+          </div>
       </div>
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input
-          type="number"
-          min="0.0"
-          id="salePrice"
-          [value]="productObj.salePrice"
+        <input type="number" min="0.0" id="salePrice" [value]="productObj.discountedPrice.toFixed(2)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          disabled
-        />
+          disabled />
       </div>
 
       <div class="mb-6">
@@ -187,28 +174,18 @@
         <section>
           <mat-form-field class="w-[100%]">
             <mat-label>tags</mat-label>
-            <mat-chip-grid
-              #templateChipGrid
-              aria-label="Enter template form keywords"
-              [(ngModel)]="templateKeywords"
-            >
+            <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords">
               @for (keyword of templateKeywords(); track keyword) {
               <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
                 {{ keyword }}
-                <button
-                  matChipRemove
-                  aria-label="'remove template form' + keyword"
-                >
+                <button matChipRemove aria-label="'remove template form' + keyword">
                   <mat-icon>cancel</mat-icon>
                 </button>
               </mat-chip-row>
               }
             </mat-chip-grid>
-            <input
-              placeholder="New keyword..."
-              [matChipInputFor]="templateChipGrid"
-              (matChipInputTokenEnd)="addTemplateKeyword($event)"
-            />
+            <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+              (matChipInputTokenEnd)="addTemplateKeyword($event)" />
           </mat-form-field>
         </section>
       </div>
@@ -219,82 +196,109 @@
       <div class="rounded-lg shadow-lg px-12 py-6">
         <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
 
-        <div
-          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl"
-        >
-          <div
-            *ngIf="
-              productObj.displaytype === 'AP&SP' ||
+        <div *ngIf="!isNoDiscount" class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
+
+          <div *ngIf="
+              productObj.displaytype === 'D&AP' ||
               productObj.displaytype === 'AP&SP&D'
             "
             class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
-            style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)"
-          >
-            <p *ngIf="productObj.discountedPrice === 0" class="text-white">
+            style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)">
+            <p *ngIf="discountPercentage === 0" class="text-white">
               #%
             </p>
-            <p *ngIf="productObj.discountedPrice !== 0" class="text-white">
-              {{ productObj.discountedPrice }}%
+            <p *ngIf="discountPercentage !== 0" class="text-white">
+              {{ discountPercentage | number:'1.2-2' }}%
             </p>
             <p class="text-white">off</p>
           </div>
-
-          <!-- <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8"> -->
-          <img
-            *ngIf="productObj.varietyId > 0"
-            [src]="selectedImage"
-            class="w-full h-auto object-contain px-4 py-2 mt-8"
-          />
+         
+          <img *ngIf="productObj.varietyId > 0" [src]="selectedImage"
+            class="w-full h-auto object-contain px-4 py-2 mt-8" />
 
           <p class="text-lg text-black my-2">{{ productObj.cropName }}</p>
 
-          <p
-            *ngIf="
-              (productObj.displaytype === 'D&AP' ||
+          <p *ngIf="
+              ( productObj.displaytype === 'D&AP' ||
+                productObj.displaytype === 'AP&SP' ||
                 productObj.displaytype === 'AP&SP&D') &&
-              productObj.salePrice !== 0
+              productObj.discountedPrice !== 0
+            " class="text-[#00957D] my-1 line-through">
+            Rs.{{ productObj.normalPrice | number:'1.2-2'}}
+          </p>
+          <div *ngIf="
+          (productObj.displaytype === 'AP&SP' ||
+            productObj.displaytype === 'AP&SP&D') &&
+          productObj.discountedPrice !== 0
+        " class="text-xl text-[#00957D] my-1">
+            <p *ngIf="productObj.discountedPrice === 0">
+              Rs.0.00
+            </p>
+            <p *ngIf="productObj.discountedPrice !== 0">
+              Rs. {{ productObj.discountedPrice | number:'1.2-2' }}
+            </p>
+          </div>
+
+          <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
+            <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
+            <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
+          </button>
+        </div>
+
+        <div *ngIf="isNoDiscount" class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
+
+          <!-- <div *ngIf="
+              productObj.displaytype === 'D&AP' ||
+              productObj.displaytype === 'AP&SP&D'
             "
-            class="text-[#00957D] my-1 line-through"
-          >
+            class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
+            style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)">
+            <p *ngIf="discountPercentage === 0" class="text-white">
+              #%
+            </p>
+            <p *ngIf="discountPercentage !== 0" class="text-white">
+              {{ discountPercentage }}%
+            </p>
+            <p class="text-white">off</p>
+          </div> -->
+         
+          <img *ngIf="productObj.varietyId > 0" [src]="selectedImage"
+            class="w-full h-auto object-contain px-4 py-2 mt-8" />
+
+          <p class="text-lg text-black my-2">{{ productObj.cropName }}</p>
+
+          <p 
+            class="text-[#00957D] my-1">
             Rs.{{ productObj.normalPrice }}.00
           </p>
-          <p
-            *ngIf="productObj.salePrice === 0"
-            class="text-xl text-[#00957D] my-1"
-          >
-            Rs.0.00
-          </p>
-          <p
-            *ngIf="productObj.salePrice !== 0"
-            class="text-xl text-[#00957D] my-1"
-          >
-            Rs. {{ productObj.salePrice }}
-          </p>
-          <button
-            class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10"
-          >
+          <!-- <div *ngIf="
+          (productObj.displaytype === 'AP&SP' ||
+            productObj.displaytype === 'AP&SP&D') &&
+          productObj.discountedPrice !== 0
+        " class="text-xl text-[#00957D] my-1">
+            <p *ngIf="productObj.discountedPrice === 0">
+              Rs.0.00
+            </p>
+            <p *ngIf="productObj.discountedPrice !== 0">
+              Rs. {{ productObj.discountedPrice }}
+            </p>
+          </div> -->
+
+          <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
             <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
             <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
           </button>
         </div>
       </div>
 
-      <div
-        class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack"
-      >
+      <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack">
         <p class="text-lg text-balck font-medium mb-5 dark:text-textDark">
           Quantity
         </p>
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Default Unit Type *</label
-          >
-          <select
-            id="unitType"
-            name="unitType"
-            [(ngModel)]="productObj.unitType"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
+          <select id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
+            class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option selected></option>
             <option value="Kg">Kg</option>
             <option value="g">g</option>
@@ -302,31 +306,53 @@
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Starting Value *</label
-          >
-          <input
-            type="number"
-            min="0.0"
-            id="startValue"
-            name="startValue"
-            [(ngModel)]="productObj.startValue"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Starting Value *</label>
+          <input 
+            type="number" 
+            min="0.01" 
+            step="0.01" 
+            id="startValue" 
+            name="startValue" 
+            [(ngModel)]="productObj.startValue" 
+            required 
+            #startValueField="ngModel"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
           />
+        
+          <!-- Validation Error Messages -->
+          <div *ngIf="startValueField.touched && startValueField.errors" class="text-red-500 mt-1 text-sm">
+            <div *ngIf="startValueField.errors?.['required']">
+              Starting Value is required.
+            </div>
+            <div *ngIf="startValueField.errors?.['min']">
+              Starting Value must be greater than 0 (e.g., 0.01).
+            </div>
+          </div>
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Increase/Decrease by *</label
-          >
-          <input
-            type="number"
-            min="0.0"
-            id="changeby"
-            name="changeby"
-            [(ngModel)]="productObj.changeby"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>
+          <input 
+            type="number" 
+            min="0.01" 
+            step="0.01" 
+            id="changeby" 
+            name="changeby" 
+            [(ngModel)]="productObj.changeby" 
+            required 
+            #changebyField="ngModel"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
           />
+        
+          <!-- Validation Error Messages -->
+          <div *ngIf="changebyField.touched && changebyField.errors" class="text-red-500 mt-1 text-sm">
+            <div *ngIf="changebyField.errors?.['required']">
+              Increase/Decrease value is required.
+            </div>
+            <div *ngIf="changebyField.errors?.['min']">
+              Value must be greater than 0 (e.g., 0.01).
+            </div>
+          </div>
         </div>
       </div>
     </div>

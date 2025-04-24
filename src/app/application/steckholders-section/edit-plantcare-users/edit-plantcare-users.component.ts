@@ -89,6 +89,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     private tokenService: TokenService
   ) {
     // Initialize the form with FormBuilder
+
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
@@ -107,10 +108,33 @@ export class EditPlantcareUsersComponent implements OnInit {
       ],
       profileImage: [''],
       accHolderName: [''],
-      accNumber: [''],
+      accNumber: ['', [Validators.pattern(/^[0-9]+$/)]], // Only numbers allowed
       bankName: [''],
       branchName: [''],
     });
+
+    // this.userForm = this.fb.group({
+    //   firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+    //   lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+    //   phoneNumber: [
+    //     '',
+    //     [Validators.required, Validators.pattern(/^\+94\d{9}$/)],
+    //   ],
+    //   NICnumber: [
+    //     '',
+    //     [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[V])$/)],
+    //   ],
+    //   district: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+    //   membership: [
+    //     '',
+    //     [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
+    //   ],
+    //   profileImage: [''],
+    //   accHolderName: [''],
+    //   accNumber: [''],
+    //   bankName: [''],
+    //   branchName: [''],
+    // });
   }
 
   district = [
@@ -146,6 +170,19 @@ export class EditPlantcareUsersComponent implements OnInit {
     { membershipName: 'Gold' },
     { membershipName: 'Diamond' },
   ];
+
+  onlyNumberKey(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Only allow numbers (0-9)
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+    }
+    return true;
+  }
+
+  back(): void {
+    this.router.navigate(['/steckholders/action/farmers']);
+  }
 
   ngOnInit() {
     this.loadBanks();

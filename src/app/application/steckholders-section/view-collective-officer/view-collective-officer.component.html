@@ -182,7 +182,7 @@
           />
         </div>
 
-        <div class="mr-5">
+        <!-- <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="companyArr"
@@ -193,7 +193,7 @@
             [(ngModel)]="statusFilter"
             (onChange)="applyFilters()"
           />
-        </div>
+        </div> -->
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
@@ -309,12 +309,12 @@
               NIC
             </th>
             <th
-            *ngIf="
-              permissionService.hasPermission('View Collection Officer') ||
-              tokenService.getUserDetails().role === '1'
-            "
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          ></th>
+              *ngIf="
+                permissionService.hasPermission('View Collection Officer') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            ></th>
 
             <th
               *ngIf="
@@ -370,13 +370,21 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName ? item.centerName : "---" }}
             </td>
-            <td 
-          class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
-                [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Claim Collection Officer') || tokenService.getUserDetails().role === '1') ? handleClaimButtonClick(item) : null"
-                 
+                  [class.cursor-pointer]="
+                    permissionService.hasPermission(
+                      'Approve Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                  "
+                  (click)="
+                    permissionService.hasPermission(
+                      'Claim Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                      ? handleClaimButtonClick(item)
+                      : null
+                  "
                   [ngClass]="{
                     'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
@@ -387,9 +395,7 @@
                 </span>
               </div>
             </td>
-            <td
-              class="px-4 py-3 text-center"
-            >
+            <td class="px-4 py-3 text-center">
               <div>
                 <span
                   [ngClass]="{
@@ -401,8 +407,18 @@
                       item.status === 'Rejected'
                   }"
                   class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
+                  [class.cursor-pointer]="
+                    permissionService.hasPermission(
+                      'Approve Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                  "
+                  (click)="
+                    permissionService.hasPermission(
+                      'Approve Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                      ? openPopup(item)
+                      : null
+                  "
                 >
                   {{ item.status }}
                 </span>
@@ -416,11 +432,13 @@
               {{ item.nic }}
             </td>
 
-            <td  *ngIf="
-            permissionService.hasPermission('View Collection Officer') ||
-            tokenService.getUserDetails().role === '1'
-          "
-          class="px-4 py-3 text-center">
+            <td
+              *ngIf="
+                permissionService.hasPermission('View Collection Officer') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 text-center"
+            >
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewCollectiveOfficerProfile(item.id)"

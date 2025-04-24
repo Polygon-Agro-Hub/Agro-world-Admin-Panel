@@ -1,61 +1,31 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/steckholders/action'"
-  class="mb-5 text-textLight dark:text-textDark"
->
+<button class="mb-5 text-textLight dark:text-textDark" onclick="window.location.href='/admin/steckholders/action'"
+  class="mb-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button
-  *ngIf="
+<button *ngIf="
     permissionService.hasPermission('Add Collection Officer') ||
     tokenService.getUserDetails().role === '1'
-  "
-  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-  (click)="navigatePath('/steckholders/action/collective-officer/personal')"
->
-  <svg
-    class="w-5 h-5 mr-3"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 12H20M12 4V20"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
+  " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+  (click)="navigatePath('/steckholders/action/collective-officer/personal')">
+  <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
   Add New
 </button>
 
-<div
-  *ngIf="iseditModalOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-  <div
-    class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3"
-  >
-    <h2
-      class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
-    >
+<div *ngIf="iseditModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3">
+    <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
       Claim to a Center
     </h2>
 
     <div class="flex align-middle justify-center items-center">
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-        >Select Center</label
-      >
-      <select
-        name="center"
-        required
-        [(ngModel)]="selectedCenterId"
-        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-      >
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Center</label>
+      <select name="center" required [(ngModel)]="selectedCenterId"
+        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
         <option *ngFor="let center of centerNames" [value]="center.id">
           {{ center.centerName }}
         </option>
@@ -63,48 +33,31 @@
     </div>
 
     <!-- Conditionally show/hide the Select Manager section -->
-    <div
-      *ngIf="selectedOfficer && !selectedOfficer.empId.startsWith('CCM')"
-      class="flex mt-4 align-middle justify-center items-center"
-    >
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-        >Select Manager</label
-      >
-      <select
-        name="email"
-        required
-        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-      >
-        <option
-          *ngFor="let manager of collectionCenterManagerNames"
-          [value]="manager.id"
-        >
+    <div *ngIf="selectedOfficer && !selectedOfficer.empId.startsWith('CCM')"
+      class="flex mt-4 align-middle justify-center items-center">
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
+      <select name="email" required
+        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+        <option *ngFor="let manager of collectionCenterManagerNames" [value]="manager.id">
           {{ manager.firstNameEnglish }} {{ manager.lastNameEnglish }}
         </option>
       </select>
     </div>
 
     <div class="flex justify-center mt-4">
-      <button
-        (click)="editCloseModel()"
-        class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200"
-      >
+      <button (click)="editCloseModel()"
+        class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200">
         Cancel
       </button>
-      <button
-        class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
-        (click)="claimOfficer()"
-      >
+      <button class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
+        (click)="claimOfficer()">
         Claim
       </button>
     </div>
   </div>
 </div>
 
-<div
-  *ngIf="showDisclaimView"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
+<div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
     <div>
       <!-- Icon -->
@@ -122,8 +75,7 @@
           {{ selectedOfficer?.empId }})"
           <span class="font-normal">from center</span> <br />
           <span class="font-semibold text-lg">
-            "{{ selectedOfficer?.centerName }}"?</span
-          >
+            "{{ selectedOfficer?.centerName }}"?</span>
         </p>
 
         <p class="text-red-500 mb-6 italic">
@@ -133,208 +85,157 @@
 
       <!-- Buttons -->
       <div class="flex justify-center gap-4">
-        <button
-          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="confirmDisclaim()"
-        >
+        <button class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="confirmDisclaim()">
           <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
-          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
-            >Discharge</span
-          >
+          <span class="text-light text-whight-700 button-text text-[#6B7D8C]">Discharge</span>
         </button>
-        <button
-          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="closeDisclaimView()"
-        >
+        <button class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="closeDisclaimView()">
           <span class="font-semibold text-white">No,</span> <br />
-          <span class="text-light text-whight-700 button-text text-white"
-            >Go Back</span
-          >
+          <span class="text-light text-whight-700 button-text text-white">Go Back</span>
         </button>
       </div>
     </div>
   </div>
 </div>
 
+
+
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Collection Officers ({{ this.totalItems }})
         </h2>
       </div>
-      <div class="flex items-center">
+
+      
+
+      <div class="flex items-center mr-5">
+
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="jobRole"
+            [options]="statusOptions"
             [checkmark]="true"
-            optionLabel="jobRole"
+            optionLabel="label"
+            optionValue="value"
             [showClear]="true"
-            placeholder="Role"
-            [(ngModel)]="role"
-            (onChange)="applyFilters()"
-          />
+            placeholder="Status"
+            [(ngModel)]="selectStatus"
+            (onChange)="applyStatusFilters()"
+          ></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="companyArr"
+            [options]="centerStatusOptions"
             [checkmark]="true"
-            optionLabel="companyNameEnglish"
+            optionLabel="label"
+            optionValue="value"
             [showClear]="true"
-            placeholder="Company"
-            [(ngModel)]="statusFilter"
-            (onChange)="applyFilters()"
-          />
+            placeholder="Center Status"
+            [(ngModel)]="selectCenterStatus"
+            (onChange)="applyCenterStatusFilters()"
+          ></p-dropdown>
         </div>
-        <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-        >
-          <input
-            type="text"
-            placeholder="Search"
-            [(ngModel)]="searchNIC"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="true" placeholder="Role"
+            [(ngModel)]="role" (onChange)="applyFilters()" />
+        </div>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="companyArr" [checkmark]="true" optionLabel="companyNameEnglish" [showClear]="true"
+            placeholder="Company" [(ngModel)]="statusFilter" (onChange)="applyFilters()" />
+        </div>
+
+
+
+        
+        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+          <input type="text" placeholder="Search By First Name, Center" [(ngModel)]="searchNIC"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
       </div>
     </div>
     <div class="w-full">
-      <table
-        class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
-      >
+      <table class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
             </th>
             <!-- <th class="py-3 font-normal text-gray-500 text-left"></th> -->
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Emp. Id
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               First Name
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Last Name
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Company
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Role
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Center
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Center Status
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Phone
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               NIC
             </th>
-            <th
-            *ngIf="
+            <th *ngIf="
               permissionService.hasPermission('View Collection Officer') ||
               tokenService.getUserDetails().role === '1'
-            "
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          ></th>
+            " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
-            <th
-              *ngIf="
+            <th *ngIf="
                 permissionService.hasPermission('Edit Collection Officer') ||
                 tokenService.getUserDetails().role === '1'
-              "
-              class="py-3 font-normal text-textLight dark:text-textDark text-center"
-            ></th>
-            <th
-              *ngIf="
+              " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th *ngIf="
                 permissionService.hasPermission('Delete Collection Officer') ||
                 tokenService.getUserDetails().role === '1'
-              "
-              class="py-3 font-normal text-textLight dark:text-textDark text-center"
-            ></th>
+              " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let item of collectionOfficers
                 | paginate
                   : {
@@ -343,8 +244,7 @@
                       totalItems: totalItems
                     };
               let i = index
-            "
-          >
+            ">
             <!-- <td class="py-3">
             <img class="profile-pic w-14 h-14 bg-white rounded-full" [src]="'data:image/jpeg;base64,' + item.image"
               alt="Profile Picture" width="50" height="50" />
@@ -370,40 +270,32 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName ? item.centerName : "---" }}
             </td>
-            <td 
-          class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
-                [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
+                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
                   (click)="(permissionService.hasPermission('Claim Collection Officer') || tokenService.getUserDetails().role === '1') ? handleClaimButtonClick(item) : null"
-                 
                   [ngClass]="{
                     'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
                       item.claimStatus === 0
-                  }"
-                >
+                  }">
                   {{ item.claimStatus === 1 ? "Claimed" : "Disclaimed" }}
                 </span>
               </div>
             </td>
-            <td
-              class="px-4 py-3 text-center"
-            >
+            <td class="px-4 py-3 text-center">
               <div>
-                <span
-                  [ngClass]="{
+                <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
                       item.status === 'Not Approved',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg':
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
                   [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
-                >
+                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null">
                   {{ item.status }}
                 </span>
               </div>
@@ -416,82 +308,43 @@
               {{ item.nic }}
             </td>
 
-            <td  *ngIf="
+            <td *ngIf="
             permissionService.hasPermission('View Collection Officer') ||
             tokenService.getUserDetails().role === '1'
-          "
-          class="px-4 py-3 text-center">
-              <button
-                class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                (click)="viewCollectiveOfficerProfile(item.id)"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+          " class="px-4 py-3 text-center">
+              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
             </td>
 
-            <td
-              *ngIf="
+            <td *ngIf="
                 permissionService.hasPermission('Edit Collection Officer') ||
                 tokenService.getUserDetails().role === '1'
-              "
-              class="py-3 text-center"
-            >
-              <button
-                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
-                (click)="editCollectionOfficer(item.id)"
-              >
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 32 32"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              " class="py-3 text-center">
+              <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
+                (click)="editCollectionOfficer(item.id)">
+                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>pen-to-square</title>
                   <path
-                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
-                  ></path>
+                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                  </path>
                 </svg>
               </button>
             </td>
 
-            <td
-              *ngIf="
+            <td *ngIf="
                 permissionService.hasPermission('Delete Collection Officer') ||
                 tokenService.getUserDetails().role === '1'
-              "
-              class="text-center"
-            >
-              <button
-                class="text-[#fc3636] hover:text-[#f38f8f]"
-                (click)="deleteCollectionOfficer(item.id)"
-              >
-                <svg
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                  />
+              " class="text-center">
+              <button class="text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCollectionOfficer(item.id)">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                  viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                 </svg>
               </button>
             </td>
@@ -499,15 +352,9 @@
         </tbody>
       </table>
       <div class="dark:bg-[#262f45]">
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>
     </div>

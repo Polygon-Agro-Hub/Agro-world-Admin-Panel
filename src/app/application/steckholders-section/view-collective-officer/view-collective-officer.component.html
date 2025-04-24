@@ -168,46 +168,21 @@
           Collection Officers ({{ this.totalItems }})
         </h2>
       </div>
-      <div class="flex items-center">
+
+      <div class="flex items-center mr-5">
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="jobRole"
+            [options]="statusOptions"
             [checkmark]="true"
-            optionLabel="jobRole"
+            optionLabel="label"
+            optionValue="value"
             [showClear]="true"
-            placeholder="Role"
-            [(ngModel)]="role"
-            (onChange)="applyFilters()"
-          />
+            placeholder="Status"
+            [(ngModel)]="selectStatus"
+            (onChange)="applyStatusFilters()"
+          ></p-dropdown>
         </div>
-        <!-- <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-        >
-          <input
-            type="text"
-            placeholder="Search"
-            [(ngModel)]="searchNIC"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
 
         <div class="mr-5">
           <p-dropdown
@@ -226,47 +201,39 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="true" placeholder="Role"
-            [(ngModel)]="role" (onChange)="applyFilters()" />
+            [options]="jobRole"
+            [checkmark]="true"
+            optionLabel="jobRole"
+            [showClear]="true"
+            placeholder="Role"
+            [(ngModel)]="role"
+            (onChange)="applyFilters()"
+          />
         </div>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="companyArr" [checkmark]="true" optionLabel="companyNameEnglish" [showClear]="true"
-            placeholder="Company" [(ngModel)]="statusFilter" (onChange)="applyFilters()" />
+            [options]="companyArr"
+            [checkmark]="true"
+            optionLabel="companyNameEnglish"
+            [showClear]="true"
+            placeholder="Company"
+            [(ngModel)]="statusFilter"
+            (onChange)="applyFilters()"
+          />
         </div>
 
-
-
-        
-        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search By First Name, Center" [(ngModel)]="searchNIC"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
-            (keyup.esc)="offSearch()" />
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-            </svg>
-          </button>
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div> -->
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search By First Name, Center"
             [(ngModel)]="searchNIC"
-            (keyup.enter)="onSearch()"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()"
           />
           <button
             type="button"
@@ -380,10 +347,6 @@
               "
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="
-              permissionService.hasPermission('View Collection Officer') ||
-              tokenService.getUserDetails().role === '1'
-            " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
             <th
               *ngIf="
@@ -454,8 +417,6 @@
                       ? handleClaimButtonClick(item)
                       : null
                   "
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Claim Collection Officer') || tokenService.getUserDetails().role === '1') ? handleClaimButtonClick(item) : null"
                   [ngClass]="{
                     'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
@@ -470,14 +431,14 @@
               <div>
                 <span
                   [ngClass]="{
-                    'font-bold px-3 py-1 w-full text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
                       item.status === 'Not Approved',
-                    'font-bold px-3 py-1  text-sm bg-green-100 text-[#308233] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg':
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
                   }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
                       'Approve Collection Officer'
@@ -491,9 +452,6 @@
                       : null
                   "
                 >
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null">
                   {{ item.status }}
                 </span>
               </div>
@@ -522,12 +480,6 @@
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-            <td *ngIf="
-            permissionService.hasPermission('View Collection Officer') ||
-            tokenService.getUserDetails().role === '1'
-          " class="px-4 py-3 text-center">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
                     stroke="currentColor"

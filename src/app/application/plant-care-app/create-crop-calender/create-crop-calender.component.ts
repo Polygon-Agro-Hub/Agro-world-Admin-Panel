@@ -239,7 +239,7 @@ export class CreateCropCalenderComponent {
         this.uploadXlsxFile(cropId, result.value);
         this.router.navigate(["/plant-care/action/view-crop-calender"]);
       } else {
-        this.deleteCropCalender(this.cropId);
+        this.deleteCropCalender(cropId);
         console.log("XLSX upload skipped");
         this.router.navigate(["/plant-care/action/view-crop-calender"]);
       }
@@ -265,15 +265,7 @@ export class CreateCropCalenderComponent {
         console.error("Error uploading XLSX file", error);
         let errorMessage = "There was an error uploading the XLSX file";
 
-        this.cropCalendarService.deleteCropCalender(this.cropId).subscribe(
-          (data: any) => {
-            if (data) {
-            }
-          },
-          (error) => {
-            console.error("Error deleting crop calendar:", error);
-          },
-        );
+        this.deleteCropCalender(cropId);
 
         if (error.error && typeof error.error === "string") {
           errorMessage = error.error;

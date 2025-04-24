@@ -27,6 +27,10 @@ export class AddPackageComponent implements OnInit {
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
+  back(): void {
+    this.router.navigate(['/market/action']);
+  }
+
   ngOnInit(): void {
     this.getCropProductData();
     this.packageObj.Items = [];

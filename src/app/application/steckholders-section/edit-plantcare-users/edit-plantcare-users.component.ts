@@ -106,6 +106,10 @@ export class EditPlantcareUsersComponent implements OnInit {
         '',
         [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
       ],
+      language: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
+      ],
       profileImage: [''],
       accHolderName: [''],
       accNumber: ['', [Validators.pattern(/^[0-9]+$/)]], // Only numbers allowed
@@ -169,6 +173,13 @@ export class EditPlantcareUsersComponent implements OnInit {
     { membershipName: 'Silver' },
     { membershipName: 'Gold' },
     { membershipName: 'Diamond' },
+  ];
+
+
+  language = [
+    { languageName: 'Sinhala' },
+    { languageName: 'English' },
+    { languageName: 'Tamil' },
   ];
 
   onlyNumberKey(event: KeyboardEvent) {
@@ -693,6 +704,10 @@ export class EditPlantcareUsersComponent implements OnInit {
           formData.append(
             'membership',
             this.userForm.get('membership')?.value || ''
+          );
+          formData.append(
+            'language',
+            this.userForm.get('language')?.value || ''
           );
 
           // Always append bank details (empty strings if not provided)

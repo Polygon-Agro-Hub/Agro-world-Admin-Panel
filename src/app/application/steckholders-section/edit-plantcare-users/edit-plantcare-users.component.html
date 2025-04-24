@@ -592,6 +592,42 @@
               membership is required
             </div>
           </div>
+
+
+          <div>
+            <label
+              for="language"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Language</label
+            >
+            <select
+              formControlName="language"
+              id="language"
+              name="language"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            >
+              <option selected disabled>-- select --</option>
+              <option
+                *ngFor="let item of language"
+                [value]="item.languageName"
+              >
+                {{ item.languageName }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                userForm.get('language')?.invalid &&
+                (userForm.get('language')?.dirty ||
+                  userForm.get('language')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+            language is required
+            </div>
+          </div>
+
+
+
         </div>
         <div class="border-t border-gray-200 my-10"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

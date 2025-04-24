@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CollectionOfficerReportService } from '../../../services/collection-officer/collection-officer-report.service';
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { Router } from '@angular/router';
 
 interface IProvinceReport {
   cropName: string
@@ -35,8 +36,11 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
   loadingTable = true;
   isDownloading = false;
 
-  constructor(private collectionOfficerSrv: CollectionOfficerReportService) { }
+  constructor(private collectionOfficerSrv: CollectionOfficerReportService, private router: Router) { }
 
+  back(): void {
+    this.router.navigate(['reports']);
+  }
 
   ngOnInit(): void {
     this.province = [

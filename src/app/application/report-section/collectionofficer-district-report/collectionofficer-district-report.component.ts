@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { Router } from '@angular/router';
 
 interface IdistrictReport {
   cropName: string
@@ -35,7 +36,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   loadingTable = true;
   isDownloading = false;
 
-  constructor(private collectionOfficerSrv: CollectionOfficerReportService) { }
+  constructor(private collectionOfficerSrv: CollectionOfficerReportService, private router: Router,) { }
 
   ngOnInit(): void {
     this.districts = [
@@ -92,6 +93,10 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     );
   }
   
+
+  back(): void {
+    this.router.navigate(['reports']);
+  }
 
   applyFilters() {
     if (this.selectedDistrict) {

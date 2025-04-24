@@ -142,6 +142,10 @@ export class ViewCollectiveOfficerComponent {
       );
   }
 
+  back(): void {
+    this.router.navigate(['steckholders/action']);
+  }
+
   fetchCenterNames() {
     this.collectionService.getCenterNames().subscribe(
       (response) => {

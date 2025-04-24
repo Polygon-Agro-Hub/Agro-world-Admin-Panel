@@ -559,6 +559,10 @@ export class EditPlantcareUsersComponent implements OnInit {
             'membership',
             this.userForm.get('membership')?.value || ''
           );
+          formData.append(
+            'language',
+            this.userForm.get('language')?.value || ''
+          );
 
           // Bank details (can be empty)
           formData.append(

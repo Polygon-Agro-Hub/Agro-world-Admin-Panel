@@ -85,6 +85,21 @@ export class ViewCollectiveOfficerComponent {
   selectedCenterId: string | null = null; // Store selected center ID
   selectedIrmId: string | null = null;
 
+  selectCenterStatus: string = '';
+  selectStatus: string = '';
+
+  centerStatusOptions = [
+    { label: 'Disclaimed', value: 'Disclaimed' },
+    { label: 'Claimed', value: 'Claimed' }
+  ];
+
+  statusOptions = [
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Not Approved', value: 'Not Approved' },
+    { label: 'Rejected', value: 'Rejected' }
+    
+  ];
+
   constructor(
     private router: Router,
     private collectionService: CollectionService,
@@ -95,13 +110,18 @@ export class ViewCollectiveOfficerComponent {
 
   fetchAllCollectionOfficer(
     page: number = 1,
-    limit: number = this.itemsPerPage
+    limit: number = this.itemsPerPage,
+    centerStatus: string = this.selectCenterStatus,
+    status: string = this.selectStatus,
   ) {
     this.isLoading = true;
     this.collectionService
+    
       .fetchAllCollectionOfficer(
         page,
         limit,
+        centerStatus,
+        status,
         this.searchNIC,
         this.statusFilter?.id,
         this.role?.jobRole
@@ -127,7 +147,7 @@ export class ViewCollectiveOfficerComponent {
   fetchCenterNames() {
     this.collectionService.getCenterNames().subscribe(
       (response) => {
-        console.log(response);
+        console.log('this is centers', response);
         this.centerNames = response;
       },
       (error) => {
@@ -162,6 +182,16 @@ export class ViewCollectiveOfficerComponent {
   }
 
   applyFilters() {
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+  applyCenterStatusFilters() {
+    console.log('center', this.selectCenterStatus)
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+  clearCenterStatusFilter() {
+    this.selectCenterStatus = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -478,6 +508,15 @@ export class ViewCollectiveOfficerComponent {
       }
     );
   }
+
+  applyStatusFilters() {
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
+
+  clearStatusFilter() {
+    this.selectStatus = ''
+    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+  }
 }
 
 class Company {
@@ -487,6 +526,7 @@ class Company {
 
 class CenterName {
   id!: string;
+  regCode!:string;
   centerName!: string;
 }
 

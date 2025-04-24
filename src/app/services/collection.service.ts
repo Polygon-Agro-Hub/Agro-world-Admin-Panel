@@ -16,6 +16,8 @@ export class CollectionService {
   fetchAllCollectionOfficer(
     page: number,
     limit: number,
+    centerStatus: string = '',
+    status: string = '',
     searchNIC: string = '',
     company: string,
     role: string
@@ -31,6 +33,14 @@ export class CollectionService {
 
     if (company) {
       url += `&company=${company}`;
+    }
+
+    if (centerStatus) {
+      url += `&centerStatus=${centerStatus}`
+    }
+
+    if (status) {
+      url += `&status=${status}`
     }
 
     if (role) {

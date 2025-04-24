@@ -34,12 +34,10 @@ interface CollectionOfficers {
   centerName: string;
 }
 
-
 interface JobRole {
   id: number;
   jobRole: string;
 }
-
 
 @Component({
   selector: 'app-view-collective-officer',
@@ -60,7 +58,7 @@ export class ViewCollectiveOfficerComponent {
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
     { id: 2, jobRole: 'Collection Center Manager' },
-    { id: 3, jobRole: 'Customer Officer' }
+    { id: 3, jobRole: 'Customer Officer' },
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
@@ -230,10 +228,10 @@ export class ViewCollectiveOfficerComponent {
 
     // HTML structure for the popup
     const tableHtml = `
-      <div class="container mx-auto">
-        <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstNameEnglish}</h1>
+      <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
+        <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
         <div >
-          <p class="text-center">Are you sure you want to approve or reject this collection?</p>
+          <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection?</p>
         </div>
         <div class="flex justify-center mt-4">
           <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
@@ -244,8 +242,17 @@ export class ViewCollectiveOfficerComponent {
 
     Swal.fire({
       html: tableHtml,
-      showConfirmButton: false, // Hide default confirm button
+      showConfirmButton: false,
       width: 'auto',
+      background: 'transparent', // Makes the popup background transparent
+      backdrop: 'rgba(0, 0, 0, 0.5)', // Optional: Dark semi-transparent backdrop
+      grow: 'row', // Optional: Controls popup animation
+      showClass: {
+        popup: 'animate__animated animate__fadeIn', // Optional: Adds fade-in animation
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOut', // Optional: Adds fade-out animation
+      },
       didOpen: () => {
         // Handle the "Approve" button click
         document
@@ -450,33 +457,35 @@ export class ViewCollectiveOfficerComponent {
       centerId: this.selectedCenterId,
     };
 
-    this.collectionOfficerService.claimOfficer(this.selectOfficerId, payload).subscribe(
-      (response) => {
-        console.log('Officer claimed successfully:', response);
+    this.collectionOfficerService
+      .claimOfficer(this.selectOfficerId, payload)
+      .subscribe(
+        (response) => {
+          console.log('Officer claimed successfully:', response);
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Officer claimed successfully!',
-          confirmButtonText: 'OK',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.iseditModalOpen = false; // Close the modal
-            this.fetchAllCollectionOfficer(this.page, this.itemsPerPage); // Refresh the list
-          }
-        });
-      },
-      (error) => {
-        console.error('Error claiming officer:', error);
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Officer claimed successfully!',
+            confirmButtonText: 'OK',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.iseditModalOpen = false; // Close the modal
+              this.fetchAllCollectionOfficer(this.page, this.itemsPerPage); // Refresh the list
+            }
+          });
+        },
+        (error) => {
+          console.error('Error claiming officer:', error);
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to claim officer!',
-          confirmButtonText: 'Try Again',
-        });
-      }
-    );
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to claim officer!',
+            confirmButtonText: 'Try Again',
+          });
+        }
+      );
   }
 }
 

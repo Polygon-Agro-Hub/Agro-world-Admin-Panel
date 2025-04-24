@@ -40,12 +40,6 @@
           [src]="package?.image"
           [alt]="package?.displayName"
         />
-        <img
-          *ngIf="package?.image"
-          [src]="package?.image"
-          class="h-auto max-h-48 flex items-center fixed"
-          alt="Package image"
-        />
         <svg
           *ngIf="!package?.image"
           class="h-auto max-h-24 flex items-center"
@@ -99,7 +93,13 @@
             <td class="px-6 py-4 text-center text-black dark:text-textDark">
               Rs {{ detail.normalPrice }}
             </td>
-            <td class="px-6 py-4 text-center">{{  (((detail.quantity*detail.normalPrice)-detail.price)/(detail.quantity*detail.normalPrice))*100   }}</td>
+            <td class="px-6 py-4 text-center">
+              {{
+                ((detail.quantity * detail.normalPrice - detail.price) /
+                  (detail.quantity * detail.normalPrice)) *
+                  100
+              }}
+            </td>
             <td class="px-6 py-4 text-center">Rs {{ detail.price }}</td>
           </tr>
         </tbody>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
@@ -29,8 +29,13 @@ export class MarketEditPackagesComponent {
 
   constructor(
     private markServ: MarketPlaceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
+
+  back(): void {
+    this.router.navigate(['market/action/view-packages-list']);
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -50,21 +55,18 @@ export class MarketEditPackagesComponent {
     });
   }
 
-  
-
-
   getDiscountPercentage(item: any): number {
     const normal = item.item.pricing.normalPrice;
     const discounted = item.item.pricing.discountedPrice;
     return ((normal - discounted) / normal) * 100;
   }
-  
+
   getDiscountAmount(item: any, type: any): number {
     const normal = item.item.pricing.normalPrice;
     const discounted = item.item.pricing.discountedPrice;
-  
+
     let finalDis = 0;
-  
+
     if (type === 'g') {
       // For grams, we divide by 1000 to convert to kilograms.
       finalDis = (normal - discounted) * (Number(item.quantity || 0) / 1000);
@@ -72,21 +74,20 @@ export class MarketEditPackagesComponent {
       // For kilograms, we use the quantity as is.
       finalDis = (normal - discounted) * Number(item.quantity || 0);
     }
-  
+
     return finalDis;
   }
-  
-  
 
   // Method to increment the discount value for an item
   incrementDiscountValue(index: number, step: number = 1) {
     const item = this.packageItems[index];
     const { normalPrice, discountedPrice } = item.item.pricing;
-  
+
     // Calculate the new discounted price based on the percentage step
-    const discountPercentage = ((normalPrice - discountedPrice) / normalPrice) * 100;
+    const discountPercentage =
+      ((normalPrice - discountedPrice) / normalPrice) * 100;
     const newDiscountPercentage = discountPercentage + step;
-  
+
     if (newDiscountPercentage <= 100) {
       item.item.pricing.discountedPrice = parseFloat(
         (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
@@ -95,93 +96,83 @@ export class MarketEditPackagesComponent {
     }
   }
 
-// Method to decrement the discount value for an item
-decrementDiscountValue(index: number, step: number = 1) {
-  const item = this.packageItems[index];
-  const { normalPrice, discountedPrice } = item.item.pricing;
+  // Method to decrement the discount value for an item
+  decrementDiscountValue(index: number, step: number = 1) {
+    const item = this.packageItems[index];
+    const { normalPrice, discountedPrice } = item.item.pricing;
 
-  // Calculate the new discounted price based on the percentage step
-  const discountPercentage = ((normalPrice - discountedPrice) / normalPrice) * 100;
-  const newDiscountPercentage = discountPercentage - step;
+    // Calculate the new discounted price based on the percentage step
+    const discountPercentage =
+      ((normalPrice - discountedPrice) / normalPrice) * 100;
+    const newDiscountPercentage = discountPercentage - step;
 
-  if (newDiscountPercentage >= 0) {
-    item.item.pricing.discountedPrice = parseFloat(
-      (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
-    );
+    if (newDiscountPercentage >= 0) {
+      item.item.pricing.discountedPrice = parseFloat(
+        (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
+      );
+      this.calculatePackageTotals();
+    }
+  }
+
+  toggleUnitType(index: number, unit: string) {
+    const item = this.packageItems[index];
+    if (!item || item.quantityType === unit) return;
+
+    // Convert between units
+    if (unit === 'Kg') {
+      // Convert g to Kg
+      item.quantity = parseFloat((item.quantity / 1000).toFixed(2));
+    } else {
+      // Convert Kg to g
+      item.quantity = Math.round(item.quantity * 1000);
+    }
+
+    item.quantityType = unit;
     this.calculatePackageTotals();
   }
-}
 
+  // incrementQuantity(index: number) {
+  //   const item = this.packageItems[index];
+  //   if (item.quantityType === 'g') {
+  //     // Increase by 100g (0.1 Kg in baseQuantity)
+  //     item.baseQuantity += 0.1;
+  //     item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
+  //   } else {
+  //     // Increase by 0.1 Kg
+  //     item.quantity += 0.1;
 
+  //   }
 
-toggleUnitType(index: number, unit: string) {
-  const item = this.packageItems[index];
-  if (!item || item.quantityType === unit) return;
+  //   this.calculatePackageTotals(); // Recalculate totals after quantity change
+  // }
 
-  // Convert between units
-  if (unit === 'Kg') {
-    // Convert g to Kg
-    item.quantity = parseFloat((item.quantity / 1000).toFixed(2));
-  } else {
-    // Convert Kg to g
-    item.quantity = Math.round(item.quantity * 1000);
-  }
-  
-  item.quantityType = unit;
-  this.calculatePackageTotals();
-}
+  // decrementQuantity(index: number) {
+  //   const item = this.packageItems[index];
+  //   if (item.quantityType === 'g') {
+  //     // Decrease by 100g (0.1 Kg in baseQuantity)
+  //     const newQuantity = item.baseQuantity - 0.1;
+  //     if (newQuantity >= 0) {
+  //       item.baseQuantity = newQuantity;
+  //       item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
+  //     }
+  //   } else {
+  //     // Decrease by 0.1 Kg
+  //     const newQuantity = item.baseQuantity - 0.1;
+  //     if (newQuantity >= 0) {
+  //       item.baseQuantity = newQuantity;
+  //       item.quantity = parseFloat(item.baseQuantity.toFixed(2)); // Update display quantity in Kg
+  //     }
+  //   }
 
-
-
-
-
-// incrementQuantity(index: number) {
-//   const item = this.packageItems[index];
-//   if (item.quantityType === 'g') {
-//     // Increase by 100g (0.1 Kg in baseQuantity)
-//     item.baseQuantity += 0.1;
-//     item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
-//   } else {
-//     // Increase by 0.1 Kg
-//     item.quantity += 0.1;
-   
-//   }
-
-//   this.calculatePackageTotals(); // Recalculate totals after quantity change
-// }
-
-// decrementQuantity(index: number) {
-//   const item = this.packageItems[index];
-//   if (item.quantityType === 'g') {
-//     // Decrease by 100g (0.1 Kg in baseQuantity)
-//     const newQuantity = item.baseQuantity - 0.1;
-//     if (newQuantity >= 0) {
-//       item.baseQuantity = newQuantity;
-//       item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
-//     }
-//   } else {
-//     // Decrease by 0.1 Kg
-//     const newQuantity = item.baseQuantity - 0.1;
-//     if (newQuantity >= 0) {
-//       item.baseQuantity = newQuantity;
-//       item.quantity = parseFloat(item.baseQuantity.toFixed(2)); // Update display quantity in Kg
-//     }
-//   }
-
-//   this.calculatePackageTotals(); // Recalculate totals after quantity change
-// }
-
+  //   this.calculatePackageTotals(); // Recalculate totals after quantity change
+  // }
 
   // Add this helper method to display the quantity properly in the template
-
 
   getDisplayQuantity(item: any): number {
     // Simply return the stored quantity - we're now handling conversions properly
     return item.quantity || 0;
   }
-  
-  
-  
 
   removeItem(index: number) {
     if (index >= 0 && index < this.packageItems.length) {
@@ -207,46 +198,49 @@ toggleUnitType(index: number, unit: string) {
   incrementQuantity(index: number) {
     const item = this.packageItems[index];
     if (!item) return;
-  
+
     // Determine the increment step based on unit type
     const step = item.quantityType === 'Kg' ? 0.1 : 100;
-    
+
     // Convert to grams if needed for calculation
-    const currentValue = item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
-    const newValue = currentValue + (item.quantityType === 'Kg' ? step : step / 1000);
-    
+    const currentValue =
+      item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
+    const newValue =
+      currentValue + (item.quantityType === 'Kg' ? step : step / 1000);
+
     // Update the quantity based on unit type
-    item.quantity = item.quantityType === 'Kg' ? 
-      parseFloat(newValue.toFixed(2)) : 
-      Math.round(newValue * 1000);
-    
+    item.quantity =
+      item.quantityType === 'Kg'
+        ? parseFloat(newValue.toFixed(2))
+        : Math.round(newValue * 1000);
+
     this.calculatePackageTotals();
   }
-  
+
   decrementQuantity(index: number) {
     const item = this.packageItems[index];
     if (!item || item.quantity <= 0) return;
-  
+
     // Determine the decrement step based on unit type
     const step = item.quantityType === 'Kg' ? 0.1 : 100;
-    
+
     // Convert to grams if needed for calculation
-    const currentValue = item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
-    let newValue = currentValue - (item.quantityType === 'Kg' ? step : step / 1000);
-    
+    const currentValue =
+      item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
+    let newValue =
+      currentValue - (item.quantityType === 'Kg' ? step : step / 1000);
+
     // Ensure we don't go below 0
     newValue = Math.max(0, newValue);
-    
+
     // Update the quantity based on unit type
-    item.quantity = item.quantityType === 'Kg' ? 
-      parseFloat(newValue.toFixed(2)) : 
-      Math.round(newValue * 1000);
-    
+    item.quantity =
+      item.quantityType === 'Kg'
+        ? parseFloat(newValue.toFixed(2))
+        : Math.round(newValue * 1000);
+
     this.calculatePackageTotals();
   }
-  
-  
-  
 
   decrementDiscount(index: number, step: number = 1.0) {
     if (
@@ -279,7 +273,7 @@ toggleUnitType(index: number, unit: string) {
       next: (res) => {
         if (res.success && res.data && res.data.package) {
           const pkg = res.data.package;
-      
+
           this.packageData = {
             id: pkg.id,
             displayName: pkg.displayName,
@@ -293,7 +287,7 @@ toggleUnitType(index: number, unit: string) {
             subtotal: 0, // Default value
             items: [], // Default value
           };
-      
+
           // Set the packageItems and include mpItemId
           this.packageItems = pkg.items.map((item: any) => {
             return {
@@ -307,13 +301,15 @@ toggleUnitType(index: number, unit: string) {
                 pricing: {
                   ...item.item.pricing,
                   normalPrice: parseFloat(item.item.pricing.normalPrice),
-                  discountedPrice: parseFloat(item.item.pricing.discountedPrice),
+                  discountedPrice: parseFloat(
+                    item.item.pricing.discountedPrice
+                  ),
                   discount: parseFloat(item.item.pricing.discount),
                 },
               },
             };
           });
-      
+
           this.calculatePackageTotals();
         } else {
           this.error = 'Failed to load package data';
@@ -325,8 +321,7 @@ toggleUnitType(index: number, unit: string) {
         this.error = 'Error loading package data';
         console.error(err);
         this.loading = false;
-      }
-      
+      },
     });
   }
 
@@ -426,8 +421,6 @@ toggleUnitType(index: number, unit: string) {
     }
   }
 
-
-
   onAdd() {
     if (
       !this.inputPackageObj.qtytype ||
@@ -439,14 +432,14 @@ toggleUnitType(index: number, unit: string) {
       Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
       return;
     }
-  
+
     console.log('Selected varieties:', this.selectedVarieties);
     console.log('Looking for item ID:', this.inputPackageObj.mpItemId);
-  
+
     const selectedVariety = this.selectedVarieties.find(
       (v) => v.id === +this.inputPackageObj.mpItemId!
     );
-  
+
     if (!selectedVariety) {
       console.error(
         'Available variety IDs:',
@@ -455,7 +448,7 @@ toggleUnitType(index: number, unit: string) {
       Swal.fire('Error', 'Selected item not found', 'error');
       return;
     }
-  
+
     const newItem: PackageItem = {
       id: 0,
       quantity: this.inputPackageObj.quantity,
@@ -470,18 +463,20 @@ toggleUnitType(index: number, unit: string) {
         pricing: {
           normalPrice: this.inputPackageObj.normalPrice,
           discountedPrice: this.inputPackageObj.discountedPrice,
-          discount: this.inputPackageObj.normalPrice -
+          discount:
+            this.inputPackageObj.normalPrice -
             this.inputPackageObj.discountedPrice,
           promo: false,
         },
         unitType: this.inputPackageObj.qtytype,
       },
-      baseQuantity: this.inputPackageObj.qtytype === 'g'
-        ? this.inputPackageObj.quantity! / 1000 // Convert g to Kg
-        : this.inputPackageObj.quantity!,
-      mpItemId: 0
+      baseQuantity:
+        this.inputPackageObj.qtytype === 'g'
+          ? this.inputPackageObj.quantity! / 1000 // Convert g to Kg
+          : this.inputPackageObj.quantity!,
+      mpItemId: 0,
     };
-  
+
     this.packageItems.push(newItem);
     this.calculatePackageTotals();
     this.resetInputForm();
@@ -490,24 +485,23 @@ toggleUnitType(index: number, unit: string) {
   calculatePackageTotals() {
     let subtotal = 0;
     let totalDiscount = 0;
-  
+
     this.packageItems.forEach((item) => {
       const normalPrice = item.item.pricing.normalPrice;
       const quantity = item.quantity;
       const discountAmount = this.getDiscountAmount(item, item.quantityType);
-  
-      const itemSubtotal = (normalPrice * quantity);
+
+      const itemSubtotal = normalPrice * quantity;
       const itemTotal = itemSubtotal - discountAmount;
-  
+
       subtotal += itemSubtotal;
       totalDiscount += discountAmount;
     });
-  
+
     this.packageData.subtotal = subtotal;
     this.packageData.discount = totalDiscount;
     this.packageData.total = subtotal - totalDiscount;
   }
-  
 
   resetInputForm() {
     this.inputPackageObj = new InputPackage();
@@ -537,7 +531,7 @@ toggleUnitType(index: number, unit: string) {
       );
       return;
     }
-  
+
     // Prepare the package data
     const packageData = {
       displayName: this.packageData.displayName,
@@ -551,9 +545,9 @@ toggleUnitType(index: number, unit: string) {
         const normalPrice = item.item.pricing.normalPrice;
         const quantity = item.quantity;
         const discountAmount = this.getDiscountAmount(item, item.quantityType);
-    
-        const discountedPrice = (normalPrice * quantity) - discountAmount;
-    
+
+        const discountedPrice = normalPrice * quantity - discountAmount;
+
         return {
           mpItemId: Number(item.mpItemId), // Use mpItemId from top level of item
           quantity: Number(quantity),
@@ -562,10 +556,9 @@ toggleUnitType(index: number, unit: string) {
         };
       }),
     };
-    
-  
+
     console.log('this is package data', packageData);
-  
+
     // Handle image
     let imageToUpload: string | undefined = undefined;
     if (
@@ -574,7 +567,7 @@ toggleUnitType(index: number, unit: string) {
     ) {
       imageToUpload = this.selectedImage || undefined;
     }
-  
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'You are about to update this package',
@@ -586,7 +579,7 @@ toggleUnitType(index: number, unit: string) {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.showLoading();
-  
+
         this.markServ
           .updatePackage(packageData, this.packageId, imageToUpload)
           .subscribe({

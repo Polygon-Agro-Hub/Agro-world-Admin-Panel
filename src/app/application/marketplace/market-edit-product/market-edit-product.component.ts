@@ -42,6 +42,10 @@ export class MarketEditProductComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  back(): void {
+    this.router.navigate(['market/action/view-products-list']);
+  }
+
   ngOnInit(): void {
     this.productId = this.route.snapshot.params['id'];
     this.getAllCropVerity();
@@ -187,8 +191,6 @@ export class MarketEditProductComponent implements OnInit {
         if (res.status) {
           Swal.fire('Success', 'Product Created Successfully', 'success');
           this.router.navigate(['/market/action/view-products-list']);
-
-          
         } else {
           Swal.fire('Error', 'Product Creation Failed', 'error');
         }

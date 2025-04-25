@@ -1,19 +1,19 @@
-import { Component, OnInit } from "@angular/core";
-import { CollectionCenterService } from "../../../services/collection-center/collection-center.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { CommonModule, DatePipe } from "@angular/common";
-import Swal from "sweetalert2";
-import { Dialog, DialogModule } from "primeng/dialog";
-import { FormsModule } from "@angular/forms";
-import { ButtonModule } from "primeng/button";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../../environment/environment";
-import { TokenService } from "../../../services/token/services/token.service";
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { Component, OnInit } from '@angular/core';
+import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
+import { Dialog, DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environment/environment';
+import { TokenService } from '../../../services/token/services/token.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: "app-view-selected-complain",
+  selector: 'app-view-selected-complain',
   standalone: true,
   imports: [
     DialogModule,
@@ -24,8 +24,8 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
     CommonModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: "./view-selected-complain.component.html",
-  styleUrl: "./view-selected-complain.component.css",
+  templateUrl: './view-selected-complain.component.html',
+  styleUrl: './view-selected-complain.component.css',
   providers: [DatePipe], // Add DatePipe to providers
 })
 export class ViewSelectedComplainComponent implements OnInit {
@@ -33,8 +33,8 @@ export class ViewSelectedComplainComponent implements OnInit {
   complainId!: string;
   farmerName!: string;
   display: boolean = false; // Controls dialog visibility
-  complaintText: string = ""; // Holds the text entered in the textarea
-  messageContent: string = "";
+  complaintText: string = ''; // Holds the text entered in the textarea
+  messageContent: string = '';
   isLoading = false;
 
   constructor(
@@ -43,8 +43,12 @@ export class ViewSelectedComplainComponent implements OnInit {
     private route: ActivatedRoute,
     private datePipe: DatePipe,
     private http: HttpClient,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {}
+
+  back(): void {
+    this.router.navigate(['complaints/view-complains']);
+  }
 
   showDialog() {
     this.display = true; // Opens the dialog
@@ -58,7 +62,7 @@ export class ViewSelectedComplainComponent implements OnInit {
     this.isLoading = true;
     this.complainSrv.getComplainById(this.complainId).subscribe((res) => {
       res.createdAt =
-        this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a") ||
+        this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm:ss a') ||
         res.createdAt;
       this.complain = res;
       console.log(res);
@@ -67,8 +71,8 @@ export class ViewSelectedComplainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.complainId = this.route.snapshot.params["id"];
-    this.farmerName = this.route.snapshot.params["farmerName"];
+    this.complainId = this.route.snapshot.params['id'];
+    this.farmerName = this.route.snapshot.params['farmerName'];
     this.fetchComplain();
   }
 
@@ -82,7 +86,7 @@ export class ViewSelectedComplainComponent implements OnInit {
     this.isLoading = true;
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error("No token found");
+      console.error('No token found');
       return;
     }
 
@@ -101,41 +105,38 @@ export class ViewSelectedComplainComponent implements OnInit {
       .put(
         `${environment.API_URL}auth/reply-complain/${this.complainId}`,
         body,
-        { headers },
+        { headers }
       )
       .subscribe(
         (res: any) => {
-          console.log("Market Price updated successfully", res);
+          console.log('Market Price updated successfully', res);
 
           Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Reply was sent successfully!",
+            icon: 'success',
+            title: 'Success',
+            text: 'Reply was sent successfully!',
           });
           this.fetchComplain();
           this.isLoading = false;
         },
         (error) => {
-          console.error("Error updating news", error);
+          console.error('Error updating news', error);
 
           Swal.fire({
-            icon: "error",
-            title: "Unsuccessful",
-            text: "Error sending reply",
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: 'Error sending reply',
           });
           this.fetchComplain();
           this.isLoading = false;
-        },
+        }
       );
   }
 
-
-
-
-   showReplyDialog() {
-      Swal.fire({
-        title: "Reply as AgroWorld",
-        html: `
+  showReplyDialog() {
+    Swal.fire({
+      title: 'Reply as AgroWorld',
+      html: `
           <div class="text-left">
             <p>Dear <strong>${this.farmerName}</strong>,</p>
             <p></p>
@@ -144,7 +145,7 @@ export class ViewSelectedComplainComponent implements OnInit {
               class="w-full p-2 border rounded mt-3 mb-3" 
               rows="5" 
               placeholder="Add your message here..."
-            >${this.complain.reply || ""}</textarea>
+            >${this.complain.reply || ''}</textarea>
             <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
             <p class="mt-3">
               Sincerely,<br/>
@@ -152,44 +153,45 @@ export class ViewSelectedComplainComponent implements OnInit {
             </p>
           </div>
         `,
-        showCancelButton: true,
-        confirmButtonText: "Send",
-        cancelButtonText: "Cancel",
-        confirmButtonColor: "#3980C0", // Green color for Send button
-        cancelButtonColor: "#74788D", // Blue-gray for Cancel button
-        width: "600px",
-        reverseButtons: true, // Swap button positions
-        preConfirm: () => {
-          const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
-          return textarea.value;
-        },
-        didOpen: () => {
-          // Direct DOM manipulation for button alignment
-          setTimeout(() => {
-            const actionsElement = document.querySelector('.swal2-actions');
-            if (actionsElement) {
-              actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
-              
-              // Also swap buttons if needed (in addition to reverseButtons)
-              const cancelButton = document.querySelector('.swal2-cancel');
-              const confirmButton = document.querySelector('.swal2-confirm');
-              if (cancelButton && confirmButton && actionsElement) {
-                actionsElement.insertBefore(cancelButton, confirmButton);
-              }
+      showCancelButton: true,
+      confirmButtonText: 'Send',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#3980C0', // Green color for Send button
+      cancelButtonColor: '#74788D', // Blue-gray for Cancel button
+      width: '600px',
+      reverseButtons: true, // Swap button positions
+      preConfirm: () => {
+        const textarea = document.getElementById(
+          'messageContent'
+        ) as HTMLTextAreaElement;
+        return textarea.value;
+      },
+      didOpen: () => {
+        // Direct DOM manipulation for button alignment
+        setTimeout(() => {
+          const actionsElement = document.querySelector('.swal2-actions');
+          if (actionsElement) {
+            actionsElement.setAttribute(
+              'style',
+              'display: flex; justify-content: flex-end !important; width: 100%;'
+            );
+
+            // Also swap buttons if needed (in addition to reverseButtons)
+            const cancelButton = document.querySelector('.swal2-cancel');
+            const confirmButton = document.querySelector('.swal2-confirm');
+            if (cancelButton && confirmButton && actionsElement) {
+              actionsElement.insertBefore(cancelButton, confirmButton);
             }
-          }, ); // Small delay to ensure DOM is ready
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.messageContent = result.value;
-          this.submitComplaint();
-        }
-      });
-    }
-
-
-
-
+          }
+        }); // Small delay to ensure DOM is ready
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.messageContent = result.value;
+        this.submitComplaint();
+      }
+    });
+  }
 }
 
 class Complain {

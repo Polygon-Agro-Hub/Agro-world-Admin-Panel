@@ -1,5 +1,9 @@
 <app-loading-spinner *ngIf="loading"></app-loading-spinner>
 
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
 <form>
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
@@ -320,14 +324,14 @@
           </div>
         </td>
         <td class="px-6 py-4 text-center text-black dark:text-textDark">
-          <div *ngIf = "item.quantityType === 'g'" >
-            Rs. {{ (item.item.pricing.normalPrice * (item.quantity))/1000 }}
+          <div *ngIf="item.quantityType === 'g'">
+            Rs. {{ (item.item.pricing.normalPrice * item.quantity) / 1000 }}
           </div>
-          <div *ngIf = "item.quantityType === 'Kg'">
-            Rs. {{ item.item.pricing.normalPrice * (item.quantity) }}
+          <div *ngIf="item.quantityType === 'Kg'">
+            Rs. {{ item.item.pricing.normalPrice * item.quantity }}
           </div>
         </td>
-        
+
         <td class="px-6 py-4 text-center">
           <!-- Display discount percentage with increment and decrement buttons -->
           <div class="flex justify-center items-center">
@@ -336,7 +340,7 @@
               (click)="decrementDiscountValue(i, 1)"
             ></i>
             <p class="mx-2 text-[#006C5A] dark:text-textDark">
-              {{ getDiscountPercentage(item) | number: '1.0-2' }} %
+              {{ getDiscountPercentage(item) | number : "1.0-2" }} %
             </p>
             <i
               class="fa-solid fa-plus text-black text-lg cursor-pointer dark:text-textDark"
@@ -347,17 +351,18 @@
         <td class="px-6 py-4 text-center">
           <!-- Display total discount value for all quantities -->
           <p class="text-[#006C5A] dark:text-textDark">
-            Rs. {{
-              getDiscountAmount(item, item.quantityType) | number: '1.2-2'
-            }}
+            Rs.
+            {{ getDiscountAmount(item, item.quantityType) | number : "1.2-2" }}
           </p>
         </td>
 
         <td class="px-6 py-4 text-center">
           <!-- Display total discount value for all quantities -->
           <p class="text-[#006C5A] dark:text-textDark">
-            Rs. {{
-              (item.item.pricing.normalPrice * (item.quantity))-getDiscountAmount(item, item.quantityType) | number: '1.2-2'
+            Rs.
+            {{
+              item.item.pricing.normalPrice * item.quantity -
+                getDiscountAmount(item, item.quantityType) | number : "1.2-2"
             }}
           </p>
         </td>

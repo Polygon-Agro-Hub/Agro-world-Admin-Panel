@@ -36,7 +36,13 @@ interface BranchesData {
 @Component({
   selector: 'app-create-company',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './create-company.component.html',
   styleUrl: './create-company.component.css',
 })
@@ -56,10 +62,8 @@ export class CreateCompanyComponent {
   isLoading = false;
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
-  
-  invalidFields: Set<string> = new Set();
 
-  
+  invalidFields: Set<string> = new Set();
 
   constructor(
     private fb: FormBuilder,
@@ -107,14 +111,13 @@ export class CreateCompanyComponent {
     this.getCompanyData();
   }
 
-
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      data => {
+      (data) => {
         this.banks = data;
         this.matchExistingBankToDropdown();
       },
-      error => {
+      (error) => {
         console.error('Error loading banks:', error);
       }
     );
@@ -122,11 +125,11 @@ export class CreateCompanyComponent {
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      data => {
+      (data) => {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      error => {
+      (error) => {
         console.error('Error loading branches:', error);
       }
     );
@@ -136,14 +139,16 @@ export class CreateCompanyComponent {
     if (this.selectedBankId) {
       // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      
+
       // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.companyData.bankName = selectedBank.name;
         this.invalidFields.delete('bankName');
       }
-      
+
       // Reset branch selection
       this.selectedBranchId = null;
       this.companyData.branchName = '';
@@ -156,7 +161,9 @@ export class CreateCompanyComponent {
   onBranchChange1() {
     if (this.selectedBranchId) {
       // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.companyData.branchName = selectedBranch.name;
         this.invalidFields.delete('branchName');
@@ -166,25 +173,31 @@ export class CreateCompanyComponent {
     }
   }
 
-
-
   matchExistingBankToDropdown() {
     // Only proceed if both banks and branches are loaded and we have existing data
-    if (this.banks.length > 0 && Object.keys(this.allBranches).length > 0 && 
-        this.companyData && this.companyData.bankName) {
-          console.log('hit 01',this.companyData.bankName);
-      
+    if (
+      this.banks.length > 0 &&
+      Object.keys(this.allBranches).length > 0 &&
+      this.companyData &&
+      this.companyData.bankName
+    ) {
+      console.log('hit 01', this.companyData.bankName);
+
       // Find the bank ID that matches the existing bank name
-      const matchedBank = this.banks.find(bank => bank.name === this.companyData.bankName);
-      
+      const matchedBank = this.banks.find(
+        (bank) => bank.name === this.companyData.bankName
+      );
+
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         // Load branches for this bank
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        
+
         // If we also have a branch name, try to match it
         if (this.companyData.branchName) {
-          const matchedBranch = this.branches.find(branch => branch.name === this.companyData.branchName);
+          const matchedBranch = this.branches.find(
+            (branch) => branch.name === this.companyData.branchName
+          );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
           }
@@ -194,20 +207,23 @@ export class CreateCompanyComponent {
     console.log('hit 02');
   }
 
-
   onBankChange() {
     if (this.selectedBankId) {
       // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      
+
       // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.companyData.bankName = selectedBank.name;
       }
-      
+
       // Reset branch selection if the current selection doesn't belong to this bank
-      const currentBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const currentBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (!currentBranch) {
         this.selectedBranchId = null;
         this.companyData.branchName = '';
@@ -221,7 +237,9 @@ export class CreateCompanyComponent {
   onBranchChange() {
     if (this.selectedBranchId) {
       // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.companyData.branchName = selectedBranch.name;
       }
@@ -274,7 +292,6 @@ export class CreateCompanyComponent {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
-      
       const missingFields: string[] = [];
 
       if (!this.companyData.regNumber)
@@ -285,8 +302,7 @@ export class CreateCompanyComponent {
         missingFields.push('Company Name (Sinhala)');
       if (!this.companyData.companyNameTamil)
         missingFields.push('Company Name (Tamil)');
-      
-      
+
       if (!this.companyData.email) missingFields.push('Company Email');
       // if (!this.companyData.oicName) missingFields.push('Officer In Charge Name');
       // if (!this.companyData.oicEmail) missingFields.push('Officer In Charge Email');
@@ -294,7 +310,6 @@ export class CreateCompanyComponent {
       // if (!this.companyData.oicConNum1) missingFields.push('Phone Number 02');
 
       if (missingFields.length > 0) {
-       
         Swal.fire({
           icon: 'error',
           title: 'Please fill all fields',
@@ -335,25 +350,23 @@ export class CreateCompanyComponent {
 
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
-  
-    
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
   }
-  
+
   isFieldInvalid(fieldName: keyof Company): boolean {
     return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
   }
-  
-  
+
   validateConfirmAccNumber(): void {
-   
     this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
-  
+
     // Check if account numbers match
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
-      this.confirmAccountNumberError = this.companyData.accNumber !== this.companyData.confirmAccNumber;
+      this.confirmAccountNumberError =
+        this.companyData.accNumber !== this.companyData.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
@@ -366,23 +379,23 @@ export class CreateCompanyComponent {
   }
 
   back(): void {
-    this.router.navigate(['/collection-hub/manage-company']);
+    this.router.navigate(['collection-hub']);
   }
 
   onCancel() {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Are you sure?',
-        text: 'You may lose the added data after canceling!',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Cancel',
-        cancelButtonText: 'No, Keep Editing',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['/collection-hub/manage-company']);
-        }
-      });
-    }
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/collection-hub/manage-company']);
+      }
+    });
+  }
 }
 
 class Company {

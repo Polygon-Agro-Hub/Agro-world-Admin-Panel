@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DropdownModule } from 'primeng/dropdown';
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sales-target',
@@ -49,8 +50,13 @@ export class SalesTargetComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private salesDashSrv: SalesDashService
+    private salesDashSrv: SalesDashService,
+    private router: Router
   ) {}
+
+  back(): void {
+    this.router.navigate(['sales-dash']);
+  }
 
   ngOnInit(): void {
     this.selectDate = new Date().toISOString().split('T')[0];

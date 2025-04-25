@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { CommonModule } from '@angular/common';
 import { catchError, finalize } from 'rxjs/operators';
@@ -22,9 +22,14 @@ export class ViewPackageDetailsComponent implements OnInit {
   error: string | null = null;
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private marketPlaceService: MarketPlaceService
   ) {}
+
+  back(): void {
+    this.router.navigate(['market/action/view-packages-list']);
+  }
 
   ngOnInit(): void {
     this.fetchPackageDetails();

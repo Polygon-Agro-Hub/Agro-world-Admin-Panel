@@ -523,14 +523,16 @@ export class MarketEditPackagesComponent {
         const normalPrice = item.item.pricing.normalPrice;
         const quantity = item.quantity;
         const discountAmount = this.getDiscountAmount(item, item.quantityType);
-
+        const detailDiscount = item.detailDiscount;
         const discountedPrice = normalPrice * quantity - discountAmount;
+        
 
         return {
           mpItemId: Number(item.mpItemId), // Use mpItemId from top level of item
           quantity: Number(quantity),
           qtytype: item.quantityType,
           discountedPrice: Number(discountedPrice.toFixed(2)), // rounding to 2 decimals
+          detailDiscount: Number(detailDiscount.toFixed(2)), // rounding to 2 decimals
         };
       }),
     };

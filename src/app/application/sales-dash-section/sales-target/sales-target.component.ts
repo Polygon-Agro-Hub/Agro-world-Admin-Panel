@@ -9,6 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-sales-target',
@@ -20,7 +21,8 @@ import { Router } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-  ],
+    LoadingSpinnerComponent
+],
   templateUrl: './sales-target.component.html',
   styleUrl: './sales-target.component.css',
 })
@@ -47,6 +49,7 @@ export class SalesTargetComponent implements OnInit {
   agentCount: number = 0;
 
   status = [{ name: 'Completed' }, { name: 'Pending' }, { name: 'Exceeded' }];
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -72,6 +75,7 @@ export class SalesTargetComponent implements OnInit {
   }
 
   saveTarget() {
+    this.isLoading = true;
     // First validate the input
     this.validateTargetInput();
 
@@ -87,6 +91,7 @@ export class SalesTargetComponent implements OnInit {
         icon: 'error',
         confirmButtonText: 'OK',
       });
+      this.isLoading = false;
       return; // Exit the function early
     }
 
@@ -112,6 +117,7 @@ export class SalesTargetComponent implements OnInit {
               });
               this.newTargetValue = 0;
               this.fetchAllSalesAgents();
+              this.isLoading = false;
             } else {
               Swal.fire({
                 title: 'Error!',
@@ -119,6 +125,7 @@ export class SalesTargetComponent implements OnInit {
                 icon: 'error',
                 confirmButtonText: 'OK',
               });
+              this.isLoading = false;
             }
           },
           (error) => {
@@ -129,11 +136,13 @@ export class SalesTargetComponent implements OnInit {
               icon: 'error',
               confirmButtonText: 'OK',
             });
+            this.isLoading = false;
           }
         );
       } else {
         // Add this else block to clear the input when canceled
         this.newTargetValue = 0;
+        this.isLoading = false;
       }
     });
   }
@@ -145,6 +154,7 @@ export class SalesTargetComponent implements OnInit {
     status: string = this.selectStatus,
     date: string = this.selectDate
   ) {
+    this.isLoading = true;
     this.salesDashSrv
       .getAllSalesAgents(page, limit, search, status, date)
       .subscribe({
@@ -157,6 +167,7 @@ export class SalesTargetComponent implements OnInit {
           this.agentsArr = res.items || [];
           this.totalItems = res.total || 0;
           this.agentCount = this.agentsArr.length;
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Error fetching agents:', err);
@@ -164,6 +175,7 @@ export class SalesTargetComponent implements OnInit {
           this.totalItems = 0;
           this.agentCount = 0;
           this.totalTarget = 0;
+          this.isLoading = false;
         },
       });
   }

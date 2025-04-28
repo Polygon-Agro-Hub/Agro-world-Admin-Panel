@@ -81,6 +81,8 @@ export class ViewPackageDetailsComponent implements OnInit {
                   quantity: any;
                   quantityType: any;
                   price: string;
+                  discountedPrice: any;
+                  discount: any;
                   createdAt: any;
                 }) => ({
                   packageId: detail.packageId,
@@ -92,6 +94,8 @@ export class ViewPackageDetailsComponent implements OnInit {
                   quantity: detail.quantity,
                   quantityType: detail.quantityType,
                   price: parseFloat(detail.price),
+                  discountedPrice: parseFloat(detail.discountedPrice),
+                  discount: parseFloat(detail.discount),
                   createdAt: detail.createdAt,
                 })
               ) || [];
@@ -136,4 +140,6 @@ interface PackageDetails {
   price: number;
   createdAt: string;
   normalPrice: number;
+  discountedPrice: number;
+  discount: number;
 }

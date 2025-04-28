@@ -14,15 +14,13 @@ import {
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
 import Swal from "sweetalert2";
-import {
-  AngularEditorConfig,
-  AngularEditorModule,
-} from "@kolkov/angular-editor";
+
 import { NewsService } from "../../../services/plant-care/news.service";
 import { log } from "console";
 import { environment } from "../../../environment/environment";
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import { TokenService } from "../../../services/token/services/token.service";
+import { QuillModule } from 'ngx-quill';
 
 interface NewsItem {
   id: number;
@@ -47,7 +45,7 @@ interface NewsItem {
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    AngularEditorModule,
+    QuillModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: "./create-news.component.html",
@@ -77,71 +75,24 @@ export class CreateNewsComponent {
   currentExpireDate: string = "";
   // isAnyFieldMissing:boolean = false;
 
-  editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: "300px",
-    minHeight: "300px",
-    maxHeight: "auto",
-    width: "auto",
-    minWidth: "0",
-    translate: "yes",
-    enableToolbar: true,
-    showToolbar: true,
-    placeholder: "Enter text here...",
-    defaultParagraphSeparator: "",
-    defaultFontName: "",
-    defaultFontSize: "",
-    fonts: [
-      { class: "arial", name: "Arial" },
-      { class: "times-new-roman", name: "Times New Roman" },
-      { class: "calibri", name: "Calibri" },
-      { class: "comic-sans-ms", name: "Comic Sans MS" },
-      { class: "georgia", name: "Georgia" },
-      { class: "verdana", name: "Verdana" },
-      { class: "helvetica", name: "Helvetica" },
-      { class: "fm-abaya", name: "FM Abhaya" }, // Sinhala font
-      { class: "iskoola-pota", name: "Iskoola Pota" }, // Sinhala font
-      { class: "abhaya-libre", name: "Abhaya Libre" }, // Sinhala font
-      { class: "latha", name: "Latha" }, // Tamil font
-      { class: "baloo-tamil", name: "Baloo Tamil" }, // Tamil font
-      { class: "bamini", name: "Bamini" }, // Tamil font
+  quillConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'header': 1 }, { 'header': 2 }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'align': [] }],
+      ['clean'],
+      [{ 'font': [] }],
     ],
-    customClasses: [
-      {
-        name: "quote",
-        class: "quote",
+    syntax: false,
+    modules: {
+      clipboard: {
+        matchVisual: false
       },
-      {
-        name: "redText",
-        class: "redText",
-      },
-      {
-        name: "titleText",
-        class: "titleText",
-        tag: "h1",
-      },
-    ],
-
-    uploadWithCredentials: false,
-    sanitize: false,
-    toolbarPosition: "top",
-    toolbarHiddenButtons: [
-      [
-        "insertImage",
-        // 'backgroundColor',
-        "customClasses",
-        "insertVideo",
-        "insertHorizontalRule",
-        "toggleEditorMode",
-        "indent",
-        "outdent",
-        "fontSize",
-        "heading",
-      ],
-    ],
+    },
   };
 
+  
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,

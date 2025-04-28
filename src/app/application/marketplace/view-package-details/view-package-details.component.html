@@ -19,7 +19,7 @@
             </h2>
             <h2 class="text-2xl font-bold px-5 dark:text-textDark">-</h2>
             <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
-              Rs {{ package?.total }}
+              Rs {{ package?.total | number: '1.2-2'}}
             </h2>
           </div>
           <div class="flex flex-col pt-2">
@@ -96,7 +96,7 @@
             </td>
             <td class="px-6 py-4 text-center">{{ detail.quantityType }}</td>
             <td class="px-6 py-4 text-center text-black dark:text-textDark">
-              Rs {{ detail.normalPrice }}
+              Rs {{ detail.normalPrice | number: '1.2-2'}}
             </td>
             <td class="px-6 py-4 text-center">
               {{
@@ -105,7 +105,7 @@
                   100
               }}
             </td>
-            <td class="px-6 py-4 text-center">Rs {{ detail.discountedPrice }}</td>
+            <td class="px-6 py-4 text-center">Rs {{ detail.discountedPrice | number: '1.2-2' }}</td>
           </tr>
         </tbody>
       </table>

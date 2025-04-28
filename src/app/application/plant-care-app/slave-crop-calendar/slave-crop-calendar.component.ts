@@ -4,7 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewsService } from '../../../services/plant-care/news.service';
 import { CommonModule } from '@angular/common';
-import { AngularEditorModule } from '@kolkov/angular-editor';
+
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -40,7 +40,7 @@ interface NewsItem {
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    AngularEditorModule,
+
     LoadingSpinnerComponent,
     MatProgressBarModule
   ],

@@ -282,18 +282,18 @@ export class MarketAddProductComponent implements OnInit {
 
     this.marketSrv.createProduct(this.productObj).subscribe(
       (res) => {
-        if (res.status) {
+        if (res.status === true) {
           Swal.fire('Success', 'Product Created Successfully', 'success');
           this.router.navigate(['/market/action/view-products-list']);
         } else {
-          Swal.fire('Error', 'Product Creation Failed', 'error');
+          Swal.fire('Error', res.message, 'error');
         }
       },
       (error) => {
         console.error('Product creation error:', error);
         Swal.fire(
           'Error',
-          'An error occurred while creating the product',
+          error.message,
           'error'
         );
       }

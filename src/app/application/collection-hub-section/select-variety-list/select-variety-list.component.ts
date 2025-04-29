@@ -100,8 +100,8 @@ export class SelectVarietyListComponent {
             title: 'Success!',
             text:
               isSelected === 1
-                ? 'Crop added successfully'
-                : 'Crop removed successfully',
+                ? 'Successfully added the variety to the center target'
+                : 'Successfully removed the variety from the center target',
             timer: 2000,
             showConfirmButton: false,
           });

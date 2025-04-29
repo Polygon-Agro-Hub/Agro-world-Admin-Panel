@@ -37,7 +37,7 @@ export class AddDailyTargetComponent {
   isSaveButtonDisabled = false;
   iscountDown = true;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.dailyTartgetObj.centerId = this.route.snapshot.params['id'];
@@ -53,6 +53,10 @@ export class AddDailyTargetComponent {
   selectVariety() {
     this.isAssignTarget = false;
     this.isVariety = true;
+  }
+
+  back(): void {
+    this.router.navigate(['/collection-hub/agro-world-centers']);
   }
 }
 

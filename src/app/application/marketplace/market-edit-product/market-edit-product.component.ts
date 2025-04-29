@@ -41,7 +41,8 @@ export class MarketEditProductComponent implements OnInit {
   isVerityVisible = false;
   selectedImage!: any;
 
-  isNoDiscount: boolean = false;
+  isNoDiscount!: boolean;
+
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -58,11 +59,16 @@ export class MarketEditProductComponent implements OnInit {
 
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
-      console.log('product:', res);
+      console.log('this is product:', res);
       this.productObj = res;
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.onCropChange();
+      if(res.promo === 0){
+        this.compaireDiscount()
+      }else{
+        this.applyDiscount();
+      }
       // this.productObj.varietyId = res.cropId;
       console.log('product object', this.productObj)
       this.templateKeywords.update(() => res.tags || []);
@@ -158,6 +164,33 @@ export class MarketEditProductComponent implements OnInit {
     this.updateTags();
     console.log(this.productObj.promo);
     console.log('this is product object', this.productObj)
+
+    if (this.productObj.normalPrice <= 0) {
+      Swal.fire(
+        'Invalid Value',
+        'Actual Price must be greater than 0',
+        'warning'
+      );
+      return;
+    }
+
+    if (this.discountPercentage <= 0 && !this.isNoDiscount) {
+      Swal.fire(
+        'Invalid Value',
+        'Discount percentage must be greater than 0',
+        'warning'
+      );
+      return;
+    }
+
+    if (this.productObj.discountedPrice <= 0) {
+      Swal.fire(
+        'Invalid Value',
+        'Sale price must be greater than 0, Pleace check the discount you applied.',
+        'warning'
+      );
+      return;
+    }
 
     if (this.productObj.startValue <= 0) {
       Swal.fire(
@@ -304,6 +337,8 @@ export class MarketEditProductComponent implements OnInit {
 
 
   compaireDiscount(){
+
+    
     this.productObj.displaytype='';
     this.productObj.discount= 0.00;
     this.discountPercentage= 0.00;
@@ -311,6 +346,16 @@ export class MarketEditProductComponent implements OnInit {
     this.isNoDiscount = true;
     this.productObj.discountedPrice = this.productObj.normalPrice - this.productObj.discount
     console.log('discointe', this.productObj.discountedPrice);
+    console.log("-------1",this.productObj.discountedPrice);
+
+  }
+
+  applyDiscount() {
+    console.log("-------2",this.productObj.discountedPrice);
+    
+
+    this.isNoDiscount = false;
+    console.log('discointe', this.isNoDiscount);
   }
 
   

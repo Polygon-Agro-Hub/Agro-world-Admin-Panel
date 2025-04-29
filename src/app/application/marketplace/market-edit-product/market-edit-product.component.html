@@ -1,4 +1,4 @@
-<form>
+<!-- <form> -->
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
     <p class="text-lg text-black font-semibold dark:text-textDark">
@@ -21,7 +21,7 @@
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
         <select id="category" name="category"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.category">
+          [(ngModel)]="productObj.category" >
           <option selected disabled value="">--Display type--</option>
           <option value="Retail">Retail</option>
           <option value="Retail">WholeSale</option>
@@ -65,7 +65,7 @@
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-        <select id="variety" name="variety"
+        <select id="varietyId" name="varietyId"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [(ngModel)]="productObj.varietyId" (change)="selectVerityImage()">
           <option selected disabled>--- Select Variety ---</option>
@@ -80,7 +80,7 @@
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input class="w-5 h-5" type="radio" id="withDiscount" name="priceType" [(ngModel)]="productObj.promo"
+            <input class="w-5 h-5" type="radio" id="withDiscount" name="promo" [(ngModel)]="productObj.promo" (change)="applyDiscount()"
               [value]="true" />
             <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               With Discount
@@ -88,7 +88,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <!-- No Discount Radio Button -->
-            <input class="w-5 h-5" type="radio" id="noDiscount" name="priceType" [(ngModel)]="productObj.promo" (change)="compaireDiscount()"
+            <input class="w-5 h-5" type="radio" id="noDiscount" name="promo" [(ngModel)]="productObj.promo" (change)="compaireDiscount()"
               [value]="false" />
             <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               No Discount
@@ -124,8 +124,8 @@
           type="number" 
           min="0.00" 
           step="0.01"  
-          id="discountValue" 
-          name="discountValue" 
+          id="discount" 
+          name="discount" 
           [(ngModel)]="productObj.discount " 
           required 
           #discountValueField="ngModel" 
@@ -141,15 +141,28 @@
       <!-- Discount input when displaytype is NOT AP&SP (default: percentage) -->
       <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype !== 'AP&SP'">
         <label class="text-[#534E4E]">Discount Percentage *</label>
-        <input type="number" min="0.00" step="0.01" id="discountedPrice" name="discountedPrice" 
-               [(ngModel)]="discountPercentage" required #discountPercentageField="ngModel" 
-               (change)="calculeSalePrice()"
-               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input
+          type="number"
+          min="0.01"
+          step="0.01"
+          id="discountPercentage"
+          name="discountPercentage"
+          [(ngModel)]="discountPercentage"
+          required
+          #discountPercentageField="ngModel"
+          (change)="calculeSalePrice()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
       
         <div *ngIf="discountPercentageField.touched && !discountPercentage" class="text-red-500 mt-1 text-sm">
           Discount Percentage is required.
         </div>
+      
+        <div *ngIf="discountPercentageField.touched && discountPercentage <= 0" class="text-red-500 mt-1 text-sm">
+          Discount must be greater than 0.
+        </div>
       </div>
+      
 
 
       <div class="mb-6">
@@ -160,11 +173,15 @@
           <div *ngIf="actualValueField.touched && !productObj.normalPrice" class="text-red-500 mt-1 text-sm">
            Actual Price is required.
           </div>
+
+          <div *ngIf="actualValueField.touched && productObj.normalPrice <= 0" class="text-red-500 mt-1 text-sm">
+            Discount must be greater than 0.
+          </div>
       </div>
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="number" min="0.0" id="salePrice" [value]="productObj.discountedPrice.toFixed(2)"
+        <input type="number" min="0.0" id="salePrice" name="discountedPrice" [value]="productObj.discountedPrice.toFixed(2)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           disabled />
       </div>
@@ -267,10 +284,17 @@
 
           <p class="text-lg text-black my-2">{{ productObj.cropName }}</p>
 
-          <p 
+          <!-- <p 
             class="text-[#00957D] my-1">
             Rs.{{ productObj.normalPrice }}.00
+          </p> -->
+
+          <p 
+            class="text-[#00957D] my-1">
+            Rs.{{ productObj.discountedPrice }}.00
           </p>
+
+
           <!-- <div *ngIf="
           (productObj.displaytype === 'AP&SP' ||
             productObj.displaytype === 'AP&SP&D') &&
@@ -357,4 +381,4 @@
       </div>
     </div>
   </div>
-</form>
+<!-- </form> -->

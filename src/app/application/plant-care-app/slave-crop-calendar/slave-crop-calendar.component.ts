@@ -58,6 +58,7 @@ export class SlaveCropCalendarComponent {
   newsItems: NewsItem[] = [];
   userId: any | null = null;
   isLoading = true;
+  userName: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +75,7 @@ export class SlaveCropCalendarComponent {
         ? +params['cultivationId']
         : null;
       this.userId = params['userId'] ? +params['userId'] : null;
+      this.userName = params['userName'] ? params['userName'] : '';
       console.log('This is the Id : ', this.cultivationId);
       console.log('This is the user Id : ', this.userId);
     });

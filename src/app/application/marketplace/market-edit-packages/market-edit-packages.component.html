@@ -54,19 +54,26 @@
             class="hidden"
             (change)="onImageSelected($event)"
           />
+          
           <label
             for="imageUpload"
             class="text-[#534E4E] dark:text-textDark cursor-pointer"
           >
             Add Image
           </label>
+          
           <label
             for="imageUpload"
             class="py-1 px-2 rounded-lg shadow-lg border-[1px] border-[#3980C0] cursor-pointer"
           >
             <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
           </label>
+        
+
         </div>
+
+        
+
       </div>
 
       <div class="mb-6">
@@ -205,7 +212,7 @@
         >
           <img
             class="w-full h-auto object-cover px-4 py-2 mt-8"
-            [src]="selectedImage || 'assets/default-package.png'"
+            [src]="selectedImage || packageData.image"
           />
 
           <div class="flex flex-col items-center justify-center gap-y-2">

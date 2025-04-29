@@ -510,6 +510,8 @@ export class MarketEditPackagesComponent {
       return;
     }
 
+    this.loading = true;
+
     // Prepare the package data
     const packageData = {
       displayName: this.packageData.displayName,
@@ -565,10 +567,12 @@ export class MarketEditPackagesComponent {
           .subscribe({
             next: (res) => {
               Swal.fire('Success!', 'Package updated successfully', 'success');
+              this.loading = false;
             },
             error: (err) => {
               console.error('Error updating package:', err);
               Swal.fire('Error!', 'Failed to update package', 'error');
+              this.loading = false;
             },
           });
       }

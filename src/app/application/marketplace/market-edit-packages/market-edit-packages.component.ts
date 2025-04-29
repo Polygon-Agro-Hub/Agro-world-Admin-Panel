@@ -400,6 +400,15 @@ export class MarketEditPackagesComponent {
   }
 
   onAdd() {
+
+    if (
+      !this.inputPackageObj.quantity
+    ) {
+      Swal.fire('Warning', 'You cannot add 0 as the product Quantity', 'warning');
+      return;
+    }
+
+
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||

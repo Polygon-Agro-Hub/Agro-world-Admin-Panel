@@ -60,12 +60,19 @@ export class ViewPublicForumComponent implements OnInit {
     this.publicForumSrv.sendMessage(id, replyData).subscribe(
       (res) => {
         Swal.fire('Success!', 'Your reply has been sent.', 'success');
+        this.isPopupVisible = false;
         this.fetchPostAllReply(this.postId);
+        this.loadPosts();
+        this.getCount();
         this.replyMessage = '';
       },
       (error) => {
         console.error('Error sending message:', error);
         Swal.fire('Error!', 'There was an error sending your reply.', 'error');
+        this.isPopupVisible = false;
+        this.fetchPostAllReply(this.postId);
+        this.loadPosts();
+        this.getCount();
       }
     );
   }
@@ -155,7 +162,8 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deletePost(id: number) {
-    console.log('delete id:', id);
+    
+    this.isLoading = true;
 
     Swal.fire({
       title: 'Are you sure?',
@@ -176,8 +184,13 @@ export class ViewPublicForumComponent implements OnInit {
                 'The post has been deleted.',
                 'success'
               );
-              this.isPopupVisible = true;
-
+              this.isPopupVisible = false;
+              // this.isPopupVisible = false;
+              
+              this.fetchPostAllReply(this.postId);
+              this.loadPosts();
+              this.getCount();
+              this.isLoading = false;
             }
           },
           (error) => {
@@ -187,6 +200,11 @@ export class ViewPublicForumComponent implements OnInit {
               'There was an error deleting the post.',
               'error'
             )
+            this.isPopupVisible = false;
+            this.fetchPostAllReply(this.postId);
+            this.loadPosts();
+            this.getCount();
+            this.isLoading = false;
           }
         )
       }
@@ -195,7 +213,7 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deleteReply(id: number) {
-    console.log('delete id:', id);
+    this.isLoading = true;
 
     Swal.fire({
       title: 'Are you sure?',
@@ -213,11 +231,14 @@ export class ViewPublicForumComponent implements OnInit {
             if (res) {
               Swal.fire(
                 'Deleted!',
-                'The crop calendar item has been deleted.',
+                'The Reply has been deleted.',
                 'success'
               );
-              this.isPopupVisible = true;
+              this.isPopupVisible = false;
               this.fetchPostAllReply(this.postId);
+              this.loadPosts();
+              this.getCount();
+              this.isLoading = false;
             }
           },
           (error) => {
@@ -227,6 +248,11 @@ export class ViewPublicForumComponent implements OnInit {
               'There was an error deleting the crop calendar.',
               'error'
             );
+            this.isPopupVisible = false;
+              this.fetchPostAllReply(this.postId);
+              this.loadPosts();
+              this.getCount();
+              this.isLoading = false;
           }
         );
       }

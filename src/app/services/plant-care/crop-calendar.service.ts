@@ -132,7 +132,8 @@ export class CropCalendarService {
   fetchAllCropCalenders(
     page: number = 1,
     limit: number = 10,
-    searchText: string = ''
+    searchText: string = '',
+    category: string = ''
   ): Observable<{ items: NewCropCalender[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -144,6 +145,10 @@ export class CropCalendarService {
 
     if (searchText) {
       url += `&searchText=${searchText}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
     }
 
     console.log(url);

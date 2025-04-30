@@ -75,20 +75,23 @@
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
-          <div class="flex flex-col">
+          <div class="flex flex-col w-full">
             <input type="number" formControlName="contact01" id="contact01" name="contact01"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
-            <div
-              *ngIf="collectionCenterForm.get('contact01')?.invalid && (collectionCenterForm.get('contact01')?.dirty || collectionCenterForm.get('contact01')?.touched)"
-              class="text-red-500 text-sm mt-1">
-              Required valid contact number
-            </div>
+            
             <!-- <div *ngIf="collectionCenterForm.get('contact01')?.hasError('pattern')">
               Enter valid phone number
             </div> -->
           </div>
         </div>
+
+        <div
+              *ngIf="collectionCenterForm.get('contact01')?.invalid && (collectionCenterForm.get('contact01')?.dirty || collectionCenterForm.get('contact01')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Required valid phone number
+            </div>
+
       </div>
 
       <!-- Contact Number 02 -->
@@ -103,26 +106,28 @@
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
-          <div class="flex flex-col">
+          <div class="flex flex-col w-full">
             <input type="number" formControlName="contact02" id="contact02" name="contact02"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number" />
-            <div
-              *ngIf="collectionCenterForm.get('contact02')?.hasError('required') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
-              class="text-red-500 text-sm mt-1">
-              Contact number 2 is required
-            </div>
-
-            <div
-              *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
-              class="text-red-500 text-sm mt-1">
-              Required valid contact number
-            </div>
+            
             <!-- <div *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern')" class="text-red-500 text-sm mt-1">
               Enter valid phone number
             </div> -->
           </div>
         </div>
+        <div
+              *ngIf="collectionCenterForm.get('contact02')?.hasError('required') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Required valid phone number
+            </div>
+
+            <div
+              *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Required valid phone number
+            </div>
+        
       </div>
 
       <!-- Building Number -->

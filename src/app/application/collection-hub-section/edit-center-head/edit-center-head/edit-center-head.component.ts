@@ -476,7 +476,7 @@ export class EditCenterHeadComponent {
           (res: any) => {
 
             this.isLoading = false;
-            Swal.fire('Success', 'Center Head Created Successfully', 'success');
+            Swal.fire('Success', 'Center Head Edited Successfully', 'success');
             this.navigatePath('/collection-hub/manage-company');
           },
           (error: any) => {

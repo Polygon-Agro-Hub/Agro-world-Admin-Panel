@@ -60,15 +60,111 @@ export class CollectionAllViewComponent implements OnInit {
   hasData: boolean = true;
   centerId!: number;
 
+  provinceOptions: any[] = [];
+  districtOptions: any[] = [];
+
+  selectProvince: string = '';
+  selectDistrict: string = '';
+
+  ProvinceData = [
+    {
+      province: "Western",
+      district: [
+        { districtName: "Colombo" },
+        { districtName: "Kalutara" },
+        { districtName: "Gampaha" }
+      ]
+    },
+    {
+      province: "Central",
+      district: [
+        { districtName: "Kandy" },
+        { districtName: "Matale" },
+        { districtName: "Nuwara Eliya" }
+      ]
+    },
+    {
+      province: "Southern",
+      district: [
+        { districtName: "Galle" },
+        { districtName: "Matara" },
+        { districtName: "Hambantota" }
+      ]
+    },
+    {
+      province: "Northern",
+      district: [
+        { districtName: "Jaffna" },
+        { districtName: "Mannar" },
+        { districtName: "Vavuniya" },
+        { districtName: "Kilinochchi" },
+        { districtName: "Mulaitivu" }
+      ]
+    },
+    {
+      province: "Eastern",
+      district: [
+        { districtName: "Batticaloa" },
+        { districtName: "Ampara" },
+        { districtName: "Trincomalee" }
+      ]
+    },
+    {
+      province: "Uva",
+      district: [
+        { districtName: "Badulla" },
+        { districtName: "Moneragala" }
+      ]
+    },
+    {
+      province: "North Western",
+      district: [
+        { districtName: "Kurunegala" },
+        { districtName: "Puttalam" }
+      ]
+    },
+    {
+      province: "North Central",
+      district: [
+        { districtName: "Anuradhapura" },
+        { districtName: "Polonnaruwa" }
+      ]
+    },
+    {
+      province: "Sabaragamuwa",
+      district: [
+        { districtName: "Rathnapura" },
+        { districtName: "Kegalle" }
+      ]
+    },
+
+  ]
+
   constructor(
     private router: Router,
     private collectionService: CollectionCenterService,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+
+    this.provinceOptions = this.ProvinceData
+    .map(p => ({
+      label: p.province,
+      value: p.province
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  // District dropdown (all districts initially, sorted alphabetically)
+  this.districtOptions = this.ProvinceData
+    .flatMap(p => p.district)
+    .map(d => ({
+      label: d.districtName,
+      value: d.districtName
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
   }
 
   // fetchAllCollectionCenterww(page: number = 1, limit: number = this.itemsPerPage) {
@@ -90,11 +186,13 @@ export class CollectionAllViewComponent implements OnInit {
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
+    district: string = this.selectDistrict,
+    province: string = this.selectProvince,
     searchItem?: string
   ) {
     this.isLoading = true;
     this.collectionService
-      .getAllCollectionCenterPage(page, limit, searchItem)
+      .getAllCollectionCenterPage(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -181,6 +279,84 @@ export class CollectionAllViewComponent implements OnInit {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
+  // applyDistrictFilters() {
+  //   this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  // }
+
+  // clearDistrictFilter() {
+  //   this.selectDistrict = ''
+  //   this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  // }
+
+  applyProvinceFilters() {
+    if (this.selectProvince) {
+      const selected = this.ProvinceData.find(p => p.province === this.selectProvince);
+  
+      // Filter and sort districts for selected province
+      this.districtOptions = selected?.district
+        .map(d => ({
+          label: d.districtName,
+          value: d.districtName
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || [];
+  
+      // Reset district selection
+      this.selectDistrict = '';
+    } else {
+      // Province cleared → show all districts, sorted
+      this.districtOptions = this.ProvinceData
+        .flatMap(p => p.district)
+        .map(d => ({
+          label: d.districtName,
+          value: d.districtName
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+    }
+
+    console.log(this.selectProvince);
+  
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+  
+
+  applyDistrictFilters() {
+    if (this.selectDistrict) {
+      const matchingProvince = this.ProvinceData.find(p =>
+        p.district.some(d => d.districtName === this.selectDistrict)
+      );
+  
+      if (matchingProvince) {
+        this.selectProvince = matchingProvince.province;
+  
+        // Filter district list for this province
+        this.districtOptions = matchingProvince.district.map(d => ({
+          label: d.districtName,
+          value: d.districtName
+        }));
+      }
+    }
+    console.log(this.selectDistrict);
+  
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  clearDistrictFilter() {
+    this.selectDistrict = '';
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+  
+  clearProvinceFilter() {
+    this.selectProvince = '';
+    this.selectDistrict = '';
+    this.districtOptions = this.ProvinceData
+      .flatMap(p => p.district)
+      .map(d => ({
+        label: d.districtName,
+        value: d.districtName
+      }));
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
   navigateEdit(id: number) {
     this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
   }
@@ -194,8 +370,8 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   assignTarget(items: any, centerId: number) {
-    console.log(centerId,'<---centerId');
-    
+    console.log(centerId, '<---centerId');
+
     let comId;
     items?.some((company: Company) =>
       company.companyNameEnglish === 'agroworld (Pvt) Ltd'
@@ -220,13 +396,13 @@ export class CollectionAllViewComponent implements OnInit {
     const agroworldCompany = item.companies.find(
       (company: Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
     );
-  
+
     if (!agroworldCompany) {
       console.error("Agroworld (Pvt) Ltd not found in this Collection Center.");
       return;
     }
     const companyId = agroworldCompany.id;
-  
+
     this.router.navigate([
       `/collection-hub/add-daily-target/${item.id}/${item.centerName}/${companyId}`,
     ]);
@@ -235,7 +411,7 @@ export class CollectionAllViewComponent implements OnInit {
   viewCollectionCenter(id: number) {
     this.router.navigate([`/collection-hub/preview-collection-center/${id}`]);
   }
-  
+
 }
 
 class CenterName {

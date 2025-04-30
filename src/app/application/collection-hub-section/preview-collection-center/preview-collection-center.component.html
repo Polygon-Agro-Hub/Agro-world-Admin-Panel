@@ -1,5 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="back()" class="ml-5 text-textLight dark:text-textDark">
+<button (click)="back()" class=" text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 
@@ -66,7 +66,7 @@
           />
 
           <!-- Contact Number Input -->
-          <div class="flex flex-col">
+          <div class="flex flex-col w-full">
             <input
               type="text"
               [(ngModel)]="centerFetchData.contact01"
@@ -95,7 +95,7 @@
             [disabled]="true"
           />
 
-          <div class="flex flex-col">
+          <div class="flex flex-col w-full">
             <input
               type="number"
               [(ngModel)]="centerFetchData.contact02"

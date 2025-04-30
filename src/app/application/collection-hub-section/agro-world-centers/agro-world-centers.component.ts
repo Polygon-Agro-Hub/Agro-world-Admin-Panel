@@ -50,8 +50,8 @@ export class AgroWorldCentersComponent {
   companyId!: number;
   collectionObj!: CollectionCenter[];
   filteredCollection!: CollectionCenter[];
-  districts: string[] = []; // Array to hold the districts
-  selectedDistrict: string | null = null; // Store the selected district
+  districts: string[] = [];
+  selectedDistrict: string | null = null;
   searchItem: string = '';
   page: number = 1;
   itemsPerPage: number = 10;
@@ -167,22 +167,6 @@ export class AgroWorldCentersComponent {
     .sort((a, b) => a.label.localeCompare(b.label));
   }
 
-  // fetchAllCollectionCenterww(page: number = 1, limit: number = this.itemsPerPage) {
-  //   this.collectionService.getAllCollectionCenterPage(page, limit, this.searchItem).subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       this.isLoading = false;
-  //       this.collectionObj = response.items;
-  //       this.hasData = this.collectionObj.length > 0;
-  //       this.totalItems = response.total;
-
-  //     },
-  //     (error) => {
-  //       console.log("Error occurred in fetching collection center data:", error);
-  //     }
-  //   );
-  // }
-
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
@@ -197,32 +181,15 @@ export class AgroWorldCentersComponent {
         (response) => {
           this.isLoading = false;
           this.collectionObj = response.items;
-          console.log(this.collectionObj);
           this.hasData = this.collectionObj.length > 0;
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
           if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
           }
         }
       );
   }
-
-  // extractDistricts() {
-  //   // Extract unique districts from the collectionObj
-  //   const uniqueDistricts = new Set(this.collectionObj.map(item => item.district));
-  //   this.districts = Array.from(uniqueDistricts);
-  // }
-
-  // applyFilters() {
-  //   if (this.selectedDistrict) {
-  //     this.filteredCollection = this.collectionObj.filter(item => item.district === this.selectedDistrict);
-  //   } else {
-  //     this.filteredCollection = this.collectionObj; // Reset if no district is selected
-  //   }
-  // }
 
   deleteCollectionCenter(id: number) {
     Swal.fire({
@@ -248,7 +215,6 @@ export class AgroWorldCentersComponent {
             }
           },
           (error) => {
-            console.error('Error deleting collection center:', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the Collection Centers',
@@ -262,7 +228,7 @@ export class AgroWorldCentersComponent {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   searchPlantCareUsers() {
@@ -367,7 +333,6 @@ export class AgroWorldCentersComponent {
         ? (comId = company.id)
         : 0
     );
-    console.log('companyID----->', comId);
     this.router.navigate([
       `/collection-hub/collection-center-dashboard/${centerId}/${comId}/${centerName}`,
     ]);
@@ -387,7 +352,6 @@ export class AgroWorldCentersComponent {
     );
 
     if (!agroworldCompany) {
-      console.error('Agroworld (Pvt) Ltd not found in this Collection Center.');
       return;
     }
     const companyId = agroworldCompany.id;

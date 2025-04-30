@@ -63,37 +63,11 @@ export class ViewCropGroupComponent {
     this.fetchAllCropGroups();
   }
 
-  // fetchAllCropGroups(page: number = 1, limit: number = this.itemsPerPage) {
-  //   console.log('Fetching market prices for page:', page); // Debug log
-  //   this.page = page;
-  //   this.cropCalendarService.fetchAllCropGroups(page, limit).subscribe(
-  //     (data) => {
-  //       this.isLoading = false;
-  //       this.newCropGroup = data.items;
-  //       console.log(this.newCropGroup);
-  //       this.hasData = this.newCropGroup.length > 0;
-  //       this.totalItems = data.total;
-  //     },
-  //     (error) => {
-  //       console.error('Error fetch news:', error);
-  //       if (error.status === 401) {
-  //         this.isLoading = false;
-  //       }
-  //     }
-  //   );
-  // }
-
   fetchAllCropGroups(
     page: number = 1,
     limit: number = this.itemsPerPage,
     searchTerm: string = this.searchTerm
   ) {
-    console.log(
-      'Fetching market prices for page:',
-      page,
-      'Search:',
-      searchTerm
-    ); // Debug log
     this.page = page;
     this.isLoading = true;
 
@@ -103,16 +77,11 @@ export class ViewCropGroupComponent {
         (data) => {
           this.isLoading = false;
           this.newCropGroup = data.items;
-          console.log(this.newCropGroup);
           this.hasData = this.newCropGroup.length > 0;
           this.totalItems = data.total;
         },
         (error) => {
-          console.error('Error fetching crop groups:', error);
           this.isLoading = false;
-          if (error.status === 401) {
-            // Handle unauthorized error
-          }
         }
       );
   }
@@ -124,7 +93,7 @@ export class ViewCropGroupComponent {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCropGroups(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllCropGroups(this.page, this.itemsPerPage);
   }
 
   deleteCropCalender(id: any) {
@@ -153,7 +122,6 @@ export class ViewCropGroupComponent {
             }
           },
           (error) => {
-            console.error('Error deleting crop group:', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the crop group.',

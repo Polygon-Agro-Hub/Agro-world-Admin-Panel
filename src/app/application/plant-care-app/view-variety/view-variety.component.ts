@@ -53,7 +53,6 @@ export class ViewVarietyComponent {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
       this.name = params['name'];
-      console.log('Received item ID:', this.itemId);
     });
     this.getAllVarietiesByGroup(this.itemId);
   }
@@ -63,12 +62,10 @@ export class ViewVarietyComponent {
       (data) => {
         this.isLoading = false;
         this.newCropGroup = data.groups;
-        console.log(this.newCropGroup);
         this.hasData = this.newCropGroup.length > 0;
         this.total = this.newCropGroup.length;
       },
       (error) => {
-        console.error('Error fetch news:', error);
         if (error.status === 401) {
           this.isLoading = false;
         }
@@ -102,7 +99,6 @@ export class ViewVarietyComponent {
             }
           },
           (error) => {
-            console.error('Error deleting crop variety:', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the crop variety.',

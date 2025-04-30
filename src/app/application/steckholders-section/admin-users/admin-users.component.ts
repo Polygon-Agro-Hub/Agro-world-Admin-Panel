@@ -38,7 +38,6 @@ interface AdminUsers {
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.css',
   template: `
-    <!-- Your existing table markup -->
     <pagination-controls
       (pageChange)="onPageChange($event)"
       [totalItems]="totalItems"
@@ -47,7 +46,7 @@ interface AdminUsers {
     </pagination-controls>
   `,
 })
-export class AdminUsersComponent {
+export class AdminUsersComponent implements OnInit {
   adminUsers: AdminUsers[] = [];
   page: number = 1;
   totalItems: number = 0;
@@ -58,9 +57,7 @@ export class AdminUsersComponent {
   status!: Roles[];
   statusFilter: any = '';
   roleArr: Roles[] = [];
-
   searchText: string = '';
-
   userId: number | null = null;
   role: any = localStorage.getItem('role:');
   isLoading = false;
@@ -72,15 +69,18 @@ export class AdminUsersComponent {
     public permissionService: PermissionService
   ) {}
 
+  ngOnInit() {
+    this.userId = Number(localStorage.getItem('userId:'));
+    this.fetchAllAdmins(this.page, this.itemsPerPage);
+    this.getAllRoles();
+  }
+
   fetchAllAdmins(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     this.page = page;
     const token = this.tokenService.getToken();
+    if (!token) return;
 
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -90,7 +90,6 @@ export class AdminUsersComponent {
     if (this.statusFilter.role) {
       url += `&role=${this.statusFilter.id}`;
     }
-
     if (this.searchText) {
       url += `&search=${this.searchText}`;
     }
@@ -105,32 +104,19 @@ export class AdminUsersComponent {
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
-          if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
-          }
+          this.isLoading = false;
         }
       );
   }
 
-  ngOnInit() {
-    this.userId = Number(localStorage.getItem('userId:'));
-    this.fetchAllAdmins(this.page, this.itemsPerPage);
-    this.getAllRoles();
-  }
-
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllAdmins(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
 
   deleteAdminUser(id: any) {
     const token = this.tokenService.getToken();
-
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
+    if (!token) return;
 
     Swal.fire({
       title: 'Are you sure?',
@@ -152,16 +138,14 @@ export class AdminUsersComponent {
             headers,
           })
           .subscribe(
-            (data: any) => {
-              console.log('Admin deleted successfully');
+            () => {
               Swal.fire('Deleted!', 'The Admin has been deleted.', 'success');
               this.fetchAllAdmins();
             },
-            (error) => {
-              console.error('Error deleting news:', error);
+            () => {
               Swal.fire(
                 'Error!',
-                'There was an error deleting the news item.',
+                'There was an error deleting the admin.',
                 'error'
               );
             }
@@ -189,34 +173,27 @@ export class AdminUsersComponent {
     this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
 
+  clearSearch(): void {
+    this.statusFilter = '';
+    this.fetchAllAdmins();
+  }
+
   getAllRoles() {
     const token = this.tokenService.getToken();
+    if (!token) return;
 
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
     this.http
-      .get<any>(`${environment.API_URL}auth/get-all-roles`, {
-        headers,
-      })
+      .get<any>(`${environment.API_URL}auth/get-all-roles`, { headers })
       .subscribe(
         (response) => {
           this.roleArr = response.roles;
         },
-        (error) => {
-          console.error('Error fetching news:', error);
-        }
+        () => {}
       );
-  }
-
-  clearSearch(): void {
-    this.statusFilter = '';
-    this.fetchAllAdmins();
   }
 
   navigatePath(path: string) {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -12,11 +12,10 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 
-
 interface PurchaseReport {
   id: number;
   grnNumber: string;
-  regCode:string;
+  regCode: string;
   centerName: string;
   amount: string;
   firstName: string;
@@ -26,22 +25,22 @@ interface PurchaseReport {
   collQr: string;
   createdAt: string;
   createdAtFormatted: string | null;
-  
 }
-
 
 @Component({
   selector: 'app-purchase-report',
   standalone: true,
-  imports: [ CommonModule,
-      HttpClientModule,
-      NgxPaginationModule,
-      DropdownModule,
-      FormsModule,
-      LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    NgxPaginationModule,
+    DropdownModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './purchase-report.component.html',
   styleUrl: './purchase-report.component.css',
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class PurchaseReportComponent {
   isLoading = false;
@@ -56,7 +55,7 @@ export class PurchaseReportComponent {
   maxDate: string = '';
 
   centers!: Centers[];
-  months: Months[]= [
+  months: Months[] = [
     { id: 1, monthName: 'January' },
     { id: 2, monthName: 'February' },
     { id: 3, monthName: 'March' },
@@ -72,79 +71,73 @@ export class PurchaseReportComponent {
   ];
   selectedCenter: Centers | null = null;
   selectedMonth: Months | null = null;
-  createdDate: string = new Date().toISOString().split("T")[0];
+  createdDate: string = new Date().toISOString().split('T')[0];
   search: string = '';
 
+  constructor(
+    private collectionoOfficer: CollectionService,
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+    private datePipe: DatePipe
+  ) {}
 
-  
-  
+  ngOnInit() {
+    this.getAllCenters();
+    const today = new Date();
+    this.maxDate = today.toISOString().split('T')[0];
+  }
 
+  fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
 
-    constructor(
-      private collectionoOfficer: CollectionService,
-      private router: Router,
-      public tokenService: TokenService,
-      public permissionService: PermissionService,
-      private datePipe: DatePipe,
-    ) {}
+    const centerId = this.selectedCenter?.id || '';
+    const monthNumber = this.selectedMonth?.id || '';
 
-
-    ngOnInit() {
-      // this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
-      this.getAllCenters();
-      const today = new Date();
-      this.maxDate = today.toISOString().split('T')[0];
+    if (this.createdDate === '' && this.selectedMonth == null) {
+      this.createdDate = new Date().toISOString().split('T')[0];
     }
 
-
-    fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
-      this.isLoading = true;
-
-      const centerId = this.selectedCenter?.id || '';
-      const monthNumber = this.selectedMonth?.id || '';
-
-      if (this.createdDate === "" && this.selectedMonth == null){
-        this.createdDate = new Date().toISOString().split("T")[0];
-      }
-
-
-      this.collectionoOfficer
-        .fetchAllPurchaseReport(page, limit, centerId, this.fromDate, this.toDate, this.search)
-        .subscribe(
-          (response) => {
-            this.purchaseReport = response.items;
-            this.totalItems = response.total;
-            this.grandTotal = response.grandTotal;
-            console.log(this.purchaseReport)
-            this.purchaseReport.forEach((head) => {
-              head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-            });
-            this.isLoading = false;
-          },
-          (error) => {
-            console.error('Error fetching ongoing cultivations:', error);
-            if (error.status === 401) {
-            }
-            this.isLoading = false;
+    this.collectionoOfficer
+      .fetchAllPurchaseReport(
+        page,
+        limit,
+        centerId,
+        this.fromDate,
+        this.toDate,
+        this.search
+      )
+      .subscribe(
+        (response) => {
+          this.purchaseReport = response.items;
+          this.totalItems = response.total;
+          this.grandTotal = response.grandTotal;
+          this.purchaseReport.forEach((head) => {
+            head.createdAtFormatted = this.datePipe.transform(
+              head.createdAt,
+              "yyyy/MM/dd 'at' hh.mm a"
+            );
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          if (error.status === 401) {
           }
-        );
-    }
-
-    
-
+          this.isLoading = false;
+        }
+      );
+  }
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllPurchaseReport(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 
   back(): void {
     this.router.navigate(['/reports']);
   }
 
-
   applyFiltersCrop() {
-    
     this.fetchAllPurchaseReport();
   }
 
@@ -161,246 +154,109 @@ export class PurchaseReportComponent {
 
   clearSearch(): void {
     this.search = '';
-    this.createdDate = new Date().toISOString().split("T")[0];
+    this.createdDate = new Date().toISOString().split('T')[0];
     this.fetchAllPurchaseReport();
   }
 
-    onDateChange(): void {
-      this.selectedMonth = null; // Reset selected month when date changes
-      // console.log(this.createdDate);
-      // if (this.createdDate === "") {
-      //   Swal.fire({
-      //     title: "Error!",
-      //     text: "Please select a date",
-      //     icon: "error",
-      //     confirmButtonText: "OK",
-      //   }).then(() => {
-      //     // Set today's date to createdDate after the user presses OK
-      //     this.createdDate = new Date().toISOString().split("T")[0];
-      //     // Call fetchReport after setting the date
-      //     this.fetchAllPurchaseReport();
-      //   });
-      // } else {
-      //   this.fetchAllPurchaseReport();
-      // }
+  onDateChange(): void {
+    this.selectedMonth = null;
+    this.fetchAllPurchaseReport();
+  }
 
-        
-      this.fetchAllPurchaseReport();
+  getAllCenters() {
+    this.collectionoOfficer.getAllCenters().subscribe(
+      (res) => {
+        this.centers = res;
+      },
+      (error) => {
+        Swal.fire('Error!', 'There was an error fetching crops.', 'error');
+      }
+    );
+  }
+
+  downloadTemplate1() {
+    this.isDownloading = true;
+
+    let queryParams = [];
+
+    if (this.selectedCenter) {
+      queryParams.push(`centerId=${this.selectedCenter.id}`);
     }
 
+    if (this.fromDate) {
+      queryParams.push(`startDate=${this.fromDate}`);
+    }
 
-      getAllCenters() {
-        this.collectionoOfficer.getAllCenters().subscribe(
-          (res) => {
-            this.centers = res;
-            console.log('Crops:', res);
-          },
-          (error) => {
-            console.error('Error fetching crops:', error);
-            Swal.fire(
-              'Error!',
-              'There was an error fetching crops.',
-              'error'
-            );
-          }
-        );
-      }
+    if (this.toDate) {
+      queryParams.push(`endDate=${this.toDate}`);
+    }
 
+    if (this.search) {
+      queryParams.push(`search=${this.search}`);
+    }
 
+    const queryString =
+      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
 
-      downloadTemplate1() {
-        this.isDownloading = true;
-        
-        // Prepare query parameters
-        let queryParams = [];
-        
-        if (this.selectedCenter) {
-          queryParams.push(`centerId=${this.selectedCenter.id}`);
+    const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
+
+    fetch(apiUrl, {
+      method: 'GET',
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Failed to download the file');
         }
-        
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        let filename = 'Purchase_Report';
         if (this.fromDate) {
-          queryParams.push(`startDate=${this.fromDate}`);
+          filename += `_${this.fromDate}`;
         }
-        
         if (this.toDate) {
-          queryParams.push(`endDate=${this.toDate}`);
+          filename += `_${this.toDate}`;
         }
-        
-        if (this.search) {
-          queryParams.push(`search=${this.search}`);
+        if (this.selectedCenter) {
+          filename += `_${this.selectedCenter.regCode}`;
         }
-        
-        const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-        
-        const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
-        
-        // Trigger the download
-        fetch(apiUrl, {
-          method: "GET",
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.blob();
-            } else {
-              throw new Error("Failed to download the file");
-            }
-          })
-          .then((blob) => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            
-            // Create a meaningful filename
-            let filename = 'Purchase_Report';
-            if (this.fromDate) {
-              filename += `_${this.fromDate}`;
-            }
-            if (this.toDate) {
-              filename += `_${this.toDate}`;
-            }
-            if (this.selectedCenter) {
-              filename += `_${this.selectedCenter.regCode}`;
-            }
-            filename += '.xlsx';
-            
-            a.download = filename;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            Swal.fire({
-              icon: "success",
-              title: "Downloaded",
-              text: "Please check your downloads folder",
-            });
-            this.isDownloading = false;
-          })
-          .catch((error) => {
-            Swal.fire({
-              icon: "error",
-              title: "Download Failed",
-              text: error.message,
-            });
-            this.isDownloading = false;
-          });
-      }
+        filename += '.xlsx';
 
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
 
+        Swal.fire({
+          icon: 'success',
+          title: 'Downloaded',
+          text: 'Please check your downloads folder',
+        });
+        this.isDownloading = false;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Download Failed',
+          text: error.message,
+        });
+        this.isDownloading = false;
+      });
+  }
 
-        // downloadTemplate1() {
-        //   this.selectedCenter = null;
-        //   // this.selectedMonth = null;
-        //   this.search = '';
-        //   if (this.createdDate != "" && this.selectedMonth?.id == null) {
-        //     console.log(this.createdDate);
-        //     this.isDownloading = true;
-        //   const apiUrl = `${environment.API_URL}auth/download-purchase-report?createdDate=${this.selectedMonth?.id}`;
-      
-        //   // Trigger the download
-        //   fetch(apiUrl, {
-        //     method: "GET",
-        //   })
-        //     .then((response) => {
-        //       if (response.ok) {
-        //         // Create a blob for the Excel file
-        //         return response.blob();
-        //       } else {
-        //         throw new Error("Failed to download the file");
-        //       }
-        //     })
-        //     .then((blob) => {
-        //       // Create a URL for the blob
-        //       const url = window.URL.createObjectURL(blob);
-      
-        //       // Create a temporary anchor element to trigger the download
-        //       const a = document.createElement("a");
-        //       a.href = url;
-        //       a.download = `Daily Collection Report (${this.selectedMonth?.monthName}).xlsx`;
-        //       a.click();
-      
-        //       // Revoke the URL after the download is triggered
-        //       window.URL.revokeObjectURL(url);
-      
-        //       // Show success message
-        //       Swal.fire({
-        //         icon: "success",
-        //         title: "Downloaded",
-        //         text: "Please check your downloads folder",
-        //       });
-        //       this.isDownloading = false;
-        //     })
-        //     .catch((error) => {
-        //       // Handle errors
-        //       Swal.fire({
-        //         icon: "error",
-        //         title: "Download Failed",
-        //         text: error.message,
-        //       });
-        //       this.isDownloading = false;
-        //     });
-        //   } 
-        //   else if (this.createdDate === "" && this.selectedMonth != null){
-
-        //     console.log('Hit 3',this.createdDate);
-        //     this.isDownloading = true;
-        //   const apiUrl = `${environment.API_URL}auth/download-purchase-report?createdDate=${this.createdDate}`;
-      
-        //   // Trigger the download
-        //   fetch(apiUrl, {
-        //     method: "GET",
-        //   })
-        //     .then((response) => {
-        //       if (response.ok) {
-        //         // Create a blob for the Excel file
-        //         return response.blob();
-        //       } else {
-        //         throw new Error("Failed to download the file");
-        //       }
-        //     })
-        //     .then((blob) => {
-        //       // Create a URL for the blob
-        //       const url = window.URL.createObjectURL(blob);
-      
-        //       // Create a temporary anchor element to trigger the download
-        //       const a = document.createElement("a");
-        //       a.href = url;
-        //       a.download = `Daily Collection Report (${this.createdDate}).xlsx`;
-        //       a.click();
-      
-        //       // Revoke the URL after the download is triggered
-        //       window.URL.revokeObjectURL(url);
-      
-        //       // Show success message
-        //       Swal.fire({
-        //         icon: "success",
-        //         title: "Downloaded",
-        //         text: "Please check your downloads folder",
-        //       });
-        //       this.isDownloading = false;
-        //     })
-        //     .catch((error) => {
-        //       // Handle errors
-        //       Swal.fire({
-        //         icon: "error",
-        //         title: "Download Failed",
-        //         text: error.message,
-        //       });
-        //       this.isDownloading = false;
-        //     });
-        //   }
-    
-          
-        // }
-
-
-
-        navigateToFamerListReport(id: number, userId: number, QRcode: string) {
-          this.router.navigate(['/reports/farmer-list-report'], { queryParams: { id, userId, QRcode } });
-        }
+  navigateToFamerListReport(id: number, userId: number, QRcode: string) {
+    this.router.navigate(['/reports/farmer-list-report'], {
+      queryParams: { id, userId, QRcode },
+    });
+  }
 }
 
-
 class Centers {
-  id!: string; // Updated to match `cropGroupId`
+  id!: string;
   centerName!: string;
   regCode!: string;
 }

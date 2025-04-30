@@ -1,38 +1,41 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-  <button
-    class="mb-5 text-textLight dark:text-textDark"
-    (click)="back()"
-    class="mb-5 text-textLight dark:text-textDark"
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  (click)="back()"
+  class="mb-5 text-textLight dark:text-textDark"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<button
+  *ngIf="
+    permissionService.hasPermission('Add And Edit Company') ||
+    tokenService.getUserDetails().role === '1'
+  "
+  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+  (click)="add()"
+>
+  <svg
+    class="w-5 h-5 mr-3"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
   >
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
-  </button>
-  <button
-  *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
-    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-    (click)="add()"
-  >
-    <svg
-      class="w-5 h-5 mr-3"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 12H20M12 4V20"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-    Add New
-  </button>
+    <path
+      d="M4 12H20M12 4V20"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+  Add New
+</button>
 
-
-  <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
@@ -43,17 +46,17 @@
         </h2>
       </div>
 
-
-
       <div class="mr-8">
-        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+        <div
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+        >
           <!-- Popover -->
           <div
             class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           >
             Search by company
           </div>
-      
+
           <!-- Input field -->
           <input
             type="text"
@@ -62,7 +65,7 @@
             [(ngModel)]="search"
             (keydown.enter)="searchPlantCareUsers()"
           />
-      
+
           <!-- Search button -->
           <button
             type="button"
@@ -84,7 +87,7 @@
               />
             </svg>
           </button>
-      
+
           <!-- Clear button -->
           <button
             type="button"
@@ -108,9 +111,6 @@
           </button>
         </div>
       </div>
-
-
-
     </div>
     <div>
       <table class="min-w-full divide-y divide-gray-200 table-auto">
@@ -139,7 +139,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              No. of Centers
+              No. of Centres
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -164,7 +164,7 @@
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Center Head Portals
+              Centre Head Portals
             </th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -185,13 +185,19 @@
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ item.companyName }}
             </td>
-            <td *ngIf='item.companyEmail' class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              *ngIf="item.companyEmail"
+              class="px-2 py-3 text-left text-textLight dark:text-textDark"
+            >
               {{ item.companyEmail }}
             </td>
-            <td *ngIf='!item.companyEmail' class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold italic">
+            <td
+              *ngIf="!item.companyEmail"
+              class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold italic"
+            >
               Email added by default
             </td>
-            
+
             <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.status === 1">
                 <span
@@ -224,42 +230,47 @@
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.numOfCustomerOfficers }}
             </td>
-            <td class="pt-1 pr-2 py-3 text-center text-textLight dark:text-textDark">
+            <td
+              class="pt-1 pr-2 py-3 text-center text-textLight dark:text-textDark"
+            >
               <button
-               class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewCompanyHeadPortals(item.id, item.companyName)"
               >
-              <i class="fa-regular fa-square-plus text-2xl"></i>
+                <i class="fa-regular fa-square-plus text-2xl"></i>
               </button>
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
-              class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-              (click)="viewCompany(item.id, true)"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewCompany(item.id, true)"
               >
-                <path
-                  d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
-          </td>
-          
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
-              *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission('Add And Edit Company') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompany(item.id)"
                 [disabled]="item.id === 1"
-                [ngStyle]="{'opacity': item.id === 1 ? '0.5' : '1'}"
+                [ngStyle]="{ opacity: item.id === 1 ? '0.5' : '1' }"
               >
                 <svg
                   fill="currentColor"
@@ -276,11 +287,14 @@
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
-              *ngIf="permissionService.hasPermission('Delete Company') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission('Delete Company') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCompany(item.id)"
                 [disabled]="item.id === 1"
-                [ngStyle]="{'opacity': item.id === 1 ? '0.5' : '1'}"
+                [ngStyle]="{ opacity: item.id === 1 ? '0.5' : '1' }"
               >
                 <svg
                   aria-hidden="true"
@@ -305,4 +319,4 @@
       </table>
     </div>
   </div>
-  </div>
+</div>

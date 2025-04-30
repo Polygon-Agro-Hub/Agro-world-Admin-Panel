@@ -26,6 +26,7 @@ export class DashbordAreaChartComponent implements OnChanges {
   options: any;
   qrUsers: number = 0;
   allusers: number = 0;
+  showClearButton: boolean = false;
 
   district = [
     { districtName: 'All' },
@@ -63,6 +64,7 @@ export class DashbordAreaChartComponent implements OnChanges {
   ngOnInit() {
     this.fetchDashboardData();
   }
+  selectedDistrict: any = { districtName: 'All' };
 
   fetchDashboardData(district?: string): void {
     const apiDistrict = district === 'All' ? undefined : district;
@@ -79,7 +81,7 @@ export class DashbordAreaChartComponent implements OnChanges {
             const unregisteredCount =
               data.data.farmerRegistrationCounts.unregistered_count;
             this.initializeChart(registeredCount, unregisteredCount, true);
-            this.loading = false; 
+            this.loading = false;
           } else {
             // For "All" districts, use qrUsers and allusers
             this.qrUsers = data.data.qrUsers;
@@ -89,7 +91,7 @@ export class DashbordAreaChartComponent implements OnChanges {
               this.allusers - this.qrUsers,
               false
             );
-            this.loading = false; 
+            this.loading = false;
           }
         }
       },
@@ -100,7 +102,16 @@ export class DashbordAreaChartComponent implements OnChanges {
   }
 
   onDistrictChange(event: any): void {
-    const selectedDistrict = event.value ? event.value.districtName : 'All';
+    if (!event.value) {
+      // When cleared, set back to "All" and hide clear button
+      this.selectedDistrict = { districtName: 'All' };
+      this.showClearButton = false;
+    } else {
+      this.selectedDistrict = event.value;
+      this.showClearButton = event.value.districtName !== 'All';
+    }
+
+    const selectedDistrict = this.selectedDistrict.districtName;
     this.districtSelected.emit(
       selectedDistrict === 'All' ? null : selectedDistrict
     );
@@ -168,5 +179,4 @@ export class DashbordAreaChartComponent implements OnChanges {
       height: 500,
     };
   }
-  
 }

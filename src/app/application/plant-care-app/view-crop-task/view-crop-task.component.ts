@@ -59,17 +59,13 @@ export class ViewCropTaskComponent implements OnInit {
       .getAllCropTaskBycropId(this.cropId, page, limit)
       .subscribe(
         (res) => {
-          console.log('Crop Task:', res);
-
           this.cropTask = res.results;
           this.isLoading = false;
           this.hasData = this.cropTask.length > 0;
           this.totalItems = res.total;
         },
         (error) => {
-          console.error('Error fetching news:', error);
           this.isLoading = false;
-          // Handle error...
         }
       );
   }
@@ -98,7 +94,6 @@ export class ViewCropTaskComponent implements OnInit {
             }
           },
           (error) => {
-            console.log('Error', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the crop calendar.',
@@ -118,8 +113,6 @@ export class ViewCropTaskComponent implements OnInit {
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
-      // confirmButtonColor: '#8AC440',
-      // cancelButtonColor: '#ECECEC',
       confirmButtonText: 'Yes',
       cancelButtonText: 'Cancel',
       customClass: {
@@ -142,7 +135,7 @@ export class ViewCropTaskComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCropTask(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllCropTask(this.page, this.itemsPerPage);
   }
 
   Back(): void {

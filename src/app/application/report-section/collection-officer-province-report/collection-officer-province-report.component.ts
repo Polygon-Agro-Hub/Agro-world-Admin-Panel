@@ -6,37 +6,47 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
 import { CollectionOfficerReportService } from '../../../services/collection-officer/collection-officer-report.service';
 import jsPDF from 'jspdf';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 
 interface IProvinceReport {
-  cropName: string
-  district: string
-  qtyA: number
-  qtyB: number
-  qtyC: number
-  priceA: number
-  priceB: number
-  priceC: number
+  cropName: string;
+  district: string;
+  qtyA: number;
+  qtyB: number;
+  qtyC: number;
+  priceA: number;
+  priceB: number;
+  priceC: number;
 }
 
 @Component({
   selector: 'app-collection-officer-province-report',
   standalone: true,
-  imports: [DropdownModule, NgxPaginationModule, FormsModule, CommonModule, CanvasJSAngularChartsModule, LoadingSpinnerComponent],
+  imports: [
+    DropdownModule,
+    NgxPaginationModule,
+    FormsModule,
+    CommonModule,
+    CanvasJSAngularChartsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './collection-officer-province-report.component.html',
-  styleUrl: './collection-officer-province-report.component.css'
+  styleUrl: './collection-officer-province-report.component.css',
 })
 export class CollectionOfficerProvinceReportComponent implements OnInit {
-  province: any[] = []
-  selectedProvince: any = { name: 'Western', code: 'WEST' }
+  province: any[] = [];
+  selectedProvince: any = { name: 'Western', code: 'WEST' };
   reportDetails: IProvinceReport[] = [];
   chartOptions: any;
   loadingChart = true;
   loadingTable = true;
   isDownloading = false;
 
-  constructor(private collectionOfficerSrv: CollectionOfficerReportService, private router: Router) { }
+  constructor(
+    private collectionOfficerSrv: CollectionOfficerReportService,
+    private router: Router
+  ) {}
 
   back(): void {
     this.router.navigate(['reports']);
@@ -52,18 +62,16 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
       { name: 'North Western', code: 'NW' },
       { name: 'North Central', code: 'NC' },
       { name: 'Uva', code: 'UVA' },
-      { name: 'Sabaragamuwa', code: 'SAB' }
+      { name: 'Sabaragamuwa', code: 'SAB' },
     ];
 
-    this.fetchAllProvinceReportDetails(this.selectedProvince.name)
-
+    this.fetchAllProvinceReportDetails(this.selectedProvince.name);
   }
 
   fetchAllProvinceReportDetails(district: string) {
-    console.log(district);
     this.loadingChart = true;
     this.loadingTable = true;
-    
+
     this.collectionOfficerSrv.getProvinceReport(district).subscribe(
       (response) => {
         this.reportDetails = response.map((item) => ({
@@ -73,89 +81,81 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
           qtyC: Number(item.qtyC) || 0,
         }));
         this.loadingTable = false;
-        this.updateChart()
+        this.updateChart();
       },
-      (error) => {
-        console.log('Error: ', error);
-      }
+      (error) => {}
     );
   }
 
-
   applyFilters() {
     if (this.selectedProvince) {
-      console.log('Filtering by district:', this.selectedProvince.name);
       this.fetchAllProvinceReportDetails(this.selectedProvince.name);
-    } else {
-      console.log('No district selected');
     }
   }
 
   updateChart() {
-
     this.chartOptions = null;
 
     const gradeAData = this.reportDetails.map((crop) => ({
       label: crop.cropName,
       y: crop.qtyA || 0,
-      color: "#FF9263"
+      color: '#FF9263',
     }));
 
     const gradeBData = this.reportDetails.map((crop) => ({
       label: crop.cropName,
       y: crop.qtyB || 0,
-      color: "#5F75E9"
+      color: '#5F75E9',
     }));
 
     const gradeCData = this.reportDetails.map((crop) => ({
       label: crop.cropName,
       y: crop.qtyC || 0,
-      color: "#3DE188"
+      color: '#3DE188',
     }));
 
     this.chartOptions = {
       animationEnabled: true,
-      theme: "light2",
+      theme: 'light2',
       title: {
-        text: `${this.selectedProvince.name} - Crop Weights`
+        text: `${this.selectedProvince.name} - Crop Weights`,
       },
       axisX: {
-        title: "Crops",
-        reversed: true
+        title: 'Crops',
+        reversed: true,
       },
       axisY: {
-        title: "Total Weight (Kg)",
-        includeZero: true
+        title: 'Total Weight (Kg)',
+        includeZero: true,
       },
       data: [
         {
-          type: "stackedBar",
-          name: "Grade A",
+          type: 'stackedBar',
+          name: 'Grade A',
           showInLegend: true,
-          dataPoints: gradeAData
+          dataPoints: gradeAData,
         },
         {
-          type: "stackedBar",
-          name: "Grade B",
+          type: 'stackedBar',
+          name: 'Grade B',
           showInLegend: true,
-          dataPoints: gradeBData
+          dataPoints: gradeBData,
         },
         {
-          type: "stackedBar",
-          name: "Grade C",
+          type: 'stackedBar',
+          name: 'Grade C',
           showInLegend: true,
-          dataPoints: gradeCData
-        }
-      ]
+          dataPoints: gradeCData,
+        },
+      ],
     };
 
     this.loadingChart = false;
   }
 
   async exportToPDF(): Promise<void> {
-    this.isDownloading = true; // Show spinner and disable button
+    this.isDownloading = true;
 
-    // Use setTimeout to allow Angular to update the UI
     setTimeout(() => {
       const doc = new jsPDF('p', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -172,25 +172,22 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
         gradeC: '#3DE188',
       };
 
-      // Title
       doc.setFontSize(titleFontSize);
       doc.text(
         `${this.selectedProvince.name} - Crop Grade Report`,
         pageWidth / 2,
         20,
-        { align: 'center' },
+        { align: 'center' }
       );
 
-      // Ensure reportDetails is populated
       if (!this.reportDetails || this.reportDetails.length === 0) {
         doc.setFontSize(contentFontSize);
         doc.text('No data available to display.', startX, startY);
         doc.save(`${this.selectedProvince.name}_Report.pdf`);
-        this.isDownloading = false; // Hide spinner and enable button
+        this.isDownloading = false;
         return;
       }
 
-      // Calculate total weights and group data for visualization
       const groupedData = this.reportDetails.map((crop) => ({
         cropName: crop.cropName,
         gradeA: crop.qtyA || 0,
@@ -199,36 +196,33 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
         totalWeight: (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0),
       }));
 
-      const maxWeight = Math.max(...groupedData.map((crop) => crop.totalWeight));
+      const maxWeight = Math.max(
+        ...groupedData.map((crop) => crop.totalWeight)
+      );
 
-      // Draw chart bars for each crop
       let currentY = startY;
       groupedData.forEach((crop) => {
         let currentX = startX;
         const labelYOffset = currentY + barHeight / 2 + 3;
 
-        // Crop Name Label
         doc.setFontSize(contentFontSize);
         doc.setTextColor(0, 0, 0);
         doc.text(crop.cropName, startX - 20, labelYOffset);
 
-        // Draw bars for each grade
-        (['A', 'B', 'C'] as const).forEach((grade, idx) => {
+        (['A', 'B', 'C'] as const).forEach((grade) => {
           const gradeKey = `grade${grade}` as 'gradeA' | 'gradeB' | 'gradeC';
           const gradeWeight = crop[gradeKey];
           if (gradeWeight > 0) {
             const barWidth = (gradeWeight / maxWeight) * chartWidth;
             doc.setFillColor(colors[gradeKey]);
             doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-
-            // Display weight inside the bar
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(8);
             doc.text(
               `${gradeWeight} kg`,
               currentX + barWidth / 2,
               currentY + barHeight / 2 + 3,
-              { align: 'center' },
+              { align: 'center' }
             );
             currentX += barWidth;
           }
@@ -237,7 +231,6 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
         currentY += gap;
       });
 
-      // Draw table header
       const tableStartY = currentY + 20;
       const cellPadding = 5;
       const cellHeight = 8;
@@ -250,13 +243,12 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
       headers.forEach((header, index) => {
         const cellX =
           startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-        doc.rect(cellX, rowY, tableColWidths[index], cellHeight); // Draw header cell
+        doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
         doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 3);
       });
 
       rowY += cellHeight;
 
-      // Draw table rows
       groupedData.forEach((crop) => {
         const cropValues = [
           crop.cropName,
@@ -269,20 +261,15 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
         cropValues.forEach((value, index) => {
           const cellX =
             startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-          doc.rect(cellX, rowY, tableColWidths[index], cellHeight); // Draw data cell
+          doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
           doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 3);
         });
 
         rowY += cellHeight;
       });
 
-      // Save the PDF
       doc.save(`${this.selectedProvince.name}_CropGradeReport.pdf`);
-
-      this.isDownloading = false; // Hide spinner and enable button
-    }, 0); // setTimeout with 0ms delay to allow UI update
+      this.isDownloading = false;
+    }, 0);
   }
-
-
-
 }

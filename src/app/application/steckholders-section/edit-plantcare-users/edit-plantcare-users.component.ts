@@ -78,7 +78,6 @@ export class EditPlantcareUsersComponent implements OnInit {
   banks: Bank[] = [];
   allBranches: BranchesData = {};
   selectedBranchId: number | null = null;
-
   invalidFields: Set<string> = new Set();
 
   constructor(
@@ -88,8 +87,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     private route: ActivatedRoute,
     private tokenService: TokenService
   ) {
-    // Initialize the form with FormBuilder
-
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
@@ -106,39 +103,13 @@ export class EditPlantcareUsersComponent implements OnInit {
         '',
         [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
       ],
-      language: [
-        '',
-        [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
-      ],
+      language: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       profileImage: [''],
       accHolderName: [''],
-      accNumber: ['', [Validators.pattern(/^[0-9]+$/)]], // Only numbers allowed
+      accNumber: ['', [Validators.pattern(/^[0-9]+$/)]],
       bankName: [''],
       branchName: [''],
     });
-
-    // this.userForm = this.fb.group({
-    //   firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
-    //   lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
-    //   phoneNumber: [
-    //     '',
-    //     [Validators.required, Validators.pattern(/^\+94\d{9}$/)],
-    //   ],
-    //   NICnumber: [
-    //     '',
-    //     [Validators.required, Validators.pattern(/^(\d{12}|\d{9}[V])$/)],
-    //   ],
-    //   district: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
-    //   membership: [
-    //     '',
-    //     [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)],
-    //   ],
-    //   profileImage: [''],
-    //   accHolderName: [''],
-    //   accNumber: [''],
-    //   bankName: [''],
-    //   branchName: [''],
-    // });
   }
 
   district = [
@@ -175,7 +146,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     { membershipName: 'Diamond' },
   ];
 
-
   language = [
     { languageName: 'Sinhala' },
     { languageName: 'English' },
@@ -184,7 +154,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onlyNumberKey(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
-    // Only allow numbers (0-9)
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
@@ -201,49 +170,16 @@ export class EditPlantcareUsersComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
       this.isView = params['isView'] === 'true';
-      console.log('Received item ID:', this.itemId);
-      console.log('recieved view state: ', this.isView);
     });
     if (this.itemId) {
       this.loadUserData(this.itemId);
     }
   }
 
-  // loadUserData(id: number) {
-  //   const token = this.tokenService.getToken();
-
-  //   if (!token) {
-  //     console.error('No token found');
-  //     return;
-  //   }
-
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`,
-  //   });
-
-  //   this.isLoading = true;
-  //   this.http
-  //     .get<PlantCareUser>(`${environment.API_URL}auth/get-user-by-id/${id}`, {
-  //       headers,
-  //     })
-  //     .subscribe(
-  //       (data) => {
-  //         this.isLoading = false;
-  //         this.userForm.patchValue(data);
-  //         this.imagePreview = data.profileImage;
-  //       },
-  //       (error) => {
-  //         this.isLoading = false;
-  //         console.error('Error fetching user data:', error);
-  //       }
-  //     );
-  // }
-
   loadUserData(id: number) {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
       return;
     }
 
@@ -262,7 +198,6 @@ export class EditPlantcareUsersComponent implements OnInit {
           this.userForm.patchValue(data);
           this.imagePreview = data.profileImage;
 
-          // Set bank details if they exist
           if (data.bankName) {
             this.selectedBankId =
               this.banks.find((b) => b.name === data.bankName)?.ID || null;
@@ -276,7 +211,6 @@ export class EditPlantcareUsersComponent implements OnInit {
         },
         (error) => {
           this.isLoading = false;
-          console.error('Error fetching user data:', error);
         }
       );
   }
@@ -285,8 +219,6 @@ export class EditPlantcareUsersComponent implements OnInit {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.selectedImage = file;
-
-      // Create an image preview
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result as string;
@@ -294,208 +226,6 @@ export class EditPlantcareUsersComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
-
-  // onSubmit() {
-  //   if (this.userForm.valid) {
-  //     console.log('this is the form values.....', this.userForm.value);
-
-  //     if (this.selectedImage) {
-  //       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  //       if (!validImageTypes.includes(this.selectedImage.type)) {
-  //         Swal.fire({
-  //           title: 'Invalid File!',
-  //           text: 'Please upload a valid image file (jpg, png, gif).',
-  //           icon: 'error',
-  //           confirmButtonText: 'OK',
-  //         });
-  //         return;
-  //       }
-  //     }
-
-  //     const token = this.tokenService.getToken();
-  //     if (!token) {
-  //       console.error('No token found');
-  //       return;
-  //     }
-
-  //     Swal.fire({
-  //       title: 'Are you sure?',
-  //       text: 'Do you really want to update this plant care user?',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3085d6',
-  //       cancelButtonColor: '#d33',
-  //       confirmButtonText: 'Yes, update it!',
-  //       cancelButtonText: 'Cancel',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         const headers = new HttpHeaders({
-  //           Authorization: `Bearer ${token}`,
-  //         });
-
-  //         const formData = new FormData();
-  //         formData.append('firstName', this.userForm.get('firstName')?.value);
-  //         formData.append('lastName', this.userForm.get('lastName')?.value);
-  //         formData.append(
-  //           'phoneNumber',
-  //           this.userForm.get('phoneNumber')?.value
-  //         );
-  //         formData.append('NICnumber', this.userForm.get('NICnumber')?.value);
-  //         formData.append('district', this.userForm.get('district')?.value);
-  //         formData.append('membership', this.userForm.get('membership')?.value);
-
-  //         if (this.selectedImage) {
-  //           formData.append('image', this.selectedImage);
-  //         }
-  //         this.isLoading = true;
-  //         this.http
-  //           .put(
-  //             `${environment.API_URL}auth/update-plant-care-user/${this.itemId}`,
-  //             formData,
-  //             { headers }
-  //           )
-  //           .subscribe(
-  //             (data) => {
-  //               this.isLoading = false;
-  //               this.userForm.patchValue(data);
-  //               Swal.fire(
-  //                 'Updated!',
-  //                 'plant care user has been updated.',
-  //                 'success'
-  //               ).then(() => {
-  //                 this.router.navigate(['/steckholders/action/farmers']);
-  //               });
-  //               this.loadUserData(this.itemId!);
-  //               this.userForm.reset();
-  //               this.imagePreview = '';
-  //               this.selectedImage = null;
-  //               this.itemId = null;
-  //             },
-  //             (error) => {
-  //               this.isLoading = false;
-  //               console.error('Error fetching user data:', error);
-  //               Swal.fire(
-  //                 'Error!',
-  //                 'There was an error updating the plant care user.',
-  //                 'error'
-  //               );
-  //             }
-  //           );
-  //       }
-  //     });
-  //   } else {
-  //     // Mark all fields as touched to trigger validation messages
-  //     Object.keys(this.userForm.controls).forEach((key) => {
-  //       const control = this.userForm.get(key);
-  //       control!.markAsTouched();
-  //     });
-  //   }
-  // }
-
-  // onSubmit() {
-  //   if (this.userForm.valid) {
-  //     if (this.selectedImage) {
-  //       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  //       if (!validImageTypes.includes(this.selectedImage.type)) {
-  //         Swal.fire({
-  //           title: 'Invalid File!',
-  //           text: 'Please upload a valid image file (jpg, png, gif).',
-  //           icon: 'error',
-  //           confirmButtonText: 'OK',
-  //         });
-  //         return;
-  //       }
-  //     }
-
-  //     const token = this.tokenService.getToken();
-  //     if (!token) {
-  //       console.error('No token found');
-  //       return;
-  //     }
-
-  //     Swal.fire({
-  //       title: 'Are you sure?',
-  //       text: 'Do you really want to update this plant care user?',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3085d6',
-  //       cancelButtonColor: '#d33',
-  //       confirmButtonText: 'Yes, update it!',
-  //       cancelButtonText: 'Cancel',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         const headers = new HttpHeaders({
-  //           Authorization: `Bearer ${token}`,
-  //         });
-
-  //         const formData = new FormData();
-  //         formData.append('firstName', this.userForm.get('firstName')?.value);
-  //         formData.append('lastName', this.userForm.get('lastName')?.value);
-  //         formData.append(
-  //           'phoneNumber',
-  //           this.userForm.get('phoneNumber')?.value
-  //         );
-  //         formData.append('NICnumber', this.userForm.get('NICnumber')?.value);
-  //         formData.append('district', this.userForm.get('district')?.value);
-  //         formData.append('membership', this.userForm.get('membership')?.value);
-
-  //         // Append bank details
-  //         formData.append(
-  //           'accHolderName',
-  //           this.userForm.get('accHolderName')?.value
-  //         );
-  //         formData.append('accNumber', this.userForm.get('accNumber')?.value);
-  //         formData.append('bankName', this.userForm.get('bankName')?.value);
-  //         formData.append('branchName', this.userForm.get('branchName')?.value);
-
-  //         if (this.selectedImage) {
-  //           formData.append('image', this.selectedImage);
-  //         }
-
-  //         this.isLoading = true;
-  //         this.http
-  //           .put(
-  //             `${environment.API_URL}auth/update-plant-care-user/${this.itemId}`,
-  //             formData,
-  //             { headers }
-  //           )
-  //           .subscribe(
-  //             (data: any) => {
-  //               this.isLoading = false;
-  //               this.userForm.patchValue(data);
-  //               Swal.fire(
-  //                 'Updated!',
-  //                 'Plant care user has been updated.',
-  //                 'success'
-  //               ).then(() => {
-  //                 this.router.navigate(['/steckholders/action/farmers']);
-  //               });
-  //               this.loadUserData(this.itemId!);
-  //               this.userForm.reset();
-  //               this.imagePreview = '';
-  //               this.selectedImage = null;
-  //               this.itemId = null;
-  //             },
-  //             (error) => {
-  //               this.isLoading = false;
-  //               console.error('Error updating plant care user:', error);
-  //               Swal.fire(
-  //                 'Error!',
-  //                 'There was an error updating the plant care user.',
-  //                 'error'
-  //               );
-  //             }
-  //           );
-  //       }
-  //     });
-  //   } else {
-  //     // Mark all fields as touched to trigger validation messages
-  //     Object.keys(this.userForm.controls).forEach((key) => {
-  //       const control = this.userForm.get(key);
-  //       control!.markAsTouched();
-  //     });
-  //   }
-  // }
 
   onSubmit() {
     if (this.userForm.valid) {
@@ -514,7 +244,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
       const token = this.tokenService.getToken();
       if (!token) {
-        console.error('No token found');
         return;
       }
 
@@ -534,7 +263,6 @@ export class EditPlantcareUsersComponent implements OnInit {
           });
 
           const formData = new FormData();
-          // Required user fields
           formData.append(
             'firstName',
             this.userForm.get('firstName')?.value || ''
@@ -564,7 +292,6 @@ export class EditPlantcareUsersComponent implements OnInit {
             this.userForm.get('language')?.value || ''
           );
 
-          // Bank details (can be empty)
           formData.append(
             'accHolderName',
             this.userForm.get('accHolderName')?.value || ''
@@ -584,13 +311,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
           if (this.selectedImage) {
             formData.append('image', this.selectedImage);
-          }
-
-          // Debugging logs
-          console.log('Form values:', this.userForm.value);
-          console.log('FormData contents:');
-          for (let pair of (formData as any).entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
           }
 
           this.isLoading = true;
@@ -615,7 +335,6 @@ export class EditPlantcareUsersComponent implements OnInit {
               },
               (error) => {
                 this.isLoading = false;
-                console.error('Full error response:', error);
                 let errorMessage =
                   'There was an error updating the plant care user.';
                 if (error.error?.error) {
@@ -632,7 +351,6 @@ export class EditPlantcareUsersComponent implements OnInit {
         }
       });
     } else {
-      // Mark all fields as touched to trigger validation messages
       Object.keys(this.userForm.controls).forEach((key) => {
         const control = this.userForm.get(key);
         control!.markAsTouched();
@@ -646,9 +364,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onSubmitCreate() {
     if (this.userForm.valid) {
-      console.log('this is the form values.....', this.userForm.value);
-
-      // Image validation
       if (this.selectedImage) {
         const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (!validImageTypes.includes(this.selectedImage.type)) {
@@ -664,7 +379,6 @@ export class EditPlantcareUsersComponent implements OnInit {
 
       const token = this.tokenService.getToken();
       if (!token) {
-        console.error('No token found');
         return;
       }
 
@@ -683,7 +397,6 @@ export class EditPlantcareUsersComponent implements OnInit {
             Authorization: `Bearer ${token}`,
           });
 
-          // Create FormData with all required fields
           const formData = new FormData();
           formData.append(
             'firstName',
@@ -714,7 +427,6 @@ export class EditPlantcareUsersComponent implements OnInit {
             this.userForm.get('language')?.value || ''
           );
 
-          // Always append bank details (empty strings if not provided)
           formData.append(
             'accNumber',
             this.userForm.get('accNumber')?.value || ''
@@ -732,7 +444,6 @@ export class EditPlantcareUsersComponent implements OnInit {
             this.userForm.get('branchName')?.value || ''
           );
 
-          // Add image if selected
           if (this.selectedImage) {
             formData.append('image', this.selectedImage);
           }
@@ -755,7 +466,6 @@ export class EditPlantcareUsersComponent implements OnInit {
                   this.router.navigate(['/steckholders/action/farmers']);
                 });
 
-                // Reset form and clear selections
                 this.userForm.reset();
                 this.imagePreview = '';
                 this.selectedImage = null;
@@ -763,8 +473,6 @@ export class EditPlantcareUsersComponent implements OnInit {
               },
               (error) => {
                 this.isLoading = false;
-                console.error('Error creating plant care user:', error);
-
                 let errorMessage =
                   'There was an error creating the plant care user.';
                 if (error.error?.error) {
@@ -779,7 +487,6 @@ export class EditPlantcareUsersComponent implements OnInit {
         }
       });
     } else {
-      // Mark all fields as touched to trigger validation messages
       Object.keys(this.userForm.controls).forEach((key) => {
         const control = this.userForm.get(key);
         control!.markAsTouched();
@@ -797,13 +504,11 @@ export class EditPlantcareUsersComponent implements OnInit {
     const file: File = event.target.files[0];
 
     if (file) {
-      // Validate file size (5MB max)
       if (file.size > 5000000) {
         Swal.fire('Error', 'File size should not exceed 5MB', 'error');
         return;
       }
 
-      // Validate file type
       const allowedTypes = [
         'image/jpeg',
         'image/png',
@@ -822,14 +527,12 @@ export class EditPlantcareUsersComponent implements OnInit {
       this.selectedImage = file;
       this.selectedFileName = file.name;
 
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
 
-      // Update form control
       this.userForm.patchValue({
         profileImage: file,
       });
@@ -841,9 +544,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       (data) => {
         this.banks = data;
       },
-      (error) => {
-        console.error('Error loading banks:', error);
-      }
+      (error) => {}
     );
   }
 
@@ -852,9 +553,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       (data) => {
         this.allBranches = data;
       },
-      (error) => {
-        console.error('Error loading branches:', error);
-      }
+      (error) => {}
     );
   }
 
@@ -867,7 +566,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
         this.branches = this.allBranches[selectedBank.ID.toString()] || [];
-        this.userForm.get('branchName')?.setValue(''); // Reset branch when bank changes
+        this.userForm.get('branchName')?.setValue('');
       }
     } else {
       this.branches = [];
@@ -878,7 +577,6 @@ export class EditPlantcareUsersComponent implements OnInit {
   onBranchChange() {
     const selectedBranchName = this.userForm.get('branchName')?.value;
     if (selectedBranchName) {
-      // You can add additional logic here if needed
     }
   }
 }

@@ -26,6 +26,7 @@ export class DashbordAreaChartComponent implements OnChanges {
   options: any;
   qrUsers: number = 0;
   allusers: number = 0;
+  showClearButton: boolean = false;
 
   district = [
     { districtName: 'All' },
@@ -101,8 +102,16 @@ export class DashbordAreaChartComponent implements OnChanges {
   }
 
   onDistrictChange(event: any): void {
-    const selectedDistrict = event.value ? event.value.districtName : 'All';
-    this.selectedDistrict = event.value || { districtName: 'All' };
+    if (!event.value) {
+      // When cleared, set back to "All" and hide clear button
+      this.selectedDistrict = { districtName: 'All' };
+      this.showClearButton = false;
+    } else {
+      this.selectedDistrict = event.value;
+      this.showClearButton = event.value.districtName !== 'All';
+    }
+
+    const selectedDistrict = this.selectedDistrict.districtName;
     this.districtSelected.emit(
       selectedDistrict === 'All' ? null : selectedDistrict
     );

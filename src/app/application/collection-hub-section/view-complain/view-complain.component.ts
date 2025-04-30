@@ -117,6 +117,7 @@ export class ViewComplainComponent implements OnInit {
           this.complainsData = res.results;
           this.totalItems = res.total;
           this.isLoading = false;
+          this.hasData = this.complainsData.length > 0;
         },
         (error) => {
           console.log("Error: ", error);

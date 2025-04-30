@@ -39,6 +39,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   company: Company[] = [];
   filterComCategory: any = {};
   filterCompany: any = {};
+  hasData: boolean = true;
 
   rpst: string = '';
   replyStatus = [
@@ -117,6 +118,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
           this.complainsData = res.results;
           this.totalItems = res.total;
           this.isLoading = false;
+          this.hasData = this.complainsData.length > 0;
         },
         (error) => {
           console.log("Error: ", error);

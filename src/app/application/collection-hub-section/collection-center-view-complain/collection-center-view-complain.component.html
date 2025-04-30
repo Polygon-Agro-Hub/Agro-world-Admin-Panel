@@ -147,7 +147,16 @@
       </div>
     </div>
   </div>
-  <div>
+
+
+  <div *ngIf="!hasData" class="text-center py-8">
+    <p class="text-textLight dark:text-textDark text-lg">
+      No data to display
+    </p>
+  </div>
+
+
+  <div *ngIf="hasData">
     <table
       class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
     >

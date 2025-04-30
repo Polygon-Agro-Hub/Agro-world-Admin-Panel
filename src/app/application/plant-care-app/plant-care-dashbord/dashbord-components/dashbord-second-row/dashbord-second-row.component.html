@@ -26,13 +26,29 @@
 
     <div class="flex flex-1 flex-col items-end justify-center py-5 px-2">
       <div class="flex flex-row items-center justify-end">
-        <i *ngIf="dashboardData.user_increase_percentage > 0" class="fa-solid fa-arrow-trend-up" style="color: #0D9488;"></i>
-        <i *ngIf="dashboardData.user_increase_percentage < 0" class="fa-solid fa-arrow-trend-down" style="color: #EF4444;"></i>
-        <p *ngIf="dashboardData.user_increase_percentage > 0" class="text-lg text-end font-semibold ml-3" style="color: #0D9488;">
-          {{ dashboardData.user_increase_percentage + '%' }}
+        <i
+          *ngIf="dashboardData.user_increase_percentage > 0"
+          class="fa-solid fa-arrow-trend-up"
+          style="color: #0d9488"
+        ></i>
+        <i
+          *ngIf="dashboardData.user_increase_percentage < 0"
+          class="fa-solid fa-arrow-trend-down"
+          style="color: #ef4444"
+        ></i>
+        <p
+          *ngIf="dashboardData.user_increase_percentage > 0"
+          class="text-lg text-end font-semibold ml-3"
+          style="color: #0d9488"
+        >
+          {{ formatPercentage(dashboardData.user_increase_percentage) }}
         </p>
-        <p *ngIf="dashboardData.user_increase_percentage < 0" class="text-lg text-end font-semibold ml-3" style="color: #EF4444;">
-          {{ dashboardData.user_increase_percentage + '%' }}
+        <p
+          *ngIf="dashboardData.user_increase_percentage < 0"
+          class="text-lg text-end font-semibold ml-3"
+          style="color: #ef4444"
+        >
+          {{ formatPercentage(dashboardData.user_increase_percentage) }}
         </p>
       </div>
       <p class="text-[#ABB0B8] text-end text-sm">Compared to last month</p>
@@ -57,13 +73,29 @@
 
     <div class="flex flex-1 flex-col items-end justify-center py-5 px-2">
       <div class="flex flex-row items-center justify-end">
-        <i *ngIf="dashboardData.qr_user_increase_percentage > 0" class="fa-solid fa-arrow-trend-up" style="color: #0D9488;"></i>
-        <i *ngIf="dashboardData.qr_user_increase_percentage < 0" class="fa-solid fa-arrow-trend-down" style="color: #EF4444;"></i>
-        <p *ngIf="dashboardData.qr_user_increase_percentage > 0" class="text-lg text-end font-semibold ml-3" style="color: #0D9488;">
-          {{ dashboardData.qr_user_increase_percentage + '%' }}
+        <i
+          *ngIf="dashboardData.qr_user_increase_percentage > 0"
+          class="fa-solid fa-arrow-trend-up"
+          style="color: #0d9488"
+        ></i>
+        <i
+          *ngIf="dashboardData.qr_user_increase_percentage < 0"
+          class="fa-solid fa-arrow-trend-down"
+          style="color: #ef4444"
+        ></i>
+        <p
+          *ngIf="dashboardData.qr_user_increase_percentage > 0"
+          class="text-lg text-end font-semibold ml-3"
+          style="color: #0d9488"
+        >
+          {{ formatPercentage(dashboardData.qr_user_increase_percentage) }}
         </p>
-        <p *ngIf="dashboardData.qr_user_increase_percentage < 0" class="text-lg text-end font-semibold ml-3" style="color: #EF4444;">
-          {{ dashboardData.qr_user_increase_percentage + '%' }}
+        <p
+          *ngIf="dashboardData.qr_user_increase_percentage < 0"
+          class="text-lg text-end font-semibold ml-3"
+          style="color: #ef4444"
+        >
+          {{ formatPercentage(dashboardData.qr_user_increase_percentage) }}
         </p>
       </div>
       <p class="text-[#ABB0B8] text-end text-sm">Compared to last month</p>
@@ -88,13 +120,29 @@
 
     <div class="flex flex-1 flex-col items-end justify-center py-5 px-2">
       <div class="flex flex-row items-center justify-end">
-        <i *ngIf="dashboardData.cultivation_increase_percentage > 0" class="fa-solid fa-arrow-trend-up" style="color: #0D9488;"></i>
-        <i *ngIf="dashboardData.cultivation_increase_percentage < 0" class="fa-solid fa-arrow-trend-down" style="color: #EF4444;"></i>
-        <p *ngIf="dashboardData.cultivation_increase_percentage > 0" class="text-lg text-end font-semibold ml-3" style="color: #0D9488;">
-          {{ dashboardData.cultivation_increase_percentage + '%' }}
+        <i
+          *ngIf="dashboardData.cultivation_increase_percentage > 0"
+          class="fa-solid fa-arrow-trend-up"
+          style="color: #0d9488"
+        ></i>
+        <i
+          *ngIf="dashboardData.cultivation_increase_percentage < 0"
+          class="fa-solid fa-arrow-trend-down"
+          style="color: #ef4444"
+        ></i>
+        <p
+          *ngIf="dashboardData.cultivation_increase_percentage > 0"
+          class="text-lg text-end font-semibold ml-3"
+          style="color: #0d9488"
+        >
+          {{ formatPercentage(dashboardData.cultivation_increase_percentage) }}
         </p>
-        <p *ngIf="dashboardData.cultivation_increase_percentage < 0" class="text-lg text-end font-semibold ml-3" style="color: #EF4444;">
-          {{ dashboardData.cultivation_increase_percentage + '%' }}
+        <p
+          *ngIf="dashboardData.cultivation_increase_percentage < 0"
+          class="text-lg text-end font-semibold ml-3"
+          style="color: #ef4444"
+        >
+          {{ formatPercentage(dashboardData.cultivation_increase_percentage) }}
         </p>
       </div>
       <p class="text-[#ABB0B8] text-end text-sm">Compared to last month</p>

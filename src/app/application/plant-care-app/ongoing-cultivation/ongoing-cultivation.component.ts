@@ -158,10 +158,10 @@ export class OngoingCultivationComponent {
     );
   }
 
-  viewTaskByUser(cultivationId: any, userId: any) {
+  viewTaskByUser(cultivationId: any, userId: any, userName: any) {
     if (cultivationId) {
       this.router.navigate(['/plant-care/action/view-crop-task-by-user'], {
-        queryParams: { cultivationId, userId },
+        queryParams: { cultivationId, userId, userName },
       });
     }
   }

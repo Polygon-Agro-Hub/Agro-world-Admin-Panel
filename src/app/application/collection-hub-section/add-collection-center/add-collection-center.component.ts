@@ -147,48 +147,68 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.collectionCenterForm.valid) {
-      this.centerData = {
-        ...this.centerData,
-        ...this.collectionCenterForm.value,
-      };
+    const requiredFields = [
+      { key: 'buildingNumber', label: 'Building Number' },
+      { key: 'street', label: 'Street' },
+      { key: 'city', label: 'City' },
+      { key: 'centerName', label: 'Center Name' },
+      { key: 'contact01', label: 'Contact Number' },
+      { key: 'district', label: 'District' },
+      { key: 'province', label: 'Province' },
+      { key: 'regCode', label: 'Registration Code' },
+      { key: 'contact01Code', label: 'Contact Code' },
+    ];
 
-      this.collectionCenterService
-        .createCollectionCenter(this.centerData, this.selectedCompaniesIds)
-        .subscribe(
-          (res) => {
-            if (res.status) {
-              Swal.fire(
-                'Success',
-                'Collection Center Created Successfully',
-                'success'
-              );
-              this.router.navigate(['/collection-hub/view-collection-centers']);
-            } else {
-              if (res.message === 'This RegCode already exists!') {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Failed',
-                  text: 'This RegCode already exists!',
-                });
-              }
-            }
-          },
-          () => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Something went wrong while creating the Collection Center.',
-            });
-          }
-        );
-    } else {
+    const missingFields = requiredFields
+      .filter((field) => !this.collectionCenterForm.value[field.key])
+      .map((field) => `- ${field.label}`);
+
+    if (this.selectedCompaniesIds.length === 0) {
+      missingFields.push(`- Company Name`);
+    }
+
+    if (missingFields.length > 0) {
       Swal.fire({
         icon: 'error',
         title: 'Form Validation Error',
-        text: 'Please check all fields and ensure they meet the required validation criteria.',
+        html: `<p>Please fill in the following required fields:</p><ul>${missingFields
+          .map((f) => `<li>${f}</li>`)
+          .join('')}</ul>`,
       });
+      return;
     }
+
+    this.centerData = {
+      ...this.centerData,
+      ...this.collectionCenterForm.value,
+    };
+
+    this.collectionCenterService
+      .createCollectionCenter(this.centerData, this.selectedCompaniesIds)
+      .subscribe(
+        (res) => {
+          console.log(res);
+          if (res.status) {
+            Swal.fire(
+              'Success',
+              'Collection Center Created Successfully',
+              'success'
+            );
+            this.router.navigate(['/collection-hub/view-collection-centers']);
+          } else {
+            if (res.message === 'This RegCode already exists!') {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Something went wrong while creating the Collection Center.',
+              });
+            }
+          }
+        },
+        (error) => {
+          console.log('Error:', error);
+        }
+      );
   }
 
   onCancel() {

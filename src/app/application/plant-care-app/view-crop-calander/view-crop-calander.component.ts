@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface NewCropCalender {
   id: number;
@@ -33,6 +34,7 @@ interface NewCropCalender {
     LoadingSpinnerComponent,
     NgxPaginationModule,
     FormsModule,
+    DropdownModule,
   ],
   templateUrl: './view-crop-calander.component.html',
   styleUrl: './view-crop-calander.component.css',
@@ -40,12 +42,19 @@ interface NewCropCalender {
 export class ViewCropCalanderComponent implements OnInit {
   newCropCalender: NewCropCalender[] = [];
   selectedCrop: any = null;
+  selectedCategory: any = null;
   isLoading = false;
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
   hasData: boolean = true;
   searchText: string = '';
+  category = [
+    { name: 'Vegetables', value: 'Vegetables' },
+    { name: 'Fruit', value: 'Fruit' },
+    { name: 'Grain', value: 'Grain' },
+    { name: 'Mushrooms', value: 'Mushrooms' },
+  ];
 
   constructor(
     private cropCalendarService: CropCalendarService,
@@ -57,15 +66,21 @@ export class ViewCropCalanderComponent implements OnInit {
     this.fetchAllCropCalenders();
   }
 
+  regStatusFil() {
+    this.fetchAllCropCalenders();
+  }
+
   fetchAllCropCalenders(
     page: number = 1,
     limit: number = this.itemsPerPage,
-    search: string = this.searchText
+    search: string = this.searchText,
+    category: string = this.selectedCategory
   ) {
+    console.log('Fetching market prices for page:', page); // Debug log
     this.page = page;
     this.isLoading = true;
     this.cropCalendarService
-      .fetchAllCropCalenders(page, limit, search)
+      .fetchAllCropCalenders(page, limit, search, category)
       .subscribe(
         (data) => {
           this.isLoading = false;
@@ -74,6 +89,7 @@ export class ViewCropCalanderComponent implements OnInit {
           this.totalItems = data.total;
         },
         (error) => {
+          console.error('Error fetch news:', error);
           if (error.status === 401) {
             this.isLoading = false;
           }

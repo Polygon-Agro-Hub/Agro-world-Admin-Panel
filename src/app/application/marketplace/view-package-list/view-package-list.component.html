@@ -34,7 +34,7 @@
     <div class="flex justify-between items-center align-middle mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Packages
+          All Packages ({{ this.filteredPackages.length }})
         </h2>
       </div>
       <div class="flex items-center">
@@ -82,7 +82,7 @@
                 {{ pkg.displayName }}
               </td>
               <td class="py-4 text-textLight dark:text-textDark">
-                {{ pkg.total }}
+                {{ pkg.total | number: '1.2-2' }}
               </td>
               <td>
                 <span

@@ -421,7 +421,7 @@ export class EditCenterHeadComponent {
               this.isLoading = false;
               Swal.fire(
                 'Success',
-                'Center Head Created Successfully',
+                'Center Head Edited Successfully',
                 'success'
               );
               this.navigatePath('/collection-hub/manage-company');
@@ -429,7 +429,7 @@ export class EditCenterHeadComponent {
             (error: any) => {
               this.isLoading = false;
               this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
+                error.error.error || 'An unexpected error occurred'; // Update the error message
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );

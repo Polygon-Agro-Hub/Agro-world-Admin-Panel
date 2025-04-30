@@ -233,10 +233,8 @@ export class CreateCropCalenderComponent {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         this.uploadXlsxFile(cropId, result.value);
-        this.router.navigate(['/plant-care/action/view-crop-calender']);
       } else {
         this.deleteCropCalender(cropId);
-        this.router.navigate(['/plant-care/action/view-crop-calender']);
       }
     });
   }
@@ -255,7 +253,9 @@ export class CreateCropCalenderComponent {
         this.router.navigate(['/plant-care/action/view-crop-calender']);
       },
       (error: HttpErrorResponse) => {
-        let errorMessage = 'There was an error uploading the XLSX file';
+        console.error('Error uploading XLSX file', error);
+        let errorMessage = 'Please check XLSX file again.';
+        Swal.fire('Error!', 'Please check XLSX file again.', 'error');
 
         this.deleteCropCalender(cropId);
 
@@ -376,14 +376,16 @@ export class CreateCropCalenderComponent {
   }
 
   deleteCropCalender(id: any) {
+    this.isLoading = true;
     this.cropCalendarService.deleteCropCalender(id).subscribe(
       (data: any) => {
         if (data) {
-          Swal.fire(
-            'Deleted!',
-            'Your uncomplete crop calender has been deleted',
-            'success'
-          );
+          // Swal.fire(
+          //   "Deleted!",
+          //   "Your uncomplete crop calender has been deleted",
+          //   "success",
+          // );
+          this.isLoading = false;
         }
       },
       (error) => {
@@ -392,6 +394,7 @@ export class CreateCropCalenderComponent {
           'There was an error deleting the uncomplete crop calendar.',
           'error'
         );
+        this.isLoading = false;
       }
     );
   }

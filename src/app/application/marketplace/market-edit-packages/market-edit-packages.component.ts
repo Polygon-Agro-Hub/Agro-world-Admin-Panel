@@ -56,62 +56,57 @@ export class MarketEditPackagesComponent {
   }
 
   getDiscountPercentage(item: any): number {
-    const normal = item.item.pricing.normalPrice;
-    const discounted = item.item.pricing.discountedPrice;
-    return ((normal - discounted) / normal) * 100;
+    if (!item.detailDiscount || !item.item.pricing.normalPrice) return 0;
+    
+    const normalPrice = item.quantityType === 'g' 
+      ? (item.item.pricing.normalPrice * item.quantity) / 1000
+      : item.item.pricing.normalPrice * item.quantity;
+    
+    return (item.detailDiscount / normalPrice) * 100;
   }
-
-  getDiscountAmount(item: any, type: any): number {
-    const normal = item.item.pricing.normalPrice;
-    const discounted = item.item.pricing.discountedPrice;
-
-    let finalDis = 0;
-
-    if (type === 'g') {
-      // For grams, we divide by 1000 to convert to kilograms.
-      finalDis = (normal - discounted) * (Number(item.quantity || 0) / 1000);
-    } else {
-      // For kilograms, we use the quantity as is.
-      finalDis = (normal - discounted) * Number(item.quantity || 0);
-    }
-
-    return finalDis;
+  
+  getDiscountAmount(item: any, quantityType: string): number {
+    if (!item.item.pricing.normalPrice || !item.detailDiscountedPrice) return 0;
+    
+    const normalPrice = item.quantityType === 'g' 
+      ? (item.item.pricing.normalPrice * item.quantity) / 1000
+      : item.item.pricing.normalPrice * item.quantity;
+    
+    return normalPrice - item.detailDiscountedPrice;
   }
-
-  // Method to increment the discount value for an item
+  
   incrementDiscountValue(index: number, step: number = 1) {
     const item = this.packageItems[index];
-    const { normalPrice, discountedPrice } = item.item.pricing;
-
-    // Calculate the new discounted price based on the percentage step
-    const discountPercentage =
-      ((normalPrice - discountedPrice) / normalPrice) * 100;
-    const newDiscountPercentage = discountPercentage + step;
-
-    if (newDiscountPercentage <= 100) {
-      item.item.pricing.discountedPrice = parseFloat(
-        (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
-      );
-      this.calculatePackageTotals();
-    }
+    const normalPrice = item.quantityType === 'g' 
+      ? (item.item.pricing.normalPrice * item.quantity) / 1000
+      : item.item.pricing.normalPrice * item.quantity;
+  
+    // Calculate current discount percentage
+    const currentDiscountPercentage = this.getDiscountPercentage(item);
+    const newDiscountPercentage = Math.min(100, currentDiscountPercentage + step);
+  
+    // Update discount values
+    item.detailDiscount = (normalPrice * newDiscountPercentage) / 100;
+    item.detailDiscountedPrice = normalPrice - item.detailDiscount;
+  
+    this.calculatePackageTotals();
   }
-
-  // Method to decrement the discount value for an item
+  
   decrementDiscountValue(index: number, step: number = 1) {
     const item = this.packageItems[index];
-    const { normalPrice, discountedPrice } = item.item.pricing;
-
-    // Calculate the new discounted price based on the percentage step
-    const discountPercentage =
-      ((normalPrice - discountedPrice) / normalPrice) * 100;
-    const newDiscountPercentage = discountPercentage - step;
-
-    if (newDiscountPercentage >= 0) {
-      item.item.pricing.discountedPrice = parseFloat(
-        (normalPrice * (1 - newDiscountPercentage / 100)).toFixed(2)
-      );
-      this.calculatePackageTotals();
-    }
+    const normalPrice = item.quantityType === 'g' 
+      ? (item.item.pricing.normalPrice * item.quantity) / 1000
+      : item.item.pricing.normalPrice * item.quantity;
+  
+    // Calculate current discount percentage
+    const currentDiscountPercentage = this.getDiscountPercentage(item);
+    const newDiscountPercentage = Math.max(0, currentDiscountPercentage - step);
+  
+    // Update discount values
+    item.detailDiscount = (normalPrice * newDiscountPercentage) / 100;
+    item.detailDiscountedPrice = normalPrice - item.detailDiscount;
+  
+    this.calculatePackageTotals();
   }
 
   toggleUnitType(index: number, unit: string) {
@@ -131,47 +126,27 @@ export class MarketEditPackagesComponent {
     this.calculatePackageTotals();
   }
 
-  // incrementQuantity(index: number) {
-  //   const item = this.packageItems[index];
-  //   if (item.quantityType === 'g') {
-  //     // Increase by 100g (0.1 Kg in baseQuantity)
-  //     item.baseQuantity += 0.1;
-  //     item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
-  //   } else {
-  //     // Increase by 0.1 Kg
-  //     item.quantity += 0.1;
-
-  //   }
-
-  //   this.calculatePackageTotals(); // Recalculate totals after quantity change
-  // }
-
-  // decrementQuantity(index: number) {
-  //   const item = this.packageItems[index];
-  //   if (item.quantityType === 'g') {
-  //     // Decrease by 100g (0.1 Kg in baseQuantity)
-  //     const newQuantity = item.baseQuantity - 0.1;
-  //     if (newQuantity >= 0) {
-  //       item.baseQuantity = newQuantity;
-  //       item.quantity = item.baseQuantity * 1000; // Update display quantity in grams
-  //     }
-  //   } else {
-  //     // Decrease by 0.1 Kg
-  //     const newQuantity = item.baseQuantity - 0.1;
-  //     if (newQuantity >= 0) {
-  //       item.baseQuantity = newQuantity;
-  //       item.quantity = parseFloat(item.baseQuantity.toFixed(2)); // Update display quantity in Kg
-  //     }
-  //   }
-
-  //   this.calculatePackageTotals(); // Recalculate totals after quantity change
-  // }
-
-  // Add this helper method to display the quantity properly in the template
-
-  getDisplayQuantity(item: any): number {
-    // Simply return the stored quantity - we're now handling conversions properly
-    return item.quantity || 0;
+  
+  getDisplayQuantity(item: any): string {
+    if (!item) return '0';
+    
+    // For kilograms, show 1 decimal place (e.g., "1.5 kg")
+    if (item.quantityType === 'Kg') {
+      return item.quantity.toFixed(1);
+    }
+    // For grams, show as whole number (e.g., "500 g")
+    return Math.round(item.quantity).toString();
+  }
+  
+  // Helper method to update prices while maintaining discount percentage
+  private updateItemPrices(item: any, discountPercentage: number) {
+    const normalPrice = item.quantityType === 'g'
+      ? (item.item.pricing.normalPrice * item.quantity) / 1000
+      : item.item.pricing.normalPrice * item.quantity;
+  
+    // Recalculate discount values based on original percentage
+    item.detailDiscount = (normalPrice * discountPercentage) / 100;
+    item.detailDiscountedPrice = normalPrice - item.detailDiscount;
   }
 
   removeItem(index: number) {
@@ -198,49 +173,52 @@ export class MarketEditPackagesComponent {
   incrementQuantity(index: number) {
     const item = this.packageItems[index];
     if (!item) return;
-
+  
     // Determine the increment step based on unit type
     const step = item.quantityType === 'Kg' ? 0.1 : 100;
-
-    // Convert to grams if needed for calculation
-    const currentValue =
-      item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
-    const newValue =
-      currentValue + (item.quantityType === 'Kg' ? step : step / 1000);
-
-    // Update the quantity based on unit type
-    item.quantity =
-      item.quantityType === 'Kg'
-        ? parseFloat(newValue.toFixed(2))
-        : Math.round(newValue * 1000);
-
+  
+    // Store current discount percentage before changing quantity
+    const currentDiscountPercentage = this.getDiscountPercentage(item);
+  
+    // Update the quantity
+    item.quantity = item.quantityType === 'Kg'
+      ? parseFloat((item.quantity + step).toFixed(2))
+      : item.quantity + step;
+  
+    // Recalculate prices based on new quantity while maintaining discount percentage
+    this.updateItemPrices(item, currentDiscountPercentage);
     this.calculatePackageTotals();
   }
-
+  
   decrementQuantity(index: number) {
     const item = this.packageItems[index];
-    if (!item || item.quantity <= 0) return;
-
+    if (!item) return;
+  
     // Determine the decrement step based on unit type
     const step = item.quantityType === 'Kg' ? 0.1 : 100;
-
-    // Convert to grams if needed for calculation
-    const currentValue =
-      item.quantityType === 'Kg' ? item.quantity : item.quantity / 1000;
-    let newValue =
-      currentValue - (item.quantityType === 'Kg' ? step : step / 1000);
-
-    // Ensure we don't go below 0
-    newValue = Math.max(0, newValue);
-
-    // Update the quantity based on unit type
-    item.quantity =
+  
+    // Store current discount percentage before changing quantity
+    const currentDiscountPercentage = this.getDiscountPercentage(item);
+  
+    // Calculate new quantity (ensuring it doesn't go below 0)
+    const newQuantity = Math.max(
+      0,
       item.quantityType === 'Kg'
-        ? parseFloat(newValue.toFixed(2))
-        : Math.round(newValue * 1000);
-
-    this.calculatePackageTotals();
+        ? parseFloat((item.quantity - step).toFixed(2))
+        : item.quantity - step
+    );
+  
+    // Only update if quantity changed
+    if (newQuantity !== item.quantity) {
+      item.quantity = newQuantity;
+      // Recalculate prices based on new quantity while maintaining discount percentage
+      this.updateItemPrices(item, currentDiscountPercentage);
+      this.calculatePackageTotals();
+    }
   }
+
+
+
 
   decrementDiscount(index: number, step: number = 1.0) {
     if (
@@ -422,6 +400,15 @@ export class MarketEditPackagesComponent {
   }
 
   onAdd() {
+
+    if (
+      !this.inputPackageObj.quantity
+    ) {
+      Swal.fire('Warning', 'You cannot add 0 as the product Quantity', 'warning');
+      return;
+    }
+
+
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
@@ -463,18 +450,18 @@ export class MarketEditPackagesComponent {
         pricing: {
           normalPrice: this.inputPackageObj.normalPrice,
           discountedPrice: this.inputPackageObj.discountedPrice,
-          discount:
-            this.inputPackageObj.normalPrice -
+          discount: this.inputPackageObj.normalPrice -
             this.inputPackageObj.discountedPrice,
           promo: false,
         },
         unitType: this.inputPackageObj.qtytype,
       },
-      baseQuantity:
-        this.inputPackageObj.qtytype === 'g'
-          ? this.inputPackageObj.quantity! / 1000 // Convert g to Kg
-          : this.inputPackageObj.quantity!,
+      baseQuantity: this.inputPackageObj.qtytype === 'g'
+        ? this.inputPackageObj.quantity! / 1000 // Convert g to Kg
+        : this.inputPackageObj.quantity!,
       mpItemId: 0,
+      detailDiscountedPrice: 0,
+      detailDiscount: 0
     };
 
     this.packageItems.push(newItem);
@@ -532,6 +519,8 @@ export class MarketEditPackagesComponent {
       return;
     }
 
+    this.loading = true;
+
     // Prepare the package data
     const packageData = {
       displayName: this.packageData.displayName,
@@ -545,14 +534,16 @@ export class MarketEditPackagesComponent {
         const normalPrice = item.item.pricing.normalPrice;
         const quantity = item.quantity;
         const discountAmount = this.getDiscountAmount(item, item.quantityType);
-
+        const detailDiscount = item.detailDiscount;
         const discountedPrice = normalPrice * quantity - discountAmount;
+        
 
         return {
           mpItemId: Number(item.mpItemId), // Use mpItemId from top level of item
           quantity: Number(quantity),
           qtytype: item.quantityType,
           discountedPrice: Number(discountedPrice.toFixed(2)), // rounding to 2 decimals
+          detailDiscount: Number(detailDiscount.toFixed(2)), // rounding to 2 decimals
         };
       }),
     };
@@ -585,10 +576,12 @@ export class MarketEditPackagesComponent {
           .subscribe({
             next: (res) => {
               Swal.fire('Success!', 'Package updated successfully', 'success');
+              this.loading = false;
             },
             error: (err) => {
               console.error('Error updating package:', err);
               Swal.fire('Error!', 'Failed to update package', 'error');
+              this.loading = false;
             },
           });
       }
@@ -626,6 +619,8 @@ interface PackageItem {
   baseQuantity: number; // Base quantity used for calculations (e.g., always in Kg)
   quantityType: string;
   price: number;
+  detailDiscountedPrice: number;
+  detailDiscount: number;
   item: {
     id: number;
     mpItemId: number;

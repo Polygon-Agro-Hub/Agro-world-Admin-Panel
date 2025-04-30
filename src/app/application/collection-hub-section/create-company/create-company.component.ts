@@ -105,7 +105,8 @@ export class CreateCompanyComponent {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort banks alphabetically by name (case-insensitive)
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
       (error) => {}
@@ -179,17 +180,25 @@ export class CreateCompanyComponent {
         }
       }
     }
+    console.log('hit 02', console.log(this.companyData.bankName));
   }
 
   onBankChange() {
     if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      // Update and sort branches based on selected bank
+      this.branches = (
+        this.allBranches[this.selectedBankId.toString()] || []
+      ).sort((a, b) => a.name.localeCompare(b.name));
+
+      // Update company data with bank name
       const selectedBank = this.banks.find(
         (bank) => bank.ID === this.selectedBankId
       );
       if (selectedBank) {
         this.companyData.bankName = selectedBank.name;
       }
+
+      // Reset branch selection if the current selection doesn't belong to this bank
       const currentBranch = this.branches.find(
         (branch) => branch.ID === this.selectedBranchId
       );
@@ -238,12 +247,18 @@ export class CreateCompanyComponent {
   }
 
   saveCompanyData() {
+    console.log(this.companyData);
+    this.isLoading = true;
     this.collectionCenterSrv.createCompany(this.companyData).subscribe(
       (response) => {
+        this.isLoading = false;
+        console.log('Data saved successfully:', response);
         Swal.fire('Success', 'Company Created Successfully', 'success');
         this.router.navigate(['/collection-hub/manage-company']);
       },
       (error) => {
+        this.isLoading = false;
+        console.error('Error saving data:', error);
         Swal.fire('Error', error, 'error');
       }
     );

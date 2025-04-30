@@ -18,22 +18,44 @@
         </h2>
       </div>
       <div class="flex items-center">
-        <!-- <div class="mr-5">
+
+        <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-            [options]="districts"
-            [(ngModel)]="selectedDistrict"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="districtOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
             [showClear]="true"
             placeholder="District"
-            (onChange)="applyFilters()"
-          />
-        </div> -->
+            [(ngModel)]="selectDistrict"
+            (onChange)="applyDistrictFilters()"
+          ></p-dropdown>
+        </div>
+        
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="provinceOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="Province"
+            [(ngModel)]="selectProvince"
+            (onChange)="applyProvinceFilters()"
+          ></p-dropdown>
+        </div>
+
+
+        
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
           <input
             type="text"
-            placeholder="Search.."
+            placeholder="Search By Reg Code, Center Name, City"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             [(ngModel)]="searchItem"
             (keydown.enter)="searchPlantCareUsers()"
@@ -89,39 +111,39 @@
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Reg Code
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Centre Name
             </th>
 
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Provine
             </th>
 
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               District
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               City
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Contact Number 01
             </th>
@@ -150,22 +172,22 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.province }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.district }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.street }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.code1 }} {{ item.contact01 }}
             </td>
             <td
@@ -211,6 +233,21 @@
                     stroke-linejoin="round"
                   />
                 </svg>
+              </button>
+            </td>
+
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                
+              >
+                <i class="fa-solid fa-pen-to-square fa-xl text-blue-500 hover:text-blue-700"></i>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                
+              >
+                <i class="fa-solid fa-trash fa-xl text-red-500"></i>
               </button>
             </td>
             <!-- <td class="px-4 py-3 text-center text-textLight dark:text-textDark">

@@ -60,6 +60,86 @@ export class AgroWorldCentersComponent {
   hasData: boolean = true;
   centerId!: number;
 
+  provinceOptions: any[] = [];
+  districtOptions: any[] = [];
+
+  selectProvince: string = '';
+  selectDistrict: string = '';
+
+  ProvinceData = [
+    {
+      province: "Western",
+      district: [
+        { districtName: "Colombo" },
+        { districtName: "Kalutara" },
+        { districtName: "Gampaha" }
+      ]
+    },
+    {
+      province: "Central",
+      district: [
+        { districtName: "Kandy" },
+        { districtName: "Matale" },
+        { districtName: "Nuwara Eliya" }
+      ]
+    },
+    {
+      province: "Southern",
+      district: [
+        { districtName: "Galle" },
+        { districtName: "Matara" },
+        { districtName: "Hambantota" }
+      ]
+    },
+    {
+      province: "Northern",
+      district: [
+        { districtName: "Jaffna" },
+        { districtName: "Mannar" },
+        { districtName: "Vavuniya" },
+        { districtName: "Kilinochchi" },
+        { districtName: "Mulaitivu" }
+      ]
+    },
+    {
+      province: "Eastern",
+      district: [
+        { districtName: "Batticaloa" },
+        { districtName: "Ampara" },
+        { districtName: "Trincomalee" }
+      ]
+    },
+    {
+      province: "Uva",
+      district: [
+        { districtName: "Badulla" },
+        { districtName: "Moneragala" }
+      ]
+    },
+    {
+      province: "North Western",
+      district: [
+        { districtName: "Kurunegala" },
+        { districtName: "Puttalam" }
+      ]
+    },
+    {
+      province: "North Central",
+      district: [
+        { districtName: "Anuradhapura" },
+        { districtName: "Polonnaruwa" }
+      ]
+    },
+    {
+      province: "Sabaragamuwa",
+      district: [
+        { districtName: "Rathnapura" },
+        { districtName: "Kegalle" }
+      ]
+    },
+
+  ]
+
   constructor(
     private router: Router,
     private collectionService: CollectionCenterService,
@@ -69,16 +149,34 @@ export class AgroWorldCentersComponent {
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+
+    this.provinceOptions = this.ProvinceData
+    .map(p => ({
+      label: p.province,
+      value: p.province
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  // District dropdown (all districts initially, sorted alphabetically)
+  this.districtOptions = this.ProvinceData
+    .flatMap(p => p.district)
+    .map(d => ({
+      label: d.districtName,
+      value: d.districtName
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
   }
 
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
-    searchItem?: string
+    district: string = this.selectDistrict,
+    province: string = this.selectProvince,
+    searchItem: string = this.searchItem,
   ) {
     this.isLoading = true;
     this.collectionService
-      .getAllCollectionCenterPageAW(page, limit, searchItem)
+      .getAllCollectionCenterPageAW(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -134,16 +232,85 @@ export class AgroWorldCentersComponent {
   }
 
   searchPlantCareUsers() {
-    this.page = 1;
+    console.log(this.searchItem);
+    // this.page = 1;
     this.fetchAllCollectionCenter(
       this.page,
       this.itemsPerPage,
-      this.searchItem
     );
   }
 
   clearSearch(): void {
     this.searchItem = '';
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  applyProvinceFilters() {
+    if (this.selectProvince) {
+      const selected = this.ProvinceData.find(p => p.province === this.selectProvince);
+  
+      // Filter and sort districts for selected province
+      this.districtOptions = selected?.district
+        .map(d => ({
+          label: d.districtName,
+          value: d.districtName
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || [];
+  
+      // Reset district selection
+      this.selectDistrict = '';
+    } else {
+      // Province cleared → show all districts, sorted
+      this.districtOptions = this.ProvinceData
+        .flatMap(p => p.district)
+        .map(d => ({
+          label: d.districtName,
+          value: d.districtName
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+    }
+
+    console.log(this.selectProvince);
+  
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+  
+
+  applyDistrictFilters() {
+    if (this.selectDistrict) {
+      const matchingProvince = this.ProvinceData.find(p =>
+        p.district.some(d => d.districtName === this.selectDistrict)
+      );
+  
+      if (matchingProvince) {
+        this.selectProvince = matchingProvince.province;
+  
+        // Filter district list for this province
+        this.districtOptions = matchingProvince.district.map(d => ({
+          label: d.districtName,
+          value: d.districtName
+        }));
+      }
+    }
+    console.log(this.selectDistrict);
+  
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  clearDistrictFilter() {
+    this.selectDistrict = '';
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+  
+  clearProvinceFilter() {
+    this.selectProvince = '';
+    this.selectDistrict = '';
+    this.districtOptions = this.ProvinceData
+      .flatMap(p => p.district)
+      .map(d => ({
+        label: d.districtName,
+        value: d.districtName
+      }));
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 

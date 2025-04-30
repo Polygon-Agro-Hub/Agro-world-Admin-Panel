@@ -42,16 +42,36 @@
         </h2>
       </div>
       <div class="flex items-center">
-        <!-- <div class="mr-5">
+
+        <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-            [options]="districts"
-            [(ngModel)]="selectedDistrict"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="provinceOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="Province"
+            [(ngModel)]="selectProvince"
+            (onChange)="applyProvinceFilters()"
+          ></p-dropdown>
+        </div>
+
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="districtOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
             [showClear]="true"
             placeholder="District"
-            (onChange)="applyFilters()"
-          />
-        </div> -->
+            [(ngModel)]="selectDistrict"
+            (onChange)="applyDistrictFilters()"
+          ></p-dropdown>
+        </div>
+
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
@@ -113,43 +133,43 @@
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-nowrap"
             >
               Reg Code
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Centre Name
             </th>
             <th
-              class="px-8 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left "
             >
               Companies
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Provine
             </th>
 
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               District
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               City
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Contact Number 01
             </th>
@@ -158,7 +178,7 @@
               class="py-3 font-normal text-textLight dark:text-textDark text-left"
             ></th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             ></th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -181,14 +201,14 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName }}
             </td>
             <td
-              class="flex flex-col px-4 py-3 text-center text-textLight dark:text-textDark"
+              class=" px-4 py-3 text-left text-textLight dark:text-textDark "
             >
               <ng-container *ngIf="item.companies.length > 0; else noCompanies">
                 <span *ngFor="let company of item.companies; let last = last">
@@ -197,20 +217,20 @@
               </ng-container>
               <ng-template #noCompanies> No companies </ng-template>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark ">
               {{ item.province }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.district }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.street }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.code1 }} {{ item.contact01 }}
             </td>
 
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="viewCollectionCenter(item.id)"

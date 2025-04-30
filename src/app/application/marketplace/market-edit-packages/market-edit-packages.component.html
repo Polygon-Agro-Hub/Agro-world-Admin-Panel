@@ -54,19 +54,26 @@
             class="hidden"
             (change)="onImageSelected($event)"
           />
+          
           <label
             for="imageUpload"
             class="text-[#534E4E] dark:text-textDark cursor-pointer"
           >
             Add Image
           </label>
+          
           <label
             for="imageUpload"
             class="py-1 px-2 rounded-lg shadow-lg border-[1px] border-[#3980C0] cursor-pointer"
           >
             <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
           </label>
+        
+
         </div>
+
+        
+
       </div>
 
       <div class="mb-6">
@@ -205,7 +212,7 @@
         >
           <img
             class="w-full h-auto object-cover px-4 py-2 mt-8"
-            [src]="selectedImage || 'assets/default-package.png'"
+            [src]="selectedImage || packageData.image"
           />
 
           <div class="flex flex-col items-center justify-center gap-y-2">
@@ -213,7 +220,7 @@
               {{ packageData.displayName || "Package Name" }}
             </p>
             <p class="text-lg text-[#00957D]">
-              Rs. {{ packageData.total || "0.00" }}
+              Rs. {{ packageData.total | number: '1.2-2' }}
             </p>
           </div>
         </div>
@@ -325,10 +332,10 @@
         </td>
         <td class="px-6 py-4 text-center text-black dark:text-textDark">
           <div *ngIf="item.quantityType === 'g'">
-            Rs. {{ (item.item.pricing.normalPrice * item.quantity) / 1000 }}
+            Rs. {{ ((item.item.pricing.normalPrice * item.quantity) / 1000 ) | number: '1.2-2'}}
           </div>
           <div *ngIf="item.quantityType === 'Kg'">
-            Rs. {{ item.item.pricing.normalPrice * item.quantity }}
+            Rs. {{ (item.item.pricing.normalPrice * item.quantity) | number: '1.2-2' }}
           </div>
         </td>
 
@@ -352,7 +359,7 @@
           <!-- Display total discount value for all quantities -->
           <p class="text-[#006C5A] dark:text-textDark">
             Rs.
-            {{ getDiscountAmount(item, item.quantityType) | number : "1.2-2" }}
+            {{item.detailDiscount | number: '1.2-2'}}
           </p>
         </td>
 
@@ -361,8 +368,7 @@
           <p class="text-[#006C5A] dark:text-textDark">
             Rs.
             {{
-              item.item.pricing.normalPrice * item.quantity -
-                getDiscountAmount(item, item.quantityType) | number : "1.2-2"
+              item.detailDiscountedPrice | number: '1.2-2'
             }}
           </p>
         </td>

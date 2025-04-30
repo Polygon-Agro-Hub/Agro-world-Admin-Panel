@@ -161,8 +161,13 @@ export class ViewCollectiveOfficerProfileComponent {
       y + 10
     );
     y += 5;
-    pdf.text(`${this.officerObj.centerName}`, detailsX, y + 10);
-    y += 5;
+
+    // Only show center name if it exists
+    if (this.officerObj.centerName) {
+      pdf.text(`${this.officerObj.centerName}`, detailsX, y + 10);
+      y += 5;
+    }
+
     pdf.text(`${this.officerObj.companyNameEnglish}`, detailsX, y + 10);
     y += 30;
 

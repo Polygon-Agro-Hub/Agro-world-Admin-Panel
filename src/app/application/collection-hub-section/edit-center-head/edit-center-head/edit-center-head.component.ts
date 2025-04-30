@@ -26,44 +26,43 @@ interface BranchesData {
 @Component({
   selector: 'app-edit-center-head',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './edit-center-head.component.html',
-  styleUrl: './edit-center-head.component.css'
+  styleUrl: './edit-center-head.component.css',
 })
 export class EditCenterHeadComponent {
-
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
-  selectedFileName!: string
+  selectedFileName!: string;
   selectedImage: string | ArrayBuffer | null = null;
   isLoading = true;
   selectedLanguages: string[] = [];
-  selectJobRole!: string
+  selectJobRole!: string;
   personalData: Personal = new Personal();
   CompanyData: Company[] = [];
   confirmAccNumber!: any;
-  
-  lastID!: string
+  lastID!: string;
   empType!: string;
-  
   comId!: number;
   initiateJobRole!: string;
   initiateId!: string;
   errorMessage: string = '';
   img!: string;
-
-
   banks: Bank[] = [];
   branches: Branch[] = [];
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
-
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
-
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -99,8 +98,8 @@ export class EditCenterHeadComponent {
     private route: ActivatedRoute,
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
-    private collectionOfficerService: CollectionOfficerService,
-  ) { }
+    private collectionOfficerService: CollectionOfficerService
+  ) {}
 
   ngOnInit(): void {
     this.loadBanks();
@@ -109,20 +108,15 @@ export class EditCenterHeadComponent {
 
     if (this.itemId) {
       this.isLoading = true;
-      console.log('isLoading became true');
-
       this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
         next: (response: any) => {
-          console.log('Response: ', response);
-
-          // Map the response data to the Personal class
           const officerData = response.officerData[0];
-          console.log('hi hi: ', response.officerData[0].empId);
-
           this.personalData.empId = officerData.empId;
           this.personalData.jobRole = officerData.jobRole || '';
-          this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
-          this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
+          this.personalData.firstNameEnglish =
+            officerData.firstNameEnglish || '';
+          this.personalData.firstNameSinhala =
+            officerData.firstNameSinhala || '';
           this.personalData.firstNameTamil = officerData.firstNameTamil || '';
           this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
           this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
@@ -140,7 +134,6 @@ export class EditCenterHeadComponent {
           this.personalData.province = officerData.province || '';
           this.personalData.languages = officerData.languages || '';
           this.personalData.companyId = officerData.companyId || '';
-          
           this.personalData.bankName = officerData.bankName || '';
           this.personalData.branchName = officerData.branchName || '';
           this.personalData.accHolderName = officerData.accHolderName || '';
@@ -148,104 +141,75 @@ export class EditCenterHeadComponent {
           this.personalData.empType = officerData.empType || '';
           this.personalData.irmId = officerData.irmId || '';
           this.personalData.image = officerData.image || '';
-
-          // Additional fields
           this.selectedLanguages = this.personalData.languages.split(',');
           this.empType = this.personalData.empType;
           this.lastID = this.personalData.empId.slice(-5);
-          // this.lastID = this.personalData.empId;
-          
           this.comId = this.personalData.companyId;
           this.confirmAccNumber = this.personalData.accNumber;
           this.initiateJobRole = officerData.jobRole || '';
           this.initiateId = officerData.empId.slice(-5);
-
-          console.log('This is the initiate Id', this.initiateJobRole)
-          console.log('This is the initiate JobRole', this.initiateId)
-
-          console.log('Mapped Personal Data: ', this.personalData);
-          console.log('laguages', this.selectedLanguages);
-
           this.matchExistingBankToDropdown();
-          
-
-
           this.isLoading = false;
-          console.log('isloading became false');
-          
-
         },
         error: (error) => {
-          console.error('Error fetching officer details:', error);
           this.isLoading = false;
         },
       });
     }
 
-    this.getAllCompanies()
-    // this.EpmloyeIdCreate()
-    
+    this.getAllCompanies();
   }
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      data => {
-        this.banks = data.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+      (data) => {
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      error => {
-        console.error('Error loading banks:', error);
-      }
+      (error) => {}
     );
   }
 
-
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      data => {
-        Object.keys(data).forEach(bankID => {
+      (data) => {
+        Object.keys(data).forEach((bankID) => {
           data[bankID].sort((a, b) => a.name.localeCompare(b.name));
         });
         this.allBranches = data;
       },
-      error => {
-        console.error('Error loading branches:', error);
-      }
+      (error) => {}
     );
   }
 
   matchExistingBankToDropdown() {
-    // Only proceed if both banks and branches are loaded and we have existing data
-    if (this.banks.length > 0 && Object.keys(this.allBranches).length > 0 &&
-      this.personalData && this.personalData.bankName) {
-      console.log('hit 01', this.personalData.bankName);
-
-      // Find the bank ID that matches the existing bank name
-      const matchedBank = this.banks.find(bank => bank.name === this.personalData.bankName);
-
+    if (
+      this.banks.length > 0 &&
+      Object.keys(this.allBranches).length > 0 &&
+      this.personalData &&
+      this.personalData.bankName
+    ) {
+      const matchedBank = this.banks.find(
+        (bank) => bank.name === this.personalData.bankName
+      );
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
-        // Load branches for this bank
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-
-        // If we also have a branch name, try to match it
         if (this.personalData.branchName) {
-          const matchedBranch = this.branches.find(branch => branch.name === this.personalData.branchName);
+          const matchedBranch = this.branches.find(
+            (branch) => branch.name === this.personalData.branchName
+          );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
           }
         }
       }
     }
-    console.log('hit 02');
   }
 
-
   getAllCompanies() {
-    this.collectionCenterSrv.getAllCompanyList().subscribe(
-      (res) => {
-        this.CompanyData = res
-      }
-    )
+    this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res;
+    });
   }
 
   onFileSelected(event: any): void {
@@ -264,18 +228,13 @@ export class EditCenterHeadComponent {
 
       this.selectedFile = file;
       this.selectedFileName = file.name;
-      // this.officerForm.patchValue({ image: file });
-
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.selectedImage = e.target.result; // Set selectedImage to the base64 string or URL
-        console.log(this.selectedImage);
+        this.selectedImage = e.target.result;
       };
-      reader.readAsDataURL(file); // Read the file as a data URL
+      reader.readAsDataURL(file);
     }
   }
-
-
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -285,25 +244,21 @@ export class EditCenterHeadComponent {
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
-    this.personalData.empType = selectedType; // Update personalData.empType dynamically
-    console.log('Selected Employee Type:', this.empType);
+    this.personalData.empType = selectedType;
   }
 
-
-
   onCheckboxChange1(lang: string, event: any) {
-    // If the checkbox is checked, add the language to the string; if unchecked, remove it
     if (event.target.checked) {
       if (this.personalData.languages) {
-        // Add the language if it's not already in the string
         if (!this.personalData.languages.includes(lang)) {
-          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
+          this.personalData.languages += this.personalData.languages
+            ? `,${lang}`
+            : lang;
         }
       } else {
         this.personalData.languages = lang;
       }
     } else {
-      // Remove the language from the string if the checkbox is unchecked
       const languagesArray = this.personalData.languages.split(',');
       const index = languagesArray.indexOf(lang);
       if (index !== -1) {
@@ -313,23 +268,20 @@ export class EditCenterHeadComponent {
     }
   }
 
-  isLanguageRequired = false; // Flag for validation
+  isLanguageRequired = false;
 
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
-
     if (isChecked) {
       if (!this.selectedLanguages.includes(language)) {
         this.selectedLanguages.push(language);
       }
     } else {
-      this.selectedLanguages = this.selectedLanguages.filter(lang => lang !== language);
+      this.selectedLanguages = this.selectedLanguages.filter(
+        (lang) => lang !== language
+      );
     }
-
-    // Validation Check: If no languages are selected, show the error
     this.isLanguageRequired = this.selectedLanguages.length === 0;
-
-    console.log('Selected Languages:', this.selectedLanguages);
   }
 
   onCancel() {
@@ -342,16 +294,14 @@ export class EditCenterHeadComponent {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/collection-hub/edit-center-head')
+        this.navigatePath('/collection-hub/edit-center-head');
       }
     });
   }
 
-
-
-
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    if (!this.personalData.firstNameEnglish ||
+    if (
+      !this.personalData.firstNameEnglish ||
       !this.personalData.firstNameSinhala ||
       !this.personalData.firstNameTamil ||
       !this.personalData.lastNameEnglish ||
@@ -368,22 +318,18 @@ export class EditCenterHeadComponent {
   }
 
   updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDistrict = target.value;
-
-    const selected = this.districts.find(district => district.name === selectedDistrict);
-
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict
+    );
     if (this.itemId === null) {
-
       if (selected) {
         this.personalData.province = selected.province;
       } else {
-        this.personalData.province = ''; // Clear if no matching district is found
+        this.personalData.province = '';
       }
-
     } else {
-
-
       if (selected) {
         this.personalData.province = selected.province;
       }
@@ -392,17 +338,16 @@ export class EditCenterHeadComponent {
 
   onBankChange() {
     if (this.selectedBankId) {
-      // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-
-      // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
-
-      // Reset branch selection if the current selection doesn't belong to this bank
-      const currentBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const currentBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (!currentBranch) {
         this.selectedBranchId = null;
         this.personalData.branchName = '';
@@ -415,8 +360,9 @@ export class EditCenterHeadComponent {
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
       }
@@ -424,21 +370,18 @@ export class EditCenterHeadComponent {
       this.personalData.branchName = '';
     }
   }
-  
+
   validateConfirmAccNumber(): void {
-   
     this.confirmAccountNumberRequired = !this.confirmAccNumber;
-  
-    // Check if account numbers match
     if (this.personalData.accNumber && this.confirmAccNumber) {
-      this.confirmAccountNumberError = this.personalData.accNumber !== this.confirmAccNumber;
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
   }
 
   onSubmit() {
-    console.log('start submitting')
     if (
       !this.personalData.houseNumber ||
       !this.personalData.streetName ||
@@ -450,16 +393,11 @@ export class EditCenterHeadComponent {
       !this.personalData.bankName ||
       !this.personalData.branchName ||
       this.personalData.accNumber !== this.confirmAccNumber
-
-    ) { return; }
-
+    ) {
+      return;
+    }
 
     this.isLoading = true;
-    console.log(this.personalData); // Logs the personal data with updated languages
-    console.log('hii', this.personalData.empType);
-    console.log(this.selectedImage);
-
-    // Show a confirmation dialog before proceeding
     this.isLoading = false;
     Swal.fire({
       title: 'Are you sure?',
@@ -468,26 +406,35 @@ export class EditCenterHeadComponent {
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'No, cancel',
-      reverseButtons: true
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        this.collectionOfficerService.editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage).subscribe(
-          (res: any) => {
-
-            this.isLoading = false;
-            Swal.fire('Success', 'Center Head Created Successfully', 'success');
-            this.navigatePath('/collection-hub/manage-company');
-          },
-          (error: any) => {
-            this.isLoading = false;
-            this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
-            Swal.fire('Error', this.errorMessage, 'error');
-          }
-        );
+        this.collectionOfficerService
+          .editCollectiveOfficer(
+            this.personalData,
+            this.itemId,
+            this.selectedImage
+          )
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
+              Swal.fire(
+                'Success',
+                'Center Head Created Successfully',
+                'success'
+              );
+              this.navigatePath('/collection-hub/manage-company');
+            },
+            (error: any) => {
+              this.isLoading = false;
+              this.errorMessage =
+                error.error.error || 'An unexpected error occurred';
+              Swal.fire('Error', this.errorMessage, 'error');
+            }
+          );
       } else {
         this.isLoading = false;
-        // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
@@ -496,13 +443,11 @@ export class EditCenterHeadComponent {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
 }
 
 class Personal {
   jobRole!: string;
   empId!: any;
-  
   irmId!: number;
   empType!: string;
   firstNameEnglish!: string;
@@ -533,12 +478,9 @@ class Personal {
   accNumber!: any;
   bankName!: string;
   branchName!: string;
-
 }
 
-
 class Company {
-  id!: number
-  companyNameEnglish!: string
-
+  id!: number;
+  companyNameEnglish!: string;
 }

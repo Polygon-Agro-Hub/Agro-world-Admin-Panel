@@ -43,15 +43,15 @@ interface Company {
     LoadingSpinnerComponent,
   ],
   templateUrl: './collection-all-view.component.html',
-  styleUrls: ['./collection-all-view.component.css'], // Fixed typo from styleUrl to styleUrls
+  styleUrls: ['./collection-all-view.component.css'],
 })
 export class CollectionAllViewComponent implements OnInit {
   centerNameObj: CenterName = new CenterName();
   companyId!: number;
   collectionObj!: CollectionCenter[];
   filteredCollection!: CollectionCenter[];
-  districts: string[] = []; // Array to hold the districts
-  selectedDistrict: string | null = null; // Store the selected district
+  districts: string[] = [];
+  selectedDistrict: string | null = null;
   searchItem: string = '';
   page: number = 1;
   itemsPerPage: number = 10;
@@ -71,22 +71,6 @@ export class CollectionAllViewComponent implements OnInit {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  // fetchAllCollectionCenterww(page: number = 1, limit: number = this.itemsPerPage) {
-  //   this.collectionService.getAllCollectionCenterPage(page, limit, this.searchItem).subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       this.isLoading = false;
-  //       this.collectionObj = response.items;
-  //       this.hasData = this.collectionObj.length > 0;
-  //       this.totalItems = response.total;
-
-  //     },
-  //     (error) => {
-  //       console.log("Error occurred in fetching collection center data:", error);
-  //     }
-  //   );
-  // }
-
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
@@ -99,32 +83,16 @@ export class CollectionAllViewComponent implements OnInit {
         (response) => {
           this.isLoading = false;
           this.collectionObj = response.items;
-          console.log(this.collectionObj);
           this.hasData = this.collectionObj.length > 0;
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
           if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
+            // Unauthorized access handling (left empty intentionally)
           }
         }
       );
   }
-
-  // extractDistricts() {
-  //   // Extract unique districts from the collectionObj
-  //   const uniqueDistricts = new Set(this.collectionObj.map(item => item.district));
-  //   this.districts = Array.from(uniqueDistricts);
-  // }
-
-  // applyFilters() {
-  //   if (this.selectedDistrict) {
-  //     this.filteredCollection = this.collectionObj.filter(item => item.district === this.selectedDistrict);
-  //   } else {
-  //     this.filteredCollection = this.collectionObj; // Reset if no district is selected
-  //   }
-  // }
 
   deleteCollectionCenter(id: number) {
     Swal.fire({
@@ -150,10 +118,9 @@ export class CollectionAllViewComponent implements OnInit {
             }
           },
           (error) => {
-            console.error('Error deleting collection center:', error);
             Swal.fire(
               'Error!',
-              'There was an error deleting the Collection Centers',
+              'There was an error deleting the Collection Center',
               'error'
             );
           }
@@ -164,7 +131,7 @@ export class CollectionAllViewComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   searchPlantCareUsers() {
@@ -194,15 +161,12 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   assignTarget(items: any, centerId: number) {
-    console.log(centerId,'<---centerId');
-    
     let comId;
     items?.some((company: Company) =>
       company.companyNameEnglish === 'agroworld (Pvt) Ltd'
         ? (comId = company.id)
         : 0
     );
-    console.log('companyID----->', comId);
     this.router.navigate([
       `/collection-hub/collection-center-dashboard/${centerId}/${comId}`,
     ]);
@@ -220,13 +184,12 @@ export class CollectionAllViewComponent implements OnInit {
     const agroworldCompany = item.companies.find(
       (company: Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
     );
-  
+
     if (!agroworldCompany) {
-      console.error("Agroworld (Pvt) Ltd not found in this Collection Center.");
       return;
     }
     const companyId = agroworldCompany.id;
-  
+
     this.router.navigate([
       `/collection-hub/add-daily-target/${item.id}/${item.centerName}/${companyId}`,
     ]);
@@ -235,7 +198,6 @@ export class CollectionAllViewComponent implements OnInit {
   viewCollectionCenter(id: number) {
     this.router.navigate([`/collection-hub/preview-collection-center/${id}`]);
   }
-  
 }
 
 class CenterName {

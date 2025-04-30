@@ -1,155 +1,179 @@
 <div class="flex justify-center items-center">
-
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16">
-
-
-
     <div class="flex justify-center">
-      <button  (click)="navigateToViewFamers()" type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        (click)="navigateToViewFamers()"
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-seedling" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-seedling" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Farmers</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
-
-
-    <div class="flex justify-center" *ngIf="tokenService.getUserDetails().role ==='1'">
-      <button (click)="navigateToViewAdmins()" type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+    <div
+      class="flex justify-center"
+      *ngIf="tokenService.getUserDetails().role === '1'"
+    >
+      <button
+        (click)="navigateToViewAdmins()"
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-user-shield" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-user-shield" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Back office Executives</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
-
     <div class="flex justify-center">
-      <button type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-building-user" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-building-user" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Field Officers</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
-
     <div class="flex justify-center">
-      <button (click)="navigateToViewCoOfficers()" type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        (click)="navigateToViewCoOfficers()"
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-users" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-users" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Collection Officer</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-shop" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-shop" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Buyers</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button  type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-truck" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-truck" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Transporters</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button (click)="navigateToViewCollectionCenter()" type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        (click)="navigateToViewCollectionCenter()"
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-arrows-to-dot" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-arrows-to-dot" style="color: #4a90e2"></i>
           </div>
-          <span class="ml-3">Collection Center</span>
+          <span class="ml-3">Collection Centre</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button (click)="navigateToViewSalesAgents()" type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        (click)="navigateToViewSalesAgents()"
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-arrows-to-dot" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-arrows-to-dot" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Sales Agents</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-building-circle-arrow-right" style="color: #4A90E2;"></i>
+            <i
+              class="fa-solid fa-building-circle-arrow-right"
+              style="color: #4a90e2"
+            ></i>
           </div>
-          <span class="ml-3">Distribution Center</span>
+          <span class="ml-3">Distribution Centre</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-parachute-box" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-parachute-box" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Suppliers</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
 
     <div class="flex justify-center">
-      <button type="button"
-        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+      <button
+        type="button"
+        class="transition-shadow transition hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-warehouse" style="color: #4A90E2;"></i>
+            <i class="fa-solid fa-warehouse" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Investors</span>
         </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4A90E2;"></i>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>
     </div>
-
   </div>
 </div>

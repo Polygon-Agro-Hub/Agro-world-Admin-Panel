@@ -40,18 +40,14 @@ export class ViewCollectiveOfficerProfileComponent {
   ngOnInit(): void {
     this.officerId = this.route.snapshot.params['id'];
     this.fetchOfficerById(this.officerId);
-    
   }
 
   getRoleHeading() {
-
-    if(this.officerObj.jobRole === 'Collection Officer'){
+    if (this.officerObj.jobRole === 'Collection Officer') {
       this.empHeader = 'COO';
-      console.log(this.empHeader);
-    }else if(this.officerObj.jobRole === 'Collection Center Manager'){
+    } else if (this.officerObj.jobRole === 'Collection Center Manager') {
       this.empHeader = 'CCM';
-      console.log('chalana',this.empHeader);
-    }else if(this.officerObj.jobRole === 'Customer Officer'){
+    } else if (this.officerObj.jobRole === 'Customer Officer') {
       this.empHeader = 'CUO';
     }
   }
@@ -63,14 +59,10 @@ export class ViewCollectiveOfficerProfileComponent {
       .subscribe((res: any) => {
         this.isLoading = false;
         this.officerObj = res.officerData.collectionOfficer;
-
-        this.officerObj.claimStatus = res.officerData.collectionOfficer.claimStatus;
-
-        console.log(this.officerObj);
+        this.officerObj.claimStatus =
+          res.officerData.collectionOfficer.claimStatus;
         this.getRoleHeading();
       });
-
-     
   }
 
   navigatePath(path: string) {
@@ -78,11 +70,13 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   viewOfficerTarget(officerId: number) {
-    this.router.navigate([`/steckholders/action/collective-officer/view-officer-targets/${officerId}`])
+    this.router.navigate([
+      `/steckholders/action/collective-officer/view-officer-targets/${officerId}`,
+    ]);
   }
-  
+
   async generatePDF() {
-    this.isGeneratingPDF = true; // Show spinner and disable button
+    this.isGeneratingPDF = true;
 
     const pdf = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
@@ -109,7 +103,6 @@ export class ViewCollectiveOfficerProfileComponent {
             resolve(canvas.toDataURL('image/png'));
           };
           img.onerror = function () {
-            console.warn('Image load failed:', url);
             resolve('');
           };
           img.src = url;
@@ -120,7 +113,6 @@ export class ViewCollectiveOfficerProfileComponent {
         try {
           xhr.send();
         } catch (error) {
-          console.error('XHR send error:', error);
           reject(error);
         }
       });
@@ -157,9 +149,17 @@ export class ViewCollectiveOfficerProfileComponent {
     const detailsX = hasImage ? margin + 40 : margin;
 
     pdf.setFontSize(10);
-    pdf.text(`${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}`, detailsX, y + 10);
+    pdf.text(
+      `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}`,
+      detailsX,
+      y + 10
+    );
     y += 5;
-    pdf.text(`${this.officerObj.jobRole} - ${this.empHeader}${this.officerObj.empId}`, detailsX, y + 10);
+    pdf.text(
+      `${this.officerObj.jobRole} - ${this.empHeader}${this.officerObj.empId}`,
+      detailsX,
+      y + 10
+    );
     y += 5;
     pdf.text(`${this.officerObj.centerName}`, detailsX, y + 10);
     y += 5;
@@ -179,14 +179,22 @@ export class ViewCollectiveOfficerProfileComponent {
     pdf.text(`NIC Number`, leftColumnX, y + 21);
     pdf.text(`${this.officerObj.nic}`, leftColumnX, y + 28);
     pdf.text(`Phone Number - 1`, leftColumnX, y + 42);
-    pdf.text(`${this.officerObj.phoneCode01} ${this.officerObj.phoneNumber01}`, leftColumnX, y + 49);
+    pdf.text(
+      `${this.officerObj.phoneCode01} ${this.officerObj.phoneNumber01}`,
+      leftColumnX,
+      y + 49
+    );
 
     pdf.text(`Last Name`, rightColumnX, y);
     pdf.text(`${this.officerObj.lastNameEnglish}`, rightColumnX, y + 7);
     pdf.text(`Email`, rightColumnX, y + 21);
     pdf.text(`${this.officerObj.email}`, rightColumnX, y + 28);
     pdf.text(`Phone Number - 2`, rightColumnX, y + 42);
-    pdf.text(`${this.officerObj.phoneCode02} ${this.officerObj.phoneNumber02}`, rightColumnX, y + 49);
+    pdf.text(
+      `${this.officerObj.phoneCode02} ${this.officerObj.phoneNumber02}`,
+      rightColumnX,
+      y + 49
+    );
 
     y += 70;
 
@@ -238,18 +246,17 @@ export class ViewCollectiveOfficerProfileComponent {
       pdf.internal.pageSize.getHeight() - margin
     );
 
-    const fileName = `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}(${this.empHeader + this.officerObj.empId}).pdf`;
+    const fileName = `${this.officerObj.firstNameEnglish} ${
+      this.officerObj.lastNameEnglish
+    }(${this.empHeader + this.officerObj.empId}).pdf`;
     pdf.save(fileName);
 
-    this.isGeneratingPDF = false; // Hide spinner and enable button
+    this.isGeneratingPDF = false;
   }
-
 
   confirmDisclaim(id: number) {
     this.collectionOfficerService.disclaimOfficer(id).subscribe(
       (response) => {
-        console.log('Officer ID sent successfully:', response);
-
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -261,8 +268,6 @@ export class ViewCollectiveOfficerProfileComponent {
         this.router.navigate(['/steckholders/action/collective-officer']);
       },
       (error) => {
-        console.error('Error sending Officer ID:', error);
-
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -278,17 +283,15 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   toggleDisclaimView() {
-    this.showDisclaimView = !this.showDisclaimView; // Toggle the boolean value
+    this.showDisclaimView = !this.showDisclaimView;
   }
 
   isAgroworldCompany(): boolean {
     return (
-      this.officerObj.companyNameEnglish?.toLowerCase() === "agroworld (pvt) ltd" &&
-      this.officerObj.status === "Approved"
+      this.officerObj.companyNameEnglish?.toLowerCase() ===
+        'agroworld (pvt) ltd' && this.officerObj.status === 'Approved'
     );
   }
-
-  
 }
 
 class CollectionOfficer {
@@ -316,6 +319,6 @@ class CollectionOfficer {
   branchName!: string;
   companyNameEnglish!: string;
   centerName!: string;
-  status!:string;
+  status!: string;
   claimStatus!: number;
 }

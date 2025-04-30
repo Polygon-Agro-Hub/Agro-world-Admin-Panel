@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
-import { response } from 'express';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -21,7 +20,7 @@ export class ManageCompanyComponent {
   isLoading = false;
   total: number | null = null;
   private token = this.tokenService.getToken();
-  search: string = "";
+  search: string = '';
 
   constructor(
     private companyService: CollectionCenterService,
@@ -39,24 +38,21 @@ export class ManageCompanyComponent {
     this.companyService.getAllCompanyDetails(this.search).subscribe(
       (response: any) => {
         this.isLoading = false;
-        console.log(response);
-
         this.companies = response.results;
         this.total = response.total;
       },
-      (error) => {
-        console.error(error);
+      () => {
+        this.isLoading = false;
       }
     );
   }
-
 
   searchPlantCareUsers() {
     this.fetchAllCompanys();
   }
 
   clearSearch(): void {
-    this.search = "";
+    this.search = '';
     this.fetchAllCompanys();
   }
 
@@ -81,7 +77,6 @@ export class ManageCompanyComponent {
   deleteCompany(id: number) {
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error('No token found');
       return;
     }
 
@@ -97,13 +92,11 @@ export class ManageCompanyComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.companyService.deleteCompany(id).subscribe(
-          (data: any) => {
-            console.log('Company deleted successfully');
+          () => {
             Swal.fire('Deleted!', 'The company has been deleted.', 'success');
-            this.fetchAllCompanys(); // Refresh the company list
+            this.fetchAllCompanys();
           },
-          (error) => {
-            console.error('Error deleting company:', error);
+          () => {
             Swal.fire(
               'Error!',
               'There was an error deleting the company.',
@@ -115,8 +108,6 @@ export class ManageCompanyComponent {
     });
   }
 
-
-
   back(): void {
     this.router.navigate(['/collection-hub']);
   }
@@ -124,7 +115,6 @@ export class ManageCompanyComponent {
   add(): void {
     this.router.navigate(['/collection-hub/create-company']);
   }
-  
 }
 
 class CompanyDetails {

@@ -27,33 +27,34 @@ interface BranchesData {
 @Component({
   selector: 'app-preview-sales-agents',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './preview-sales-agents.component.html',
-  styleUrl: './preview-sales-agents.component.css'
+  styleUrl: './preview-sales-agents.component.css',
 })
-export class PreviewSalesAgentsComponent implements OnInit{
-
+export class PreviewSalesAgentsComponent implements OnInit {
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
-  selectedFileName!: string
+  selectedFileName!: string;
   selectedImage: string | ArrayBuffer | null = null;
   isLoading = true;
   selectedLanguages: string[] = [];
-  selectJobRole!: string
+  selectJobRole!: string;
   personalData: Personal = new Personal();
-  
   confirmAccNumber!: any;
-  
-  lastID!: string
+  lastID!: string;
   empType!: string;
-  
   comId!: number;
   initiateJobRole!: string;
   initiateId!: string;
   errorMessage: string = '';
   img!: string;
-
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -100,8 +101,8 @@ export class PreviewSalesAgentsComponent implements OnInit{
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
-    private salesAgentService: SalesAgentsService,
-  ) { }
+    private salesAgentService: SalesAgentsService
+  ) {}
 
   ngOnInit(): void {
     this.loadBanks();
@@ -110,15 +111,9 @@ export class PreviewSalesAgentsComponent implements OnInit{
 
     if (this.itemId) {
       this.isLoading = true;
-      console.log('isLoading became true');
-
       this.salesAgentService.getSalesAgentReportById(this.itemId).subscribe({
         next: (response: any) => {
-          console.log('Response: ', response);
-
-          // Map the response data to the Personal class
           const officerData = response.officerData[0];
-          console.log('hi hi: ', response.officerData[0].empId);
 
           this.personalData.empId = officerData.empId;
           this.personalData.firstName = officerData.firstName || '';
@@ -134,7 +129,6 @@ export class PreviewSalesAgentsComponent implements OnInit{
           this.personalData.city = officerData.city || '';
           this.personalData.district = officerData.district || '';
           this.personalData.province = officerData.province || '';
-          
           this.personalData.bankName = officerData.bankName || '';
           this.personalData.branchName = officerData.branchName || '';
           this.personalData.accHolderName = officerData.accHolderName || '';
@@ -142,91 +136,62 @@ export class PreviewSalesAgentsComponent implements OnInit{
           this.personalData.empType = officerData.empType || '';
           this.personalData.image = officerData.image || '';
 
-          // Additional fields
-          
           this.empType = this.personalData.empType;
           this.lastID = this.personalData.empId.slice(-5);
-          console.log('cutted empId', this.lastID);
-          // this.lastID = this.personalData.empId;
-          
           this.confirmAccNumber = this.personalData.accNumber;
-          // this.initiateJobRole = officerData.jobRole || '';
-          // this.initiateId = officerData.empId.slice(-4);
-
-          // console.log('This is the initiate Id', this.initiateJobRole)
-          // console.log('This is the initiate JobRole', this.initiateId)
-
-          // console.log('Mapped Personal Data: ', this.personalData);
-          // console.log('laguages', this.selectedLanguages);
 
           this.matchExistingBankToDropdown();
-          
-
-
           this.isLoading = false;
-          console.log('isloading became false');
-          
-
         },
         error: (error) => {
-          console.error('Error fetching officer details:', error);
           this.isLoading = false;
         },
       });
     }
-    
   }
 
   loadBanks() {
-    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      data => {
-        this.banks = data.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-      },
-      error => {
-        console.error('Error loading banks:', error);
-      }
-    );
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe((data) => {
+      this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+    });
   }
 
-
   loadBranches() {
-    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      data => {
-        Object.keys(data).forEach(bankID => {
+    this.http
+      .get<BranchesData>('assets/json/branches.json')
+      .subscribe((data) => {
+        Object.keys(data).forEach((bankID) => {
           data[bankID].sort((a, b) => a.name.localeCompare(b.name));
         });
         this.allBranches = data;
-      },
-      error => {
-        console.error('Error loading branches:', error);
-      }
-    );
+      });
   }
 
   matchExistingBankToDropdown() {
-    // Only proceed if both banks and branches are loaded and we have existing data
-    if (this.banks.length > 0 && Object.keys(this.allBranches).length > 0 &&
-      this.personalData && this.personalData.bankName) {
-      console.log('hit 01', this.personalData.bankName);
-
-      // Find the bank ID that matches the existing bank name
-      const matchedBank = this.banks.find(bank => bank.name === this.personalData.bankName);
+    if (
+      this.banks.length > 0 &&
+      Object.keys(this.allBranches).length > 0 &&
+      this.personalData &&
+      this.personalData.bankName
+    ) {
+      const matchedBank = this.banks.find(
+        (bank) => bank.name === this.personalData.bankName
+      );
 
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
-        // Load branches for this bank
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
 
-        // If we also have a branch name, try to match it
         if (this.personalData.branchName) {
-          const matchedBranch = this.branches.find(branch => branch.name === this.personalData.branchName);
+          const matchedBranch = this.branches.find(
+            (branch) => branch.name === this.personalData.branchName
+          );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
           }
         }
       }
     }
-    console.log('hit 02');
   }
 
   onFileSelected(event: any): void {
@@ -245,18 +210,14 @@ export class PreviewSalesAgentsComponent implements OnInit{
 
       this.selectedFile = file;
       this.selectedFileName = file.name;
-      // this.officerForm.patchValue({ image: file });
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.selectedImage = e.target.result; // Set selectedImage to the base64 string or URL
-        console.log(this.selectedImage);
+        this.selectedImage = e.target.result;
       };
-      reader.readAsDataURL(file); // Read the file as a data URL
+      reader.readAsDataURL(file);
     }
   }
-
-
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -266,27 +227,24 @@ export class PreviewSalesAgentsComponent implements OnInit{
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
-    this.personalData.empType = selectedType; // Update personalData.empType dynamically
-    console.log('Selected Employee Type:', this.empType);
+    this.personalData.empType = selectedType;
   }
 
   updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDistrict = target.value;
 
-    const selected = this.districts.find(district => district.name === selectedDistrict);
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict
+    );
 
     if (this.itemId === null) {
-
       if (selected) {
         this.personalData.province = selected.province;
       } else {
-        this.personalData.province = ''; // Clear if no matching district is found
+        this.personalData.province = '';
       }
-
     } else {
-
-
       if (selected) {
         this.personalData.province = selected.province;
       }
@@ -295,17 +253,17 @@ export class PreviewSalesAgentsComponent implements OnInit{
 
   onBankChange() {
     if (this.selectedBankId) {
-      // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-
-      // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
       }
 
-      // Reset branch selection if the current selection doesn't belong to this bank
-      const currentBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const currentBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (!currentBranch) {
         this.selectedBranchId = null;
         this.personalData.branchName = '';
@@ -318,8 +276,9 @@ export class PreviewSalesAgentsComponent implements OnInit{
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
       }
@@ -327,14 +286,13 @@ export class PreviewSalesAgentsComponent implements OnInit{
       this.personalData.branchName = '';
     }
   }
-  
+
   validateConfirmAccNumber(): void {
-   
     this.confirmAccountNumberRequired = !this.confirmAccNumber;
-  
-    // Check if account numbers match
+
     if (this.personalData.accNumber && this.confirmAccNumber) {
-      this.confirmAccountNumberError = this.personalData.accNumber !== this.confirmAccNumber;
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
@@ -350,13 +308,12 @@ export class PreviewSalesAgentsComponent implements OnInit{
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/sales-agents')
+        this.navigatePath('/steckholders/action/sales-agents');
       }
     });
   }
 
   onSubmit() {
-    console.log('start submitting')
     if (
       !this.personalData.firstName ||
       !this.personalData.lastName ||
@@ -374,17 +331,11 @@ export class PreviewSalesAgentsComponent implements OnInit{
       !this.personalData.bankName ||
       !this.personalData.branchName ||
       this.personalData.accNumber !== this.confirmAccNumber
-
-    ) { return; }
-
+    ) {
+      return;
+    }
 
     this.isLoading = true;
-    console.log(this.personalData); // Logs the personal data with updated languages
-    console.log('hii', this.personalData.empType);
-    console.log(this.selectedImage);
-
-    
-    this.isLoading = false;
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to edit the Sales Agent?',
@@ -392,26 +343,31 @@ export class PreviewSalesAgentsComponent implements OnInit{
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'No, cancel',
-      reverseButtons: true
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        this.salesAgentService.editSalesAgent(this.personalData, this.itemId, this.selectedImage).subscribe(
-          (res: any) => {
-
-            this.isLoading = false;
-            Swal.fire('Success', 'Sales Agent Created Successfully', 'success');
-            this.navigatePath('/steckholders/action/sales-agents');
-          },
-          (error: any) => {
-            this.isLoading = false;
-            this.errorMessage = error.error.error || 'An unexpected error occurred'; // Update the error message
-            Swal.fire('Error', this.errorMessage, 'error');
-          }
-        );
+        this.salesAgentService
+          .editSalesAgent(this.personalData, this.itemId, this.selectedImage)
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
+              Swal.fire(
+                'Success',
+                'Sales Agent Updated Successfully',
+                'success'
+              );
+              this.navigatePath('/steckholders/action/sales-agents');
+            },
+            (error: any) => {
+              this.isLoading = false;
+              this.errorMessage =
+                error.error.error || 'An unexpected error occurred';
+              Swal.fire('Error', this.errorMessage, 'error');
+            }
+          );
       } else {
         this.isLoading = false;
-        // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
@@ -420,9 +376,7 @@ export class PreviewSalesAgentsComponent implements OnInit{
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
 }
-
 
 class Personal {
   empId!: any;
@@ -450,5 +404,4 @@ class Personal {
   accNumber!: any;
   bankName!: string;
   branchName!: string;
-
 }

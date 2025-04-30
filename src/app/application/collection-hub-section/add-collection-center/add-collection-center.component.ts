@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-collection-center.component.html',
-  styleUrls: ['./add-collection-center.component.css']
+  styleUrls: ['./add-collection-center.component.css'],
 })
 export class AddCollectionCenterComponent implements OnInit {
   collectionCenterForm: FormGroup;
@@ -24,9 +24,7 @@ export class AddCollectionCenterComponent implements OnInit {
   selectedCompaniesNames: string[] = [];
   selectDistrict: string = '';
   city: string = '';
-
   isLoadingregcode = false;
- 
 
   constructor(
     private fb: FormBuilder,
@@ -36,31 +34,33 @@ export class AddCollectionCenterComponent implements OnInit {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
       centerName: ['', [Validators.required, this.noNumbersValidator]],
-      contact01: ['', [Validators.required,  Validators.pattern(/^[7][0-9]{8}$/)]],
+      contact01: [
+        '',
+        [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)],
+      ],
       contact01Code: ['+94', Validators.required],
-      contact02: ['',[Validators.required, Validators.pattern(/^[7][0-9]{8}$/)]],
+      contact02: [
+        '',
+        [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)],
+      ],
       contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
       street: ['', [Validators.required, this.noNumbersValidator]],
       district: ['', Validators.required],
       province: ['', Validators.required],
       country: ['Sri Lanka', Validators.required],
-      city: ['', Validators.required]  // Add city form control
+      city: ['', Validators.required],
     });
   }
 
   ngOnInit() {
     this.getAllCompanies();
-
-    // Listen to value changes on the form fields
     this.collectionCenterForm.get('province')?.valueChanges.subscribe(() => {
       this.onProvinceChange();
     });
-
     this.collectionCenterForm.get('district')?.valueChanges.subscribe(() => {
       this.onDistrictChange();
     });
-
     this.collectionCenterForm.get('city')?.valueChanges.subscribe(() => {
       this.onCityChange();
     });
@@ -79,29 +79,7 @@ export class AddCollectionCenterComponent implements OnInit {
       this.selectedCompaniesIds.splice(index, 1);
       this.selectedCompaniesNames.splice(index, 1);
     }
-    console.log('Selected IDs:', this.selectedCompaniesIds);
-    console.log('Selected Names:', this.selectedCompaniesNames);
   }
-
-
-  
-
-  // onProvinceChange() {
-  //   const selectedProvince = this.collectionCenterForm.get('province')?.value;
-  //   this.selectProvince = selectedProvince;
-
-  //   // Trigger regCode update
-  //   this.updateRegCode();
-
-  //   const sample = this.ProvinceData.filter(province => province.province === selectedProvince);
-  //   if (sample.length > 0) {
-  //     this.selectedDistrict = sample[0].district;
-  //     console.log("Selected districts:", this.selectedDistrict);
-  //   } else {
-  //     console.log("No districts found for the selected province.");
-  //   }
-  // }
-
 
   onProvinceChange() {
     const selectedProvince = this.collectionCenterForm.get('province')?.value;
@@ -109,32 +87,25 @@ export class AddCollectionCenterComponent implements OnInit {
     const selectedCity = this.collectionCenterForm.get('city')?.value;
 
     this.selectProvince = selectedProvince;
-
-    // Trigger regCode update based on the selected province
     this.updateRegCode();
 
-    // Find the corresponding district list for the selected province
-    const selectedProvinceData = this.ProvinceData.find(province => province.province === selectedProvince);
-
+    const selectedProvinceData = this.ProvinceData.find(
+      (province) => province.province === selectedProvince
+    );
     if (selectedProvinceData) {
       this.selectedDistrict = selectedProvinceData.district;
-      console.log("Selected districts:", this.selectedDistrict);
-    } else {
-      console.log("No districts found for the selected province.");
     }
 
-    // Fetch the next regCode from the backend when province or district changes
     if (selectedProvince && selectedDistrict && selectedCity) {
       this.isLoadingregcode = true;
-      this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(response => {
+      this.collectionCenterService
+        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe((response) => {
           this.collectionCenterForm.patchValue({ regCode: response.regCode });
           this.isLoadingregcode = false;
         });
     }
   }
-
-  
 
   onDistrictChange() {
     const selectedProvince = this.collectionCenterForm.get('province')?.value;
@@ -143,23 +114,23 @@ export class AddCollectionCenterComponent implements OnInit {
 
     if (selectedProvince && selectedDistrict && selectedCity) {
       this.isLoadingregcode = true;
-      this.collectionCenterService.generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(response => {
-          this.collectionCenterForm.patchValue({ regCode: response.regCode });
-          console.log("New RegCode:", response.regCode);
-          this.isLoadingregcode = false;
-        }, error => {
-          console.error("Error fetching regCode:", error);
-          this.isLoadingregcode = false;
-        });
+      this.collectionCenterService
+        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe(
+          (response) => {
+            this.collectionCenterForm.patchValue({ regCode: response.regCode });
+            this.isLoadingregcode = false;
+          },
+          () => {
+            this.isLoadingregcode = false;
+          }
+        );
     }
   }
 
   onCityChange() {
     this.city = this.collectionCenterForm.get('city')?.value;
-    // Trigger regCode update
     this.updateRegCode();
-    
   }
 
   updateRegCode() {
@@ -167,63 +138,58 @@ export class AddCollectionCenterComponent implements OnInit {
     const district = this.collectionCenterForm.get('district')?.value;
     const city = this.collectionCenterForm.get('city')?.value;
 
-    
     if (province && district && city) {
-      const regCode = `${province.slice(0, 2).toUpperCase()}${district.slice(0, 1).toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
+      const regCode = `${province.slice(0, 2).toUpperCase()}${district
+        .slice(0, 1)
+        .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
       this.collectionCenterForm.patchValue({ regCode });
     }
   }
 
   onSubmit() {
-   
+    if (this.collectionCenterForm.valid) {
+      this.centerData = {
+        ...this.centerData,
+        ...this.collectionCenterForm.value,
+      };
 
-    if(this.collectionCenterForm.value.buildingNumber && 
-      this.collectionCenterForm.value.street && 
-      this.collectionCenterForm.value.city &&
-      this.collectionCenterForm.value.centerName &&
-      this.collectionCenterForm.value.contact01 &&
-      this.collectionCenterForm.value.district &&
-      this.collectionCenterForm.value.province &&
-      this.collectionCenterForm.value.regCode &&
-      this.collectionCenterForm.value.contact01Code){
-
-      this.centerData = { ...this.centerData, ...this.collectionCenterForm.value };
-
-    this.collectionCenterService.createCollectionCenter(this.centerData, this.selectedCompaniesIds).subscribe(
-      (res) => {
-        console.log(res);
-
-        if (res.status) {
-          Swal.fire('Success', 'Collection Center Created Successfully', 'success');
-          this.router.navigate(['/collection-hub/view-collection-centers']);
-        } else {
-          if (res.message === "This RegCode already exists!") {
+      this.collectionCenterService
+        .createCollectionCenter(this.centerData, this.selectedCompaniesIds)
+        .subscribe(
+          (res) => {
+            if (res.status) {
+              Swal.fire(
+                'Success',
+                'Collection Center Created Successfully',
+                'success'
+              );
+              this.router.navigate(['/collection-hub/view-collection-centers']);
+            } else {
+              if (res.message === 'This RegCode already exists!') {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Failed',
+                  text: 'This RegCode already exists!',
+                });
+              }
+            }
+          },
+          () => {
             Swal.fire({
               icon: 'error',
-              title: 'Failed',
-              text: 'This RegCode already exists!'
+              title: 'Error',
+              text: 'Something went wrong while creating the Collection Center.',
             });
           }
-        }
-      },
-      (error) => {
-        console.log("Error:", error);
-      }
-    );
-    }else{
+        );
+    } else {
       Swal.fire({
         icon: 'error',
         title: 'Form Validation Error',
-        text: 'Please check all fields and ensure they meet the required validation criteria.'
+        text: 'Please check all fields and ensure they meet the required validation criteria.',
       });
     }
-
-    
   }
-
-
- 
-  
 
   onCancel() {
     Swal.fire({
@@ -233,19 +199,15 @@ export class AddCollectionCenterComponent implements OnInit {
       timer: 2000,
       showConfirmButton: false,
     });
-
     this.collectionCenterForm.reset();
     this.selectedDistrict = [];
     this.selectProvince = '';
   }
 
   getAllCompanies() {
-    this.collectionCenterService.getAllCompanyList().subscribe(
-      (res) => {
-        this.CompanyData = res;
-        console.log(this.CompanyData);
-      }
-    );
+    this.collectionCenterService.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res;
+    });
   }
 
   noNumbersValidator(control: any) {
@@ -256,85 +218,73 @@ export class AddCollectionCenterComponent implements OnInit {
     return null;
   }
 
-
-
   back(): void {
     this.router.navigate(['/collection-hub']);
   }
 
   ProvinceData = [
     {
-      province: "Western",
+      province: 'Western',
       district: [
-        { districtName: "Colombo" },
-        { districtName: "Kalutara" },
-        { districtName: "Gampaha" }
-      ]
+        { districtName: 'Colombo' },
+        { districtName: 'Kalutara' },
+        { districtName: 'Gampaha' },
+      ],
     },
     {
-      province: "Central",
+      province: 'Central',
       district: [
-        { districtName: "Kandy" },
-        { districtName: "Matale" },
-        { districtName: "Nuwara Eliya" }
-      ]
+        { districtName: 'Kandy' },
+        { districtName: 'Matale' },
+        { districtName: 'Nuwara Eliya' },
+      ],
     },
     {
-      province: "Southern",
+      province: 'Southern',
       district: [
-        { districtName: "Galle" },
-        { districtName: "Matara" },
-        { districtName: "Hambantota" }
-      ]
+        { districtName: 'Galle' },
+        { districtName: 'Matara' },
+        { districtName: 'Hambantota' },
+      ],
     },
     {
-      province: "Northern",
+      province: 'Northern',
       district: [
-        { districtName: "Jaffna" },
-        { districtName: "Mannar" },
-        { districtName: "Vavuniya" },
-        { districtName: "Kilinochchi" },
-        { districtName: "Mulaitivu" }
-      ]
+        { districtName: 'Jaffna' },
+        { districtName: 'Mannar' },
+        { districtName: 'Vavuniya' },
+        { districtName: 'Kilinochchi' },
+        { districtName: 'Mulaitivu' },
+      ],
     },
     {
-      province: "Eastern",
+      province: 'Eastern',
       district: [
-        { districtName: "Batticaloa" },
-        { districtName: "Ampara" },
-        { districtName: "Trincomalee" }
-      ]
+        { districtName: 'Batticaloa' },
+        { districtName: 'Ampara' },
+        { districtName: 'Trincomalee' },
+      ],
     },
     {
-      province: "Uva",
-      district: [
-        { districtName: "Badulla" },
-        { districtName: "Moneragala" }
-      ]
+      province: 'Uva',
+      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
     },
     {
-      province: "North Western",
-      district: [
-        { districtName: "Kurunegala" },
-        { districtName: "Puttalam" }
-      ]
+      province: 'North Western',
+      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
     },
     {
-      province: "North Central",
+      province: 'North Central',
       district: [
-        { districtName: "Anuradhapura" },
-        { districtName: "Polonnaruwa" }
-      ]
+        { districtName: 'Anuradhapura' },
+        { districtName: 'Polonnaruwa' },
+      ],
     },
     {
-      province: "Sabaragamuwa",
-      district: [
-        { districtName: "Rathnapura" },
-        { districtName: "Kegalle" }
-      ]
+      province: 'Sabaragamuwa',
+      district: [{ districtName: 'Rathnapura' }, { districtName: 'Kegalle' }],
     },
-
-  ]
+  ];
 }
 
 class CollectionCenter {
@@ -349,7 +299,7 @@ class CollectionCenter {
   district!: string;
   province!: string;
   country!: string;
-  city!: string;  // Add city to CollectionCenter class
+  city!: string;
 }
 
 class Company {

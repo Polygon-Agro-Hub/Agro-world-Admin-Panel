@@ -10,9 +10,8 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
 
-
 class CropTask {
-  'id':number;
+  'id': number;
   'taskIndex': string;
   'startingDate': any;
   'days': string;
@@ -29,10 +28,10 @@ class CropTask {
   'taskDescriptionSinhala': string;
   'taskDescriptionTamil': string;
   'reqImages': any;
-  'videoLinkEnglish':any;
-  'videoLinkSinhala':any;
-  'videoLinkTamil':any;
-  'imageLink':any;
+  'videoLinkEnglish': any;
+  'videoLinkSinhala': any;
+  'videoLinkTamil': any;
+  'imageLink': any;
 }
 
 @Component({
@@ -40,7 +39,7 @@ class CropTask {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './user-task-edit.component.html',
-  styleUrl: './user-task-edit.component.css'
+  styleUrl: './user-task-edit.component.css',
 })
 export class UserTaskEditComponent {
   id: any | null = null;
@@ -56,55 +55,43 @@ export class UserTaskEditComponent {
     private router: Router,
     private taskService: CropCalendarService,
     private tokenService: TokenService
-
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.id = params['id'] ? +params['id'] : null;  
-      console.log("slave : ", this.id);
+      this.id = params['id'] ? +params['id'] : null;
     });
-    
-    this.getTaskById(this.id);
-    console.log(this.getTaskById);
-    
-  }
 
+    this.getTaskById(this.id);
+  }
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }
 
-
   getTaskById(id: any) {
     this.taskService.getUserCropTaskBycropId(id).subscribe(
       (data) => {
-        console.log("jjjj",data);
-        
         this.taskItems = data;
-        console.log('Task Items:', this.taskItems);
-        this.taskItems.startingDate = this.formatDate(this.taskItems.startingDate);
+        this.taskItems.startingDate = this.formatDate(
+          this.taskItems.startingDate
+        );
       },
       (error) => {
-        console.error('Error fetching task:', error);
         if (error.status === 401) {
         }
       }
     );
   }
 
-
   updateTask() {
-    const token =  this.tokenService.getToken();
+    const token = this.tokenService.getToken();
 
     if (!token) {
-      console.error('No token found');
       return;
     }
-  
+
     const formData = new FormData();
-  
-    // Directly append all form fields without conditionals
     formData.append('taskEnglish', this.taskItems.taskEnglish);
     formData.append('taskSinhala', this.taskItems.taskSinhala);
     formData.append('taskTamil', this.taskItems.taskTamil);
@@ -120,22 +107,18 @@ export class UserTaskEditComponent {
     formData.append('videoLink', this.taskItems.videoLinkEnglish);
     formData.append('videoLink', this.taskItems.videoLinkSinhala);
     formData.append('videoLink', this.taskItems.videoLinkTamil);
-  
-  
+
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     });
-  
-    console.log('FormData:', formData);
-  
+
     const taskData = {
       ...this.taskItems,
-      startingDate: this.formatDate(this.taskItems.startingDate) // Ensure proper date format
+      startingDate: this.formatDate(this.taskItems.startingDate),
     };
 
     this.taskService.updateUserCropTask(this.id, taskData).subscribe(
       (res: any) => {
-        console.log('Task updated successfully', res);
         Swal.fire({
           icon: 'success',
           title: 'Success',
@@ -143,7 +126,6 @@ export class UserTaskEditComponent {
         });
       },
       (error) => {
-        console.error('Error updating task', error);
         Swal.fire({
           icon: 'error',
           title: 'Unsuccessful',
@@ -153,17 +135,12 @@ export class UserTaskEditComponent {
     );
   }
 
-
   formatDate(date: any): string {
     if (!date) return '';
     const d = new Date(date);
-    return d.toISOString().split('T')[0]; // Ensure format 'yyyy-MM-dd'
+    return d.toISOString().split('T')[0];
   }
-
-
-  
 }
-
 
 export class CreateTask {
   taskTypeEnglish: string = '';

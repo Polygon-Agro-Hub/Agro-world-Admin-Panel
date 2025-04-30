@@ -137,23 +137,14 @@ export class EditCollectionCenterComponent implements OnInit {
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
           } else {
-            if (res?.message === 'This RegCode already exists!') {
-              Swal.fire({
-                icon: 'error',
-                title: 'Failed',
-                text: 'This RegCode already exists!',
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'This RegCode already exists!',
-              });
-            }
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: res?.message || 'This RegCode already exists!',
+            });
           }
         },
-        (error) => {
-          console.error('Error:', error);
+        () => {
           Swal.fire({
             icon: 'error',
             title: 'Server Error',
@@ -171,11 +162,9 @@ export class EditCollectionCenterComponent implements OnInit {
     this.collectionCenterService.getAllCompanyList().subscribe(
       (res) => {
         this.CompanyData = res;
-
-        // Update selected companies once the CompanyData is available
         this.updateSelectedCompanies();
       },
-      (error) => console.error('Error fetching companies:', error)
+      () => {}
     );
   }
 
@@ -188,9 +177,7 @@ export class EditCollectionCenterComponent implements OnInit {
           if (res?.status) {
             this.centerFetchData = res.results;
             this.selectProvince = this.centerFetchData.province;
-            this.existRegCode = this.centerFetchData.regCode; // Store initial reg code
-            console.log('efkskfnksdfjdf', this.centerFetchData.companies);
-
+            this.existRegCode = this.centerFetchData.regCode;
             this.updateSelectedCompanies();
             this.onProvinceChange();
             this.isLoading = false;
@@ -200,8 +187,7 @@ export class EditCollectionCenterComponent implements OnInit {
             this.router.navigate(['/collection-hub/view-collection-centers']);
           }
         },
-
-        (error) => console.error('Error fetching collection center:', error)
+        () => {}
       );
   }
 
@@ -217,7 +203,6 @@ export class EditCollectionCenterComponent implements OnInit {
     }
   }
 
-  // Update toggleSelection to synchronize selectedCompaniesIds and companies string
   toggleSelection(company: any) {
     const index = this.selectedCompaniesIds.indexOf(company.id);
     if (index === -1) {
@@ -226,15 +211,11 @@ export class EditCollectionCenterComponent implements OnInit {
       this.selectedCompaniesIds.splice(index, 1);
     }
 
-    // Update the companies string
     this.centerFetchData.companies = this.CompanyData.filter((c) =>
       this.selectedCompaniesIds.includes(c.id)
     )
       .map((c) => c.companyNameEnglish)
       .join(',');
-
-    console.log('Selected IDs:', this.selectedCompaniesIds);
-    console.log('Selected Companies:', this.centerFetchData.companies);
   }
 
   onCancel() {
@@ -250,9 +231,9 @@ export class EditCollectionCenterComponent implements OnInit {
   }
 
   updateRegCode() {
-    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase(); // First 3 letters of province
-    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase(); // First 3 letters of district
-    const cityCode = this.city.slice(0, 3).toUpperCase(); // First 3 letters of city
+    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase();
+    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase();
+    const cityCode = this.city.slice(0, 3).toUpperCase();
 
     if (provinceCode && districtCode && cityCode) {
       this.centerFetchData.regCode = `${provinceCode}-${districtCode}-${cityCode}`;
@@ -264,7 +245,6 @@ export class EditCollectionCenterComponent implements OnInit {
     const selectedDistrict = this.centerFetchData.district;
     const selectedCity = this.centerFetchData.city;
 
-    // Call the original province change logic
     const filteredProvince = this.ProvinceData.filter(
       (item) => item.province === this.selectProvince
     );
@@ -276,23 +256,18 @@ export class EditCollectionCenterComponent implements OnInit {
       this.selectedDistrict = [];
     }
 
-    // Add reg code generation logic
     if (selectedProvince && selectedDistrict && selectedCity) {
       this.collectionCenterService
         .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
         .subscribe(
           (response) => {
             this.centerFetchData.regCode = response.regCode;
-            console.log('New RegCode:', response.regCode);
           },
-          (error) => {
-            console.error('Error fetching regCode:', error);
-          }
+          () => {}
         );
     }
   }
 
-  // Add new methods for district and city changes
   onDistrictChange() {
     const selectedProvince = this.centerFetchData.province;
     const selectedDistrict = this.centerFetchData.district;
@@ -304,11 +279,8 @@ export class EditCollectionCenterComponent implements OnInit {
         .subscribe(
           (response) => {
             this.centerFetchData.regCode = response.regCode;
-            console.log('New RegCode:', response.regCode);
           },
-          (error) => {
-            console.error('Error fetching regCode:', error);
-          }
+          () => {}
         );
     }
   }
@@ -324,11 +296,8 @@ export class EditCollectionCenterComponent implements OnInit {
         .subscribe(
           (response) => {
             this.centerFetchData.regCode = response.regCode;
-            console.log('New RegCode:', response.regCode);
           },
-          (error) => {
-            console.error('Error fetching regCode:', error);
-          }
+          () => {}
         );
     }
   }

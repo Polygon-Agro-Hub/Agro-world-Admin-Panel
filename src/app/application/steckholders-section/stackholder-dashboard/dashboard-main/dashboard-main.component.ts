@@ -31,15 +31,12 @@ export class DashboardMainComponent implements OnInit {
   thirdRow: any = {};
   fourthRow: any = {};
   isLoading = false;
-
-  // Variables to store the emitted data from AdminRowComponent
   adminRowData: any = {};
   collectionOfficerRowData: any = {};
   salesAgentRowData: any = {};
   plantCareRowData: any = {};
-
   isDownloading: boolean = false;
- currentDate = new Date().toISOString().split('T')[0];
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(private stakeholderSrv: StakeholderService) {}
 
@@ -49,26 +46,15 @@ export class DashboardMainComponent implements OnInit {
 
   fetchAdminUserData() {
     this.isLoading = true;
-    console.log('fetching started');
     this.stakeholderSrv.getAdminUserData().subscribe(
       (res) => {
-        console.log('Admin ->', res);
         this.firstRow = res.firstRow;
         this.secondRow = res.secondRow;
         this.thirdRow = res.thirdRow;
         this.fourthRow = res.fourthRow;
-        console.log(
-          'logiing',
-          this.firstRow,
-          this.secondRow,
-          this.thirdRow,
-          this.fourthRow
-        );
-        // console.log("---------------",this.secondRow);
         this.isLoading = false;
       },
-      (error) => {
-        console.log('Error: ', error);
+      () => {
         this.isLoading = false;
       }
     );
@@ -76,41 +62,28 @@ export class DashboardMainComponent implements OnInit {
 
   onAdminDataEmitted(data: any) {
     this.adminRowData = data;
-    console.log('Admin Row Data Received:', this.adminRowData);
   }
 
   onsPlantCareDataEmitted(data: any) {
     this.plantCareRowData = data;
-    console.log('Plant Care Row Data Received:', this.plantCareRowData);
   }
 
   onCollectionOfficerDataEmitted(data: any) {
     this.collectionOfficerRowData = data;
-    console.log(
-      'Collection Officer Row Data Received:',
-      this.collectionOfficerRowData
-    );
   }
 
   onsalesAgentDataEmitted(data: any) {
     this.salesAgentRowData = data;
-    console.log('Sales Agent Row Data Received:', this.salesAgentRowData);
   }
 
   exportReport(): void {
     this.isDownloading = true;
-    console.log('Export started', this.isDownloading);
-
-    // Minimum loading time (2 seconds)
     const minLoadingTime = 2000;
     const startTime = Date.now();
 
-    // Generate PDF
     const generatePdf = () => {
       try {
         const doc = new jsPDF();
-
-        // Colors used in the boxes
         const colors = {
           blue: '#007bff',
           orange: '#ff7f00',
@@ -122,7 +95,6 @@ export class DashboardMainComponent implements OnInit {
           background: '#f5f5f5',
         };
 
-        // Set background
         doc.setFillColor(colors.background);
         doc.rect(
           0,
@@ -132,19 +104,17 @@ export class DashboardMainComponent implements OnInit {
           'F'
         );
 
-        const currentDate = new Date().toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
+        const currentDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
         });
 
-        // Main title
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(colors.black);
         doc.text(`Stakeholder Dashboard Report on ${currentDate}`, 10, 15);
 
-        // Function to draw a box with centered text
         const drawBox = (
           x: number,
           y: number,
@@ -158,16 +128,13 @@ export class DashboardMainComponent implements OnInit {
           doc.setFillColor(backgroundColor);
           const cornerRadius = 2;
           doc.roundedRect(x, y, width, height, cornerRadius, cornerRadius, 'F');
-
           const centerX = x + width / 2;
-
           doc.setTextColor(textColor);
           doc.setFontSize(10);
           doc.setFont('helvetica', 'normal');
           const labelWidth =
             (doc.getStringUnitWidth(label) * 10) / doc.internal.scaleFactor;
           doc.text(label, centerX - labelWidth / 2, y + height * 0.4);
-
           doc.setFontSize(12);
           doc.setFont('helvetica', 'bold');
           const valueWidth =
@@ -180,8 +147,6 @@ export class DashboardMainComponent implements OnInit {
         const boxCount = 5;
         const spaceBetweenBoxes = 5;
         const verticalSpacing = 10;
-
-        // Box dimensions
         const totalSpace =
           pageWidth -
           2 * horizontalPadding -
@@ -191,17 +156,13 @@ export class DashboardMainComponent implements OnInit {
         const halfBoxHeight = baseBoxHeight / 2 - 2;
         const secondRowBoxHeight = 45;
         const halfSecondRowBoxHeight = secondRowBoxHeight / 2 - 2;
-
-        // Base Y-coordinate
         const baseY = 25;
 
-        // Function to calculate X and Y coordinates
         const getX = (index: number) =>
           horizontalPadding + index * (boxWidth + spaceBetweenBoxes);
         const getY = (row: number) =>
           baseY + row * (baseBoxHeight + verticalSpacing);
 
-        // Row 1 (Standard Height)
         drawBox(
           getX(0),
           getY(0),
@@ -232,8 +193,6 @@ export class DashboardMainComponent implements OnInit {
           'New Admins',
           `Total: ${this.adminRowData.newAdminUsers}`
         );
-
-        // Split 4th box into two horizontally
         drawBox(
           getX(3),
           getY(0),
@@ -254,8 +213,6 @@ export class DashboardMainComponent implements OnInit {
           'Total Officers',
           `${this.adminRowData.officerAdmins}`
         );
-
-        // Split 5th box into two horizontally
         drawBox(
           getX(4),
           getY(0),
@@ -277,7 +234,6 @@ export class DashboardMainComponent implements OnInit {
           `${this.adminRowData.managerAdmins}`
         );
 
-        // Row 2 (Increased Height)
         drawBox(
           getX(0),
           getY(1),
@@ -308,8 +264,6 @@ export class DashboardMainComponent implements OnInit {
           'Active Users',
           `Today: ${this.plantCareRowData.newPlantCareUsers}`
         );
-
-        // Split 4th box in 2nd row into two horizontally
         drawBox(
           getX(3),
           getY(1),
@@ -331,13 +285,11 @@ export class DashboardMainComponent implements OnInit {
           `${this.plantCareRowData.plantCareUsersWithOutQrForOutput}`
         );
 
-        // 5th box in 2nd row - QR Registration Chart
         const box5X = getX(4);
         const box5Y = getY(1);
 
         doc.setFillColor(colors.white);
         doc.roundedRect(box5X, box5Y, boxWidth, secondRowBoxHeight, 2, 2, 'F');
-
         doc.setTextColor(colors.black);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
@@ -352,13 +304,11 @@ export class DashboardMainComponent implements OnInit {
 
         const QRpresentage = this.plantCareRowData.QRpresentageForOutput;
         const nonQRpresentage = this.plantCareRowData.nonQRpresentageForOutput;
-
         const barWidth = boxWidth * 0.35;
         const barMaxHeight = secondRowBoxHeight * 0.55;
         const startX = box5X + (boxWidth - (2 * barWidth + 5)) / 2;
         const startY = box5Y + 12;
 
-        // Draw the Registered bar
         doc.setFillColor(0, 128, 128);
         const registeredBarHeight = (barMaxHeight * QRpresentage) / 100;
         doc.rect(
@@ -369,7 +319,6 @@ export class DashboardMainComponent implements OnInit {
           'F'
         );
 
-        // Draw the Unregistered bar
         doc.setFillColor(118, 183, 178);
         const unregisteredBarHeight = (barMaxHeight * nonQRpresentage) / 100;
         doc.rect(
@@ -380,7 +329,6 @@ export class DashboardMainComponent implements OnInit {
           'F'
         );
 
-        // Add labels below bars
         doc.setFontSize(8);
         doc.setTextColor(colors.black);
         const reg = 'Registered';
@@ -401,7 +349,6 @@ export class DashboardMainComponent implements OnInit {
           startY + barMaxHeight + 5
         );
 
-        // Add percentages on top of bars
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
         doc.text(
@@ -415,10 +362,7 @@ export class DashboardMainComponent implements OnInit {
           startY + (barMaxHeight - unregisteredBarHeight) - 2
         );
 
-        // Row 3 adjustment for the increased height of row 2
         const row3YAdjustment = getY(2) + (secondRowBoxHeight - baseBoxHeight);
-
-        // Row 3 (Standard Height)
         drawBox(
           getX(0),
           row3YAdjustment,
@@ -449,8 +393,6 @@ export class DashboardMainComponent implements OnInit {
           'New Officers',
           `Today: ${this.collectionOfficerRowData.newOfficers}`
         );
-
-        // Split 4th box in 3rd row into two horizontally
         drawBox(
           getX(3),
           row3YAdjustment,
@@ -471,8 +413,6 @@ export class DashboardMainComponent implements OnInit {
           'Center Managers',
           `${this.collectionOfficerRowData.centerManagers}`
         );
-
-        // Split 5th box in 3rd row into two horizontally
         drawBox(
           getX(4),
           row3YAdjustment,
@@ -494,10 +434,7 @@ export class DashboardMainComponent implements OnInit {
           `${this.collectionOfficerRowData.customerOfficers}`
         );
 
-        // Row 4 adjustment for the increased height of row 2
         const row4YAdjustment = getY(3) + (secondRowBoxHeight - baseBoxHeight);
-
-        // Row 4 (Standard Height)
         drawBox(
           getX(0),
           row4YAdjustment,
@@ -529,25 +466,18 @@ export class DashboardMainComponent implements OnInit {
           `Today: ${this.salesAgentRowData.newSalesAgents}`
         );
 
-        // Save the PDF
         doc.save('dashboard-report.pdf');
-      } catch (error) {
-        console.error('Error generating PDF:', error);
-      }
+      } catch {}
     };
 
-    // Calculate remaining time to ensure minimum loading time
     const completeExport = () => {
       const elapsedTime = Date.now() - startTime;
       const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
-
       setTimeout(() => {
         this.isDownloading = false;
-        console.log('Export completed', this.isDownloading);
       }, remainingTime);
     };
 
-    // Use setTimeout to ensure UI updates before PDF generation
     setTimeout(() => {
       generatePdf();
       completeExport();

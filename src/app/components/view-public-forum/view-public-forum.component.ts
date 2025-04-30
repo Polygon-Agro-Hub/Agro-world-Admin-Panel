@@ -3,19 +3,22 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PublicForumService } from '../../services/plant-care/public-forum.service';
-import { count, error, log, profile } from 'console';
 import Swal from 'sweetalert2';
 import { PublicforumService } from '../../services/plant-care/publicforum.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlantcareUsersService } from '../../services/plant-care/plantcare-users.service';
-import { response } from 'express';
-import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-public-forum',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    NgxPaginationModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-public-forum.component.html',
   styleUrl: './view-public-forum.component.css',
 })
@@ -23,7 +26,7 @@ export class ViewPublicForumComponent implements OnInit {
   publiForum!: PublicForum[];
   isPopupVisible = false;
   deletePopUpVisible = false;
-  deletePostVisible = false
+  deletePostVisible = false;
   postId!: number;
   postRcord!: any;
   posts: any[] = [];
@@ -33,18 +36,17 @@ export class ViewPublicForumComponent implements OnInit {
   replyMessage: string = '';
   @Input() chatId!: number;
   count!: any;
-  countReply!: ReplyCount[]
-  hasData: boolean =false
+  countReply!: ReplyCount[];
+  hasData: boolean = false;
   selectPostId!: number;
   isLoading = false;
   isLoadingpop = false;
-
 
   constructor(
     private psotService: PublicforumService,
     private router: Router,
     private publicForumSrv: PublicForumService
-  ) { }
+  ) {}
 
   sendMessage(id: number) {
     if (!this.replyMessage.trim()) {
@@ -64,7 +66,6 @@ export class ViewPublicForumComponent implements OnInit {
         this.replyMessage = '';
       },
       (error) => {
-        console.error('Error sending message:', error);
         Swal.fire('Error!', 'There was an error sending your reply.', 'error');
       }
     );
@@ -83,35 +84,29 @@ export class ViewPublicForumComponent implements OnInit {
           post.timeAgo = this.calculateTimeAgo(post.createdAt);
           return post;
         });
-  
         this.hasData = data.length > 0;
-        console.log(this.post);
         this.getCount();
         this.isLoading = false;
       },
       (error) => {
-        console.error("Error fetching posts:", error);
         this.isLoading = false;
       }
     );
   }
-  
 
   viewUserProfile(userId: number) {
     this.router.navigate(['/plant-care/action/plant-care-user-profile'], {
       queryParams: { userId },
     });
-    console.log('forum U. Id', userId);
   }
 
   toggleDeleteButton() {
     this.isDeleteVisible = !this.isDeleteVisible;
-
   }
 
   openPopup(id: number) {
     this.isPopupVisible = true;
-    this.fetchPostAllReply(id)
+    this.fetchPostAllReply(id);
     this.selectPostId = id;
   }
 
@@ -130,33 +125,28 @@ export class ViewPublicForumComponent implements OnInit {
   openDeletePopUp() {
     this.deletePopUpVisible = true;
   }
+
   closeDeletePopUp() {
     this.deletePopUpVisible = true;
   }
 
-
   fetchPostAllReply(id: number): void {
     this.isLoadingpop = true;
-    
-    this.publicForumSrv.getAllPostReply(id)
-      .pipe(finalize(() => this.isLoadingpop = false))
+    this.publicForumSrv
+      .getAllPostReply(id)
+      .pipe(finalize(() => (this.isLoadingpop = false)))
       .subscribe(
         (data: PublicForum[]) => {
           this.publiForum = data.map((reply) => {
             reply.timeAgo = this.calculateTimeAgo(reply.createdAt);
             return reply;
           });
-          console.log(this.publiForum);
         },
-        (error) => {
-          console.error('Error:', error);
-        }
+        (error) => {}
       );
   }
 
   deletePost(id: number) {
-    console.log('delete id:', id);
-
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this post? This action cannot be undone.',
@@ -171,32 +161,23 @@ export class ViewPublicForumComponent implements OnInit {
         this.publicForumSrv.deletePublicForumPost(id).subscribe(
           (res: any) => {
             if (res) {
-              Swal.fire(
-                'Deleted!',
-                'The post has been deleted.',
-                'success'
-              );
+              Swal.fire('Deleted!', 'The post has been deleted.', 'success');
               this.isPopupVisible = true;
-
             }
           },
           (error) => {
-            console.log('Error', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the post.',
               'error'
-            )
+            );
           }
-        )
+        );
       }
     });
-
   }
 
   deleteReply(id: number) {
-    console.log('delete id:', id);
-
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this reply message? This action cannot be undone.',
@@ -221,7 +202,6 @@ export class ViewPublicForumComponent implements OnInit {
             }
           },
           (error) => {
-            console.log('Error', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the crop calendar.',
@@ -232,36 +212,34 @@ export class ViewPublicForumComponent implements OnInit {
       }
     });
   }
+
   getCount() {
     this.publicForumSrv.getreplyCount().subscribe((data: any) => {
-      console.log(data);
-
-      this.countReply = data
+      this.countReply = data;
     });
   }
 
-  calculateTimeAgo(createdAt:string):string{
+  calculateTimeAgo(createdAt: string): string {
     const now = new Date();
     const postTime = new Date(createdAt);
-    const diffInSeconds  = Math.floor((now.getTime() - postTime.getTime()) / 1000);
+    const diffInSeconds = Math.floor(
+      (now.getTime() - postTime.getTime()) / 1000
+    );
 
-    if(diffInSeconds < 60){
+    if (diffInSeconds < 60) {
       return `${diffInSeconds} sec ago`;
-    }else if(diffInSeconds < 3600){
+    } else if (diffInSeconds < 3600) {
       return `${Math.floor(diffInSeconds / 60)} min ago`;
-    }else if (diffInSeconds < 86400){
+    } else if (diffInSeconds < 86400) {
       return `${Math.floor(diffInSeconds / 3600)} hr ago`;
-    }else{
+    } else {
       return `${Math.floor(diffInSeconds / 86400)} day(s) ago`;
     }
   }
 
-
   back(): void {
     this.router.navigate(['/plant-care/action']);
   }
-
-  
 }
 
 class PublicForum {
@@ -270,11 +248,10 @@ class PublicForum {
   'firstName': string;
   'lastName': string;
   'createdAt': string;
-  timeAgo?:string;
+  timeAgo?: string;
 }
 
 class ReplyCount {
   'chatId': number;
   'replyCount': number;
-
 }

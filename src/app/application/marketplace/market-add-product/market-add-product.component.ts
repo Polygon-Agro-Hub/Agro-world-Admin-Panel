@@ -10,10 +10,8 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
-import { MatInputModule } from '@angular/material/input'; // Add this import
-import { COMMA, ENTER } from '@angular/cdk/keycodes'; // Add this for chip separators
-
-
+import { MatInputModule } from '@angular/material/input';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-market-add-product',
   standalone: true,
@@ -24,7 +22,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes'; // Add this for chip separ
     FormsModule,
     MatIconModule,
     CommonModule,
-    MatInputModule
+    MatInputModule,
   ],
   templateUrl: './market-add-product.component.html',
   styleUrls: ['./market-add-product.component.css'],
@@ -53,11 +51,8 @@ export class MarketAddProductComponent implements OnInit {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
         this.cropsObj = res;
-        console.log('Crops fetched successfully:', res);
       },
-      (error) => {
-        console.log('Error: Crop variety fetching issue', error);
-      }
+      (error) => {}
     );
   }
 
@@ -66,14 +61,10 @@ export class MarketAddProductComponent implements OnInit {
       (crop) => crop.cropId === +this.productObj.selectId
     );
 
-    console.log('Filtered crops:', sample);
-
     if (sample.length > 0) {
       this.selectedVarieties = sample[0].variety;
-      console.log('Selected crop varieties:', this.selectedVarieties);
       this.isVerityVisible = true;
     } else {
-      console.log('No crop found with selectId:', this.productObj.selectId);
     }
   }
 
@@ -83,8 +74,6 @@ export class MarketAddProductComponent implements OnInit {
 
   onImageError() {
     this.isImageLoading = false;
-    // You can set a fallback image here if needed
-    // this.selectedImage = 'path/to/fallback-image.jpg';
   }
 
   selectVerityImage() {
@@ -93,69 +82,43 @@ export class MarketAddProductComponent implements OnInit {
       const sample = this.selectedVarieties.filter(
         (verity) => verity.id === +this.productObj.varietyId
       );
-      console.log(sample[0].image);
       this.selectedImage = sample[0].image;
     }
   }
 
-  // calculeSalePrice() {
-  //   if (this.productObj.displaytype === 'AP&SP') {
-  //     this.productObj.discount = this.productObj.discountValue;
-  //     this.productObj.salePrice =  this.productObj.normalPrice -this.productObj.discountValue;
-  //   }else{
-  //     this.productObj.discount = (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-  //   this.productObj.salePrice =  this.productObj.normalPrice -(this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-  //   }
-
-
-    
-  //   console.log(this.productObj.salePrice);
-  // }
-
   calculeSalePrice() {
-    console.log('this is sale price ', this.productObj.salePrice);
-    if (this.productObj.displaytype === 'D&AP' || this.productObj.displaytype === 'AP&SP&D') {
+    if (
+      this.productObj.displaytype === 'D&AP' ||
+      this.productObj.displaytype === 'AP&SP&D'
+    ) {
       this.productObj.salePrice =
-      this.productObj.normalPrice -
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+        this.productObj.normalPrice -
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
 
-      this.productObj.discount = (this.productObj.normalPrice * this.productObj.discountedPrice) / 100
-      console.log('this is discount', this.productObj.discount);
-    console.log('this is sale price ', this.productObj.salePrice);
-    }else if (this.productObj.displaytype === 'AP&SP') {
-      this.productObj.discount = this.productObj.normalPrice - this.productObj.salePrice;
-      console.log('this is discount', this.productObj.discount);
-    console.log('this is sale price ',this.productObj.salePrice);
-    console.log('this is normal price ',this.productObj.normalPrice);
-
-    }else {
-      console.log('discount', this.productObj.discount)
-      this.productObj.salePrice = this.productObj.normalPrice - this.productObj.discount
-      console.log('actual price', this.productObj.normalPrice)
+      this.productObj.discount =
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+    } else if (this.productObj.displaytype === 'AP&SP') {
+      this.productObj.discount =
+        this.productObj.normalPrice - this.productObj.salePrice;
+    } else {
+      this.productObj.salePrice =
+        this.productObj.normalPrice - this.productObj.discount;
     }
-   
   }
 
-  // calculediscount() {
-  //   console.log('this is sale price ',this.productObj.salePrice);
-    
-   
-  // }
-
-
-  dispresent(){
-    if (this.productObj.discountValue){
+  dispresent() {
+    if (this.productObj.discountValue) {
       this.productObj.discountedPrice = 0;
     }
   }
 
-  disvalue(){
-    if (this.productObj.discountedPrice){
+  disvalue() {
+    if (this.productObj.discountedPrice) {
       this.productObj.discountedPrice = 0;
     }
   }
 
-  changeType(){
+  changeType() {
     this.productObj.normalPrice = 0;
     this.productObj.salePrice = 0;
     this.productObj.discountedPrice = 0;
@@ -164,21 +127,16 @@ export class MarketAddProductComponent implements OnInit {
 
   applyDiscount() {
     this.isNoDiscount = false;
-    console.log('discointe', this.isNoDiscount);
   }
 
-  compaireDiscount(){
-    this.productObj.displaytype='';
-    this.productObj.discount= 0.00;
-    this.productObj.discountedPrice= 0.00;
-    console.log(this.productObj.discount);
+  compaireDiscount() {
+    this.productObj.displaytype = '';
+    this.productObj.discount = 0.0;
+    this.productObj.discountedPrice = 0.0;
     this.isNoDiscount = true;
-    this.productObj.salePrice = this.productObj.normalPrice - this.productObj.discount
-    console.log('discointe', this.productObj.salePrice);
-    console.log('discointe', this.isNoDiscount);
+    this.productObj.salePrice =
+      this.productObj.normalPrice - this.productObj.discount;
   }
-
-  // displayType
 
   onCancel() {
     Swal.fire({
@@ -200,9 +158,7 @@ export class MarketAddProductComponent implements OnInit {
     });
   }
 
-  seeCategory() {
-    console.log('cateogy', this.productObj.category)
-  }
+  seeCategory() {}
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -213,7 +169,6 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.productObj)
     this.updateTags();
 
     if (this.templateKeywords().length === 0) {
@@ -224,9 +179,8 @@ export class MarketAddProductComponent implements OnInit {
       );
       return;
     }
-    console.log(this.productObj.promo);
 
-    if (this.productObj.salePrice <= 0)  {
+    if (this.productObj.salePrice <= 0) {
       Swal.fire(
         'Invalid Value',
         'sale Price must be greater than 0, check the discount you applied',
@@ -272,13 +226,11 @@ export class MarketAddProductComponent implements OnInit {
       }
     }
 
-    if(this.productObj.unitType == 'g'){
+    if (this.productObj.unitType == 'g') {
       this.productObj.startValue = this.productObj.startValue / 1000;
       this.productObj.changeby = this.productObj.changeby / 1000;
       this.productObj.unitType = 'Kg';
     }
-
-
 
     this.marketSrv.createProduct(this.productObj).subscribe(
       (res) => {
@@ -291,14 +243,9 @@ export class MarketAddProductComponent implements OnInit {
       },
       (error) => {
         console.error('Product creation error:', error);
-        Swal.fire(
-          'Error',
-          error.message,
-          'error'
-        );
+        Swal.fire('Error', error.message, 'error');
       }
     );
-    console.log('Form submitted:', this.productObj);
   }
 
   addTemplateKeyword(event: MatChipInputEvent): void {

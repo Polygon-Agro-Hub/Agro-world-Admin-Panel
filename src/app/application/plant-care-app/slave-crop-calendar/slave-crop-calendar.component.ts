@@ -4,7 +4,6 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewsService } from '../../../services/plant-care/news.service';
 import { CommonModule } from '@angular/common';
-
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -40,9 +39,8 @@ interface NewsItem {
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-
     LoadingSpinnerComponent,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   templateUrl: './slave-crop-calendar.component.html',
   styleUrl: './slave-crop-calendar.component.css',
@@ -50,7 +48,6 @@ interface NewsItem {
 export class SlaveCropCalendarComponent {
   itemId: number | null = null;
   cultivtionItems: CultivationItems[] = [];
-
   cultivationId: any | null = null;
   name: string = '';
   category: string = '';
@@ -74,8 +71,6 @@ export class SlaveCropCalendarComponent {
         ? +params['cultivationId']
         : null;
       this.userId = params['userId'] ? +params['userId'] : null;
-      console.log('This is the Id : ', this.cultivationId);
-      console.log('This is the user Id : ', this.userId);
     });
     this.fetchAllNews(this.cultivationId);
   }
@@ -84,7 +79,7 @@ export class SlaveCropCalendarComponent {
     totalTasks: number,
     completedTasks: number
   ): number {
-    if (totalTasks === 0) return 0; // Avoid division by zero
+    if (totalTasks === 0) return 0;
     return (completedTasks / totalTasks) * 100;
   }
 
@@ -93,11 +88,9 @@ export class SlaveCropCalendarComponent {
     this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
       (data) => {
         this.cultivtionItems = data;
-        console.log(this.cultivtionItems);
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error fetching news:', error);
         if (error.status === 401) {
           this.isLoading = false;
         }
@@ -110,11 +103,9 @@ export class SlaveCropCalendarComponent {
     this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
       (data) => {
         this.newsItems = data;
-        console.log(data);
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error fetching ongoing cultivations:', error);
         if (error.status === 401) {
           this.isLoading = false;
         }
@@ -126,14 +117,8 @@ export class SlaveCropCalendarComponent {
     if (cropCalendarId) {
       this.router.navigate(
         ['/plant-care/action/view-crop-task-by-user/user-task-list'],
-        {
-          queryParams: { cropCalendarId, userId, onCulscropID },
-        }
+        { queryParams: { cropCalendarId, userId, onCulscropID } }
       );
-      console.log('Navigating with cultivationId:', cropCalendarId);
-      console.log('ish:', onCulscropID);
-    } else {
-      console.error('cultivationId is not defined:', cropCalendarId);
     }
   }
 

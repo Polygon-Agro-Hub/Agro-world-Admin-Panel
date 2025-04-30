@@ -28,33 +28,32 @@
         [checkmark]="true"
         [options]="district"
         optionLabel="districtName"
-        [showClear]="true"
+        [(ngModel)]="selectedDistrict"
         (onChange)="onDistrictChange($event)"
       />
     </div>
   </div>
 
   <ng-container *ngIf="loading">
-    <div class="w-full h-full flex flex-col justify-end gap-2 p-4 bg-[#f3f1f1] dark:bg-[#d1cece] rounded-lg animate-pulse">
-      
+    <div
+      class="w-full h-full flex flex-col justify-end gap-2 p-4 bg-[#f3f1f1] dark:bg-[#d1cece] rounded-lg animate-pulse"
+    >
       <div class="flex items-end gap-10 w-full">
         <div class="w-3/6 h-12 bg-gray-300 dark:bg-gray-600 rounded"></div>
         <div class="w-3/6 h-24 bg-gray-300 dark:bg-gray-600 rounded"></div>
-        
       </div>
     </div>
   </ng-container>
 
   <!-- Chart Section -->
   <ng-container *ngIf="!loading">
-  <div class="w-full h-full sm:h-[80%] max-h-[500px] overflow-hidden">
-    <p-chart
-      class="w-full h-[500px]"
-      type="bar"
-      [data]="data"
-      [options]="options"
-    ></p-chart>
-  </div>
-</ng-container>
+    <div class="w-full h-full sm:h-[80%] max-h-[500px] overflow-hidden">
+      <p-chart
+        class="w-full h-[500px]"
+        type="bar"
+        [data]="data"
+        [options]="options"
+      ></p-chart>
+    </div>
+  </ng-container>
 </div>
-

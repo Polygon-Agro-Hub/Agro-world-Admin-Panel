@@ -93,6 +93,7 @@ export class CollectionCenterService {
     category: String,
     comCategory: String,
     searchText: string,
+    rpstatus: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -117,6 +118,10 @@ export class CollectionCenterService {
       url += `&searchText=${searchText}`;
     }
 
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
+    }
+
     return this.http.get(url, {
       headers,
     });
@@ -134,6 +139,7 @@ export class CollectionCenterService {
     comCategory: String,
     filterCompany: String,
     searchText: string,
+    rpstatus: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -160,6 +166,10 @@ export class CollectionCenterService {
 
     if (searchText) {
       url += `&searchText=${searchText}`;
+    }
+
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
     }
 
     return this.http.get(url, {

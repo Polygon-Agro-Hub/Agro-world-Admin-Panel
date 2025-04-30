@@ -47,9 +47,10 @@
       </textarea>
     </div>
 
+    
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
-        <label class="block text-gray-700 dark:text-textDark mb-2 mr-11"
+        <label class="block text-gray-700 dark:text-textDark mb-2"
           >Complaint (Farmer)</label
         >
         <input
@@ -75,7 +76,7 @@
     <div class="text-center">
       <!-- <button pButton type="button" label="Open Popup" icon="pi pi-envelope" (click)="showDialog()"></button> -->
       <button
-        (click)="showReplyDialog()"
+        (click)="showReplyDialog(complain.language)"
         class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
       >
         Send Message

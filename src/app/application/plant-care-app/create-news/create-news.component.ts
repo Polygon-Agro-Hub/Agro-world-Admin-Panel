@@ -78,6 +78,7 @@ export class CreateNewsComponent {
       ['bold', 'italic', 'underline', 'strike'],
       [{ header: 1 }, { header: 2 }],
       [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ size: ['large', 'huge'] }],
       [{ align: [] }],
       ['clean'],
       [{ font: [] }],
@@ -86,6 +87,18 @@ export class CreateNewsComponent {
     modules: {
       clipboard: {
         matchVisual: false,
+        matchers: [
+          [
+            'span',
+            (node: { style: { fontSize: any } }, delta: any) => {
+              // Remove font-size styles from pasted content
+              if (node.style && node.style.fontSize) {
+                delete node.style.fontSize;
+              }
+              return delta;
+            },
+          ],
+        ],
       },
     },
   };
@@ -125,6 +138,9 @@ export class CreateNewsComponent {
   }
 
   createNews() {
+    console.log('clicked');
+    console.log(this.createNewsObj);
+
     if (!this.isPublishAfterExpireValid) {
       Swal.fire({
         icon: 'error',
@@ -155,10 +171,13 @@ export class CreateNewsComponent {
       missingFields.push('Description (Tamil)');
     }
     if (this.createNewsObj.publishDate.trim() === '') {
-      missingFields.push('Publishe Date');
+      missingFields.push('Publish Date');
     }
     if (this.createNewsObj.expireDate.trim() === '') {
       missingFields.push('Expire Date');
+    }
+    if (!this.selectedFile) {
+      missingFields.push('Image');
     }
 
     if (missingFields.length > 0) {
@@ -233,7 +252,7 @@ export class CreateNewsComponent {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'news created successfully!',
+            text: 'News created successfully!',
           });
           this.createNewsObj = new CreateNews();
           this.selectedFile = null;
@@ -248,8 +267,8 @@ export class CreateNewsComponent {
             title: 'Unsuccess',
             text: 'Error creating news',
           });
-          this.createNewsObj = new CreateNews();
-          this.selectedFile = null;
+          // this.createNewsObj = new CreateNews();
+          // this.selectedFile = null; // Reset file input
         }
       );
     }
@@ -432,11 +451,12 @@ export class CreateNewsComponent {
       })
       .subscribe(
         (res: any) => {
+          console.log('Market Price updated successfully', res);
           this.isLoading = false;
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Market Price updated successfully!',
+            text: 'News updated successfully!',
           });
           this.router.navigate(['/plant-care/action/manage-content']);
         },

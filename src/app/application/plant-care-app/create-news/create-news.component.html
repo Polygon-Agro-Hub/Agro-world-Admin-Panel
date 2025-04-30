@@ -5,7 +5,7 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  <div class="h-[20px]"></div>
+  
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <h2
       class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold"
@@ -21,12 +21,12 @@
           >Publish Date</label
         >
         <input
-          [(ngModel)]="createNewsObj.publishDate"
-          id="createdDateFilter"
-          type="date"
-          class="ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
-          (change)="checkPublishDate(); checkPublishExpireDate()"
-        />
+        [(ngModel)]="createNewsObj.publishDate"
+        id="createdDateFilter"
+        type="date"
+        class="w-64 p-2 ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+        (change)="checkPublishDate(); checkPublishExpireDate()"
+      />
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
           Publish Date cannot be later than Expiry Date.
         </div>
@@ -41,7 +41,7 @@
           [(ngModel)]="createNewsObj.expireDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+          class="w-64 p-2 ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           (change)="checkExpireDate(); checkPublishExpireDate()"
         />
       </div>
@@ -60,12 +60,12 @@
           id="titleSinhala"
           [(ngModel)]="createNewsObj.titleEnglish"
           (ngModelChange)="validateTitleEnglish($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isEnglishValid }"
         />
-        <div *ngIf="!isEnglishValid" class="text-red-500">
+        <!-- <div *ngIf="!isEnglishValid" class="text-red-500">
           Title must contain English and not only numbers.
-        </div>
+        </div> -->
       </div>
 
       <div class="mb-4">
@@ -87,7 +87,7 @@
           [styles]="{ height: '300px' }"
           [modules]="quillConfig"
           placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full"
+          class="text-textLight dark:text-textDark w-full text-lg"
           #descriptionEnglishField="ngModel"
           [required]="true"
         ></quill-editor>
@@ -113,9 +113,9 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isSinhalaValid }"
         />
-        <div *ngIf="!isSinhalaValid" class="text-red-500">
+        <!-- <div *ngIf="!isSinhalaValid" class="text-red-500">
           Title must be in Sinhala and not only numbers.
-        </div>
+        </div> -->
       </div>
 
       <div class="mb-4">
@@ -162,9 +162,9 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isTamilValid }"
         />
-        <div *ngIf="!isTamilValid" class="text-red-500">
+        <!-- <div *ngIf="!isTamilValid" class="text-red-500">
           Title must be in Tamil and not only numbers.
-        </div>
+        </div> -->
       </div>
 
       <div class="mb-4">
@@ -256,7 +256,7 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  <div class="h-[20px]"></div>
+ 
   <div class="mx-auto p-6 rounded-lg shadow-md bg-tileLight dark:bg-tileBlack">
     <h2
       class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark"

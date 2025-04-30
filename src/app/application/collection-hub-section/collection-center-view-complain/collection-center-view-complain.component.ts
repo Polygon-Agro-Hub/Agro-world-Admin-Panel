@@ -40,6 +40,12 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   filterComCategory: any = {};
   filterCompany: any = {};
 
+  rpst: string = '';
+  replyStatus = [
+    { status: 'Yes', value: 'Yes' },
+    { status: 'No', value: 'No' },
+  ];
+
     @ViewChild("dropdown") dropdown!: Dropdown;
 
 
@@ -100,16 +106,15 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         this.filterComCategory?.id,
         this.filterCompany?.id,
         this.searchText,
+        this.rpst
       )
       .subscribe(
         (res) => {
           console.log(res.results);
 
           // Map response data to ensure createdAt is in a readable date format
-          this.complainsData = res.results.map((item: any) => ({
-            ...item,
-            createdAt: this.datePipe.transform(item.createdAt, "yyyy-MM-dd"), // Convert date format
-          }));
+        
+          this.complainsData = res.results;
           this.totalItems = res.total;
           this.isLoading = false;
         },
@@ -120,7 +125,9 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       );
   }
 
-
+  regStatusFil() {
+    this.fetchAllComplain(this.page, this.itemsPerPage);
+  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -250,12 +257,12 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
         .subscribe(
           (res: any) => {
-            console.log("Market Price updated successfully", res);
+            console.log("Reply sent successfully", res);
   
             Swal.fire({
               icon: "success",
               title: "Success",
-              text: "Market Price updated successfully!",
+              text: "Reply sent successfully!",
             });
             this.fetchAllComplain(this.page, this.itemsPerPage);
           },

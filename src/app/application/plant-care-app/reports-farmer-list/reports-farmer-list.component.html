@@ -8,15 +8,14 @@
   Back
 </button>
 
-<p class="text-xl my-8 text-textLight dark:text-textDark">Farmer List</p>
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1100px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex justify-end items-center mb-8">
+    <div class="flex justify-between items-center mb-8">
+      <p class="text-xl my-8 text-textLight dark:text-textDark">Farmer List</p>
       <div class="flex justify-center items-end mr-8">
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
@@ -26,6 +25,7 @@
             placeholder="Search.."
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="searchNIC"
+            (keyup.enter)="searchPlantCareUsers()"
           />
           <button
             type="button"

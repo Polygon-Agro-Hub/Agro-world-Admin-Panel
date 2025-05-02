@@ -146,18 +146,21 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
           name: 'Grade A',
           showInLegend: true,
           dataPoints: gradeAData,
+          color: '#FF9263',
         },
         {
           type: 'stackedBar',
           name: 'Grade B',
           showInLegend: true,
           dataPoints: gradeBData,
+          color: '#5F75E9',
         },
         {
           type: 'stackedBar',
           name: 'Grade C',
           showInLegend: true,
           dataPoints: gradeCData,
+          color: '#3DE188',
         },
       ],
     };

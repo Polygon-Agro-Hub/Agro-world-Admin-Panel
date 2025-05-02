@@ -5,7 +5,7 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  
+
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <h2
       class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold"
@@ -21,12 +21,12 @@
           >Publish Date</label
         >
         <input
-        [(ngModel)]="createNewsObj.publishDate"
-        id="createdDateFilter"
-        type="date"
-        class="w-64 p-2 ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
-        (change)="checkPublishDate(); checkPublishExpireDate()"
-      />
+          [(ngModel)]="createNewsObj.publishDate"
+          id="createdDateFilter"
+          type="date"
+          class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+          (change)="checkPublishDate(); checkPublishExpireDate()"
+        />
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
           Publish Date cannot be later than Expiry Date.
         </div>
@@ -41,7 +41,7 @@
           [(ngModel)]="createNewsObj.expireDate"
           id="createdDateFilter"
           type="date"
-          class="w-64 p-2 ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+          class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           (change)="checkExpireDate(); checkPublishExpireDate()"
         />
       </div>
@@ -83,14 +83,14 @@
           ></angular-editor> -->
 
           <quill-editor
-          [(ngModel)]="createNewsObj.descriptionEnglish"
-          [styles]="{ height: '300px' }"
-          [modules]="quillConfig"
-          placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full text-lg"
-          #descriptionEnglishField="ngModel"
-          [required]="true"
-        ></quill-editor>
+            [(ngModel)]="createNewsObj.descriptionEnglish"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full text-lg"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
       </div>
     </div>
@@ -132,14 +132,14 @@
             [config]="editorConfig"
           ></angular-editor> -->
           <quill-editor
-          [(ngModel)]="createNewsObj.descriptionSinhala"
-          [styles]="{ height: '300px' }"
-          [modules]="quillConfig"
-          placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full"
-          #descriptionEnglishField="ngModel"
-          [required]="true"
-        ></quill-editor>
+            [(ngModel)]="createNewsObj.descriptionSinhala"
+            [styles]="{ height: '300px', fontSize: '16px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
       </div>
     </div>
@@ -181,14 +181,14 @@
             [config]="editorConfig"
           ></angular-editor> -->
           <quill-editor
-          [(ngModel)]="createNewsObj.descriptionTamil"
-          [styles]="{ height: '300px' }"
-          [modules]="quillConfig"
-          placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full"
-          #descriptionEnglishField="ngModel"
-          [required]="true"
-        ></quill-editor>
+            [(ngModel)]="createNewsObj.descriptionTamil"
+            [styles]="{ height: '300px', fontSize: '16px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
       </div>
     </div>
@@ -256,7 +256,7 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
- 
+
   <div class="mx-auto p-6 rounded-lg shadow-md bg-tileLight dark:bg-tileBlack">
     <h2
       class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark"
@@ -353,14 +353,14 @@
             required
           ></angular-editor> -->
           <quill-editor
-          [(ngModel)]="newsItems[0].descriptionEnglish"
-          [styles]="{ height: '300px' }"
-          [modules]="quillConfig"
-          placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full"
-          #descriptionEnglishField="ngModel"
-          [required]="true"
-        ></quill-editor>
+            [(ngModel)]="newsItems[0].descriptionEnglish"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
         <p
           *ngIf="
@@ -428,14 +428,14 @@
             required
           ></angular-editor> -->
           <quill-editor
-          [(ngModel)]="newsItems[0].descriptionSinhala"
-          [styles]="{ height: '300px' }"
-          [modules]="quillConfig"
-          placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full"
-          #descriptionSinhalaField="ngModel"
-          [required]="true"
-        ></quill-editor>
+            [(ngModel)]="newsItems[0].descriptionSinhala"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionSinhalaField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
         <p
           *ngIf="
@@ -494,14 +494,14 @@
         >
         <div class="custom-editor">
           <quill-editor
-          [(ngModel)]="newsItems[0].descriptionTamil"
-          [styles]="{ height: '300px' }"
-          [modules]="quillConfig"
-          placeholder="Enter text here..."
-          class="text-textLight dark:text-textDark w-full"
-          #descriptionTamilField="ngModel"
-          [required]="true"
-        ></quill-editor>
+            [(ngModel)]="newsItems[0].descriptionTamil"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionTamilField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
         <p
           *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched"

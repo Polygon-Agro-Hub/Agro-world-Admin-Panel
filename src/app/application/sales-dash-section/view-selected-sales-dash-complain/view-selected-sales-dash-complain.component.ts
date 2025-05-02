@@ -199,7 +199,8 @@ class Complain {
   status!: string;
   firstName!: string;
   lastName!: string;
-  AgentPhone!: string;
+  phoneNumber1!: string;
+  phoneCode1!: string;
   complain!: string;
   complainCategory!: string;
   language!: string;

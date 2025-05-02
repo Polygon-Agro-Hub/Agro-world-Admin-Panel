@@ -161,53 +161,64 @@
       </p>
     </div>
 
-    <div *ngIf="hasData">
+    <div *ngIf="hasData" class="w-full py-4">
+      <!-- Added py-4 for vertical padding -->
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
       >
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
+              <!-- Reduced px-4 to px-3 -->
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            ></th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
+              <!-- Reduced px-4 to px-3 -->
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              <!-- Reduced px-4 to px-3 -->
               Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
+              <!-- Reduced px-4 to px-3 -->
               Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
+              <!-- Reduced px-4 to px-3 -->
               NIC
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
+              <!-- Reduced px-4 to px-3 -->
               Distrct
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
+              <!-- Reduced px-4 to px-3 -->
               Register Status
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
+              <!-- Reduced px-4 to px-3 -->
               Status
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
+              <!-- Reduced px-4 to px-3 -->
               Actions
             </th>
           </tr>
@@ -226,10 +237,12 @@
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              <!-- Reduced px-4 to px-3 -->
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-4 py-3">
+            <td class="px-3 py-3">
+              <!-- Reduced px-4 to px-3 -->
               <img
                 *ngIf="item.profileImage != null"
                 class="profile-pic"
@@ -256,19 +269,24 @@
                 </svg>
               </div>
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              <!-- Reduced px-4 to px-3 -->
               {{ item.firstName }} {{ item.lastName }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              <!-- Reduced px-4 to px-3 -->
               {{ item.phoneNumber }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              <!-- Reduced px-4 to px-3 -->
               {{ item.NICnumber }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              <!-- Reduced px-4 to px-3 -->
               {{ item.district }}
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="px-3 py-3 text-center">
+              <!-- Reduced px-4 to px-3 -->
               <span
                 *ngIf="item.farmerQr"
                 class="text-[#006C5A] dark:text-[#BFFEB8]"
@@ -283,7 +301,8 @@
               </span>
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td class="px-3 py-3 text-center">
+              <!-- Reduced px-4 to px-3 -->
               <div>
                 <span
                   [ngClass]="{
@@ -301,7 +320,8 @@
               </div>
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td class="px-3 py-3 text-center">
+              <!-- Reduced px-4 to px-3 -->
               <div class="flex justify-center space-x-4">
                 <button
                   class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
@@ -369,7 +389,7 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z"
                     />
                   </svg>
                 </button>
@@ -379,6 +399,7 @@
         </tbody>
       </table>
       <div class="dark:bg-[#262f45]">
+        <!-- Added py-4 for vertical padding -->
         <pagination-controls
           (pageChange)="onPageChange($event)"
           [responsive]="true"

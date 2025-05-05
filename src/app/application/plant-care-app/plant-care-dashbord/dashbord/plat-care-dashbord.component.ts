@@ -63,6 +63,14 @@ export class PlatCareDashbordComponent implements OnInit {
       (data: any) => {
         if (data && data.data) {
           this.dashboardData = data.data;
+          // Ensure percentages are numbers
+          this.dashboardData.user_increase_percentage =
+            Number(this.dashboardData.user_increase_percentage) || 0;
+          this.dashboardData.qr_user_increase_percentage =
+            Number(this.dashboardData.qr_user_increase_percentage) || 0;
+          this.dashboardData.cultivation_increase_percentage =
+            Number(this.dashboardData.cultivation_increase_percentage) || 0;
+
           this.calculateTotalCultivation();
           this.hasData = true;
         } else {

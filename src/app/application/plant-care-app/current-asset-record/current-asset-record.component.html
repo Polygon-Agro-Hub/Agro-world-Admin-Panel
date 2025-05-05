@@ -9,7 +9,7 @@
     Back
   </button>
   <div
-    class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex flex-col items-center mb-8">
       <h3 class="flex dark:text-textDark">
@@ -111,10 +111,10 @@
               {{ item.totalPrice }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.createdAt | date:'yyyy-MM-dd' }}
+              {{ item.createdAt | date : "yyyy-MM-dd" }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.createdAt | date:'hh:mm a' }}
+              {{ item.createdAt | date : "hh:mm a" }}
             </td>
           </tr>
         </tbody>

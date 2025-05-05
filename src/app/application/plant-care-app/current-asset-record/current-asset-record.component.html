@@ -34,6 +34,11 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
+            <th
+              class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+            >
+              Batch Number
+            </th>
             <th class="py-3 font-normal text-gray-500 text-left"></th>
             <th
               class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
@@ -49,6 +54,11 @@
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Unit
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+            Unit Price
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
@@ -69,6 +79,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of currentAssetRecord" class="border-b">
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">{{ this.batchNumber }}</td>
             <td class="py-3 text-green-700">
               <div class="overflow-x-auto">
                 <!-- Show the down arrow if numOfMinUnit is 0 or null or undefined -->
@@ -92,6 +103,9 @@
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ this.unit }}
+            </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ this.unitPrice }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.totalPrice }}

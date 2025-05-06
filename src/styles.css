@@ -5,37 +5,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 /* Apply Tailwind classes using @apply */
 .angular-editor-toolbar {
-    @apply bg-gray-100; /* Light gray background */
-  }
-  
-  .angular-editor-textarea {
-    @apply bg-yellow-50; /* Light yellow background */
-  }
+  @apply bg-gray-100;
+  /* Light gray background */
+}
 
-  
-  .compact-slider .swiper-button-next,
-  .compact-slider .swiper-button-prev {
-    width: 8px;  /* Adjust size */
-    height: 8px; /* Adjust size */
-    font-size: 8px; /* Adjust arrow icon size */
-  }
-  
-  .compact-slider .swiper-button-next::after,
-  .compact-slider .swiper-button-prev::after {
-    width: 8px;  /* Adjust size */
-    height: 8px; /* Adjust size */
-    font-size: 8px;
-    font-size: 8px; /* Reduces arrow icon size */
-  }
-  
+.angular-editor-textarea {
+  @apply bg-yellow-50;
+  /* Light yellow background */
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.dark .ql-editor.ql-blank::before {
+  @apply text-white;
+}
+
+.ql-editor {
+  font-size: 17px !important;
+}
+
+
+.compact-slider .swiper-button-next,
+.compact-slider .swiper-button-prev {
+  width: 8px;
+  /* Adjust size */
+  height: 8px;
+  /* Adjust size */
+  font-size: 8px;
+  /* Adjust arrow icon size */
+}
+
+.compact-slider .swiper-button-next::after,
+.compact-slider .swiper-button-prev::after {
+  width: 8px;
+  /* Adjust size */
+  height: 8px;
+  /* Adjust size */
+  font-size: 8px;
+  font-size: 8px;
+  /* Reduces arrow icon size */
+}
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -98,9 +98,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     { name: 'Puttalam', province: 'North Western' },
     { name: 'Rathnapura', province: 'Sabaragamuwa' },
     { name: 'Trincomalee', province: 'Eastern' },
-    { name: 'Vavuniya', province: 'Northern' },
+    { name: 'Vavuniya', province: 'Northern' }
   ];
-
+  
   constructor(
     private collectionOfficerService: CollectionOfficerService,
     private fb: FormBuilder,

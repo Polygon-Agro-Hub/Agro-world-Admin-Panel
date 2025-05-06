@@ -5,11 +5,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -66,8 +62,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   loaded = true;
 
-
-
   banks: Bank[] = [];
   branches: Branch[] = [];
   selectedBankId: number | null = null;
@@ -76,11 +70,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
-  
+
   invalidFields: Set<string> = new Set();
 
   languagesRequired: boolean = false;
-
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -127,10 +120,8 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   selectedLanguages: string[] = [];
 
   onCheckboxChange1(lang: string, event: any) {
-    // If the checkbox is checked, add the language to the string; if unchecked, remove it
     if (event.target.checked) {
       if (this.personalData.languages) {
-        // Add the language if it's not already in the string
         if (!this.personalData.languages.includes(lang)) {
           this.personalData.languages += this.personalData.languages
             ? `,${lang}`
@@ -140,7 +131,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         this.personalData.languages = lang;
       }
     } else {
-      // Remove the language from the string if the checkbox is unchecked
       const languagesArray = this.personalData.languages.split(',');
       const index = languagesArray.indexOf(lang);
       if (index !== -1) {
@@ -151,10 +141,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.personalData); // Logs the personal data with updated languages
-    console.log('hii', this.personalData.empType);
-
-    // Show a confirmation dialog before proceeding
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to create the collection officer?',
@@ -166,7 +152,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        // Proceed with submission if user clicks 'Yes'
         this.collectionOfficerService
           .createCollectiveOfficer(this.personalData, this.selectedImage)
           .subscribe(
@@ -185,12 +170,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
             (error: any) => {
               this.isLoading = false;
               this.errorMessage =
-                error.error.error || 'An unexpected error occurred'; // Update the error message
+                error.error.error || 'An unexpected error occurred';
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
       } else {
-        // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
@@ -213,66 +197,43 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.selectedPage = page;
-    // if (!this.selectedImage) {
-    //   Swal.fire({
-    //     title: 'Image Required',
-    //     text: 'Please upload a profile picture',
-    //     icon: 'warning',
-    //     confirmButtonText: 'OK',
-    //   });
-    //   return; // This will terminate the function if no image is selected
-    // }
   }
 
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
-    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      data => {
+      (data) => {
         this.banks = data;
-       
       },
-      error => {
-        console.error('Error loading banks:', error);
-      }
+      (error) => {}
     );
   }
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      data => {
+      (data) => {
         this.allBranches = data;
-        
       },
-      error => {
-        console.error('Error loading branches:', error);
-      }
+      (error) => {}
     );
   }
 
-
-
-  
-  
   onBankChange() {
     if (this.selectedBankId) {
-      // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      
-      // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
         this.invalidFields.delete('bankName');
       }
-      
-      // Reset branch selection
       this.selectedBranchId = null;
       this.personalData.branchName = '';
     } else {
@@ -283,8 +244,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
         this.invalidFields.delete('branchName');
@@ -294,30 +256,16 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
-
-  // getAllCollectionCetnter(id : number) {
-  //   this.loaded=false;
-  //   this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe((res) => {
-  //     this.collectionCenterData = res;
-      
-
-      
-  //     this.loaded=true;
-  //   });
-  // }
-
-
-  getAllCollectionCetnter(id : number) {
-    this.loaded = false; // Set loading state
+  getAllCollectionCetnter(id: number) {
+    this.loaded = false;
     this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
       (res) => {
         this.collectionCenterData = res;
-        this.loaded = true; // Set loaded state to true when data arrives
+        this.loaded = true;
       },
       (error) => {
-        console.error("Error fetching centers", error);
-        this.collectionCenterData = []; // Clear the data on error
-        this.loaded = true; // Even on error, stop loading state
+        this.collectionCenterData = [];
+        this.loaded = true;
       }
     );
   }
@@ -378,7 +326,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
-    // Map job roles to their respective prefixes
     const rolePrefixes: { [key: string]: string } = {
       'Collection Center Head': 'CCH',
       'Collection Center Manager': 'CCM',
@@ -386,22 +333,17 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       'Collection Officer': 'COO',
     };
 
-    // Get the prefix based on the job role
     rolePrefix = rolePrefixes[this.personalData.jobRole];
 
     if (!rolePrefix) {
-      console.error(`Invalid job role: ${this.personalData.jobRole}`);
-      return; // Exit if the job role is invalid
+      return;
     }
 
-    // Fetch the last ID and assign a new Employee ID
     this.getLastID(rolePrefix)
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {
-        console.error('Error fetching last ID:', error);
-      });
+      .catch((error) => {});
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -412,10 +354,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         (res) => {
           this.lastID = res.result.empId;
           const lastId = res.result.empId;
-          resolve(lastId); // Resolve the Promise with the empId
+          resolve(lastId);
         },
         (error) => {
-          console.error('Error fetching last ID:', error);
           reject(error);
         }
       );
@@ -423,7 +364,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDistrict = target.value;
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
@@ -432,15 +373,14 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       if (selected) {
         this.personalData.province = selected.province;
       } else {
-        this.personalData.province = ''; // Clear if no matching district is found
+        this.personalData.province = '';
       }
     }
   }
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
-    this.personalData.empType = selectedType; // Update personalData.empType dynamically
-    console.log('Selected Employee Type:', this.personalData.empType);
+    this.personalData.empType = selectedType;
   }
 
   isFormValid(): boolean {
@@ -485,41 +425,28 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9}$/; // Adjust based on phone number format
+    const phoneRegex = /^[0-9]{9}$/;
     return phoneRegex.test(phone);
   }
 
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
-  
-    
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
   }
-  
-  // isFieldInvalid(fieldName: keyof Company): boolean {
-  //   return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
-  // }
-  
-  
+
   validateConfirmAccNumber(): void {
-   
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
-  
-    // Check if account numbers match
+
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
-      this.confirmAccountNumberError = this.personalData.accNumber !== this.personalData.confirmAccNumber;
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
   }
-
-
-
-  // onBlur(fieldName: keyof Personal): void {
-  //   this.touchedFields[fieldName] = true;
-  // }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
@@ -534,7 +461,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   isEmpTypeSelected(): boolean {
-    return !!this.empType; // Returns true if empType is not null or undefined
+    return !!this.empType;
   }
 
   validateFile(file: File): boolean {
@@ -561,8 +488,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
       !!this.personalData.lastNameTamil;
-    const isPhoneNumberValid =
-      this.isValidPhoneNumber(this.personalData.phoneNumber01);
+    const isPhoneNumberValid = this.isValidPhoneNumber(
+      this.personalData.phoneNumber01
+    );
     const isEmailValid = this.isValidEmail(this.personalData.email);
     const isEmpTypeSelected = !!this.empType;
     const isLanguagesSelected = !!this.personalData.languages;
@@ -604,7 +532,12 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
     if (companyId === '1') {
       const isBankDetailsValid =
-        !!accHolderName && !!accNumber && !!bankName && !!branchName && !! confirmAccNumber && accNumber === confirmAccNumber;
+        !!accHolderName &&
+        !!accNumber &&
+        !!bankName &&
+        !!branchName &&
+        !!confirmAccNumber &&
+        accNumber === confirmAccNumber;
       return isBankDetailsValid && isAddressValid;
     } else {
       return isAddressValid;
@@ -619,7 +552,9 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     if (event.target.checked) {
       if (this.personalData.languages) {
         if (!this.personalData.languages.includes(lang)) {
-          this.personalData.languages += this.personalData.languages ? `,${lang}` : lang;
+          this.personalData.languages += this.personalData.languages
+            ? `,${lang}`
+            : lang;
         }
       } else {
         this.personalData.languages = lang;
@@ -634,11 +569,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
 
     this.validateLanguages();
-
   }
 
   validateLanguages() {
-    this.languagesRequired = !this.personalData.languages || this.personalData.languages.trim() === '';
+    this.languagesRequired =
+      !this.personalData.languages || this.personalData.languages.trim() === '';
   }
 }
 

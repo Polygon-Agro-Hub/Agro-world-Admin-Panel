@@ -25,46 +25,43 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   isLoading = false;
   currentDate: string;
   market: MarketPrice[] = [];
-  selectedCrop: Crop | null = null; // Updated for type safety
+  selectedCrop: Crop | null = null;
   crops!: Crop[];
 
-  selectedGrade: Viraity | null = null; // Updated for type safety
+  selectedGrade: Viraity | null = null;
   grades!: Viraity[];
 
   page: number = 1;
   totalItems: number = 0;
   searchNIC: string = '';
 
-  constructor(private marketSrv: MarketPriceService,private router: Router) {
+  constructor(private marketSrv: MarketPriceService, private router: Router) {
     this.currentDate = new Date().toLocaleDateString();
   }
 
   ngOnInit(): void {
     this.fetchAllMarketPrices();
     this.getAllCrops();
-
     this.grades = [
       { id: '1', Vgrade: 'A' },
       { id: '2', Vgrade: 'B' },
-      { id: '3', Vgrade: 'C' }
+      { id: '3', Vgrade: 'C' },
     ];
   }
 
   fetchAllMarketPrices() {
     this.isLoading = true;
 
-    const cropId = this.selectedCrop?.id || ''; // Pass cropGroupId if selected
-    const grade = this.selectedGrade?.Vgrade || ''; // Pass grade if selected
+    const cropId = this.selectedCrop?.id || '';
+    const grade = this.selectedGrade?.Vgrade || '';
 
     this.marketSrv.getAllMarketPrice(cropId, grade, this.searchNIC).subscribe(
       (res) => {
         this.isLoading = false;
         this.market = res.results;
         this.totalItems = res.total;
-        console.log('Market Prices:', res);
       },
-      (error) => {
-        console.error('Error fetching market price:', error);
+      () => {
         this.isLoading = false;
         Swal.fire(
           'Error!',
@@ -79,15 +76,9 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     this.marketSrv.getAllCropName().subscribe(
       (res) => {
         this.crops = res;
-        console.log('Crops:', res);
       },
-      (error) => {
-        console.error('Error fetching crops:', error);
-        Swal.fire(
-          'Error!',
-          'There was an error fetching crops.',
-          'error'
-        );
+      () => {
+        Swal.fire('Error!', 'There was an error fetching crops.', 'error');
       }
     );
   }
@@ -100,12 +91,6 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     this.fetchAllMarketPrices();
   }
 
-  // onPageChange(event: number) {
-  //   this.page = event;
-  //   this.fetchAllMarketPrices();
-  // }
-
-
   searchPlantCareUsers() {
     this.page = 1;
     this.fetchAllMarketPrices();
@@ -115,8 +100,6 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     this.searchNIC = '';
     this.fetchAllMarketPrices();
   }
-
-
 
   back(): void {
     this.router.navigate(['/collection-hub']);
@@ -135,7 +118,7 @@ class MarketPrice {
 }
 
 class Crop {
-  id!: string; // Updated to match `cropGroupId`
+  id!: string;
   cropNameEnglish!: string;
 }
 

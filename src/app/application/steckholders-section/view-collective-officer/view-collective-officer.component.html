@@ -2,7 +2,7 @@
 
 <button
   class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/steckholders/action'"
+  (click)="back()"
   class="mb-5 text-textLight dark:text-textDark"
 >
   <i class="fa-solid fa-arrow-left"></i>
@@ -160,7 +160,7 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -168,7 +168,36 @@
           Collection Officers ({{ this.totalItems }})
         </h2>
       </div>
-      <div class="flex items-center">
+
+      <div class="flex items-center mr-5">
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="statusOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="Status"
+            [(ngModel)]="selectStatus"
+            (onChange)="applyStatusFilters()"
+          ></p-dropdown>
+        </div>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="centerStatusOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="Center Status"
+            [(ngModel)]="selectCenterStatus"
+            (onChange)="applyCenterStatusFilters()"
+          ></p-dropdown>
+        </div>
+
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
@@ -194,14 +223,17 @@
             (onChange)="applyFilters()"
           />
         </div>
+
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search By First Name, Center"
             [(ngModel)]="searchNIC"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()"
           />
           <button
             type="button"
@@ -247,9 +279,7 @@
       </div>
     </div>
     <div class="w-full">
-      <table
-        class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
-      >
+      <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
             <th
@@ -309,12 +339,12 @@
               NIC
             </th>
             <th
-            *ngIf="
-              permissionService.hasPermission('View Collection Officer') ||
-              tokenService.getUserDetails().role === '1'
-            "
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
-          ></th>
+              *ngIf="
+                permissionService.hasPermission('View Collection Officer') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            ></th>
 
             <th
               *ngIf="
@@ -370,13 +400,21 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName ? item.centerName : "---" }}
             </td>
-            <td 
-          class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span
-                [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Claim Collection Officer') || tokenService.getUserDetails().role === '1') ? handleClaimButtonClick(item) : null"
-                 
+                  [class.cursor-pointer]="
+                    permissionService.hasPermission(
+                      'Approve Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                  "
+                  (click)="
+                    permissionService.hasPermission(
+                      'Claim Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                      ? handleClaimButtonClick(item)
+                      : null
+                  "
                   [ngClass]="{
                     'px-3 py-1 text-sm text-[#308233]': item.claimStatus === 1,
                     'px-3 py-1 text-sm bg-[#FFF9F9] border-solid border-2 border-[#9D1D19] text-[#9D1D19] rounded-lg':
@@ -387,9 +425,7 @@
                 </span>
               </div>
             </td>
-            <td
-              class="px-4 py-3 text-center"
-            >
+            <td class="px-4 py-3 text-center">
               <div>
                 <span
                   [ngClass]="{
@@ -400,9 +436,19 @@
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
                   }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve Collection Officer') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
+                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
+                  [class.cursor-pointer]="
+                    permissionService.hasPermission(
+                      'Approve Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                  "
+                  (click)="
+                    permissionService.hasPermission(
+                      'Approve Collection Officer'
+                    ) || tokenService.getUserDetails().role === '1'
+                      ? openPopup(item)
+                      : null
+                  "
                 >
                   {{ item.status }}
                 </span>
@@ -416,11 +462,13 @@
               {{ item.nic }}
             </td>
 
-            <td  *ngIf="
-            permissionService.hasPermission('View Collection Officer') ||
-            tokenService.getUserDetails().role === '1'
-          "
-          class="px-4 py-3 text-center">
+            <td
+              *ngIf="
+                permissionService.hasPermission('View Collection Officer') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 text-center"
+            >
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewCollectiveOfficerProfile(item.id)"

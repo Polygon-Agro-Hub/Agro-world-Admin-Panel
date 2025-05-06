@@ -1,4 +1,9 @@
 <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
@@ -14,7 +19,7 @@
             </h2>
             <h2 class="text-2xl font-bold px-5 dark:text-textDark">-</h2>
             <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
-              Rs {{ package?.total }}
+              Rs {{ package?.total | number: '1.2-2'}}
             </h2>
           </div>
           <div class="flex flex-col pt-2">
@@ -39,12 +44,6 @@
           class="h-auto max-h-48 flex items-center"
           [src]="package?.image"
           [alt]="package?.displayName"
-        />
-        <img
-          *ngIf="package?.image"
-          [src]="package?.image"
-          class="h-auto max-h-48 flex items-center fixed"
-          alt="Package image"
         />
         <svg
           *ngIf="!package?.image"
@@ -97,10 +96,16 @@
             </td>
             <td class="px-6 py-4 text-center">{{ detail.quantityType }}</td>
             <td class="px-6 py-4 text-center text-black dark:text-textDark">
-              Rs {{ detail.normalPrice }}
+              Rs {{ detail.normalPrice | number: '1.2-2'}}
             </td>
-            <td class="px-6 py-4 text-center">{{  (((detail.quantity*detail.normalPrice)-detail.price)/(detail.quantity*detail.normalPrice))*100   }}</td>
-            <td class="px-6 py-4 text-center">Rs {{ detail.price }}</td>
+            <td class="px-6 py-4 text-center">
+              {{
+                ((detail.discount ) /
+                  (detail.price)) *
+                  100
+              }}
+            </td>
+            <td class="px-6 py-4 text-center">Rs {{ detail.discountedPrice | number: '1.2-2' }}</td>
           </tr>
         </tbody>
       </table>

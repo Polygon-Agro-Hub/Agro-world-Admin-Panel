@@ -16,7 +16,6 @@ interface DashboardData {
   qrUsers: number;
   total_cultivation_till_previous_month: number;
   cultivation_increase_percentage: number;
-  
 }
 @Component({
   selector: 'app-dashbord-second-row',
@@ -29,26 +28,24 @@ export class DashbordSecondRowComponent implements OnInit {
   @Input() dashboardData: DashboardData = {} as DashboardData;
   @Input() totalCultivationCount: number = 0;
   userIncreasePercentage: number = 0;
-  
 
   constructor(private dashbordService: PlantcareDashbordService) {}
 
- 
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-    // this.calculateTotalCultivation();
+  // In your backend service or wherever the calculation is done
+  calculatePercentageChange(current: number, previous: number): number {
+    if (previous === 0) {
+      // You can return 0, or some other default value
+      return current === 0 ? 0 : 100; // 100% if going from 0 to any positive number
+    }
+    return ((current - previous) / previous) * 100;
   }
 
-  // calculateTotalCultivation(): void {
-  //   console.log('Calculating total');
-
-  //   if (this.dashboardData) {
-  //     this.totalCultivationCount =
-  //       this.dashboardData.vegCultivation +
-  //       this.dashboardData.grainCultivation +
-  //       this.dashboardData.fruitCultivation +
-  //       this.dashboardData.mushCultivation;
-  //   }
-  //   console.log(this.totalCultivationCount);
-  // }
+  formatPercentage(percentage: number): string {
+    if (!isFinite(percentage)) {
+      return percentage > 0 ? '100%' : '0%';
+    }
+    return percentage.toFixed(2) + '%';
+  }
 }

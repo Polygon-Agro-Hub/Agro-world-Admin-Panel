@@ -1,9 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/complaints/view-complains'"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -12,35 +9,48 @@
 >
   <div>
     <div class="text-center mb-4">
-      <p class="text-sm text-gray-600 dark:text-textDark">Ref No : {{complain.refNo}}</p>
       <p class="text-sm text-gray-600 dark:text-textDark">
-        Preferred Language: <span class="font-semibold">{{complain.language}}</span>
+        Ref No : {{ complain.refNo }}
       </p>
-      <p class="text-sm text-gray-600 dark:text-textDark">Received: {{complain.createdAt}}</p>
+      <p class="text-sm text-gray-600 dark:text-textDark">
+        Preferred Language:
+        <span class="font-semibold">{{ complain.language }}</span>
+      </p>
+      <p class="text-sm text-gray-600 dark:text-textDark">
+        Received: {{ complain.createdAt }}
+      </p>
     </div>
 
-
-    
-
     <div class="flex flex-row mb-6 justify-between">
-      <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark">Category</label>
-      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" rows="1" [value]="complain.complainCategory" disabled>
+      <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark"
+        >Category</label
+      >
+      <textarea
+        class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+        rows="1"
+        [value]="complain.complainCategory"
+        disabled
+      >
       </textarea>
     </div>
 
     <div class="flex flex-row mb-6 justify-between">
-      <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark">Complain</label>
-      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" rows="4" [value]="complain.complain" disabled>
+      <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark"
+        >Complain</label
+      >
+      <textarea
+        class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+        rows="4"
+        [value]="complain.complain"
+        disabled
+      >
       </textarea>
     </div>
 
-
-
     
-
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
-        <label class="block text-gray-700 dark:text-textDark  mb-2 mr-11"
+        <label class="block text-gray-700 dark:text-textDark mb-2"
           >Complaint (Farmer)</label
         >
         <input
@@ -63,13 +73,10 @@
       </div>
     </div>
 
-    
-
-    
-
     <div class="text-center">
       <!-- <button pButton type="button" label="Open Popup" icon="pi pi-envelope" (click)="showDialog()"></button> -->
-      <button (click)="showReplyDialog()"
+      <button
+        (click)="showReplyDialog(complain.language)"
         class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
       >
         Send Message
@@ -78,71 +85,66 @@
   </div>
 </div>
 
-
-
-
-
-
-
 <p-dialog
   header=""
   [(visible)]="display"
   [modal]="true"
   [closable]="true"
   [style]="{ width: '600px' }"
-  [contentStyle]="{ 'padding': '0' }"
+  [contentStyle]="{ padding: '0' }"
 >
   <!-- Header Section -->
   <div class="dialog-header text-center">
-    
-    <i class="fa-regular fa-envelope" style="font-size: 2rem; color: #999;"></i>
+    <i class="fa-regular fa-envelope" style="font-size: 2rem; color: #999"></i>
     <h3 class="header-title">Reply as AgroWorld</h3>
   </div>
 
   <!-- Content Section -->
   <div class="dialog-content">
-    <p>Dear <strong>{{this.farmerName}}</strong>,</p>
     <p>
-      We are pleased to inform you that your complaint has been resolved.
+      Dear <strong>{{ this.farmerName }}</strong
+      >,
     </p>
+    <p>We are pleased to inform you that your complaint has been resolved.</p>
 
     <!-- Editable Text Area -->
     <div class="message-box" *ngIf="!complain.reply">
       <textarea
-      [(ngModel)]="messageContent"
-      placeholder="Add your message here..."
-      rows="5"
-      style="
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 0.5rem;
-        font-size: 1rem;
-        background-color: #ffffff; /* Normal white background */
-        color: #333;
-      "
-    ></textarea>
+        [(ngModel)]="messageContent"
+        placeholder="Add your message here..."
+        rows="5"
+        style="
+          width: 100%;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 0.5rem;
+          font-size: 1rem;
+          background-color: #ffffff; /* Normal white background */
+          color: #333;
+        "
+      ></textarea>
     </div>
 
     <div class="message-box" *ngIf="complain.reply">
       <textarea
-      [(ngModel)]="complain.reply"
-      placeholder="Add your message here..."
-      rows="5"
-      style="
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 0.5rem;
-        font-size: 1rem;
-        background-color: #ffffff; /* Normal white background */
-        color: #333;
-      "
-    ></textarea>
+        [(ngModel)]="complain.reply"
+        placeholder="Add your message here..."
+        rows="5"
+        style="
+          width: 100%;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 0.5rem;
+          font-size: 1rem;
+          background-color: #ffffff; /* Normal white background */
+          color: #333;
+        "
+      ></textarea>
     </div>
 
     <p>
-      If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.
+      If you have any further concerns or questions, feel free to reach out.
+      Thank you for your patience and understanding.
     </p>
 
     <p>
@@ -172,5 +174,3 @@
     </div>
   </p-footer>
 </p-dialog>
-
-

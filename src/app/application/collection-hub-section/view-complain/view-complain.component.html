@@ -9,12 +9,12 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Complain List ({{ this.totalItems }})
+          Complaint List ({{ this.totalItems }})
         </h2>
       </div>
       <div class="flex items-center">
@@ -25,6 +25,20 @@
             />
           </svg>
         </i>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="replyStatus"
+            [checkmark]="true"
+            optionLabel="status"
+            optionValue="value"
+            [showClear]="true"
+            placeholder="Reply Status"
+            [(ngModel)]="rpst"
+            (onChange)="regStatusFil()"
+          />
+        </div>
 
         <div class="mr-5">
           <p-dropdown
@@ -68,6 +82,7 @@
             placeholder="Search.."
             [(ngModel)]="searchText"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            (keydown.enter)="searchComplain()"
           />
           <button
             type="button"
@@ -112,6 +127,14 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="!hasData" class="text-center py-8">
+      <p class="text-textLight dark:text-textDark text-lg">
+        No data to display
+      </p>
+    </div>
+
+    
     <div>
       <table
         class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
@@ -124,22 +147,22 @@
               Ref No.
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Category
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Farmer NIC
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               First Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Last Name
             </th>
@@ -183,24 +206,24 @@
                     }
             "
           >
-            <td class="py-3 dark:text-textDark text-centser">
+            <td class="py-3 dark:text-textDark text-left">
               {{ item.refNo }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.complainCategory }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.NIC }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.farmerName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.lastName }}
             </td>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.createdAt | date : "yyyy/MM/dd hh.mma" }}
+              {{ item.createdAt | date: 'yyyy/MM/dd hh.mm a' : 'UTC' }}
             </td>
             <td class="px-4 py-3 text-green-500 text-center">
               <div *ngIf="item.status === 'Assigned'">
@@ -262,7 +285,7 @@
                 <button
                   disabled
                   class="w-5 h-5 text-blue-100"
-                  (click)="fetchComplain(item.id, item.farmerName)"
+                  (click)="fetchComplain(item.id, item.farmerName, item.language)"
                 >
                   <i class="fa-solid fa-file-export"></i>
                 </button>
@@ -271,7 +294,7 @@
               <div *ngIf="item.reply != null">
                 <button
                   class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                  (click)="fetchComplain(item.id, item.farmerName)"
+                  (click)="fetchComplain(item.id, item.farmerName, item.language)"
                 >
                   <i class="fa-solid fa-file-export"></i>
                 </button>

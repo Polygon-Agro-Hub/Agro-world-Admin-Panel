@@ -76,12 +76,14 @@ export class CurrentAssetsViewComponent {
     name: string,
     category: string,
     asset: string,
-    unit: string
+    unit: string,
+    unitPrice :any,
+    batchNumber : any
   ) {
     this.router.navigate(
       ['/plant-care/action/report-farmer-current-assert/record-view'],
       {
-        queryParams: { id, name, category, asset, unit },
+        queryParams: { id, name, category, asset, unit, unitPrice, batchNumber },
       }
     );
   }

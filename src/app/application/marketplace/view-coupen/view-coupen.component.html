@@ -1,9 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  onclick="window.location.href='/admin/market/action'"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>

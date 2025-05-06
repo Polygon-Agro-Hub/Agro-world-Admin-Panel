@@ -132,7 +132,8 @@ export class CropCalendarService {
   fetchAllCropCalenders(
     page: number = 1,
     limit: number = 10,
-    searchText: string = ''
+    searchText: string = '',
+    category: string = ''
   ): Observable<{ items: NewCropCalender[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -144,6 +145,10 @@ export class CropCalendarService {
 
     if (searchText) {
       url += `&searchText=${searchText}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
     }
 
     console.log(url);
@@ -178,8 +183,10 @@ export class CropCalendarService {
     let url = `${this.apiUrl}crop-calendar/get-all-crop-groups?page=${page}&limit=${limit}`;
 
     // Add search parameter if cropNameEnglish is provided
-    if (cropNameEnglish.trim()) {
-      url += `&cropNameEnglish=${encodeURIComponent(cropNameEnglish)}`;
+    if (cropNameEnglish) {
+      console.log(cropNameEnglish);
+      
+      url += `&searchText=${cropNameEnglish}`;
     }
 
     return this.http.get<{ items: NewCropGroup[]; total: number }>(url, {

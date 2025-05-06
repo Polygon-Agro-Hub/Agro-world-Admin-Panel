@@ -38,7 +38,7 @@ export class ViewOrdersComponent implements OnInit {
 
   ordersArr: Orders[] = [];
   
-
+  date: string = '';
   isLoading = false;
   isPopupVisible = false;
 
@@ -60,16 +60,16 @@ export class ViewOrdersComponent implements OnInit {
   ]
 
   orderStatusArr = [
-    { orderStatus: 'Delivered', value: 'Delivered' },
+    { orderStatus: 'Ordered', value: 'Ordered' },
     { orderStatus: 'Processing', value: 'Processing' },
-    { orderStatus: 'Assigned', value: 'Assigned' },
+    { orderStatus: 'On the way', value: 'On the way' },
+    { orderStatus: 'Delivered', value: 'Delivered' },
     { orderStatus: 'Cancelled', value: 'Cancelled' },
-    { orderStatus: 'Failed', value: 'Failed' },
   ];
 
   paymentMethodArr = [
-    { paymentMethod: 'Debit/Credit', value: 'Debit/Credit' },
-    { paymentMethod: 'Cash On Delivery', value: 'Cash On Delivery' },
+    { paymentMethod: 'Online Payment', value: 'Online Payment' },
+    { paymentMethod: 'Pay By Cash', value: 'Pay By Cash' },
     
   ];
 
@@ -98,7 +98,7 @@ export class ViewOrdersComponent implements OnInit {
     
     
     this.isLoading = true;
-    this.salesDashService.getAllOrders( page, limit, orderStatus, paymentMethod, paymentStatus, deliveryType, search).subscribe(
+    this.salesDashService.getAllOrders( page, limit, orderStatus, paymentMethod, paymentStatus, deliveryType, search, this.date).subscribe(
       (data) => {
         console.log(data);
         this.isLoading = false;
@@ -106,6 +106,7 @@ export class ViewOrdersComponent implements OnInit {
           return {
             ...order,
             formattedCreatedDate: this.datePipe.transform(order.createdAt, 'd MMM,  y h:mm a'),
+            scheduleDateFormattedSL: this.formatDate(order.scheduleDate)
           };
         });
         
@@ -144,6 +145,10 @@ export class ViewOrdersComponent implements OnInit {
 
   applydeliveryTypeFilters() {
     console.log(this.deliveryTypeFilter)
+    this.fetchAllOrders(this.page, this.itemsPerPage, this.orderStatusFilter, this.paymentMethodFilter, this.paymentStatusFilter, this.deliveryTypeFilter, this.searchText);
+  }
+
+  dateFilter() {
     this.fetchAllOrders(this.page, this.itemsPerPage, this.orderStatusFilter, this.paymentMethodFilter, this.paymentStatusFilter, this.deliveryTypeFilter, this.searchText);
   }
 
@@ -187,6 +192,7 @@ class Orders {
   timeSlot!: string;
   createdAt!: Date;
   formattedCreatedDate!:string;
+  scheduleDateFormattedSL?: string;
  
   
 }

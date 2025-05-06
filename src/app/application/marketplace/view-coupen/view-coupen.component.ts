@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-coupen',
@@ -17,11 +18,11 @@ import Swal from 'sweetalert2';
     DropdownModule,
     FormsModule,
     CalendarModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
   providers: [DatePipe],
   templateUrl: './view-coupen.component.html',
-  styleUrl: './view-coupen.component.css'
+  styleUrl: './view-coupen.component.css',
 })
 export class ViewCoupenComponent implements OnInit {
   isLoading = true;
@@ -37,45 +38,40 @@ export class ViewCoupenComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
 
-  Status = [
-    {name:"Enabled"},
-    {name:"Finished"},
-    {name:"Disabled"}
-  ]
+  Status = [{ name: 'Enabled' }, { name: 'Finished' }, { name: 'Disabled' }];
 
   Types = [
-    {name:"Percentage"},
-    {name:"Fixed Amount"},
-    {name:"Free Delivery"}
-  ]
+    { name: 'Percentage' },
+    { name: 'Fixed Amount' },
+    { name: 'Free Delivery' },
+  ];
 
+  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
-  constructor(private marketSrv: MarketPlaceService) {
-
+  back(): void {
+    this.router.navigate(['market/action']);
   }
 
   ngOnInit(): void {
-    this.fetchAllCoupon()
+    this.fetchAllCoupon();
   }
 
   fetchAllCoupon(page: number = 1, limit: number = this.itemsPerPage) {
-    const status = this.selectedStatus?.name || ''
-    const types = this.selectedType?.name || ''
-    const search = this.searchText || ''
-    this.marketSrv.getAllCoupen(page, limit, status, types, search).subscribe(
-      (res) => {
+    const status = this.selectedStatus?.name || '';
+    const types = this.selectedType?.name || '';
+    const search = this.searchText || '';
+    this.marketSrv
+      .getAllCoupen(page, limit, status, types, search)
+      .subscribe((res) => {
         // console.log(res);
-        
+
         if (res.items.length > 0) {
-          this.hasData = false
+          this.hasData = false;
         }
         this.coupenObj = res.items;
         this.totalItems = res.total;
         this.isLoading = false;
-      }
-    )
-
-
+      });
   }
 
   searchCode() {
@@ -85,25 +81,22 @@ export class ViewCoupenComponent implements OnInit {
   clearSearch() {
     this.searchText = '';
     this.fetchAllCoupon(this.page, this.itemsPerPage);
-
   }
-
 
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
-  applyFilterStatus(){
+  applyFilterStatus() {
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
-  applyFilterType(){
+  applyFilterType() {
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
-
-  deleteCoupon(id:number){
+  deleteCoupon(id: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Coupon? This action cannot be undone.',
@@ -115,45 +108,35 @@ export class ViewCoupenComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("deeteID:",id);
-        
-        this.marketSrv.deleteCoupenById(id)
-          .subscribe(
-            (data: boolean) => {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'The Coupen has been deleted.',
-                  'success'
-                  
-                );
-                this.fetchAllCoupon(this.page, this.itemsPerPage);
-              }else{
-                Swal.fire(
-                  'Failed!',
-                  'The coupon could not be deleted. Please try again later.',
-                  'error'
-                );
-                
-              }
-             
-            },
-            (error:any) => {
-              console.error('Error deleting crop calendar:', error);
+        console.log('deeteID:', id);
+
+        this.marketSrv.deleteCoupenById(id).subscribe(
+          (data: boolean) => {
+            if (data) {
+              Swal.fire('Deleted!', 'The Coupen has been deleted.', 'success');
+              this.fetchAllCoupon(this.page, this.itemsPerPage);
+            } else {
               Swal.fire(
-                'Error!',
-                'There was an error deleting the crop calendar.',
+                'Failed!',
+                'The coupon could not be deleted. Please try again later.',
                 'error'
               );
             }
-          );
+          },
+          (error: any) => {
+            console.error('Error deleting crop calendar:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the crop calendar.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
 
-
-
-  deleteAllCoupon(){
+  deleteAllCoupon() {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this all coupen? This action cannot be undone.',
@@ -165,50 +148,45 @@ export class ViewCoupenComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.marketSrv.deleteAllCoupen()
-          .subscribe(
-            (data: boolean) => {
-              if(data){
-                Swal.fire(
-                  'Deleted!',
-                  'The Coupenes has been deleted.',
-                  'success'
-                  
-                );
-                this.fetchAllCoupon(this.page, this.itemsPerPage);
-              }else{
-                Swal.fire(
-                  'Failed!',
-                  'The Coupenes could not be deleted. Please try again later.',
-                  'error'
-                );
-                
-              }
-             
-            },
-            (error:any) => {
-              console.error('Error deleting crop calendar:', error);
+        this.marketSrv.deleteAllCoupen().subscribe(
+          (data: boolean) => {
+            if (data) {
               Swal.fire(
-                'Error!',
-                'There was an error deleting the crop calendar.',
+                'Deleted!',
+                'The Coupenes has been deleted.',
+                'success'
+              );
+              this.fetchAllCoupon(this.page, this.itemsPerPage);
+            } else {
+              Swal.fire(
+                'Failed!',
+                'The Coupenes could not be deleted. Please try again later.',
                 'error'
               );
             }
-          );
+          },
+          (error: any) => {
+            console.error('Error deleting crop calendar:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the crop calendar.',
+              'error'
+            );
+          }
+        );
       }
     });
   }
-
 }
 
 class Coupen {
-  id!: number
-  code!: string
-  type!: string
-  percentage!: number
-  status!: string
-  checkLimit!: string
-  startDate!: string
-  endDate!: string
-  createdAt!: string
+  id!: number;
+  code!: string;
+  type!: string;
+  percentage!: number;
+  status!: string;
+  checkLimit!: string;
+  startDate!: string;
+  endDate!: string;
+  createdAt!: string;
 }

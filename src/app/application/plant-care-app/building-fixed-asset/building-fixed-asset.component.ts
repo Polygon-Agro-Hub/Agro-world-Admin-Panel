@@ -44,9 +44,6 @@ export class BuildingFixedAssetComponent {
       this.itemId = params['id'] ? +params['id'] : null;
       this.category = params['category'] || null;
       this.fullName = params['fullName'] || null;
-
-      console.log('Received item ID:', this.itemId);
-      console.log('Received category:', this.category);
     });
     this.assetsBuilding(this.itemId, this.category);
   }
@@ -56,16 +53,11 @@ export class BuildingFixedAssetComponent {
     this.assetsService.getAllBuildingFixedAsset(itemId, category).subscribe(
       (response) => {
         this.isLoading = false;
-        console.log('Received items:', response); // Debug log
-
         this.fixedAssetB = response;
         this.hasData = this.fixedAssetB.length > 0;
       },
       (error) => {
-        console.error('Error fetching market prices:', error);
-        if (error.status === 401) {
-          // Handle unauthorized access (e.g., redirect to login)
-        }
+        this.isLoading = false;
       }
     );
   }

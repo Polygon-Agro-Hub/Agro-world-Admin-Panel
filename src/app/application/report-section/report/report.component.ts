@@ -15,6 +15,12 @@ export class ReportComponent {
   constructor(private router: Router, public tokenService: TokenService,
       public permissionService: PermissionService) {}
 
+
+      ngOnInit() {
+        console.log('User Role:', this.tokenService.getUserDetails().role);
+        
+      }
+
   coReport(): void {
     this.router.navigate(['/reports/collective-officer-report']);
   }

@@ -34,78 +34,73 @@
       </div>
 
       <!-- Scrollable content area -->
-      <div
-        class="overflow-y-auto max-w-7xl h-screen p-4 bg-tileLight dark:bg-tileBlack scrollbar-thin scrollbar-[#8AC440] scrollbar-track-gray-200 dark:scrollbar-thumb-[#8AC440] dark:scrollbar-track-gray-900"
-      >
-        <div class="flex justify-center my-4">
-          <img
-            [src]="newsItems[0].image"
-            alt="Market Price Image"
-            class="w-2/3 h-auto rounded-lg shadow-lg"
-          />
-        </div>
-
-        <div>
-          <div class="text-md text-textLight dark:text-textDark ml-2">
-            News in English
+      <div class="flex flex-col h-screen bg-tileLight dark:bg-tileBlack">
+        <!-- Scrollable content container -->
+        <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-thin scrollbar-[#8AC440] scrollbar-track-gray-200 dark:scrollbar-thumb-[#8AC440] dark:scrollbar-track-gray-900">
+          <!-- Image section -->
+          <div class="flex justify-center my-4">
+            <img
+              [src]="newsItems[0].image"
+              alt="Market Price Image"
+              class="w-2/3 h-auto rounded-lg shadow-lg"
+            />
           </div>
-          <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
-
-          <div class="text-sm mt-2">
-            <h3
-              class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
-            >
-              {{ newsItems[0].titleEnglish }}
-            </h3>
-            <div
-              [innerHTML]="safeHtmlDescriptionEnglish"
-              class="text-textLight dark:text-textDark text-left ml-2 w-full"
-            ></div>
+      
+          <!-- English news section -->
+          <div class="mb-8">
+            <div class="text-md text-textLight dark:text-textDark ml-2">
+              News in English
+            </div>
+            <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
+            <div class="text-sm mt-2">
+              <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2">
+                {{ newsItems[0].titleEnglish }}
+              </h3>
+              <div
+                [innerHTML]="safeHtmlDescriptionEnglish"
+                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"
+              ></div>
+            </div>
           </div>
-        </div>
-
-        <div class="h-[35px]"></div>
-
-        <div>
-          <div class="text-md text-textLight dark:text-textDark ml-2">
-            News in Sinhala
+      
+          <!-- Sinhala news section -->
+          <div class="mb-8">
+            <div class="text-md text-textLight dark:text-textDark ml-2">
+              News in Sinhala
+            </div>
+            <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
+            <div class="text-sm mt-2">
+              <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2">
+                {{ newsItems[0].titleSinhala }}
+              </h3>
+              <div
+                [innerHTML]="safeHtmlDescriptionSinhala"
+                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"
+              ></div>
+            </div>
           </div>
-          <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
-
-          <div class="text-sm mt-2">
-            <h3
-              class="text-lg font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
-            >
-              {{ newsItems[0].titleSinhala }}
-            </h3>
-            <div
-              [innerHTML]="safeHtmlDescriptionSinhala"
-              class="text-textLight dark:text-textDark text-left ml-2 w-full"
-            ></div>
-          </div>
-        </div>
-
-        <div class="h-[35px]"></div>
-
-        <div>
-          <div class="text-md text-textLight dark:text-textDark ml-2">
-            News in Tamil
-          </div>
-          <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
-
-          <div class="text-sm mt-2 pb-20">
-            <h3
-              class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2"
-            >
-              {{ newsItems[0].titleTamil }}
-            </h3>
-            <div
-              [innerHTML]="safeHtmlDescriptionTamil"
-              class="text-textLight dark:text-textDark text-left ml-2 w-full"
-            ></div>
+      
+          <!-- Tamil news section -->
+          <div class="mb-8 pb-20">
+            <div class="text-md text-textLight dark:text-textDark ml-2">
+              News in Tamil
+            </div>
+            <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
+            <div class="text-sm mt-2">
+              <h3 class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2">
+                {{ newsItems[0].titleTamil }}
+              </h3>
+              <div
+                [innerHTML]="safeHtmlDescriptionTamil"
+                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
+
+
+
     </div>
   </div>
 
@@ -296,8 +291,29 @@
                     ></path>
                   </svg>
                 </button>
+                <button
+                class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
+                (click)="deleteNews(item.id)"
+              >
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                  />
+                </svg>
+              </button>
               </td>
-              <td class="px-4 py-3 text-center">
+              <!-- <td class="px-4 py-3 text-center">
                 <button
                   class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
                   (click)="deleteNews(item.id)"
@@ -319,7 +335,7 @@
                     />
                   </svg>
                 </button>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>

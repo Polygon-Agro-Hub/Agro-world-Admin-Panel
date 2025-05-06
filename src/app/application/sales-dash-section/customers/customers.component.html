@@ -1,5 +1,9 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i> Back
+</button>
+
 <div
   *ngIf="isPopupOpen"
   class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center"

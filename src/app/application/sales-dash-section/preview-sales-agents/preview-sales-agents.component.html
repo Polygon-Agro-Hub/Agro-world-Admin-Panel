@@ -3,7 +3,7 @@
   </div>
   
   <button 
-  onclick="history.back()" class="ml-5 text-textLight dark:text-textDark">
+  onclick="history.back()" class="text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -273,7 +273,7 @@
               
           </div>
 
-          <div class="pb-6">
+          <!-- <div class="pb-6">
             <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Confirm Account Number
             </label>
@@ -288,12 +288,12 @@
             
             
           </div>
-    
+     -->
           
     
           <div class="pb-6">
             <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
-            <input id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [disabled]="true"/>
+            <input id="bankDropdown" name="bankDropdown" [(ngModel)]="personalData.bankName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [disabled]="true"/>
             
           </div>
     
@@ -301,7 +301,7 @@
           <div class="pb-6">
             <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
               Name</label>
-            <input id="branchDropdown" name="branchDropdown" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [(ngModel)]="selectedBranchId" [disabled]="true"/>
+            <input id="branchDropdown" name="branchDropdown" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" [(ngModel)]="personalData.branchName" [disabled]="true"/>
             
           </div>
         </div>

@@ -39,24 +39,35 @@ export class AddComplainCategoriesComponent implements OnInit {
     )
   }
 
-  onSubmit(){
-    if(this.complainObj.appId === 0 || this.complainObj.appId === 0 || !this.complainObj.categoryEnglish || !this.complainObj.categorySinhala || !this.complainObj.categoryTamil){
-      Swal.fire('Warning','Fill all required feilds!', 'warning')
+  onSubmit() {
+    const c = this.complainObj;
+    if (
+      !c.appId || !c.roleId || 
+      !c.categoryEnglish || !c.categorySinhala || !c.categoryTamil
+    ) {
+      Swal.fire('Warning', 'Fill all required fields!', 'warning');
       return;
     }
-    this.complaintSrv.AddNewComplainCategory(this.complainObj).subscribe(
-      (res)=>{
-        if(res.status){
-          Swal.fire("Success",'Create complain category success!','success')
-          this.router.navigate(['/complaints/manage-applications'])
-        }else{
-          Swal.fire("Error",'Error Occur creaating complain category!','error')
-
+  
+    this.complaintSrv.AddNewComplainCategory(c).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire("Success", 'Complaint category created successfully!', 'success');
+          this.router.navigate(['/complaints/manage-applications']);
+        } else {
+          if (res.message === 'Category already added') {
+            Swal.fire("Info", 'This complaint category already exists.', 'info');
+          } else {
+            Swal.fire("Error", 'Error occurred while creating complaint category!', 'error');
+          }
         }
-        
+      },
+      (err) => {
+        Swal.fire("Error", 'Already added this category!', 'error');
       }
-    )
+    );
   }
+  
 
     onCancel() {
       Swal.fire({

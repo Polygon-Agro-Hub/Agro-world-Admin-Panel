@@ -93,6 +93,7 @@ export class CollectionCenterService {
     category: String,
     comCategory: String,
     searchText: string,
+    rpstatus: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -117,6 +118,10 @@ export class CollectionCenterService {
       url += `&searchText=${searchText}`;
     }
 
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
+    }
+
     return this.http.get(url, {
       headers,
     });
@@ -134,6 +139,7 @@ export class CollectionCenterService {
     comCategory: String,
     filterCompany: String,
     searchText: string,
+    rpstatus: string,
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -160,6 +166,10 @@ export class CollectionCenterService {
 
     if (searchText) {
       url += `&searchText=${searchText}`;
+    }
+
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
     }
 
     return this.http.get(url, {
@@ -200,6 +210,8 @@ export class CollectionCenterService {
   getAllCollectionCenterPage(
     page: number,
     limit: number,
+    district: string = "",
+    province: string = "",
     searchItem: string = "",
   ): Observable<any> {
     console.log(page, limit, searchItem);
@@ -211,6 +223,14 @@ export class CollectionCenterService {
     let url = `${this.apiUrl}auth/get-all-centerpage?page=${page}&limit=${limit}`;
     if (searchItem) {
       url += `&searchItem=${searchItem}`;
+    }
+
+    if (district) {
+      url += `&district=${district}`;
+    }
+
+    if (province) {
+      url += `&province=${province}`;
     }
 
     return this.http.get<any>(url, { headers: headers });
@@ -438,9 +458,11 @@ export class CollectionCenterService {
   getAllCollectionCenterPageAW(
     page: number,
     limit: number,
+    district: string = "",
+    province: string = "", 
     searchItem: string = "",
   ): Observable<any> {
-    console.log(page, limit, searchItem);
+    console.log(page, limit, district, province, searchItem);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -449,6 +471,14 @@ export class CollectionCenterService {
     let url = `${this.apiUrl}auth/get-all-centerpage-aw?page=${page}&limit=${limit}&companyId=1`;
     if (searchItem) {
       url += `&searchItem=${searchItem}`;
+    }
+
+    if (district) {
+      url += `&district=${district}`;
+    }
+
+    if (province) {
+      url += `&province=${province}`;
     }
 
     return this.http.get<any>(url, { headers: headers });

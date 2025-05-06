@@ -5,7 +5,7 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  <div class="h-[20px]"></div>
+
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <h2
       class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold"
@@ -24,7 +24,7 @@
           [(ngModel)]="createNewsObj.publishDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+          class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           (change)="checkPublishDate(); checkPublishExpireDate()"
         />
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
@@ -41,7 +41,7 @@
           [(ngModel)]="createNewsObj.expireDate"
           id="createdDateFilter"
           type="date"
-          class="ml-2 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+          class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           (change)="checkExpireDate(); checkPublishExpireDate()"
         />
       </div>
@@ -60,12 +60,12 @@
           id="titleSinhala"
           [(ngModel)]="createNewsObj.titleEnglish"
           (ngModelChange)="validateTitleEnglish($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isEnglishValid }"
         />
-        <div *ngIf="!isEnglishValid" class="text-red-500">
+        <!-- <div *ngIf="!isEnglishValid" class="text-red-500">
           Title must contain English and not only numbers.
-        </div>
+        </div> -->
       </div>
 
       <div class="mb-4">
@@ -75,12 +75,22 @@
           >Add Description (In English)</label
         >
         <div class="custom-editor">
-          <angular-editor
+          <!-- <angular-editor
             [placeholder]="'Enter text here...'"
             [(ngModel)]="createNewsObj.descriptionEnglish"
             class="w-full h-full text-textLight dark:text-textDark"
             [config]="editorConfig"
-          ></angular-editor>
+          ></angular-editor> -->
+
+          <quill-editor
+            [(ngModel)]="createNewsObj.descriptionEnglish"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full text-lg"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
       </div>
     </div>
@@ -103,9 +113,9 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isSinhalaValid }"
         />
-        <div *ngIf="!isSinhalaValid" class="text-red-500">
+        <!-- <div *ngIf="!isSinhalaValid" class="text-red-500">
           Title must be in Sinhala and not only numbers.
-        </div>
+        </div> -->
       </div>
 
       <div class="mb-4">
@@ -115,12 +125,21 @@
           >Add Description (In Sinhala)</label
         >
         <div class="custom-editor">
-          <angular-editor
+          <!-- <angular-editor
             [placeholder]="'Enter text here...'"
             [(ngModel)]="createNewsObj.descriptionSinhala"
             class="w-full h-full text-textLight dark:text-textDark"
             [config]="editorConfig"
-          ></angular-editor>
+          ></angular-editor> -->
+          <quill-editor
+            [(ngModel)]="createNewsObj.descriptionSinhala"
+            [styles]="{ height: '300px', fontSize: '16px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
       </div>
     </div>
@@ -143,9 +162,9 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isTamilValid }"
         />
-        <div *ngIf="!isTamilValid" class="text-red-500">
+        <!-- <div *ngIf="!isTamilValid" class="text-red-500">
           Title must be in Tamil and not only numbers.
-        </div>
+        </div> -->
       </div>
 
       <div class="mb-4">
@@ -155,12 +174,21 @@
           >Add Description (In Tamil)</label
         >
         <div class="custom-editor">
-          <angular-editor
+          <!-- <angular-editor
             [placeholder]="'Enter text here...'"
             [(ngModel)]="createNewsObj.descriptionTamil"
             class="w-full h-full text-textLight dark:text-textDark"
             [config]="editorConfig"
-          ></angular-editor>
+          ></angular-editor> -->
+          <quill-editor
+            [(ngModel)]="createNewsObj.descriptionTamil"
+            [styles]="{ height: '300px', fontSize: '16px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
       </div>
     </div>
@@ -228,7 +256,7 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  <div class="h-[20px]"></div>
+
   <div class="mx-auto p-6 rounded-lg shadow-md bg-tileLight dark:bg-tileBlack">
     <h2
       class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark"
@@ -290,7 +318,7 @@
           [ngClass]="{ 'border-red-500': !isEnglishValid }"
           pattern=".*[a-zA-Z]+.*"
           #titleEnglish="ngModel"
-          required
+          [required]="true"
         />
         <div
           *ngIf="titleEnglish.invalid && titleEnglish.touched"
@@ -316,14 +344,23 @@
           >Add Description (In English)</label
         >
         <div class="custom-editor">
-          <angular-editor
+          <!-- <angular-editor
             [placeholder]="'Enter text here...'"
             [(ngModel)]="newsItems[0].descriptionEnglish"
             class="w-full h-full text-textLight dark:text-textDark"
             [config]="editorConfig"
             #descriptionEnglishField="ngModel"
             required
-          ></angular-editor>
+          ></angular-editor> -->
+          <quill-editor
+            [(ngModel)]="newsItems[0].descriptionEnglish"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
         <p
           *ngIf="
@@ -381,7 +418,7 @@
           >Add Description (In Sinhala)</label
         >
         <div class="custom-editor">
-          <angular-editor
+          <!-- <angular-editor
             [placeholder]="'Enter text here...'"
             [(ngModel)]="newsItems[0].descriptionSinhala"
             (ngModelChange)="validateTitleEnglish($event)"
@@ -389,7 +426,16 @@
             [config]="editorConfig"
             #descriptionSinhalaField="ngModel"
             required
-          ></angular-editor>
+          ></angular-editor> -->
+          <quill-editor
+            [(ngModel)]="newsItems[0].descriptionSinhala"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
+            #descriptionSinhalaField="ngModel"
+            [required]="true"
+          ></quill-editor>
         </div>
         <p
           *ngIf="
@@ -447,15 +493,15 @@
           >Add Description (In Tamil)</label
         >
         <div class="custom-editor">
-          <angular-editor
-            [placeholder]="'Enter text here...'"
+          <quill-editor
             [(ngModel)]="newsItems[0].descriptionTamil"
-            (ngModelChange)="validateTitleEnglish($event)"
-            class="w-full h-full text-textLight dark:text-textDark"
-            [config]="editorConfig"
+            [styles]="{ height: '300px' }"
+            [modules]="quillConfig"
+            placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full"
             #descriptionTamilField="ngModel"
-            required
-          ></angular-editor>
+            [required]="true"
+          ></quill-editor>
         </div>
         <p
           *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched"

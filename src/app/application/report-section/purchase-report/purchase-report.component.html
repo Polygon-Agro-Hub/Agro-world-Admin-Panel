@@ -5,68 +5,60 @@
   Back
 </button>
 
-
-
-
-
-
-
-
-
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
+  <div
+    class="mx-auto min-w-[1200px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16"
+  >
+    <!-- From Date Input (Label and Input on the Same Line) -->
+    <div class="flex items-center gap-2">
+      <label
+        for="fromDate"
+        class="text-sm font-medium text-gray-700 dark:text-textDark"
+        >From:</label
+      >
+      <input
+        id="fromDate"
+        type="date"
+        class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
+        placeholder="YYYY/MM/DD"
+        [(ngModel)]="fromDate"
+        [max]="maxDate"
+      />
+    </div>
 
+    <!-- To Date Input (Label and Input on the Same Line) -->
+    <div class="flex items-center gap-2">
+      <label
+        for="toDate"
+        class="text-sm font-medium text-gray-700 dark:text-textDark"
+        >To:</label
+      >
+      <input
+        id="toDate"
+        type="date"
+        class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
+        placeholder="YYYY/MM/DD"
+        [(ngModel)]="toDate"
+        [min]="fromDate"
+      />
+    </div>
 
+    <!-- Go Button -->
+    <div class="flex items-center">
+      <button
+        (click)="fetchAllPurchaseReport()"
+        class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
+      >
+        Go
+      </button>
+    </div>
 
-<div class="mx-auto min-w-[1200px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
-  <!-- From Date Input (Label and Input on the Same Line) -->
-  <div class="flex items-center gap-2">
-    <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
-    <input
-      id="fromDate"
-      type="date"
-      class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
-      placeholder="YYYY/MM/DD"
-      [(ngModel)]="fromDate"
-      [max]="maxDate"
-    />
+    <!-- Download Report Button (New Line) -->
   </div>
 
-  <!-- To Date Input (Label and Input on the Same Line) -->
-  <div class="flex items-center gap-2">
-    <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
-    <input
-      id="toDate"
-      type="date"
-      class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
-      placeholder="YYYY/MM/DD"
-      [(ngModel)]="toDate"
-      [min]="fromDate"
-    />
-  </div>
-
-  <!-- Go Button -->
-  <div class="flex items-center">
-    <button
-    (click)="fetchAllPurchaseReport()"
-      class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
-    >
-      Go
-    </button>
-  </div>
-
-  <!-- Download Report Button (New Line) -->
-  
-</div>
-
-
-<div class="h-10"></div>
-
-
-
-
+  <div class="h-10"></div>
 
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
@@ -74,7 +66,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          All Transactions ({{this.totalItems}})
+          All Transactions ({{ this.totalItems }})
         </h2>
       </div>
       <div class="flex items-center">
@@ -86,7 +78,6 @@
           </svg>
         </i>
 
-
         <div class="mx-6">
           <p-dropdown
             styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
@@ -94,12 +85,10 @@
             optionLabel="centerName"
             [(ngModel)]="selectedCenter"
             [showClear]="true"
-            placeholder="Center"
+            placeholder="Centre"
             (onChange)="applyFiltersCrop()"
           />
         </div>
-
-
 
         <!-- <div class="mx-6">
           <p-dropdown
@@ -122,7 +111,7 @@
             (change)="onDateChange()"
           />
         </div> -->
-      
+
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
         >
@@ -131,7 +120,7 @@
             placeholder="Search by all"
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="search"
-          (keydown.enter)="applysearch()"
+            (keydown.enter)="applysearch()"
           />
           <button
             type="button"
@@ -154,7 +143,7 @@
             </svg>
           </button>
           <button
-          (click)="clearSearch()"
+            (click)="clearSearch()"
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none"
           >
@@ -177,23 +166,22 @@
       </div>
     </div>
 
-
-    <div class="flex justify-between items-center mb-5"> 
-        <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-        Total : Rs. {{this.grandTotal | number:'1.2-2'}}
+    <div class="flex justify-between items-center mb-5">
+      <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
+        Total : Rs. {{ this.grandTotal | number : "1.2-2" }}
       </h4>
 
-      <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="downloadTemplate1()">
+      <button
+        class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+        (click)="downloadTemplate1()"
+      >
         <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
         <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
         {{ isDownloading ? " Downloading..." : " Download" }}
       </button>
     </div>
 
-
-
     <div>
-
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
@@ -205,39 +193,36 @@
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
             >
-            GRN No
+              GRN No
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
             >
-            Amount (Rs.)
+              Amount (Rs.)
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Center Code
+              Centre Code
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Center Name
+              Centre Name
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-            Farmer NIC
+              Farmer NIC
             </th>
             <th
-            class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-          >
-          Collected Time
-                  </th>
-            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-               
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+              Collected Time
             </th>
-            
-          
-            
+            <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            ></th>
           </tr>
         </thead>
         <tbody>
@@ -249,8 +234,8 @@
                       itemsPerPage: itemsPerPage,
                       currentPage: page,
                       totalItems: totalItems
-                    }
-                    let i = index
+                    };
+              let i = index
             "
           >
             <td class="py-3 text-gray-500 dark:text-textDark text-left">
@@ -260,7 +245,7 @@
               {{ item.grnNumber }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.amount | number:'1.2-2'}}
+              {{ item.amount | number : "1.2-2" }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.regCode }}
@@ -272,20 +257,30 @@
               {{ item.nic }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-                {{ item.createdAtFormatted }}
-              </td>
+              {{ item.createdAtFormatted }}
+            </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              <button (click)="navigateToFamerListReport(item.id, item.userId, item.collQr)">
-               
-                <i class="fa fa-external-link text-blue-500" aria-hidden="true"></i>
+              <button
+                (click)="
+                  navigateToFamerListReport(item.id, item.userId, item.collQr)
+                "
+              >
+                <i
+                  class="fa fa-external-link text-blue-500"
+                  aria-hidden="true"
+                ></i>
               </button>
             </td>
-           
           </tr>
         </tbody>
       </table>
-      <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
-        <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+      <div
+        *ngIf="purchaseReport.length === 0"
+        class="text-center py-4 text-gray-500 dark:text-textDark"
+      >
+        <p class="text-textLight dark:text-textDark text-lg">
+          No data to display
+        </p>
       </div>
       <div class="dark:bg-[#262f45]">
         <pagination-controls

@@ -1,63 +1,66 @@
 import { Injectable } from '@angular/core';
-import { AuthContextService } from '../../context/auth-context.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  private token: string | null = null;
-  private userName: string | null = null;
-  private userId: string | null = null;
-  private role: string | null = null;
-  private permissions: any[] = [];
-  private expiration: number | null = null;
+  private readonly TOKEN_KEY = 'AdminLoginToken';
+  private readonly USERNAME_KEY = 'AdminUserName';
+  private readonly USERID_KEY = 'AdminUserId';
+  private readonly ROLE_KEY = 'AdminRole';
+  private readonly PERMISSIONS_KEY = 'AdminPermissions';
+  private readonly EXPIRATION_KEY = 'AdminTokenExpiration';
 
 
-  constructor(private authContext: AuthContextService) { }
+  constructor() { }
 
   saveLoginDetails(token: string, userName: string, userId: string, role: string, permissions: any, expiresIn: number): void {
-    this.token = token;
-    this.userName = userName;
-    this.userId = userId;
-    this.role = role.toString();
-    this.permissions = permissions;
-    this.expiration = Date.now() + expiresIn * 1000;
+    const expirationTime = new Date().getTime() + expiresIn * 1000; // Convert seconds to milliseconds
+    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.USERNAME_KEY, userName);
+    localStorage.setItem(this.USERID_KEY, userId);
+    localStorage.setItem(this.ROLE_KEY, role);
+    localStorage.setItem(this.PERMISSIONS_KEY, JSON.stringify(permissions));
+    localStorage.setItem(this.EXPIRATION_KEY, expirationTime.toString());
 
-    console.log('Token:', this.token);
-    console.log('UserName:', this.userName);
-    console.log('UserId:', this.userId);
-    console.log('Role:', this.role);
-    console.log('Permissions:', this.permissions);
-    console.log('Expiration:', this.expiration);
+    console.log('Saved login credentials');
+
   }
 
 
   getToken(): string | null {
-    return this.token;
-  }
-  
- 
-  clearLoginDetails(): void {
-    this.token = null;
-    this.userName = null;
-    this.userId = null;
-    this.role = null;
-    this.permissions = [];
-    this.expiration = null;
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  isTokenExpired(): boolean {
-    return !this.expiration || Date.now() > this.expiration;
+
+  clearLoginDetails(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USERNAME_KEY);
+    localStorage.removeItem(this.USERID_KEY);
+    localStorage.removeItem(this.ROLE_KEY);
+    localStorage.removeItem(this.PERMISSIONS_KEY);
+    localStorage.removeItem(this.EXPIRATION_KEY);
+    console.log('User cleared');
+    
   }
+
+
+  isTokenExpired(): boolean {
+    const expiration = localStorage.getItem(this.EXPIRATION_KEY);
+    if (!expiration) {
+      return true;
+    }
+    return new Date().getTime() > parseInt(expiration, 10);
+  }
+
 
   getUserDetails(): any {
     return {
-      userName: this.userName,
-      userId: this.userId,
-      role: this.role,
-      permissions: this.permissions,
-      tokenExpiration: this.expiration,
+      userName: localStorage.getItem(this.USERNAME_KEY),
+      userId: localStorage.getItem(this.USERID_KEY),
+      role: localStorage.getItem(this.ROLE_KEY),
+      permissions: JSON.parse(localStorage.getItem(this.PERMISSIONS_KEY) || '[]'),
+      tokenExpiration: localStorage.getItem(this.EXPIRATION_KEY),
     };
   }
-
 }

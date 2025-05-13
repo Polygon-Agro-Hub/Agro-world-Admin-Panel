@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 
 interface OngoingCultivationItem {
   id: number;
+  empId: string;
   firstNameEnglish: string;
   lastNameEnglish: string;
   lastName: string;

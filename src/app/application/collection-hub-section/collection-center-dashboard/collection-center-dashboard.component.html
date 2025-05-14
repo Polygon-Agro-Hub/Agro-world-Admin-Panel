@@ -1,4 +1,11 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  (click)="navigatePath('/collection-hub/agro-world-centers')"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
 <div class="flex flex-row items-center justify-center gap-16 dark:bg-black">
   <div
     class="flex justify-center items-center w-1/5 py-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg"

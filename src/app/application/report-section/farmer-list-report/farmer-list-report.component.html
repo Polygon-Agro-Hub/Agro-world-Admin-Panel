@@ -11,7 +11,8 @@
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="text-gray-500 dark:text-textDark">Date: {{ todayDate }}</div>
+    <div class="text-gray-500 dark:text-textDark"> Date: {{ this.todayDate[0].createdAt.slice(0, 10) }}</div>
+    <div class="text-gray-500 dark:text-textDark">Inv No: {{ this.todayDate[0].invNo }}</div>
     <div class="flex justify-between items-center mb-8 mt-5">
       <div class="flex items-center">
         <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
@@ -216,7 +217,7 @@
             <td
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
             >
-              {{ crop.gradeAprice }}
+              {{ crop.gradeAprice | number: '1.2-2' }}
             </td>
             <td
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
@@ -226,7 +227,7 @@
             <td
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
             >
-              {{ crop.gradeBprice }}
+              {{ crop.gradeBprice | number: '1.2-2' }}
             </td>
             <td
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
@@ -236,7 +237,7 @@
             <td
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
             >
-              {{ crop.gradeCprice }}
+              {{ crop.gradeCprice | number: '1.2-2' }}
             </td>
             <td
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
@@ -247,9 +248,9 @@
               class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
             >
               {{
-                crop.gradeAprice * crop.gradeAquan +
+                (crop.gradeAprice * crop.gradeAquan +
                   crop.gradeBprice * crop.gradeBquan +
-                  crop.gradeCprice * crop.gradeCquan
+                  crop.gradeCprice * crop.gradeCquan) | number: '1.2-2'
               }}
             </td>
           </tr>
@@ -278,7 +279,7 @@
   <div class="flex flex-col justify-center min-w-[1200px]">
     <div class="flex justify-center">
       <button
-        (click)="downloadPDF()"
+        (click)="downloadPDF(this.todayDate[0].invNo)"
         type="submit"
         class="px-6 py-2 mt-10 mb-10 bg-[#3980C0] text-white rounded-md flex items-center justify-center"
         [disabled]="isLoadingButton"

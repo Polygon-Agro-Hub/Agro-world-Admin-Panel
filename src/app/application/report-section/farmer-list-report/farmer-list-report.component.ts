@@ -19,7 +19,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 export class FarmerListReportComponent {
   fullTotal: number = 0;
   selectedFamer: any = {};
-  todayDate!: string;
+  todayDate!: any;
   famerID!: number;
   farmerList: FarmerList = new FarmerList();
   cropList: CropList[] = [];
@@ -50,6 +50,8 @@ export class FarmerListReportComponent {
       console.log('Received user ID:', this.userId);
     });
     this.loadFarmerList();
+
+    console.log('Farmer List:', this.todayDate);
   }
 
   loadFarmerList() {
@@ -63,6 +65,8 @@ export class FarmerListReportComponent {
             console.log(response);
             this.cropList = response.crops[0];
             this.farmerList = response.farmer[0];
+            console.log('Farmer List:', response.date[0]);
+            this.todayDate = response.date[0];
           },
           (error) => {
             console.error('Error fetching payments:', error);
@@ -96,7 +100,7 @@ export class FarmerListReportComponent {
   //     }));
   // }
 
-  async downloadPDF() {
+  async downloadPDF(inv : any) {
     this.isLoadingButton = true;
     try {
       // console.log('Starting PDF generation...');
@@ -452,7 +456,7 @@ export class FarmerListReportComponent {
       }
 
       console.log('Saving PDF...');
-      doc.save('Farmer_Details_Report.pdf');
+      doc.save(`${inv}.pdf`);
       console.log('PDF generation completed successfully');
       this.isLoadingButton = false;
     } catch (error) {

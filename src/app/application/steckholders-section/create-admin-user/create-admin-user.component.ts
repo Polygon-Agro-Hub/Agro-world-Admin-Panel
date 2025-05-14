@@ -346,7 +346,7 @@ export class CreateAdminUserComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Unsuccess',
-            text: 'Error creating Admin',
+            text: error.error.error,
           });
         }
       );

@@ -67,7 +67,7 @@ export class LoginComponent {
       Swal.fire({
         icon: 'error',
         title: 'Unsuccessful',
-        text: 'Email and Password are required',
+        text: 'Username / Email and Password are required',
       }).then(() => {
         this.isLoading = false; // Stop loader after user sees the error
       });
@@ -78,23 +78,23 @@ export class LoginComponent {
       Swal.fire({
         icon: 'error',
         title: 'Unsuccessful',
-        text: 'Email is required',
+        text: 'Username / Email is required',
       }).then(() => {
         this.isLoading = false;
       });
       return;
     }
   
-    if (!/\S+@\S+\.\S+/.test(this.loginObj.email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Unsuccessful',
-        text: 'Please enter a valid email address',
-      }).then(() => {
-        this.isLoading = false;
-      });
-      return;
-    }
+    // if (!/\S+@\S+\.\S+/.test(this.loginObj.email)) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Unsuccessful',
+    //     text: 'Please enter a valid email address',
+    //   }).then(() => {
+    //     this.isLoading = false;
+    //   });
+    //   return;
+    // }
   
     if (!this.loginObj.password) {
       Swal.fire({

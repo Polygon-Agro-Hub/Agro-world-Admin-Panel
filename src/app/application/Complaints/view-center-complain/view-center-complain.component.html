@@ -41,9 +41,15 @@
 
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
-        <label class="block text-gray-700 dark:text-textDark  mb-2 mr-11"
-          >Complaint (Farmer)</label
+        <div class="flex flex-col justify-between mr-6">
+          <label class="block text-gray-700 dark:text-textDark mb-2"
+          >Complainent</label
         >
+        <label class="block text-gray-700 dark:text-textDark mb-2"
+          >({{complain.empId}})</label
+        >
+        </div>
+       
         <input
           type="text"
           [value]="complain.firstName + ' ' + complain.lastName"
@@ -53,7 +59,7 @@
       </div>
       <div class="flex flex-row justify-between">
         <label class="block text-gray-700 dark:text-textDark mb-2"
-          >Contact (Farmer)</label
+          >Contact ({{complain.jobRole}})</label
         >
         <input
           type="text"

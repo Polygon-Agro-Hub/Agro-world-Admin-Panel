@@ -194,6 +194,8 @@ export class ViewCenterComplainComponent {
 
 class Complain {
   id!: string;
+  empId!: any;
+  jobRole!: string; 
   refNo!: string;
   status!: string;
   firstName!: string;

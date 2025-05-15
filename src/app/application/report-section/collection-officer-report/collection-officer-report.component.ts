@@ -102,10 +102,11 @@ export class CollectionOfficerReportComponent {
     id: number,
     firstName: string,
     lastName: string,
-    QRcode: string
+    QRcode: string,
+    empId: string,
   ) {
     this.router.navigate([`/reports/payment-slip-report/${id}`], {
-      queryParams: { firstName, lastName, QRcode },
+      queryParams: { firstName, lastName, QRcode, empId },
     });
   }
 

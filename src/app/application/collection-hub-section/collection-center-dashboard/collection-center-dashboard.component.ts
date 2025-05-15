@@ -39,6 +39,13 @@ export class CollectionCenterDashboardComponent {
     this.fetchCenterDashbordDetails();
   }
 
+   centerOfficers(id = this.centerId) {
+    this.router.navigate(
+      ['/steckholders/action/collective-officer'],
+      { queryParams: { id } }
+    );
+  }
+
   fetchCenterDashbordDetails() {
     this.isLoading = true;
     this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {

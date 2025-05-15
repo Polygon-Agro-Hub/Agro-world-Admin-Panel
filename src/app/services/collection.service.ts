@@ -13,6 +13,51 @@ export class CollectionService {
  
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
+  fetchAllCollectionOfficercenter(
+    page: number,
+    limit: number,
+    centerStatus: string = '',
+    status: string = '',
+    searchNIC: string = '',
+    company: string,
+    role: string,
+    centerId: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log(company);
+
+
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers?page=${page}&limit=${limit}&centerId=${centerId}`;
+
+    if (company) {
+      url += `&company=${company}`;
+    }
+
+    if (centerStatus) {
+      url += `&centerStatus=${centerStatus}`
+    }
+
+    if (status) {
+      url += `&status=${status}`
+    }
+
+  
+
+    if (role) {
+      url += `&role=${role}`;
+    }
+
+    if (searchNIC) {
+      url += `&nic=${searchNIC}`;
+    }
+    return this.http.get<any>(url, { headers });
+  }
+
+
+
   fetchAllCollectionOfficer(
     page: number,
     limit: number,
@@ -42,6 +87,8 @@ export class CollectionService {
     if (status) {
       url += `&status=${status}`
     }
+
+  
 
     if (role) {
       url += `&role=${role}`;

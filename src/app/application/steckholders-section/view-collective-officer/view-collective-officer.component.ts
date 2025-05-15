@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
@@ -88,12 +88,15 @@ export class ViewCollectiveOfficerComponent {
     { label: 'Rejected', value: 'Rejected' },
   ];
 
+  centerId: number | null = null;
+
   constructor(
     private router: Router,
     private collectionService: CollectionService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private collectionOfficerService: CollectionOfficerService
+    private collectionOfficerService: CollectionOfficerService,
+    private route: ActivatedRoute,
   ) {}
 
   fetchAllCollectionOfficer(
@@ -103,7 +106,14 @@ export class ViewCollectiveOfficerComponent {
     status: string = this.selectStatus
   ) {
     this.isLoading = true;
-    this.collectionService
+        this.route.queryParams.subscribe((params) => {
+      this.centerId = params['id'] ? +params['id'] : null;
+    });
+
+
+    if(this.centerId === null){
+
+          this.collectionService
       .fetchAllCollectionOfficer(
         page,
         limit,
@@ -111,7 +121,8 @@ export class ViewCollectiveOfficerComponent {
         status,
         this.searchNIC,
         this.statusFilter?.id,
-        this.role?.jobRole
+        this.role?.jobRole,
+       
       )
       .subscribe(
         (response) => {
@@ -123,6 +134,33 @@ export class ViewCollectiveOfficerComponent {
           this.isLoading = false;
         }
       );
+
+    }else{
+
+          this.collectionService
+      .fetchAllCollectionOfficercenter(
+        page,
+        limit,
+        centerStatus,
+        status,
+        this.searchNIC,
+        this.statusFilter?.id,
+        this.role?.jobRole,
+        this.centerId ? this.centerId : 0
+      )
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.collectionOfficers = response.items;
+          this.totalItems = response.total;
+        },
+        (error) => {
+          this.isLoading = false;
+        }
+      );
+
+    }
+
   }
 
   back(): void {
@@ -152,6 +190,13 @@ export class ViewCollectiveOfficerComponent {
     this.getAllcompany();
     this.fetchCenterNames();
     this.fetchManagerNames();
+    // this.route.queryParams.subscribe((params) => {
+    //   this.centerId = params['id'] ? +params['id'] : null;
+    // });
+
+    // if(this.centerId != null){
+    //   console.log(this.centerId);
+    // }
   }
 
   onPageChange(event: number) {

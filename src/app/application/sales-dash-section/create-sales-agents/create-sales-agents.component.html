@@ -43,7 +43,7 @@ onclick="history.back()"
             alt="Profile Picture"
           />
 
-          <span
+          <!-- <span
             (click)="triggerFileInput($event)"
             class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer"
           >
@@ -52,7 +52,14 @@ onclick="history.back()"
               alt="Edit Icon"
               class="w-16 h-16"
             />
-          </span>
+          </span> -->
+
+           <span
+              (click)="triggerFileInput($event)"
+              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
+            >
+              <i class="fa-solid fa-pen text-lg text-white"></i>
+            </span>
         </div>
       </div>
 

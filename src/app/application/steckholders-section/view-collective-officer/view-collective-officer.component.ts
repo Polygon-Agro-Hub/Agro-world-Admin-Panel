@@ -164,7 +164,12 @@ export class ViewCollectiveOfficerComponent {
   }
 
   back(): void {
-    this.router.navigate(['steckholders/action']);
+    if(this.centerId != null){
+      history.back()
+    }else{
+      this.router.navigate(['steckholders/action']);
+    }
+    
   }
 
   fetchCenterNames() {

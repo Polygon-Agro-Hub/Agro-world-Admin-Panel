@@ -63,7 +63,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
 
-  selectedImage: string | ArrayBuffer | null = null;
+  selectedImage: File | null = null;
   selectedFile: File | null = null;
   selectedFileName!: string;
   invalidFields: Set<string> = new Set();

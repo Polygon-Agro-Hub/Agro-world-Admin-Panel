@@ -202,4 +202,14 @@ export class MarketPlaceService {
       { headers }
     );
   }
+
+
+
+
+    uploadRetailBanner(data: FormData): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        });
+    return this.http.post(`${this.apiUrl}market-place/upload-banner`, data, {headers});
+  }
 }

@@ -16,6 +16,7 @@ export class MarketPlaceActionsComponent {
   istogglePopupCentersView = false
   istogglePopupMarketingView = false
   istogglePopupAnalyticsView = false
+  istogglePopupMediaView = false
 
 
   togglePopupCatalog() {
@@ -26,6 +27,7 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupCentersView = false
     this.istogglePopupMarketingView = false
     this.istogglePopupAnalyticsView = false
+    this.istogglePopupMediaView = false
   }
 
   togglePopupCustomer() {
@@ -36,6 +38,7 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupCentersView = false
     this.istogglePopupMarketingView = false
     this.istogglePopupAnalyticsView = false
+    this.istogglePopupMediaView = false
   }
 
   togglePopupOrder() {
@@ -46,6 +49,7 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupCentersView = false
     this.istogglePopupMarketingView = false
     this.istogglePopupAnalyticsView = false
+    this.istogglePopupMediaView = false
   }
 
   togglePopupCenters() {
@@ -56,6 +60,7 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupOrderView = false
     this.istogglePopupMarketingView = false
     this.istogglePopupAnalyticsView = false
+    this.istogglePopupMediaView = false
   }
 
   togglePopupMarketing() {
@@ -66,6 +71,7 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupOrderView = false
     this.istogglePopupCentersView = false
     this.istogglePopupAnalyticsView = false
+    this.istogglePopupMediaView = false
   }
 
   togglePopupAnalytics() {
@@ -76,6 +82,18 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupOrderView = false
     this.istogglePopupCentersView = false
     this.istogglePopupMarketingView = false
+    this.istogglePopupMediaView = false
+  }
+
+    togglePopuMedia() {
+    this.istogglePopupMediaView = !this.istogglePopupMediaView
+
+    this.istogglePopupCatalogView = false
+    this.istogglePopupCustomerView = false
+    this.istogglePopupOrderView = false
+    this.istogglePopupCentersView = false
+    this.istogglePopupMarketingView = false
+    this.istogglePopupAnalyticsView = false
   }
 
   constructor(private router: Router) { }

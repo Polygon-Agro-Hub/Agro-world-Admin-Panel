@@ -27,6 +27,7 @@
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.8",
     "@canvasjs/angular-charts": "^1.2.0",
+    "@canvasjs/charts": "^3.12.14",
     "@ckeditor/ckeditor5-angular": "^8.0.0",
     "@ckeditor/ckeditor5-build-classic": "^43.0.0",
     "aws-sdk": "^2.1678.0",

@@ -102,9 +102,9 @@ export class BannerListComponent {
 
     cancelUploadWholesale(): void {
       this.bannerNameWholesale = '';
-    this.selectedFileWholesale = null;
-     this.selectedWholesaleImageUrl = null;
-     this.ViewWholesaleAddBanner = false;
+      this.selectedFileWholesale = null;
+      this.selectedWholesaleImageUrl = null;
+      this.ViewWholesaleAddBanner = false;
   }
 
 
@@ -288,7 +288,10 @@ export class BannerListComponent {
         this.ViewRetailAddBanner = false;
          this.getAllFeedbacks();
          this.isLoading = false;
-         
+          this.bannerName = '';
+          this.selectedFile = null;
+          this.selectedRetailImageUrl = null;
+          this.ViewRetailAddBanner = false;
       },
       error: (err) => {
         console.error(err);
@@ -296,6 +299,10 @@ export class BannerListComponent {
         this.ViewRetailAddBanner = false;
          this.getAllFeedbacks();
          this.isLoading = false;
+        this.bannerName = '';
+        this.selectedFile = null;
+        this.selectedRetailImageUrl = null;
+        this.ViewRetailAddBanner = false;
       },
     });
   }
@@ -320,6 +327,10 @@ export class BannerListComponent {
         this.ViewWholesaleAddBanner = false;
          this.getAllFeedbacksWhole();
          this.isLoading = false;
+         this.bannerNameWholesale = '';
+        this.selectedFileWholesale = null;
+        this.selectedWholesaleImageUrl = null;
+        this.ViewWholesaleAddBanner = false;
       },
       error: (err) => {
         console.error(err);
@@ -327,6 +338,10 @@ export class BannerListComponent {
         this.ViewWholesaleAddBanner = false;
          this.getAllFeedbacksWhole();
          this.isLoading = false;
+         this.bannerNameWholesale = '';
+        this.selectedFileWholesale = null;
+        this.selectedWholesaleImageUrl = null;
+        this.ViewWholesaleAddBanner = false;
       },
     });
   }
@@ -480,11 +495,18 @@ export class BannerListComponent {
           this.marketPlaceSrv.deleteBannerRetail(feedbackId).subscribe({
             next: () => {
               Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
-              this.getAllFeedbacks();
+                 this.loadNextNumberRetail();
+                  this.loadNextNumberWholesale();
+                  this.getAllFeedbacks();
+                  this.getAllFeedbacksWhole();
               // this.loadNextNumber();
             },
             error: () => {
               Swal.fire('Error!', 'Failed to delete Banner.', 'error');
+                  this.loadNextNumberRetail();
+                  this.loadNextNumberWholesale();
+                  this.getAllFeedbacks();
+                  this.getAllFeedbacksWhole();
             },
           });
         }
@@ -507,11 +529,17 @@ export class BannerListComponent {
           this.marketPlaceSrv.deleteBannerWhole(feedbackId).subscribe({
             next: () => {
               Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
-              this.getAllFeedbacks();
-              // this.loadNextNumber();
+                this.loadNextNumberRetail();
+                this.loadNextNumberWholesale();
+                this.getAllFeedbacks();
+                this.getAllFeedbacksWhole();
             },
             error: () => {
               Swal.fire('Error!', 'Failed to delete Banner.', 'error');
+                  this.loadNextNumberRetail();
+                  this.loadNextNumberWholesale();
+                  this.getAllFeedbacks();
+                  this.getAllFeedbacksWhole();
             },
           });
         }

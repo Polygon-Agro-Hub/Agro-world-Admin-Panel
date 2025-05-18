@@ -258,7 +258,7 @@ export class MarketPlaceService {
     });
 
     return this.http.delete(`${this.apiUrl}market-place/delete-banner-retail/${feedbackId}`, {
-      headers,
+      headers
     });
   }
 
@@ -269,7 +269,7 @@ export class MarketPlaceService {
     });
 
     return this.http.delete(`${this.apiUrl}market-place/delete-banner-whole/${feedbackId}`, {
-      headers,
+      headers
     });
   }
 }

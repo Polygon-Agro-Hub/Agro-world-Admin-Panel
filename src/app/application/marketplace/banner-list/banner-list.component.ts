@@ -112,6 +112,7 @@ export class BannerListComponent {
 
 
    loadNextNumberRetail() {
+    
       const token = this.tokenService.getToken();
       if (!token) {
         return;
@@ -367,7 +368,7 @@ export class BannerListComponent {
         },
         () => {}
       );
-       this.isLoading = false;
+      //  this.isLoading = false;
   }
 
 
@@ -394,7 +395,7 @@ export class BannerListComponent {
         },
         () => {}
       );
-       this.isLoading = false;
+      //  this.isLoading = false;
   }
 
     drop(event: CdkDragDrop<any[]>) {

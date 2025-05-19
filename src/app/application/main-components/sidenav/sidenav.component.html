@@ -19,7 +19,7 @@
          [routerLink]="item.children ? null : item.RouterLink" 
          class="sidenav-nav-link" 
          [routerLinkActive]="getActiveClass(item)" 
-         (click)="toggleChildren(item)" 
+         (click)="onParentItemClick(item)" 
          routerLinkActive="active" 
          [routerLinkActiveOptions]="{exact: false}">
         <i class="sidenav-link-icon" [class]="item.icon"></i>

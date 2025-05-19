@@ -347,7 +347,7 @@ export class BannerListComponent {
   }
 
     getAllFeedbacks() {
-       this.isLoading = true;
+       
     const token = this.tokenService.getToken();
     if (!token) {
       return;
@@ -355,6 +355,7 @@ export class BannerListComponent {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
+    this.isLoading = true;
     this.http
       .get<any>(`${environment.API_URL}market-place/get-all-banners`, {
         headers,
@@ -373,7 +374,7 @@ export class BannerListComponent {
 
 
       getAllFeedbacksWhole() {
-         this.isLoading = true;
+        
     const token = this.tokenService.getToken();
     if (!token) {
       return;
@@ -381,6 +382,7 @@ export class BannerListComponent {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
+     this.isLoading = true;
     this.http
       .get<any>(`${environment.API_URL}market-place/get-all-banners-wholesale`, {
         headers,

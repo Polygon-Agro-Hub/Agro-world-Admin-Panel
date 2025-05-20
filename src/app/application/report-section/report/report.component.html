@@ -2,6 +2,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
 
     <div
+    *ngIf="permissionService.hasPermission('View and download purchase report') || tokenService.getUserDetails().role === '1'"
     (click)="purchaseReport()"
       class="flex justify-center cursor-pointer"
     >
@@ -21,6 +22,7 @@
 
 
     <div
+     *ngIf="permissionService.hasPermission('View and download collection report') || tokenService.getUserDetails().role === '1'"
     (click)="collectionReport()"
       class="flex justify-center cursor-pointer"
     >
@@ -43,6 +45,7 @@
 
 
     <div
+    *ngIf="permissionService.hasPermission('View and download collection officer reports') || tokenService.getUserDetails().role === '1'"
     (click)="coReport()"
       class="flex justify-center cursor-pointer"
     >
@@ -59,7 +62,7 @@
       </div>
     </div>
 
-    <div *ngIf="permissionService.hasPermission('District Report') || tokenService.getUserDetails().role === '1'"
+    <div *ngIf="permissionService.hasPermission('View and download district report') || tokenService.getUserDetails().role === '1'"
     (click)="districtReport()"
       class="flex justify-center cursor-pointer"
     >
@@ -76,7 +79,7 @@
       </div>
     </div>
 
-    <div *ngIf="permissionService.hasPermission('Province Report') || tokenService.getUserDetails().role === '1'"
+    <div *ngIf="permissionService.hasPermission('View and download province report') || tokenService.getUserDetails().role === '1'"
     (click)="provinceReport()"
       class="flex justify-center cursor-pointer"
     >

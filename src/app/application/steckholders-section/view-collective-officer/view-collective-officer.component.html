@@ -10,7 +10,7 @@
 </button>
 <button
   *ngIf="
-    (permissionService.hasPermission('Add Collection Officer') ||
+    (permissionService.hasPermission('Onboard individual collection CO / CCM / DO') ||
     tokenService.getUserDetails().role === '1') && this.centerId == null
   "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
@@ -169,7 +169,11 @@
         </h2>
       </div>
 
-      <div class="flex items-center mr-5">
+      <div class="flex items-center mr-5"
+        *ngIf="
+          (permissionService.hasPermission('Filter CO / CCM / DO') ||
+          tokenService.getUserDetails().role === '1') && this.centerId == null
+        ">
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
@@ -320,11 +324,19 @@
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="
+                permissionService.hasPermission('Claim collection officer') ||
+                tokenService.getUserDetails().role === '1'
+              "
             >
               Center Status
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="
+                permissionService.hasPermission('Approve collection officer') ||
+                tokenService.getUserDetails().role === '1'
+              "
             >
               Status
             </th>
@@ -340,7 +352,7 @@
             </th>
             <th
               *ngIf="
-                permissionService.hasPermission('View Collection Officer') ||
+                permissionService.hasPermission('View individual collection officer') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -348,14 +360,14 @@
 
             <th
               *ngIf="
-                permissionService.hasPermission('Edit Collection Officer') ||
+                permissionService.hasPermission('Manage CO / CCM / DO') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
             ></th>
             <th
               *ngIf="
-                permissionService.hasPermission('Delete Collection Officer') ||
+                permissionService.hasPermission('Delete(remove) CO / CCM / DO') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -405,12 +417,12 @@
                 <span
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Approve Collection Officer'
+                      'Claim collection officer'
                     ) || tokenService.getUserDetails().role === '1'
                   "
                   (click)="
                     permissionService.hasPermission(
-                      'Claim Collection Officer'
+                      'Claim collection officer'
                     ) || tokenService.getUserDetails().role === '1'
                       ? handleClaimButtonClick(item)
                       : null
@@ -439,12 +451,12 @@
                   class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Approve Collection Officer'
+                      'Approve collection officer'
                     ) || tokenService.getUserDetails().role === '1'
                   "
                   (click)="
                     permissionService.hasPermission(
-                      'Approve Collection Officer'
+                      'Approve collection officer'
                     ) || tokenService.getUserDetails().role === '1'
                       ? openPopup(item)
                       : null
@@ -464,7 +476,7 @@
 
             <td
               *ngIf="
-                permissionService.hasPermission('View Collection Officer') ||
+                permissionService.hasPermission('View individual collection officer') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="px-4 py-3 text-center"
@@ -491,7 +503,7 @@
 
             <td
               *ngIf="
-                permissionService.hasPermission('Edit Collection Officer') ||
+                permissionService.hasPermission('Manage CO / CCM / DO') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="py-3 text-center"
@@ -516,7 +528,7 @@
 
             <td
               *ngIf="
-                permissionService.hasPermission('Delete Collection Officer') ||
+                permissionService.hasPermission('Delete(remove) CO / CCM / DO') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="text-center"

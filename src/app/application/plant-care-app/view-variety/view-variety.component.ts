@@ -6,6 +6,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface NewCropGroup {
   id: number;
@@ -46,7 +48,9 @@ export class ViewVarietyComponent {
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public permissionService: PermissionService,
+        public tokenService: TokenService
   ) {}
 
   ngOnInit() {
@@ -112,7 +116,7 @@ export class ViewVarietyComponent {
   }
 
   editVarity(id: number) {
-    this.router.navigate(['/plant-care/action/create-crop-variety'], {
+    this.router.navigate(['/plant-care/action/edit-crop-variety'], {
       queryParams: { id },
     });
   }

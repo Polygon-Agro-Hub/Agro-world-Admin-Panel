@@ -15,6 +15,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NewsService } from '../../../services/plant-care/news.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface NewsItem {
   id: number;
@@ -82,7 +83,8 @@ export class ManageContentComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private sanitizer: DomSanitizer,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit() {

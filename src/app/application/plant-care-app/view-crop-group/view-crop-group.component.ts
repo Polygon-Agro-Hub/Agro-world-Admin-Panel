@@ -7,6 +7,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface NewCropCalender {
   id: number;
@@ -56,7 +58,9 @@ export class ViewCropGroupComponent {
   constructor(
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) {}
 
   ngOnInit() {
@@ -147,7 +151,7 @@ export class ViewCropGroupComponent {
   }
 
   editCropGroup(id: number) {
-    this.router.navigate(['/plant-care/action/create-crop-group'], {
+    this.router.navigate(['/plant-care/action/edit-crop-group'], {
       queryParams: { id },
     });
   }

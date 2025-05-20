@@ -5,7 +5,7 @@
   Back
 </button>
 <button
-*ngIf="permissionService.hasPermission('Add Sales Dash user') ||
+*ngIf="permissionService.hasPermission('Onboard sales agent') ||
                   tokenService.getUserDetails().role === '1'"
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="
@@ -167,15 +167,15 @@
               Activity Status
             </th> -->
             
-            <th *ngIf="permissionService.hasPermission('View Sales Dash user') ||
+            <th *ngIf="permissionService.hasPermission('View individual sales agent') ||
                   tokenService.getUserDetails().role === '1'"
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="permissionService.hasPermission('Edit Sales Dash user') ||
+            <th *ngIf="permissionService.hasPermission('Manage sales agent') ||
                   tokenService.getUserDetails().role === '1'"
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="permissionService.hasPermission('Delete Sales Dash user') ||
+            <th *ngIf="permissionService.hasPermission('Delete(remove) sales agent') ||
                   tokenService.getUserDetails().role === '1'"
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
@@ -221,8 +221,8 @@
                       item.status === 'Rejected'
                   }"
                   class="font-medium rounded-md px-4 py-2 text-xs text-center w-24 flex items-center justify-center"
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve Sales Dash user') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve Sales Dash user') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
+                  [class.cursor-pointer]="permissionService.hasPermission('Approve sales agent') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Approve sales agent') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
                 >
                   {{ item.status }}
                 </span>
@@ -241,7 +241,7 @@
               
             </td> -->
 
-            <td *ngIf="permissionService.hasPermission('View Sales Dash user') ||
+            <td *ngIf="permissionService.hasPermission('View individual sales agent') ||
                   tokenService.getUserDetails().role === '1'" 
                   class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
@@ -264,7 +264,7 @@
               </button>
             </td>
 
-            <td *ngIf="permissionService.hasPermission('Edit Sales Dash user') ||
+            <td *ngIf="permissionService.hasPermission('Manage sales agent') ||
                   tokenService.getUserDetails().role === '1'"
                   class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
@@ -285,7 +285,7 @@
               </button>
             </td>
 
-            <td *ngIf="permissionService.hasPermission('Delete Sales Dash user') ||
+            <td *ngIf="permissionService.hasPermission('Delete(remove) sales agent') ||
                   tokenService.getUserDetails().role === '1'"
                   class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button

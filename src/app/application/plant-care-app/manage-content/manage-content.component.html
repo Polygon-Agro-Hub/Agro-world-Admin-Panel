@@ -121,7 +121,10 @@
             All News ({{ this.totalItems }})
           </h2>
         </div>
-        <div class="flex items-center">
+        <div
+        *ngIf="permissionService.hasPermission('Filter by status') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="flex items-center">
           <i
             class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark"
           >
@@ -177,6 +180,8 @@
               </th>
               <th
                 class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+                *ngIf="permissionService.hasPermission('View each news individually') ||
+                  tokenService.getUserDetails().role === '1'"
               >
                 View
               </th>
@@ -227,7 +232,9 @@
                 }}
               </td>
 
-              <td class="px-4 py-3 text-center">
+              <td *ngIf="permissionService.hasPermission('View each news individually') ||
+                  tokenService.getUserDetails().role === '1'"
+                  class="px-4 py-3 text-center">
                 <button
                   class="w-5 h-5 text-blue-500 hover:text-blue-700"
                   (click)="openPopup(item.id)"
@@ -250,16 +257,19 @@
               <td class="px-4 py-3 text-green-500 text-center">
                 <div *ngIf="item.status == 'Published'">
                   <span
+                    [class.cursor-pointer]="permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1'"
                     class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="updateStatus(item.id)"
+                    (click)="(permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1') ? updateStatus(item.id) : null"
+                    
                   >
                     {{ item.status }}
                   </span>
                 </div>
                 <div *ngIf="item.status != 'Published'">
                   <span
+                     [class.cursor-pointer]="permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1'" 
                     class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="updateStatus(item.id)"
+                     (click)="(permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1') ? updateStatus(item.id) : null"
                   >
                     {{ item.status }}
                   </span>
@@ -276,6 +286,8 @@
               </td>
               <td class="px-4 py-3 text-center">
                 <button
+                *ngIf="permissionService.hasPermission('Manage content') ||
+                  tokenService.getUserDetails().role === '1'"
                   class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
                   (click)="editNews(item.id)"
                 >
@@ -292,6 +304,8 @@
                   </svg>
                 </button>
                 <button
+                *ngIf="permissionService.hasPermission('Delete each news') ||
+                  tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteNews(item.id)"
               >

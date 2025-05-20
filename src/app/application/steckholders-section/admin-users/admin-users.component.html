@@ -10,7 +10,7 @@
 
 <button
   *ngIf="
-    permissionService.hasPermission('Add Admin User') ||
+    permissionService.hasPermission('Onboard individual admin user') ||
     tokenService.getUserDetails().role === '1'
   "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
@@ -46,7 +46,11 @@
         </h2>
       </div>
       <div class="flex items-center">
-        <div class="mr-5">
+        <div class="mr-5"
+        *ngIf="
+            permissionService.hasPermission('Filter admin user by roles') ||
+            tokenService.getUserDetails().role === '1'
+          ">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="roleArr"
@@ -60,6 +64,10 @@
           />
         </div>
         <div
+        *ngIf="
+            permissionService.hasPermission('Search admin users') ||
+            tokenService.getUserDetails().role === '1'
+          "
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
           <input
@@ -145,8 +153,8 @@
             </th>
             <th
               *ngIf="
-                permissionService.hasPermission('Edit Admin User') ||
-                permissionService.hasPermission('Delete Admin User') ||
+                permissionService.hasPermission('Manage admin users') ||
+                permissionService.hasPermission('Delete(remove) admin user') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -183,7 +191,7 @@
 
               <td
                 *ngIf="
-                  permissionService.hasPermission('Edit Admin User') ||
+                  permissionService.hasPermission('Manage admin users') ||
                   tokenService.getUserDetails().role === '1'
                 "
                 class="py-3"
@@ -207,7 +215,7 @@
               </td>
               <td
                 *ngIf="
-                  permissionService.hasPermission('Delete Admin User') ||
+                  permissionService.hasPermission('Delete(remove) admin user') ||
                   tokenService.getUserDetails().role === '1'
                 "
                 class="py-3"

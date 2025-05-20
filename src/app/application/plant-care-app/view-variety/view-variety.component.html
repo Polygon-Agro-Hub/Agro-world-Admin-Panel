@@ -8,6 +8,8 @@
   Back
 </button>
 <button
+*ngIf="permissionService.hasPermission('Add varieties') ||
+                  tokenService.getUserDetails().role === '1'"
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add()"
 >
@@ -86,6 +88,8 @@
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
+              *ngIf="permissionService.hasPermission('Edit varieties') ||
+                  tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editVarity(item.id)"
               >
@@ -103,6 +107,8 @@
               </button>
 
               <button
+              *ngIf="permissionService.hasPermission('Delete varieties') ||
+                  tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCropCalender(item.id)"
               >

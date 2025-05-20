@@ -179,6 +179,18 @@ export class SidenavComponent implements OnInit {
     item.expanded = !item.expanded;
   }
 
+  onParentItemClick(item: any): void {
+  this.toggleChildren(item);
+
+  // If the item has children and is now expanded, navigate to the first child
+  if (item.children && item.expanded && item.children.length > 0) {
+    const firstChildLink = item.children[0].RouterLink;
+    if (firstChildLink) {
+      this.router.navigate([firstChildLink]);
+    }
+  }
+}
+
   navigateToSettings(): void {
     this.router.navigate(['/settings/view-roles']);
   }

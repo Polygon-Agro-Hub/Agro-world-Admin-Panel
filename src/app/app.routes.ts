@@ -175,18 +175,32 @@ export const routes: Routes = [
               {
                 path: 'create-crop-calender',
                 component: CreateCropCalenderComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Create crop calendar' },
+              },
+              {
+                path: 'edit-crop-calender',
+                component: CreateCropCalenderComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit crop calendar' },
               },
               {
                 path: 'view-crop-calender',
                 component: ViewCropCalanderComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View crop calendar' },
               },
               {
                 path: 'view-crop-task/:cropId',
                 component: ViewCropTaskComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View crop calendar task' },
               },
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,
+                 canActivate: [PermissionGuard],
+                data: { permission: 'Edit task' },
               },
               {
                 path: 'public-forum',
@@ -243,6 +257,8 @@ export const routes: Routes = [
               {
                 path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',
                 component: AddNewCropCalanderTaskComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add new task' },
               },
               {
                 path: 'add-block-words',

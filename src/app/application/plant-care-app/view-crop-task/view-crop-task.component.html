@@ -27,7 +27,10 @@
       >
         <thead>
           <tr>
-            <th class="py-3 font-normal text-gray-500 text-left"></th>
+            <th
+            *ngIf="permissionService.hasPermission('Add new task') ||
+                  tokenService.getUserDetails().role === '1'"
+             class="py-3 font-normal text-gray-500 text-left"></th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
@@ -44,21 +47,29 @@
               Task
             </th>
             <th
+             *ngIf="permissionService.hasPermission('View guided image') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Guided Image
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View guided video') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Guided Video English
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View guided video') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Guided Video Sinhala
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View guided video') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Guided Video Tamil
@@ -77,7 +88,10 @@
                     }
             "
           >
-            <td class="px-4 py-3 text-center">
+            <td 
+            *ngIf="permissionService.hasPermission('Add new task') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-4 py-3 text-center">
               <button
                 class="w-6 h-6 mr-3 text-textLight dark:text-textDark hover:text-[#83aefd]"
                 (click)="addNewTask(task.cropId, task.taskIndex)"
@@ -101,7 +115,10 @@
               }}
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td
+             *ngIf="permissionService.hasPermission('View guided image') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <ng-container *ngIf="task.imageLink; else noImage">
                 <a
                   [attr.href]="task.imageLink"
@@ -116,7 +133,10 @@
               <ng-template #noImage> No image </ng-template>
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td
+            *ngIf="permissionService.hasPermission('View guided video') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <ng-container *ngIf="task.videoLinkEnglish; else noVideo">
                 <a
                   [attr.href]="task.videoLinkEnglish"
@@ -130,7 +150,10 @@
               </ng-container>
               <ng-template #noVideo> No video </ng-template>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td
+            *ngIf="permissionService.hasPermission('View guided video') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <ng-container *ngIf="task.videoLinkSinhala; else noVideo">
                 <a
                   [attr.href]="task.videoLinkSinhala"
@@ -144,7 +167,9 @@
               </ng-container>
               <ng-template #noVideo> No video </ng-template>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('View guided video') ||
+                  tokenService.getUserDetails().role === '1'"
+                  class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <ng-container *ngIf="task.videoLinkTamil; else noVideo">
                 <a
                   [attr.href]="task.videoLinkTamil"
@@ -161,6 +186,8 @@
 
             <td class="px-4 py-3 text-center">
               <button
+              *ngIf="permissionService.hasPermission('Edit task') ||
+                  tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCropTask(task.id)"
               >
@@ -177,6 +204,8 @@
                 </svg>
               </button>
               <button
+              *ngIf="permissionService.hasPermission('Delete task') ||
+                  tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCroptask(task.id, task.cropId, task.taskIndex)"
               >

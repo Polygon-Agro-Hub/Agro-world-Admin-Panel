@@ -13,6 +13,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface NewCropCalender {
   id: number;
@@ -59,7 +61,8 @@ export class ViewCropCalanderComponent implements OnInit {
   constructor(
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService, public tokenService: TokenService,
   ) {}
 
   ngOnInit() {
@@ -133,7 +136,7 @@ export class ViewCropCalanderComponent implements OnInit {
   }
 
   editCropCalender(id: number) {
-    this.router.navigate(['/plant-care/action/create-crop-calender'], {
+    this.router.navigate(['/plant-care/action/edit-crop-calender'], {
       queryParams: { id },
     });
   }

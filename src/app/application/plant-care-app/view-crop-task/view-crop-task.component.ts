@@ -6,6 +6,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 class CropTask {
   'cropId': string;
@@ -44,7 +46,8 @@ export class ViewCropTaskComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private cropCalService: CropCalendarService
+    private cropCalService: CropCalendarService,
+    public permissionService: PermissionService, public tokenService: TokenService
   ) {}
 
   ngOnInit(): void {

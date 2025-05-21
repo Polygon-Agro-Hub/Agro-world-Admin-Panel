@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface CultivationItems {
   id: any;
@@ -63,7 +65,9 @@ export class SlaveCropCalendarComponent {
     private route: ActivatedRoute,
     private newsService: NewsService,
     private ongoingCultivationService: OngoingCultivationService,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService, 
+        public tokenService: TokenService
   ) {}
 
   ngOnInit() {

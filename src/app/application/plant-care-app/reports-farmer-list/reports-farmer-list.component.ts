@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface PlantCareUser {
   id: number;
@@ -85,7 +87,9 @@ export class ReportsFarmerListComponent {
   constructor(
     private plantcareService: PlantcareUsersService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    public permissionService: PermissionService,
+     public tokenService: TokenService
   ) {}
 
   fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {

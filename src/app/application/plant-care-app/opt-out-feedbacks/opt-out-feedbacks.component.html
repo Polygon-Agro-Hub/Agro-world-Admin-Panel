@@ -108,7 +108,10 @@
     </div>
 
     <!-- Add/Edit Options Button -->
-    <div class="flex items-center justify-center w-full">
+    <div
+     *ngIf="permissionService.hasPermission('Manage Opt-Out feedback list') ||
+                  tokenService.getUserDetails().role === '1'"
+     class="flex items-center justify-center w-full">
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg flex items-center space-x-2 hover:bg-blue-600 transition"
         (click)="
@@ -135,6 +138,8 @@
   </div>
 
   <div
+  *ngIf="permissionService.hasPermission('View Opt-Out feedbacks') ||
+                  tokenService.getUserDetails().role === '1'"
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8 w-full">

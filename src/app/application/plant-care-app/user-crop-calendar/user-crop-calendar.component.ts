@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface TaskList {
   id: any;
@@ -55,7 +57,9 @@ export class UserCropCalendarComponent {
     private ongoingCultivationService: OngoingCultivationService,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public permissionService: PermissionService, 
+    public tokenService: TokenService
   ) {}
 
   ngOnInit() {

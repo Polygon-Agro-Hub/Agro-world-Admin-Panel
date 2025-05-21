@@ -24,7 +24,9 @@
     >
       <thead>
         <tr>
-          <th class="py-3 font-normal text-gray-500 text-left"></th>
+          <th
+          *ngIf="permissionService.hasPermission('Add new tasks for each user') ||
+                  tokenService.getUserDetails().role === '1'" class="py-3 font-normal text-gray-500 text-left"></th>
           <th
             class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
           >
@@ -85,7 +87,10 @@
                   }
           "
         >
-          <td class="px-4 py-3 text-center">
+          <td 
+          *ngIf="permissionService.hasPermission('Add new tasks for each user') ||
+                  tokenService.getUserDetails().role === '1'"
+            class="px-4 py-3 text-center">
             <button
               class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
               (click)="
@@ -203,7 +208,8 @@
             <div *ngIf="task.status == 'completed'">
               <span
                 class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
-                (click)="updateStatus(task.slavecropcalendardaysId)"
+                [class.cursor-pointer]="permissionService.hasPermission('Change user task status') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Change user task status') || tokenService.getUserDetails().role === '1') ?updateStatus(task.slavecropcalendardaysId) : null"
               >
                 {{ task.status }}
               </span>
@@ -211,7 +217,8 @@
             <div *ngIf="task.status != 'completed'">
               <span
                 class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
-                (click)="updateStatus(task.slavecropcalendardaysId)"
+                [class.cursor-pointer]="permissionService.hasPermission('Change user task status') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Change user task status') || tokenService.getUserDetails().role === '1') ?updateStatus(task.slavecropcalendardaysId) : null"
               >
                 {{ task.status }}
               </span>
@@ -220,6 +227,8 @@
 
           <td class="px-4 py-3 text-center">
             <button
+            *ngIf="permissionService.hasPermission('Edit user tasks') ||
+                  tokenService.getUserDetails().role === '1'"
               class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
               (click)="editCropTask(task.slavecropcalendardaysId)"
             >
@@ -236,6 +245,8 @@
               </svg>
             </button>
             <button
+             *ngIf="permissionService.hasPermission('Delete user tasks') ||
+                  tokenService.getUserDetails().role === '1'"
               class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
               (click)="
                 deleteCroptask(

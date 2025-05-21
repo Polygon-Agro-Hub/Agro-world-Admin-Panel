@@ -6,6 +6,8 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-opt-out-feedbacks',
@@ -37,7 +39,9 @@ export class OptOutFeedbacksComponent {
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService,
+         public tokenService: TokenService
   ) {}
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {

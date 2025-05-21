@@ -128,6 +128,8 @@
     </div>
 
     <div
+    *ngIf="permissionService.hasPermission('View post list of the public forum') ||
+                  tokenService.getUserDetails().role === '1'" 
       class="flex justify-center cursor-pointer"
       (click)="publicForum()"
     >
@@ -145,6 +147,8 @@
     </div>
 
     <div
+    *ngIf="permissionService.hasPermission('View users that enroll with crop calendars') ||
+                  tokenService.getUserDetails().role === '1'" 
       class="flex justify-center cursor-pointer"
       (click)="ongoingCultivation()"
     >
@@ -162,6 +166,8 @@
     </div>
 
     <div
+    *ngIf="permissionService.hasPermission('View users current assets by category') || permissionService.hasPermission('View users fixed assets by category') ||
+                  tokenService.getUserDetails().role === '1'" 
       class="flex justify-center cursor-pointer"
       (click)="assets()"
     >
@@ -179,6 +185,8 @@
     </div>
 
     <div
+    *ngIf="permissionService.hasPermission('Manage Opt-Out feedback list') || permissionService.hasPermission('View Opt-Out feedback') ||
+                  tokenService.getUserDetails().role === '1'"
       class="flex justify-center cursor-pointer"
       (click)="feedBack()"
     >

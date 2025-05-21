@@ -205,14 +205,20 @@ export const routes: Routes = [
               {
                 path: 'public-forum',
                 component: PublicForumComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View post list of the public forum' },
               },
               {
                 path: 'ongoing-cultivation',
                 component: OngoingCultivationComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View users that enroll with crop calendars' },
               },
               {
                 path: 'view-crop-task-by-user',
                 component: SlaveCropCalendarComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View each farmer’s enrolled crop calendars' },
               },
               {
                 path: 'view-crop-task-by-user/user-task-list/edit-user-task',
@@ -221,7 +227,10 @@ export const routes: Routes = [
               {
                 path: 'view-crop-task-by-user/user-task-list',
                 component: UserCropCalendarComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View each farmer’s crop calendar task list' },
               },
+              
               {
                 path: 'report-farmer-list',
                 component: ReportsFarmerListComponent,
@@ -229,6 +238,8 @@ export const routes: Routes = [
               {
                 path: 'report-farmer-current-assert/:userId/:name',
                 component: ReportCurrentAssertsComponent,
+                 canActivate: [PermissionGuard],
+                data: { permission: 'View users current assets by category' },
               },
               {
                 path: 'current-assets-view',
@@ -241,6 +252,8 @@ export const routes: Routes = [
               {
                 path: 'assets/fixed-asset-category',
                 component: FixedAssetCategoryComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View users fixed assets by category' },
               },
               {
                 path: 'assets/fixed-asset-category/building-fixed-asset',
@@ -308,6 +321,8 @@ export const routes: Routes = [
                   {
                     path: 'create-feedback',
                     component: CreateFeedbackComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Manage Opt-Out feedback list' },
                   },
                 ],
               },

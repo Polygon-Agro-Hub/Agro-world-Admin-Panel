@@ -97,11 +97,15 @@
               NIC
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View users current assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Current
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View users fixed assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Fixed
@@ -132,7 +136,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.NICnumber }}
             </td>
-            <td class="px-3 py-3 text-center">
+            <td
+            *ngIf="permissionService.hasPermission('View users current assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-3 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="
@@ -154,7 +161,10 @@
                 </svg>
               </button>
             </td>
-            <td class="px-3 py-3 text-center">
+            <td
+            *ngIf="permissionService.hasPermission('View users fixed assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-3 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewFixedAsset(item.id, item.firstName, item.lastName)"

@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlantcareUsersService } from '../../services/plant-care/plantcare-users.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { finalize } from 'rxjs/operators';
+import { PermissionService } from '../../services/roles-permission/permission.service';
+import { TokenService } from '../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-public-forum',
@@ -45,7 +47,9 @@ export class ViewPublicForumComponent implements OnInit {
   constructor(
     private psotService: PublicforumService,
     private router: Router,
-    private publicForumSrv: PublicForumService
+    private publicForumSrv: PublicForumService,
+    public permissionService: PermissionService, 
+    public tokenService: TokenService
   ) {}
 
   sendMessage(id: number) {

@@ -11,6 +11,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface OngoingCultivationItem {
   cultivationId: number;
@@ -64,7 +66,9 @@ export class OngoingCultivationComponent {
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService, 
+    public tokenService: TokenService
   ) {}
 
   ngOnInit() {

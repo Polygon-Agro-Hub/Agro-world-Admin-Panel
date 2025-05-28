@@ -121,6 +121,9 @@ import { DispatchComponent } from './application/dispatch-section/dispatch/dispa
 import { RecievedOrdersComponent } from './application/procurement-section/recieved-orders/recieved-orders.component';
 import { SalesdashOrdersComponent } from './application/dispatch-section/salesdash-orders/salesdash-orders.component';
 import { BannerListComponent } from './application/marketplace/banner-list/banner-list.component';
+import { DistributionHubDashboardComponent } from './application/distribution-hub/distribution-hub-dashboard/distribution-hub-dashboard.component';
+import { DistributionhubComponent } from './application/distribution-hub/distributionhub/distributionhub.component';
+import { ViewProductTypesComponent } from './application/marketplace/view-product-types/view-product-types.component';
 export const routes: Routes = [
   {
     path: '',
@@ -199,7 +202,7 @@ export const routes: Routes = [
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,
-                 canActivate: [PermissionGuard],
+                canActivate: [PermissionGuard],
                 data: { permission: 'Edit task' },
               },
               {
@@ -212,13 +215,17 @@ export const routes: Routes = [
                 path: 'ongoing-cultivation',
                 component: OngoingCultivationComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View users that enroll with crop calendars' },
+                data: {
+                  permission: 'View users that enroll with crop calendars',
+                },
               },
               {
                 path: 'view-crop-task-by-user',
                 component: SlaveCropCalendarComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View each farmer’s enrolled crop calendars' },
+                data: {
+                  permission: 'View each farmer’s enrolled crop calendars',
+                },
               },
               {
                 path: 'view-crop-task-by-user/user-task-list/edit-user-task',
@@ -228,9 +235,11 @@ export const routes: Routes = [
                 path: 'view-crop-task-by-user/user-task-list',
                 component: UserCropCalendarComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View each farmer’s crop calendar task list' },
+                data: {
+                  permission: 'View each farmer’s crop calendar task list',
+                },
               },
-              
+
               {
                 path: 'report-farmer-list',
                 component: ReportsFarmerListComponent,
@@ -238,7 +247,7 @@ export const routes: Routes = [
               {
                 path: 'report-farmer-current-assert/:userId/:name',
                 component: ReportCurrentAssertsComponent,
-                 canActivate: [PermissionGuard],
+                canActivate: [PermissionGuard],
                 data: { permission: 'View users current assets by category' },
               },
               {
@@ -342,7 +351,9 @@ export const routes: Routes = [
             path: 'collective-officer-report',
             component: CollectionOfficerReportComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'View and download collection officer reports' },
+            data: {
+              permission: 'View and download collection officer reports',
+            },
           },
           {
             path: 'collective-officer-report/view/:id/:name',
@@ -427,7 +438,9 @@ export const routes: Routes = [
                     path: 'create-plantcare-users',
                     component: EditPlantcareUsersComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: ['Onboard individual plant care user'] },
+                    data: {
+                      permission: ['Onboard individual plant care user'],
+                    },
                   },
                   {
                     path: 'view-plantcare-users',
@@ -500,7 +513,9 @@ export const routes: Routes = [
                     path: 'personal',
                     component: CollectiveofficersPersonalComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Onboard individual collection CO / CCM / DO' },
+                    data: {
+                      permission: 'Onboard individual collection CO / CCM / DO',
+                    },
                   },
                   {
                     path: 'personal-edit/:id',
@@ -723,6 +738,10 @@ export const routes: Routes = [
                 path: 'banner-list',
                 component: BannerListComponent,
               },
+              {
+                path: 'view-product-types',
+                component: ViewProductTypesComponent,
+              },
             ],
           },
         ],
@@ -813,6 +832,16 @@ export const routes: Routes = [
           {
             path: 'give-permissions/:id',
             component: PermissionAreaComponent,
+          },
+        ],
+      },
+      {
+        path: 'distribution-hub',
+        children: [
+          { path: 'dashboard', component: DistributionHubDashboardComponent },
+          {
+            path: 'action',
+            children: [{ path: '', component: DistributionhubComponent }],
           },
         ],
       },

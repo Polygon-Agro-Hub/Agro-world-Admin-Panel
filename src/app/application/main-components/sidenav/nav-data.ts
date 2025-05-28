@@ -49,6 +49,24 @@ export const navbarData = [
     label: 'Collection Hub',
   },
   {
+    RouterLink: '/distribution-hub',
+    icon: 'fa-solid fa-building-circle-arrow-right',
+    label: 'Distribution Hub',
+    expanded: false,
+    children: [
+      {
+        RouterLink: '/distribution-hub/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashboard',
+      },
+      {
+        RouterLink: '/distribution-hub/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
+  },
+  {
     RouterLink: '/procurement',
     icon: 'fa-solid fa-box-open',
     label: 'Procurement',

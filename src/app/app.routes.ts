@@ -123,6 +123,7 @@ import { SalesdashOrdersComponent } from './application/dispatch-section/salesda
 import { BannerListComponent } from './application/marketplace/banner-list/banner-list.component';
 import { DistributionHubDashboardComponent } from './application/distribution-hub/distribution-hub-dashboard/distribution-hub-dashboard.component';
 import { DistributionhubComponent } from './application/distribution-hub/distributionhub/distributionhub.component';
+import { ViewProductTypesComponent } from './application/marketplace/view-product-types/view-product-types.component';
 export const routes: Routes = [
   {
     path: '',
@@ -736,6 +737,10 @@ export const routes: Routes = [
               {
                 path: 'banner-list',
                 component: BannerListComponent,
+              },
+              {
+                path: 'view-product-types',
+                component: ViewProductTypesComponent,
               },
             ],
           },

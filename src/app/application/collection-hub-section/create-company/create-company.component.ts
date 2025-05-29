@@ -174,16 +174,29 @@ export class CreateCompanyComponent {
     }
   }
 
-  onFaviconChange(event: Event): void {
+  async onFaviconChange(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
-      this.selectedFaviconFile = input.files[0];
-      this.companyData.faviconFile = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.companyData.favicon = e.target?.result as string;
-      };
-      reader.readAsDataURL(this.selectedFaviconFile);
+      try {
+        this.isLoading = true;
+        const compressedFile = await this.compressImage(
+          input.files[0],
+          800,
+          800,
+          0.7
+        );
+        this.selectedFaviconFile = compressedFile;
+        this.companyData.faviconFile = compressedFile;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.companyData.favicon = e.target?.result as string;
+          this.isLoading = false;
+        };
+        reader.readAsDataURL(this.selectedFaviconFile);
+      } catch (error) {
+        this.isLoading = false;
+        console.error('Error compressing image:', error);
+      }
     }
   }
 

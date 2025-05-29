@@ -37,7 +37,7 @@ export class MarketEditProductComponent implements OnInit {
   selectedImage!: any;
   storedDisplayType!: string;
   storedDiscountPercentage: number = 0.0;
-  discountPercentage: number = 0.0;
+  // discountPercentage: number = 0.0;
   isNoDiscount: boolean = true;
 
   constructor(
@@ -167,7 +167,7 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.changeby ||
         !this.productObj.discountedPrice ||
         !this.productObj.salePrice ||
-        !this.productObj.maxQuantity
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
       ) {
         Swal.fire(
           'Warning',
@@ -185,7 +185,7 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        !this.productObj.maxQuantity
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
       ) {
         Swal.fire(
           'Warning',

@@ -16,6 +16,28 @@
           <label
             for="regNumber"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Favicon</label
+          >
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack mb-5"
+          />
+          <label
+            for="regNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Logo</label
+          >
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack mb-5"
+          />
+          <label
+            for="regNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Registration Number of the Company</label
           >
           <input
@@ -262,7 +284,10 @@
         </div>
 
         <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="accNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Account Number
           </label>
           <input
@@ -272,13 +297,19 @@
             (blur)="onBlur('accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          <span
+            *ngIf="isFieldInvalid('accNumber')"
+            class="text-red-600 text-sm"
+          >
             Account Number is required.
           </span>
         </div>
-        
+
         <div class="pb-6">
-          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="confirmAccNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Confirm Account Number
           </label>
           <input
@@ -288,52 +319,72 @@
             (blur)="onBlur('confirmAccNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          
+
           <!-- Required validation message -->
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Confirm Account Number is required.
           </span>
-        
+
           <!-- Mismatch validation message -->
-          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Account Numbers do not match.
           </span>
         </div>
-        
 
         <div class="pb-6">
-          <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="bankDropdown"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Bank Name
           </label>
-          <select 
-            id="bankDropdown" 
+          <select
+            id="bankDropdown"
             name="bankDropdown"
             [(ngModel)]="selectedBankId"
             (change)="onBankChange()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a bank</option>
-            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+              {{ bank.name }}
+            </option>
           </select>
           <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
             Bank Name is required.
           </span>
         </div>
-        
+
         <div class="pb-6">
-          <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="branchDropdown"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Branch Name
           </label>
-          <select 
-            id="branchDropdown" 
+          <select
+            id="branchDropdown"
             name="branchDropdown"
             [(ngModel)]="selectedBranchId"
             (change)="onBranchChange()"
             [disabled]="!selectedBankId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a branch</option>
-            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+              {{ branch.name }}
+            </option>
           </select>
-          <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+          <span
+            *ngIf="isFieldInvalid('branchName')"
+            class="text-red-600 text-sm"
+          >
             Branch Name is required.
           </span>
         </div>
@@ -368,7 +419,15 @@
         <button
           type="button"
           (click)="saveCompanyData()"
-          [disabled]="!companyData.confirmAccNumber || !companyData.accNumber || !companyData.accHolderName || !companyData.bankName || !companyData.branchName || !companyData.foName || companyData.accNumber != companyData.confirmAccNumber"
+          [disabled]="
+            !companyData.confirmAccNumber ||
+            !companyData.accNumber ||
+            !companyData.accHolderName ||
+            !companyData.bankName ||
+            !companyData.branchName ||
+            !companyData.foName ||
+            companyData.accNumber != companyData.confirmAccNumber
+          "
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Submit
@@ -377,36 +436,6 @@
     </div>
   </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div *ngIf="itemId !== null && !isView">
     <div *ngIf="selectedPage === 'pageOne'">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
@@ -414,6 +443,28 @@
       </h2>
       <div>
         <div class="pb-6">
+          <label
+            for="regNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Favicon</label
+          >
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack mb-5"
+          />
+          <label
+            for="regNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Company Logo</label
+          >
+          <input
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack mb-5"
+          />
           <label
             for="regNumber"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -592,7 +643,10 @@
         </div>
 
         <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="accNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Account Number
           </label>
           <input
@@ -602,13 +656,19 @@
             (blur)="onBlur('accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          <span
+            *ngIf="isFieldInvalid('accNumber')"
+            class="text-red-600 text-sm"
+          >
             Account Number is required.
           </span>
         </div>
-        
+
         <div class="pb-6">
-          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="confirmAccNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Confirm Account Number
           </label>
           <input
@@ -619,14 +679,20 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-yellow-500 dark:placeholder-yellow-300"
             placeholder="Please re-enter the account number to submit changes"
           />
-          
+
           <!-- Required validation message -->
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Confirm Account Number is required.
           </span>
-        
+
           <!-- Mismatch validation message -->
-          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Account Numbers do not match.
           </span>
         </div>
@@ -637,32 +703,38 @@
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Bank Name</label
           >
-          <select 
-            id="bankDropdown" 
+          <select
+            id="bankDropdown"
             name="bankDropdown"
             [(ngModel)]="selectedBankId"
             (change)="onBankChange()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a bank</option>
-            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+              {{ bank.name }}
+            </option>
           </select>
         </div>
-        
+
         <div class="pb-6">
           <label
             for="branchDropdown"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Branch Name</label
           >
-          <select 
-            id="branchDropdown" 
+          <select
+            id="branchDropdown"
             name="branchDropdown"
             [(ngModel)]="selectedBranchId"
             (change)="onBranchChange()"
             [disabled]="!selectedBankId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a branch</option>
-            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+              {{ branch.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -678,7 +750,14 @@
         <button
           type="button"
           (click)="updateCompanyData()"
-          [disabled]="!companyData.confirmAccNumber || !companyData.accNumber || !companyData.accHolderName || !companyData.bankName || !companyData.branchName || companyData.accNumber != companyData.confirmAccNumber"
+          [disabled]="
+            !companyData.confirmAccNumber ||
+            !companyData.accNumber ||
+            !companyData.accHolderName ||
+            !companyData.bankName ||
+            !companyData.branchName ||
+            companyData.accNumber != companyData.confirmAccNumber
+          "
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Save
@@ -686,36 +765,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <div *ngIf="itemId !== null && isView">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
@@ -735,7 +784,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -751,7 +799,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -767,7 +814,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -783,7 +829,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -800,13 +845,8 @@
           type="email"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
-
-      
     </div>
-
-
 
     <h2 class="text-2xl mt-5 mb-10 text-textLight dark:text-textDark">
       Billing Information
@@ -828,7 +868,10 @@
       </div>
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Account Number
         </label>
         <input
@@ -838,7 +881,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div>
@@ -874,48 +916,6 @@
           />
         </div>
       </div>
-
     </div>
-
   </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

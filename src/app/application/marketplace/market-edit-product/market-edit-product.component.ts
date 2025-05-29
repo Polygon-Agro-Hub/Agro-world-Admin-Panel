@@ -35,12 +35,17 @@ export class MarketEditProductComponent implements OnInit {
   selectedVarieties!: Variety[];
   isVerityVisible = false;
   selectedImage!: any;
+  storedDisplayType!: string;
+  storedDiscountPercentage: number = 0.0;
+
+
+  isNoDiscount: boolean = true;
 
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   back(): void {
     this.router.navigate(['market/action/view-products-list']);
@@ -56,11 +61,15 @@ export class MarketEditProductComponent implements OnInit {
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
       console.log('product:', res);
+      this.storedDisplayType = res.displaytype;
       this.productObj = res;
+      console.log('this is product', this.productObj);
+      this.storedDisplayType
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.onCropChange();
-      this.productObj.varietyId = res.cropId;
+      // this.productObj.varietyId = res.cropId;
+      console.log('this is variety ID', this.productObj.varietyId);
       this.templateKeywords.update(() => res.tags || []);
       this.calculeSalePrice();
       if (res.promo) {
@@ -107,14 +116,14 @@ export class MarketEditProductComponent implements OnInit {
     this.selectedImage = sample[0].image;
   }
 
-  calculeSalePrice() {
-    this.productObj.discount =
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    this.productObj.salePrice =
-      this.productObj.normalPrice -
-      (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
-    console.log(this.productObj.salePrice);
-  }
+  // calculeSalePrice() {
+  //   this.productObj.discount =
+  //     (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+  //   this.productObj.salePrice =
+  //     this.productObj.normalPrice -
+  //     (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+  //   console.log(this.productObj.salePrice);
+  // }
 
   onCancel() {
     Swal.fire({
@@ -158,7 +167,8 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.startValue ||
         !this.productObj.changeby ||
         !this.productObj.discountedPrice ||
-        !this.productObj.salePrice
+        !this.productObj.salePrice ||
+        !this.productObj.maxQuantity
       ) {
         Swal.fire(
           'Warning',
@@ -175,7 +185,8 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.normalPrice ||
         !this.productObj.unitType ||
         !this.productObj.startValue ||
-        !this.productObj.changeby
+        !this.productObj.changeby ||
+        !this.productObj.maxQuantity
       ) {
         Swal.fire(
           'Warning',
@@ -235,6 +246,56 @@ export class MarketEditProductComponent implements OnInit {
       return [...keywords];
     });
   }
+
+  applyDiscount() {
+    this.isNoDiscount = false;
+    this.productObj.displaytype = this.storedDisplayType;
+    console.log('discounted price', this.productObj.discountedPrice);
+  
+    if (this.productObj.discountedPrice === 0) {
+      this.productObj.discountedPrice = this.storedDiscountPercentage;
+    }
+  
+    console.log('store', this.storedDisplayType);
+  }
+  
+
+  compaireDiscount() {
+    this.storedDiscountPercentage = this.productObj.discountedPrice;
+    this.productObj.displaytype = '';
+    this.productObj.discount = 0.0;
+    this.productObj.discountedPrice = 0.0;
+    this.isNoDiscount = true;
+    this.productObj.salePrice =
+      this.productObj.normalPrice - this.productObj.discount;
+  }
+
+  calculeSalePrice() {
+    if (
+      this.productObj.displaytype === 'D&AP' ||
+      this.productObj.displaytype === 'AP&SP&D'
+    ) {
+      this.productObj.salePrice =
+        this.productObj.normalPrice -
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+
+      this.productObj.discount =
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+    } else if (this.productObj.displaytype === 'AP&SP') {
+      this.productObj.discount =
+        this.productObj.normalPrice - this.productObj.salePrice;
+    } else {
+      this.productObj.salePrice =
+        this.productObj.normalPrice - this.productObj.discount;
+    }
+  }
+
+  // changeType() {
+  //   this.productObj.normalPrice = 0;
+  //   this.productObj.salePrice = 0;
+  //   this.productObj.discountedPrice = 0;
+  //   this.productObj.discountedPrice = 0;
+  // }
 }
 
 class Crop {
@@ -252,9 +313,13 @@ class MarketPrice {
   promo: boolean = false;
   unitType!: string;
   startValue!: number;
+  maxQuantity!: number;
   changeby!: number;
   tags: string = '';
-  category!: String;
+  category!: string;
+  // displayType!: string;
+  variety!: string
+
 
   selectId!: number;
   displaytype!: string;

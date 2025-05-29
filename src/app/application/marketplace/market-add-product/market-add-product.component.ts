@@ -305,6 +305,7 @@ class MarketPrice {
   displaytype!: string;
   salePrice: number = 0;
   discount: number = 0.0;
+  maxQuantity!: number;
 
   discountValue: number = 0;
 }

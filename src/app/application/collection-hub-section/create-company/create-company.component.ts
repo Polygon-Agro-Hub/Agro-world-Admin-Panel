@@ -58,6 +58,10 @@ export class CreateCompanyComponent {
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   invalidFields: Set<string> = new Set();
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
+  selectedLogoFile: File | null = null;
+  selectedFaviconFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -87,6 +91,139 @@ export class CreateCompanyComponent {
       foConNum: ['', Validators.required],
       foEmail: ['', [Validators.required]],
     });
+  }
+
+  async compressImage(
+    file: File,
+    maxWidth: number,
+    maxHeight: number,
+    quality: number
+  ): Promise<File> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            },
+            'image/jpeg',
+            quality
+          );
+        };
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async onLogoChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      try {
+        this.isLoading = true;
+        const compressedFile = await this.compressImage(
+          input.files[0],
+          800,
+          800,
+          0.7
+        );
+        this.selectedLogoFile = compressedFile;
+        this.companyData.logoFile = compressedFile;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.companyData.logo = e.target?.result as string;
+          this.isLoading = false;
+        };
+        reader.readAsDataURL(this.selectedLogoFile);
+      } catch (error) {
+        this.isLoading = false;
+        console.error('Error compressing image:', error);
+      }
+    }
+  }
+
+  async onFaviconChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      try {
+        this.isLoading = true;
+        const compressedFile = await this.compressImage(
+          input.files[0],
+          800,
+          800,
+          0.7
+        );
+        this.selectedFaviconFile = compressedFile;
+        this.companyData.faviconFile = compressedFile;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.companyData.favicon = e.target?.result as string;
+          this.isLoading = false;
+        };
+        reader.readAsDataURL(this.selectedFaviconFile);
+      } catch (error) {
+        this.isLoading = false;
+        console.error('Error compressing image:', error);
+      }
+    }
+  }
+
+  removeLogo(): void {
+    this.companyData.logo = '';
+    this.selectedLogoFile = null;
+
+    const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
+    if (logoInput) {
+      logoInput.value = '';
+    }
+
+    this.touchedFields['logo'] = true;
+  }
+
+  removeFavicon(): void {
+    this.companyData.favicon = '';
+    this.selectedFaviconFile = null;
+
+    const faviconInput = document.getElementById(
+      'faviconUpload'
+    ) as HTMLInputElement;
+    if (faviconInput) {
+      faviconInput.value = '';
+    }
+
+    this.touchedFields['favicon'] = true;
   }
 
   ngOnInit() {
@@ -249,6 +386,26 @@ export class CreateCompanyComponent {
   saveCompanyData() {
     console.log(this.companyData);
     this.isLoading = true;
+    const formData = new FormData();
+
+    Object.entries(this.companyData).forEach(([key, value]) => {
+      if (
+        key !== 'logoFile' &&
+        key !== 'faviconFile' &&
+        value !== null &&
+        value !== undefined
+      ) {
+        formData.append(key, String(value));
+      }
+      if (key === 'logoFile' && this.companyData.logoFile) {
+        formData.append('logo', this.companyData.logoFile);
+      } else if (key === 'faviconFile' && this.companyData.faviconFile) {
+        formData.append('favicon', this.companyData.faviconFile);
+      } else if (key !== 'logoFile' && key !== 'faviconFile') {
+        formData.append(key, (this.companyData as any)[key]);
+      }
+    });
+
     this.collectionCenterSrv.createCompany(this.companyData).subscribe(
       (response) => {
         this.isLoading = false;
@@ -387,4 +544,8 @@ class Company {
   foConCode!: string;
   foConNum!: string;
   foEmail!: string;
+  logo!: string;
+  favicon!: string;
+  logoFile?: File;
+  faviconFile?: File;
 }

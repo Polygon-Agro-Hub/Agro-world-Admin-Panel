@@ -121,6 +121,7 @@ import { DispatchComponent } from './application/dispatch-section/dispatch/dispa
 import { RecievedOrdersComponent } from './application/procurement-section/recieved-orders/recieved-orders.component';
 import { SalesdashOrdersComponent } from './application/dispatch-section/salesdash-orders/salesdash-orders.component';
 import { BannerListComponent } from './application/marketplace/banner-list/banner-list.component';
+import { AddDestributionCenterComponent } from './application/marketplace/add-destribution-center/add-destribution-center.component';
 export const routes: Routes = [
   {
     path: '',
@@ -686,6 +687,11 @@ export const routes: Routes = [
               {
                 path: 'add-product',
                 component: MarketAddProductComponent,
+              },
+
+              {
+                path: 'add-destribition-center',
+                component: AddDestributionCenterComponent,
               },
               {
                 path: 'view-products-list',

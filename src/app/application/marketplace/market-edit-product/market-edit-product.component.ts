@@ -37,8 +37,7 @@ export class MarketEditProductComponent implements OnInit {
   selectedImage!: any;
   storedDisplayType!: string;
   storedDiscountPercentage: number = 0.0;
-
-
+  discountPercentage: number = 0.0;
   isNoDiscount: boolean = true;
 
   constructor(

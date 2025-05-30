@@ -29,11 +29,6 @@ export class MarketEditProductComponent implements OnInit {
   announcer = inject(LiveAnnouncer);
   productObj: MarketPrice = new MarketPrice();
 
-  discountPercentage: number = 0.00;
-
-  isDisplayNameOnlyNumbers: boolean = false;
-
-
   productId!: number;
 
   cropsObj: Crop[] = [];
@@ -75,14 +70,6 @@ export class MarketEditProductComponent implements OnInit {
       // this.productObj.varietyId = res.cropId;
       console.log('this is variety ID', this.productObj.varietyId);
       this.templateKeywords.update(() => res.tags || []);
-      if (res.normalPrice && res.discount) {
-        this.discountPercentage = this.calculateDiscountPercentage(
-          res.normalPrice,
-          res.discount
-        );
-      } else {
-        this.discountPercentage = 0.00; // Default to 0 if no discount
-      }
       this.calculeSalePrice();
       if (res.promo) {
         this.productObj.promo = true;
@@ -91,13 +78,6 @@ export class MarketEditProductComponent implements OnInit {
       }
     });
   }
-
-  calculateDiscountPercentage(normalPrice: number, discountAmount: number): number {
-    console.log(discountAmount);
-    if (normalPrice <= 0) return 0;
-    const percentage = (discountAmount / normalPrice) * 100;
-    return parseFloat(percentage.toFixed(2)); // Ensures 2 decimal places
-}
 
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
@@ -175,62 +155,9 @@ export class MarketEditProductComponent implements OnInit {
   onSubmit() {
     this.updateTags();
     console.log(this.productObj.promo);
-    console.log('this is product object', this.productObj)
-
-    if (this.productObj.startValue <= 0) {
-      Swal.fire(
-        'Invalid Value',
-        'Starting Value must be greater than 0',
-        'warning'
-      );
-      return;
-    }
-  
-    // Check if changeby is invalid
-    if (this.productObj.changeby <= 0) {
-      Swal.fire(
-        'Invalid Value',
-        'Change By value must be greater than 0',
-        'warning'
-      );
-      return;
-    }
-
-    if (this.productObj.normalPrice <= 0) {
-      Swal.fire(
-        'Invalid Value',
-        'Actual value must be greater than 0',
-        'warning'
-      );
-      return;
-    }
-
-    if (this.discountPercentage < 0 || (!this.isNoDiscount && this.discountPercentage === 0)) {
-      Swal.fire(
-        'Invalid Value',
-        this.discountPercentage < 0
-          ? 'Discount percentage cannot be less than 0'
-          : 'Discount percentage must be greater than 0',
-        'warning'
-      );
-      return;
-    }
-
-
-    if (this.productObj.discount < 0 || (!this.isNoDiscount && this.productObj.discount === 0)) {
-      Swal.fire(
-        'Invalid Value',
-        this.productObj.discount < 0
-          ? 'Discount value cannot be less than 0'
-          : 'Discount value must be greater than 0',
-        'warning'
-      );
-      return;
-    }
 
     if (this.productObj.promo) {
       if (
-        this.isDisplayNameOnlyNumbers ||
         !this.productObj.category ||
         !this.productObj.cropName ||
         !this.productObj.varietyId ||
@@ -244,14 +171,13 @@ export class MarketEditProductComponent implements OnInit {
       ) {
         Swal.fire(
           'Warning',
-          'Please fill in all the required fields correctly',
+          'Please fill in all the required fields',
           'warning'
         );
         return;
       }
     } else {
       if (
-        this.isDisplayNameOnlyNumbers ||
         !this.productObj.category ||
         !this.productObj.cropName ||
         !this.productObj.varietyId ||
@@ -263,7 +189,7 @@ export class MarketEditProductComponent implements OnInit {
       ) {
         Swal.fire(
           'Warning',
-          'Please fill in all the required fields correctly',
+          'Please fill in all the required fields',
           'warning'
         );
         return;
@@ -381,8 +307,8 @@ class MarketPrice {
   cropName!: string;
   varietyId!: number;
   displayName!: string;
-  normalPrice!: number;
-  discountedPrice!: number;
+  normalPrice: number = 0;
+  discountedPrice: number = 0;
   promo: boolean = false;
   unitType!: string;
   startValue!: number;
@@ -396,8 +322,8 @@ class MarketPrice {
 
   selectId!: number;
   displaytype!: string;
-    salePrice: number = 0;
-  discount!: number;
+  salePrice: number = 0;
+  discount: number = 0.0;
 }
 
 class Variety {

@@ -1,17 +1,24 @@
 <button (click)="back()" class="mb-10 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
-<!-- <form> -->
+<form>
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
     <p class="text-lg text-black font-semibold dark:text-textDark">
       Edit Product
     </p>
     <div>
-      <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
+      <button
+        class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
+        (click)="onCancel()"
+      >
         Cancel
       </button>
-      <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">
+      <button
+        class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2"
+        type="submit"
+        (click)="onSubmit()"
+      >
         Save
       </button>
     </div>
@@ -19,45 +26,44 @@
 
   <div class="flex flex-row justify-between">
     <!-- form component -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
+    <div
+      class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]"
+    >
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
-        <select id="category" name="category"
+        <select
+          id="category"
+          name="category"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.category">
+          [(ngModel)]="productObj.category"
+        >
           <option selected disabled value="">--Display type--</option>
           <option value="Retail">Retail</option>
           <option value="WholeSale">WholeSale</option>
         </select>
-
       </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
-        <input 
-          type="text" 
-          id="cropName" 
-          name="cropName" 
-          [(ngModel)]="productObj.cropName" 
-          required 
-          #displayNameField="ngModel" 
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+        <input
+          type="text"
+          id="cropName"
+          name="cropName"
+          [(ngModel)]="productObj.cropName"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-      
-        <!-- Validation messages -->
-        <div *ngIf="displayNameField.touched && !productObj.cropName" class="text-red-500 mt-1 text-sm">
-          Display Name is required.
-        </div>
-        <div *ngIf="displayNameField.touched && isDisplayNameOnlyNumbers" class="text-red-500 mt-1 text-sm">
-          Display Name cannot be only numbers.
-        </div>
       </div>
+
       <!-- Crop Selection -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-        <select id="selectId" name="selectId"
+        <select
+          id="selectId"
+          name="selectId"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.selectId" (change)="onCropChange()">
+          [(ngModel)]="productObj.selectId"
+          (change)="onCropChange()"
+        >
           <option selected disabled value="">--- Select Crop ---</option>
           <option *ngFor="let cropItem of cropsObj" [value]="cropItem.cropId">
             {{ cropItem.cropNameEnglish }}
@@ -65,15 +71,36 @@
         </select>
       </div>
 
+      <!-- <div>
+        <select
+          id="variety"
+          name="variety"
+          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [(ngModel)]="productObj.variety"
+        >
+        <option selected></option>
+          <option value="D&AP">With Discount and Actual Price</option>
+          <option value="AP&SP">With Actual Price and Sale Price</option>
+          <option value="AP&SP&D">
+            With Actual Price,Sale Price and Discount
+          </option>
+        </select>
+      </div> -->
+
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
         <select
           id="variety"
           name="variety"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.varietyId" (change)="selectVerityImage()">
+          [(ngModel)]="productObj.varietyId"
+          (change)="selectVerityImage()"
+        >
           <option selected disabled>--- Select Variety ---</option>
-          <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
+          <option
+            *ngFor="let variety of selectedVarieties"
+            [value]="variety.id"
+          >
             {{ variety.varietyEnglish }}
           </option>
         </select>
@@ -123,8 +150,12 @@
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
-        <select id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+        <select
+          id="displaytype"
+          name="displaytype"
+          [(ngModel)]="productObj.displaytype"
+          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        >
           <option selected></option>
           <option value="D&AP">With Discount and Actual Price</option>
           <option value="AP&SP">With Actual Price and Sale Price</option>
@@ -136,44 +167,16 @@
 
       <div class="mb-6" *ngIf="(productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D') && productObj.promo">
         <label class="text-[#534E4E]">Discount Percentage *</label>
-        <input type="number" min="0.0" id="discountedPrice" name="discountedPrice" [(ngModel)]="discountPercentage"
+        <input
+          type="number"
+          min="0.0"
+          id="discountedPrice"
+          name="discountedPrice"
+          [(ngModel)]="productObj.discountedPrice"
           (change)="calculeSalePrice()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-      </div>
-
-      <!-- Discount input when displaytype is AP&SP -->
-      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
-        <label class="text-[#534E4E]">Discount Value *</label>
-        <input 
-          type="number" 
-          min="0.00" 
-          step="0.01"  
-          id="discountValue" 
-          name="discountValue" 
-          [(ngModel)]="productObj.discount " 
-          required 
-          #discountValueField="ngModel" 
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-      
-        <div *ngIf="discountValueField.touched && !productObj.discount" class="text-red-500 mt-1 text-sm">
-          Discount Value is required.
-        </div>
       </div>
-
-      <!-- Discount input when displaytype is NOT AP&SP (default: percentage) -->
-      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype !== 'AP&SP'">
-        <label class="text-[#534E4E]">Discount Percentage *</label>
-        <input type="number" min="0.00" step="0.01" id="discountedPrice" name="discountedPrice" 
-               [(ngModel)]="discountPercentage" required #discountPercentageField="ngModel" 
-               (change)="calculeSalePrice()"
-               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-      
-        <div *ngIf="discountPercentageField.touched && !discountPercentage" class="text-red-500 mt-1 text-sm">
-          Discount Percentage is required.
-        </div>
-      </div>
-
 
       <div class="mb-6" >
         <label class="text-[#534E4E] dark:text-textDark">{{ isNoDiscount === true ? 'Price Per kg *' : 'Actual Price Per kg *' }}</label>
@@ -190,10 +193,22 @@
 
       <div class="mb-6" *ngIf="productObj.promo && (productObj.displaytype === 'AP&SP&D')">
         <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="number" min="0.0" id="salePrice" [value]="productObj.discountedPrice.toFixed(2)"
+        <input
+          type="number"
+          min="0.0"
+          id="salePrice"
+          [value]="productObj.salePrice"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           disabled
         />
+      </div>
+
+      <div class="mb-6"
+        *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
+        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
+        <input type="number" min="0.00" step="0.01" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
+        (change)="calculeSalePrice()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <div class="mb-6">
@@ -201,18 +216,28 @@
         <section>
           <mat-form-field class="w-[100%]">
             <mat-label>tags</mat-label>
-            <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords">
+            <mat-chip-grid
+              #templateChipGrid
+              aria-label="Enter template form keywords"
+              [(ngModel)]="templateKeywords"
+            >
               @for (keyword of templateKeywords(); track keyword) {
               <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
                 {{ keyword }}
-                <button matChipRemove aria-label="'remove template form' + keyword">
+                <button
+                  matChipRemove
+                  aria-label="'remove template form' + keyword"
+                >
                   <mat-icon>cancel</mat-icon>
                 </button>
               </mat-chip-row>
               }
             </mat-chip-grid>
-            <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
-              (matChipInputTokenEnd)="addTemplateKeyword($event)" />
+            <input
+              placeholder="New keyword..."
+              [matChipInputFor]="templateChipGrid"
+              (matChipInputTokenEnd)="addTemplateKeyword($event)"
+            />
           </mat-form-field>
         </section>
       </div>
@@ -329,14 +354,22 @@
         </div>
       </div>
 
-      <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack">
+      <div
+        class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack"
+      >
         <p class="text-lg text-balck font-medium mb-5 dark:text-textDark">
           Quantity
         </p>
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
-          <select id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+          <label class="text-lg text-[#534E4E] dark:text-textDark"
+            >Default Unit Type *</label
+          >
+          <select
+            id="unitType"
+            name="unitType"
+            [(ngModel)]="productObj.unitType"
+            class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          >
             <option selected></option>
             <option value="Kg">Kg</option>
             <option value="g">g</option>
@@ -355,31 +388,6 @@
             [(ngModel)]="productObj.startValue"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-        
-          <!-- Validation Error Messages -->
-          <!-- <div *ngIf="startValueField.touched && startValueField.errors" class="text-red-500 mt-1 text-sm">
-            <div *ngIf="startValueField.errors?.['required']">
-              Starting Value is required.
-            </div>
-            <div *ngIf="startValueField.errors?.['min']">
-              Starting Value must be greater than 0 (e.g., 0.01).
-            </div>
-          </div> -->
-        </div>
-
-        <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Maximum Quantity *</label
-          >
-          <input
-          type="number"
-          min="0.0"
-          id="maxQuantity"
-          name="maxQuantity"
-          [(ngModel)]="productObj.maxQuantity"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          
         </div>
 
         <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
@@ -409,20 +417,11 @@
             [(ngModel)]="productObj.changeby"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-        
-          <!-- Validation Error Messages -->
-          <!-- <div *ngIf="changebyField.touched && changebyField.errors" class="text-red-500 mt-1 text-sm">
-            <div *ngIf="changebyField.errors?.['required']">
-              Increase/Decrease value is required.
-            </div>
-            <div *ngIf="changebyField.errors?.['min']">
-              Value must be greater than 0 (e.g., 0.01).
-            </div>
-          </div> -->
         </div>
 
         
       </div>
     </div>
   </div>
-<!-- </form> -->
+</form>
+<!-- [(ngModel)]="productObj.varietyId" -->

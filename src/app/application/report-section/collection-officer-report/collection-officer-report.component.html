@@ -43,6 +43,7 @@
             placeholder="Search.."
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="searchNIC"
+            (keydown.enter)="searchCultivations()"
           />
           <button
             type="button"
@@ -94,6 +95,11 @@
             <th
               class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
             >
+              Emp ID
+            </th>
+            <th
+              class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+            >
               Officer Name
             </th>
             <th
@@ -104,7 +110,7 @@
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
             >
-              Center Name
+              Centre Name
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
@@ -167,7 +173,10 @@
                     }
             "
           >
-            <td class="py-3 text-gray-500 dark:text-textDark text-left">
+          <td class="py-3 text-gray-500 dark:text-textDark text-left">
+            {{ item.empId }}
+          </td>
+            <td class="py-3 px-4 text-gray-500 dark:text-textDark text-left">
               {{ item.firstNameEnglish }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
@@ -230,7 +239,8 @@
                     item.id,
                     item.firstNameEnglish,
                     item.lastNameEnglish,
-                    item.QRcode
+                    item.QRcode,
+                    item.empId
                   )
                 "
               >

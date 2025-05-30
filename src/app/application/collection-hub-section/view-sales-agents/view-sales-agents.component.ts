@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
-// import { DatePipe } from '@angular/common';
-
 import {
   HttpClient,
   HttpClientModule,
@@ -14,7 +12,6 @@ import { Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-
 import { FormsModule } from '@angular/forms';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
@@ -25,30 +22,26 @@ import { TokenService } from '../../../services/token/services/token.service';
   selector: 'app-view-sales-agents',
   standalone: true,
   imports: [
-            HttpClientModule,
-            CommonModule,
-            LoadingSpinnerComponent,
-            NgxPaginationModule,
-            FormsModule,
-            DropdownModule,
-            
+    HttpClientModule,
+    CommonModule,
+    LoadingSpinnerComponent,
+    NgxPaginationModule,
+    FormsModule,
+    DropdownModule,
   ],
   templateUrl: './view-sales-agents.component.html',
-  styleUrl: './view-sales-agents.component.css'
+  styleUrl: './view-sales-agents.component.css',
 })
 export class ViewSalesAgentsComponent implements OnInit {
-
   salesAgentsArr: SalesAgent[] = [];
-  
-
   isLoading = false;
   isPopupVisible = false;
-
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
   hasData: boolean = true;
   searchText: string = '';
+  statusFilter: string = '';
 
   statusArr = [
     { status: 'Approved', value: 'Approved' },
@@ -56,60 +49,79 @@ export class ViewSalesAgentsComponent implements OnInit {
     { status: 'Not Approved', value: 'Not Approved' },
   ];
 
-  statusFilter: string = '';
-
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService,
-    private salesAgentsService: SalesAgentsService,
+    private salesAgentsService: SalesAgentsService
   ) {}
 
   ngOnInit() {
-    
     this.fetchAllSalesAgents();
   }
 
-  fetchAllSalesAgents(page: number = 1, limit: number = this.itemsPerPage, search: string = this.searchText, status: string = this.statusFilter) {
-    
-    
+  fetchAllSalesAgents(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchText,
+    status: string = this.statusFilter
+  ) {
     this.isLoading = true;
-    this.salesAgentsService.getAllSalesAgents( page, limit, search, status).subscribe(
-      (data) => {
-        console.log(data);
-        this.isLoading = false;
-        this.salesAgentsArr = data.items;
-        
-        this.hasData = this.salesAgentsArr.length > 0;
-        this.totalItems = data.total;
-      },
-      (error) => {
-        console.error('Error fetch news:', error);
-        if (error.status === 401) {
+    this.salesAgentsService
+      .getAllSalesAgents(page, limit, search, status)
+      .subscribe(
+        (data) => {
           this.isLoading = false;
+          this.salesAgentsArr = data.items;
+          this.hasData = this.salesAgentsArr.length > 0;
+          this.totalItems = data.total;
+        },
+        (error) => {
+          if (error.status === 401) {
+            this.isLoading = false;
+          }
         }
-      }
-    );
+      );
   }
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.statusFilter); // Include itemsPerPage
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.statusFilter
+    );
   }
 
   onSearch() {
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.statusFilter);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.statusFilter
+    );
   }
 
   offSearch() {
     this.searchText = '';
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.statusFilter);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.statusFilter
+    );
   }
 
   applyFilters() {
-    this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.statusFilter);
+    this.fetchAllSalesAgents(
+      this.page,
+      this.itemsPerPage,
+      this.searchText,
+      this.statusFilter
+    );
   }
 
   Back(): void {
@@ -117,8 +129,9 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   editCompanyHead(id: number) {
-    
-    this.navigatePath(`/steckholders/action/sales-agents/edit-sales-agents/${id}`);
+    this.navigatePath(
+      `/steckholders/action/sales-agents/edit-sales-agents/${id}`
+    );
   }
 
   navigatePath(path: string) {
@@ -126,8 +139,6 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   deleteSalesAgent(id: any) {
-    console.log(id);
-    console.log('clicked');
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this sales agent? This action cannot be undone.',
@@ -153,7 +164,6 @@ export class ViewSalesAgentsComponent implements OnInit {
             }
           },
           (error) => {
-            console.error('Error deleting Sales Agent:', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the Sales Agent.',
@@ -168,11 +178,10 @@ export class ViewSalesAgentsComponent implements OnInit {
   openPopup(item: any) {
     this.isPopupVisible = true;
 
-    // HTML structure for the popup
     const tableHtml = `
       <div class="container mx-auto">
         <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstName}</h1>
-        <div >
+        <div>
           <p class="text-center">Are you sure you want to approve or reject this officer?</p>
         </div>
         <div class="flex justify-center mt-4">
@@ -184,10 +193,9 @@ export class ViewSalesAgentsComponent implements OnInit {
 
     Swal.fire({
       html: tableHtml,
-      showConfirmButton: false, // Hide default confirm button
+      showConfirmButton: false,
       width: 'auto',
       didOpen: () => {
-        // Handle the "Approve" button click
         document
           .getElementById('approveButton')
           ?.addEventListener('click', () => {
@@ -205,7 +213,6 @@ export class ViewSalesAgentsComponent implements OnInit {
                     showConfirmButton: false,
                     timer: 3000,
                   });
-                  this.isLoading = false;
                   this.fetchAllSalesAgents();
                 } else {
                   Swal.fire({
@@ -217,7 +224,7 @@ export class ViewSalesAgentsComponent implements OnInit {
                   });
                 }
               },
-              (err) => {
+              () => {
                 this.isLoading = false;
                 Swal.fire({
                   icon: 'error',
@@ -230,7 +237,6 @@ export class ViewSalesAgentsComponent implements OnInit {
             );
           });
 
-        // Handle the "Reject" button click
         document
           .getElementById('rejectButton')
           ?.addEventListener('click', () => {
@@ -248,7 +254,6 @@ export class ViewSalesAgentsComponent implements OnInit {
                     showConfirmButton: false,
                     timer: 3000,
                   });
-                  this.isLoading = false;
                   this.fetchAllSalesAgents();
                 } else {
                   Swal.fire({
@@ -260,7 +265,7 @@ export class ViewSalesAgentsComponent implements OnInit {
                   });
                 }
               },
-              (err) => {
+              () => {
                 this.isLoading = false;
                 Swal.fire({
                   icon: 'error',
@@ -277,9 +282,10 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   viewSalesAgent(id: number) {
-    this.navigatePath(`/steckholders/action/sales-agents/preview-sales-agents/${id}`);
+    this.navigatePath(
+      `/steckholders/action/sales-agents/preview-sales-agents/${id}`
+    );
   }
-
 }
 
 class SalesAgent {
@@ -291,9 +297,4 @@ class SalesAgent {
   phoneCode1!: string;
   phoneNumber1!: string;
   nic!: string;
- 
-  
 }
-
-
-

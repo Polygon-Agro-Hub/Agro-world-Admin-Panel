@@ -37,7 +37,12 @@ interface Customers {
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, FormsModule, NgxPaginationModule],
+  imports: [
+    CommonModule,
+    LoadingSpinnerComponent,
+    FormsModule,
+    NgxPaginationModule,
+  ],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css',
 })
@@ -57,7 +62,11 @@ export class CustomersComponent {
     private customerService: CustomersService,
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) {}
+
+  back(): void {
+    this.router.navigate(['sales-dash']);
+  }
 
   ngOnInit() {
     this.fetchAllCustomers();
@@ -97,7 +106,11 @@ export class CustomersComponent {
       });
   }
 
-  fetchAllCustomers(page: number = this.page, limit: number = this.itemsPerPage, search: string = this.searchText) {
+  fetchAllCustomers(
+    page: number = this.page,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchText
+  ) {
     this.customerService.getCustomers(page, limit, search).subscribe(
       (response: any) => {
         console.log(response);
@@ -111,11 +124,11 @@ export class CustomersComponent {
     );
   }
 
-  onSearch(){
+  onSearch() {
     this.fetchAllCustomers();
   }
 
-  offSearch(){
+  offSearch() {
     this.searchText = '';
     this.fetchAllCustomers();
   }

@@ -8,15 +8,14 @@
   Back
 </button>
 
-<p class="text-xl my-8 text-textLight dark:text-textDark">Farmer List</p>
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1100px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex justify-end items-center mb-8">
+    <div class="flex justify-between items-center mb-8">
+      <p class="text-xl my-8 text-textLight dark:text-textDark">Farmer List</p>
       <div class="flex justify-center items-end mr-8">
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
@@ -26,6 +25,7 @@
             placeholder="Search.."
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="searchNIC"
+            (keyup.enter)="searchPlantCareUsers()"
           />
           <button
             type="button"
@@ -82,26 +82,30 @@
               First Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
             >
               Last Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
             >
               Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
             >
               NIC
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View users current assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Current
             </th>
             <th
+            *ngIf="permissionService.hasPermission('View users fixed assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
               class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Fixed
@@ -123,16 +127,19 @@
             <td class="px-4 py-3 text-start text-textLight dark:text-textDark">
               {{ item.firstName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.lastName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.phoneNumber }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.NICnumber }}
             </td>
-            <td class="px-3 py-3 text-center">
+            <td
+            *ngIf="permissionService.hasPermission('View users current assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-3 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="
@@ -154,7 +161,10 @@
                 </svg>
               </button>
             </td>
-            <td class="px-3 py-3 text-center">
+            <td
+            *ngIf="permissionService.hasPermission('View users fixed assets by category') ||
+                  tokenService.getUserDetails().role === '1'"
+                   class="px-3 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewFixedAsset(item.id, item.firstName, item.lastName)"

@@ -37,7 +37,7 @@ export class ReportCurrentAssertsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private assertService: AssetsService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['userId'];
@@ -49,7 +49,6 @@ export class ReportCurrentAssertsComponent implements OnInit {
     this.isLoading = true;
     this.assertService.getCurrentAssertById(id).subscribe((responce) => {
       this.isLoading = false;
-      console.log(responce);
       this.assertReport = responce;
     });
   }

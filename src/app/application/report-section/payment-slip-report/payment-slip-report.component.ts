@@ -30,6 +30,7 @@ export class PaymentSlipReportComponent {
   firstName: string = '';
   lastName: string = '';
   QRcode: string = '';
+  empId: string = '';
 
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
@@ -45,6 +46,7 @@ export class PaymentSlipReportComponent {
       this.firstName = params['firstName'] ? params['firstName'] : '';
       this.lastName = params['lastName'] ? params['lastName'] : '';
       this.QRcode = params['QRcode'] ? params['QRcode'] : '';
+      this.empId = params['empId'] ? params['empId'] : '';
       
     });
     this.loadPayments();
@@ -111,6 +113,7 @@ clearSearch(): void {
 class Payment {
   id!: number;
   userId!: number;
+  invNo!: string;
   firstName!: string;
   lastName!: string;
   NICnumber!: string;

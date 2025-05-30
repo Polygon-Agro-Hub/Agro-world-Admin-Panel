@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component'
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-plantcare',
@@ -18,7 +20,7 @@ export class PlantcareComponent {
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
 
-   constructor(private router: Router){}
+   constructor(private router: Router, public permissionService: PermissionService, public tokenService: TokenService,){}
   
 
   togglePopupNews() {

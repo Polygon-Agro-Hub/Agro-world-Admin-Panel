@@ -1,28 +1,25 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import {
   HttpClient,
   HttpClientModule,
   HttpHeaders,
-} from "@angular/common/http";
+} from '@angular/common/http';
 import {
   FormGroup,
   FormBuilder,
   Validators,
   ReactiveFormsModule,
   FormsModule,
-} from "@angular/forms";
-import { CommonModule } from "@angular/common";
-import { ActivatedRoute, Router } from "@angular/router";
-import Swal from "sweetalert2";
-import {
-  AngularEditorConfig,
-  AngularEditorModule,
-} from "@kolkov/angular-editor";
-import { NewsService } from "../../../services/plant-care/news.service";
-import { log } from "console";
-import { environment } from "../../../environment/environment";
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-import { TokenService } from "../../../services/token/services/token.service";
+} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
+
+import { NewsService } from '../../../services/plant-care/news.service';
+import { environment } from '../../../environment/environment';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { QuillModule } from 'ngx-quill';
 
 interface NewsItem {
   id: number;
@@ -40,21 +37,21 @@ interface NewsItem {
 }
 
 @Component({
-  selector: "app-create-news",
+  selector: 'app-create-news',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    AngularEditorModule,
+    QuillModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: "./create-news.component.html",
-  styleUrls: ["./create-news.component.css"],
+  templateUrl: './create-news.component.html',
+  styleUrls: ['./create-news.component.css'],
 })
 export class CreateNewsComponent {
-  selectedLanguage: "english" | "sinhala" | "tamil" = "english";
+  selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   createNewsObj: CreateNews = new CreateNews();
   validatedObj: CreateNews = new CreateNews();
   selectedFile: File | null = null;
@@ -68,78 +65,42 @@ export class CreateNewsComponent {
   isOnlyNumbers: boolean = false;
   isTamilValid: boolean = true;
   isLoading = false;
-  createDate: string = "";
-  expireDate: string = "";
+  createDate: string = '';
+  expireDate: string = '';
   today: string = this.getTodayDate();
   isPublishAfterExpireValid: boolean = true;
   isPublishAfterExpireValidEditNews: boolean = true;
-  currentPublishDate: string = "";
-  currentExpireDate: string = "";
-  // isAnyFieldMissing:boolean = false;
+  currentPublishDate: string = '';
+  currentExpireDate: string = '';
 
-  editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: "300px",
-    minHeight: "300px",
-    maxHeight: "auto",
-    width: "auto",
-    minWidth: "0",
-    translate: "yes",
-    enableToolbar: true,
-    showToolbar: true,
-    placeholder: "Enter text here...",
-    defaultParagraphSeparator: "",
-    defaultFontName: "",
-    defaultFontSize: "",
-    fonts: [
-      { class: "arial", name: "Arial" },
-      { class: "times-new-roman", name: "Times New Roman" },
-      { class: "calibri", name: "Calibri" },
-      { class: "comic-sans-ms", name: "Comic Sans MS" },
-      { class: "georgia", name: "Georgia" },
-      { class: "verdana", name: "Verdana" },
-      { class: "helvetica", name: "Helvetica" },
-      { class: "fm-abaya", name: "FM Abhaya" }, // Sinhala font
-      { class: "iskoola-pota", name: "Iskoola Pota" }, // Sinhala font
-      { class: "abhaya-libre", name: "Abhaya Libre" }, // Sinhala font
-      { class: "latha", name: "Latha" }, // Tamil font
-      { class: "baloo-tamil", name: "Baloo Tamil" }, // Tamil font
-      { class: "bamini", name: "Bamini" }, // Tamil font
+  quillConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ header: 1 }, { header: 2 }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ size: ['large', 'huge'] }],
+      [{ align: [] }],
+      ['clean'],
+      [{ font: [] }],
     ],
-    customClasses: [
-      {
-        name: "quote",
-        class: "quote",
+    syntax: false,
+    modules: {
+      clipboard: {
+        matchVisual: false,
+        matchers: [
+          [
+            'span',
+            (node: { style: { fontSize: any } }, delta: any) => {
+              // Remove font-size styles from pasted content
+              if (node.style && node.style.fontSize) {
+                delete node.style.fontSize;
+              }
+              return delta;
+            },
+          ],
+        ],
       },
-      {
-        name: "redText",
-        class: "redText",
-      },
-      {
-        name: "titleText",
-        class: "titleText",
-        tag: "h1",
-      },
-    ],
-
-    uploadWithCredentials: false,
-    sanitize: false,
-    toolbarPosition: "top",
-    toolbarHiddenButtons: [
-      [
-        "insertImage",
-        // 'backgroundColor',
-        "customClasses",
-        "insertVideo",
-        "insertHorizontalRule",
-        "toggleEditorMode",
-        "indent",
-        "outdent",
-        "fontSize",
-        "heading",
-      ],
-    ],
+    },
   };
 
   constructor(
@@ -148,36 +109,11 @@ export class CreateNewsComponent {
     private route: ActivatedRoute,
     private newsService: NewsService,
     private router: Router,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {}
 
-  // validateSinhala(event: any) {
-  //   const sinhalaRegex = /^[\u0D80-\u0DFF\s]+$/; // Unicode range for Sinhala characters
-  //   const inputValue = event.target.value;
-
-  //   // Check if the input matches the Sinhala regex
-  //   this.isSinhalaValid = sinhalaRegex.test(inputValue);
-  // }
-
-  // validateEnglish(event: any) {
-  //   const englishRegex = /^[A-Za-z\s]+$/; // Regex for English characters
-  //   const inputValue = event.target.value;
-
-  //   // Check if the input matches the English regex
-  //   this.isEnglishValid = englishRegex.test(inputValue);
-  // }
-
-  // validateTamil(event: any) {
-  //   const tamilRegex = /^[\u0B80-\u0BFF\s]+$/; // Unicode range for Tamil characters
-  //   const inputValue = event.target.value;
-
-  //   // Check if the input matches the Tamil regex
-  //   this.isTamilValid = tamilRegex.test(inputValue);
-  // }
-
   validateTitleEnglish(value: string): void {
-    // Regular expression to disallow numbers-only input
-    const regex = /[a-zA-Z!@#$%^&*(),.?":{}|<>]/; // Ensures the presence of at least one non-digit character
+    const regex = /[a-zA-Z!@#$%^&*(),.?":{}|<>]/;
     this.isEnglishValid = regex.test(value.trim());
   }
 
@@ -188,19 +124,9 @@ export class CreateNewsComponent {
   }
 
   isSinhalaAndNumberOnly(input: string): string {
-    // Regular expression for Sinhala characters and numbers
     const sinhalaAndNumberRegex =
       /^[\u0D80-\u0DFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
     this.isSinhalaValid = sinhalaAndNumberRegex.test(input.trim());
-
-    // if (!sinhalaAndNumberRegex.test(input)) {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Unsuccessful',
-    //     text: 'It allows only Sinhala characters and numbers!',
-    //   });
-    //   return '';
-    // }
     return input;
   }
 
@@ -208,208 +134,176 @@ export class CreateNewsComponent {
     const tamilRegex =
       /^[\u0B80-\u0BFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
     this.isTamilValid = tamilRegex.test(input.trim());
-    // if (!tamilRegex.test(input )) {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Unsuccess',
-    //     text: 'It allows only Tamil characters and numbers!',
-    //   });
-    //   return '';
-    // }
     return input;
   }
 
   createNews() {
-    console.log("clicked");
+    console.log('clicked');
     console.log(this.createNewsObj);
 
     if (!this.isPublishAfterExpireValid) {
       Swal.fire({
-        icon: "error",
-        title: "Invalid Dates",
-        text: "Please check the publish date and expire date again",
+        icon: 'error',
+        title: 'Invalid Dates',
+        text: 'Please check the publish date and expire date again',
       });
       return;
     }
 
     const missingFields: string[] = [];
 
-    // Check for missing fields and add to the array
-    if (this.createNewsObj.titleEnglish.trim() === "") {
-      missingFields.push("Title (English)");
+    if (this.createNewsObj.titleEnglish.trim() === '') {
+      missingFields.push('Title (English)');
     }
-    if (this.createNewsObj.descriptionEnglish.trim() === "") {
-      missingFields.push("Description (English)");
+    if (this.createNewsObj.descriptionEnglish.trim() === '') {
+      missingFields.push('Description (English)');
     }
-    if (this.createNewsObj.titleSinhala.trim() === "") {
-      missingFields.push("Title (Sinhala)");
+    if (this.createNewsObj.titleSinhala.trim() === '') {
+      missingFields.push('Title (Sinhala)');
     }
-    if (this.createNewsObj.descriptionSinhala.trim() === "") {
-      missingFields.push("Description (Sinhala)");
+    if (this.createNewsObj.descriptionSinhala.trim() === '') {
+      missingFields.push('Description (Sinhala)');
     }
-    if (this.createNewsObj.titleTamil.trim() === "") {
-      missingFields.push("Title (Tamil)");
+    if (this.createNewsObj.titleTamil.trim() === '') {
+      missingFields.push('Title (Tamil)');
     }
-    if (this.createNewsObj.descriptionTamil.trim() === "") {
-      missingFields.push("Description (Tamil)");
+    if (this.createNewsObj.descriptionTamil.trim() === '') {
+      missingFields.push('Description (Tamil)');
     }
-    if (this.createNewsObj.publishDate.trim() === "") {
-      missingFields.push("Publishe Date");
+    if (this.createNewsObj.publishDate.trim() === '') {
+      missingFields.push('Publish Date');
     }
-    if (this.createNewsObj.expireDate.trim() === "") {
-      missingFields.push("Expire Date");
+    if (this.createNewsObj.expireDate.trim() === '') {
+      missingFields.push('Expire Date');
+    }
+    if (!this.selectedFile) {
+      missingFields.push('Image');
     }
 
-    // If there are any missing fields, show a Swal popup with the list
     if (missingFields.length > 0) {
       Swal.fire({
-        icon: "error",
-        title: "Missing Fields",
+        icon: 'error',
+        title: 'Missing Fields',
         html: `<strong>Please fill in the following fields:</strong><ul>${missingFields
           .map((field) => `<li>${field}</li>`)
-          .join("")}</ul>`,
+          .join('')}</ul>`,
       });
-      return; // Stop further execution if fields are missing
+      return;
     }
 
     const formData = new FormData();
     formData.append(
-      "titleEnglish",
-      this.isEnglishOnly(this.createNewsObj.titleEnglish),
+      'titleEnglish',
+      this.isEnglishOnly(this.createNewsObj.titleEnglish)
     );
     formData.append(
-      "titleSinhala",
-      this.isSinhalaAndNumberOnly(this.createNewsObj.titleSinhala),
+      'titleSinhala',
+      this.isSinhalaAndNumberOnly(this.createNewsObj.titleSinhala)
     );
     formData.append(
-      "titleTamil",
-      this.isTamilAndNumberOnly(this.createNewsObj.titleTamil),
+      'titleTamil',
+      this.isTamilAndNumberOnly(this.createNewsObj.titleTamil)
     );
     formData.append(
-      "descriptionEnglish",
-      this.isEnglishOnly(this.createNewsObj.descriptionEnglish),
+      'descriptionEnglish',
+      this.isEnglishOnly(this.createNewsObj.descriptionEnglish)
     );
     formData.append(
-      "descriptionSinhala",
-      this.isSinhalaAndNumberOnly(this.createNewsObj.descriptionSinhala),
+      'descriptionSinhala',
+      this.isSinhalaAndNumberOnly(this.createNewsObj.descriptionSinhala)
     );
     formData.append(
-      "descriptionTamil",
-      this.isTamilAndNumberOnly(this.createNewsObj.descriptionTamil),
+      'descriptionTamil',
+      this.isTamilAndNumberOnly(this.createNewsObj.descriptionTamil)
     );
-    formData.append("status", this.createNewsObj.status);
-    formData.append("publishDate", this.createNewsObj.publishDate);
-    formData.append("expireDate", this.createNewsObj.expireDate);
+    formData.append('status', this.createNewsObj.status);
+    formData.append('publishDate', this.createNewsObj.publishDate);
+    formData.append('expireDate', this.createNewsObj.expireDate);
     if (this.selectedFile) {
-      const allowedTypes = ["image/jpeg", "image/png"]; // Allowed MIME types
+      const allowedTypes = ['image/jpeg', 'image/png'];
 
       if (!allowedTypes.includes(this.selectedFile.type)) {
         Swal.fire({
-          icon: "error",
-          title: "Invalid Image Type",
-          text: "Only JPEG and PNG images are allowed. Please upload a valid image.",
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
         });
-        this.selectedFile = null; // Clear the invalid file
-        return; // Stop further execution
+        this.selectedFile = null;
+        return;
       } else {
-        formData.append("image", this.selectedFile);
+        formData.append('image', this.selectedFile);
       }
     }
 
     if (
-      formData.get("titleEnglish") === "" ||
-      formData.get("descriptionEnglish") === "" ||
-      formData.get("titleSinhala") === "" ||
-      formData.get("descriptionSinhala") === "" ||
-      formData.get("titleTamil") === "" ||
-      formData.get("descriptionTamil") === ""
+      formData.get('titleEnglish') === '' ||
+      formData.get('descriptionEnglish') === '' ||
+      formData.get('titleSinhala') === '' ||
+      formData.get('descriptionSinhala') === '' ||
+      formData.get('titleTamil') === '' ||
+      formData.get('descriptionTamil') === ''
     ) {
-      console.log("language does not match");
-
       return;
     } else {
       this.isLoading = true;
       this.newsService.createNews(formData).subscribe(
         (res: any) => {
           this.isLoading = false;
-          console.log("News created successfully", res);
           Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "news created successfully!",
+            icon: 'success',
+            title: 'Success',
+            text: 'News created successfully!',
           });
           this.createNewsObj = new CreateNews();
           this.selectedFile = null;
           this.selectedImage = null;
-          this.selectedLanguage = "english";
-          this.router.navigate(["/plant-care/action/manage-content"]);
+          this.selectedLanguage = 'english';
+          this.router.navigate(['/plant-care/action/manage-content']);
         },
         (error) => {
           this.isLoading = false;
-          console.error("Error creating news", error);
           Swal.fire({
-            icon: "error",
-            title: "Unsuccess",
-            text: "Error creating news",
+            icon: 'error',
+            title: 'Unsuccess',
+            text: 'Error creating news',
           });
-          this.createNewsObj = new CreateNews();
-          this.selectedFile = null; // Reset file input
-        },
+          // this.createNewsObj = new CreateNews();
+          // this.selectedFile = null; // Reset file input
+        }
       );
     }
   }
 
-  // onCancel() {
-  //   this.createNewsObj = new CreateNews();
-  //   this.selectedFile = null;
-  //   this.selectedImage = null;
-  //   this.selectedLanguage = 'english';
-  //   console.log('Form cleared');
-  //   Swal.fire('Form cleared', '', 'info');
-  // }
-
-  // onCancel2() {
-  //   this.createNewsObj = new CreateNews();
-  //   this.selectedFile = null;
-  //   this.selectedImage = null;
-  //   this.selectedLanguage = 'english';
-  //   console.log('Form cleared');
-  //   Swal.fire('Form cleared', '', 'info').then(() => {
-  //     this.router.navigate(['/plant-care/manage-content']);
-  //   });
-  // }
-
   onCancel() {
     Swal.fire({
-      icon: "warning",
-      title: "Are you sure?",
-      text: "You may lose the added data after canceling!",
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonText: "Yes, Cancel",
-      cancelButtonText: "No, Keep Editing",
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
         this.selectedFile = null;
         this.selectedImage = null;
-        this.router.navigate(["/plant-care/action/manage-content"]);
+        this.router.navigate(['/plant-care/action/manage-content']);
       }
     });
   }
 
-  selectLanguage(lang: "english" | "sinhala" | "tamil") {
+  selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }
 
   triggerFileInput() {
-    const fileInput = document.getElementById("imageUpload") as HTMLElement;
+    const fileInput = document.getElementById('imageUpload') as HTMLElement;
     fileInput.click();
   }
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      console.log("Selected file:", file);
-      this.selectedFile = file; // Save the file to the component property
+      this.selectedFile = file;
       this.selectedFileName = file.name;
 
       const reader = new FileReader();
@@ -422,21 +316,18 @@ export class CreateNewsComponent {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.itemId = params["id"] ? +params["id"] : null;
-      console.log("Received item ID:", this.itemId);
+      this.itemId = params['id'] ? +params['id'] : null;
     });
 
-    if(this.itemId){this.getNewsById(this.itemId);}
-    
-    
+    if (this.itemId) {
+      this.getNewsById(this.itemId);
+    }
   }
 
   getNewsById(id: any) {
-    this.isLoading=true;
+    this.isLoading = true;
     this.newsService.getNewsById(id).subscribe(
       (data) => {
-        // this.currentPublishDate = data[0].publishDate
-        // Convert dates to 'YYYY-MM-DD'
         data.forEach((newsItem: any) => {
           if (newsItem.publishDate) {
             newsItem.publishDate = this.formatDate(newsItem.publishDate);
@@ -447,127 +338,107 @@ export class CreateNewsComponent {
           }
         });
         this.newsItems = data;
-        // console.log(this.newsItems[0].publishDate);
         this.currentPublishDate = this.newsItems[0].publishDate;
         this.currentExpireDate = this.newsItems[0].expireDate;
-        console.log(this.newsItems);
-        this.isLoading=false;
+        this.isLoading = false;
       },
       (error) => {
-        console.error("Error fetching news:", error);
-        // if (error.status === 401) {
-        // }
-        this.isLoading=false;
+        this.isLoading = false;
       }
     );
   }
 
   formatDate(date: string): string {
     const d = new Date(date);
-    return d.toISOString().split("T")[0]; // Extract 'YYYY-MM-DD'
+    return d.toISOString().split('T')[0];
   }
 
   updateNews() {
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error("No token found");
       return;
     }
 
     const editMissingFields: string[] = [];
 
-    if (this.newsItems[0].titleEnglish.trim() === "") {
-      editMissingFields.push("Title (English)");
+    if (this.newsItems[0].titleEnglish.trim() === '') {
+      editMissingFields.push('Title (English)');
     }
-    if (this.newsItems[0].descriptionEnglish.trim() === "") {
-      editMissingFields.push("Description (English)");
+    if (this.newsItems[0].descriptionEnglish.trim() === '') {
+      editMissingFields.push('Description (English)');
     }
-    if (this.newsItems[0].titleSinhala.trim() === "") {
-      editMissingFields.push("Title (Sinhala)");
+    if (this.newsItems[0].titleSinhala.trim() === '') {
+      editMissingFields.push('Title (Sinhala)');
     }
-    if (this.newsItems[0].descriptionSinhala.trim() === "") {
-      editMissingFields.push("Description (Sinhala)");
+    if (this.newsItems[0].descriptionSinhala.trim() === '') {
+      editMissingFields.push('Description (Sinhala)');
     }
-    if (this.newsItems[0].titleTamil.trim() === "") {
-      editMissingFields.push("Title (Tamil)");
+    if (this.newsItems[0].titleTamil.trim() === '') {
+      editMissingFields.push('Title (Tamil)');
     }
-    if (this.newsItems[0].descriptionTamil.trim() === "") {
-      editMissingFields.push("Description (Tamil)");
+    if (this.newsItems[0].descriptionTamil.trim() === '') {
+      editMissingFields.push('Description (Tamil)');
     }
-    if (this.newsItems[0].publishDate.trim() === "") {
-      editMissingFields.push("Publishe Date");
+    if (this.newsItems[0].publishDate.trim() === '') {
+      editMissingFields.push('Publishe Date');
     }
-    if (this.newsItems[0].expireDate.trim() === "") {
-      editMissingFields.push("Expire Date");
+    if (this.newsItems[0].expireDate.trim() === '') {
+      editMissingFields.push('Expire Date');
     }
 
-    // If there are any missing fields, show a Swal popup with the list
     if (editMissingFields.length > 0) {
-      // this.isAnyFieldMissing = true;
       Swal.fire({
-        icon: "error",
-        title: "Missing Fields",
+        icon: 'error',
+        title: 'Missing Fields',
         html: `<strong>Please fill in the following fields:</strong><ul>${editMissingFields
           .map((field) => `<li>${field}</li>`)
-          .join("")}</ul>`,
+          .join('')}</ul>`,
       });
-      return; // Stop further execution if fields are missing
+      return;
     }
 
     const formData = new FormData();
     formData.append(
-      "titleEnglish",
-      this.isEnglishOnly(this.newsItems[0].titleEnglish),
+      'titleEnglish',
+      this.isEnglishOnly(this.newsItems[0].titleEnglish)
     );
     formData.append(
-      "titleSinhala",
-      this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala),
+      'titleSinhala',
+      this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala)
     );
     formData.append(
-      "titleTamil",
-      this.isTamilAndNumberOnly(this.newsItems[0].titleTamil),
+      'titleTamil',
+      this.isTamilAndNumberOnly(this.newsItems[0].titleTamil)
     );
     formData.append(
-      "descriptionEnglish",
-      this.isEnglishOnly(this.newsItems[0].descriptionEnglish),
+      'descriptionEnglish',
+      this.isEnglishOnly(this.newsItems[0].descriptionEnglish)
     );
     formData.append(
-      "descriptionSinhala",
-      this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala),
+      'descriptionSinhala',
+      this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala)
     );
     formData.append(
-      "descriptionTamil",
-      this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil),
+      'descriptionTamil',
+      this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil)
     );
-    formData.append("publishDate", this.newsItems[0].publishDate);
-    formData.append("expireDate", this.newsItems[0].expireDate);
+    formData.append('publishDate', this.newsItems[0].publishDate);
+    formData.append('expireDate', this.newsItems[0].expireDate);
     if (this.selectedFile) {
-      const allowedTypes = ["image/jpeg", "image/png"]; // Allowed MIME types
+      const allowedTypes = ['image/jpeg', 'image/png'];
 
-      // Validate the image type
       if (!allowedTypes.includes(this.selectedFile.type)) {
         Swal.fire({
-          icon: "error",
-          title: "Invalid Image Type",
-          text: "Only JPEG and PNG images are allowed. Please upload a valid image.",
+          icon: 'error',
+          title: 'Invalid Image Type',
+          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
         });
-        this.selectedFile = null; // Clear the invalid file
-        return; // Stop further execution
+        this.selectedFile = null;
+        return;
       }
 
-      // Append the file to the form data if valid
-      formData.append("image", this.selectedFile);
+      formData.append('image', this.selectedFile);
     }
-    // else {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'No Image Selected',
-    //     text: 'please select an image to upload.',
-    //   });
-    //   this.selectedFile = null; // Clear the invalid file
-    //   return; // Stop further execution
-
-    // }
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -580,50 +451,49 @@ export class CreateNewsComponent {
       })
       .subscribe(
         (res: any) => {
-          console.log("Market Price updated successfully", res);
+          console.log('Market Price updated successfully', res);
           this.isLoading = false;
           Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Market Price updated successfully!",
+            icon: 'success',
+            title: 'Success',
+            text: 'News updated successfully!',
           });
-          this.router.navigate(["/plant-care/action/manage-content"]);
+          this.router.navigate(['/plant-care/action/manage-content']);
         },
         (error) => {
-          console.error("Error updating news", error);
           this.isLoading = false;
           Swal.fire({
-            icon: "error",
-            title: "Unsuccessful",
-            text: "Error updating news",
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: 'Error updating news',
           });
-        },
+        }
       );
   }
 
   onDeleteImage() {
     if (this.newsItems[0]) {
-      this.newsItems[0].image = "";
+      this.newsItems[0].image = '';
     }
   }
 
   getTodayDate(): string {
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   }
 
   checkPublishDate() {
     if (this.createNewsObj.publishDate < this.today) {
       Swal.fire({
-        icon: "error",
-        title: "Invalid Publish Date",
-        text: "Publish Date cannot be a past date!",
-        confirmButtonText: "OK",
+        icon: 'error',
+        title: 'Invalid Publish Date',
+        text: 'Publish Date cannot be a past date!',
+        confirmButtonText: 'OK',
       }).then(() => {
-        this.createNewsObj.publishDate = "";
+        this.createNewsObj.publishDate = '';
       });
     }
   }
@@ -631,10 +501,10 @@ export class CreateNewsComponent {
   checkPublishDateEditNews() {
     if (this.newsItems[0].publishDate < this.today) {
       Swal.fire({
-        icon: "error",
-        title: "Invalid Publish Date",
-        text: "Publish Date cannot be a past date!",
-        confirmButtonText: "OK",
+        icon: 'error',
+        title: 'Invalid Publish Date',
+        text: 'Publish Date cannot be a past date!',
+        confirmButtonText: 'OK',
       }).then(() => {
         this.newsItems[0].publishDate = this.currentPublishDate;
       });
@@ -644,22 +514,22 @@ export class CreateNewsComponent {
   checkExpireDate() {
     if (!this.createNewsObj.publishDate) {
       Swal.fire({
-        icon: "warning",
-        title: "publish Date Required",
-        text: "Please select a publish Date before setting an Expiration Date.",
-        confirmButtonText: "OK",
+        icon: 'warning',
+        title: 'publish Date Required',
+        text: 'Please select a publish Date before setting an Expiration Date.',
+        confirmButtonText: 'OK',
       }).then(() => {
-        this.createNewsObj.expireDate = "";
+        this.createNewsObj.expireDate = '';
       });
     } else {
       if (this.createNewsObj.expireDate < this.createNewsObj.publishDate) {
         Swal.fire({
-          icon: "error",
-          title: "Invalid Expire Date",
-          text: "Expire Date cannot be earlier than publish Date!",
-          confirmButtonText: "OK",
+          icon: 'error',
+          title: 'Invalid Expire Date',
+          text: 'Expire Date cannot be earlier than publish Date!',
+          confirmButtonText: 'OK',
         }).then(() => {
-          this.createNewsObj.expireDate = "";
+          this.createNewsObj.expireDate = '';
         });
       }
     }
@@ -668,20 +538,20 @@ export class CreateNewsComponent {
   checkExpireDateEditNews() {
     if (!this.newsItems[0].publishDate) {
       Swal.fire({
-        icon: "warning",
-        title: "publish Date Required",
-        text: "Please select a publish Date before setting an Expiration Date.",
-        confirmButtonText: "OK",
+        icon: 'warning',
+        title: 'publish Date Required',
+        text: 'Please select a publish Date before setting an Expiration Date.',
+        confirmButtonText: 'OK',
       }).then(() => {
         this.newsItems[0].expireDate = this.currentExpireDate;
       });
     } else {
       if (this.newsItems[0].expireDate < this.newsItems[0].publishDate) {
         Swal.fire({
-          icon: "error",
-          title: "Invalid Expire Date",
-          text: "Expire Date cannot be earlier than publish Date!",
-          confirmButtonText: "OK",
+          icon: 'error',
+          title: 'Invalid Expire Date',
+          text: 'Expire Date cannot be earlier than publish Date!',
+          confirmButtonText: 'OK',
         }).then(() => {
           this.newsItems[0].expireDate = this.currentExpireDate;
         });
@@ -710,10 +580,10 @@ export class CreateNewsComponent {
       if (publishDate > expireDate) {
         this.isPublishAfterExpireValidEditNews = false;
         Swal.fire({
-          icon: "error",
-          title: "Invalid publish Date",
-          text: "Publish date can not be later than expire date",
-          confirmButtonText: "OK",
+          icon: 'error',
+          title: 'Invalid publish Date',
+          text: 'Publish date can not be later than expire date',
+          confirmButtonText: 'OK',
         }).then(() => {
           this.newsItems[0].publishDate = this.currentPublishDate;
           this.newsItems[0].expireDate = this.currentExpireDate;
@@ -725,24 +595,24 @@ export class CreateNewsComponent {
   }
 
   back(): void {
-    this.router.navigate(["/plant-care/action"]);
+    this.router.navigate(['/plant-care/action']);
   }
 
   backEdit(): void {
-    this.router.navigate(["/plant-care/action/manage-content"]);
+    this.router.navigate(['/plant-care/action/manage-content']);
   }
 }
 
 export class CreateNews {
-  titleEnglish: string = "";
-  titleSinhala: string = "";
-  titleTamil: string = "";
-  descriptionEnglish: string = "";
-  descriptionSinhala: string = "";
-  descriptionTamil: string = "";
-  publishDate: string = "";
-  expireDate: string = "";
-  status: string = "Draft";
+  titleEnglish: string = '';
+  titleSinhala: string = '';
+  titleTamil: string = '';
+  descriptionEnglish: string = '';
+  descriptionSinhala: string = '';
+  descriptionTamil: string = '';
+  publishDate: string = '';
+  expireDate: string = '';
+  status: string = 'Draft';
 
-  createdBy: any = localStorage.getItem("userId:");
+  createdBy: any = localStorage.getItem('userId:');
 }

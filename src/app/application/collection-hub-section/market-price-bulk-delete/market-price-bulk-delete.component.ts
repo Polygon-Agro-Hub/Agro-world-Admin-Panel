@@ -1,12 +1,12 @@
-import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-import { NgxPaginationModule } from "ngx-pagination";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { environment } from "../../../environment/environment";
-import Swal from "sweetalert2";
-import { TokenService } from "../../../services/token/services/token.service";
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { environment } from '../../../environment/environment';
+import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface marketxl {
   id: number;
@@ -17,11 +17,11 @@ interface marketxl {
 }
 
 @Component({
-  selector: "app-market-price-bulk-delete",
+  selector: 'app-market-price-bulk-delete',
   standalone: true,
   imports: [CommonModule, LoadingSpinnerComponent, NgxPaginationModule],
-  templateUrl: "./market-price-bulk-delete.component.html",
-  styleUrl: "./market-price-bulk-delete.component.css",
+  templateUrl: './market-price-bulk-delete.component.html',
+  styleUrl: './market-price-bulk-delete.component.css',
 })
 export class MarketPriceBulkDeleteComponent {
   isLoading = false;
@@ -35,7 +35,7 @@ export class MarketPriceBulkDeleteComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit() {
@@ -44,18 +44,16 @@ export class MarketPriceBulkDeleteComponent {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllXl(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllXl(this.page, this.itemsPerPage);
   }
 
   fetchAllXl(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    console.log("Fetching market prices for page:", page); // Debug log
     this.page = page;
+
     const token = `Bearer ${this.token}`;
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
+    if (!token) return;
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -64,42 +62,36 @@ export class MarketPriceBulkDeleteComponent {
       .get<{
         items: marketxl[];
         total: number;
-      }>(`${environment.API_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`, { headers: headers })
+      }>(
+        `${environment.API_URL}market-price/get-all-market-xlsx?page=${page}&limit=${limit}`,
+        { headers }
+      )
       .subscribe(
         (response) => {
-          console.log("Received items:", response.items); // Debug log
-          console.log("Total items:", response.total); // Debug log
           this.mprices = response.items;
           this.hasData = this.mprices.length > 0;
           this.totalItems = response.total;
           this.isLoading = false;
         },
         (error) => {
-          console.error("Error fetching market prices:", error);
-          if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
-            this.isLoading = false;
-          }
-        },
+          this.isLoading = false;
+        }
       );
   }
 
   deleteAdminUser(id: any) {
     const token = `Bearer ${this.token}`;
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
+    if (!token) return;
 
     Swal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to delete this Admin? This action cannot be undone.",
-      icon: "warning",
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Admin? This action cannot be undone.',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -111,25 +103,23 @@ export class MarketPriceBulkDeleteComponent {
             headers,
           })
           .subscribe(
-            (data: any) => {
-              console.log("Admin deleted successfully");
-              Swal.fire("Deleted!", "The Admin has been deleted.", "success");
+            () => {
+              Swal.fire('Deleted!', 'The Admin has been deleted.', 'success');
               this.fetchAllXl();
             },
-            (error) => {
-              console.error("Error deleting news:", error);
+            () => {
               Swal.fire(
-                "Error!",
-                "There was an error deleting the news item.",
-                "error",
+                'Error!',
+                'There was an error deleting the news item.',
+                'error'
               );
-            },
+            }
           );
       }
     });
   }
 
   back(): void {
-    this.router.navigate(["/collection-hub"]);
+    this.router.navigate(['/collection-hub']);
   }
 }

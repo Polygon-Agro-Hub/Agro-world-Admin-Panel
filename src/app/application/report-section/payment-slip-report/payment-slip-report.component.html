@@ -41,6 +41,7 @@
             type="text"
             placeholder="Search.."
             [(ngModel)]="searchNIC"
+            (keydown.enter)="searchPlantCareUsers()"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           />
           <button
@@ -89,7 +90,7 @@
   </div>
   <div class="flex items-center flex-col">
     <h2 class="text-xl text-textLight dark:text-textDark">
-      {{  this.firstName }} {{ this.lastName }}
+     {{this.empId}} - {{  this.firstName }} {{ this.lastName }}
     </h2>
     <p class="text-lg text-textLight dark:text-textDark">On {{this.createdDate}}</p>
   </div>
@@ -106,7 +107,12 @@
           <th
             class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
-            Farmer Name
+           GRN Number
+          </th>
+          <th
+            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+          >
+            First Name
           </th>
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
@@ -133,6 +139,9 @@
       
       <tbody>
         <tr *ngFor="let item of payments">
+          <td class="py-3 dark:text-textDark">
+            {{ item.invNo }}
+          </td>
           <td class="py-3 dark:text-textDark">
             {{ item.firstName }}
           </td>

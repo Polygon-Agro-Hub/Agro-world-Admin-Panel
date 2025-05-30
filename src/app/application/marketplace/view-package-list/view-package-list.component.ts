@@ -36,6 +36,10 @@ export class ViewPackageListComponent {
     private tokenService: TokenService
   ) {}
 
+  back(): void {
+    this.router.navigate(['/market/action']);
+  }
+
   fetchAllPackages() {
     this.isLoading = true;
     this.viewPackagesList.getAllMarketplacePackages().subscribe(

@@ -43,15 +43,15 @@ interface Company {
     LoadingSpinnerComponent,
   ],
   templateUrl: './collection-all-view.component.html',
-  styleUrls: ['./collection-all-view.component.css'], // Fixed typo from styleUrl to styleUrls
+  styleUrls: ['./collection-all-view.component.css'],
 })
 export class CollectionAllViewComponent implements OnInit {
   centerNameObj: CenterName = new CenterName();
   companyId!: number;
   collectionObj!: CollectionCenter[];
   filteredCollection!: CollectionCenter[];
-  districts: string[] = []; // Array to hold the districts
-  selectedDistrict: string | null = null; // Store the selected district
+  districts: string[] = [];
+  selectedDistrict: string | null = null;
   searchItem: string = '';
   page: number = 1;
   itemsPerPage: number = 10;
@@ -59,6 +59,76 @@ export class CollectionAllViewComponent implements OnInit {
   totalItems: number = 0;
   hasData: boolean = true;
   centerId!: number;
+
+  provinceOptions: any[] = [];
+  districtOptions: any[] = [];
+
+  selectProvince: string = '';
+  selectDistrict: string = '';
+
+  ProvinceData = [
+    {
+      province: 'Western',
+      district: [
+        { districtName: 'Colombo' },
+        { districtName: 'Kalutara' },
+        { districtName: 'Gampaha' },
+      ],
+    },
+    {
+      province: 'Central',
+      district: [
+        { districtName: 'Kandy' },
+        { districtName: 'Matale' },
+        { districtName: 'Nuwara Eliya' },
+      ],
+    },
+    {
+      province: 'Southern',
+      district: [
+        { districtName: 'Galle' },
+        { districtName: 'Matara' },
+        { districtName: 'Hambantota' },
+      ],
+    },
+    {
+      province: 'Northern',
+      district: [
+        { districtName: 'Jaffna' },
+        { districtName: 'Mannar' },
+        { districtName: 'Vavuniya' },
+        { districtName: 'Kilinochchi' },
+        { districtName: 'Mulaitivu' },
+      ],
+    },
+    {
+      province: 'Eastern',
+      district: [
+        { districtName: 'Batticaloa' },
+        { districtName: 'Ampara' },
+        { districtName: 'Trincomalee' },
+      ],
+    },
+    {
+      province: 'Uva',
+      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
+    },
+    {
+      province: 'North Western',
+      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
+    },
+    {
+      province: 'North Central',
+      district: [
+        { districtName: 'Anuradhapura' },
+        { districtName: 'Polonnaruwa' },
+      ],
+    },
+    {
+      province: 'Sabaragamuwa',
+      district: [{ districtName: 'Rathnapura' }, { districtName: 'Kegalle' }],
+    },
+  ];
 
   constructor(
     private router: Router,
@@ -69,62 +139,45 @@ export class CollectionAllViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+
+    this.provinceOptions = this.ProvinceData.map((p) => ({
+      label: p.province,
+      value: p.province,
+    })).sort((a, b) => a.label.localeCompare(b.label));
+
+    // District dropdown (all districts initially, sorted alphabetically)
+    this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
+      .map((d) => ({
+        label: d.districtName,
+        value: d.districtName,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   }
-
-  // fetchAllCollectionCenterww(page: number = 1, limit: number = this.itemsPerPage) {
-  //   this.collectionService.getAllCollectionCenterPage(page, limit, this.searchItem).subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       this.isLoading = false;
-  //       this.collectionObj = response.items;
-  //       this.hasData = this.collectionObj.length > 0;
-  //       this.totalItems = response.total;
-
-  //     },
-  //     (error) => {
-  //       console.log("Error occurred in fetching collection center data:", error);
-  //     }
-  //   );
-  // }
 
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
+    district: string = this.selectDistrict,
+    province: string = this.selectProvince,
     searchItem?: string
   ) {
     this.isLoading = true;
     this.collectionService
-      .getAllCollectionCenterPage(page, limit, searchItem)
+      .getAllCollectionCenterPage(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
           this.isLoading = false;
           this.collectionObj = response.items;
-          console.log(this.collectionObj);
           this.hasData = this.collectionObj.length > 0;
           this.totalItems = response.total;
         },
         (error) => {
-          console.error('Error fetching market prices:', error);
           if (error.status === 401) {
-            // Handle unauthorized access (e.g., redirect to login)
+            // Unauthorized access handling (left empty intentionally)
           }
         }
       );
   }
-
-  // extractDistricts() {
-  //   // Extract unique districts from the collectionObj
-  //   const uniqueDistricts = new Set(this.collectionObj.map(item => item.district));
-  //   this.districts = Array.from(uniqueDistricts);
-  // }
-
-  // applyFilters() {
-  //   if (this.selectedDistrict) {
-  //     this.filteredCollection = this.collectionObj.filter(item => item.district === this.selectedDistrict);
-  //   } else {
-  //     this.filteredCollection = this.collectionObj; // Reset if no district is selected
-  //   }
-  // }
 
   deleteCollectionCenter(id: number) {
     Swal.fire({
@@ -150,10 +203,9 @@ export class CollectionAllViewComponent implements OnInit {
             }
           },
           (error) => {
-            console.error('Error deleting collection center:', error);
             Swal.fire(
               'Error!',
-              'There was an error deleting the Collection Centers',
+              'There was an error deleting the Collection Center',
               'error'
             );
           }
@@ -164,7 +216,7 @@ export class CollectionAllViewComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   searchPlantCareUsers() {
@@ -181,6 +233,85 @@ export class CollectionAllViewComponent implements OnInit {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
+  // applyDistrictFilters() {
+  //   this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  // }
+
+  // clearDistrictFilter() {
+  //   this.selectDistrict = ''
+  //   this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  // }
+
+  applyProvinceFilters() {
+    if (this.selectProvince) {
+      const selected = this.ProvinceData.find(
+        (p) => p.province === this.selectProvince
+      );
+
+      // Filter and sort districts for selected province
+      this.districtOptions =
+        selected?.district
+          .map((d) => ({
+            label: d.districtName,
+            value: d.districtName,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label)) || [];
+
+      // Reset district selection
+      this.selectDistrict = '';
+    } else {
+      // Province cleared → show all districts, sorted
+      this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
+        .map((d) => ({
+          label: d.districtName,
+          value: d.districtName,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+    }
+
+    console.log(this.selectProvince);
+
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  applyDistrictFilters() {
+    if (this.selectDistrict) {
+      const matchingProvince = this.ProvinceData.find((p) =>
+        p.district.some((d) => d.districtName === this.selectDistrict)
+      );
+
+      if (matchingProvince) {
+        this.selectProvince = matchingProvince.province;
+
+        // Filter district list for this province
+        this.districtOptions = matchingProvince.district.map((d) => ({
+          label: d.districtName,
+          value: d.districtName,
+        }));
+      }
+    }
+    console.log(this.selectDistrict);
+
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  clearDistrictFilter() {
+    this.selectDistrict = '';
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
+  clearProvinceFilter() {
+    this.selectProvince = '';
+    this.selectDistrict = '';
+    this.districtOptions = this.ProvinceData.flatMap((p) => p.district).map(
+      (d) => ({
+        label: d.districtName,
+        value: d.districtName,
+      })
+    );
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
+
   navigateEdit(id: number) {
     this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
   }
@@ -194,15 +325,14 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   assignTarget(items: any, centerId: number) {
-    console.log(centerId,'<---centerId');
-    
+    console.log(centerId, '<---centerId');
+
     let comId;
     items?.some((company: Company) =>
       company.companyNameEnglish === 'agroworld (Pvt) Ltd'
         ? (comId = company.id)
         : 0
     );
-    console.log('companyID----->', comId);
     this.router.navigate([
       `/collection-hub/collection-center-dashboard/${centerId}/${comId}`,
     ]);
@@ -220,13 +350,12 @@ export class CollectionAllViewComponent implements OnInit {
     const agroworldCompany = item.companies.find(
       (company: Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
     );
-  
+
     if (!agroworldCompany) {
-      console.error("Agroworld (Pvt) Ltd not found in this Collection Center.");
       return;
     }
     const companyId = agroworldCompany.id;
-  
+
     this.router.navigate([
       `/collection-hub/add-daily-target/${item.id}/${item.centerName}/${companyId}`,
     ]);
@@ -235,7 +364,6 @@ export class CollectionAllViewComponent implements OnInit {
   viewCollectionCenter(id: number) {
     this.router.navigate([`/collection-hub/preview-collection-center/${id}`]);
   }
-  
 }
 
 class CenterName {

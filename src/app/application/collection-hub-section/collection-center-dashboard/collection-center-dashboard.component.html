@@ -1,4 +1,11 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  (click)="navigatePath('/collection-hub/agro-world-centers')"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
 <div class="flex flex-row items-center justify-center gap-16 dark:bg-black">
   <div
     class="flex justify-center items-center w-1/5 py-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg"
@@ -92,7 +99,7 @@
     <div class="flex flex-row items-end justify-end">
       <i
         class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-4"
-        (click)="navigatePath('/centers/center-view-officers')"
+        (click)="centerOfficers()"
       ></i>
     </div>
   </div>
@@ -101,12 +108,13 @@
     <div class="flex flex-row items-end justify-end">
       <i
         *ngIf="expencePrecentage >= 0"
-        class="fa-solid fa-arrow-trend-up text-[#0D9488] mx-2"
+        class="fa-solid fa-arrow-trend-up text-[#0D9488] mx-2 mb-1"
       ></i>
       <i
         *ngIf="expencePrecentage < 0"
-        class="fa-solid fa-arrow-trend-down text-[#D70000] mx-2"
+        class="fa-solid fa-arrow-trend-down text-[#D70000] mx-2 mb-1"
       ></i>
+
       <p
         class="text-[#0D9488] mx-2 mt-1 dark:text-white"
         [ngClass]="{ 'text-[#D70000]': expencePrecentage < 0 }"
@@ -133,7 +141,7 @@
 
   <div class="w-2/5 pb-1 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg">
     <div class="flex flex-row items-end justify-end">
-      <i class="fa-solid fa-arrow-trend-down text-[#D70000] mx-2"></i>
+      <i class="fa-solid fa-arrow-trend-down text-[#D70000] mx-2 mb-1"></i>
       <p class="text-[#D70000] mx-2 mt-1 dark:text-white">34.7%</p>
     </div>
     <div class="flex flex-row items-center justify-start mx-5 gap-5">

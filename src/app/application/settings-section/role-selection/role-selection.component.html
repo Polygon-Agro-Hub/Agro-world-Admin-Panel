@@ -42,14 +42,14 @@
       <h2
         class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
       >
-        Add New Section
+        Add New Department
       </h2>
 
       <!-- Form or content for the modal -->
 
       <div class="flex align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-          >Section Name</label
+          >Department Name</label
         >
         <input
           [(ngModel)]="createRolesObj.role"
@@ -58,11 +58,11 @@
           #roleInput="ngModel"
           required
           class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-          placeholder="Enter section name"
+          placeholder="Enter Department name"
         />
       </div>
       <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-center">
-        Section Name is required.
+        Department Name is required.
       </div>
 
       <div class="flex mt-4 align-middle justify-center items-center">
@@ -112,14 +112,14 @@
       <h2
         class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
       >
-        Edit Section
+        Edit Department
       </h2>
 
       <!-- Form or content for the modal -->
 
       <div class="flex align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-          >Section Name</label
+          >Department Name</label
         >
         <input
           [(ngModel)]="selectedRole.role"
@@ -128,11 +128,11 @@
           #roleInput="ngModel"
           required
           class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-          placeholder="Enter section name"
+          placeholder="Enter Department name"
         />
       </div>
       <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-center">
-        Section Name is required.
+        Department Name is required.
       </div>
 
       <div class="flex mt-4 align-middle justify-center items-center">
@@ -186,7 +186,7 @@
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
           >
-            Section
+            Department
           </th>
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"

@@ -5,11 +5,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
@@ -42,10 +38,9 @@ interface BranchesData {
     LoadingSpinnerComponent,
   ],
   templateUrl: './create-center-head.component.html',
-  styleUrl: './create-center-head.component.css'
+  styleUrl: './create-center-head.component.css',
 })
 export class CreateCenterHeadComponent implements OnInit {
-
   isLoading = false;
   empType!: string;
   personalData: Personal = new Personal();
@@ -55,18 +50,15 @@ export class CreateCenterHeadComponent implements OnInit {
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   officerId: number | null = null;
-  
   banks: Bank[] = [];
   branches: Branch[] = [];
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
-
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   selectedFileName!: string;
   invalidFields: Set<string> = new Set();
-  
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
@@ -119,31 +111,24 @@ export class CreateCenterHeadComponent implements OnInit {
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
-      console.log(this.CompanyData);
     });
   }
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      data => {
+      (data) => {
         this.banks = data;
-       
       },
-      error => {
-        console.error('Error loading banks:', error);
-      }
+      (error) => {}
     );
   }
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      data => {
+      (data) => {
         this.allBranches = data;
-        
       },
-      error => {
-        console.error('Error loading branches:', error);
-      }
+      (error) => {}
     );
   }
 
@@ -151,7 +136,6 @@ export class CreateCenterHeadComponent implements OnInit {
     event.preventDefault();
     const fileInput = document.getElementById('imageUpload');
     fileInput?.click();
-    console.log('file input triggered');
   }
 
   onFileSelected(event: any): void {
@@ -171,33 +155,23 @@ export class CreateCenterHeadComponent implements OnInit {
       this.selectedFile = file;
       this.personalData.image = file;
       this.selectedFileName = file.name;
-      
-      // console.log(this.selectedFile);
-      // console.log(this.personalData.image);
-      // console.log(this.selectedFileName);
-      
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // console.log(e.target.result);
         this.selectedImage = e.target.result;
       };
       reader.readAsDataURL(file);
-      console.log(this.selectedImage);
     }
   }
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
-    this.personalData.empType = selectedType; // Update personalData.empType dynamically
-    console.log('Selected Employee Type:', this.personalData.empType);
+    this.personalData.empType = selectedType;
   }
 
   onCheckboxChange1(lang: string, event: any) {
-    // If the checkbox is checked, add the language to the string; if unchecked, remove it
     if (event.target.checked) {
       if (this.personalData.languages) {
-        // Add the language if it's not already in the string
         if (!this.personalData.languages.includes(lang)) {
           this.personalData.languages += this.personalData.languages
             ? `,${lang}`
@@ -207,47 +181,23 @@ export class CreateCenterHeadComponent implements OnInit {
         this.personalData.languages = lang;
       }
     } else {
-      // Remove the language from the string if the checkbox is unchecked
       const languagesArray = this.personalData.languages.split(',');
       const index = languagesArray.indexOf(lang);
       if (index !== -1) {
         languagesArray.splice(index, 1);
       }
       this.personalData.languages = languagesArray.join(',');
-      console.log(this.personalData.languages);
     }
-    console.log(this.personalData);
   }
 
   EpmloyeIdCreate() {
-    // const currentCompanyId = this.personalData.companyId;
-  
-    let rolePrefix: string;
+    let rolePrefix = 'CCH';
 
-    // Map job roles to their respective prefixes
-    // const rolePrefixes: { [key: string]: string } = {
-    //   'Collection Center Head': 'CCH',
-      
-    // };
-
-    // Get the prefix based on the job role
-    rolePrefix = 'CCH';
-
-    // if (!rolePrefix) {
-    //   console.error(`Invalid job role: ${this.personalData.jobRole}`);
-    //   return; // Exit if the job role is invalid
-    // }
-
-    // Fetch the last ID and assign a new Employee ID
     this.getLastID(rolePrefix)
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {
-        console.error('Error fetching last ID:', error);
-      });
-    // this.personalData.companyId = currentCompanyId;
-    
+      .catch((error) => {});
   }
 
   getLastID(role: string): Promise<string> {
@@ -256,10 +206,9 @@ export class CreateCenterHeadComponent implements OnInit {
         (res) => {
           this.lastID = res.result.empId;
           const lastId = res.result.empId;
-          resolve(lastId); // Resolve the Promise with the empId
+          resolve(lastId);
         },
         (error) => {
-          console.error('Error fetching last ID:', error);
           reject(error);
         }
       );
@@ -268,19 +217,10 @@ export class CreateCenterHeadComponent implements OnInit {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.selectedPage = page;
-    // if (!this.selectedImage) {
-    //   Swal.fire({
-    //     title: 'Image Required',
-    //     text: 'Please upload a profile picture',
-    //     icon: 'warning',
-    //     confirmButtonText: 'OK',
-    //   });
-    //   return; // This will terminate the function if no image is selected
-    // }
   }
 
   updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDistrict = target.value;
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
@@ -289,24 +229,23 @@ export class CreateCenterHeadComponent implements OnInit {
       if (selected) {
         this.personalData.province = selected.province;
       } else {
-        this.personalData.province = ''; // Clear if no matching district is found
+        this.personalData.province = '';
       }
     }
   }
 
   onBankChange() {
     if (this.selectedBankId) {
-      // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      
-      // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
         this.invalidFields.delete('bankName');
       }
-      
-      // Reset branch selection
+
       this.selectedBranchId = null;
       this.personalData.branchName = '';
     } else {
@@ -317,8 +256,9 @@ export class CreateCenterHeadComponent implements OnInit {
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
         this.invalidFields.delete('branchName');
@@ -329,10 +269,6 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.personalData); // Logs the personal data with updated languages
-    console.log('hii', this.personalData.empType);
-
-    // Show a confirmation dialog before proceeding
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to create the collection center head?',
@@ -344,7 +280,6 @@ export class CreateCenterHeadComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        // Proceed with submission if user clicks 'Yes'
         this.collectionOfficerService
           .createCenterHead(this.personalData, this.selectedImage)
           .subscribe(
@@ -363,12 +298,11 @@ export class CreateCenterHeadComponent implements OnInit {
             (error: any) => {
               this.isLoading = false;
               this.errorMessage =
-                error.error.error || 'An unexpected error occurred'; // Update the error message
+                error.error.error || 'An unexpected error occurred';
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
       } else {
-        // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
@@ -405,7 +339,7 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   isEmpTypeSelected(): boolean {
-    return !!this.empType; // Returns true if empType is not null or undefined
+    return !!this.empType;
   }
 
   isAtLeastOneLanguageSelected(): boolean {
@@ -416,20 +350,18 @@ export class CreateCenterHeadComponent implements OnInit {
 
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
-  
-    
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
   }
 
   validateConfirmAccNumber(): void {
-   
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
-  
-    // Check if account numbers match
+
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
-      this.confirmAccountNumberError = this.personalData.accNumber !== this.personalData.confirmAccNumber;
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
@@ -440,9 +372,9 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9}$/; // Allows only 9-digit numbers
+    const phoneRegex = /^[0-9]{9}$/;
     return phoneRegex.test(phone);
-}
+  }
 
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -463,15 +395,11 @@ export class CreateCenterHeadComponent implements OnInit {
       !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
       !!this.personalData.lastNameTamil;
-    // const isPhoneNumberValid =
-    //   this.isValidPhoneNumber(this.personalData.phoneNumber01) &&
-    //   this.isValidPhoneNumber(this.personalData.phoneNumber02);
-    const isPhoneNumber01Valid = !!this.personalData.phoneNumber01
+    const isPhoneNumber01Valid = !!this.personalData.phoneNumber01;
     const isEmailValid = this.isValidEmail(this.personalData.email);
     const isEmpTypeSelected = !!this.empType;
     const isLanguagesSelected = !!this.personalData.languages;
     const isCompanySelected = !!this.personalData.companyId;
-    
     const isNicSelected = !!this.personalData.nic;
 
     return (
@@ -497,23 +425,24 @@ export class CreateCenterHeadComponent implements OnInit {
       streetName,
       city,
       district,
-      
     } = this.personalData;
 
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
- 
     const isBankDetailsValid =
-        !!accHolderName && !!accNumber && !!bankName && !!branchName && !! confirmAccNumber && accNumber === confirmAccNumber;
-      return isBankDetailsValid && isAddressValid;
-    
+      !!accHolderName &&
+      !!accNumber &&
+      !!bankName &&
+      !!branchName &&
+      !!confirmAccNumber &&
+      accNumber === confirmAccNumber;
+    return isBankDetailsValid && isAddressValid;
   }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
 }
 
 class Personal {

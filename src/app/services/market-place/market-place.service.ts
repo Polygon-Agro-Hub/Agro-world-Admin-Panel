@@ -202,4 +202,74 @@ export class MarketPlaceService {
       { headers }
     );
   }
+
+
+
+
+    uploadRetailBanner(data: FormData): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        });
+    return this.http.post(`${this.apiUrl}market-place/upload-banner`, data, {headers});
+  }
+
+
+  uploadRetailBannerWholesale(data: FormData): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        });
+    return this.http.post(`${this.apiUrl}market-place/upload-banner-wholesale`, data, {headers});
+  }
+
+
+
+
+    updateBannerOrder(feedbacks: { id: number; orderNumber: number }[]) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+      });
+  
+      return this.http.put(
+        `${environment.API_URL}market-place/update-banner-order`,
+        { feedbacks },
+        { headers },
+      );
+    }
+
+
+    
+    updateBannerOrderWhole(feedbacks: { id: number; orderNumber: number }[]) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+      });
+  
+      return this.http.put(
+        `${environment.API_URL}market-place/update-banner-order`,
+        { feedbacks },
+        { headers },
+      );
+    }
+
+
+
+      deleteBannerRetail(feedbackId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.delete(`${this.apiUrl}market-place/delete-banner-retail/${feedbackId}`, {
+      headers
+    });
+  }
+
+
+        deleteBannerWhole(feedbackId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.delete(`${this.apiUrl}market-place/delete-banner-whole/${feedbackId}`, {
+      headers
+    });
+  }
 }

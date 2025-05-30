@@ -94,7 +94,7 @@ export class BarChartComponent implements OnChanges {
               color: '#000', // Keep x-axis labels visible
               font: {
                 weight: 'normal',
-                size: 14
+                size: 10
               }
             },
             // Axis line itself (the line that runs along the x-axis)
@@ -112,7 +112,7 @@ export class BarChartComponent implements OnChanges {
             color: '#000',
             font: {
               weight: 'normal',
-              size: 14
+              size: 10
             }
           }
         }

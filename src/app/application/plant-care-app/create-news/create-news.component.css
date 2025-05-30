@@ -10,3 +10,22 @@
   ::ng-deep .angular-editor-toolbar {
     @apply bg-gray-100 dark:bg-gray-800;
 }
+
+
+/* For WebKit browsers like Chrome, Safari */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* For Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+  filter: invert(0.5);
+}
+
+.dark input[type="date"]::-moz-calendar-picker-indicator {
+  filter: invert(1);
+}

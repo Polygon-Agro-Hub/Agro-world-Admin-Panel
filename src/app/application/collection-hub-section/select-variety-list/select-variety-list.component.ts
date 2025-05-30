@@ -48,7 +48,6 @@ export class SelectVarietyListComponent {
       search
     ).subscribe((res) => {
       this.isLoading = false;
-      console.log(res);
       this.cropsArr = res.items;
       this.cropCount = res.items.length;
       this.hasData = this.cropsArr.length > 0 ? true : false;
@@ -72,8 +71,6 @@ export class SelectVarietyListComponent {
     } else {
       isSelected = 1;
     }
-
-    console.log('On Add', isSelected, cropId);
 
     let data = {
       centerId: this.centerDetails.centerId,
@@ -100,8 +97,8 @@ export class SelectVarietyListComponent {
             title: 'Success!',
             text:
               isSelected === 1
-                ? 'Crop added successfully'
-                : 'Crop removed successfully',
+                ? 'Successfully added the variety to the center target'
+                : 'Successfully removed the variety from the center target',
             timer: 2000,
             showConfirmButton: false,
           });

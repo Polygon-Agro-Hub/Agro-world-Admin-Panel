@@ -6,6 +6,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface NewCropGroup {
   id: number;
@@ -46,14 +48,15 @@ export class ViewVarietyComponent {
     private cropCalendarService: CropCalendarService,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public permissionService: PermissionService,
+        public tokenService: TokenService
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
       this.name = params['name'];
-      console.log('Received item ID:', this.itemId);
     });
     this.getAllVarietiesByGroup(this.itemId);
   }
@@ -63,12 +66,10 @@ export class ViewVarietyComponent {
       (data) => {
         this.isLoading = false;
         this.newCropGroup = data.groups;
-        console.log(this.newCropGroup);
         this.hasData = this.newCropGroup.length > 0;
         this.total = this.newCropGroup.length;
       },
       (error) => {
-        console.error('Error fetch news:', error);
         if (error.status === 401) {
           this.isLoading = false;
         }
@@ -102,7 +103,6 @@ export class ViewVarietyComponent {
             }
           },
           (error) => {
-            console.error('Error deleting crop variety:', error);
             Swal.fire(
               'Error!',
               'There was an error deleting the crop variety.',
@@ -116,7 +116,7 @@ export class ViewVarietyComponent {
   }
 
   editVarity(id: number) {
-    this.router.navigate(['/plant-care/action/create-crop-variety'], {
+    this.router.navigate(['/plant-care/action/edit-crop-variety'], {
       queryParams: { id },
     });
   }

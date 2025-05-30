@@ -30,6 +30,8 @@ export class CurrentAssetRecordComponent {
   category: string = '';
   asset: string = '';
   unit: string = '';
+  unitPrice: string = '';
+  batchNumber : string = '';
 
   constructor(
     private assetService: AssetsService,
@@ -45,6 +47,8 @@ export class CurrentAssetRecordComponent {
       this.category = params['category'] ? params['category'] : null;
       this.asset = params['asset'] ? params['asset'] : null;
       this.unit = params['unit'] ? params['unit'] : null;
+      this.unitPrice = params['unitPrice'] ? params['unitPrice'] : null;
+      this.batchNumber = params['batchNumber'] ? params['batchNumber'] : null;
     });
     this.loadAssetsRecords(this.assetId);
   }

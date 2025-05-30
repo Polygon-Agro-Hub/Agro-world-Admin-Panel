@@ -5,220 +5,357 @@
 <div class="h-[20px]"></div>
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-  <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">Add Collection Center</h2>
+  <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+    Add Collection Center
+  </h2>
 
   <form [formGroup]="collectionCenterForm" (ngSubmit)="onSubmit()">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
       <!-- Registration Code -->
-
-
 
       <!-- Collection Center Name -->
       <div>
-        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center
-          Name</label>
-        <input formControlName="centerName" id="centerName" name="centerName"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <label
+          for="centerName"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Collection Centre Name</label
+        >
+        <input
+          formControlName="centerName"
+          id="centerName"
+          name="centerName"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
         <div
-          *ngIf="collectionCenterForm.get('centerName')?.invalid && (collectionCenterForm.get('centerName')?.dirty || collectionCenterForm.get('centerName')?.touched)"
-          class="text-red-500 text-sm mt-1">
-          Center Name is required
+          *ngIf="
+            collectionCenterForm.get('centerName')?.invalid &&
+            (collectionCenterForm.get('centerName')?.dirty ||
+              collectionCenterForm.get('centerName')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Centre Name is required
         </div>
-        <div *ngIf="collectionCenterForm.get('centerName')?.hasError('containsNumbers') && 
-            (collectionCenterForm.get('centerName')?.dirty || collectionCenterForm.get('centerName')?.touched)"
-          class="text-red-500 text-sm mt-1">
-          Center name cannot contain numbers.
+        <div
+          *ngIf="
+            collectionCenterForm
+              .get('centerName')
+              ?.hasError('containsNumbers') &&
+            (collectionCenterForm.get('centerName')?.dirty ||
+              collectionCenterForm.get('centerName')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Centre name cannot contain numbers.
         </div>
       </div>
 
-
-
-
-
       <div class="relative">
         <!-- Input Field -->
-        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="centerId"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Company Name
         </label>
-        <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
+        <input
+          type="text"
+          [value]="selectedCompaniesNames.join(', ')"
+          readonly
           class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          placeholder="Select companies" (click)="toggleDropdown()" />
+          placeholder="Select companies"
+          (click)="toggleDropdown()"
+        />
 
         <!-- Dropdown -->
-        <div *ngIf="dropdownOpen"
+        <div
+          *ngIf="dropdownOpen"
           class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
-          style="top: 100%; position: absolute;">
-          <div *ngFor="let company of CompanyData" class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-            (click)="toggleSelection(company)">
-            <input type="checkbox" [checked]="selectedCompaniesIds.includes(company.id)" class="mr-2" />
+          style="top: 100%; position: absolute"
+        >
+          <div
+            *ngFor="let company of CompanyData"
+            class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+            (click)="toggleSelection(company)"
+          >
+            <input
+              type="checkbox"
+              [checked]="selectedCompaniesIds.includes(company.id)"
+              class="mr-2"
+            />
             {{ company.companyNameEnglish }}
           </div>
         </div>
       </div>
 
-
-
-
-
-
-
       <!-- Contact Number 01 -->
       <div>
-        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
-          01</label>
+        <label
+          for="contact01Code"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Contact Number 01</label
+        >
         <div class="mt-1 flex">
-          <select formControlName="contact01Code" id="contact01Code"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+          <select
+            formControlName="contact01Code"
+            id="contact01Code"
+            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+          >
             <option value="+94">+94 (LK)</option>
             <option value="+1">+1 (US)</option>
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
           <div class="flex flex-col">
-            <input type="number" formControlName="contact01" id="contact01" name="contact01"
+            <input
+              type="number"
+              formControlName="contact01"
+              id="contact01"
+              name="contact01"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number" />
-            <div
-              *ngIf="collectionCenterForm.get('contact01')?.invalid && (collectionCenterForm.get('contact01')?.dirty || collectionCenterForm.get('contact01')?.touched)"
-              class="text-red-500 text-sm mt-1">
-              Required valid contact number
-            </div>
+              placeholder="Enter your phone number"
+            />
+
             <!-- <div *ngIf="collectionCenterForm.get('contact01')?.hasError('pattern')">
               Enter valid phone number
             </div> -->
           </div>
         </div>
+
+        <div
+          *ngIf="
+            collectionCenterForm.get('contact01')?.invalid &&
+            (collectionCenterForm.get('contact01')?.dirty ||
+              collectionCenterForm.get('contact01')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Required valid phone number
+        </div>
       </div>
 
       <!-- Contact Number 02 -->
       <div>
-        <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
-          02</label>
+        <label
+          for="contact02Code"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Contact Number 02</label
+        >
         <div class="mt-1 flex">
-          <select formControlName="contact02Code" id="contact02Code"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+          <select
+            formControlName="contact02Code"
+            id="contact02Code"
+            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+          >
             <option value="+94">+94 (LK)</option>
             <option value="+1">+1 (US)</option>
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
           <div class="flex flex-col">
-            <input type="number" formControlName="contact02" id="contact02" name="contact02"
+            <input
+              type="number"
+              formControlName="contact02"
+              id="contact02"
+              name="contact02"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number" />
-            <div
-              *ngIf="collectionCenterForm.get('contact02')?.hasError('required') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
-              class="text-red-500 text-sm mt-1">
-              Contact number 2 is required
-            </div>
+              placeholder="Enter your phone number"
+            />
 
-            <div
-              *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern') && (collectionCenterForm.get('contact02')?.dirty || collectionCenterForm.get('contact02')?.touched)"
-              class="text-red-500 text-sm mt-1">
-              Required valid contact number
-            </div>
             <!-- <div *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern')" class="text-red-500 text-sm mt-1">
               Enter valid phone number
             </div> -->
           </div>
         </div>
+        <div
+          *ngIf="
+            collectionCenterForm.get('contact02')?.hasError('required') &&
+            (collectionCenterForm.get('contact02')?.dirty ||
+              collectionCenterForm.get('contact02')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Required valid phone number
+        </div>
+
+        <div
+          *ngIf="
+            collectionCenterForm.get('contact02')?.hasError('pattern') &&
+            (collectionCenterForm.get('contact02')?.dirty ||
+              collectionCenterForm.get('contact02')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Required valid phone number
+        </div>
       </div>
 
       <!-- Building Number -->
       <div>
-        <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building
-          Number</label>
-        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <label
+          for="buildingNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Building Number</label
+        >
+        <input
+          formControlName="buildingNumber"
+          id="buildingNumber"
+          name="buildingNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
         <div
-          *ngIf="collectionCenterForm.get('buildingNumber')?.invalid && (collectionCenterForm.get('buildingNumber')?.dirty || collectionCenterForm.get('buildingNumber')?.touched)"
-          class="text-red-500 text-sm mt-1">
+          *ngIf="
+            collectionCenterForm.get('buildingNumber')?.invalid &&
+            (collectionCenterForm.get('buildingNumber')?.dirty ||
+              collectionCenterForm.get('buildingNumber')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Building number is required
         </div>
       </div>
 
       <!-- Street Name -->
       <div>
-        <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
-        <input formControlName="street" id="street" name="street"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <label
+          for="street"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Street Name</label
+        >
+        <input
+          formControlName="street"
+          id="street"
+          name="street"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
         <div
-          *ngIf="collectionCenterForm.get('street')?.invalid && (collectionCenterForm.get('street')?.dirty || collectionCenterForm.get('street')?.touched)"
-          class="text-red-500 text-sm mt-1">
+          *ngIf="
+            collectionCenterForm.get('street')?.invalid &&
+            (collectionCenterForm.get('street')?.dirty ||
+              collectionCenterForm.get('street')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Street name is required
         </div>
-
       </div>
 
       <div>
-        <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
-        <input formControlName="city" id="city" name="city" (input)="onProvinceChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="collectionCenterForm.get('city')?.invalid && 
-            (collectionCenterForm.get('city')?.dirty || collectionCenterForm.get('city')?.touched)"
-          class="text-red-500 text-sm mt-1">
+        <label
+          for="city"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >City</label
+        >
+        <input
+          formControlName="city"
+          id="city"
+          name="city"
+          (input)="onProvinceChange()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <div
+          *ngIf="
+            collectionCenterForm.get('city')?.invalid &&
+            (collectionCenterForm.get('city')?.dirty ||
+              collectionCenterForm.get('city')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           City is required
         </div>
       </div>
 
       <!-- Province -->
       <div>
-        <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
-        <select formControlName="province" id="province" name="province" [(ngModel)]="selectProvince"
+        <label
+          for="province"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Province</label
+        >
+        <select
+          formControlName="province"
+          id="province"
+          name="province"
+          [(ngModel)]="selectProvince"
           (change)="onProvinceChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option selected disabled>-- select --</option>
-          <option *ngFor="let item of ProvinceData" [value]="item.province">{{item.province}}</option>
+          <option *ngFor="let item of ProvinceData" [value]="item.province">
+            {{ item.province }}
+          </option>
         </select>
         <div
-          *ngIf="collectionCenterForm.get('province')?.invalid && (collectionCenterForm.get('province')?.dirty || collectionCenterForm.get('province')?.touched)"
-          class="text-red-500 text-sm mt-1">
+          *ngIf="
+            collectionCenterForm.get('province')?.invalid &&
+            (collectionCenterForm.get('province')?.dirty ||
+              collectionCenterForm.get('province')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Province is required
         </div>
       </div>
 
-
-
-
-
-
       <!-- District -->
       <div>
-        <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
-        <select formControlName="district" id="district" name="district" (change)="onDistrictChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+        <label
+          for="district"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >District</label
+        >
+        <select
+          formControlName="district"
+          id="district"
+          name="district"
+          (change)="onDistrictChange()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option selected disabled>-- select --</option>
-          <option *ngFor="let item of selectedDistrict" [value]="item.districtName">{{item.districtName}}</option>
+          <option
+            *ngFor="let item of selectedDistrict"
+            [value]="item.districtName"
+          >
+            {{ item.districtName }}
+          </option>
         </select>
         <div
-          *ngIf="collectionCenterForm.get('district')?.invalid && (collectionCenterForm.get('district')?.dirty || collectionCenterForm.get('district')?.touched)"
-          class="text-red-500 text-sm mt-1">
+          *ngIf="
+            collectionCenterForm.get('district')?.invalid &&
+            (collectionCenterForm.get('district')?.dirty ||
+              collectionCenterForm.get('district')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           District is required
         </div>
       </div>
 
-
-
       <div>
-        <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
-        <select formControlName="country" id="country" name="country"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+        <label
+          for="country"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Country</label
+        >
+        <select
+          formControlName="country"
+          id="country"
+          name="country"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option selected disabled>Sri Lanka</option>
         </select>
         <div
-          *ngIf="collectionCenterForm.get('country')?.invalid && (collectionCenterForm.get('country')?.dirty || collectionCenterForm.get('country')?.touched)"
-          class="text-red-500 text-sm mt-1">
+          *ngIf="
+            collectionCenterForm.get('country')?.invalid &&
+            (collectionCenterForm.get('country')?.dirty ||
+              collectionCenterForm.get('country')?.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Country is required
         </div>
       </div>
-
-
-
-
-
-
-
 
       <!-- <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
@@ -243,19 +380,36 @@
       </div> -->
 
       <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <label
+          for="regCode"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Reg Code</label
+        >
         <div class="relative">
-          <input formControlName="regCode" id="regCode" name="regCode" [value]="isLoadingregcode ? 'Loading...' : ''"
+          <input
+            formControlName="regCode"
+            id="regCode"
+            name="regCode"
+            [value]="isLoadingregcode ? 'Loading...' : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [readonly]="true" />
+            [readonly]="true"
+          />
         </div>
       </div>
-
-
     </div>
     <div class="flex justify-end items-end m-10">
-      <div class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md cursor-pointer" (click)="onCancel()">Cancel</div>
-      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">Save</button>
+      <div
+        class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md cursor-pointer"
+        (click)="onCancel()"
+      >
+        Cancel
+      </div>
+      <button
+        type="submit"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
+      >
+        Save
+      </button>
     </div>
   </form>
 </div>

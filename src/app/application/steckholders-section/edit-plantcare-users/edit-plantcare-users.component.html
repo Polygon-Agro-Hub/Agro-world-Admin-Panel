@@ -1,9 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button
-  onclick="window.location.href='/admin/steckholders/action/farmers'"
-  class="mb-5 text-textLight dark:text-textDark"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -53,16 +50,13 @@
             />
             <span
               (click)="fileInput.click()"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer"
+              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
             >
-              <img
-                src="../../../../assets/images/editIcon.png"
-                alt="Edit Icon"
-                class="w-16 h-16"
-              />
+              <i class="fa-solid fa-pen text-lg text-white"></i>
             </span>
           </div>
         </div>
+
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
@@ -241,6 +235,43 @@
               membership is required
             </div>
           </div>
+
+
+
+          <div>
+            <label
+              for="language"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Language</label
+            >
+            <select
+              formControlName="language"
+              id="language"
+              name="language"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            >
+              <option selected disabled>-- select --</option>
+              <option
+                *ngFor="let item of language"
+                [value]="item.languageName"
+              >
+                {{ item.languageName }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                userForm.get('language')?.invalid &&
+                (userForm.get('language')?.dirty ||
+                  userForm.get('language')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+            language is required
+            </div>
+          </div>
+
+
+
         </div>
         <div class="border-t border-gray-200 my-10"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -276,7 +307,10 @@
             <input
               formControlName="accNumber"
               id="accNumber"
-              type="number"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              (keypress)="onlyNumberKey($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
             <div
@@ -287,11 +321,8 @@
               "
               class="text-red-500 text-sm mt-1"
             >
-              <div *ngIf="userForm.get('accNumber')?.errors?.['required']">
-                Account number is required
-              </div>
               <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">
-                Please enter a valid account number
+                Please enter a valid account number (numbers only)
               </div>
             </div>
           </div>
@@ -407,13 +438,9 @@
             />
             <span
               (click)="fileInput.click()"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer"
+              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
             >
-              <img
-                src="../../../../assets/images/editIcon.png"
-                alt="Edit Icon"
-                class="w-16 h-16"
-              />
+              <i class="fa-solid fa-pen text-lg text-white"></i>
             </span>
           </div>
         </div>
@@ -595,6 +622,42 @@
               membership is required
             </div>
           </div>
+
+
+          <div>
+            <label
+              for="language"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Language</label
+            >
+            <select
+              formControlName="language"
+              id="language"
+              name="language"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            >
+              <option selected disabled>-- select --</option>
+              <option
+                *ngFor="let item of language"
+                [value]="item.languageName"
+              >
+                {{ item.languageName }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                userForm.get('language')?.invalid &&
+                (userForm.get('language')?.dirty ||
+                  userForm.get('language')?.touched)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
+            language is required
+            </div>
+          </div>
+
+
+
         </div>
         <div class="border-t border-gray-200 my-10"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -830,6 +893,25 @@
             />
           </div>
 
+
+
+          <div>
+            <label
+              for="language"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >Language</label
+            >
+            <input
+              formControlName="language"
+              id="language"
+              name="language"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              readonly
+            />
+          </div>
+
+          
+
           <div>
             <label
               for="accHolderName"
@@ -839,8 +921,8 @@
             <input
               formControlName="accHolderName"
               id="accHolderName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
             />
             <div
               *ngIf="
@@ -865,8 +947,8 @@
               formControlName="accNumber"
               id="accNumber"
               type="number"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
             />
             <div
               *ngIf="
@@ -885,25 +967,21 @@
             </div>
           </div>
 
+          <!-- Bank Name Dropdown -->
+          <!-- Bank Name Field (converted from dropdown) -->
           <div>
             <label
-              for="bankDropdown"
+              for="bankName"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >
               Bank Name
             </label>
-            <select
+            <input
               formControlName="bankName"
-              id="bankDropdown"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
-              (change)="onBankChange()"
-            >
-              <option [ngValue]="null" disabled>Select a bank</option>
-              <option *ngFor="let bank of banks" [value]="bank.name">
-                {{ bank.name }}
-              </option>
-            </select>
+              id="bankName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
+            />
             <div
               *ngIf="
                 userForm.get('bankName')?.invalid &&
@@ -916,25 +994,20 @@
             </div>
           </div>
 
+          <!-- Branch Name Field (converted from dropdown) -->
           <div>
             <label
-              for="branchDropdown"
+              for="branchName"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >
               Branch Name
             </label>
-            <select
+            <input
               formControlName="branchName"
-              id="branchDropdown"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack disabled:opacity-50 disabled:cursor-not-allowed"
-              [disabled]="true"
-              (change)="onBranchChange()"
-            >
-              <option [ngValue]="null" disabled>Select a branch</option>
-              <option *ngFor="let branch of branches" [value]="branch.name">
-                {{ branch.name }}
-              </option>
-            </select>
+              id="branchName"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              readonly
+            />
             <div
               *ngIf="
                 userForm.get('branchName')?.invalid &&

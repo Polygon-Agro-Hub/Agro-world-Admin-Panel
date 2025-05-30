@@ -6,6 +6,8 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-opt-out-feedbacks',
@@ -37,14 +39,15 @@ export class OptOutFeedbacksComponent {
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
-    private router: Router
-  ) { }
+    private router: Router,
+    public permissionService: PermissionService,
+         public tokenService: TokenService
+  ) {}
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
     this.plantcareService.getUserFeedbackDetails(page, limit).subscribe(
       (response: any) => {
-        console.log(response);
         this.feedbacks = response.feedbackDetails;
         this.total = response.feedbackCount.Total;
         this.deleteCount = response.deletedUserCount.Total;
@@ -52,14 +55,10 @@ export class OptOutFeedbacksComponent {
         if (response.length > 0) {
           this.hasData = false;
         }
-
         this.calculatePercentageChange();
       },
       (error) => {
-        console.error(error);
         this.isLoading = false;
-        if (error.ststus === 401) {
-        }
       }
     );
   }
@@ -126,13 +125,9 @@ export class OptOutFeedbacksComponent {
               },
             ],
           };
-        } else {
-          console.warn('No feedback data received');
         }
       },
-      error: (error) => {
-        console.error('Error loading feedback data:', error);
-      },
+      error: () => {},
     });
   }
 
@@ -154,15 +149,14 @@ export class OptOutFeedbacksComponent {
     data: [
       {
         type: 'bar',
-        indexLabel: '{y}', // Show values on the bars
-        yValueFormatString: '#,###', // Format for bar values
-        maxBarWidth: 10, // Reduce bar width
-        barThickness: 5, // Reduce bar thickness
-        dataPoints: [], // Initialized as empty, will be updated dynamically
+        indexLabel: '{y}',
+        yValueFormatString: '#,###',
+        maxBarWidth: 10,
+        barThickness: 5,
+        dataPoints: [],
       },
     ],
   };
-
 
   navigatePath(path: string) {
     this.router.navigate([path]);

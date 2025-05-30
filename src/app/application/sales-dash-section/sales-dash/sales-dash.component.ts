@@ -21,4 +21,20 @@ export class SalesDashComponent {
     });
   }
 
+
+    viewCustomers(): void {
+    // this.isLoading = true;
+    this.router.navigate(['/sales-dash/customer']).then(() => {
+      // this.isLoading = false;
+    });
+  }
+
+
+      viewTargets(): void {
+    // this.isLoading = true;
+    this.router.navigate(['/sales-dash/sales-targets']).then(() => {
+      // this.isLoading = false;
+    });
+  }
+
 }

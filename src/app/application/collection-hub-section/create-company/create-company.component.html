@@ -11,6 +11,106 @@
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Add Company Details
       </h2>
+
+      <!-- Logo and Favicon Upload Section -->
+      <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            Add Logo
+          </label>
+          <div class="relative ml-5">
+            <input
+              type="file"
+              id="logoUpload"
+              name="logoUpload"
+              accept="image/*"
+              (change)="onLogoChange($event)"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div
+              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+            >
+              <div *ngIf="!companyData.logo" class="text-center">
+                <svg
+                  class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+              </div>
+              <img
+                *ngIf="companyData.logo"
+                [src]="companyData.logo"
+                alt="Logo preview"
+                class="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+          </div>
+          <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm mt-1"
+            >Logo is required.</span
+          >
+        </div>
+
+        <div class="flex items-center">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            Add Favicon
+          </label>
+          <div class="relative ml-5">
+            <input
+              type="file"
+              id="faviconUpload"
+              name="faviconUpload"
+              accept="image/*,.ico"
+              (change)="onFaviconChange($event)"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div
+              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+            >
+              <div *ngIf="!companyData.favicon" class="text-center">
+                <svg
+                  class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+              </div>
+              <img
+                *ngIf="companyData.favicon"
+                [src]="companyData.favicon"
+                alt="Favicon preview"
+                class="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+          </div>
+          <span
+            *ngIf="isFieldInvalid('favicon')"
+            class="text-red-600 text-sm mt-1"
+            >Favicon is required.</span
+          >
+        </div>
+      </div>
+
+      <hr class="my-5" />
+
       <div>
         <div class="pb-6">
           <label
@@ -114,116 +214,9 @@
             Enter a valid email address.
           </span>
         </div>
-
-        <!-- <div class="pb-6">
-            <label
-              for="oicName"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Officer In Charge Name</label
-            >
-            <input
-              id="oicName"
-              name="oicName"
-              [(ngModel)]="companyData.oicName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <div *ngIf="userForm.get('oicName')!.invalid && (userForm.get('oicName')!.dirty || userForm.get('oicName')!.touched)" class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('oicName')!.errors?.['required']">Name is required.</div>
-            </div>
-          </div> -->
-
-        <!-- <div class="pb-6">
-            <label
-              for="oicEmail"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-              >Officer In Charge Email</label
-            >
-            <input
-              id="oicEmail"
-              name="oicEmail"
-              [(ngModel)]="companyData.oicEmail"
-              type="email"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            <div *ngIf="userForm.get('oicEmail')!.invalid && (userForm.get('oicEmail')!.dirty || userForm.get('oicEmail')!.touched)" class="text-red-500 text-sm mt-1">
-              <div *ngIf="userForm.get('oicEmail')!.errors?.['required']">Email is required.</div>
-            </div>
-          </div> -->
-
-        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-         
-            <div>
-                <label
-                  for="phoneNumber01"
-                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
-                >
-                  Phone Number - 1
-                </label>
-                <div class="mt-1 flex">
-                  <select
-                    id="phoneNumber01Code"
-                    name="phoneNumber01Code"
-                    [(ngModel)]="companyData.oicConCode1"
-                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-                  >
-                    <option value="+94">+94 (LK)</option>
-                    <option value="+1">+1 (US)</option>
-                    <option value="+44">+44 (UK)</option>
-                    <option value="+91">+91 (India)</option>
-                  </select>
-                  <input
-                  [(ngModel)]="companyData.oicConNum1"
-                    id="phoneNumber01"
-                    name="phoneNumber01"
-                    type="number"
-                    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-              </div>
-    
-              <div>
-                <label
-                  for="phoNumTwo"
-                  class="block text-sm font-medium text-gray-700 dark:text-textDark"
-                >
-                  Phone Number - 2 (Optional)
-                </label>
-                <div class="mt-1 flex">
-                  <select
-                    id="phoneNumber02Code"
-                    name="phoneNumber02Code"
-                    [(ngModel)]="companyData.oicConCode2"
-                    class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-                  >
-                    <option value="+94">+94 (LK)</option>
-                    <option value="+1">+1 (US)</option>
-                    <option value="+44">+44 (UK)</option>
-                    <option value="+91">+91 (India)</option>
-                  </select>
-                  <input
-                    [(ngModel)]="companyData.oicConNum2"
-                    id="phoneNumber02"
-                    name="phoneNumber02"
-                    type="number"
-                    class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                    placeholder="Enter your phone number"
-                  />
-                  
-                </div>
-              </div>
-
-        </div> -->
       </div>
 
       <div class="flex justify-end m-10">
-        <!-- <button
-          
-          type="button"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-        >
-          Cancel
-        </button> -->
         <button
           type="submit"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
@@ -262,7 +255,10 @@
         </div>
 
         <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="accNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Account Number
           </label>
           <input
@@ -272,13 +268,19 @@
             (blur)="onBlur('accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          <span
+            *ngIf="isFieldInvalid('accNumber')"
+            class="text-red-600 text-sm"
+          >
             Account Number is required.
           </span>
         </div>
-        
+
         <div class="pb-6">
-          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="confirmAccNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Confirm Account Number
           </label>
           <input
@@ -288,52 +290,72 @@
             (blur)="onBlur('confirmAccNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          
+
           <!-- Required validation message -->
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Confirm Account Number is required.
           </span>
-        
+
           <!-- Mismatch validation message -->
-          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Account Numbers do not match.
           </span>
         </div>
-        
 
         <div class="pb-6">
-          <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="bankDropdown"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Bank Name
           </label>
-          <select 
-            id="bankDropdown" 
+          <select
+            id="bankDropdown"
             name="bankDropdown"
             [(ngModel)]="selectedBankId"
             (change)="onBankChange()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a bank</option>
-            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+              {{ bank.name }}
+            </option>
           </select>
           <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
             Bank Name is required.
           </span>
         </div>
-        
+
         <div class="pb-6">
-          <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="branchDropdown"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Branch Name
           </label>
-          <select 
-            id="branchDropdown" 
+          <select
+            id="branchDropdown"
             name="branchDropdown"
             [(ngModel)]="selectedBranchId"
             (change)="onBranchChange()"
             [disabled]="!selectedBankId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a branch</option>
-            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+              {{ branch.name }}
+            </option>
           </select>
-          <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+          <span
+            *ngIf="isFieldInvalid('branchName')"
+            class="text-red-600 text-sm"
+          >
             Branch Name is required.
           </span>
         </div>
@@ -368,7 +390,15 @@
         <button
           type="button"
           (click)="saveCompanyData()"
-          [disabled]="!companyData.confirmAccNumber || !companyData.accNumber || !companyData.accHolderName || !companyData.bankName || !companyData.branchName || !companyData.foName || companyData.accNumber != companyData.confirmAccNumber"
+          [disabled]="
+            !companyData.confirmAccNumber ||
+            !companyData.accNumber ||
+            !companyData.accHolderName ||
+            !companyData.bankName ||
+            !companyData.branchName ||
+            !companyData.foName ||
+            companyData.accNumber != companyData.confirmAccNumber
+          "
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Submit
@@ -377,41 +407,134 @@
     </div>
   </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div *ngIf="itemId !== null && !isView">
     <div *ngIf="selectedPage === 'pageOne'">
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
         Edit Company Details
       </h2>
+
+      <div class="flex justify-between items-center mb-8">
+        <!-- Logo Section -->
+        <div class="flex items-center">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            Add Logo
+          </label>
+          <div class="relative ml-5">
+            <input
+              type="file"
+              id="logoUpload"
+              name="logoUpload"
+              accept="image/*"
+              (change)="onLogoChange($event)"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div
+              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer relative"
+            >
+              <div *ngIf="!companyData.logo" class="text-center">
+                <svg
+                  class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+              </div>
+              <img
+                *ngIf="companyData.logo"
+                [src]="companyData.logo"
+                alt="Logo preview"
+                class="w-full h-full object-cover rounded-lg"
+              />
+              <!-- Remove button for logo -->
+              <button
+                *ngIf="companyData.logo"
+                (click)="removeLogo()"
+                type="button"
+                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          <span
+            *ngIf="isFieldInvalid('logo')"
+            class="text-red-600 text-sm mt-1"
+          >
+            Logo is required.
+          </span>
+        </div>
+
+        <!-- Favicon Section -->
+        <div class="flex items-center">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            Add Favicon
+          </label>
+          <div class="relative ml-5">
+            <input
+              type="file"
+              id="faviconUpload"
+              name="faviconUpload"
+              accept="image/*,.ico"
+              (change)="onFaviconChange($event)"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div
+              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer relative"
+            >
+              <div *ngIf="!companyData.favicon" class="text-center">
+                <svg
+                  class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
+                </svg>
+              </div>
+              <img
+                *ngIf="companyData.favicon"
+                [src]="companyData.favicon"
+                alt="Favicon preview"
+                class="w-full h-full object-cover rounded-lg"
+              />
+              <!-- Remove button for favicon -->
+              <button
+                *ngIf="companyData.favicon"
+                (click)="removeFavicon()"
+                type="button"
+                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          <span
+            *ngIf="isFieldInvalid('favicon')"
+            class="text-red-600 text-sm mt-1"
+          >
+            Favicon is required.
+          </span>
+        </div>
+      </div>
+
+      <hr class="my-5" />
+
       <div>
         <div class="pb-6">
           <label
@@ -592,7 +715,10 @@
         </div>
 
         <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="accNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Account Number
           </label>
           <input
@@ -602,13 +728,19 @@
             (blur)="onBlur('accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          <span
+            *ngIf="isFieldInvalid('accNumber')"
+            class="text-red-600 text-sm"
+          >
             Account Number is required.
           </span>
         </div>
-        
+
         <div class="pb-6">
-          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label
+            for="confirmAccNumber"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
             Confirm Account Number
           </label>
           <input
@@ -619,14 +751,20 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-yellow-500 dark:placeholder-yellow-300"
             placeholder="Please re-enter the account number to submit changes"
           />
-          
+
           <!-- Required validation message -->
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Confirm Account Number is required.
           </span>
-        
+
           <!-- Mismatch validation message -->
-          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span
+            *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+            class="text-red-600 text-sm"
+          >
             Account Numbers do not match.
           </span>
         </div>
@@ -637,32 +775,38 @@
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Bank Name</label
           >
-          <select 
-            id="bankDropdown" 
+          <select
+            id="bankDropdown"
             name="bankDropdown"
             [(ngModel)]="selectedBankId"
             (change)="onBankChange()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a bank</option>
-            <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+            <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+              {{ bank.name }}
+            </option>
           </select>
         </div>
-        
+
         <div class="pb-6">
           <label
             for="branchDropdown"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Branch Name</label
           >
-          <select 
-            id="branchDropdown" 
+          <select
+            id="branchDropdown"
             name="branchDropdown"
             [(ngModel)]="selectedBranchId"
             (change)="onBranchChange()"
             [disabled]="!selectedBankId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
             <option [ngValue]="null" disabled>Select a branch</option>
-            <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+            <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+              {{ branch.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -678,7 +822,14 @@
         <button
           type="button"
           (click)="updateCompanyData()"
-          [disabled]="!companyData.confirmAccNumber || !companyData.accNumber || !companyData.accHolderName || !companyData.bankName || !companyData.branchName || companyData.accNumber != companyData.confirmAccNumber"
+          [disabled]="
+            !companyData.confirmAccNumber ||
+            !companyData.accNumber ||
+            !companyData.accHolderName ||
+            !companyData.bankName ||
+            !companyData.branchName ||
+            companyData.accNumber != companyData.confirmAccNumber
+          "
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         >
           Save
@@ -686,36 +837,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <div *ngIf="itemId !== null && isView">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
@@ -735,7 +856,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -751,7 +871,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -767,7 +886,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -783,7 +901,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div class="pb-6">
@@ -800,13 +917,8 @@
           type="email"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
-
-      
     </div>
-
-
 
     <h2 class="text-2xl mt-5 mb-10 text-textLight dark:text-textDark">
       Billing Information
@@ -828,7 +940,10 @@
       </div>
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Account Number
         </label>
         <input
@@ -838,7 +953,6 @@
           [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
       </div>
 
       <div>
@@ -874,48 +988,6 @@
           />
         </div>
       </div>
-
     </div>
-
   </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

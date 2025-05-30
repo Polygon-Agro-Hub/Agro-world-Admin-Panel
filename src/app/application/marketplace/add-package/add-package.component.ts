@@ -27,6 +27,10 @@ export class AddPackageComponent implements OnInit {
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
+  back(): void {
+    this.router.navigate(['/market/action']);
+  }
+
   ngOnInit(): void {
     this.getCropProductData();
     this.packageObj.Items = [];
@@ -70,15 +74,32 @@ export class AddPackageComponent implements OnInit {
     if (
       !this.inputPackageObj.qtytype ||
       !this.inputPackageObj.mpItemId ||
-      !this.inputPackageObj.cID ||
-      !this.inputPackageObj.quantity
+      !this.inputPackageObj.cID
+
     ) {
       let errorMessage = 'Please fill in all the required fields:';
 
       if (!this.inputPackageObj.qtytype) errorMessage += '<br>- Quantity Type';
       if (!this.inputPackageObj.mpItemId) errorMessage += '<br>- Variety';
       if (!this.inputPackageObj.cID) errorMessage += '<br>- Crop';
-      if (!this.inputPackageObj.quantity) errorMessage += '<br>- Quantity';
+
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+
+    if (
+      !this.inputPackageObj.quantity
+    ) {
+      let errorMessage = 'You cannot add 0 as the product Quantity';
+
+     
 
       Swal.fire({
         icon: 'warning',

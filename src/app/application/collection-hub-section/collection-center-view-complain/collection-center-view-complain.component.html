@@ -6,12 +6,13 @@
 </button>
 
 <div
-  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
+<div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
-    <div class="flex items-center">
+    <div class="flex items-center min-w-[200px]">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Complain List ({{ this.totalItems }})
+        Complaint List ({{ this.totalItems }})
       </h2>
     </div>
     <div class="flex items-center">
@@ -22,6 +23,20 @@
           />
         </svg>
       </i>
+
+      <div class="mr-5">
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+          [options]="replyStatus"
+          [checkmark]="true"
+          optionLabel="status"
+          optionValue="value"
+          [showClear]="true"
+          placeholder="Reply Status"
+          [(ngModel)]="rpst"
+          (onChange)="regStatusFil()"
+        />
+      </div>
 
       <div class="mr-5">
         <p-dropdown
@@ -51,7 +66,7 @@
           [checkmark]="true"
           optionLabel="companyNameEnglish"
           [showClear]="true"
-          placeholder="company"
+          placeholder="Company"
           (onChange)="applyFilters()"
           appendTo="body"
         ></p-dropdown>
@@ -87,6 +102,7 @@
           placeholder="Search.."
           [(ngModel)]="searchText"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          (keydown.enter)="searchComplain()"
         />
         <button
           type="button"
@@ -131,34 +147,43 @@
       </div>
     </div>
   </div>
-  <div>
+
+
+  <div *ngIf="!hasData" class="text-center py-8">
+    <p class="text-textLight dark:text-textDark text-lg">
+      No data to display
+    </p>
+  </div>
+
+
+  <div *ngIf="hasData">
     <table
-      class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
     >
       <thead>
         <tr>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
             Ref No.
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
             Category
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
             EMP ID
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
             Company
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-center"
+            class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
             Center Code
           </th>
@@ -202,19 +227,19 @@
                   }
           "
         >
-          <td class="py-3 dark:text-textDark text-center">{{ item.refNo }}</td>
-          <td class="py-3 dark:text-textDark text-center">
+          <td class="py-3 dark:text-textDark text-left">{{ item.refNo }}</td>
+          <td class="py-3 dark:text-textDark text-left">
             {{ item.complainCategory }}
           </td>
-          <td class="py-3 dark:text-textDark text-center">{{ item.empId }}</td>
-          <td class="py-3 dark:text-textDark text-center">
+          <td class="py-3 dark:text-textDark text-left">{{ item.empId }}</td>
+          <td class="py-3 dark:text-textDark text-left">
             {{ item.companyName }}
           </td>
-          <td class="py-3 dark:text-textDark text-center">
+          <td class="py-3 dark:text-textDark text-left">
             {{ item.regCode }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ item.createdAt }}
+            {{ item.createdAt | date: 'yyyy/MM/dd hh.mm a' : 'UTC' }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
             <div *ngIf="item.status === 'Assigned'">
@@ -295,4 +320,5 @@
   <div class="dark:bg-[#262f45]">
     <pagination-controls></pagination-controls>
   </div>
+</div>
 </div>

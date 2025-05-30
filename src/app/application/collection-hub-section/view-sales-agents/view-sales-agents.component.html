@@ -5,7 +5,7 @@
   Back
 </button>
 <button
-*ngIf="permissionService.hasPermission('Add Sales Dash user') ||
+*ngIf="permissionService.hasPermission('Onboard sales agent') ||
                   tokenService.getUserDetails().role === '1'"
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="
@@ -45,13 +45,13 @@
         <div class="flex items-center gap-4">
           <div>
             <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [options]="statusArr"
               [checkmark]="true"
               optionLabel="status"
               optionValue="value"
               [showClear]="true"
-              placeholder="status"
+              placeholder="Status"
               [(ngModel)]="statusFilter"
               (onChange)="applyFilters()"
             />
@@ -161,21 +161,21 @@
             >
               NIC
             </th>
-            <th
+            <!-- <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Activity Status
-            </th>
+            </th> -->
             
-            <th *ngIf="permissionService.hasPermission('View Sales Dash user') ||
+            <th *ngIf="permissionService.hasPermission('View individual sales agent') ||
                   tokenService.getUserDetails().role === '1'"
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="permissionService.hasPermission('Edit Sales Dash user') ||
+            <th *ngIf="permissionService.hasPermission('Manage sales agent') ||
                   tokenService.getUserDetails().role === '1'"
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="permissionService.hasPermission('Delete Sales Dash user') ||
+            <th *ngIf="permissionService.hasPermission('Delete(remove) sales agent') ||
                   tokenService.getUserDetails().role === '1'"
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
@@ -220,9 +220,9 @@
                     'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-lg':
                       item.status === 'Rejected'
                   }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-textLight dark:text-textDark text-center"
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve Sales Dash user') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve Sales Dash user') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
+                  class="font-medium rounded-md px-4 py-2 text-xs text-center w-24 flex items-center justify-center"
+                  [class.cursor-pointer]="permissionService.hasPermission('Approve sales agent') || tokenService.getUserDetails().role === '1'"
+                  (click)="(permissionService.hasPermission('Approve sales agent') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
                 >
                   {{ item.status }}
                 </span>
@@ -237,11 +237,11 @@
             </td>
 
             
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <!-- View button commented out -->
-            </td>
+            <!-- <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              
+            </td> -->
 
-            <td *ngIf="permissionService.hasPermission('View Sales Dash user') ||
+            <td *ngIf="permissionService.hasPermission('View individual sales agent') ||
                   tokenService.getUserDetails().role === '1'" 
                   class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
@@ -264,7 +264,7 @@
               </button>
             </td>
 
-            <td *ngIf="permissionService.hasPermission('Edit Sales Dash user') ||
+            <td *ngIf="permissionService.hasPermission('Manage sales agent') ||
                   tokenService.getUserDetails().role === '1'"
                   class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
@@ -285,7 +285,7 @@
               </button>
             </td>
 
-            <td *ngIf="permissionService.hasPermission('Delete Sales Dash user') ||
+            <td *ngIf="permissionService.hasPermission('Delete(remove) sales agent') ||
                   tokenService.getUserDetails().role === '1'"
                   class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button

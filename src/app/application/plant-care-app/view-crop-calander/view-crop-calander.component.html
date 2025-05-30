@@ -5,6 +5,8 @@
   Back
 </button>
 <button
+ *ngIf="permissionService.hasPermission('Create crop calendar') ||
+                  tokenService.getUserDetails().role === '1'"
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="addNew()"
 >
@@ -36,6 +38,27 @@
           All Crop Calenders ({{ this.totalItems }})
         </h2>
       </div>
+
+      <div
+      *ngIf="permissionService.hasPermission('Filter crop calendar') ||
+                  tokenService.getUserDetails().role === '1'"
+          class="flex items-center gap-3">
+
+      <div>
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+          [options]="category"
+          [checkmark]="true"
+          optionLabel="name"
+          optionValue="value"
+          [showClear]="true"
+          placeholder="Category"
+          [(ngModel)]="selectedCategory"
+          (onChange)="regStatusFil()"
+        />
+      </div>
+
+
       <div
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
       >
@@ -88,6 +111,10 @@
       </div>
     </div>
 
+
+
+    </div>
+
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-textLight dark:text-textDark text-lg">
         No data to display
@@ -111,27 +138,27 @@
               Crop
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Variety
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Category
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Cultivation Method
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Nature of Cultivation
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Duration
             </th>
@@ -157,22 +184,25 @@
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.cropNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.category }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.method }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.natOfCul }}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.cropDuration }}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            *ngIf="permissionService.hasPermission('View crop calendar task') ||
+                  tokenService.getUserDetails().role === '1'"
+                  class="px-3 py-3 text-left text-textLight dark:text-textDark">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-8"
                 (click)="ViewCroptask(item.id)"
@@ -193,7 +223,10 @@
               </button>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            *ngIf="permissionService.hasPermission('Edit crop calendar') ||
+                  tokenService.getUserDetails().role === '1'"
+                  class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCropCalender(item.id)"
@@ -212,7 +245,9 @@
               </button>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('Delete crop calendar') ||
+                  tokenService.getUserDetails().role === '1'"
+                  class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button
                 class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCropCalender(item.id)"

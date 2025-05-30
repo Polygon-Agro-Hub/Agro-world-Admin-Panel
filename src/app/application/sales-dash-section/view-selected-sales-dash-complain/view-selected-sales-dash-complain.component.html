@@ -13,9 +13,9 @@
   <div>
     <div class="text-center mb-4">
       <p class="text-sm text-gray-600 dark:text-textDark">Ref No : {{complain.refNo}}</p>
-      <p class="text-sm text-gray-600 dark:text-textDark">
+      <!-- <p class="text-sm text-gray-600 dark:text-textDark">
         Preferred Language: <span class="font-semibold">{{complain.language}}</span>
-      </p>
+      </p> -->
       <p class="text-sm text-gray-600 dark:text-textDark">Received: {{complain.createdAt}}</p>
     </div>
 
@@ -36,8 +36,8 @@
 
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
-        <label class="block text-gray-700 dark:text-textDark  mb-2 mr-11"
-          >Complaint (Sales Agent)</label
+        <label class="block text-gray-700 dark:text-textDark mb-2 mr-6"
+          >Complaint (SA)   </label
         >
         <input
           type="text"
@@ -52,7 +52,7 @@
         >
         <input
           type="text"
-          [value]="complain.AgentPhone"
+          [value]="complain.phoneNumber1"
           class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
           disabled
         />

@@ -41,7 +41,6 @@ export class AssignCenterTargetComponent {
       this.searchText
     ).subscribe((res) => {
       this.isLoading = false;
-      console.log('res', res);
 
       this.assignCropsArr = res.result.data;
       this.countCrops = res.result.data.length;
@@ -55,7 +54,6 @@ export class AssignCenterTargetComponent {
     const selectedDate = new Date(this.selectDate);
     const today = new Date();
 
-    // Reset time components to compare just dates
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
 
@@ -166,7 +164,6 @@ export class AssignCenterTargetComponent {
             showConfirmButton: false,
           }).then(() => {
             this.fetchSavedCenterCrops();
-            // this.router.navigate(['/target/assign-center-target'])
           });
         } else {
           Swal.fire({

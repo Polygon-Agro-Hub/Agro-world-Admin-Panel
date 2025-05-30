@@ -1,0 +1,8 @@
+
+.profile-pic {
+    background-color: #fff;
+    width: 10em;
+    height: 5em;
+    /* border-radius: 50%; */
+    object-fit: cover; /* Ensures the image fills the container without distortion */
+}

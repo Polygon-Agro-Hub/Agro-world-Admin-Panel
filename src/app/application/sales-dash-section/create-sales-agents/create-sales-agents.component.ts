@@ -63,7 +63,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
 
-  selectedImage: string | ArrayBuffer | null = null;
+  selectedImage: File | null = null;
   selectedFile: File | null = null;
   selectedFileName!: string;
   invalidFields: Set<string> = new Set();
@@ -98,9 +98,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     { name: 'Puttalam', province: 'North Western' },
     { name: 'Rathnapura', province: 'Sabaragamuwa' },
     { name: 'Trincomalee', province: 'Eastern' },
-    { name: 'Vavuniya', province: 'Northern' },
+    { name: 'Vavuniya', province: 'Northern' }
   ];
-
+  
   constructor(
     private collectionOfficerService: CollectionOfficerService,
     private fb: FormBuilder,

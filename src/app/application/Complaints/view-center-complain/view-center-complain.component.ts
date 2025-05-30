@@ -54,6 +54,10 @@ export class ViewCenterComplainComponent {
     this.fetchComplain();
   }
 
+  back(): void {
+    this.router.navigate(['complaints/view-complains']);
+  }
+
 
   fetchComplain() {
     this.isLoading = true;
@@ -152,12 +156,12 @@ export class ViewCenterComplainComponent {
       )
       .subscribe(
         (res: any) => {
-          console.log("Market Price updated successfully", res);
+          console.log("Reply Sent successfully", res);
 
           Swal.fire({
             icon: "success",
             title: "Success",
-            text: "Market Price updated successfully!",
+            text: "Reply Sent successfully!",
           });
           this.fetchComplain();
           this.isLoading = false;
@@ -190,6 +194,8 @@ export class ViewCenterComplainComponent {
 
 class Complain {
   id!: string;
+  empId!: any;
+  jobRole!: string; 
   refNo!: string;
   status!: string;
   firstName!: string;

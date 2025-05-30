@@ -50,4 +50,33 @@ export class DestributionService {
     const url = `${this.apiUrl}distribution/create-distribution-center`;
     return this.http.post<ApiResponse>(url, data, { headers: this.getHeaders() });
   }
+
+  getAllDistributionCentre(
+    page: number,
+    limit: number,
+    district: string = '',
+    province: string = '',
+    searchItem: string = ''
+  ): Observable<any> {
+    console.log(page, limit, searchItem);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}distribution/get-all-distribution-centre?page=${page}&limit=${limit}`;
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (district) {
+      url += `&district=${district}`;
+    }
+
+    if (province) {
+      url += `&province=${province}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
 }

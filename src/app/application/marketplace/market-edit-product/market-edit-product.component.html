@@ -1,7 +1,7 @@
 <button (click)="back()" class="mb-10 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
-<form>
+<!-- <form> -->
   <!-- save button -->
   <div class="flex flex-row justify-between items-center mb-6">
     <p class="text-lg text-black font-semibold dark:text-textDark">
@@ -41,7 +41,6 @@
           [(ngModel)]="productObj.cropName" 
           required 
           #displayNameField="ngModel" 
-          (input)="validateDisplayName()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
         />
       
@@ -154,7 +153,6 @@
           [(ngModel)]="productObj.discount " 
           required 
           #discountValueField="ngModel" 
-          (change)="calculeSalePriceForDiscountValue()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
         />
       
@@ -359,14 +357,14 @@
           />
         
           <!-- Validation Error Messages -->
-          <div *ngIf="startValueField.touched && startValueField.errors" class="text-red-500 mt-1 text-sm">
+          <!-- <div *ngIf="startValueField.touched && startValueField.errors" class="text-red-500 mt-1 text-sm">
             <div *ngIf="startValueField.errors?.['required']">
               Starting Value is required.
             </div>
             <div *ngIf="startValueField.errors?.['min']">
               Starting Value must be greater than 0 (e.g., 0.01).
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
@@ -413,18 +411,18 @@
           />
         
           <!-- Validation Error Messages -->
-          <div *ngIf="changebyField.touched && changebyField.errors" class="text-red-500 mt-1 text-sm">
+          <!-- <div *ngIf="changebyField.touched && changebyField.errors" class="text-red-500 mt-1 text-sm">
             <div *ngIf="changebyField.errors?.['required']">
               Increase/Decrease value is required.
             </div>
             <div *ngIf="changebyField.errors?.['min']">
               Value must be greater than 0 (e.g., 0.01).
             </div>
-          </div>
+          </div> -->
         </div>
 
         
       </div>
     </div>
   </div>
-</form>
+<!-- </form> -->

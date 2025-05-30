@@ -253,7 +253,14 @@ export class MarketEditProductComponent implements OnInit {
   
     if (this.productObj.discountedPrice === 0) {
       this.productObj.discountedPrice = this.storedDiscountPercentage;
+      this.productObj.salePrice =
+        this.productObj.normalPrice -
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+
+      this.productObj.discount =
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
     }
+    console.log('object', this.productObj)
   
     console.log('store', this.storedDisplayType);
   }

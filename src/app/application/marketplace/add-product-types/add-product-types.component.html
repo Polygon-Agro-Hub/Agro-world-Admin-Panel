@@ -1,0 +1,46 @@
+<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+    <h2 class="text-xl mb-6 text-textLight dark:text-textDark font-normal">Add Product Type</h2>
+
+    <div>
+
+        <div class="mb-5">
+            <!-- Role Input -->
+            <label for="typeName" class="block text-[#534E4E] dark:text-textDark my-2">Type Name</label>
+            <input id="typeName" name="typeName" [(ngModel)]="productObj.typeName"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                placeholder="Ex : Up County Fruits" #typeNameInput="ngModel" required />
+
+            <!-- Error: Required Field -->
+            <div *ngIf="typeNameInput.touched && !productObj.typeName" class="text-red-500 text-sm mt-1">
+                <div>Type Name is required</div>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <!-- Role Input -->
+            <label for="cropName" class="block text-[#534E4E] dark:text-textDark my-2">Short Code (Must have 3
+                initials)</label>
+            <input id="shortCode" name="shortCode" [(ngModel)]="productObj.shortCode"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                placeholder="Ex : UCF" #shortCodeInput="ngModel" required />
+
+            <!-- Error: Required Field -->
+            <div *ngIf="shortCodeInput.touched && !productObj.shortCode" class="text-red-500 text-sm mt-1">
+                <div>Short Code is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-end mt-6">
+        <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md cursor-pointer" onclick="history.back()">
+            Cancel
+        </button>
+        <button (click)="createType()" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">
+            Save
+        </button>
+    </div>
+</div>

@@ -11,7 +11,7 @@ export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -206,53 +206,53 @@ export class MarketPlaceService {
 
 
 
-    uploadRetailBanner(data: FormData): Observable<any> {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`,
-        });
-    return this.http.post(`${this.apiUrl}market-place/upload-banner`, data, {headers});
+  uploadRetailBanner(data: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(`${this.apiUrl}market-place/upload-banner`, data, { headers });
   }
 
 
   uploadRetailBannerWholesale(data: FormData): Observable<any> {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`,
-        });
-    return this.http.post(`${this.apiUrl}market-place/upload-banner-wholesale`, data, {headers});
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.post(`${this.apiUrl}market-place/upload-banner-wholesale`, data, { headers });
   }
 
 
 
 
-    updateBannerOrder(feedbacks: { id: number; orderNumber: number }[]) {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`,
-      });
-  
-      return this.http.put(
-        `${environment.API_URL}market-place/update-banner-order`,
-        { feedbacks },
-        { headers },
-      );
-    }
+  updateBannerOrder(feedbacks: { id: number; orderNumber: number }[]) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-
-    
-    updateBannerOrderWhole(feedbacks: { id: number; orderNumber: number }[]) {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`,
-      });
-  
-      return this.http.put(
-        `${environment.API_URL}market-place/update-banner-order`,
-        { feedbacks },
-        { headers },
-      );
-    }
+    return this.http.put(
+      `${environment.API_URL}market-place/update-banner-order`,
+      { feedbacks },
+      { headers },
+    );
+  }
 
 
 
-      deleteBannerRetail(feedbackId: number): Observable<any> {
+  updateBannerOrderWhole(feedbacks: { id: number; orderNumber: number }[]) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(
+      `${environment.API_URL}market-place/update-banner-order`,
+      { feedbacks },
+      { headers },
+    );
+  }
+
+
+
+  deleteBannerRetail(feedbackId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -263,12 +263,33 @@ export class MarketPlaceService {
   }
 
 
-        deleteBannerWhole(feedbackId: number): Observable<any> {
+  deleteBannerWhole(feedbackId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.delete(`${this.apiUrl}market-place/delete-banner-whole/${feedbackId}`, {
+      headers
+    });
+  }
+
+  createProductType(data:any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(`${this.apiUrl}market-place/create-product-type`,data, {
+      headers
+    });
+  }
+
+
+  getAllProductType(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get(`${this.apiUrl}market-place/view-all-product-type`, {
       headers
     });
   }

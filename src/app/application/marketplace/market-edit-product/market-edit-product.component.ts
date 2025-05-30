@@ -40,14 +40,16 @@ export class MarketEditProductComponent implements OnInit {
   selectedVarieties!: Variety[];
   isVerityVisible = false;
   selectedImage!: any;
-
-  isNoDiscount: boolean = false;
+  storedDisplayType!: string;
+  storedDiscountPercentage: number = 0.0;
+  // discountPercentage: number = 0.0;
+  isNoDiscount: boolean = true;
 
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   back(): void {
     this.router.navigate(['market/action/view-products-list']);
@@ -63,12 +65,15 @@ export class MarketEditProductComponent implements OnInit {
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
       console.log('product:', res);
+      this.storedDisplayType = res.displaytype;
       this.productObj = res;
+      console.log('this is product', this.productObj);
+      this.storedDisplayType
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.onCropChange();
       // this.productObj.varietyId = res.cropId;
-      console.log('product object', this.productObj)
+      console.log('this is variety ID', this.productObj.varietyId);
       this.templateKeywords.update(() => res.tags || []);
       if (res.normalPrice && res.discount) {
         this.discountPercentage = this.calculateDiscountPercentage(
@@ -130,21 +135,14 @@ export class MarketEditProductComponent implements OnInit {
     this.selectedImage = sample[0].image;
   }
 
-  calculeSalePrice() {
-    this.productObj.discount =
-      (this.productObj.normalPrice * this.discountPercentage) / 100;
-    this.productObj.discountedPrice =
-      this.productObj.normalPrice -
-      (this.productObj.normalPrice * this.discountPercentage) / 100;
-    console.log(this.productObj.discountedPrice);
-  }
-
-  calculeSalePriceForDiscountValue() {
-  
-    this.productObj.discountedPrice =
-      this.productObj.normalPrice - this.productObj.discount;
-    console.log(this.productObj.discountedPrice);
-  }
+  // calculeSalePrice() {
+  //   this.productObj.discount =
+  //     (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+  //   this.productObj.salePrice =
+  //     this.productObj.normalPrice -
+  //     (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+  //   console.log(this.productObj.salePrice);
+  // }
 
   onCancel() {
     Swal.fire({
@@ -240,8 +238,9 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        !this.productObj.discountedPrice
-        // !this.productObj.salePrice
+        !this.productObj.discountedPrice ||
+        !this.productObj.salePrice ||
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
       ) {
         Swal.fire(
           'Warning',
@@ -259,7 +258,8 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.normalPrice ||
         !this.productObj.unitType ||
         !this.productObj.startValue ||
-        !this.productObj.changeby
+        !this.productObj.changeby ||
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
       ) {
         Swal.fire(
           'Warning',
@@ -320,27 +320,55 @@ export class MarketEditProductComponent implements OnInit {
     });
   }
 
-
-  compaireDiscount(){
-    this.productObj.displaytype='';
-    this.productObj.discount= 0.00;
-    this.discountPercentage= 0.00;
-    console.log(this.productObj.discount);
-    this.isNoDiscount = true;
-    this.productObj.discountedPrice = this.productObj.normalPrice - this.productObj.discount
-    console.log('discointe', this.productObj.discountedPrice);
+  applyDiscount() {
+    this.isNoDiscount = false;
+    this.productObj.displaytype = this.storedDisplayType;
+    console.log('discounted price', this.productObj.discountedPrice);
+  
+    if (this.productObj.discountedPrice === 0) {
+      this.productObj.discountedPrice = this.storedDiscountPercentage;
+    }
+  
+    console.log('store', this.storedDisplayType);
   }
-
   
 
-validateDisplayName() {
-  if (this.productObj.cropName) {
-    // Check if the display name contains only digits
-    this.isDisplayNameOnlyNumbers = /^\d+$/.test(this.productObj.cropName);
-  } else {
-    this.isDisplayNameOnlyNumbers = false;
+  compaireDiscount() {
+    this.storedDiscountPercentage = this.productObj.discountedPrice;
+    this.productObj.displaytype = '';
+    this.productObj.discount = 0.0;
+    this.productObj.discountedPrice = 0.0;
+    this.isNoDiscount = true;
+    this.productObj.salePrice =
+      this.productObj.normalPrice - this.productObj.discount;
   }
-}
+
+  calculeSalePrice() {
+    if (
+      this.productObj.displaytype === 'D&AP' ||
+      this.productObj.displaytype === 'AP&SP&D'
+    ) {
+      this.productObj.salePrice =
+        this.productObj.normalPrice -
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+
+      this.productObj.discount =
+        (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
+    } else if (this.productObj.displaytype === 'AP&SP') {
+      this.productObj.discount =
+        this.productObj.normalPrice - this.productObj.salePrice;
+    } else {
+      this.productObj.salePrice =
+        this.productObj.normalPrice - this.productObj.discount;
+    }
+  }
+
+  // changeType() {
+  //   this.productObj.normalPrice = 0;
+  //   this.productObj.salePrice = 0;
+  //   this.productObj.discountedPrice = 0;
+  //   this.productObj.discountedPrice = 0;
+  // }
 }
 
 class Crop {
@@ -358,13 +386,17 @@ class MarketPrice {
   promo: boolean = false;
   unitType!: string;
   startValue!: number;
+  maxQuantity!: number;
   changeby!: number;
   tags: string = '';
-  category!: String;
+  category!: string;
+  // displayType!: string;
+  variety!: string
+
 
   selectId!: number;
   displaytype!: string;
-  // salePrice: number = 0;
+    salePrice: number = 0;
   discount!: number;
 }
 

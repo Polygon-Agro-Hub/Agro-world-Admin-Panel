@@ -198,7 +198,8 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        !this.productObj.salePrice
+        !this.productObj.salePrice ||
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
       ) {
         Swal.fire(
           'Warning',
@@ -215,7 +216,8 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.normalPrice ||
         !this.productObj.unitType ||
         !this.productObj.startValue ||
-        !this.productObj.changeby
+        !this.productObj.changeby ||
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
       ) {
         Swal.fire(
           'Warning',
@@ -305,6 +307,7 @@ class MarketPrice {
   displaytype!: string;
   salePrice: number = 0;
   discount: number = 0.0;
+  maxQuantity!: number;
 
   discountValue: number = 0;
 }

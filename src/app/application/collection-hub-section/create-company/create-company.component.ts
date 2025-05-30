@@ -200,9 +200,11 @@ export class CreateCompanyComponent {
     }
   }
 
-  removeLogo(): void {
+  removeLogo(event: Event): void {
+    event.stopPropagation();
     this.companyData.logo = '';
     this.selectedLogoFile = null;
+    this.companyData.logoFile = undefined;
 
     const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
     if (logoInput) {
@@ -212,7 +214,8 @@ export class CreateCompanyComponent {
     this.touchedFields['logo'] = true;
   }
 
-  removeFavicon(): void {
+  removeFavicon(event: Event): void {
+    event.stopPropagation();
     this.companyData.favicon = '';
     this.selectedFaviconFile = null;
 
@@ -453,14 +456,39 @@ export class CreateCompanyComponent {
 
   updateCompanyData() {
     if (this.itemId) {
+      this.isLoading = true;
+
+      const formData = new FormData();
+
+      Object.entries(this.companyData).forEach(([key, value]) => {
+        if (
+          key !== 'logoFile' &&
+          key !== 'faviconFile' &&
+          value !== null &&
+          value !== undefined
+        ) {
+          formData.append(key, String(value));
+        }
+      });
+
+      if (this.companyData.logoFile) {
+        formData.append('logo', this.companyData.logoFile);
+      }
+
+      if (this.companyData.faviconFile) {
+        formData.append('favicon', this.companyData.faviconFile);
+      }
+
       this.collectionCenterSrv
         .updateCompany(this.companyData, this.itemId)
         .subscribe(
           (response) => {
+            this.isLoading = false;
             Swal.fire('Success', 'Company Updated Successfully', 'success');
             this.router.navigate(['/collection-hub/manage-company']);
           },
           (error) => {
+            this.isLoading = false;
             Swal.fire(
               'Error',
               'Failed to update company. Please try again.',

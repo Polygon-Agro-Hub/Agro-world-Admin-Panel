@@ -120,6 +120,7 @@ import { ProcurementComponent } from './application/procurement-section/procurem
 import { DispatchComponent } from './application/dispatch-section/dispatch/dispatch.component';
 import { RecievedOrdersComponent } from './application/procurement-section/recieved-orders/recieved-orders.component';
 import { SalesdashOrdersComponent } from './application/dispatch-section/salesdash-orders/salesdash-orders.component';
+import { SubsriptionComponent } from './application/marketplace/subsription/subsription.component'
 export const routes: Routes = [
   {
     path: '',
@@ -660,6 +661,10 @@ export const routes: Routes = [
                 path: 'view-package-details/:id',
                 component: ViewPackageDetailsComponent,
               },
+              {
+                path: 'subscription',
+                component: SubsriptionComponent,
+              },
             ],
           },
         ],
@@ -762,4 +767,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

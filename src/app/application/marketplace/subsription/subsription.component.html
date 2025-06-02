@@ -1,0 +1,89 @@
+<div class="main-wrapper">
+  <div class="main-content">
+    <div class="header">
+      <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+    </div>
+
+    <div class="subscription-container">
+      <div class="subscription-content">
+        <div class="tabs">
+          <button class="tab" [class.active]="activeTab === 'retail'" (click)="switchTab('retail')">Retail Buyer Subscriptions</button>
+          <button class="tab" [class.active]="activeTab === 'wholesale'" (click)="switchTab('wholesale')">Wholesale Buyer Subscriptions</button>
+        </div>
+        <hr class="divider" />
+
+        <div class="filter">
+          <span>All ({{ totalItems }})</span>
+          <div class="search-container">
+            <span class="search-icon"> <img
+                    class="delete-icon"
+                    src="./assets/icons/search.png"
+                   
+                  /></span>
+            <input
+              type="text"
+              [(ngModel)]="searchText"
+              (ngModelChange)="onSearchChange()"
+              placeholder="Search by Customer Name / Email"
+              aria-label="Search"
+            />
+            <button *ngIf="searchText" (click)="clearSearch()">✖</button>
+          </div>
+        </div>
+
+        <div class="download-section"(click)="downloadExcel()">
+          <button class="download-btn">
+            <span class="download-icon">⬇</span> Download
+          </button>
+        </div>
+
+        <ng-container *ngIf="!isLoading; else loading">
+          <table *ngIf="hasData; else noData">
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Time</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filteredSubscriptions | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+                <td>{{ user.customerName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.time }}</td>
+                <td>
+                  <img
+                    class="delete-icon"
+                    src="./assets/icons/dlt.png"
+                    alt="Delete"
+                    (click)="deleteUser(user.id)"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noData>
+            <p>No subscriptions found.</p>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <app-loading-spinner></app-loading-spinner>
+        </ng-template>
+
+        <div *ngIf="totalItems > itemsPerPage" class="pagination">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            [maxSize]="5"
+            [directionLinks]="true"
+            [autoHide]="true"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -199,7 +199,10 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.startValue ||
         !this.productObj.changeby ||
         !this.productObj.salePrice ||
-        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) ||
+        this.productObj.startValue <= 0.0 ||
+        this.productObj.startValue <= 0.0 ||
+        (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0)
       ) {
         Swal.fire(
           'Warning',
@@ -217,7 +220,10 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity)
+        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) ||
+        this.productObj.startValue <= 0.0 ||
+        this.productObj.startValue <= 0.0 ||
+        (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0)
       ) {
         Swal.fire(
           'Warning',
@@ -281,6 +287,24 @@ export class MarketAddProductComponent implements OnInit {
 
   back(): void {
     this.router.navigate(['/market/action']);
+  }
+
+  validateChangeBy() {
+    if (this.productObj.changeby <= 0.0) {
+      this.productObj.changeby = 0.0;
+    }
+  }
+
+  validateMaxQuantity() {
+    if (this.productObj.maxQuantity <= 0.0) {
+      this.productObj.maxQuantity = 0.0;
+    }
+  }
+
+  validateMinQuantity() {
+    if (this.productObj.startValue <= 0.0) {
+      this.productObj.startValue = 0.0;
+    }
   }
 }
 

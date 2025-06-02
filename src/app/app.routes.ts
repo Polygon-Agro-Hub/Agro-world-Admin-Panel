@@ -128,6 +128,7 @@ import { AddDestributionCenterComponent } from './application/marketplace/add-de
 import { AddProductTypesComponent } from './application/marketplace/add-product-types/add-product-types.component';
 import { ViewDistributionCenterComponent } from './application/distribution-hub/view-distribution-center/view-distribution-center.component';
 import { ViewCompaniesComponent } from './application/distribution-hub/view-companies/view-companies.component';
+import { SubsriptionComponent } from './application/marketplace/subsription/subsription.component'
 export const routes: Routes = [
   {
     path: '',
@@ -760,6 +761,10 @@ export const routes: Routes = [
                 path: 'add-product-type',
                 component: AddProductTypesComponent,
               },
+              {
+                path: 'subscription',
+                component: SubsriptionComponent,
+              },
             ],
           },
         ],
@@ -878,4 +883,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -125,6 +125,7 @@ import { DistributionHubDashboardComponent } from './application/distribution-hu
 import { DistributionhubComponent } from './application/distribution-hub/distributionhub/distributionhub.component';
 import { ViewProductTypesComponent } from './application/marketplace/view-product-types/view-product-types.component';
 import { AddDestributionCenterComponent } from './application/marketplace/add-destribution-center/add-destribution-center.component';
+import { ViewCompaniesComponent } from './application/distribution-hub/view-companies/view-companies.component';
 export const routes: Routes = [
   {
     path: '',
@@ -847,7 +848,13 @@ export const routes: Routes = [
           { path: 'dashboard', component: DistributionHubDashboardComponent },
           {
             path: 'action',
-            children: [{ path: '', component: DistributionhubComponent }],
+            children: [
+              { path: '', component: DistributionhubComponent },
+              {
+                path: 'view-companies.component',
+                component: ViewCompaniesComponent,
+              },
+            ],
           },
         ],
       },

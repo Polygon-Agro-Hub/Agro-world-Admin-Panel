@@ -100,6 +100,7 @@ export class MarketPlaceService {
   }
 
   createPackage(Data: any, selectedImage: any): Observable<any> {
+    console.log('this is data', Data )
     const formData = new FormData();
     console.log(selectedImage);
     formData.append('package', JSON.stringify(Data));
@@ -107,6 +108,7 @@ export class MarketPlaceService {
     if (selectedImage) {
       formData.append('file', selectedImage);
     }
+    console.log('formDta', formData);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -273,12 +275,12 @@ export class MarketPlaceService {
     });
   }
 
-  createProductType(data:any): Observable<any> {
+  createProductType(data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(`${this.apiUrl}market-place/create-product-type`,data, {
+    return this.http.post(`${this.apiUrl}market-place/create-product-type`, data, {
       headers
     });
   }
@@ -293,4 +295,15 @@ export class MarketPlaceService {
       headers
     });
   }
+
+  fetchProductTypes(): Observable <any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+  
+    let url = `${this.apiUrl}market-place/get-product-type`;
+    return this.http.get<any>(url, { headers });
+  }
 }
+
+

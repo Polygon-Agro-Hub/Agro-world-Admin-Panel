@@ -14,11 +14,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   styleUrls: ['./add-package.component.css'],
 })
 export class AddPackageComponent implements OnInit {
-  cropObj: Crop[] = [];
-  selectedVarieties: Variety[] = [];
-  selectedPrice: Variety = new Variety();
   packageObj: Package = new Package();
-  inputPackageObj: InputPackage = new InputPackage();
+  productTypeObj: ProductType[] = [];
 
   selectedImage: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
@@ -32,267 +29,43 @@ export class AddPackageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCropProductData();
-    this.packageObj.Items = [];
+    this.getProductTypes();
   }
 
-  getCropProductData() {
-    this.marketSrv.getProuctCropVerity().subscribe((res) => {
-      this.cropObj = res.sort(
-        (a: { cropNameEnglish: string }, b: { cropNameEnglish: any }) =>
-          a.cropNameEnglish.localeCompare(b.cropNameEnglish)
-      );
+  getProductTypes() {
+    this.marketSrv.fetchProductTypes().subscribe((res) => {
+      this.productTypeObj = res.data;
+      console.log('this is type', this.productTypeObj);
+      // Initialize quantities with 0 for each product type
+      for (let item of this.productTypeObj) {
+        this.packageObj.quantities[item.id] = 0;
+      }
+      console.log('Initial quantities:', this.packageObj.quantities);
     });
   }
 
-  onCropChange() {
-    const selectedCrop = this.cropObj.find(
-      (crop) => crop.cropId === +this.inputPackageObj.cID
-    );
-    if (selectedCrop) {
-      // Sort varieties by displayName in ascending order
-      this.selectedVarieties = selectedCrop.variety.sort((a, b) =>
-        a.displayName.localeCompare(b.displayName)
-      );
-    } else {
-      this.selectedVarieties = [];
-    }
-  }
-  onPriceChange() {
-    const selectedVariety = this.selectedVarieties.find(
-      (variety) => variety.id === +this.inputPackageObj.mpItemId
-    );
-    if (selectedVariety) {
-      this.selectedPrice = { ...selectedVariety };
-    } else {
-      this.selectedPrice = new Variety();
-    }
-  }
-
-  onAdd() {
-    // Check for required fields
-    if (
-      !this.inputPackageObj.qtytype ||
-      !this.inputPackageObj.mpItemId ||
-      !this.inputPackageObj.cID
-
-    ) {
-      let errorMessage = 'Please fill in all the required fields:';
-
-      if (!this.inputPackageObj.qtytype) errorMessage += '<br>- Quantity Type';
-      if (!this.inputPackageObj.mpItemId) errorMessage += '<br>- Variety';
-      if (!this.inputPackageObj.cID) errorMessage += '<br>- Crop';
-
-
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Fields',
-        html: errorMessage,
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
-
-
-    if (
-      !this.inputPackageObj.quantity
-    ) {
-      let errorMessage = 'You cannot add 0 as the product Quantity';
-
-     
-
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Fields',
-        html: errorMessage,
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
-
-    // Convert input quantity to kg if grams are selected
-    const quantityInKg =
-      this.inputPackageObj.qtytype === 'g'
-        ? this.inputPackageObj.quantity / 1000
-        : this.inputPackageObj.quantity;
-
-    // Check if item already exists in the package
-    const existingItemIndex = this.packageObj.Items.findIndex(
-      (item) => item.mpItemId === this.inputPackageObj.mpItemId
-    );
-
-    if (existingItemIndex !== -1) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Item Already Exists',
-        html: `This item (${this.selectedPrice.displayName}) is already in the package.`,
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
-
-    // Calculate initial discount percentage
-    const initialDiscountPercentage =
-      this.selectedPrice.normalPrice > 0
-        ? Math.round(
-            (this.selectedPrice.discount / this.selectedPrice.normalPrice) * 100
-          )
-        : 0;
-
-    this.packageObj.Items.push({
-      displayName: this.selectedPrice.displayName,
-      mpItemId: this.inputPackageObj.mpItemId,
-      quantity: quantityInKg, // Always stored in kg
-      qtytype: this.inputPackageObj.qtytype as 'g' | 'Kg',
-      itemName: this.selectedPrice.displayName,
-      normalPrice: this.selectedPrice.normalPrice, // Price per kg
-      discount: this.selectedPrice.discount, // Discount per kg
-      discountPercentage: initialDiscountPercentage,
-    });
-
-    // Reset form fields
-    this.inputPackageObj = new InputPackage();
-    this.selectedPrice = new Variety();
-    this.selectedVarieties = [];
-  }
-
-  toggleUnitType(index: number, unit: 'g' | 'Kg') {
-    const item = this.packageObj.Items[index];
-    if (item.qtytype === unit) return;
-
-    item.qtytype = unit;
-  }
-
-  onQuantityChange(index: number, event: any) {
-    const newValue = parseFloat(event.target.value);
-    const item = this.packageObj.Items[index];
-
-    if (!isNaN(newValue)) {
-      if (item.qtytype === 'g') {
-        // Convert grams to kg for storage
-        item.quantity = newValue / 1000;
-      } else {
-        // Keep kg value as is
-        item.quantity = newValue;
-      }
-
-      // Ensure minimum quantity (100g or 0.1kg)
-      if (item.quantity < 0.1) {
-        item.quantity = 0.1;
-        if (item.qtytype === 'g') {
-          event.target.value = 100; // Show 100g in input
-        } else {
-          event.target.value = 0.1; // Show 0.1kg in input
-        }
-      }
-    }
-  }
-
-  onDiscountPercentageChange(index: number, event: any) {
-    const newValue = parseInt(event.target.value);
-    const item = this.packageObj.Items[index];
-
-    if (!isNaN(newValue)) {
-      // Ensure value stays between 0-100
-      if (newValue >= 0 && newValue <= 100) {
-        item.discountPercentage = newValue;
-        this.updateDiscountFromPercentage(index);
-      } else {
-        // Reset to previous value if invalid
-        event.target.value = item.discountPercentage;
-      }
-    }
-  }
-
-  incrementQuantity(index: number) {
-    const item = this.packageObj.Items[index];
-    if (item.qtytype === 'g') {
-      item.quantity += 0.1; // Add 100g (0.1kg)
-    } else {
-      item.quantity += 0.1; // Add 0.1kg
-    }
-    item.quantity = parseFloat(item.quantity.toFixed(2));
-  }
-
-  decrementQuantity(index: number) {
-    const item = this.packageObj.Items[index];
-    const minValue = 0.1; // Minimum 100g or 0.1kg
-
-    if (item.quantity > minValue) {
-      if (item.qtytype === 'g') {
-        item.quantity -= 0.1; // Subtract 100g (0.1kg)
-      } else {
-        item.quantity -= 0.1; // Subtract 0.1kg
-      }
-      item.quantity = parseFloat(item.quantity.toFixed(2));
-    }
-  }
-
-  incrementDiscountPercentage(index: number) {
-    if (this.packageObj.Items[index]) {
-      if (this.packageObj.Items[index].discountPercentage < 100) {
-        this.packageObj.Items[index].discountPercentage += 1;
-        this.updateDiscountFromPercentage(index);
-      }
-    }
-  }
-
-  decrementDiscountPercentage(index: number) {
-    if (this.packageObj.Items[index]) {
-      if (this.packageObj.Items[index].discountPercentage > 0) {
-        this.packageObj.Items[index].discountPercentage -= 1;
-        this.updateDiscountFromPercentage(index);
-      }
-    }
-  }
-
-  updateDiscountFromPercentage(index: number) {
-    const item = this.packageObj.Items[index];
-    item.discount = (item.discountPercentage / 100) * item.normalPrice;
-    item.discount = parseFloat(item.discount.toFixed(2));
-  }
-
-  getDisplayQuantity(item: Items): number {
-    return item.qtytype === 'g' ? item.quantity * 1000 : item.quantity;
-  }
-
-  getTotalPrice(): number {
-    return this.packageObj.Items.reduce((sum, item) => {
-      const actualPrice = item.normalPrice * item.quantity;
-      const totalDiscount = (item.discountPercentage / 100) * actualPrice;
-      const totalPrice = sum + (actualPrice - totalDiscount);
-      this.packageObj.total = parseFloat(totalPrice.toFixed(2));
-      return this.packageObj.total;
-    }, 0);
-  }
-
-  removeItem(index: number) {
-    if (index >= 0 && index < this.packageObj.Items.length) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to remove this item?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, remove it!',
-        cancelButtonText: 'No, keep it',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.packageObj.Items.splice(index, 1);
-          Swal.fire('Removed!', 'The item has been removed.', 'success');
-        }
-      });
-    }
+  // Fixed method - removed the problematic null check that was resetting values
+  onInputChange(id: number, event: Event) {
+    const target = event.target as HTMLInputElement;
+    // Convert to number, default to 0 if invalid
+    const numValue = Number(target.value) || 0;
+    this.packageObj.quantities[id] = numValue;
+    console.log('Updated quantities:', this.packageObj.quantities);
+    console.log(`Product ${id} quantity: ${this.packageObj.quantities[id]}`);
   }
 
   onSubmit() {
+    console.log('submit', this.packageObj);
+    console.log('Final quantities:', this.packageObj.quantities);
     this.isLoading = true;
+    
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
-      !this.selectedImage ||
-      this.packageObj.Items.length === 0
+      !this.packageObj.productPrice ||
+      !this.packageObj.packageFee ||
+      !this.packageObj.serviceFee ||
+      !this.selectedImage
     ) {
       let errorMessage = '';
 
@@ -300,9 +73,13 @@ export class AddPackageComponent implements OnInit {
         errorMessage += 'Display Package Name is required.<br>';
       if (!this.packageObj.description)
         errorMessage += 'Description is required.<br>';
+      if (!this.packageObj.productPrice)
+        errorMessage += 'Product price is required.<br>';
+      if (!this.packageObj.packageFee)
+        errorMessage += 'Package fee is required.<br>';
+      if (!this.packageObj.serviceFee)
+        errorMessage += 'Service fee is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
-      if (this.packageObj.Items.length === 0)
-        errorMessage += 'Please add at least one product item.<br>';
 
       Swal.fire({
         icon: 'error',
@@ -313,6 +90,20 @@ export class AddPackageComponent implements OnInit {
       this.isLoading = false;
       return;
     }
+
+    // ✅ New validation: Ensure at least one quantity is > 0
+  const hasAtLeastOneQuantity = Object.values(this.packageObj.quantities).some(qty => qty > 0);
+
+  if (!hasAtLeastOneQuantity) {
+    Swal.fire({
+      icon: 'error',
+      title: 'No product type selected',
+      text: 'You should select at least on product type.',
+      confirmButtonText: 'OK',
+    });
+    this.isLoading = false;
+    return;
+  }
 
     // All quantities are already stored in kg, no conversion needed before submit
     this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
@@ -346,6 +137,7 @@ export class AddPackageComponent implements OnInit {
         });
         this.isLoading = false;
       }
+      
     );
   }
 
@@ -359,7 +151,6 @@ export class AddPackageComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.inputPackageObj = new InputPackage();
         this.packageObj = new Package();
         this.router.navigate(['/market/action']);
       }
@@ -399,59 +190,47 @@ export class AddPackageComponent implements OnInit {
     fileInput?.click();
   }
 
-  preventNegativeNumbers(event: KeyboardEvent) {
-    if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+  calculateApproximatedPrice() {
+    const productPrice = Number(this.packageObj.productPrice) || 0.00;
+    const serviceFee = Number(this.packageObj.serviceFee) || 0.00;
+    const packageFee = Number(this.packageObj.packageFee) || 0.00;
+  
+    this.packageObj.approximatedPrice = productPrice + (serviceFee + packageFee);
+    
+    console.log('Approximated Price:', this.packageObj.approximatedPrice);
+    return this.packageObj.approximatedPrice;
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.charCode;
+    // Allow only digits (0-9)
+    if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }
   }
 }
 
-class Crop {
-  cropId!: number;
-  cropNameEnglish!: string;
-  variety!: Variety[];
-}
-
-class Variety {
-  id!: number;
-  displayName: string = '';
-  normalPrice: number = 0;
-  discountedPrice: number = 0;
-  discount: number = 0;
-}
-
 class Package {
   displayName!: string;
-  status: string = 'Disabled';
-  Items: Items[] = [];
+  status: string = 'Enabled';
   cID!: number;
   total!: number;
   description!: string;
   image!: any;
   selectedFileName!: string;
+  // productPrice: number = 0.00;
+  // packageFee: number = 0.00;
+  // serviceFee: number = 0.00;
+  // approximatedPrice: number = 0.00;
+  productPrice!: number;
+  packageFee!: number;
+  serviceFee!: number;
+  approximatedPrice!: number;
+  quantities: { [id: number]: number } = {};
 }
 
-class Items {
-  displayName: string | undefined = undefined;
-  mpItemId!: number;
-  quantity: number = 0; // Always stored in kg
-  qtytype: 'g' | 'Kg' = 'Kg'; // Current display unit
-  itemName: string | undefined = '';
-  normalPrice: number = 0; // Price per kg
-  discount: number = 0; // Discount per kg
-  discountPercentage: number = 0;
-}
-
-class InputPackage {
-  name!: string;
-  status: string = 'Disabled';
-  cID!: number;
-  packageId!: number;
-  mpItemId!: number;
-  quantity: number = 0;
-  discountedPrice: number = 0;
-  qtytype: string = '';
-  itemName!: string;
-  normalPrice!: number;
-  discount: number = 0;
+class ProductType {
+  typeName!: string;
+  shortCode!: string;
+  id!: number;
 }

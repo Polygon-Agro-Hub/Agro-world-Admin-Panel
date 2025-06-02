@@ -127,6 +127,7 @@ import { ViewProductTypesComponent } from './application/marketplace/view-produc
 import { AddDestributionCenterComponent } from './application/marketplace/add-destribution-center/add-destribution-center.component';
 import { AddProductTypesComponent } from './application/marketplace/add-product-types/add-product-types.component';
 import { ViewDistributionCenterComponent } from './application/distribution-hub/view-distribution-center/view-distribution-center.component';
+import { ViewCompaniesComponent } from './application/distribution-hub/view-companies/view-companies.component';
 export const routes: Routes = [
   {
     path: '',
@@ -858,7 +859,13 @@ export const routes: Routes = [
           { path: 'dashboard', component: DistributionHubDashboardComponent },
           {
             path: 'action',
-            children: [{ path: '', component: DistributionhubComponent }],
+            children: [
+              { path: '', component: DistributionhubComponent },
+              {
+                path: 'view-companies.component',
+                component: ViewCompaniesComponent,
+              },
+            ],
           },
         ],
       },

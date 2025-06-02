@@ -28,6 +28,7 @@ export class ViewPackageListComponent {
     { label: 'Disabled', value: 'Disabled' },
   ];
   selectedStatus: any;
+  searchtext:string = '';
 
   constructor(
     private router: Router,
@@ -40,9 +41,9 @@ export class ViewPackageListComponent {
     this.router.navigate(['/market/action']);
   }
 
-  fetchAllPackages() {
+  fetchAllPackages(searchText: string = this.searchtext) {
     this.isLoading = true;
-    this.viewPackagesList.getAllMarketplacePackages().subscribe(
+    this.viewPackagesList.getAllMarketplacePackages(searchText).subscribe(
       (response) => {
         console.log('Package list response:', response);
         // Flatten the packages array from all status groups
@@ -133,7 +134,17 @@ export class ViewPackageListComponent {
         pkg.groupStatus === this.selectedStatus
     );
   }
+
+  onSearch(){
+    this.fetchAllPackages();
+  }
+
+  offSearch(){
+    this.searchtext = '';
+    this.fetchAllPackages();
+  }
 }
+
 
 class PackageList {
   id!: number;

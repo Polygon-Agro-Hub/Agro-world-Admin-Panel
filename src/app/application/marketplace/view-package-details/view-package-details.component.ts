@@ -63,40 +63,19 @@ export class ViewPackageDetailsComponent implements OnInit {
               image: response.data.image,
               description: response.data.description,
               status: response.data.status,
-              total: parseFloat(response.data.total),
-              discount: response.data.discount
-                ? parseFloat(response.data.discount)
-                : null,
-              subtotal: parseFloat(response.data.subtotal),
-              createdAt: response.data.createdAt,
+              productPrice: response.data.productPrice,
+              packingFee: response.data.packingFee,
+              serviceFee: response.data.serviceFee,
             };
 
             this.packageDetails =
               response.data.packageDetails?.map(
                 (detail: {
-                  packageId: any;
-                  mpItemId: any;
-                  itemDisplayName: any;
-                  normalPrice: any;
-                  quantity: any;
-                  quantityType: any;
-                  price: string;
-                  discountedPrice: any;
-                  discount: any;
-                  createdAt: any;
+                  productType: { typeName: string };
+                  qty: number;
                 }) => ({
-                  packageId: detail.packageId,
-                  mpItemId: detail.mpItemId,
-                  itemDisplayName: detail.itemDisplayName,
-                  normalPrice: detail.normalPrice
-                    ? parseFloat(detail.normalPrice)
-                    : null,
-                  quantity: detail.quantity,
-                  quantityType: detail.quantityType,
-                  price: parseFloat(detail.price),
-                  discountedPrice: parseFloat(detail.discountedPrice),
-                  discount: parseFloat(detail.discount),
-                  createdAt: detail.createdAt,
+                  typeName: detail.productType.typeName,
+                  qty: detail.qty,
                 })
               ) || [];
           } else if (response && !response.success) {
@@ -125,21 +104,12 @@ interface Package {
   image: string | null;
   description: string;
   status: string;
-  total: number;
-  discount: number | null;
-  subtotal: number;
-  createdAt: string;
+  productPrice: number;
+  packingFee: number;
+  serviceFee: number;
 }
 
 interface PackageDetails {
-  packageId: number;
-  mpItemId: number;
-  itemDisplayName: string;
-  quantity: number;
-  quantityType: string;
-  price: number;
-  createdAt: string;
-  normalPrice: number;
-  discountedPrice: number;
-  discount: number;
+  typeName: string;
+  qty: number;
 }

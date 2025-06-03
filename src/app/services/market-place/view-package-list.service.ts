@@ -11,14 +11,17 @@ export class ViewPackageListService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  getAllMarketplacePackages(): Observable<any> {
+  getAllMarketplacePackages(searchText: string = ''): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    const url = `${this.apiUrl}market-place/get-all-package-list`; // Matches your router endpoint
+    let url = `${this.apiUrl}market-place/get-all-package-list`; 
+    if(searchText){
+      url+= `?searchText=${searchText}`;
+    }
     return this.http.get<any>(url, { headers });
   }
 }

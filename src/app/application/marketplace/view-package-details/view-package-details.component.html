@@ -19,7 +19,7 @@
             </h2>
             <h2 class="text-2xl font-bold px-5 dark:text-textDark">-</h2>
             <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
-              Rs {{ package?.total | number: '1.2-2'}}
+              Rs {{ package?.productPrice }}
             </h2>
           </div>
           <div class="flex flex-col pt-2">
@@ -69,46 +69,50 @@
       </div>
     </div>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10">
-      <table class="w-full text-gray-500 dark:text-gray-400">
-        <thead
-          class="text-[#8492A3] bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-4"
-        >
-          <tr>
-            <th class="px-6 py-3 text-center">ITEM</th>
-            <th class="px-8 py-3 text-center">QUANTITY</th>
-            <th class="px-6 py-3 text-center">UNIT</th>
-            <th class="px-6 py-3 text-center">ACTUAL PRICE PER 1Kg</th>
-            <th class="px-6 py-3 text-center">DISCOUNT VALUE (%)</th>
-            <th class="px-6 py-3 text-center">TOTAL</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
+    <div class="relative overflow-x-auto mt-10">
+      <div class="rounded-lg shadow-sm">
+        <div class="grid grid-cols-2 gap-4 px-6 py-4 border-b border-gray-200">
+          <div class="text-sm font-medium text-[#8492A3]">Product Type</div>
+          <div class="text-sm font-medium text-[#8492A3] text-right">
+            No. of Items
+          </div>
+        </div>
+
+        <div>
+          <div
             *ngFor="let detail of packageDetails"
-            class="bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            class="grid grid-cols-2 gap-4 px-6 py-4"
           >
-            <td class="px-6 py-4 text-center text-gray-900 dark:text-white">
-              {{ detail.itemDisplayName }}
-            </td>
-            <td class="px-6 py-4 text-center">
-              {{ detail.quantity }}
-            </td>
-            <td class="px-6 py-4 text-center">{{ detail.quantityType }}</td>
-            <td class="px-6 py-4 text-center text-black dark:text-textDark">
-              Rs {{ detail.normalPrice | number: '1.2-2'}}
-            </td>
-            <td class="px-6 py-4 text-center">
-              {{
-                ((detail.discount ) /
-                  (detail.price)) *
-                  100
-              }}
-            </td>
-            <td class="px-6 py-4 text-center">Rs {{ detail.discountedPrice | number: '1.2-2' }}</td>
-          </tr>
-        </tbody>
-      </table>
+            <div class="text-sm text-gray-900 dark:text-white">
+              {{ detail.typeName }}
+            </div>
+            <div
+              class="text-sm text-gray-900 dark:text-white text-right font-medium"
+            >
+              {{ detail.qty }}
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-200">
+          <div
+            class="grid grid-cols-2 gap-4 px-6 py-6 border-b border-gray-200"
+          >
+            <div class="text-sm text-[#3980C0] font-medium">Packaging Fee</div>
+            <div class="text-sm text-[#00957D] font-medium text-right">
+              Rs.{{ package?.packingFee }}
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-2 gap-4 px-6 py-6 border-b border-gray-200"
+          >
+            <div class="text-sm text-[#3980C0] font-medium">Service Fee</div>
+            <div class="text-sm text-[#00957D] font-medium text-right">
+              Rs.{{ package?.serviceFee }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

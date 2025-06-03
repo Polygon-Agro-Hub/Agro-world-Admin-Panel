@@ -62,11 +62,13 @@ export class DistributionhubComponent {
     });
   }
 
-  navigateToManageNews(): void {
+  navigateToViewCompanies(): void {
     this.isLoading = true;
-    this.router.navigate(['/distribution-hub/action']).then(() => {
-      this.isLoading = false;
-    });
+    this.router
+      .navigate(['/distribution-hub/action/view-companies'])
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
   createCalendar(): void {

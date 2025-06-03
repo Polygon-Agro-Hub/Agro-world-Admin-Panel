@@ -128,7 +128,8 @@ import { AddDestributionCenterComponent } from './application/marketplace/add-de
 import { AddProductTypesComponent } from './application/marketplace/add-product-types/add-product-types.component';
 import { ViewDistributionCenterComponent } from './application/distribution-hub/view-distribution-center/view-distribution-center.component';
 import { ViewCompaniesComponent } from './application/distribution-hub/view-companies/view-companies.component';
-import { SubsriptionComponent } from './application/marketplace/subsription/subsription.component'
+import { SubsriptionComponent } from './application/marketplace/subsription/subsription.component';
+import { DistributionViewCompanyComponent } from './application/distribution-hub/distribution-view-company/distribution-view-company.component';
 export const routes: Routes = [
   {
     path: '',
@@ -867,8 +868,12 @@ export const routes: Routes = [
             children: [
               { path: '', component: DistributionhubComponent },
               {
-                path: 'view-companies.component',
+                path: 'view-companies',
                 component: ViewCompaniesComponent,
+              },
+              {
+                path: 'view-distribution-company',
+                component: DistributionViewCompanyComponent,
               },
             ],
           },
@@ -883,4 +888,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

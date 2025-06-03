@@ -88,7 +88,7 @@ export class DistributionhubComponent {
   }
 
   createVariety(): void {
-    this.router.navigate(['/distribution-hub/action']);
+    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
 
   publicForum(): void {

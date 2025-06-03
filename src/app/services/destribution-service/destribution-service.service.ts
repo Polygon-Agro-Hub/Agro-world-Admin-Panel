@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
-
 export interface DistributionCentreRequest {
   name: string;
   officerInCharge: string;
@@ -29,10 +28,9 @@ export interface ApiResponse<T = any> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DestributionService {
-
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
@@ -46,9 +44,13 @@ export class DestributionService {
     });
   }
 
-  createDistributionCentre(data: DistributionCentreRequest): Observable<ApiResponse> {
+  createDistributionCentre(
+    data: DistributionCentreRequest
+  ): Observable<ApiResponse> {
     const url = `${this.apiUrl}distribution/create-distribution-center`;
-    return this.http.post<ApiResponse>(url, data, { headers: this.getHeaders() });
+    return this.http.post<ApiResponse>(url, data, {
+      headers: this.getHeaders(),
+    });
   }
 
   getAllDistributionCentre(
@@ -56,6 +58,7 @@ export class DestributionService {
     limit: number,
     district: string = '',
     province: string = '',
+    company: string = '',
     searchItem: string = ''
   ): Observable<any> {
     console.log(page, limit, searchItem);
@@ -76,7 +79,17 @@ export class DestributionService {
     if (province) {
       url += `&province=${province}`;
     }
+    if (province) {
+      url += `&company=${company}`;
+    }
 
     return this.http.get<any>(url, { headers: headers });
+  }
+
+  getCompanies(): Observable<ApiResponse<any[]>> {
+    const url = `${this.apiUrl}distribution/get-companies`;
+    return this.http.get<ApiResponse<any[]>>(url, {
+      headers: this.getHeaders(),
+    });
   }
 }

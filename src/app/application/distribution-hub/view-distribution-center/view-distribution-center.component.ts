@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
-import { DestributionService } from '../../../services/destribution-service/destribution-service.service'
+import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -23,10 +23,9 @@ import { PermissionService } from '../../../services/roles-permission/permission
     LoadingSpinnerComponent,
   ],
   templateUrl: './view-distribution-center.component.html',
-  styleUrl: './view-distribution-center.component.css'
+  styleUrl: './view-distribution-center.component.css',
 })
 export class ViewDistributionCenterComponent implements OnInit {
-
   // centerNameObj: CenterName = new CenterName();
   companyId!: number;
   distributionCentreObj!: DistributionCentre[];
@@ -43,9 +42,11 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   provinceOptions: any[] = [];
   districtOptions: any[] = [];
+  companyOptions: any[] = [];
 
   selectProvince: string = '';
   selectDistrict: string = '';
+  selectCompany: string = '';
 
   ProvinceData = [
     {
@@ -135,29 +136,81 @@ export class ViewDistributionCenterComponent implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
+  applyCompanyFilters() {
+    this.page = 1; // Reset to first page when filter changes
+    this.fetchAllCollectionCenter(
+      this.page,
+      this.itemsPerPage,
+      this.selectDistrict,
+      this.selectProvince,
+      this.selectCompany,
+      this.searchItem
+    );
+  }
+
+  clearCompanyFilter() {
+    this.selectCompany = '';
+    this.fetchAllCollectionCenter(
+      this.page,
+      this.itemsPerPage,
+      this.selectDistrict,
+      this.selectProvince,
+      '',
+      this.searchItem
+    );
+  }
+
+  fetchCompanies() {
+    this.isLoading = true;
+    this.DestributionSrv.getCompanies().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.companyOptions = response.data
+            .map((company: any) => ({
+              label:
+                company.name || company.companyNameEnglish || 'Unknown Company',
+              value: company.id,
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching companies:', error);
+        this.isLoading = false;
+      },
+    });
+  }
+
   fetchAllCollectionCenter(
     page: number = this.page,
     limit: number = this.itemsPerPage,
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
+    company: string = this.selectCompany,
     searchItem?: string
   ) {
     this.isLoading = true;
-    this.DestributionSrv
-      .getAllDistributionCentre(page, limit, district, province, searchItem)
-      .subscribe(
-        (response) => {
-          this.isLoading = false;
-          this.distributionCentreObj = response.items;
-          this.hasData = this.distributionCentreObj.length > 0;
-          this.totalItems = response.total;
-        },
-        (error) => {
-          if (error.status === 401) {
-            // Unauthorized access handling (left empty intentionally)
-          }
+    this.DestributionSrv.getAllDistributionCentre(
+      page,
+      limit,
+      district,
+      province,
+      company,
+      searchItem
+    ).subscribe(
+      (response) => {
+        this.isLoading = false;
+        this.distributionCentreObj = response.items;
+        this.hasData = this.distributionCentreObj.length > 0;
+        this.totalItems = response.total;
+      },
+      (error) => {
+        if (error.status === 401) {
+          // Unauthorized access handling (left empty intentionally)
         }
-      );
+      }
+    );
   }
 
   onPageChange(event: number) {
@@ -260,7 +313,6 @@ export class ViewDistributionCenterComponent implements OnInit {
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
-
 }
 
 class DistributionCentre {

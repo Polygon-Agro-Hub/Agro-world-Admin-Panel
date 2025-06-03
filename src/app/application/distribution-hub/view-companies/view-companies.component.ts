@@ -71,9 +71,12 @@ export class ViewCompaniesComponent {
   }
 
   viewCompanyHeadPortals(id: number, companyName: string) {
-    this.router.navigate(['/collection-hub/view-company-head'], {
-      queryParams: { id, companyName },
-    });
+    this.router.navigate(
+      ['/distribution-hub/action/view-distribution-company'],
+      {
+        queryParams: { id, companyName },
+      }
+    );
   }
 
   deleteCompany(id: number) {

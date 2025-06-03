@@ -65,7 +65,7 @@ export class DistributionhubComponent {
   navigateToViewCompanies(): void {
     this.isLoading = true;
     this.router
-      .navigate(['/distribution-hub/action/view-companies.component'])
+      .navigate(['/distribution-hub/action/view-companies'])
       .then(() => {
         this.isLoading = false;
       });

@@ -130,6 +130,7 @@ import { ViewDistributionCenterComponent } from './application/distribution-hub/
 import { ViewCompaniesComponent } from './application/distribution-hub/view-companies/view-companies.component';
 import { SubsriptionComponent } from './application/marketplace/subsription/subsription.component';
 import { DistributionViewCompanyComponent } from './application/distribution-hub/distribution-view-company/distribution-view-company.component';
+import { AddDistributionOfficerComponent } from './application/distribution-hub/add-distribution-officer/add-distribution-officer.component';
 export const routes: Routes = [
   {
     path: '',
@@ -873,6 +874,10 @@ export const routes: Routes = [
               {
                 path: 'view-destribition-center',
                 component: ViewDistributionCenterComponent,
+              },
+              {
+                path: 'add-distribution-officer',
+                component: AddDistributionOfficerComponent,
               },
             ],
           },

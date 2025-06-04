@@ -86,10 +86,15 @@ export class DestributionService {
     return this.http.get<any>(url, { headers: headers });
   }
 
-  getCompanies(): Observable<ApiResponse<any[]>> {
-    const url = `${this.apiUrl}distribution/get-companies`;
-    return this.http.get<ApiResponse<any[]>>(url, {
-      headers: this.getHeaders(),
+  getCompanies(): Observable<ApiResponse<{ companyNameEnglish: string }[]>> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}distribution/get-companies`;
+    return this.http.get<ApiResponse<{ companyNameEnglish: string }[]>>(url, {
+      headers,
     });
   }
 }

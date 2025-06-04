@@ -121,6 +121,7 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.fetchCompanies();
 
     this.provinceOptions = this.ProvinceData.map((p) => ({
       label: p.province,
@@ -136,8 +137,36 @@ export class ViewDistributionCenterComponent implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
-  applyCompanyFilters() {
-    this.page = 1; // Reset to first page when filter changes
+  fetchCompanies(): void {
+    this.isLoading = true;
+    this.DestributionSrv.getCompanies().subscribe({
+      next: (response) => {
+        console.log('Companies fetched:', response);
+
+        if (response.success && response.data) {
+          this.companyOptions = response.data
+            .map((company) => ({
+              label: company.companyNameEnglish, // Use companyNameEnglish directly
+              value: company.companyNameEnglish, // Use name as value since ID isn't returned
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching companies:', error);
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to load companies',
+        });
+      },
+    });
+  }
+
+  applyCompanyFilter(): void {
+    this.page = 1;
     this.fetchAllCollectionCenter(
       this.page,
       this.itemsPerPage,
@@ -148,38 +177,9 @@ export class ViewDistributionCenterComponent implements OnInit {
     );
   }
 
-  clearCompanyFilter() {
+  clearCompanyFilter(): void {
     this.selectCompany = '';
-    this.fetchAllCollectionCenter(
-      this.page,
-      this.itemsPerPage,
-      this.selectDistrict,
-      this.selectProvince,
-      '',
-      this.searchItem
-    );
-  }
-
-  fetchCompanies() {
-    this.isLoading = true;
-    this.DestributionSrv.getCompanies().subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.companyOptions = response.data
-            .map((company: any) => ({
-              label:
-                company.name || company.companyNameEnglish || 'Unknown Company',
-              value: company.id,
-            }))
-            .sort((a, b) => a.label.localeCompare(b.label));
-        }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching companies:', error);
-        this.isLoading = false;
-      },
-    });
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   fetchAllCollectionCenter(

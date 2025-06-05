@@ -72,7 +72,7 @@ export class DistributionhubComponent {
   }
 
   createCalendar(): void {
-    this.router.navigate(['/distribution-hub/action']);
+    this.router.navigate(['/distribution-hub/action/add-destribition-center']);
   }
 
   manageCalendar(): void {

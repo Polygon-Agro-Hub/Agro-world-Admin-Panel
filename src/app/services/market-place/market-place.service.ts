@@ -325,21 +325,24 @@ export class MarketPlaceService {
 
 
 editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-  console.log('this is data', Data )
+  console.log('this is data', Data)
+  console.log('this is image', selectedImage)
   const formData = new FormData();
-  console.log(selectedImage);
+  
   formData.append('package', JSON.stringify(Data));
 
-  if (selectedImage) {
+  // Only append file if selectedImage is a base64 string (new image)
+  // If it's a URL string (old image), don't append it
+  if (selectedImage && selectedImage.toString().startsWith('data:')) {
     formData.append('file', selectedImage);
   }
-  console.log('formDta', formData);
+  
+  console.log('formData', formData);
 
   const headers = new HttpHeaders({
     Authorization: `Bearer ${this.token}`,
   });
 
-  // Send the request
   return this.http.post(`${this.apiUrl}market-place/edit-package/${id}`, formData, {
     headers,
   });

@@ -709,11 +709,6 @@ export const routes: Routes = [
                 path: 'add-product',
                 component: MarketAddProductComponent,
               },
-
-              {
-                path: 'add-destribition-center',
-                component: AddDestributionCenterComponent,
-              },
               {
                 path: 'view-products-list',
                 component: ViewProductsListComponent,
@@ -878,6 +873,11 @@ export const routes: Routes = [
               {
                 path: 'add-distribution-officer',
                 component: AddDistributionOfficerComponent,
+              },
+
+              {
+                path: 'add-destribition-center',
+                component: AddDestributionCenterComponent,
               },
             ],
           },

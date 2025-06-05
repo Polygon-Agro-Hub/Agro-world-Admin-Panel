@@ -93,6 +93,7 @@ export class MarketEditPackagesComponent {
   }
 
   onSubmit() {
+    console.log('seleced image', this.selectedImage)
     console.log('submit', this.packageObj);
     console.log('Final quantities:', this.packageObj.quantities);
     this.isLoading = true;
@@ -145,6 +146,7 @@ export class MarketEditPackagesComponent {
 
     // All quantities are already stored in kg, no conversion needed before submit
     this.marketSrv.editPackage(this.packageObj, this.selectedImage, this.packageId ).subscribe(
+
       (res) => {
         if (res.status) {
           Swal.fire({
@@ -272,17 +274,4 @@ class ProductType {
   id!: number;
 }
 
-
-// class Package {
-//   displayName!: string;
-//   status: string = 'Enabled';
-//   total!: number;
-//   description!: string;
-//   productPrice!: number;
-//   packageFee!: number;
-//   serviceFee!: number;
-//   approximatedPrice!: number;
-//   quantities: { [id: number]: number } = {};
-//   imageUrl!: string;
-// }
 

@@ -124,6 +124,7 @@ export class ViewCompaniesComponent {
 
 class CompanyDetails {
   id!: number;
+  companyId!: number;
   companyNameEnglish!: string;
   companyEmail!: string;
   status!: number;

@@ -37,7 +37,7 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -265,7 +265,10 @@
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="
-                  viewCompanyHeadPortals(item.id, item.companyNameEnglish)
+                  viewCompanyHeadPortals(
+                    item.companyId,
+                    item.companyNameEnglish
+                  )
                 "
               >
                 <i class="fa-regular fa-square-plus text-2xl"></i>
@@ -300,8 +303,6 @@
                 "
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompany(item.id)"
-                [disabled]="item.id === 1"
-                [ngStyle]="{ opacity: item.id === 1 ? '0.5' : '1' }"
               >
                 <svg
                   fill="currentColor"
@@ -324,8 +325,6 @@
                 "
                 class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCompany(item.id)"
-                [disabled]="item.id === 1"
-                [ngStyle]="{ opacity: item.id === 1 ? '0.5' : '1' }"
               >
                 <svg
                   aria-hidden="true"

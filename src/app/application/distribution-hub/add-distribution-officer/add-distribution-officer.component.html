@@ -1,0 +1,694 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="navigatePath('/distribution-hub/action/view-distribution-company')"
+  *ngIf="selectedPage === 'pageOne'"
+  class="ml-5 text-textLight dark:text-textDark"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div class="h-[20px]"></div>
+<div
+  *ngIf="this.itemId == null"
+  class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg"
+>
+  <div *ngIf="selectedPage === 'pageOne'">
+    <!-- <div> -->
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+      Add Personal Details
+    </h2>
+    <div>
+      <div class="flex justify-center pt-3 pb-9">
+        <div class="relative">
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
+
+          <!-- Display default image if no file is selected -->
+          <div
+            *ngIf="!selectedImage"
+            class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60"
+          >
+            <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
+          </div>
+
+          <!-- Display the selected image if available -->
+          <img
+            *ngIf="selectedImage"
+            class="rounded-full w-60 h-60 object-cover"
+            [src]="selectedImage"
+            alt="Profile Picture"
+          />
+          <span
+            (click)="triggerFileInput($event)"
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
+          >
+            <i class="fa-solid fa-pen text-lg text-white"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="h-[20px]"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >EMP ID / User name</label
+          >
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
+            >
+              <p *ngIf="personalData.jobRole === 'Distribution Center Head'">
+                DCH
+              </p>
+            </span>
+            <input
+              type="text"
+              [value]="lastID"
+              name="empId"
+              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              disabled
+            />
+          </div>
+        </div>
+        <div>
+          <label
+            for="centerId"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Company Name
+          </label>
+          <div class="relative">
+            <select
+              (blur)="onBlur('companyId')"
+              id="centerId"
+              [(ngModel)]="personalData.companyId"
+              name="centerId"
+              (change)="getAllDistributedCenters(personalData.companyId)"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+            >
+              <option
+                *ngFor="let company of CompanyData"
+                [value]="company.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                {{ company.companyNameEnglish }}
+              </option>
+            </select>
+            <i
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
+            ></i>
+          </div>
+          <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm"
+            >Company Name is required.</span
+          >
+        </div>
+
+        <div>
+          <label
+            for="enpType"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Staff Employee Type
+          </label>
+
+          <div class="flex items-center space-x-4 mt-3">
+            <div class="flex items-center space-x-2">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >
+                <input
+                  class="w-5 h-5"
+                  type="radio"
+                  name="enpType"
+                  value="Permanent"
+                  [(ngModel)]="empType"
+                  (ngModelChange)="updateEmployeeType($event)"
+                />
+                Permanent
+              </label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >
+                <input
+                  class="w-5 h-5"
+                  type="radio"
+                  name="enpType"
+                  value="Temporary"
+                  [(ngModel)]="empType"
+                  (ngModelChange)="updateEmployeeType($event)"
+                />
+                Temporary
+              </label>
+            </div>
+          </div>
+          <p *ngIf="!isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
+            Please select an employee type.
+          </p>
+        </div>
+
+        <div>
+          <label
+            for="languages"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Preferred Languages
+          </label>
+
+          <div class="flex items-center space-x-4 mt-3">
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="checkbox"
+                id="sinhala"
+                name="languages"
+                value="Sinhala"
+                (change)="onCheckboxChange('Sinhala', $event)"
+                [checked]="personalData.languages.includes('Sinhala')"
+              />
+              <label for="sinhala" class="text-gray-700">Sinhala</label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="checkbox"
+                id="english"
+                name="languages"
+                value="English"
+                (change)="onCheckboxChange('English', $event)"
+                [checked]="personalData.languages.includes('English')"
+              />
+              <label for="english" class="text-gray-700">English</label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="checkbox"
+                id="tamil"
+                name="languages"
+                value="Tamil"
+                (change)="onCheckboxChange('Tamil', $event)"
+                [checked]="personalData.languages.includes('Tamil')"
+              />
+              <label for="tamil" class="text-gray-700">Tamil</label>
+            </div>
+          </div>
+          <p
+            *ngIf="!isAtLeastOneLanguageSelected()"
+            class="text-red-600 text-sm mt-2"
+          >
+            Please select at least one preferred language.
+          </p>
+        </div>
+
+        <div *ngIf="personalData.jobRole === 'Collection Officer'">
+          <label
+            for="centerId"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Manager Name
+          </label>
+          <div class="relative">
+            <select
+              id="centerId"
+              [(ngModel)]="personalData.irmId"
+              name="centerId"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+            >
+              <option
+                *ngFor="let center of distributionHeadData"
+                [value]="center.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+              >
+                {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
+              </option>
+            </select>
+            <!-- FontAwesome Down Arrow Icon -->
+            <i
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
+            ></i>
+          </div>
+        </div>
+
+        <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>
+
+        <div>
+          <label
+            for="firstNameEnglish"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name (in English)</label
+          >
+          <input
+            id="firstNameEnglish"
+            [(ngModel)]="personalData.firstNameEnglish"
+            name="firstNameEnglish"
+            (blur)="onBlur('firstNameEnglish')"
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('firstNameEnglish')"
+            class="text-red-600 text-sm"
+            >First Name is required.</span
+          >
+        </div>
+
+        <div>
+          <label
+            for="variety"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name (in English)</label
+          >
+          <input
+            id="lastName"
+            name="lastName"
+            [(ngModel)]="personalData.lastNameEnglish"
+            (blur)="onBlur('lastNameEnglish')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('lastNameEnglish')"
+            class="text-red-600 text-sm"
+            >Last Name is required.</span
+          >
+        </div>
+
+        <div>
+          <label
+            for="phoneNumber01"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Phone Number - 1
+          </label>
+          <div class="mt-1 flex">
+            <select
+              id="phoneNumber01Code"
+              name="phoneNumber01Code"
+              [(ngModel)]="personalData.phoneCode01"
+              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+            >
+              <option value="+94">+94 (LK)</option>
+              <option value="+1">+1 (US)</option>
+              <option value="+44">+44 (UK)</option>
+              <option value="+91">+91 (India)</option>
+            </select>
+            <div class="w-full flex flex-col">
+              <input
+                id="phoneNumber01"
+                name="phoneNumber01"
+                type="number"
+                [(ngModel)]="personalData.phoneNumber01"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                placeholder="Enter your phone number"
+                (blur)="onBlur('phoneNumber01')"
+              />
+              <span
+                *ngIf="
+                  touchedFields.phoneNumber01 &&
+                  !isValidPhoneNumber(personalData.phoneNumber01)
+                "
+                class="text-red-600 text-sm"
+              >
+                Invalid phone number.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label
+            for="phoNumTwo"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Phone Number - 2
+          </label>
+          <div class="mt-1 flex">
+            <select
+              id="phoneNumber02Code"
+              name="phoneNumber02Code"
+              [(ngModel)]="personalData.phoneCode02"
+              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+            >
+              <option value="+94">+94 (LK)</option>
+              <option value="+1">+1 (US)</option>
+              <option value="+44">+44 (UK)</option>
+              <option value="+91">+91 (India)</option>
+            </select>
+            <div class="w-full flex flex-col">
+              <input
+                id="phoneNumber02"
+                name="phoneNumber02"
+                type="number"
+                [(ngModel)]="personalData.phoneNumber02"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                placeholder="Enter your phone number"
+                (blur)="onBlur('phoneNumber02')"
+              />
+              <span
+                *ngIf="
+                  touchedFields.phoneNumber02 &&
+                  !isValidPhoneNumber(personalData.phoneNumber02)
+                "
+                class="text-red-600 text-sm"
+              >
+                Invalid phone number.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label
+            for="nic"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >NIC Number</label
+          >
+          <input
+            id="nic"
+            name="nic"
+            [(ngModel)]="personalData.nic"
+            (blur)="onBlur('nic')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)"
+            class="text-red-600 text-sm"
+          >
+            Invalid nic number.
+          </span>
+        </div>
+
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Email</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="nic"
+            [(ngModel)]="personalData.email"
+            (blur)="onBlur('email')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="touchedFields.email && !isValidEmail(personalData.email)"
+            class="text-red-600 text-sm"
+          >
+            Invalid email address.
+          </span>
+        </div>
+      </div>
+
+      <div class="flex justify-end m-10">
+        <button
+          (click)="onCancel()"
+          type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="nextFormCreate('pageTwo')"
+          type="button"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+          [disabled]="!checkFormValidity()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedPage === 'pageTwo'">
+    <!-- <div> -->
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+      Residential Details
+    </h2>
+    <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="pb-6">
+          <label
+            for="house"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >House / Plot Number</label
+          >
+          <input
+            (blur)="onBlur('houseNumber')"
+            id="houseNumber"
+            name="houseNumber"
+            [(ngModel)]="personalData.houseNumber"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('houseNumber')"
+            class="text-red-600 text-sm"
+            >House Number is required.</span
+          >
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="street"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Street Name</label
+          >
+          <input
+            (blur)="onBlur('streetName')"
+            id="streetName"
+            name="streetName"
+            [(ngModel)]="personalData.streetName"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('streetName')"
+            class="text-red-600 text-sm"
+            >Street Name is required.</span
+          >
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="city"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >City</label
+          >
+          <input
+            (blur)="onBlur('city')"
+            id="city"
+            name="city"
+            [(ngModel)]="personalData.city"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm"
+            >city is required.</span
+          >
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="district"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            District
+          </label>
+          <select
+            (blur)="onBlur('district')"
+            id="district"
+            name="district"
+            [(ngModel)]="personalData.district"
+            (change)="updateProvince($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          >
+            <option value="" disabled selected>Select a district</option>
+            <option *ngFor="let district of districts" [value]="district.name">
+              {{ district.name }}
+            </option>
+          </select>
+          <span *ngIf="isFieldInvalid('district')" class="text-red-600 text-sm"
+            >District is required.</span
+          >
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="province"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Province
+          </label>
+          <input
+            id="province"
+            name="province"
+            [(ngModel)]="personalData.province"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            readonly
+          />
+        </div>
+
+        <div class="pb-6">
+          <label
+            for="country"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Country</label
+          >
+          <input
+            id="country"
+            name="country"
+            [(ngModel)]="personalData.country"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
+        Add Bank Details
+      </h2>
+      <div class="pb-6">
+        <label
+          for="accHolderName"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Account Holder’s Name</label
+        >
+        <input
+          id="accHolderName"
+          name="accHolderName"
+          [(ngModel)]="personalData.accHolderName"
+          (blur)="onBlur('accHolderName')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <span
+          *ngIf="isFieldInvalid('accHolderName')"
+          class="text-red-600 text-sm"
+          >city is required.</span
+        >
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Account Number
+        </label>
+        <input
+          id="accNumber"
+          name="accNumber"
+          type="number"
+          [(ngModel)]="personalData.accNumber"
+          (blur)="onBlur('accNumber')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          Account Number is required.
+        </span>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="confirmAccNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Confirm Account Number
+        </label>
+        <input
+          id="confirmAccNumber"
+          name="confirmAccNumber"
+          type="number"
+          [(ngModel)]="personalData.confirmAccNumber"
+          (blur)="onBlur('confirmAccNumber')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+
+        <!-- Required validation message -->
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Confirm Account Number is required.
+        </span>
+
+        <!-- Mismatch validation message -->
+        <span
+          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+          class="text-red-600 text-sm"
+        >
+          Account Numbers do not match.
+        </span>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="bankDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Bank Name
+        </label>
+        <select
+          id="bankDropdown"
+          name="bankDropdown"
+          [(ngModel)]="selectedBankId"
+          (change)="onBankChange()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
+          <option [ngValue]="null" disabled>Select a bank</option>
+          <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+            {{ bank.name }}
+          </option>
+        </select>
+        <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
+          Bank Name is required.
+        </span>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="branchDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Branch Name
+        </label>
+        <select
+          id="branchDropdown"
+          name="branchDropdown"
+          [(ngModel)]="selectedBranchId"
+          (change)="onBranchChange()"
+          [disabled]="!selectedBankId"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
+          <option [ngValue]="null" disabled>Select a branch</option>
+          <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+            {{ branch.name }}
+          </option>
+        </select>
+        <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+          Branch Name is required.
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-end m-10">
+      <button
+        (click)="nextFormCreate('pageOne')"
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+      >
+        Back
+      </button>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+        (click)="onSubmit()"
+        [disabled]="!checkSubmitValidity()"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</div>

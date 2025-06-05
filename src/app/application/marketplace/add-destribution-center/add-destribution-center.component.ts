@@ -20,6 +20,8 @@ interface PhoneCode {
 })
 export class AddDestributionCenterComponent implements OnInit {
   distributionForm!: FormGroup;
+  companyList: CompanyList[] = [];
+
   isLoading = false;
 
   isSubmitting = false;
@@ -57,11 +59,13 @@ export class AddDestributionCenterComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+    this.fetchAllCompanies();
   }
 
   private initializeForm() {
     this.distributionForm = this.fb.group({
       name: ['', Validators.required],
+      company: ['', Validators.required],
       officerInCharge: ['', Validators.required],
       contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       contact1Code: ['+94', Validators.required],
@@ -75,6 +79,8 @@ export class AddDestributionCenterComponent implements OnInit {
       district: ['', Validators.required],
       city: ['', Validators.required]
     });
+
+    
 
     // Watch province changes to update districts
     this.distributionForm.get('province')?.valueChanges.subscribe(province => {
@@ -143,6 +149,7 @@ export class AddDestributionCenterComponent implements OnInit {
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
       name: 'Distribution Centre Name',
+      company: 'Company Name',
       officerInCharge: 'Officer In-Charge Name',
       contact1: 'Contact Number 01',
       contact2: 'Contact Number 02',
@@ -155,6 +162,18 @@ export class AddDestributionCenterComponent implements OnInit {
       city: 'City'
     };
     return labels[fieldName] || fieldName;
+  }
+
+  fetchAllCompanies() {
+    this.distributionService.getAllCompanies().subscribe(
+      (res) => {
+        console.log('this is company', res);
+        this.companyList = res.data;
+        console.log(this.companyList)
+        
+      },
+      (error) => console.error('Error fetching companies:', error)
+    );
   }
 
   onSubmit() {
@@ -260,4 +279,9 @@ export class AddDestributionCenterComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+}
+
+class CompanyList {
+  companyNameEnglish!: string;
+  id!: number;
 }

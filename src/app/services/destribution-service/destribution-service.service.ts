@@ -6,6 +6,7 @@ import { TokenService } from '../token/services/token.service';
 
 export interface DistributionCentreRequest {
   name: string;
+  company: number;
   officerInCharge: string;
   contact1: string;
   contact1Code: string;
@@ -94,6 +95,18 @@ export class DestributionService {
 
     let url = `${this.apiUrl}distribution/get-companies`;
     return this.http.get<ApiResponse<{ companyNameEnglish: string }[]>>(url, {
+      headers,
+    });
+  }
+
+  getAllCompanies(): Observable<ApiResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    let url = `${this.apiUrl}distribution/get-company`;
+    return this.http.get<ApiResponse>(url, {
       headers,
     });
   }

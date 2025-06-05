@@ -10,7 +10,8 @@
 
     <form [formGroup]="distributionForm" (ngSubmit)="onSubmit()">
         <!-- Row 1 -->
-        <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+
+        <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
             <div class="flex-1 mb-4 md:mb-0">
                 <label class="block text-sm font-medium text-[#534E4E] mb-2">Distribution Centre Name *</label>
                 <input type="text" formControlName="name" [class]="'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' + 
@@ -19,6 +20,31 @@
                     {{ getFieldError('name') }}
                 </div>
             </div>
+            <div class="flex-1 mb-4 md:mb-0">
+
+            </div>
+        </div>
+
+
+        <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+            <div class="flex-1 mb-4 md:mb-0">
+                <label class="block text-sm font-medium text-[#534E4E] mb-2">Company *</label>
+                <select
+                  formControlName="company"
+                  [class]="'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' + 
+                    (isFieldInvalid('company') ? 'border-red-500' : 'border-gray-300')"
+                >
+                  <option value="" disabled selected>Select a company</option>
+                  <option *ngFor="let company of companyList" [value]="company.id">
+                    {{ company.companyNameEnglish }}
+                  </option>
+                </select>
+              
+                <div *ngIf="isFieldInvalid('company')" class="text-red-500 text-sm mt-1">
+                  {{ getFieldError('company') }}
+                </div>
+              </div>
+              
 
             <div class="flex-1">
                 <label class="block text-sm font-medium text-[#534E4E] mb-2">Officer In-Charge Name *</label>
@@ -32,7 +58,7 @@
 
         <!-- Row 2 -->
         <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
-            <div class="flex-1 mb-4 md:mb-0">
+            <div class="flex-1 mb-4 md:mb-0 ">
                 <label class="block text-sm font-medium text-[#534E4E] mb-2">Contact Number 01 *</label>
                 <div class="flex">
                     <select formControlName="contact1Code"
@@ -164,5 +190,3 @@
         </div>
     </form>
 </div>
-
-<!-- [disabled]="distributionForm.invalid" -->

@@ -709,10 +709,7 @@ export const routes: Routes = [
                 component: MarketAddProductComponent,
               },
 
-              {
-                path: 'add-destribition-center',
-                component: AddDestributionCenterComponent,
-              },
+              
               {
                 path: 'view-products-list',
                 component: ViewProductsListComponent,
@@ -873,6 +870,11 @@ export const routes: Routes = [
               {
                 path: 'view-destribition-center',
                 component: ViewDistributionCenterComponent,
+              },
+
+              {
+                path: 'add-destribition-center',
+                component: AddDestributionCenterComponent,
               },
             ],
           },

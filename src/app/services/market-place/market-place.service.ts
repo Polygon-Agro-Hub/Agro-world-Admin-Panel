@@ -304,6 +304,49 @@ export class MarketPlaceService {
     let url = `${this.apiUrl}market-place/get-product-type`;
     return this.http.get<any>(url, { headers });
   }
+
+//   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
+//   console.log('this is data', Data);
+//   const formData = new FormData();
+//   formData.append('package', JSON.stringify(Data));
+
+//   if (selectedImage) {
+//     formData.append('file', selectedImage);
+//   }
+
+//   const headers = new HttpHeaders({
+//     Authorization: `Bearer ${this.token}`,
+//   });
+
+//   return this.http.post(`${this.apiUrl}market-place/add-package`,{
+//     headers,
+//   });
+// }
+
+
+editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
+  console.log('this is data', Data )
+  const formData = new FormData();
+  console.log(selectedImage);
+  formData.append('package', JSON.stringify(Data));
+
+  if (selectedImage) {
+    formData.append('file', selectedImage);
+  }
+  console.log('formDta', formData);
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  // Send the request
+  return this.http.post(`${this.apiUrl}market-place/edit-package/${id}`, formData, {
+    headers,
+  });
 }
+
+}
+
+
 
 

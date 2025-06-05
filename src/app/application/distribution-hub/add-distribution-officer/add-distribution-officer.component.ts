@@ -47,7 +47,6 @@ export class AddDistributionOfficerComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   lastID!: string;
   empType!: string;
-  selectedBankId: number | null = null;
 
   languagesRequired: boolean = false;
 
@@ -92,10 +91,10 @@ export class AddDistributionOfficerComponent implements OnInit {
 
   banks: Bank[] = [];
   branches: Branch[] = [];
+  selectedBankId: number | null = null;
+  selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
   errorMessage: string = '';
-
-  selectedBranchId: number | null = null;
 
   constructor(
     private router: Router,
@@ -105,6 +104,8 @@ export class AddDistributionOfficerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadBanks();
+    this.loadBranches();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
@@ -304,10 +305,8 @@ export class AddDistributionOfficerComponent implements OnInit {
       this.personalData.phoneNumber01
     );
     const isEmailValid = this.isValidEmail(this.personalData.email);
-    const isEmpTypeSelected = !!this.empType;
     const isLanguagesSelected = !!this.personalData.languages;
     const isCompanySelected = !!this.personalData.companyId;
-    const isCenterSelected = !!this.personalData.centerId;
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicSelected = !!this.personalData.nic;
 
@@ -316,10 +315,8 @@ export class AddDistributionOfficerComponent implements OnInit {
       isLastNameValid &&
       isPhoneNumberValid &&
       isEmailValid &&
-      isEmpTypeSelected &&
       isLanguagesSelected &&
       isCompanySelected &&
-      isCenterSelected &&
       isJobRoleSelected &&
       isNicSelected
     );
@@ -375,7 +372,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   onSubmit() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to create the collection officer?',
+      text: 'Do you want to create the distribution center head?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, create it!',
@@ -394,10 +391,12 @@ export class AddDistributionOfficerComponent implements OnInit {
 
               Swal.fire(
                 'Success',
-                'Collection Officer Created Successfully',
+                'Created Distribution Center Head Successfully',
                 'success'
               );
-              this.navigatePath('/steckholders/action/collective-officer');
+              this.navigatePath(
+                '/distribution-hub/action/view-distribution-company'
+              );
             },
             (error: any) => {
               this.isLoading = false;
@@ -447,6 +446,38 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.distributionHubSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
     });
+  }
+
+  getAllDistributedCenters(id: number) {
+    this.loaded = false;
+    this.distributionHubSrv.getAllDistributedCentersByCompany(id).subscribe(
+      (res) => {
+        this.distributionCenterData = res;
+        this.loaded = true;
+      },
+      (error) => {
+        this.distributionCenterData = [];
+        this.loaded = true;
+      }
+    );
+  }
+
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      (data) => {
+        this.banks = data;
+      },
+      (error) => {}
+    );
+  }
+
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      (data) => {
+        this.allBranches = data;
+      },
+      (error) => {}
+    );
   }
 }
 

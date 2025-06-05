@@ -90,15 +90,15 @@
               id="centerId"
               [(ngModel)]="personalData.companyId"
               name="centerId"
-              (change)="getAllCompanies()"
+              (change)="getAllDistributedCenters(personalData.companyId)"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
             >
               <option
-                *ngFor="let center of CompanyData"
-                [value]="center.id"
+                *ngFor="let company of CompanyData"
+                [value]="company.id"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
               >
-                {{ center.companyNameEnglish }}
+                {{ company.companyNameEnglish }}
               </option>
             </select>
             <i
@@ -549,7 +549,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="personalData.companyId === '1'">
+    <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>

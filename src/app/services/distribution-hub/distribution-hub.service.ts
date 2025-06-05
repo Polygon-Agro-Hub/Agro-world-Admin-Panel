@@ -70,7 +70,7 @@ export class DistributionHubService {
     });
 
     return this.http.post(
-      `${this.apiUrl}auth/distribution/create-distribution-head`,
+      `${this.apiUrl}distribution/create-distribution-head`,
       formData,
       {
         headers,
@@ -83,8 +83,18 @@ export class DistributionHubService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
+    return this.http.get(`${this.apiUrl}distribution/get-all-company-list`, {
+      headers,
+    });
+  }
+
+  getAllDistributedCentersByCompany(companyId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
     return this.http.get(
-      `${this.apiUrl}auth/distribution/get-all-company-list`,
+      `${this.apiUrl}distribution/get-all-centers-by-company/${companyId}`,
       {
         headers,
       }

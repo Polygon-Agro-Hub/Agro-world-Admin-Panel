@@ -65,8 +65,9 @@ export class DistributionViewCompanyComponent implements OnInit {
       .getAllDistributionCompanyHeads(companyId, page, limit, search)
       .subscribe(
         (data) => {
+          console.log('API Response:', data);
           this.isLoading = false;
-          this.distributionCompanyHeads = data.item;
+          this.distributionCompanyHeads = data.items;
           this.distributionCompanyHeads.forEach((head) => {
             head.createdAtFormatted = this.datePipe.transform(
               head.createdAt,
@@ -74,9 +75,10 @@ export class DistributionViewCompanyComponent implements OnInit {
             );
           });
           this.hasData = this.distributionCompanyHeads.length > 0;
-          this.totalItems = data.totalItems;
+          this.totalItems = data.total;
         },
         (error) => {
+          console.error('Error:', error); // Add error logging
           if (error.status === 401) {
             this.isLoading = false;
           }

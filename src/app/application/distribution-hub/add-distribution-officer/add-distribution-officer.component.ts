@@ -220,7 +220,7 @@ export class AddDistributionOfficerComponent implements OnInit {
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Center Head': 'DCM',
+      'Distribution Center Head': 'DCH',
     };
 
     rolePrefix = rolePrefixes[this.personalData.jobRole];

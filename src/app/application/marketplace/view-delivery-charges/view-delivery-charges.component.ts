@@ -59,22 +59,9 @@ export class ViewDeliveryChargesComponent implements OnInit {
     this.deliveryChargeService
       .getAllDeliveryCharges(this.searchCity, this.exactCity)
       .subscribe({
-        next: (response: ApiResponse | DeliveryCharge[]) => {
-          console.log('API Response:', response);
-
-          if (Array.isArray(response)) {
-            this.deliveryCharges = response;
-          } else if (response?.data && Array.isArray(response.data)) {
-            this.deliveryCharges = response.data;
-          } else if (response?.result && Array.isArray(response.result)) {
-            this.deliveryCharges = response.result;
-          } else if (response?.items && Array.isArray(response.items)) {
-            this.deliveryCharges = response.items;
-          } else {
-            console.error('Unexpected response structure:', response);
-            this.errorMessage = 'Received data in unexpected format';
-          }
-
+        next: (response: DeliveryCharge[]) => {
+          console.log('Delivery charges loaded successfully:', response);
+          this.deliveryCharges = response;
           this.isLoading = false;
         },
         error: (err) => {

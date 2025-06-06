@@ -62,18 +62,13 @@ export class ViewDeliveryChargesComponent implements OnInit {
         next: (response: ApiResponse | DeliveryCharge[]) => {
           console.log('API Response:', response);
 
-          // Handle different response structures
           if (Array.isArray(response)) {
-            // Case 1: Response is the array directly
             this.deliveryCharges = response;
           } else if (response?.data && Array.isArray(response.data)) {
-            // Case 2: Response has data property
             this.deliveryCharges = response.data;
           } else if (response?.result && Array.isArray(response.result)) {
-            // Case 3: Response uses result property
             this.deliveryCharges = response.result;
           } else if (response?.items && Array.isArray(response.items)) {
-            // Case 4: Response uses items property
             this.deliveryCharges = response.items;
           } else {
             console.error('Unexpected response structure:', response);

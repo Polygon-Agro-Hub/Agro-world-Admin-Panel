@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
@@ -11,7 +11,7 @@ export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -100,7 +100,7 @@ export class MarketPlaceService {
   }
 
   createPackage(Data: any, selectedImage: any): Observable<any> {
-    console.log('this is data', Data )
+    console.log('this is data', Data);
     const formData = new FormData();
     console.log(selectedImage);
     formData.append('package', JSON.stringify(Data));
@@ -205,26 +205,25 @@ export class MarketPlaceService {
     );
   }
 
-
-
-
   uploadRetailBanner(data: FormData): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${this.apiUrl}market-place/upload-banner`, data, { headers });
+    return this.http.post(`${this.apiUrl}market-place/upload-banner`, data, {
+      headers,
+    });
   }
-
 
   uploadRetailBannerWholesale(data: FormData): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.post(`${this.apiUrl}market-place/upload-banner-wholesale`, data, { headers });
+    return this.http.post(
+      `${this.apiUrl}market-place/upload-banner-wholesale`,
+      data,
+      { headers }
+    );
   }
-
-
-
 
   updateBannerOrder(feedbacks: { id: number; orderNumber: number }[]) {
     const headers = new HttpHeaders({
@@ -234,11 +233,9 @@ export class MarketPlaceService {
     return this.http.put(
       `${environment.API_URL}market-place/update-banner-order`,
       { feedbacks },
-      { headers },
+      { headers }
     );
   }
-
-
 
   updateBannerOrderWhole(feedbacks: { id: number; orderNumber: number }[]) {
     const headers = new HttpHeaders({
@@ -248,31 +245,34 @@ export class MarketPlaceService {
     return this.http.put(
       `${environment.API_URL}market-place/update-banner-order`,
       { feedbacks },
-      { headers },
+      { headers }
     );
   }
-
-
 
   deleteBannerRetail(feedbackId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete(`${this.apiUrl}market-place/delete-banner-retail/${feedbackId}`, {
-      headers
-    });
+    return this.http.delete(
+      `${this.apiUrl}market-place/delete-banner-retail/${feedbackId}`,
+      {
+        headers,
+      }
+    );
   }
-
 
   deleteBannerWhole(feedbackId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.delete(`${this.apiUrl}market-place/delete-banner-whole/${feedbackId}`, {
-      headers
-    });
+    return this.http.delete(
+      `${this.apiUrl}market-place/delete-banner-whole/${feedbackId}`,
+      {
+        headers,
+      }
+    );
   }
 
   createProductType(data: any): Observable<any> {
@@ -280,11 +280,14 @@ export class MarketPlaceService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(`${this.apiUrl}market-place/create-product-type`, data, {
-      headers
-    });
+    return this.http.post(
+      `${this.apiUrl}market-place/create-product-type`,
+      data,
+      {
+        headers,
+      }
+    );
   }
-
 
   getAllProductType(): Observable<any> {
     const headers = new HttpHeaders({
@@ -292,61 +295,81 @@ export class MarketPlaceService {
     });
 
     return this.http.get(`${this.apiUrl}market-place/view-all-product-type`, {
-      headers
+      headers,
     });
   }
 
-  fetchProductTypes(): Observable <any> {
+  fetchProductTypes(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-  
+
     let url = `${this.apiUrl}market-place/get-product-type`;
     return this.http.get<any>(url, { headers });
   }
 
-//   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-//   console.log('this is data', Data);
-//   const formData = new FormData();
-//   formData.append('package', JSON.stringify(Data));
+  //   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
+  //   console.log('this is data', Data);
+  //   const formData = new FormData();
+  //   formData.append('package', JSON.stringify(Data));
 
-//   if (selectedImage) {
-//     formData.append('file', selectedImage);
-//   }
+  //   if (selectedImage) {
+  //     formData.append('file', selectedImage);
+  //   }
 
-//   const headers = new HttpHeaders({
-//     Authorization: `Bearer ${this.token}`,
-//   });
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //   });
 
-//   return this.http.post(`${this.apiUrl}market-place/add-package`,{
-//     headers,
-//   });
-// }
+  //   return this.http.post(`${this.apiUrl}market-place/add-package`,{
+  //     headers,
+  //   });
+  // }
 
+  editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
+    console.log('this is data', Data);
+    const formData = new FormData();
+    console.log(selectedImage);
+    formData.append('package', JSON.stringify(Data));
 
-editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-  console.log('this is data', Data )
-  const formData = new FormData();
-  console.log(selectedImage);
-  formData.append('package', JSON.stringify(Data));
+    if (selectedImage) {
+      formData.append('file', selectedImage);
+    }
+    console.log('formDta', formData);
 
-  if (selectedImage) {
-    formData.append('file', selectedImage);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    // Send the request
+    return this.http.post(
+      `${this.apiUrl}market-place/edit-package/${id}`,
+      formData,
+      {
+        headers,
+      }
+    );
   }
-  console.log('formDta', formData);
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+  getAllDeliveryCharges(
+    searchCity: string = '',
+    exactCity: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  // Send the request
-  return this.http.post(`${this.apiUrl}market-place/edit-package/${id}`, formData, {
-    headers,
-  });
+    let url = `${this.apiUrl}market-place/get-all-delivery-charges`;
+    const params = new HttpParams();
+
+    if (searchCity) {
+      params.set('searchItem', searchCity);
+    }
+
+    if (exactCity) {
+      params.set('city', exactCity);
+    }
+
+    return this.http.get<any>(url, { headers, params });
+  }
 }
-
-}
-
-
-
-

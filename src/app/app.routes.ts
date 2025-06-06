@@ -131,6 +131,7 @@ import { ViewCompaniesComponent } from './application/distribution-hub/view-comp
 import { SubsriptionComponent } from './application/marketplace/subsription/subsription.component';
 import { DistributionViewCompanyComponent } from './application/distribution-hub/distribution-view-company/distribution-view-company.component';
 import { AddDistributionOfficerComponent } from './application/distribution-hub/add-distribution-officer/add-distribution-officer.component';
+import { EditProductTypesComponent } from './application/marketplace/edit-product-types/edit-product-types.component';
 export const routes: Routes = [
   {
     path: '',
@@ -756,6 +757,10 @@ export const routes: Routes = [
               {
                 path: 'subscription',
                 component: SubsriptionComponent,
+              },
+              {
+                path: 'edit-product-type/:id',
+                component: EditProductTypesComponent,
               },
             ],
           },

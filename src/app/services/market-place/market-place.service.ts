@@ -100,7 +100,7 @@ export class MarketPlaceService {
   }
 
   createPackage(Data: any, selectedImage: any): Observable<any> {
-    console.log('this is data', Data )
+    console.log('this is data', Data)
     const formData = new FormData();
     console.log(selectedImage);
     formData.append('package', JSON.stringify(Data));
@@ -296,57 +296,87 @@ export class MarketPlaceService {
     });
   }
 
-  fetchProductTypes(): Observable <any> {
+  fetchProductTypes(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-  
+
     let url = `${this.apiUrl}market-place/get-product-type`;
     return this.http.get<any>(url, { headers });
   }
 
-//   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-//   console.log('this is data', Data);
-//   const formData = new FormData();
-//   formData.append('package', JSON.stringify(Data));
+  //   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
+  //   console.log('this is data', Data);
+  //   const formData = new FormData();
+  //   formData.append('package', JSON.stringify(Data));
 
-//   if (selectedImage) {
-//     formData.append('file', selectedImage);
-//   }
+  //   if (selectedImage) {
+  //     formData.append('file', selectedImage);
+  //   }
 
-//   const headers = new HttpHeaders({
-//     Authorization: `Bearer ${this.token}`,
-//   });
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //   });
 
-//   return this.http.post(`${this.apiUrl}market-place/add-package`,{
-//     headers,
-//   });
-// }
+  //   return this.http.post(`${this.apiUrl}market-place/add-package`,{
+  //     headers,
+  //   });
+  // }
 
 
-editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-  console.log('this is data', Data)
-  console.log('this is image', selectedImage)
-  const formData = new FormData();
-  
-  formData.append('package', JSON.stringify(Data));
+  editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
+    console.log('this is data', Data)
+    console.log('this is image', selectedImage)
+    const formData = new FormData();
 
-  // Only append file if selectedImage is a base64 string (new image)
-  // If it's a URL string (old image), don't append it
-  if (selectedImage && selectedImage.toString().startsWith('data:')) {
-    formData.append('file', selectedImage);
+    formData.append('package', JSON.stringify(Data));
+
+    // Only append file if selectedImage is a base64 string (new image)
+    // If it's a URL string (old image), don't append it
+    if (selectedImage && selectedImage.toString().startsWith('data:')) {
+      formData.append('file', selectedImage);
+    }
+
+    console.log('formData', formData);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(`${this.apiUrl}market-place/edit-package/${id}`, formData, {
+      headers,
+    });
   }
-  
-  console.log('formData', formData);
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+  getAllProductTypeById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  return this.http.post(`${this.apiUrl}market-place/edit-package/${id}`, formData, {
-    headers,
-  });
-}
+    return this.http.get(`${this.apiUrl}market-place/get-product-type-by-id/${id}`, {
+      headers
+    });
+  }
+
+  editProductType(data: any, id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.patch(`${this.apiUrl}market-place/edit-product-type/${id}`, data, {
+      headers
+    });
+  }
+
+  deleteProductType(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.delete(`${this.apiUrl}market-place/delete-product-type/${id}`, {
+      headers
+    });
+  }
 
 }
 

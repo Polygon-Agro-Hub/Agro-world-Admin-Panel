@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-distribution-view-company',
@@ -113,6 +114,38 @@ export class DistributionViewCompanyComponent implements OnInit {
       this.itemsPerPage,
       this.searchText
     );
+  }
+
+  deleteDistributionHead(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.distributionHubService.deleteDistributionHead(id).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            Swal.fire(
+              'Deleted!',
+              'Distribution head has been deleted.',
+              'success'
+            );
+            this.fetchAllCompanyHeads();
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error deleting distribution head:', error);
+            Swal.fire('Error!', 'Failed to delete distribution head.', 'error');
+          },
+        });
+      }
+    });
   }
 }
 

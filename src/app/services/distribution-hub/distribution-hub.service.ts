@@ -100,4 +100,14 @@ export class DistributionHubService {
       }
     );
   }
+
+  deleteDistributionHead(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}distribution/delete-officer/${id}`;
+    return this.http.delete<any>(url, { headers });
+  }
 }

@@ -428,4 +428,59 @@ export class MarketPlaceService {
 
     return this.http.get<any>(url, { headers: headers });
   }
+
+  getAllDeliveryCharges(
+    searchCity: string = '',
+    exactCity: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-delivery-charges`;
+    const params = new HttpParams();
+
+    if (searchCity) {
+      params.set('searchItem', searchCity);
+    }
+
+    if (exactCity) {
+      params.set('city', exactCity);
+    }
+
+    return this.http.get<any>(url, { headers, params });
+  }
+
+  uploadDeliveryCharges(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http
+      .post(`${this.apiUrl}market-place/upload-delivery-charges`, formData, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Upload error:', error);
+          return throwError(() => new Error('Failed to upload file'));
+        })
+      );
+  }
+
+  updateDeliveryCharge(data: any, id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(
+      `${this.apiUrl}market-place/edit-delivery-charge/${id}`,
+      data,
+      { headers }
+    );
+  }
 }

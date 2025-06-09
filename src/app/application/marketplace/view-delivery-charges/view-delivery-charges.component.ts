@@ -83,43 +83,51 @@ export class ViewDeliveryChargesComponent implements OnInit {
     this.router.navigate(['/market/action/upload-delivery-charges']);
   }
 
-  downloadTemplate(): void {
+  async downloadTemplate(): Promise<void> {
     try {
-      // Create the template data
-      const templateData = [
-        ['City Name', 'Charge (Rs.)'],
-        ['', ''],
-      ];
+      this.deliveryChargeService.getAllDeliveryCharges().subscribe({
+        next: (dbData: any[]) => {
+          const excelData = [
+            ['City Name', 'Charge (Rs.)'],
+            ...dbData.map((item) => [item.city || item.cityName, item.charge]),
+          ];
 
-      // Create a worksheet
-      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(templateData);
+          const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(excelData);
 
-      // Create a workbook
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Delivery Charges Template');
+          const wb: XLSX.WorkBook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Delivery Charges Template');
 
-      // Generate file name with current date
-      const fileName = `Delivery_Charges_Template_${
-        new Date().toISOString().split('T')[0]
-      }.xlsx`;
+          const fileName = `Delivery_Charges_Template_${
+            new Date().toISOString().split('T')[0]
+          }.xlsx`;
 
-      // Export the workbook
-      XLSX.writeFile(wb, fileName);
+          XLSX.writeFile(wb, fileName);
 
-      // Show success message
-      Swal.fire({
-        title: 'Success!',
-        text: 'Template downloaded successfully',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#3980C0',
-        timer: 3000,
+          Swal.fire({
+            title: 'Success!',
+            text: 'Template with database data downloaded successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3980C0',
+            timer: 3000,
+          });
+        },
+        error: (error) => {
+          console.error('Error generating template:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to download template with database data',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3980C0',
+          });
+        },
       });
     } catch (error) {
       console.error('Error generating template:', error);
       Swal.fire({
         title: 'Error!',
-        text: 'Failed to download template',
+        text: 'Failed to download template with database data',
         icon: 'error',
         confirmButtonText: 'OK',
         confirmButtonColor: '#3980C0',

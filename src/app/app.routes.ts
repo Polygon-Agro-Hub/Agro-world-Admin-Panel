@@ -132,6 +132,7 @@ import { SubsriptionComponent } from './application/marketplace/subsription/subs
 import { DistributionViewCompanyComponent } from './application/distribution-hub/distribution-view-company/distribution-view-company.component';
 import { AddDistributionOfficerComponent } from './application/distribution-hub/add-distribution-officer/add-distribution-officer.component';
 import { ViewDeliveryChargesComponent } from './application/marketplace/view-delivery-charges/view-delivery-charges.component';
+import { UploadDeliveryChargesComponent } from './application/marketplace/upload-delivery-charges/upload-delivery-charges.component';
 export const routes: Routes = [
   {
     path: '',
@@ -766,6 +767,10 @@ export const routes: Routes = [
               {
                 path: 'view-delivery-charges',
                 component: ViewDeliveryChargesComponent,
+              },
+              {
+                path: 'upload-delivery-charges',
+                component: UploadDeliveryChargesComponent,
               },
             ],
           },

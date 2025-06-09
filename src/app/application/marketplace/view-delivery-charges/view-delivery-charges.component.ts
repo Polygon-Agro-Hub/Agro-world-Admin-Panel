@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 
 interface DeliveryCharge {
   id: number;
@@ -75,5 +77,53 @@ export class ViewDeliveryChargesComponent implements OnInit {
 
   navigateToBack(): void {
     this.router.navigate(['/market/action']);
+  }
+
+  upload(): void {
+    this.router.navigate(['/market/action/upload-delivery-charges']);
+  }
+
+  downloadTemplate(): void {
+    try {
+      // Create the template data
+      const templateData = [
+        ['City Name', 'Charge (Rs.)'],
+        ['', ''],
+      ];
+
+      // Create a worksheet
+      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(templateData);
+
+      // Create a workbook
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Delivery Charges Template');
+
+      // Generate file name with current date
+      const fileName = `Delivery_Charges_Template_${
+        new Date().toISOString().split('T')[0]
+      }.xlsx`;
+
+      // Export the workbook
+      XLSX.writeFile(wb, fileName);
+
+      // Show success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Template downloaded successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3980C0',
+        timer: 3000,
+      });
+    } catch (error) {
+      console.error('Error generating template:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to download template',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3980C0',
+      });
+    }
   }
 }

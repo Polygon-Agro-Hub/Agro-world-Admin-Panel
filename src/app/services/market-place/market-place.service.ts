@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
 @Injectable({
@@ -371,5 +371,25 @@ export class MarketPlaceService {
     }
 
     return this.http.get<any>(url, { headers, params });
+  }
+
+  uploadDeliveryCharges(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http
+      .post(`${this.apiUrl}market-place/upload-delivery-charges`, formData, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Upload error:', error);
+          return throwError(() => new Error('Failed to upload file'));
+        })
+      );
   }
 }

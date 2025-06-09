@@ -43,6 +43,12 @@ export class ViewDeliveryChargesComponent implements OnInit {
   errorMessage = '';
   searchCity = '';
   exactCity = '';
+  showEditModal: boolean = false;
+  editData: any = {
+    city: '',
+    charge: null,
+    id: null, // assuming you have an ID field
+  };
 
   constructor(
     private router: Router,
@@ -133,5 +139,83 @@ export class ViewDeliveryChargesComponent implements OnInit {
         confirmButtonColor: '#3980C0',
       });
     }
+  }
+
+  openEditModal(data: any): void {
+    this.editData = {
+      city: data.city,
+      charge: data.charge,
+      id: data.id, // or whatever unique identifier you use
+    };
+    this.showEditModal = true;
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.editData = {
+      city: '',
+      charge: null,
+      id: null,
+    };
+  }
+
+  updateDeliveryCharge(): void {
+    if (!this.editData.id || this.editData.charge === null) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Invalid data for update',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3980C0',
+      });
+      return;
+    }
+
+    this.isLoading = true;
+
+    // Prepare the data to send (only include necessary fields)
+    const updateData = {
+      city: this.editData.city,
+      charge: this.editData.charge,
+    };
+
+    this.deliveryChargeService
+      .updateDeliveryCharge(updateData, this.editData.id)
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Success!',
+            text: 'Delivery charge updated successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3980C0',
+            timer: 2000,
+          });
+
+          // Update the local data
+          const index = this.deliveryCharges.findIndex(
+            (item) => item.id === this.editData.id
+          );
+          if (index !== -1) {
+            this.deliveryCharges[index].charge = this.editData.charge;
+            // Update city too if it's editable (currently your input is readonly)
+            this.deliveryCharges[index].city = this.editData.city;
+          }
+
+          this.closeEditModal();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Error updating delivery charge:', err);
+          Swal.fire({
+            title: 'Error!',
+            text: err.error?.message || 'Failed to update delivery charge',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3980C0',
+          });
+        },
+      });
   }
 }

@@ -392,4 +392,17 @@ export class MarketPlaceService {
         })
       );
   }
+
+  updateDeliveryCharge(data: any, id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(
+      `${this.apiUrl}market-place/edit-delivery-charge/${id}`,
+      data,
+      { headers }
+    );
+  }
 }

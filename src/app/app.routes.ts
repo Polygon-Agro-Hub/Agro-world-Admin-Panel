@@ -135,6 +135,7 @@ import { EditProductTypesComponent } from './application/marketplace/edit-produc
 import { ViewRetailOrdersComponent } from './application/marketplace/view-retail-orders/view-retail-orders.component';
 import { ViewDeliveryChargesComponent } from './application/marketplace/view-delivery-charges/view-delivery-charges.component';
 import { UploadDeliveryChargesComponent } from './application/marketplace/upload-delivery-charges/upload-delivery-charges.component';
+import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
 export const routes: Routes = [
   {
     path: '',
@@ -900,6 +901,10 @@ export const routes: Routes = [
               {
                 path: 'add-destribition-center',
                 component: AddDestributionCenterComponent,
+              },
+              {
+                path: 'edit-distribution-officer/:id',
+                component: EditDistributionOfficerComponent,
               },
             ],
           },

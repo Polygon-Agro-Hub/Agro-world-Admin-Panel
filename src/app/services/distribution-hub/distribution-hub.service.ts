@@ -110,4 +110,16 @@ export class DistributionHubService {
     let url = `${this.apiUrl}distribution/delete-officer/${id}`;
     return this.http.delete<any>(url, { headers });
   }
+
+  getDistributionHeadDetailsById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(
+      `${this.apiUrl}distribution/get-distribution-head/${id}`,
+      { headers }
+    );
+  }
 }

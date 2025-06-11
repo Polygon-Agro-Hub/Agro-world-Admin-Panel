@@ -147,6 +147,13 @@ export class DistributionViewCompanyComponent implements OnInit {
       }
     });
   }
+
+  edit(id: number): void {
+    this.router.navigate([
+      '/distribution-hub/action/edit-distribution-officer/',
+      id,
+    ]);
+  }
 }
 
 class DistributionCompanyHead {

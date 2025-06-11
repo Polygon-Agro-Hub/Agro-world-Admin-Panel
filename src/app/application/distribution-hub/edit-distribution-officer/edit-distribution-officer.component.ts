@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
@@ -101,7 +102,8 @@ export class EditDistributionOfficerComponent implements OnInit {
     private http: HttpClient,
     private collectionCenterSrv: CollectionCenterService,
     private distributionHubSrv: DistributionHubService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -420,31 +422,36 @@ export class EditDistributionOfficerComponent implements OnInit {
   onSubmit() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to create the distribution center head?',
+      text: 'Do you want to update the distribution center head?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
+      confirmButtonText: 'Yes, update it!',
       cancelButtonText: 'No, cancel',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
+        const updateData = {
+          ...this.personalData,
+          empId: 'DCH' + this.personalData.empId,
+          image: this.selectedImage,
+        };
+
         this.distributionHubSrv
-          .createDistributionHead(this.personalData, this.selectedImage)
+          .updateDistributionHeadDetails(this.itemId!, updateData)
           .subscribe(
             (res: any) => {
               this.isLoading = false;
-              this.officerId = res.officerId;
               this.errorMessage = '';
 
               Swal.fire(
                 'Success',
-                'Created Distribution Center Head Successfully',
+                'Updated Distribution Center Head Successfully',
                 'success'
-              );
-              this.navigatePath(
-                '/distribution-hub/action/view-distribution-company'
-              );
+              ).then(() => {
+                // Redirect back after success
+                this.location.back();
+              });
             },
             (error: any) => {
               this.isLoading = false;
@@ -453,8 +460,13 @@ export class EditDistributionOfficerComponent implements OnInit {
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
-      } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
+          () => {
+            // Redirect back on cancel
+            this.location.back();
+          }
+        );
       }
     });
   }

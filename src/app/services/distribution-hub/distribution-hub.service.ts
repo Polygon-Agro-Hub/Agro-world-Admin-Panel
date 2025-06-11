@@ -122,4 +122,17 @@ export class DistributionHubService {
       { headers }
     );
   }
+
+  updateDistributionHeadDetails(id: number, updateData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(
+      `${this.apiUrl}distribution/update-collection-officer/${id}`,
+      updateData,
+      { headers }
+    );
+  }
 }

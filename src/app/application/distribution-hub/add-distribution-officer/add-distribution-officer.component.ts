@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
@@ -100,7 +101,8 @@ export class AddDistributionOfficerComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private collectionCenterSrv: CollectionCenterService,
-    private distributionHubSrv: DistributionHubService
+    private distributionHubSrv: DistributionHubService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -393,10 +395,9 @@ export class AddDistributionOfficerComponent implements OnInit {
                 'Success',
                 'Created Distribution Center Head Successfully',
                 'success'
-              );
-              this.navigatePath(
-                '/distribution-hub/action/view-distribution-company'
-              );
+              ).then(() => {
+                this.location.back();
+              });
             },
             (error: any) => {
               this.isLoading = false;
@@ -406,7 +407,11 @@ export class AddDistributionOfficerComponent implements OnInit {
             }
           );
       } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+        Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
+          () => {
+            this.location.back();
+          }
+        );
       }
     });
   }

@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <button
-  (click)="navigatePath('/distribution-hub/action/view-distribution-company')"
+  onclick="history.back()"
   *ngIf="selectedPage === 'pageOne'"
   class="ml-5 text-textLight dark:text-textDark"
 >

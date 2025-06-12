@@ -131,6 +131,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { environment } from '../../../environment/environment.development';
 
 @Component({
   selector: 'app-subscription',
@@ -156,8 +157,9 @@ export class SubsriptionComponent implements OnInit {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
+  // BaseApiURL = 
 
-  private apiUrl = 'http://localhost:3000/agro-api/admin-api/api/market-place/marketplace-users';
+  private apiUrl = `${environment.API_URL}market-place/marketplace-users`;
 
   constructor(private http: HttpClient, private router: Router) {}
 

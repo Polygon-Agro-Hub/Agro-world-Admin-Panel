@@ -882,6 +882,12 @@ export const routes: Routes = [
             children: [
               { path: '', component: DistributionhubComponent },
               {
+                path: 'create-company',
+                component: CreateCompanyComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add And Edit Company' },
+              },
+              {
                 path: 'view-companies',
                 component: ViewCompaniesComponent,
               },

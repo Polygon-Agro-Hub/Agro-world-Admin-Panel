@@ -57,9 +57,11 @@ export class DistributionhubComponent {
 
   navigateToCreateNews(): void {
     this.isLoading = true;
-    this.router.navigate(['/distribution-hub/action']).then(() => {
-      this.isLoading = false;
-    });
+    this.router
+      .navigate(['/distribution-hub/action/create-company'])
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
   navigateToViewCompanies(): void {

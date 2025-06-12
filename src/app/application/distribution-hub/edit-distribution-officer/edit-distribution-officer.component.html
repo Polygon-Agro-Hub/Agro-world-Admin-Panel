@@ -169,7 +169,7 @@
                 name="languages"
                 value="Sinhala"
                 (change)="onCheckboxChange('Sinhala', $event)"
-                [checked]="personalData.languages?.includes('Sinhala')"
+                [checked]="personalData.languages.includes('Sinhala')"
               />
               <label for="sinhala" class="text-gray-700">Sinhala</label>
             </div>
@@ -181,7 +181,7 @@
                 name="languages"
                 value="English"
                 (change)="onCheckboxChange('English', $event)"
-                [checked]="personalData.languages?.includes('English')"
+                [checked]="personalData.languages.includes('English')"
               />
               <label for="english" class="text-gray-700">English</label>
             </div>
@@ -193,7 +193,7 @@
                 name="languages"
                 value="Tamil"
                 (change)="onCheckboxChange('Tamil', $event)"
-                [checked]="personalData.languages?.includes('Tamil')"
+                [checked]="personalData.languages.includes('Tamil')"
               />
               <label for="tamil" class="text-gray-700">Tamil</label>
             </div>

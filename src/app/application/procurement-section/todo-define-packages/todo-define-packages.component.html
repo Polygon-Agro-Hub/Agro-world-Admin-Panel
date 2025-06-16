@@ -1,0 +1,235 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div class="overflow-x-auto">
+  <div
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  >
+    <div
+      class="pt-5 px-12 pb-5 min-w-[1550px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    >
+      <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+            All Orders ({{ totalItems }})
+          </h2>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-4">
+          <div>
+            <p-dropdown
+              [(ngModel)]="statusFilter"
+              (onChange)="onFilterChange()"
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              [options]="statusOptions"
+              [checkmark]="true"
+              optionLabel="label"
+              optionValue="value"
+              [showClear]="true"
+              placeholder="Status"
+            ></p-dropdown>
+          </div>
+
+          <div>
+            <p-dropdown
+              [(ngModel)]="dateFilter"
+              (onChange)="onFilterChange()"
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              [options]="dateOptions"
+              [checkmark]="true"
+              optionLabel="label"
+              optionValue="value"
+              [showClear]="true"
+              placeholder="Ordered Date"
+            ></p-dropdown>
+          </div>
+
+          <div>
+            <p-dropdown
+              [(ngModel)]="deliveryDateFilter"
+              (onChange)="onFilterChange()"
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              [options]="dateOptions"
+              [checkmark]="true"
+              optionLabel="label"
+              optionValue="value"
+              [showClear]="true"
+              placeholder="Delivery Date"
+            ></p-dropdown>
+          </div>
+
+          <div
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+          >
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              (keyup.enter)="onSearch()"
+              placeholder="Search By First Name, Center"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            />
+            <button
+              type="button"
+              (click)="onSearch()"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              (click)="onClearSearch()"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="w-full overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
+                No
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              >
+                Invoice No
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
+                Application
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
+                Total Price (.Rs)
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
+                Ordered Date
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
+                Delivery Date
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
+                Status
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr
+              *ngFor="let order of orders; let i = index"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ (page - 1) * itemsPerPage + i + 1 }}
+              </td>
+              <td
+                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              >
+                {{ order.invNo || "N/A" }}
+              </td>
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.orderApp }}
+              </td>
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.total | number : "1.2-2" }}
+              </td>
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.createdAt | date : "mediumDate" }}
+              </td>
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.sheduleDate | date : "mediumDate" }}
+              </td>
+              <td class="px-4 py-3 text-left">
+                <span
+                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32 {{
+                    getStatusClass(order.status)
+                  }}"
+                >
+                  {{ order.status || "N/A" }}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="orders.length === 0 && !isLoading">
+              <td
+                colspan="8"
+                class="px-4 py-6 text-center text-textLight dark:text-textDark"
+              >
+                No orders found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="dark:bg-[#262f45]">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            [responsive]="true"
+            [previousLabel]="'Previous'"
+            [nextLabel]="'Next'"
+            [screenReaderPaginationLabel]="'Pagination'"
+            [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'"
+          >
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

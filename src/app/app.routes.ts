@@ -136,6 +136,7 @@ import { ViewRetailOrdersComponent } from './application/marketplace/view-retail
 import { ViewDeliveryChargesComponent } from './application/marketplace/view-delivery-charges/view-delivery-charges.component';
 import { UploadDeliveryChargesComponent } from './application/marketplace/upload-delivery-charges/upload-delivery-charges.component';
 import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
+import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
 export const routes: Routes = [
   {
     path: '',
@@ -678,6 +679,10 @@ export const routes: Routes = [
           {
             path: 'received-orders',
             component: RecievedOrdersComponent,
+          },
+          {
+            path: 'define-packages',
+            component: DefinePackagesComponent,
           },
         ],
       },

@@ -9,19 +9,20 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './procurement.component.html',
-  styleUrl: './procurement.component.css'
+  styleUrl: './procurement.component.css',
 })
 export class ProcurementComponent {
   constructor(
-    private router: Router, 
+    private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
   ) {}
-
 
   purchaseReport(): void {
     this.router.navigate(['/procurement/received-orders']);
   }
 
-
+  definePackages(): void {
+    this.router.navigate(['/procurement/define-packages']);
+  }
 }

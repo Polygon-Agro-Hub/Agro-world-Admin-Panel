@@ -105,9 +105,12 @@
             </div>
           </span>
 
-          <div class="mt-3 flex justify-end">
+          <div class="mt-3 flex justify-end px-10">
             <div class="text-sm text-gray-900 dark:text-gray-100">
-              Full Total : <span class="ml-2">Rs.0.00</span>
+              Full Total :
+              <span class="ml-2"
+                >Rs.{{ getPackageTotal(item).toFixed(2) }}</span
+              >
             </div>
           </div>
         </div>

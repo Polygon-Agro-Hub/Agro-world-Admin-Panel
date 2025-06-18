@@ -135,10 +135,20 @@ export class ProcumentsService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.post(
-      `${this.apiUrl}procument/add-order-package-item`, // Note the new endpoint name
-      { items: orderPackageItemsData }, // Send as an object with items array
-      { headers }
-    );
+    // Log the data being sent
+    console.log('Sending package items:', orderPackageItemsData);
+
+    return this.http
+      .post(
+        `${this.apiUrl}procument/add-order-package-item`,
+        orderPackageItemsData, // Send array directly
+        { headers }
+      )
+      .pipe(
+        catchError((error) => {
+          console.error('Error in createOrderPackageItems:', error);
+          return throwError(error);
+        })
+      );
   }
 }

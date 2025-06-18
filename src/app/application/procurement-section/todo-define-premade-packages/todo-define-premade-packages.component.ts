@@ -219,32 +219,41 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
-
-    const packageItems = this.orderDetails.flatMap((pkg) =>
-      pkg.productTypes
-        .filter((pt) => pt.productId && pt.quantity)
-        .map((pt) => ({
-          orderPackageId: pkg.packageId,
-          productType: pt.id,
-          productId: pt.productId,
-          qty: pt.quantity,
-          price: pt.selectedProductPrice,
-        }))
+    // Prepare package items with validation
+    const packageItems = this.orderDetails.flatMap(
+      (pkg) =>
+        pkg.productTypes
+          .filter(
+            (pt) => pt.productId && pt.quantity && pt.selectedProductPrice
+          )
+          .map((pt) => {
+            if (!pt.productId || !pt.quantity || !pt.selectedProductPrice) {
+              console.error('Invalid product type:', pt);
+              return null;
+            }
+            return {
+              orderPackageId: pkg.packageId,
+              productType: pt.id,
+              productId: pt.productId,
+              qty: pt.quantity,
+              price: pt.selectedProductPrice,
+            };
+          })
+          .filter((item) => item !== null) // Remove any null items
     );
 
     if (packageItems.length === 0) {
-      this.loading = false;
       Swal.fire({
         icon: 'warning',
         title: 'No Valid Items',
-        text: 'No valid package items to save',
+        text: 'No valid package items to save. Please ensure all items have a product selected, quantity, and price.',
         confirmButtonColor: '#3085d6',
       });
       return;
     }
 
-    // Show loading alert
+    console.log('Final package items to save:', packageItems);
+
     Swal.fire({
       title: 'Processing...',
       html: 'Please wait while we save your order',
@@ -256,11 +265,11 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
     this.procurementService.createOrderPackageItems(packageItems).subscribe({
       next: (response) => {
-        this.loading = false;
+        console.log('Save successful, response:', response);
         Swal.fire({
           icon: 'success',
           title: 'Success!',
-          text: 'All items saved successfully!',
+          text: response.message || 'All items saved successfully!',
           confirmButtonColor: '#3085d6',
         }).then((result) => {
           if (result.isConfirmed) {
@@ -270,11 +279,19 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error saving items:', err);
-        this.loading = false;
+        let errorMessage = 'Failed to save items. Please try again.';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.error?.errors) {
+          errorMessage = `Some items failed to save: ${err.error.errors
+            .map((e: { error: any }) => e.error)
+            .join(', ')}`;
+        }
+
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Failed to save items. Please try again.',
+          text: errorMessage,
           confirmButtonColor: '#3085d6',
         });
       },

@@ -4,6 +4,7 @@ import { ProcumentsService } from '../../../services/procuments/procuments.servi
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 interface OrderDetailItem {
   packageId: number;
@@ -199,20 +200,27 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   onComplete() {
     if (!this.isWithinLimit) {
-      alert(
-        'Cannot complete order - calculated price exceeds the allowed limit!'
-      );
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot Complete Order',
+        text: 'Calculated price exceeds the allowed limit!',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
     if (!this.orderDetails.length) {
-      alert('No order details available');
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Order Details',
+        text: 'No order details available',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
     this.loading = true;
 
-    // Prepare all package items
     const packageItems = this.orderDetails.flatMap((pkg) =>
       pkg.productTypes
         .filter((pt) => pt.productId && pt.quantity)
@@ -227,21 +235,48 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
     if (packageItems.length === 0) {
       this.loading = false;
-      alert('No valid package items to save');
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Valid Items',
+        text: 'No valid package items to save',
+        confirmButtonColor: '#3085d6',
+      });
       return;
     }
 
-    // Send all items in a single request
+    // Show loading alert
+    Swal.fire({
+      title: 'Processing...',
+      html: 'Please wait while we save your order',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     this.procurementService.createOrderPackageItems(packageItems).subscribe({
       next: (response) => {
         this.loading = false;
-        alert('All items saved successfully!');
-        this.goBack();
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'All items saved successfully!',
+          confirmButtonColor: '#3085d6',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.goBack();
+          }
+        });
       },
       error: (err) => {
         console.error('Error saving items:', err);
         this.loading = false;
-        alert('Failed to save items. Please try again.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to save items. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
       },
     });
   }

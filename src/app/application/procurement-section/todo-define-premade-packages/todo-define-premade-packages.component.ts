@@ -44,6 +44,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   invoiceNumber = '';
   totalPrice = 0;
   orderId!: number;
+  isWithinLimit = true;
 
   constructor(
     private procurementService: ProcumentsService,
@@ -122,9 +123,26 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         (sum: number, pkg: OrderDetailItem) => sum + (pkg.productPrice || 0),
         0
       );
+
+      // Calculate the allowed limit (8% of the total price)
+      const allowedLimit = this.totalPrice * 1.08;
+
+      // Calculate the current total (sum of all package totals)
+      const currentTotal = this.orderDetails.reduce(
+        (sum: number, pkg: OrderDetailItem) => sum + this.getPackageTotal(pkg),
+        0
+      );
+
+      // Validate if current total is within the allowed limit
+      this.isWithinLimit = currentTotal <= allowedLimit;
+
       console.log('Calculated total price:', this.totalPrice);
+      console.log('Allowed limit:', allowedLimit);
+      console.log('Current total:', currentTotal);
+      console.log('Is within limit:', this.isWithinLimit);
     } else {
       this.totalPrice = 0;
+      this.isWithinLimit = true;
     }
   }
 
@@ -155,7 +173,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     const quantity = parseFloat(inputElement.value);
 
     if (isNaN(quantity)) {
-      // When quantity is empty, revert to default price (1 unit)
       productType.quantity = undefined;
       productType.calculatedPrice = productType.selectedProductPrice || 0;
     } else {
@@ -163,6 +180,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       productType.calculatedPrice =
         quantity * (productType.selectedProductPrice || 0);
     }
+    this.calculateTotalPrice(); // Add this line
   }
 
   getPackageTotal(packageItem: OrderDetailItem): number {
@@ -171,5 +189,10 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     return packageItem.productTypes.reduce((sum, productType) => {
       return sum + (productType.calculatedPrice || 0);
     }, 0);
+  }
+
+  getAllowedLimit(packageItem: OrderDetailItem): string {
+    const allowedLimit = packageItem.productPrice * 1.08;
+    return allowedLimit.toFixed(2);
   }
 }

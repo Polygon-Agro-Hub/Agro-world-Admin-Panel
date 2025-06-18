@@ -46,7 +46,12 @@
       <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm">
         Clear
       </button>
-      <button class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm">
+      <button
+        class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm"
+        [disabled]="!isWithinLimit"
+        [class.opacity-50]="!isWithinLimit"
+        [class.cursor-not-allowed]="!isWithinLimit"
+      >
         Complete
       </button>
     </div>
@@ -125,7 +130,14 @@
               <span class="ml-2">Rs.{{ item.productPrice }}</span>
             </div>
             <div class="text-xs text-blue-600 dark:text-blue-400">
-              Allowed limit : 2,000 + 2,000 × 6% = Rs.2,160.00
+              Allowed limit : {{ item.productPrice }} +
+              {{ item.productPrice }} × 8% = Rs.{{ getAllowedLimit(item) }}
+            </div>
+            <div
+              *ngIf="!isWithinLimit"
+              class="text-xs text-red-600 dark:text-red-400 mt-1"
+            >
+              Calculated price exceeds the allowed limit!
             </div>
           </div>
         </div>

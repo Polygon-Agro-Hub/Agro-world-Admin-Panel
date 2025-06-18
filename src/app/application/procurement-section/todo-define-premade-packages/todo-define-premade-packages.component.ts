@@ -18,6 +18,8 @@ interface ProductTypes {
   shortCode: string;
   productId: number | null;
   selectedProductPrice?: number;
+  quantity?: number; // Add this
+  calculatedPrice?: number; // Add this
 }
 
 interface MarketplaceItem {
@@ -130,12 +132,50 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
 
-    // Find the selected product and update the price
+    // Find the selected product
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
-    productType.selectedProductPrice = selectedProduct
-      ? selectedProduct.normalPrice
-      : 0;
+
+    if (selectedProduct) {
+      productType.productId = selectedProduct.id;
+      productType.selectedProductPrice = selectedProduct.discountedPrice;
+      // Set calculated price to normal price by default (for 1 unit)
+      productType.calculatedPrice = selectedProduct.discountedPrice;
+    } else {
+      productType.productId = null;
+      productType.selectedProductPrice = 0;
+      productType.calculatedPrice = 0;
+    }
+    productType.quantity = undefined; // Reset quantity
+  }
+
+  onQuantityChanged(productType: ProductTypes, event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const quantity = parseFloat(inputElement.value);
+
+    if (isNaN(quantity)) {
+      // When quantity is empty, revert to default price (1 unit)
+      productType.quantity = undefined;
+      productType.calculatedPrice = productType.selectedProductPrice || 0;
+    } else {
+      productType.quantity = quantity;
+      productType.calculatedPrice =
+        quantity * (productType.selectedProductPrice || 0);
+    }
+  }
+
+  getPackageTotal(packageItem: OrderDetailItem): number {
+    if (!packageItem.productTypes) return 0;
+
+    return packageItem.productTypes.reduce((sum, productType) => {
+      return sum + (productType.calculatedPrice || 0);
+    }, 0);
+  }
+
+  getGrandTotal(): number {
+    return this.orderDetails.reduce((sum, packageItem) => {
+      return sum + this.getPackageTotal(packageItem);
+    }, 0);
   }
 }

@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from '../token/services/token.service';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environment/environment';
 
 @Injectable({
@@ -69,4 +70,73 @@ export class ProcumentsService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  getOrderDetailsById(id: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/get-order-details/${id}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      map((response) => {
+        if (response.success) {
+          return response.data;
+        } else {
+          throw new Error(response.message);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching order details:', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message ||
+                'An error occurred while fetching order details'
+            )
+        );
+      })
+    );
+  }
+
+  getAllMarketplaceItems(orderId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/get-marketplace-item/${orderId}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      map((response) => {
+        if (response.success) {
+          return response.data;
+        } else {
+          throw new Error(response.message);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching marketplace items:', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message ||
+                'An error occurred while fetching marketplace items'
+            )
+        );
+      })
+    );
+  }
+
+  // getAllMarketplaceItems(id: number): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+  //   const url = `${this.apiUrl}procument/get-marketplace-item/${id}`;
+  //   return this.http.get(url, {
+  //     headers,
+  //   });
+  // }
 }

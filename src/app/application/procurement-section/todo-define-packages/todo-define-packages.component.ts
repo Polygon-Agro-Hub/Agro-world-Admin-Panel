@@ -5,6 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todo-define-packages',
@@ -43,7 +44,10 @@ export class TodoDefinePackagesComponent implements OnInit {
     { label: 'This Month', value: 'month' },
   ];
 
-  constructor(private orderService: ProcumentsService) {}
+  constructor(
+    private orderService: ProcumentsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.fetchOrders();
@@ -139,5 +143,11 @@ export class TodoDefinePackagesComponent implements OnInit {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  viewPremadePackages(id: number) {
+    this.router.navigate(['/procurement/todo-define-premade-packages'], {
+      queryParams: { id },
+    });
   }
 }

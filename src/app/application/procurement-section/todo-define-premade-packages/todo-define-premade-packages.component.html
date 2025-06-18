@@ -90,6 +90,8 @@
               </select>
               <input
                 type="number"
+                step="0.01"
+                min="0"
                 placeholder="--Quantity in kg--"
                 class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 text-sm"
                 (input)="onQuantityChanged(typeItems, $event)"

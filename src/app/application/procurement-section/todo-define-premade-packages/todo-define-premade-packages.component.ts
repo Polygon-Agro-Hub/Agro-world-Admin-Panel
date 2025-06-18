@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 interface OrderDetailItem {
   packageId: number;
@@ -194,5 +195,74 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   getAllowedLimit(packageItem: OrderDetailItem): string {
     const allowedLimit = packageItem.productPrice * 1.08;
     return allowedLimit.toFixed(2);
+  }
+
+  onComplete() {
+    if (!this.isWithinLimit) {
+      alert(
+        'Cannot complete order - calculated price exceeds the allowed limit!'
+      );
+      return;
+    }
+
+    if (!this.orderDetails.length) {
+      alert('No order details available');
+      return;
+    }
+
+    this.loading = true;
+
+    // Prepare all package items
+    const packageItems = this.orderDetails.flatMap((pkg) =>
+      pkg.productTypes
+        .filter((pt) => pt.productId && pt.quantity)
+        .map((pt) => ({
+          orderPackageId: pkg.packageId,
+          productType: pt.id,
+          productId: pt.productId,
+          qty: pt.quantity,
+          price: pt.selectedProductPrice,
+        }))
+    );
+
+    if (packageItems.length === 0) {
+      this.loading = false;
+      alert('No valid package items to save');
+      return;
+    }
+
+    // Send all items in a single request
+    this.procurementService.createOrderPackageItems(packageItems).subscribe({
+      next: (response) => {
+        this.loading = false;
+        alert('All items saved successfully!');
+        this.goBack();
+      },
+      error: (err) => {
+        console.error('Error saving items:', err);
+        this.loading = false;
+        alert('Failed to save items. Please try again.');
+      },
+    });
+  }
+
+  private saveItemsSequentially(items: any[], index = 0) {
+    if (index >= items.length) {
+      this.loading = false;
+      alert('All items saved successfully!');
+      this.goBack();
+      return;
+    }
+
+    this.procurementService.createOrderPackageItems(items[index]).subscribe({
+      next: () => {
+        this.saveItemsSequentially(items, index + 1);
+      },
+      error: (err) => {
+        console.error(`Error saving item ${index}:`, err);
+        this.loading = false;
+        alert(`Failed to save item ${index + 1}. Please try again.`);
+      },
+    });
   }
 }

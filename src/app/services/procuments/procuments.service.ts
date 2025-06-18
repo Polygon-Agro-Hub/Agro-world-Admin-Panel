@@ -129,14 +129,16 @@ export class ProcumentsService {
     );
   }
 
-  // getAllMarketplaceItems(id: number): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  //   const url = `${this.apiUrl}procument/get-marketplace-item/${id}`;
-  //   return this.http.get(url, {
-  //     headers,
-  //   });
-  // }
+  createOrderPackageItems(orderPackageItemsData: any[]): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(
+      `${this.apiUrl}procument/add-order-package-item`, // Note the new endpoint name
+      { items: orderPackageItemsData }, // Send as an object with items array
+      { headers }
+    );
+  }
 }

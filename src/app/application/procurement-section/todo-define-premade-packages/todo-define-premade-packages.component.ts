@@ -172,10 +172,4 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return sum + (productType.calculatedPrice || 0);
     }, 0);
   }
-
-  getGrandTotal(): number {
-    return this.orderDetails.reduce((sum, packageItem) => {
-      return sum + this.getPackageTotal(packageItem);
-    }, 0);
-  }
 }

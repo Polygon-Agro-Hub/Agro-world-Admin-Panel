@@ -17,6 +17,7 @@ interface ProductTypes {
   typeName: string;
   shortCode: string;
   productId: number | null;
+  selectedProductPrice?: number;
 }
 
 interface MarketplaceItem {
@@ -123,5 +124,18 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     } else {
       this.totalPrice = 0;
     }
+  }
+
+  onProductSelected(productType: ProductTypes, event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedProductId = Number(selectElement.value);
+
+    // Find the selected product and update the price
+    const selectedProduct = this.marketplaceItems.find(
+      (item) => item.id === selectedProductId
+    );
+    productType.selectedProductPrice = selectedProduct
+      ? selectedProduct.normalPrice
+      : 0;
   }
 }

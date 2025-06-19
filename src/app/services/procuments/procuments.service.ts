@@ -26,6 +26,8 @@ export class ProcumentsService {
       'Content-Type': 'application/json',
     });
 
+    console.log('filter', filterType, 'date', date, 'search', search)
+
     let url = `${this.apiUrl}procument/get-received-orders?page=${page}&limit=${limit}`;
 
     if (filterType) {

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environment/environment";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { TokenService } from "../token/services/token.service";
 
@@ -36,21 +36,27 @@ export class CollectionOfficerReportService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   getDistrictReport(district: any): Observable<IdistrictReport[]> {
     console.log("service District:", district);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
     return this.http.get<IdistrictReport[]>(
-      `${this.apiUrl}auth/collection-officer/district-report/${district}`,
+      `${this.apiUrl}auth/collection-officer/district-report/${district}`, { headers }
     );
   }
 
   getProvinceReport(province: any): Observable<IProvinceReport[]> {
     console.log("service District:", province);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
     return this.http.get<IProvinceReport[]>(
-      `${this.apiUrl}auth/collection-officer/province-report/${province}`,
+      `${this.apiUrl}auth/collection-officer/province-report/${province}`, { headers }
     );
   }
 }

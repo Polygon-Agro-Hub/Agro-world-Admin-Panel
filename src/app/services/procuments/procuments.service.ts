@@ -151,4 +151,33 @@ export class ProcumentsService {
         })
       );
   }
+
+  getAllOrdersWithProcessInfoCompleted(
+    page: number,
+    limit: number,
+    filterType: string = '',
+    date: string = '',
+    search: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}procument/orders-process-info-completed?page=${page}&limit=${limit}`;
+
+    if (filterType) {
+      url += `&filterType=${filterType}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
 }

@@ -3,11 +3,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TodoDefinePackagesComponent } from '../todo-define-packages/todo-define-packages.component';
+import { CompletedDefinePackageComponent } from '../completed-define-package/completed-define-package.component';
 
 @Component({
   selector: 'app-define-packages',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, TodoDefinePackagesComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    TodoDefinePackagesComponent,
+    CompletedDefinePackageComponent,
+  ],
   templateUrl: './define-packages.component.html',
   styleUrl: './define-packages.component.css',
 })

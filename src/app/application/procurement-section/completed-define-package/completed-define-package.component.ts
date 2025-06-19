@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { FormsModule } from '@angular/forms';
+import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-todo-define-packages',
+  selector: 'app-completed-define-package',
   standalone: true,
   imports: [
     CommonModule,
@@ -17,10 +17,10 @@ import { Router } from '@angular/router';
     NgxPaginationModule,
     FormsModule,
   ],
-  templateUrl: './todo-define-packages.component.html',
-  styleUrl: './todo-define-packages.component.css',
+  templateUrl: './completed-define-package.component.html',
+  styleUrl: './completed-define-package.component.css',
 })
-export class TodoDefinePackagesComponent implements OnInit {
+export class CompletedDefinePackageComponent {
   isLoading = false;
   orders: any[] = [];
   page: number = 1;
@@ -61,11 +61,11 @@ export class TodoDefinePackagesComponent implements OnInit {
       statusFilter: this.statusFilter,
       dateFilter: this.dateFilter,
       searchTerm: this.searchTerm,
-      packingStatus: 'Todo', // Add this filter
+      packingStatus: 'Completed', // Add this filter
     };
 
     this.orderService
-      .getAllOrdersWithProcessInfo(
+      .getAllOrdersWithProcessInfoCompleted(
         this.page,
         this.itemsPerPage,
         JSON.stringify(filters) // Convert filters object to string
@@ -78,14 +78,14 @@ export class TodoDefinePackagesComponent implements OnInit {
             // Optional: Filter on client side if needed (but better to do it server-side)
             this.orders = response.data.filter(
               (order: { packingStatus: string }) =>
-                order.packingStatus === 'Todo'
+                order.packingStatus === 'Completed'
             );
             this.totalItems = response.total || response.totalCount || 0;
           } else {
             // Fallback client-side filtering if API doesn't support it
             const allOrders = Array.isArray(response) ? response : [];
             this.orders = allOrders.filter(
-              (order) => order.packingStatus === 'Todo'
+              (order) => order.packingStatus === 'Completed'
             );
             this.totalItems = this.orders.length;
           }

@@ -157,7 +157,16 @@
           </thead>
           <tbody class="divide-y divide-gray-200">
             <tr
-              *ngFor="let order of orders; let i = index"
+              *ngFor="
+                let order of orders
+                  | paginate
+                    : {
+                        itemsPerPage: itemsPerPage,
+                        currentPage: page,
+                        totalItems: totalItems
+                      };
+                let i = index
+              "
               class="hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -190,7 +199,10 @@
                 </span>
               </td>
               <td class="px-4 py-3 text-center">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
+                <button
+                  class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                  (click)="viewPremadePackages(order.id)"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"

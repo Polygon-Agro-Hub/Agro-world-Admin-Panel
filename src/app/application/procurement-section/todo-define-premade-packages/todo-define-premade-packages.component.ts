@@ -1,0 +1,320 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ProcumentsService } from '../../../services/procuments/procuments.service';
+import { ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
+
+interface OrderDetailItem {
+  packageId: number;
+  displayName: string;
+  productPrice: number;
+  invNo: string;
+  productTypes: ProductTypes[];
+}
+
+interface ProductTypes {
+  id: number;
+  typeName: string;
+  shortCode: string;
+  productId: number | null;
+  selectedProductPrice?: number;
+  quantity?: number; // Add this
+  calculatedPrice?: number; // Add this
+}
+
+interface MarketplaceItem {
+  id: number;
+  displayName: string;
+  normalPrice: number;
+  discountedPrice: number;
+}
+
+@Component({
+  selector: 'app-todo-define-premade-packages',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './todo-define-premade-packages.component.html',
+  styleUrl: './todo-define-premade-packages.component.css',
+})
+export class TodoDefinePremadePackagesComponent implements OnInit {
+  orderDetails: OrderDetailItem[] = [];
+  marketplaceItems: MarketplaceItem[] = [];
+  loading = true;
+  error = '';
+  invoiceNumber = '';
+  totalPrice = 0;
+  orderId!: number;
+  isWithinLimit = true;
+
+  constructor(
+    private procurementService: ProcumentsService,
+    private route: ActivatedRoute
+  ) {}
+
+  goBack() {
+    window.history.back();
+  }
+
+  ngOnInit() {
+    console.log('Component initialized');
+    this.route.queryParamMap.subscribe((params) => {
+      const id = params.get('id');
+      console.log('Query parameter ID:', id);
+      if (!id) {
+        this.error = 'No order ID provided in URL';
+        this.loading = false;
+        return;
+      }
+
+      this.orderId = Number(id);
+
+      // First fetch marketplace items
+      this.fetchMarketplaceItems(() => {
+        // Then fetch order details
+        this.fetchOrderDetails(id);
+      });
+    });
+  }
+
+  fetchMarketplaceItems(callback?: () => void) {
+    this.procurementService.getAllMarketplaceItems(this.orderId).subscribe({
+      next: (data: any) => {
+        this.marketplaceItems = data.items.map((item: any) => ({
+          id: item.id,
+          displayName: item.displayName,
+          normalPrice: item.normalPrice,
+          discountedPrice: item.discountedPrice,
+        }));
+        console.log('Fetched marketplace items:', this.marketplaceItems);
+        if (callback) callback();
+      },
+      error: (err) => {
+        console.error('Error fetching marketplace items:', err);
+        this.error = 'Failed to load product options';
+        if (callback) callback();
+      },
+    });
+  }
+
+  fetchOrderDetails(id: string) {
+    console.log('Fetching order details for ID:', id);
+    this.loading = true;
+    this.error = '';
+
+    this.procurementService.getOrderDetailsById(id).subscribe({
+      next: (data: OrderDetailItem[]) => {
+        console.log('API Response:', data);
+        this.orderDetails = data;
+        this.calculateTotalPrice();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('API Error Details:', err);
+        this.error =
+          err.error?.message || err.message || 'Failed to load order details';
+        this.loading = false;
+      },
+    });
+  }
+
+  calculateTotalPrice() {
+    if (this.orderDetails && this.orderDetails.length) {
+      this.totalPrice = this.orderDetails.reduce(
+        (sum: number, pkg: OrderDetailItem) => sum + (pkg.productPrice || 0),
+        0
+      );
+
+      // Calculate the allowed limit (8% of the total price)
+      const allowedLimit = this.totalPrice * 1.08;
+
+      // Calculate the current total (sum of all package totals)
+      const currentTotal = this.orderDetails.reduce(
+        (sum: number, pkg: OrderDetailItem) => sum + this.getPackageTotal(pkg),
+        0
+      );
+
+      // Validate if current total is within the allowed limit
+      this.isWithinLimit = currentTotal <= allowedLimit;
+
+      console.log('Calculated total price:', this.totalPrice);
+      console.log('Allowed limit:', allowedLimit);
+      console.log('Current total:', currentTotal);
+      console.log('Is within limit:', this.isWithinLimit);
+    } else {
+      this.totalPrice = 0;
+      this.isWithinLimit = true;
+    }
+  }
+
+  onProductSelected(productType: ProductTypes, event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedProductId = Number(selectElement.value);
+
+    // Find the selected product
+    const selectedProduct = this.marketplaceItems.find(
+      (item) => item.id === selectedProductId
+    );
+
+    if (selectedProduct) {
+      productType.productId = selectedProduct.id;
+      productType.selectedProductPrice = selectedProduct.discountedPrice;
+      // Set calculated price to normal price by default (for 1 unit)
+      productType.calculatedPrice = selectedProduct.discountedPrice;
+    } else {
+      productType.productId = null;
+      productType.selectedProductPrice = 0;
+      productType.calculatedPrice = 0;
+    }
+    productType.quantity = undefined; // Reset quantity
+  }
+
+  onQuantityChanged(productType: ProductTypes, event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const quantity = parseFloat(inputElement.value);
+
+    if (isNaN(quantity)) {
+      productType.quantity = undefined;
+      productType.calculatedPrice = productType.selectedProductPrice || 0;
+    } else {
+      productType.quantity = quantity;
+      productType.calculatedPrice =
+        quantity * (productType.selectedProductPrice || 0);
+    }
+    this.calculateTotalPrice(); // Add this line
+  }
+
+  getPackageTotal(packageItem: OrderDetailItem): number {
+    if (!packageItem.productTypes) return 0;
+
+    return packageItem.productTypes.reduce((sum, productType) => {
+      return sum + (productType.calculatedPrice || 0);
+    }, 0);
+  }
+
+  getAllowedLimit(packageItem: OrderDetailItem): string {
+    const allowedLimit = packageItem.productPrice * 1.08;
+    return allowedLimit.toFixed(2);
+  }
+
+  onComplete() {
+    if (!this.isWithinLimit) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot Complete Order',
+        text: 'Calculated price exceeds the allowed limit!',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    if (!this.orderDetails.length) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Order Details',
+        text: 'No order details available',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    // Prepare package items with validation
+    const packageItems = this.orderDetails.flatMap(
+      (pkg) =>
+        pkg.productTypes
+          .filter(
+            (pt) => pt.productId && pt.quantity && pt.selectedProductPrice
+          )
+          .map((pt) => {
+            if (!pt.productId || !pt.quantity || !pt.selectedProductPrice) {
+              console.error('Invalid product type:', pt);
+              return null;
+            }
+            return {
+              orderPackageId: pkg.packageId,
+              productType: pt.id,
+              productId: pt.productId,
+              qty: pt.quantity,
+              price: pt.selectedProductPrice,
+            };
+          })
+          .filter((item) => item !== null) // Remove any null items
+    );
+
+    if (packageItems.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Valid Items',
+        text: 'No valid package items to save. Please ensure all items have a product selected, quantity, and price.',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    console.log('Final package items to save:', packageItems);
+
+    Swal.fire({
+      title: 'Processing...',
+      html: 'Please wait while we save your order',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    this.procurementService.createOrderPackageItems(packageItems).subscribe({
+      next: (response) => {
+        console.log('Save successful, response:', response);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: response.message || 'All items saved successfully!',
+          confirmButtonColor: '#3085d6',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.goBack();
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error saving items:', err);
+        let errorMessage = 'Failed to save items. Please try again.';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.error?.errors) {
+          errorMessage = `Some items failed to save: ${err.error.errors
+            .map((e: { error: any }) => e.error)
+            .join(', ')}`;
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMessage,
+          confirmButtonColor: '#3085d6',
+        });
+      },
+    });
+  }
+
+  private saveItemsSequentially(items: any[], index = 0) {
+    if (index >= items.length) {
+      this.loading = false;
+      alert('All items saved successfully!');
+      this.goBack();
+      return;
+    }
+
+    this.procurementService.createOrderPackageItems(items[index]).subscribe({
+      next: () => {
+        this.saveItemsSequentially(items, index + 1);
+      },
+      error: (err) => {
+        console.error(`Error saving item ${index}:`, err);
+        this.loading = false;
+        alert(`Failed to save item ${index + 1}. Please try again.`);
+      },
+    });
+  }
+}

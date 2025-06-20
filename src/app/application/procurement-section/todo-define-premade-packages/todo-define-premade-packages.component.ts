@@ -156,10 +156,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
-      this.totalPrice = this.orderDetails.reduce(
-        (sum: number, pkg: OrderDetailItem) => sum + (pkg.productPrice || 0),
-        0
-      );
+      this.totalPrice = this.getCombinedProductPrice();
 
       // Calculate the allowed limit (8% of the total price)
       const allowedLimit = this.totalPrice * 1.08;
@@ -406,5 +403,29 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           alert(`Failed to save item ${index + 1}. Please try again.`);
         },
       });
+  }
+
+  getCombinedProductPrice(): number {
+    if (!this.orderDetails || this.orderDetails.length === 0) {
+      return 0;
+    }
+
+    // Sum of all package product prices
+    return this.orderDetails.reduce(
+      (sum, pkg) => sum + (pkg.productPrice || 0),
+      0
+    );
+  }
+
+  getCombinedCalculatedTotal(): number {
+    if (!this.orderDetails || this.orderDetails.length === 0) {
+      return 0;
+    }
+
+    // Sum of all package calculated totals
+    return this.orderDetails.reduce(
+      (sum, pkg) => sum + this.getPackageTotal(pkg),
+      0
+    );
   }
 }

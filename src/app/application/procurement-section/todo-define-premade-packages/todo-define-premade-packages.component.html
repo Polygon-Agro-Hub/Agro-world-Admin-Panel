@@ -12,15 +12,15 @@
       <div class="text-sm">
         <div class="text-gray-700 dark:text-gray-300">INV No :</div>
         <div class="font-semibold text-gray-900 dark:text-gray-300">
-          {{ orderDetails[0].invNo || "N/A" }}
+          {{ orderDetails[0]?.invNo || "N/A" }}
         </div>
       </div>
 
-      <!-- Loop for Product Prices -->
-      <div *ngFor="let item of orderDetails" class="text-sm">
+      <!-- Combined Product Price -->
+      <div class="text-sm">
         <div class="text-gray-700 dark:text-gray-300">Price of Products :</div>
         <div class="font-semibold text-gray-900 dark:text-gray-100">
-          Rs.{{ item.productPrice }}
+          Rs.{{ getCombinedProductPrice().toFixed(2) }}
         </div>
       </div>
 
@@ -115,7 +115,7 @@
 
           <div class="mt-3 flex justify-end px-10">
             <div class="text-sm text-gray-900 dark:text-gray-100">
-              Full Total :
+              Package Total :
               <span class="ml-2"
                 >Rs.{{ getPackageTotal(item).toFixed(2) }}</span
               >
@@ -123,28 +123,32 @@
           </div>
         </div>
       </div>
+    </div>
+  </span>
 
-      <!-- Footer Totals -->
-      <div class="px-10 pb-4">
-        <div class="flex justify-end space-x-8">
-          <div class="text-right">
-            <div class="text-sm text-gray-900 dark:text-gray-100 mb-1">
-              Grand Total :
-              <span class="ml-2">Rs.{{ item.productPrice }}</span>
-            </div>
-            <div class="text-xs text-blue-600 dark:text-blue-400">
-              Allowed limit : {{ item.productPrice }} +
-              {{ item.productPrice }} × 8% = Rs.{{ getAllowedLimit(item) }}
-            </div>
-            <div
-              *ngIf="!isWithinLimit"
-              class="text-xs text-red-600 dark:text-red-400 mt-1"
-            >
-              Calculated price exceeds the allowed limit!
-            </div>
-          </div>
+  <!-- Combined Grand Total -->
+  <div class="px-10 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+    <div class="flex justify-end space-x-8">
+      <div class="text-right">
+        <div class="text-sm text-gray-900 dark:text-gray-100 mb-1">
+          Grand Total :
+          <span class="ml-2"
+            >Rs.{{ getCombinedCalculatedTotal().toFixed(2) }}</span
+          >
+        </div>
+        <div class="text-xs text-blue-600 dark:text-blue-400">
+          Allowed limit : {{ getCombinedProductPrice().toFixed(2) }} +
+          {{ (getCombinedProductPrice() * 0.08).toFixed(2) }} = Rs.{{
+            (getCombinedProductPrice() * 1.08).toFixed(2)
+          }}
+        </div>
+        <div
+          *ngIf="!isWithinLimit"
+          class="text-xs text-red-600 dark:text-red-400 mt-1"
+        >
+          Calculated price exceeds the allowed limit!
         </div>
       </div>
     </div>
-  </span>
+  </div>
 </div>

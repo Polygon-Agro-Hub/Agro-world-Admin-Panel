@@ -31,6 +31,13 @@ interface MarketplaceItem {
   discountedPrice: number;
 }
 
+interface PackageItem {
+  packageId: number;
+  displayName: string;
+  productPrice: number;
+  productTypes: ProductTypes[];
+}
+
 @Component({
   selector: 'app-todo-define-premade-packages',
   standalone: true,
@@ -104,14 +111,42 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.error = '';
 
     this.procurementService.getOrderDetailsById(id).subscribe({
-      next: (data: OrderDetailItem[]) => {
-        console.log('API Response:', data);
-        this.orderDetails = data;
+      next: (response) => {
+        console.log('API Response:', response);
+
+        // Type guard to ensure response has the expected structure
+        if (!response || !response.packages) {
+          throw new Error('Invalid response structure from API');
+        }
+
+        // Transform the response to match our component's OrderDetailItem[]
+        this.orderDetails = response.packages.map((pkg) => ({
+          packageId: pkg.packageId,
+          displayName: pkg.displayName,
+          productPrice:
+            typeof pkg.productPrice === 'string'
+              ? parseFloat(pkg.productPrice)
+              : pkg.productPrice,
+          invNo: response.invNo,
+          productTypes: pkg.productTypes
+            ? pkg.productTypes.map((pt) => ({
+                id: pt.id,
+                typeName: pt.typeName,
+                shortCode: pt.shortCode,
+                productId: null,
+                selectedProductPrice: undefined,
+                quantity: undefined,
+                calculatedPrice: undefined,
+              }))
+            : [],
+        }));
+
+        this.invoiceNumber = response.invNo;
         this.calculateTotalPrice();
         this.loading = false;
       },
       error: (err) => {
-        console.error('API Error Details:', err);
+        console.error('Error fetching order details:', err);
         this.error =
           err.error?.message || err.message || 'Failed to load order details';
         this.loading = false;

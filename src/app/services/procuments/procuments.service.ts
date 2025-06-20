@@ -26,7 +26,7 @@ export class ProcumentsService {
       'Content-Type': 'application/json',
     });
 
-    console.log('filter', filterType, 'date', date, 'search', search)
+    console.log('filter', filterType, 'date', date, 'search', search);
 
     let url = `${this.apiUrl}procument/get-received-orders?page=${page}&limit=${limit}`;
 
@@ -73,7 +73,48 @@ export class ProcumentsService {
     return this.http.get<any>(url, { headers });
   }
 
-  getOrderDetailsById(id: string): Observable<any> {
+  // getOrderDetailsById(id: string): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   const url = `${this.apiUrl}procument/get-order-details/${id}`;
+
+  //   return this.http.get<any>(url, { headers }).pipe(
+  //     map((response) => {
+  //       if (response.success) {
+  //         return response.data;
+  //       } else {
+  //         throw new Error(response.message);
+  //       }
+  //     }),
+  //     catchError((error) => {
+  //       console.error('Error fetching order details:', error);
+  //       return throwError(
+  //         () =>
+  //           new Error(
+  //             error.error?.message ||
+  //               'An error occurred while fetching order details'
+  //           )
+  //       );
+  //     })
+  //   );
+  // }
+
+  getOrderDetailsById(id: string): Observable<{
+    invNo: string;
+    packages: Array<{
+      packageId: number;
+      displayName: string;
+      productPrice: string;
+      productTypes: Array<{
+        id: number;
+        typeName: string;
+        shortCode: string;
+      }>;
+    }>;
+  }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -81,25 +122,56 @@ export class ProcumentsService {
 
     const url = `${this.apiUrl}procument/get-order-details/${id}`;
 
-    return this.http.get<any>(url, { headers }).pipe(
-      map((response) => {
-        if (response.success) {
-          return response.data;
-        } else {
-          throw new Error(response.message);
-        }
-      }),
-      catchError((error) => {
-        console.error('Error fetching order details:', error);
-        return throwError(
-          () =>
-            new Error(
-              error.error?.message ||
-                'An error occurred while fetching order details'
-            )
-        );
-      })
-    );
+    return this.http
+      .get<{
+        success: boolean;
+        data: {
+          invNo: string;
+          packages: Array<{
+            packageId: number;
+            displayName: string;
+            productPrice: string;
+            productTypes: Array<{
+              id: number;
+              typeName: string;
+              shortCode: string;
+            }>;
+          }>;
+        };
+        message?: string;
+      }>(url, { headers })
+      .pipe(
+        map((response) => {
+          if (response.success) {
+            // Transform the data if needed (though DAO now returns correct structure)
+            return {
+              invNo: response.data.invNo,
+              packages: response.data.packages.map((pkg) => ({
+                packageId: pkg.packageId,
+                displayName: pkg.displayName,
+                productPrice: pkg.productPrice,
+                productTypes: pkg.productTypes || [], // Ensure productTypes is always an array
+              })),
+            };
+          } else {
+            throw new Error(
+              response.message || 'Failed to fetch order details'
+            );
+          }
+        }),
+        catchError((error) => {
+          console.error('Error fetching order details:', error);
+
+          let errorMessage = 'An error occurred while fetching order details';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          return throwError(() => new Error(errorMessage));
+        })
+      );
   }
 
   getAllMarketplaceItems(orderId: number): Observable<any> {

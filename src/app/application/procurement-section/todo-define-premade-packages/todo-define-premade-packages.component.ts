@@ -233,7 +233,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     return allowedLimit.toFixed(2);
   }
 
-  onComplete() {
+  async onComplete() {
+    // Check if calculated price is within limit
     if (!this.isWithinLimit) {
       Swal.fire({
         icon: 'error',
@@ -244,6 +245,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
+    // Check if there are any order details
     if (!this.orderDetails.length) {
       Swal.fire({
         icon: 'warning',
@@ -290,55 +292,97 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
     Swal.fire({
       title: 'Processing...',
-      html: 'Please wait while we save your order',
+      html: 'Please wait while we save your order and update status',
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
       },
     });
 
-    // Process each package group
-    const saveOperations = Object.entries(packageGroups).map(
-      ([packageId, products]) => {
-        return this.procurementService
-          .createOrderPackageItems(Number(packageId), products)
-          .toPromise();
-      }
-    );
+    try {
+      // Process each package group
+      const saveOperations = Object.entries(packageGroups).map(
+        async ([packageId, products]) => {
+          try {
+            // Step 1: Save the package items
+            const saveResponse = await this.procurementService
+              .createOrderPackageItems(Number(packageId), products)
+              .toPromise();
 
-    // Execute all save operations
-    Promise.all(saveOperations)
-      .then((responses) => {
-        console.log('All saves successful, responses:', responses);
+            console.log(`Items saved for package ${packageId}`, saveResponse);
+
+            // Step 2: Update packing status to "Completed"
+            const statusResponse = await this.procurementService
+              .updateOrderPackagePackingStatus(Number(packageId), 'Completed')
+              .toPromise();
+
+            console.log(
+              `Status updated for package ${packageId}`,
+              statusResponse
+            );
+
+            return { packageId, success: true };
+          } catch (error) {
+            console.error(`Error processing package ${packageId}:`, error);
+            return {
+              packageId,
+              success: false,
+              error: this.getErrorMessage(error),
+            };
+          }
+        }
+      );
+
+      // Execute all operations
+      const results = await Promise.all(saveOperations);
+
+      // Check if all operations were successful
+      const failedPackages = results.filter((r) => !r.success);
+
+      if (failedPackages.length > 0) {
+        // Some packages failed
+        const errorMessages = failedPackages
+          .map((p) => `Package ${p.packageId}: ${p.error}`)
+          .join('<br><br>');
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Partial Success',
+          html: `Some packages couldn't be processed:<br><br>${errorMessages}`,
+          confirmButtonColor: '#3085d6',
+        });
+      } else {
+        // All operations successful
         Swal.fire({
           icon: 'success',
           title: 'Success!',
-          text: 'All items saved successfully!',
+          text: 'All items saved and packing status updated successfully!',
           confirmButtonColor: '#3085d6',
         }).then((result) => {
           if (result.isConfirmed) {
             this.goBack();
           }
         });
-      })
-      .catch((err) => {
-        console.error('Error saving items:', err);
-        let errorMessage = 'Failed to save items. Please try again.';
-        if (err.error?.message) {
-          errorMessage = err.error.message;
-        } else if (err.error?.errors) {
-          errorMessage = `Some items failed to save: ${err.error.errors
-            .map((e: { error: any }) => e.error)
-            .join(', ')}`;
-        }
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: errorMessage,
-          confirmButtonColor: '#3085d6',
-        });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred while processing your request',
+        confirmButtonColor: '#3085d6',
       });
+    }
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error?.error?.message) {
+      return error.error.message;
+    }
+    if (error?.message) {
+      return error.message;
+    }
+    return 'Unknown error occurred';
   }
 
   private saveItemsSequentially(items: any[], index = 0) {

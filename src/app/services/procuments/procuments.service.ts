@@ -261,4 +261,28 @@ export class ProcumentsService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  // In your procurement service
+  updateOrderPackagePackingStatus(
+    orderPackageId: number,
+    status: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .put(
+        `${this.apiUrl}procument/update-order-package-status`, // Remove the ID from URL
+        { orderPackageId, status }, // Send both fields in body
+        { headers }
+      )
+      .pipe(
+        catchError((error) => {
+          console.error('Error in updateOrderPackagePackingStatus:', error);
+          return throwError(() => error);
+        })
+      );
+  }
 }

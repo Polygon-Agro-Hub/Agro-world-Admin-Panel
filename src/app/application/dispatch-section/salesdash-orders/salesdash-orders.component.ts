@@ -15,16 +15,19 @@ import { DispatchService } from '../../../services/dispatch/dispatch.service';
 interface PremadePackages {
   id: number;
   invoiceNum: string;
-  packageName: string;
-  packagePrice: string;
-  additionalPrice: any;
-  scheduleDate: string;
+  displayName: string;
+  productPrice: number;
+  totalAdditionalItemsPrice: number;
+  sheduleDate: Date;
   fullSubTotal: string;
   totalPrice: string;
-  packageStatus: string;
+  packingStatus: string;
   packItemStatus: string;
   addItemStatus: string;
+  invNo: string;
   orderPackageItemsId: any;
+  fullTotal: number;
+  additionalProductIds: number[];
 
 
   scheduleDateFormatted?: string;
@@ -66,7 +69,7 @@ interface SelectdPackage {
 export class SalesdashOrdersComponent {
   search: string = '';
   isLoading = false;
-  status = ['Pending', 'Completed', 'Opened'];
+  status = ['Todo', 'Completed', 'Opened'];
   selectedStatus: any = '';
   date: string = '';
   itemsPerPage: number = 10;
@@ -135,17 +138,18 @@ selectedInvoiceIdAdditional: number = 0;
       .getPreMadePackages(page, limit, this.selectedStatus, this.date, this.search)
       .subscribe(
         (response) => {
-          this.premadePackages = response.items.map((item: { scheduleDate: string; }) => {
+          // Add fullTotal to each item
+          this.premadePackages = response.items.map((item: any) => {
+            const productPrice = item.productPrice || 0;
+            const additionalPrice = item.totalAdditionalItemsPrice || 0;
             return {
               ...item,
-              scheduleDateFormatted: this.formatDate(item.scheduleDate)
+              fullTotal: productPrice + additionalPrice
             };
           });
+  
           this.totalItems = response.total;
-          console.log(this.premadePackages)
-          // this.purchaseReport.forEach((head) => {
-          //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-          // });
+          console.log(this.premadePackages);
           this.isLoading = false;
         },
         (error) => {

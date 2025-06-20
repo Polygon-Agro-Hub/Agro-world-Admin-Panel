@@ -114,8 +114,8 @@
 
 
       <div class="flex justify-between items-center mb-5">
-        <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          All Pre Made Orders ({{this.totalItems}})
+        <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+          All ({{this.totalItems}})
         </h4>
 
 
@@ -128,35 +128,35 @@
         <table class="min-w-full divide-y divide-gray-200 table-auto">
           <thead>
             <tr>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">
+              <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
                 No
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
                 Invoice No
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
                 Package Name
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                 Package Items
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                Package Price
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                Package Price (Rs.)
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center ">
                 Additional Items
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                 Additional Items Price (Rs.)
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                 Scheduled Dilevery Date
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                 Total Price (Rs.)
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                Package Status
+              <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                Packaging Status
               </th>
 
 
@@ -173,16 +173,17 @@
                     }
                     let i = index
             ">
-              <td class="py-3 text-gray-500 dark:text-textDark text-left">
-                {{ (page - 1) * itemsPerPage + i + 1 }}
+              <td class="py-3 text-[#000000] dark:text-textDark text-left">
+                {{ ((page - 1) * itemsPerPage + i + 1) | number: '2.0' }}
               </td>
 
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start">
-                {{ item.invoiceNum }}
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
+                {{ item.invNo }}
               </td>
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start">
-                {{ item.packageName }}
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
+                {{ item.displayName }}
               </td>
+              
               <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
 
                 <button class="w-6 h-6 mr-3" 
@@ -192,7 +193,7 @@
                   [class.hover:text-yellow-700]="item.packItemStatus === 'Opened'"
                   [class.hover:text-green-700]="item.packItemStatus === 'Completed'"
                   [class.hover:text-red-700]="item.packItemStatus === 'Pending'"
-                  (click)="openViewPackageItemPopup(item.id, item.packageName, item.packagePrice, item.invoiceNum)">
+                  >
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -201,20 +202,24 @@
                 </button>
 
               </td>
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                {{ item.packagePrice | number: '1.2-2' }}
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                {{ item.productPrice | number: '1.2-2' }}
+              <!-- </td>
+
+              <td> -->
+
               </td>
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 <button
                   class="w-6 h-6 mr-3"
-                  [disabled]="item.additionalPrice === '0.00'"
+                  [disabled]="item.additionalProductIds.length === 0"
                   [ngClass]="{
-                    'text-gray-300 cursor-not-allowed': item.additionalPrice === '0.00',
-                    'text-yellow-500 hover:text-yellow-700': item.addItemStatus === 'Opened' && item.additionalPrice !== '0.00',
-                    'text-green-500 hover:text-green-700': item.addItemStatus === 'Completed' && item.additionalPrice !== '0.00',
-                    'text-red-500 hover:text-red-700': item.addItemStatus === 'Pending' && item.additionalPrice !== '0.00'
+                    'text-gray-300 cursor-not-allowed': item.additionalProductIds.length === 0,
+                    'text-yellow-500 hover:text-yellow-700': item.addItemStatus === 'Opened' && item.additionalProductIds.length > 0,
+                    'text-green-500 hover:text-green-700': item.addItemStatus === 'Completed' && item.additionalProductIds.length > 0,
+                    'text-red-500 hover:text-red-700': item.addItemStatus === 'Pending' && item.additionalProductIds.length > 0
                   }"
-                  (click)="openPopupAdditional(item.orderPackageItemsId, item.invoiceNum, item.additionalPrice)"
+                  
                 >
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -228,32 +233,38 @@
                 </button>
               </td>
               
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                {{ item.additionalPrice | number: '1.2-2'}}
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                <ng-container *ngIf="item.totalAdditionalItemsPrice != 0; else showDash">
+                  {{ item.totalAdditionalItemsPrice | number: '1.2-2' }}
+                </ng-container>
+                <ng-template #showDash>-</ng-template>
               </td>
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                {{ item.scheduleDateFormatted }}
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                {{ item.sheduleDate | date: 'd MMM, y' }}
               </td>
-              <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                {{ item.totalPrice }}
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                {{ item.fullTotal | number: '1.2-2' }}
               </td>
+              <!-- <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                {{ item.packingStatus }}
+              </td>   -->
               <td class="px-4 py-3 text-green-500 text-center">
-                <div *ngIf="item.packageStatus == 'Completed'">
+                <div *ngIf="item.packingStatus == 'Todo'">
                   <span
                     class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packageStatus }}
+                    {{ item.packingStatus }}
                   </span>
                 </div>
-                <div *ngIf="item.packageStatus == 'Pending'">
+                <div *ngIf="item.packingStatus == 'Pending'">
                   <span
                     class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packageStatus }}
+                    {{ item.packingStatus }}
                   </span>
                 </div>
-                <div *ngIf="item.packageStatus == 'Opened'">
+                <div *ngIf="item.packingStatus == 'Opened'">
                   <span
                     class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packageStatus }}
+                    {{ item.packingStatus }}
                   </span>
                 </div>
               </td>

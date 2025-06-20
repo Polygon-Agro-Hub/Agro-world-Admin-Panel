@@ -11,24 +11,43 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { DispatchService } from '../../../services/dispatch/dispatch.service';
 
+interface ProductInfo {
+  productId: number;
+  isPacked: boolean;
+}
+
 
 interface PremadePackages {
   id: number;
   invoiceNum: string;
-  packageName: string;
-  packagePrice: string;
-  additionalPrice: any;
-  scheduleDate: string;
+  displayName: string;
+  productPrice: number;
+  totalAdditionalItemsPrice: number;
+  sheduleDate: Date;
   fullSubTotal: string;
   totalPrice: string;
-  packageStatus: string;
+  packingStatus: string;
   packItemStatus: string;
   addItemStatus: string;
+  invNo: string;
   orderPackageItemsId: any;
+  fullTotal: number;
+  additionalProductIds: number[];
 
+  // Simplified maps using 0|1 directly
+  additionalProductsMap: Record<number, 0 | 1>;
+  packageProductsMap: Record<number, 0 | 1>;
+  additionalProductsCount: number;
+  packageProductsCount: number;
+  packageProductStatus: string;
+  additionalProductStatus: string;
+  combinedStatus: string;
+
+  // Optional original string fields
+  additionalProductIdsString?: string;
+  packageProductIdsString?: string;
 
   scheduleDateFormatted?: string;
-
 }
 
 
@@ -36,15 +55,18 @@ interface PremadePackages {
 
 interface SelectdPackage {
   id: number;
-  invoiceNum: string;
-  totalPrice: string;
-  scheduleDate: string;
-  fullSubTotal: string;
-  packageStatus: string;
-
-
-  scheduleDateFormattedSL?: string;
-
+  orderId: number;
+  orderPackageId: number;
+  packageId: number;
+  invNo: string;
+  isPackage: string;
+  packingStatus: string;
+  fullTotal: number;
+  productCount: number;
+  customItemStatus: string;
+  createdAt: Date;
+  sheduleDate: Date;
+  productStatusMap: Record<number, 0 | 1>; // Maps productId to packed status (0 or 1)
 }
 
 
@@ -66,7 +88,7 @@ interface SelectdPackage {
 export class SalesdashOrdersComponent {
   search: string = '';
   isLoading = false;
-  status = ['Pending', 'Completed', 'Opened'];
+  status = ['Todo', 'Completed', 'Opened'];
   selectedStatus: any = '';
   date: string = '';
   itemsPerPage: number = 10;
@@ -135,17 +157,18 @@ selectedInvoiceIdAdditional: number = 0;
       .getPreMadePackages(page, limit, this.selectedStatus, this.date, this.search)
       .subscribe(
         (response) => {
-          this.premadePackages = response.items.map((item: { scheduleDate: string; }) => {
+          // Add fullTotal to each item
+          this.premadePackages = response.items.map((item: any) => {
+            const productPrice = parseFloat(item.productPrice) || 0;
+            const additionalPrice = parseFloat(item.totalAdditionalItemsPrice) || 0;
             return {
               ...item,
-              scheduleDateFormatted: this.formatDate(item.scheduleDate)
+              fullTotal: (productPrice + additionalPrice).toFixed(2)
             };
           });
+  
           this.totalItems = response.total;
-          console.log(this.premadePackages)
-          // this.purchaseReport.forEach((head) => {
-          //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-          // });
+          console.log(this.premadePackages);
           this.isLoading = false;
         },
         (error) => {
@@ -170,6 +193,8 @@ selectedInvoiceIdAdditional: number = 0;
       .getSelectedPackages(pagesl, limitsl, this.selectedStatussl, this.datesl, this.searchsl)
       .subscribe(
         (response) => {
+          console.log('response', response);
+         
           this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
             return {
               ...item,

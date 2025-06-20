@@ -254,30 +254,29 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
-    // Prepare package items with validation
-    const packageItems = this.orderDetails.flatMap(
-      (pkg) =>
-        pkg.productTypes
-          .filter(
-            (pt) => pt.productId && pt.quantity && pt.selectedProductPrice
-          )
-          .map((pt) => {
-            if (!pt.productId || !pt.quantity || !pt.selectedProductPrice) {
-              console.error('Invalid product type:', pt);
-              return null;
-            }
-            return {
-              orderPackageId: pkg.packageId,
-              productType: pt.id,
-              productId: pt.productId,
-              qty: pt.quantity,
-              price: pt.selectedProductPrice,
-            };
-          })
-          .filter((item) => item !== null) // Remove any null items
-    );
+    // Group products by packageId
+    const packageGroups: { [key: number]: any[] } = {};
 
-    if (packageItems.length === 0) {
+    this.orderDetails.forEach((pkg) => {
+      const validProducts = pkg.productTypes
+        .filter((pt) => pt.productId && pt.quantity && pt.selectedProductPrice)
+        .map((pt) => ({
+          productType: pt.id,
+          productId: pt.productId,
+          qty: pt.quantity,
+          price: pt.selectedProductPrice,
+        }));
+
+      if (validProducts.length > 0) {
+        if (!packageGroups[pkg.packageId]) {
+          packageGroups[pkg.packageId] = [];
+        }
+        packageGroups[pkg.packageId].push(...validProducts);
+      }
+    });
+
+    // Check if we have any valid packages
+    if (Object.keys(packageGroups).length === 0) {
       Swal.fire({
         icon: 'warning',
         title: 'No Valid Items',
@@ -287,7 +286,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
-    console.log('Final package items to save:', packageItems);
+    console.log('Package groups to save:', packageGroups);
 
     Swal.fire({
       title: 'Processing...',
@@ -298,21 +297,31 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       },
     });
 
-    this.procurementService.createOrderPackageItems(packageItems).subscribe({
-      next: (response) => {
-        console.log('Save successful, response:', response);
+    // Process each package group
+    const saveOperations = Object.entries(packageGroups).map(
+      ([packageId, products]) => {
+        return this.procurementService
+          .createOrderPackageItems(Number(packageId), products)
+          .toPromise();
+      }
+    );
+
+    // Execute all save operations
+    Promise.all(saveOperations)
+      .then((responses) => {
+        console.log('All saves successful, responses:', responses);
         Swal.fire({
           icon: 'success',
           title: 'Success!',
-          text: response.message || 'All items saved successfully!',
+          text: 'All items saved successfully!',
           confirmButtonColor: '#3085d6',
         }).then((result) => {
           if (result.isConfirmed) {
             this.goBack();
           }
         });
-      },
-      error: (err) => {
+      })
+      .catch((err) => {
         console.error('Error saving items:', err);
         let errorMessage = 'Failed to save items. Please try again.';
         if (err.error?.message) {
@@ -329,8 +338,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           text: errorMessage,
           confirmButtonColor: '#3085d6',
         });
-      },
-    });
+      });
   }
 
   private saveItemsSequentially(items: any[], index = 0) {
@@ -341,15 +349,18 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
-    this.procurementService.createOrderPackageItems(items[index]).subscribe({
-      next: () => {
-        this.saveItemsSequentially(items, index + 1);
-      },
-      error: (err) => {
-        console.error(`Error saving item ${index}:`, err);
-        this.loading = false;
-        alert(`Failed to save item ${index + 1}. Please try again.`);
-      },
-    });
+    // Provide an empty array or appropriate products array as the second argument
+    this.procurementService
+      .createOrderPackageItems(items[index], [])
+      .subscribe({
+        next: () => {
+          this.saveItemsSequentially(items, index + 1);
+        },
+        error: (err) => {
+          console.error(`Error saving item ${index}:`, err);
+          this.loading = false;
+          alert(`Failed to save item ${index + 1}. Please try again.`);
+        },
+      });
   }
 }

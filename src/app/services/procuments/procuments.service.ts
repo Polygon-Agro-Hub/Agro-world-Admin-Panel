@@ -203,25 +203,32 @@ export class ProcumentsService {
     );
   }
 
-  createOrderPackageItems(orderPackageItemsData: any[]): Observable<any> {
+  createOrderPackageItems(
+    orderPackageId: number,
+    products: any[]
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
+    // Structure the data to match the endpoint's expected format
+    const requestData = {
+      orderPackageId: orderPackageId,
+      products: products,
+    };
+
     // Log the data being sent
-    console.log('Sending package items:', orderPackageItemsData);
+    console.log('Sending package items:', requestData);
 
     return this.http
-      .post(
-        `${this.apiUrl}procument/add-order-package-item`,
-        orderPackageItemsData, // Send array directly
-        { headers }
-      )
+      .post(`${this.apiUrl}procument/add-order-package-item`, requestData, {
+        headers,
+      })
       .pipe(
         catchError((error) => {
           console.error('Error in createOrderPackageItems:', error);
-          return throwError(error);
+          return throwError(() => new Error(error));
         })
       );
   }

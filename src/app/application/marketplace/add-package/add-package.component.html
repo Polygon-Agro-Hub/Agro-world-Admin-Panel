@@ -172,7 +172,7 @@
             type="text"
             id="approximatedPrice"
             name="approximatedPrice"
-            [(ngModel)]="packageObj.approximatedPrice"
+            [value]="packageObj.approximatedPrice | number : '1.2-2'"
             placeholder="--"
             class="w-full border border-[#D9D9D9] rounded-md px-3 py-2"
           />
@@ -224,14 +224,24 @@
           class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl"
         >
           <img
+            *ngIf="selectedImage; else defaultIcon"
             [src]="selectedImage"
             class="w-full h-auto object-cover px-4 py-2 mt-8"
           />
 
+          <!-- Default icon template -->
+          <ng-template #defaultIcon>
+            <div
+              class="flex items-center justify-center w-full h-32 px-4 py-2 mt-8 text-gray-400"
+            >
+              <i class="fa-solid fa-image text-7xl"></i>
+            </div>
+          </ng-template>
+
           <div class="flex flex-col items-center justify-center gap-y-2">
             <!-- Display Name OR Fallback -->
             <p
-              class="text-lg text-[#393939] font-medium"
+              class="text-xl text-[#393939] font-medium text-center"
               *ngIf="packageObj.displayName; else noDisplayName"
             >
               {{ packageObj.displayName }}
@@ -242,7 +252,7 @@
 
             <!-- Price OR Fallback -->
             <p
-              class="text-sm text-[#00957D]"
+              class="text-lg text-[#00957D]"
               *ngIf="packageObj.approximatedPrice > 0; else noPrice"
             >
               Rs.{{ packageObj.approximatedPrice | number : "1.2-2" }}

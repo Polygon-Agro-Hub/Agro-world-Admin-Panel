@@ -11,6 +11,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { DispatchService } from '../../../services/dispatch/dispatch.service';
 
+interface ProductInfo {
+  productId: number;
+  isPacked: boolean;
+}
+
 
 interface PremadePackages {
   id: number;
@@ -29,9 +34,20 @@ interface PremadePackages {
   fullTotal: number;
   additionalProductIds: number[];
 
+  // Simplified maps using 0|1 directly
+  additionalProductsMap: Record<number, 0 | 1>;
+  packageProductsMap: Record<number, 0 | 1>;
+  additionalProductsCount: number;
+  packageProductsCount: number;
+  packageProductStatus: string;
+  additionalProductStatus: string;
+  combinedStatus: string;
+
+  // Optional original string fields
+  additionalProductIdsString?: string;
+  packageProductIdsString?: string;
 
   scheduleDateFormatted?: string;
-
 }
 
 
@@ -39,15 +55,18 @@ interface PremadePackages {
 
 interface SelectdPackage {
   id: number;
-  invoiceNum: string;
-  totalPrice: string;
-  scheduleDate: string;
-  fullSubTotal: string;
-  packageStatus: string;
-
-
-  scheduleDateFormattedSL?: string;
-
+  orderId: number;
+  orderPackageId: number;
+  packageId: number;
+  invNo: string;
+  isPackage: string;
+  packingStatus: string;
+  fullTotal: number;
+  productCount: number;
+  customItemStatus: string;
+  createdAt: Date;
+  sheduleDate: Date;
+  productStatusMap: Record<number, 0 | 1>; // Maps productId to packed status (0 or 1)
 }
 
 
@@ -140,11 +159,11 @@ selectedInvoiceIdAdditional: number = 0;
         (response) => {
           // Add fullTotal to each item
           this.premadePackages = response.items.map((item: any) => {
-            const productPrice = item.productPrice || 0;
-            const additionalPrice = item.totalAdditionalItemsPrice || 0;
+            const productPrice = parseFloat(item.productPrice) || 0;
+            const additionalPrice = parseFloat(item.totalAdditionalItemsPrice) || 0;
             return {
               ...item,
-              fullTotal: productPrice + additionalPrice
+              fullTotal: (productPrice + additionalPrice).toFixed(2)
             };
           });
   
@@ -174,6 +193,8 @@ selectedInvoiceIdAdditional: number = 0;
       .getSelectedPackages(pagesl, limitsl, this.selectedStatussl, this.datesl, this.searchsl)
       .subscribe(
         (response) => {
+          console.log('response', response);
+         
           this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
             return {
               ...item,

@@ -63,6 +63,8 @@ export class DispatchService {
         Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
       });
+
+      console.log("date", date, "selectedStatus", selectedStatus, "search", search,)
   
   
       let url = `${this.apiUrl}dispatch/get-selected-packages?page=${page}&limit=${limit}`;

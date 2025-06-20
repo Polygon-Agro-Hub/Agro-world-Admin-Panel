@@ -58,7 +58,7 @@ export class AddPackageComponent implements OnInit {
     console.log('submit', this.packageObj);
     console.log('Final quantities:', this.packageObj.quantities);
     this.isLoading = true;
-    
+
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
@@ -92,18 +92,20 @@ export class AddPackageComponent implements OnInit {
     }
 
     // ✅ New validation: Ensure at least one quantity is > 0
-  const hasAtLeastOneQuantity = Object.values(this.packageObj.quantities).some(qty => qty > 0);
+    const hasAtLeastOneQuantity = Object.values(
+      this.packageObj.quantities
+    ).some((qty) => qty > 0);
 
-  if (!hasAtLeastOneQuantity) {
-    Swal.fire({
-      icon: 'error',
-      title: 'No product type selected',
-      text: 'You should select at least on product type.',
-      confirmButtonText: 'OK',
-    });
-    this.isLoading = false;
-    return;
-  }
+    if (!hasAtLeastOneQuantity) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No product type selected',
+        text: 'You should select at least on product type.',
+        confirmButtonText: 'OK',
+      });
+      this.isLoading = false;
+      return;
+    }
 
     // All quantities are already stored in kg, no conversion needed before submit
     this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
@@ -137,7 +139,6 @@ export class AddPackageComponent implements OnInit {
         });
         this.isLoading = false;
       }
-      
     );
   }
 
@@ -191,12 +192,13 @@ export class AddPackageComponent implements OnInit {
   }
 
   calculateApproximatedPrice() {
-    const productPrice = Number(this.packageObj.productPrice) || 0.00;
-    const serviceFee = Number(this.packageObj.serviceFee) || 0.00;
-    const packageFee = Number(this.packageObj.packageFee) || 0.00;
-  
-    this.packageObj.approximatedPrice = productPrice + (serviceFee + packageFee);
-    
+    const productPrice = Number(this.packageObj.productPrice) || 0.0;
+    const serviceFee = Number(this.packageObj.serviceFee) || 0.0;
+    const packageFee = Number(this.packageObj.packageFee) || 0.0;
+
+    this.packageObj.approximatedPrice =
+      productPrice + (serviceFee + packageFee);
+
     console.log('Approximated Price:', this.packageObj.approximatedPrice);
     return this.packageObj.approximatedPrice;
   }
@@ -207,6 +209,27 @@ export class AddPackageComponent implements OnInit {
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }
+  }
+
+  allowDecimalNumbers(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Allow numbers 0-9
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    // Allow decimal point
+    if (charCode === 46) {
+      const currentValue = (event.target as HTMLInputElement).value;
+      // Prevent more than one decimal point
+      return currentValue.indexOf('.') === -1;
+    }
+    // Allow backspace, tab, enter, arrows
+    if ([8, 9, 13, 37, 39].includes(charCode)) {
+      return true;
+    }
+    // Prevent all other key presses
+    event.preventDefault();
+    return false;
   }
 }
 

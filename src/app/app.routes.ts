@@ -138,6 +138,8 @@ import { UploadDeliveryChargesComponent } from './application/marketplace/upload
 import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
 import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
 import { TodoDefinePremadePackagesComponent } from './application/procurement-section/todo-define-premade-packages/todo-define-premade-packages.component';
+import { CompletedDefinePackageComponent } from './application/procurement-section/completed-define-package/completed-define-package.component';
+import { EditCompleatedDefinePremadePackagesComponent } from './application/procurement-section/edit-compleated-define-premade-packages/edit-compleated-define-premade-packages.component';
 export const routes: Routes = [
   {
     path: '',
@@ -688,6 +690,10 @@ export const routes: Routes = [
           {
             path: 'todo-define-premade-packages',
             component: TodoDefinePremadePackagesComponent,
+          },
+          {
+            path: 'edit-completed-define-package',
+            component: EditCompleatedDefinePremadePackagesComponent,
           },
         ],
       },

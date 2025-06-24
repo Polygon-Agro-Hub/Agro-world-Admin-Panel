@@ -18,8 +18,10 @@ interface ProductTypes {
   shortCode: string;
   productId: number | null;
   selectedProductPrice?: number;
-  quantity?: number; // Add this
-  calculatedPrice?: number; // Add this
+  quantity?: number;
+  calculatedPrice?: number;
+  displayName?: string;
+  productDescription?: string; // Add this
 }
 
 interface MarketplaceItem {
@@ -46,6 +48,7 @@ interface PackageItem {
 export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
+  packageItems: any[] = [];
   loading = true;
   error = '';
   invoiceNumber = '';
@@ -83,6 +86,51 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     });
   }
 
+  fetchPackageItems(orderId: string) {
+    this.procurementService
+      .getOrderPackagesByOrderId(Number(orderId))
+      .subscribe({
+        next: (items) => {
+          this.packageItems = Array.isArray(items) ? items : [items];
+          console.log('Fetched package items:', this.packageItems);
+          this.updateProductSelections();
+        },
+        error: (err) => {
+          console.error('Error fetching package items:', err);
+          this.error = 'Failed to load package items';
+        },
+      });
+  }
+
+  updateProductSelections() {
+    this.orderDetails.forEach((pkg) => {
+      const packageItems = this.packageItems.filter(
+        (item) => item.orderPackageId === pkg.packageId
+      );
+
+      pkg.productTypes.forEach((productType) => {
+        const matchingItem = packageItems.find(
+          (item) => item.productType === productType.id
+        );
+
+        if (matchingItem) {
+          productType.productId = matchingItem.productId;
+          productType.quantity = matchingItem.qty;
+          productType.selectedProductPrice = matchingItem.price;
+          productType.calculatedPrice = matchingItem.price * matchingItem.qty;
+
+          // Find and set the display name from marketplace items
+          const product = this.marketplaceItems.find(
+            (m) => m.id === matchingItem.productId
+          );
+          if (product) {
+            productType.displayName = product.displayName;
+          }
+        }
+      });
+    });
+  }
+
   fetchMarketplaceItems(callback?: () => void) {
     this.procurementService.getAllMarketplaceItems(this.orderId).subscribe({
       next: (data: any) => {
@@ -108,17 +156,15 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.procurementService.getOrderDetailsById(id).subscribe({
+    this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
       next: (response) => {
         console.log('API Response:', response);
 
-        // Type guard to ensure response has the expected structure
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
         }
 
-        // Transform the response to match our component's OrderDetailItem[]
-        this.orderDetails = response.packages.map((pkg) => ({
+        this.orderDetails = response.packages.map((pkg: any) => ({
           packageId: pkg.packageId,
           displayName: pkg.displayName,
           productPrice:
@@ -126,17 +172,19 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
               ? parseFloat(pkg.productPrice)
               : pkg.productPrice,
           invNo: response.invNo,
-          productTypes: pkg.productTypes
-            ? pkg.productTypes.map((pt) => ({
-                id: pt.id,
-                typeName: pt.typeName,
-                shortCode: pt.shortCode,
-                productId: null,
-                selectedProductPrice: undefined,
-                quantity: undefined,
-                calculatedPrice: undefined,
-              }))
-            : [],
+          productTypes: pkg.productTypes.map((pt: any) => ({
+            id: pt.id,
+            typeName: pt.typeName,
+            shortCode: pt.shortCode,
+            productId: pt.productId || null,
+            selectedProductPrice: pt.price || undefined,
+            quantity: pt.qty || undefined,
+            calculatedPrice: pt.price && pt.qty ? pt.price * pt.qty : undefined,
+            displayName: pt.displayName || undefined,
+            productDescription: pt.productDescription || undefined, // Add this
+            qty: pt.qty,
+            price: pt.price,
+          })),
         }));
 
         this.invoiceNumber = response.invNo;

@@ -5,6 +5,34 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environment/environment';
 
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message: string;
+}
+
+interface OrderPackageResponse {
+  invNo: string;
+  packages: Package[];
+}
+
+interface Package {
+  packageId: number;
+  displayName: string;
+  productPrice: number;
+  productTypes: ProductType[];
+}
+
+interface ProductType {
+  id: number;
+  typeName: string;
+  productId: number;
+  qty: number;
+  price: number;
+  displayName: string;
+  shortCode: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -286,79 +314,35 @@ export class ProcumentsService {
       );
   }
 
-  getOrderPackageItemsById(id: string): Observable<{
-    invNo: string;
-    packages: Array<{
-      packageId: number;
-      displayName: string;
-      productPrice: string;
-      productTypes: Array<{
-        id: number;
-        typeName: string;
-        shortCode: string;
-      }>;
-    }>;
-  }> {
+  getOrderPackagesByOrderId(orderId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}procument/order-packages/${id}`;
+    const url = `${this.apiUrl}procument/order-packages/${orderId}`;
 
-    return this.http
-      .get<{
-        success: boolean;
-        data: {
-          invNo: string;
-          packages: Array<{
-            packageId: number;
-            displayName: string;
-            productPrice: string;
-            productTypes: Array<{
-              id: number;
-              typeName: string;
-              shortCode: string;
-            }>;
-          }>;
-        };
-        message?: string;
-      }>(url, { headers })
-      .pipe(
-        map((response) => {
-          if (response.success) {
-            return {
-              invNo: response.data.invNo,
-              packages: response.data.packages.map((pkg) => ({
-                packageId: pkg.packageId,
-                displayName: pkg.displayName,
-                productPrice: pkg.productPrice,
-                productTypes: pkg.productTypes.map((type) => ({
-                  id: type.id,
-                  typeName: type.typeName,
-                  shortCode: type.shortCode,
-                })),
-              })),
-            };
-          } else {
-            throw new Error(
-              response.message || 'Failed to fetch order package items'
-            );
-          }
-        }),
-        catchError((error) => {
-          console.error('Error fetching order package items:', error);
-
-          let errorMessage =
-            'An error occurred while fetching order package items';
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
-
-          return throwError(() => new Error(errorMessage));
-        })
-      );
+    return this.http.get<any>(url, { headers }).pipe(
+      map((response) => {
+        if (response.success) {
+          return {
+            invNo: response.data.invNo,
+            packages: response.data.packages,
+          };
+        } else {
+          throw new Error(response.message);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching order packages:', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message ||
+                'An error occurred while fetching order packages'
+            )
+        );
+      })
+    );
   }
 }

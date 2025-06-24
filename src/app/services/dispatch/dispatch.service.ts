@@ -27,6 +27,7 @@ export class DispatchService {
         Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
       });
+      console.log('selectedStatus', selectedStatus, 'date', date, 'search', search)
   
   
       let url = `${this.apiUrl}dispatch/get-premade-packages?page=${page}&limit=${limit}`;
@@ -35,8 +36,7 @@ export class DispatchService {
         url += `&selectedStatus=${selectedStatus}`;
       }
   
-  
-  
+
       if (date) {
         url += `&date=${date}`;
       }
@@ -63,6 +63,8 @@ export class DispatchService {
         Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
       });
+
+      console.log("date", date, "selectedStatus", selectedStatus, "search", search,)
   
   
       let url = `${this.apiUrl}dispatch/get-selected-packages?page=${page}&limit=${limit}`;

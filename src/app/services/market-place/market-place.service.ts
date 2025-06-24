@@ -483,4 +483,16 @@ export class MarketPlaceService {
       { headers }
     );
   }
+
+  // In your market-place.service.ts
+  checkPackageDisplayName(displayName: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}market-place/check-package-name?displayName=${displayName}`,
+      { headers }
+    );
+  }
 }

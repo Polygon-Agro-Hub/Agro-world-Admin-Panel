@@ -1,126 +1,5 @@
 
 
-// import { CommonModule } from '@angular/common';
-// import { Component, OnInit } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
-// import { NgxPaginationModule } from 'ngx-pagination';
-// import { HttpClient } from '@angular/common/http';
-// import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-// import Swal from 'sweetalert2';
-// import { Router } from '@angular/router';
-
-// @Component({
-//   selector: 'app-subsription',
-//   standalone: true,
-//   imports: [
-//     CommonModule,
-//     NgxPaginationModule,
-//     FormsModule,
-//     LoadingSpinnerComponent,
-//   ],
-//   templateUrl: './subsription.component.html',
-//   styleUrls: ['./subsription.component.css'],
-// })
-// export class SubsriptionComponent implements OnInit {
-//   isLoading = true;
-//   subscriptionObj: Subscription[] = [];
-//   filteredSubscriptions: Subscription[] = [];
-//   hasData = true;
-
-//   activeTab: 'retail' | 'wholesale' = 'retail';
-//   searchText: string = '';
-
-//   page: number = 1;
-//   totalItems: number = 0;
-//   itemsPerPage: number = 10;
-
-//   private apiUrl = 'http://localhost:3000/agro-api/admin-api/api/market-place/marketplace-users';
-
-//   constructor(private http: HttpClient, private router: Router) {}
-
-//   back(): void {
-//     this.router.navigate(['market/action']);
-//   }
-
-//   ngOnInit(): void {
-//     this.fetchAllSubscriptions();
-//   }
-
-//   switchTab(tab: 'retail' | 'wholesale') {
-//     this.activeTab = tab;
-//     this.fetchAllSubscriptions();
-//   }
-
-//   fetchAllSubscriptions() {
-//     this.isLoading = true;
-//     this.http.get<Subscription[]>(this.apiUrl).subscribe({
-//       next: (res) => {
-//         this.subscriptionObj = res.map((user, index) => ({
-//           id: index + 1,
-//           customerName: user.customerName,
-//           email: user.email,
-//           time: user.time || 'N/A',
-//         }));
-//         this.applySearchFilter();
-//         this.isLoading = false;
-//       },
-//       error: (err) => {
-//         console.error('Error fetching marketplace users:', err);
-//         this.isLoading = false;
-//       },
-//     });
-//   }
-
-//   applySearchFilter() {
-//     const search = this.searchText.toLowerCase();
-//     this.filteredSubscriptions = this.subscriptionObj.filter(user =>
-//       user.customerName.toLowerCase().includes(search) ||
-//       user.email.toLowerCase().includes(search)
-//     );
-//     this.totalItems = this.filteredSubscriptions.length;
-//     this.hasData = this.totalItems > 0;
-//   }
-
-//   onSearchChange() {
-//     this.applySearchFilter();
-//     this.page = 1; // reset to first page
-//   }
-
-//   clearSearch() {
-//     this.searchText = '';
-//     this.applySearchFilter();
-//   }
-
-//   onPageChange(event: number) {
-//     this.page = event;
-//   }
-
-//   deleteUser(id: number) {
-//     Swal.fire({
-//       title: 'Are you sure?',
-//       text: 'Do you really want to delete this user? This action cannot be undone.',
-//       icon: 'warning',
-//       showCancelButton: true,
-//       confirmButtonColor: '#3085d6',
-//       cancelButtonColor: '#d33',
-//       confirmButtonText: 'Yes, delete it!',
-//     }).then((result) => {
-//       if (result.isConfirmed) {
-//         this.subscriptionObj = this.subscriptionObj.filter(user => user.id !== id);
-//         this.applySearchFilter();
-//         Swal.fire('Deleted!', 'The user has been deleted (mock).', 'success');
-//       }
-//     });
-//   }
-// }
-
-// export interface Subscription {
-//   id: number;
-//   customerName: string;
-//   email: string;
-//   time: string;
-// }
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -254,70 +133,77 @@ export class SubsriptionComponent implements OnInit {
     this.page = event;
   }
 
-  deleteUser(id: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this user? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const token = localStorage.getItem('AdminLoginToken');
-        if (!token) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Unauthorized',
-            text: 'Please log in to continue.',
-          }).then(() => this.router.navigate(['/login']));
-          return;
-        }
+  deleteUser(id: number): void {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this user? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const token = localStorage.getItem('AdminLoginToken');
+      if (!token) {
+        this.handleUnauthorized();
+        return;
+      }
 
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        const deleteUrl = `${this.apiUrl}/${id}`;
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      // Updated URL to match the backend route
+      const deleteUrl = `http://localhost:3000/agro-api/admin-api/api/market-place/marketplace-dltusers/${id}`;
 
-        this.http.delete(deleteUrl, { headers }).subscribe({
-          next: () => {
+      this.http.delete<{ status: boolean; message: string }>(deleteUrl, { headers }).subscribe({
+        next: (response) => {
+          if (response.status) {
             this.subscriptionObj = this.subscriptionObj.filter((user) => user.id !== id);
             this.applySearchFilter();
-            Swal.fire('Deleted!', 'The user has been deleted.', 'success');
-          },
-          error: (err) => {
-            if (err.status === 401) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Unauthorized',
-                text: 'Session expired. Please log in again.',
-              }).then(() => {
-                localStorage.removeItem('AdminLoginToken');
-                this.router.navigate(['/login']);
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Could not delete user. Please try again later.',
-              });
-            }
-          },
-        });
-      }
-    });
+            Swal.fire('Deleted!', response.message || 'The user has been deactivated.', 'success');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: response.message || 'Could not deactivate user.',
+            });
+          }
+        },
+        error: (err) => {
+          if (err.status === 401) {
+            this.handleUnauthorized();
+          } else if (err.status === 404 || err.status === 400) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Not Found',
+              text: err.error?.message || 'The user could not be found or was already deactivated.',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Could not deactivate user. Please try again later.',
+            });
+          }
+        },
+      });
+    }
+  });
+}
+  handleUnauthorized() {
+    throw new Error('Method not implemented.');
   }
 
-  // ✅ Excel Download Feature (Exports Searched Data)
+
   downloadExcel(): void {
-    const exportData = this.filteredSubscriptions.map(sub => ({
+    const exportData = this.filteredSubscriptions.map((sub) => ({
       'Customer Name': sub.customerName,
-      'Email': sub.email,
-      'Time': sub.time,
+      Email: sub.email,
+      Time: sub.time,
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
     const workbook: XLSX.WorkBook = {
-      Sheets: { 'Subscriptions': worksheet },
+      Sheets: { Subscriptions: worksheet },
       SheetNames: ['Subscriptions'],
     };
 

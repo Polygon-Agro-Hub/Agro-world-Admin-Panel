@@ -114,11 +114,11 @@ export class ViewCompaniesComponent {
   }
 
   back(): void {
-    this.router.navigate(['/collection-hub']);
+    this.router.navigate(['/distribution-hub/action']);
   }
 
   add(): void {
-    this.router.navigate(['/collection-hub/create-company']);
+    this.router.navigate(['/distribution-hub/action/create-company']);
   }
 }
 

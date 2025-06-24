@@ -177,6 +177,10 @@ export class ViewCoupenComponent implements OnInit {
       }
     });
   }
+
+  navPath(path:string): void {
+    this.router.navigate([path]);
+  }
 }
 
 class Coupen {

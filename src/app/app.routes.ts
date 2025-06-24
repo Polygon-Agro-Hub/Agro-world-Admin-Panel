@@ -135,6 +135,9 @@ import { EditProductTypesComponent } from './application/marketplace/edit-produc
 import { ViewRetailOrdersComponent } from './application/marketplace/view-retail-orders/view-retail-orders.component';
 import { ViewDeliveryChargesComponent } from './application/marketplace/view-delivery-charges/view-delivery-charges.component';
 import { UploadDeliveryChargesComponent } from './application/marketplace/upload-delivery-charges/upload-delivery-charges.component';
+import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
+import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
+import { TodoDefinePremadePackagesComponent } from './application/procurement-section/todo-define-premade-packages/todo-define-premade-packages.component';
 export const routes: Routes = [
   {
     path: '',
@@ -678,6 +681,14 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
           },
+          {
+            path: 'define-packages',
+            component: DefinePackagesComponent,
+          },
+          {
+            path: 'todo-define-premade-packages',
+            component: TodoDefinePremadePackagesComponent,
+          },
         ],
       },
 
@@ -881,6 +892,12 @@ export const routes: Routes = [
             children: [
               { path: '', component: DistributionhubComponent },
               {
+                path: 'create-company',
+                component: CreateCompanyComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add And Edit Company' },
+              },
+              {
                 path: 'view-companies',
                 component: ViewCompaniesComponent,
               },
@@ -900,6 +917,10 @@ export const routes: Routes = [
               {
                 path: 'add-destribition-center',
                 component: AddDestributionCenterComponent,
+              },
+              {
+                path: 'edit-distribution-officer/:id',
+                component: EditDistributionOfficerComponent,
               },
             ],
           },

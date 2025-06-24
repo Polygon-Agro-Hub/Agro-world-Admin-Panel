@@ -16,7 +16,7 @@ export class AddCoupenComponent {
   coupenObj: Coupen = new Coupen();
   today: string = this.getTodayDate();
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
   back(): void {
     this.router.navigate(['market/action']);
@@ -102,6 +102,7 @@ export class AddCoupenComponent {
           confirmButtonText: 'OK',
         }).then(() => {
           this.coupenObj = new Coupen();
+          this.router.navigate(['market/action/view-coupen']);
         });
       }
     });

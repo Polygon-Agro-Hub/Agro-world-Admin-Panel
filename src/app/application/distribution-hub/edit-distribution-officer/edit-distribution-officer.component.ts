@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -22,7 +22,7 @@ interface BranchesData {
   [key: string]: Branch[];
 }
 @Component({
-  selector: 'app-add-distribution-officer',
+  selector: 'app-edit-distribution-officer',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -31,10 +31,10 @@ interface BranchesData {
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: './add-distribution-officer.component.html',
-  styleUrl: './add-distribution-officer.component.css',
+  templateUrl: './edit-distribution-officer.component.html',
+  styleUrl: './edit-distribution-officer.component.css',
 })
-export class AddDistributionOfficerComponent implements OnInit {
+export class EditDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   isLoading = false;
   selectedFile: File | null = null;
@@ -102,6 +102,7 @@ export class AddDistributionOfficerComponent implements OnInit {
     private http: HttpClient,
     private collectionCenterSrv: CollectionCenterService,
     private distributionHubSrv: DistributionHubService,
+    private route: ActivatedRoute,
     private location: Location
   ) {}
 
@@ -109,7 +110,66 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.loadBanks();
     this.loadBranches();
     this.getAllCompanies();
-    this.EpmloyeIdCreate();
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.itemId = +params['id'];
+        this.loadDistributionHeadData(this.itemId);
+      }
+    });
+  }
+
+  loadDistributionHeadData(id: number): void {
+    this.isLoading = true;
+    this.distributionHubSrv.getDistributionHeadDetailsById(id).subscribe(
+      (res: any) => {
+        this.personalData = res.data;
+
+        // Remove 'DCH' prefix from empId if it exists
+        if (
+          this.personalData.empId &&
+          this.personalData.empId.startsWith('DCH')
+        ) {
+          this.personalData.empId = this.personalData.empId.substring(3);
+        }
+
+        // Set dropdown values
+        if (res.data.companyId) {
+          this.getAllDistributedCenters(res.data.companyId);
+        }
+
+        // Set bank and branch if available
+        if (res.data.bankName) {
+          const bank = this.banks.find((b) => b.name === res.data.bankName);
+          if (bank) {
+            this.selectedBankId = bank.ID;
+            this.onBankChange();
+
+            if (res.data.branchName) {
+              const branch = this.branches.find(
+                (b) => b.name === res.data.branchName
+              );
+              if (branch) {
+                this.selectedBranchId = branch.ID;
+              }
+            }
+          }
+        }
+
+        // Set image if available
+        if (res.data.image) {
+          this.selectedImage = res.data.image;
+        }
+
+        // Set employee type
+        this.empType = res.data.empType;
+
+        this.isLoading = false;
+      },
+      (error) => {
+        this.isLoading = false;
+        Swal.fire('Error', 'Failed to load distribution head data', 'error');
+      }
+    );
   }
 
   navigatePath(path: string) {
@@ -218,7 +278,6 @@ export class AddDistributionOfficerComponent implements OnInit {
     const currentCompanyId = this.personalData.companyId;
     const currentCenterId = this.personalData.centerId;
 
-    this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
@@ -253,17 +312,6 @@ export class AddDistributionOfficerComponent implements OnInit {
         }
       );
     });
-  }
-
-  getAllCollectionManagers() {
-    this.collectionCenterSrv
-      .getAllManagerList(
-        this.personalData.companyId,
-        this.personalData.centerId
-      )
-      .subscribe((res) => {
-        this.distributionHeadData = res;
-      });
   }
 
   isValidPhoneNumber(phone: string): boolean {
@@ -374,28 +422,34 @@ export class AddDistributionOfficerComponent implements OnInit {
   onSubmit() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to create the distribution center head?',
+      text: 'Do you want to update the distribution center head?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
+      confirmButtonText: 'Yes, update it!',
       cancelButtonText: 'No, cancel',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
+        const updateData = {
+          ...this.personalData,
+          empId: 'DCH' + this.personalData.empId,
+          image: this.selectedImage,
+        };
+
         this.distributionHubSrv
-          .createDistributionHead(this.personalData, this.selectedImage)
+          .updateDistributionHeadDetails(this.itemId!, updateData)
           .subscribe(
             (res: any) => {
               this.isLoading = false;
-              this.officerId = res.officerId;
               this.errorMessage = '';
 
               Swal.fire(
                 'Success',
-                'Created Distribution Center Head Successfully',
+                'Updated Distribution Center Head Successfully',
                 'success'
               ).then(() => {
+                // Redirect back after success
                 this.location.back();
               });
             },
@@ -406,9 +460,10 @@ export class AddDistributionOfficerComponent implements OnInit {
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
-      } else {
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
           () => {
+            // Redirect back on cancel
             this.location.back();
           }
         );

@@ -8,14 +8,10 @@
   Back
 </button>
 <div class="h-[20px]"></div>
-<div
-  *ngIf="this.itemId == null"
-  class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg"
->
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <div *ngIf="selectedPage === 'pageOne'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-      Add Personal Details
+      {{ itemId ? "Edit" : "Create" }} Personal Details
     </h2>
     <div>
       <div class="flex justify-center pt-3 pb-9">
@@ -70,7 +66,7 @@
             </span>
             <input
               type="text"
-              [value]="lastID"
+              [value]="itemId ? personalData.empId : lastID"
               name="empId"
               class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               disabled
@@ -92,6 +88,7 @@
               name="centerId"
               (change)="getAllDistributedCenters(personalData.companyId)"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+              [disabled]="!!itemId"
             >
               <option
                 *ngFor="let company of CompanyData"
@@ -231,14 +228,11 @@
                 {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
               </option>
             </select>
-            <!-- FontAwesome Down Arrow Icon -->
             <i
               class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
             ></i>
           </div>
         </div>
-
-        <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>
 
         <div>
           <label
@@ -429,7 +423,6 @@
   </div>
 
   <div *ngIf="selectedPage === 'pageTwo'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Residential Details
     </h2>
@@ -557,7 +550,7 @@
         <label
           for="accHolderName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder’s Name</label
+          >Account Holder's Name</label
         >
         <input
           id="accHolderName"
@@ -609,12 +602,10 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
 
-        <!-- Required validation message -->
         <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
           Confirm Account Number is required.
         </span>
 
-        <!-- Mismatch validation message -->
         <span
           *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
           class="text-red-600 text-sm"
@@ -687,7 +678,7 @@
         (click)="onSubmit()"
         [disabled]="!checkSubmitValidity()"
       >
-        Submit
+        Update
       </button>
     </div>
   </div>

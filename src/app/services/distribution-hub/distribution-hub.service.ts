@@ -100,4 +100,39 @@ export class DistributionHubService {
       }
     );
   }
+
+  deleteDistributionHead(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}distribution/delete-officer/${id}`;
+    return this.http.delete<any>(url, { headers });
+  }
+
+  getDistributionHeadDetailsById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(
+      `${this.apiUrl}distribution/get-distribution-head/${id}`,
+      { headers }
+    );
+  }
+
+  updateDistributionHeadDetails(id: number, updateData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(
+      `${this.apiUrl}distribution/update-collection-officer/${id}`,
+      updateData,
+      { headers }
+    );
+  }
 }

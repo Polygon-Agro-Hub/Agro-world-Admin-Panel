@@ -138,6 +138,7 @@ import { UploadDeliveryChargesComponent } from './application/marketplace/upload
 import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
 import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
 import { TodoDefinePremadePackagesComponent } from './application/procurement-section/todo-define-premade-packages/todo-define-premade-packages.component';
+import { PackageItemViewComponent } from './application/dispatch-section/package-item-view/package-item-view.component';
 export const routes: Routes = [
   {
     path: '',
@@ -702,6 +703,11 @@ export const routes: Routes = [
           {
             path: 'salesdash-orders',
             component: SalesdashOrdersComponent,
+          },
+
+          {
+            path: 'package-items',
+            component: PackageItemViewComponent,
           },
         ],
       },

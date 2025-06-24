@@ -17,16 +17,17 @@ interface PurchaseReport {
   id: number;
   varietyNameEnglish: string;
   cropNameEnglish: string;
-  TotalQuantity: string;
+  quantity: number;
   OrderDate: string;
-  scheduleDate: string;
-  toCollectionCenter: string;
-  toDispatchCenter: string;
+  sheduleDate: Date;
+  toCollectionCentre: Date;
+  toDispatchCenter: Date;
 
-  orderDateFormatted?: string;
-  scheduleDateFormatted?: string;
-  toCollectionCenterFormatted: string;
-  toDispatchCenterFormatted: string;
+  // orderDateFormatted?: string;
+  // scheduleDateFormatted?: string;
+  // toCollectionCenterFormatted: string;
+  // toDispatchCenterFormatted: string;
+  createdAt: Date;
 }
 
 @Component({
@@ -249,6 +250,8 @@ export class RecievedOrdersComponent {
 
     const queryString =
       queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+    console.log('filterType', this.filterType, 'date', this.date, 'search', this.search)
 
     const apiUrl = `${environment.API_URL}procument/download-order-quantity-report${queryString}`;
 

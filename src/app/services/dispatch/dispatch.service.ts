@@ -27,6 +27,7 @@ export class DispatchService {
         Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
       });
+      console.log('selectedStatus', selectedStatus, 'date', date, 'search', search)
   
   
       let url = `${this.apiUrl}dispatch/get-premade-packages?page=${page}&limit=${limit}`;
@@ -35,8 +36,7 @@ export class DispatchService {
         url += `&selectedStatus=${selectedStatus}`;
       }
   
-  
-  
+
       if (date) {
         url += `&date=${date}`;
       }
@@ -63,6 +63,8 @@ export class DispatchService {
         Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
       });
+
+      console.log("date", date, "selectedStatus", selectedStatus, "search", search,)
   
   
       let url = `${this.apiUrl}dispatch/get-selected-packages?page=${page}&limit=${limit}`;
@@ -98,19 +100,67 @@ export class DispatchService {
       return this.http.get<any>(url, { headers });
     }
 
-    updateIsPacked(array: any): Observable<any> {
+    updatePackageItemData(array: any, id: number): Observable<any> {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${this.token}`,
         'Content-Type': 'application/json',
       });
     
-      const url = `${this.apiUrl}dispatch/update-is-packed`;
+      const url = `${this.apiUrl}dispatch/update-package-data`;
     
       // Send the array as a named field in the body
-      return this.http.post<any>(url, { packedItems: array }, { headers });
+      return this.http.post<any>(url, { packedItems: array, id}, { headers });
     }
 
+    getAllProducts(): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+  
+  
+      let url = `${this.apiUrl}dispatch/get-all-products`;
+  
+      return this.http.get<any>(url, { headers });
+    }
 
+    replaceProductData(productId: number, quantity: number, totalPrice:number | null = null, id: number, previousProductId: number): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+    
+      const url = `${this.apiUrl}dispatch/replace-product-data`;
+    
+      // Send the array as a named field in the body
+      return this.http.post<any>(url, { productId, quantity, totalPrice, id, previousProductId }, { headers });
+    }
+
+    updateAdditionalItemData(array: any, id: number): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+    
+      const url = `${this.apiUrl}dispatch/update-additional-item-data`;
+    
+      // Send the array as a named field in the body
+      return this.http.post<any>(url, { additionalItems: array, id}, { headers });
+    }
+
+    getAdditionalItems(
+      id: number
+    ): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+  
+  
+      let url = `${this.apiUrl}dispatch/get-additional-items?id=${id}`;
+  
+      return this.http.get<any>(url, { headers });
+    }
 
 
 

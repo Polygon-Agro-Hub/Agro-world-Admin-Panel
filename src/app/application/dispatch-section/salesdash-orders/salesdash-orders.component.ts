@@ -11,24 +11,43 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { DispatchService } from '../../../services/dispatch/dispatch.service';
 
+interface ProductInfo {
+  productId: number;
+  isPacked: boolean;
+}
+
 
 interface PremadePackages {
-  id: number;
+  processOrderId: number;
   invoiceNum: string;
-  packageName: string;
-  packagePrice: string;
-  additionalPrice: any;
-  scheduleDate: string;
+  displayName: string;
+  productPrice: number;
+  totalAdditionalItemsPrice: number;
+  sheduleDate: Date;
   fullSubTotal: string;
   totalPrice: string;
-  packageStatus: string;
+  packingStatus: string;
   packItemStatus: string;
   addItemStatus: string;
+  invNo: string;
   orderPackageItemsId: any;
+  fullTotal: number;
+  additionalProductIds: number[];
 
+  // Simplified maps using 0|1 directly
+  additionalProductsMap: Record<number, 0 | 1>;
+  packageProductsMap: Record<number, 0 | 1>;
+  additionalProductsCount: number;
+  packageProductsCount: number;
+  packageProductStatus: string;
+  additionalProductStatus: string;
+  combinedStatus: string;
+
+  // Optional original string fields
+  additionalProductIdsString?: string;
+  packageProductIdsString?: string;
 
   scheduleDateFormatted?: string;
-
 }
 
 
@@ -36,15 +55,18 @@ interface PremadePackages {
 
 interface SelectdPackage {
   id: number;
-  invoiceNum: string;
-  totalPrice: string;
-  scheduleDate: string;
-  fullSubTotal: string;
-  packageStatus: string;
-
-
-  scheduleDateFormattedSL?: string;
-
+  orderId: number;
+  orderPackageId: number;
+  packageId: number;
+  invNo: string;
+  isPackage: string;
+  packingStatus: string;
+  fullTotal: number;
+  productCount: number;
+  customItemStatus: string;
+  createdAt: Date;
+  sheduleDate: Date;
+  productStatusMap: Record<number, 0 | 1>; // Maps productId to packed status (0 or 1)
 }
 
 
@@ -66,7 +88,7 @@ interface SelectdPackage {
 export class SalesdashOrdersComponent {
   search: string = '';
   isLoading = false;
-  status = ['Pending', 'Completed', 'Opened'];
+  status = ['Todo', 'Completed', 'Opened'];
   selectedStatus: any = '';
   date: string = '';
   itemsPerPage: number = 10;
@@ -135,17 +157,18 @@ selectedInvoiceIdAdditional: number = 0;
       .getPreMadePackages(page, limit, this.selectedStatus, this.date, this.search)
       .subscribe(
         (response) => {
-          this.premadePackages = response.items.map((item: { scheduleDate: string; }) => {
+          // Add fullTotal to each item
+          this.premadePackages = response.items.map((item: any) => {
+            const productPrice = parseFloat(item.productPrice) || 0;
+            const additionalPrice = parseFloat(item.totalAdditionalItemsPrice) || 0;
             return {
               ...item,
-              scheduleDateFormatted: this.formatDate(item.scheduleDate)
+              fullTotal: (productPrice + additionalPrice).toFixed(2)
             };
           });
+  
           this.totalItems = response.total;
-          console.log(this.premadePackages)
-          // this.purchaseReport.forEach((head) => {
-          //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-          // });
+          console.log(this.premadePackages);
           this.isLoading = false;
         },
         (error) => {
@@ -170,6 +193,8 @@ selectedInvoiceIdAdditional: number = 0;
       .getSelectedPackages(pagesl, limitsl, this.selectedStatussl, this.datesl, this.searchsl)
       .subscribe(
         (response) => {
+          console.log('response', response);
+         
           this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
             return {
               ...item,
@@ -380,18 +405,20 @@ selectedInvoiceIdAdditional: number = 0;
     this.showPopupAdditional = false;
   }
 
-  openViewPackageItemPopup(id: number, name: string, price: string, inv: string) {
+  navigateToPackageItemView(id: number, invNo: string, total: number, name:string, fullTotal: number) {
+    console.log(id, invNo, name, total);
+    this.router.navigate(['/dispatch/package-items']);
+    this.router.navigate(['/dispatch/package-items'], {
+      queryParams: { id, invNo, name, total, fullTotal },
+    });
+  }
 
-    this.isViewPackageItemsPopupOpen = true;
-    console.log(this.isViewPackageItemsPopupOpen)
-    console.log(id, name, inv)
-    this.orderId = id;
-    this.orderPrice = price;
-    this.orderName = name;
-    this.orderInv = inv;
-
-
-    this.fetchPackageItems(id)
+  navigateToAdditionalItemView(id: number, invNo: string, total: number, name:string, fullTotal: number) {
+    console.log(id, invNo, name, total);
+    this.router.navigate(['/dispatch/additional-items'], {
+      queryParams: { id, invNo, name, total, fullTotal },
+    });
+    
   }
 
   fetchPackageItems(id: number) {
@@ -442,58 +469,58 @@ selectedInvoiceIdAdditional: number = 0;
     }
   }
 
-  saveCheckedItems() {
-    console.log('All items:', this.packageItemsArr);
+  // saveCheckedItems() {
+  //   console.log('All items:', this.packageItemsArr);
   
-    // Create PackedItems for all items, regardless of isPacking value
-    this.packedItems = this.packageItemsArr.map(item => {
-      const packedItem = new PackedItems();
-      packedItem.id = item.packageListId;
-      packedItem.isPacked = item.isPacking; // can be 0 or 1
-      return packedItem;
-    });
+  //   // Create PackedItems for all items, regardless of isPacking value
+  //   this.packedItems = this.packageItemsArr.map(item => {
+  //     const packedItem = new PackedItems();
+  //     packedItem.id = item.packageListId;
+  //     packedItem.isPacked = item.isPacking; // can be 0 or 1
+  //     return packedItem;
+  //   });
   
-    console.log('Packed items:', this.packedItems);
-    console.log('All items:', this.packageItemsArr);
+  //   console.log('Packed items:', this.packedItems);
+  //   console.log('All items:', this.packageItemsArr);
   
-    this.isViewPackageItemsPopupOpen = false;
-    this.setIsPacked(this.packedItems);
-  }
+  //   this.isViewPackageItemsPopupOpen = false;
+  //   this.setIsPacked(this.packedItems);
+  // }
   
   
 
-  setIsPacked(array: PackedItems[]) {
-    this.isLoading = true;
+  // setIsPacked(array: PackedItems[]) {
+  //   this.isLoading = true;
   
-    this.dispatchService
-      .updateIsPacked(this.packedItems)
-      .subscribe(
-        (response) => {
-          if (response && response.success) {
-            console.log('Items updated successfully:', response.message || response);
+  //   this.dispatchService
+  //     .updateIsPacked(this.packedItems)
+  //     .subscribe(
+  //       (response) => {
+  //         if (response && response.success) {
+  //           console.log('Items updated successfully:', response.message || response);
              
-          } else {
-            console.log('Update failed:', response.message || 'Unknown error occurred');
-          }
-          this.isLoading = false;
+  //         } else {
+  //           console.log('Update failed:', response.message || 'Unknown error occurred');
+  //         }
+  //         this.isLoading = false;
 
-          // window.location.reload();
-          this.getPreMadePackages(this.page, this.itemsPerPage);
-        },
-        (error) => {
-          if (error.status === 401) {
-            console.log('Unauthorized access. Maybe redirect to login?');
-          } else {
-            console.log('An unexpected error occurred while updating items.');
-          }
-          this.isLoading = false;
-          this.getPreMadePackages(this.page, this.itemsPerPage);
-          // window.location.reload();
-        }
-      );
+  //         // window.location.reload();
+  //         this.getPreMadePackages(this.page, this.itemsPerPage);
+  //       },
+  //       (error) => {
+  //         if (error.status === 401) {
+  //           console.log('Unauthorized access. Maybe redirect to login?');
+  //         } else {
+  //           console.log('An unexpected error occurred while updating items.');
+  //         }
+  //         this.isLoading = false;
+  //         this.getPreMadePackages(this.page, this.itemsPerPage);
+  //         // window.location.reload();
+  //       }
+  //     );
       
-      this.getPreMadePackages(this.page, this.itemsPerPage);
-  }
+  //     this.getPreMadePackages(this.page, this.itemsPerPage);
+  // }
 
 
 

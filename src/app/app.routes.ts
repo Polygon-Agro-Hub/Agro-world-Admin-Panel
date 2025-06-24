@@ -139,6 +139,9 @@ import { EditDistributionOfficerComponent } from './application/distribution-hub
 import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
 import{RetailComplaintsComponent} from './application/Complaints/retail-complaints/retail-complaints.component';
 import {SelectedRetailComplaintsComponent} from './application/Complaints/selected-retail-complaints/selected-retail-complaints.component'
+import { TodoDefinePremadePackagesComponent } from './application/procurement-section/todo-define-premade-packages/todo-define-premade-packages.component';
+import { PackageItemViewComponent } from './application/dispatch-section/package-item-view/package-item-view.component';
+import { AdditionalItemsComponent } from './application/dispatch-section/additional-items/additional-items.component';
 export const routes: Routes = [
   {
     path: '',
@@ -686,6 +689,10 @@ export const routes: Routes = [
             path: 'define-packages',
             component: DefinePackagesComponent,
           },
+          {
+            path: 'todo-define-premade-packages',
+            component: TodoDefinePremadePackagesComponent,
+          },
         ],
       },
 
@@ -699,6 +706,16 @@ export const routes: Routes = [
           {
             path: 'salesdash-orders',
             component: SalesdashOrdersComponent,
+          },
+
+          {
+            path: 'package-items',
+            component: PackageItemViewComponent,
+          },
+
+          {
+            path: 'additional-items',
+            component: AdditionalItemsComponent,
           },
         ],
       },

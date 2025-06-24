@@ -164,32 +164,59 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
           throw new Error('Invalid response structure from API');
         }
 
-        this.orderDetails = response.packages.map((pkg: any) => ({
-          packageId: pkg.packageId,
-          displayName: pkg.displayName,
-          productPrice:
-            typeof pkg.productPrice === 'string'
-              ? parseFloat(pkg.productPrice)
-              : pkg.productPrice,
-          invNo: response.invNo,
-          productTypes: pkg.productTypes.map((pt: any) => ({
-            id: pt.id,
-            typeName: pt.typeName,
-            shortCode: pt.shortCode,
-            productId: pt.productId || null,
-            selectedProductPrice: pt.price || undefined,
-            quantity: pt.qty || undefined,
-            calculatedPrice: pt.price && pt.qty ? pt.price * pt.qty : undefined,
-            displayName: pt.displayName || undefined,
-            productDescription: pt.productDescription || undefined, // Add this
-            qty: pt.qty,
-            price: pt.price,
-          })),
-        }));
+        this.orderDetails = response.packages.map((pkg: any) => {
+          // First map the basic package info
+          const packageDetail: OrderDetailItem = {
+            packageId: pkg.packageId,
+            displayName: pkg.displayName,
+            productPrice:
+              typeof pkg.productPrice === 'string'
+                ? parseFloat(pkg.productPrice)
+                : pkg.productPrice,
+            invNo: response.invNo,
+            productTypes: [],
+          };
+
+          // Then map each product type with the correct id (orderpackageitems.id)
+          if (pkg.productTypes && Array.isArray(pkg.productTypes)) {
+            packageDetail.productTypes = pkg.productTypes.map((pt: any) => {
+              const productType: ProductTypes = {
+                id: pt.id, // This must be the orderpackageitems.id from database
+                typeName: pt.typeName,
+                shortCode: pt.shortCode,
+                productId: pt.productId || null,
+                selectedProductPrice: pt.price || undefined,
+                quantity: pt.qty || undefined,
+                calculatedPrice:
+                  pt.price && pt.qty ? pt.price * pt.qty : undefined,
+                displayName: pt.displayName || undefined,
+                productDescription: pt.productDescription || undefined,
+                // These are kept for backward compatibility
+              };
+
+              // Find and set the display name from marketplace items if not provided
+              if (pt.productId && !productType.displayName) {
+                const product = this.marketplaceItems.find(
+                  (m) => m.id === pt.productId
+                );
+                if (product) {
+                  productType.displayName = product.displayName;
+                }
+              }
+
+              return productType;
+            });
+          }
+
+          return packageDetail;
+        });
 
         this.invoiceNumber = response.invNo;
         this.calculateTotalPrice();
         this.loading = false;
+
+        // After loading details, fetch package items to get complete data
+        this.fetchPackageItems(id);
       },
       error: (err) => {
         console.error('Error fetching order details:', err);
@@ -230,7 +257,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
 
-    // Find the selected product
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
@@ -238,29 +264,38 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
-      // Set calculated price to normal price by default (for 1 unit)
-      productType.calculatedPrice = selectedProduct.discountedPrice;
+      productType.displayName = selectedProduct.displayName;
+
+      // Update calculated price based on current quantity
+      if (productType.quantity && productType.quantity > 0) {
+        productType.calculatedPrice =
+          productType.quantity * selectedProduct.discountedPrice;
+      } else {
+        productType.calculatedPrice = selectedProduct.discountedPrice; // Default to unit price
+      }
     } else {
       productType.productId = null;
       productType.selectedProductPrice = 0;
       productType.calculatedPrice = 0;
+      productType.quantity = undefined;
     }
-    productType.quantity = undefined; // Reset quantity
+    this.calculateTotalPrice();
   }
 
   onQuantityChanged(productType: ProductTypes, event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    const quantity = parseFloat(inputElement.value);
+    const quantity = Number(inputElement.value);
 
-    if (isNaN(quantity)) {
+    if (isNaN(quantity) || quantity <= 0) {
       productType.quantity = undefined;
-      productType.calculatedPrice = productType.selectedProductPrice || 0;
+      productType.calculatedPrice = 0;
     } else {
       productType.quantity = quantity;
-      productType.calculatedPrice =
-        quantity * (productType.selectedProductPrice || 0);
+      // Ensure we have a valid selectedProductPrice
+      const unitPrice = productType.selectedProductPrice || 0;
+      productType.calculatedPrice = quantity * unitPrice;
     }
-    this.calculateTotalPrice(); // Add this line
+    this.calculateTotalPrice();
   }
 
   getPackageTotal(packageItem: OrderDetailItem): number {
@@ -473,5 +508,149 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       (sum, pkg) => sum + this.getPackageTotal(pkg),
       0
     );
+  }
+
+  async onUpdate() {
+    // Check if there are any order details
+    if (!this.orderDetails.length) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Order Details',
+        text: 'No order details available to update',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    // Prepare update data - group products by packageId
+    const updateData: { [key: number]: any[] } = {};
+
+    this.orderDetails.forEach((pkg) => {
+      const productsToUpdate = pkg.productTypes
+        .filter(
+          (pt) =>
+            pt.productId && pt.quantity && pt.calculatedPrice !== undefined
+        )
+        .map((pt) => ({
+          id: pt.id, // orderpackageitems.id from database
+          productType: pt.id, // product type ID
+          productId: pt.productId,
+          qty: pt.quantity,
+          price: pt.calculatedPrice, // Send the TOTAL price (quantity × unit price)
+          // If backend expects unit price, use this instead:
+          // price: pt.selectedProductPrice
+        }));
+
+      if (productsToUpdate.length > 0) {
+        updateData[pkg.packageId] = productsToUpdate;
+      }
+    });
+
+    // Check if we have any valid packages to update
+    if (Object.keys(updateData).length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Valid Items',
+        text: 'No valid package items to update. Please ensure all items have a product selected, quantity, and price.',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    console.log('Update data being sent:', JSON.stringify(updateData, null, 2));
+
+    Swal.fire({
+      title: 'Updating...',
+      html: 'Please wait while we update your order',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      // Process each package group
+      const updateOperations = Object.entries(updateData).map(
+        async ([packageId, products]) => {
+          try {
+            const updateResponse = await this.procurementService
+              .updateOrderPackageItems(Number(packageId), products)
+              .toPromise();
+
+            console.log(
+              `Items updated for package ${packageId}:`,
+              updateResponse
+            );
+
+            // Update local data with the response
+            const updatedPackage = this.orderDetails.find(
+              (p) => p.packageId === Number(packageId)
+            );
+            if (updatedPackage) {
+              products.forEach((updatedProduct) => {
+                const productType = updatedPackage.productTypes.find(
+                  (pt) => pt.id === updatedProduct.productType
+                );
+                if (productType) {
+                  productType.quantity = updatedProduct.qty;
+                  productType.calculatedPrice = updatedProduct.price;
+                  // If backend returns unit price:
+                  // productType.selectedProductPrice = updatedProduct.price;
+                  // productType.calculatedPrice = updatedProduct.price * updatedProduct.qty;
+                }
+              });
+            }
+
+            return { packageId, success: true };
+          } catch (error) {
+            console.error(`Error updating package ${packageId}:`, error);
+            return {
+              packageId,
+              success: false,
+              error: this.getErrorMessage(error),
+            };
+          }
+        }
+      );
+
+      // Execute all operations
+      const results = await Promise.all(updateOperations);
+
+      // Check if all operations were successful
+      const failedPackages = results.filter((r) => !r.success);
+
+      if (failedPackages.length > 0) {
+        // Some packages failed
+        const errorMessages = failedPackages
+          .map((p) => `Package ${p.packageId}: ${p.error}`)
+          .join('<br><br>');
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Partial Success',
+          html: `Some packages couldn't be updated:<br><br>${errorMessages}`,
+          confirmButtonColor: '#3085d6',
+        });
+      } else {
+        // All operations successful
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'All items updated successfully!',
+          confirmButtonColor: '#3085d6',
+        }).then(() => {
+          // Refresh data to ensure UI matches backend
+          this.fetchOrderDetails(this.orderId.toString());
+        });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred while updating your request',
+        confirmButtonColor: '#3085d6',
+      });
+    }
   }
 }

@@ -345,4 +345,34 @@ export class ProcumentsService {
       })
     );
   }
+
+  updateOrderPackageItems(
+    orderPackageId: number,
+    products: any[]
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Structure the data to match the endpoint's expected format
+    const requestData = {
+      orderPackageId: orderPackageId,
+      products: products,
+    };
+
+    // Log the data being sent
+    console.log('Updating package items:', requestData);
+
+    return this.http
+      .put(`${this.apiUrl}procument/update-order-package-items`, requestData, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in updateOrderPackageItems:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
 }

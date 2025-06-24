@@ -8,12 +8,17 @@ import { TokenService } from "../token/services/token.service";
   providedIn: "root",
 })
 export class ComplaintsService {
+  replyToComplaint(complainId: string, messageContent: string) {
+    throw new Error("Method not implemented.");
+  }
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
   ) {}
+
+  
 
   getAllSystemApplications(): Observable<any> {
     const headers = new HttpHeaders({
@@ -177,4 +182,8 @@ export class ComplaintsService {
     });
   }
 
+  
+
 }
+
+

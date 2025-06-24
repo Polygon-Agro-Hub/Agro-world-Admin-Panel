@@ -1,0 +1,274 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div>
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div
+  class="pt-5 pr-12 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+>
+  <div>
+    <div class="text-center mb-4">
+     <p class="text-[#292929] text-[14px] dark:text-textDark md:text-[18px]">
+  Ref No: {{ complain.refNo }}
+</p>
+
+      <p class="text-[#292929] text-[14px] dark:text-textDark md:text-[18px]">
+        Received: {{ complain.createdAt }}
+      </p>
+    </div>
+
+    <div class="flex flex-row mb-6 justify-between">
+      <label class="block text-[#534E4E] text-[12px] md:text-[16px] mb-2 mr-12 dark:text-textDark"
+        >Category</label
+      >
+      <textarea
+        class="w-full text-[#534E4E] text-[12px] md:text-[16px] p-4 border rounded-lg bg-white dark:text-textDark dark:bg-tileBlack"
+        style="border-color: #D9D9D9;"
+        rows="1"
+        [value]="complain.complainCategory"
+        disabled
+      ></textarea>
+    </div>
+
+    <div class="flex flex-row mb-6 justify-between">
+      <label class="block text-gray-700 mb-2 mr-10 dark:text-textDark"
+        >Complaint</label
+      >
+      <textarea
+        class="w-full p-4  border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+        style="border-color: #D9D9D9;"
+        rows="4"
+        [value]="complain.complain"
+        disabled
+      ></textarea>
+    </div>
+
+   <div class="flex flex-row mb-6 justify-between">
+  <label class="block text-[#534E4E] text-[12px] md:text-[16px] mb-2 mr-10  dark:text-textDark">Photos</label>
+
+  <!-- Group container for hover effect -->
+  <div
+    class="group relative w-full p-4 ml-5 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack overflow-hidden"
+  >
+    <!-- Blurred overlay shown on hover -->
+    <div
+      class="absolute inset-0 bg-black/30 backdrop-blur-sm z-10 opacity-0 group-hover:opacity-100 transition duration-300 rounded-lg"
+    ></div>
+
+    <!-- Eye icon shown on hover -->
+    <div
+      class="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
+    >
+      <span
+        class="text-white text-2xl bg-opacity-60 rounded-full p-3 cursor-pointer"
+        (click)="openImageViewer(0)"
+      >
+        <i class="fa-solid fa-eye"></i>
+
+      </span>
+    </div>
+
+    <!-- Image grid (z-0 so it's behind the blur and icon) -->
+    <div class="image-gallery relative  text-[#534E4E] dark:bg-tileBlack text-[12px] md:text-[16px] z-0 flex flex-wrap w-full">
+      <div *ngIf="sanitizedImageUrls.length === 0" class="w-full text-center">
+        No images available
+      </div>
+
+      <div
+        *ngFor="let imageUrl of sanitizedImageUrls | slice:0:6; let i = index"
+        class="w-1/6 p-1"
+      >
+        <img
+          [src]="imageUrl"
+          alt="Complaint image {{ i + 1 }}"
+          class="w-full h-auto rounded object-cover cursor-pointer"
+          (error)="handleImageError($event)"
+          (click)="openImageViewer(i)"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="flex flex-row justify-between">
+        <label class="block text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark mb-2"
+          >Complainant </label
+        >
+        <input
+          type="text"
+          [value]="complain.firstName"
+          class="w-full p-4 ml-5 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+          style="border-color: #D9D9D9;"
+          disabled
+        />
+      </div>
+      <div class="flex flex-row justify-between">
+        <label class="block text-gray-700 dark:text-textDark mb-2"
+          ><p>Customer</p>Contact </label
+        >
+        <input
+          type="text"
+          [value]="complain.farmerPhone"
+          class="w-full p-4 border ml-5 rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+          style="border-color: #D9D9D9;"
+          disabled
+        />
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button
+        (click)="showReplyDialog(complain.language)"
+        class="bg-blue-500 text-white py-4 px-4 rounded-lg hover:bg-blue-600"
+      >
+        Send Message
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Reply Dialog -->
+<p-dialog
+  header="Reply as AgroWorld"
+  [(visible)]="display"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '600px' }"
+  [contentStyle]="{ padding: '0' }"
+>
+  <div class="dialog-header text-center">
+    <i class="fa-regular fa-envelope" style="font-size: 2rem; color: #999"></i>
+    <h3 class="header-title">Reply as AgroWorld</h3>
+  </div>
+
+  <div class="dialog-content">
+    <p>Dear <strong>{{ farmerName }}</strong>,</p>
+    <p>We are pleased to inform you that your complaint has been resolved.</p>
+
+    <div class="message-box">
+      <textarea
+        [(ngModel)]="messageContent"
+        placeholder="Add your message here..."
+        rows="5"
+        style="
+          width: 100%;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 0.5rem;
+          font-size: 1rem;
+          background-color: #ffffff;
+          color: #333;
+        "
+      ></textarea>
+    </div>
+
+    <p>
+      If you have any further concerns or questions, feel free to reach out. Thank
+      you for your patience and understanding.
+    </p>
+
+    <p>
+      Sincerely,<br />
+      AgroWorld Customer Support Team
+    </p>
+  </div>
+
+  <p-footer>
+    <div class="dialog-footer text-right ">
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-secondary"
+        style="margin-right: 8px"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Send"
+        class="p-button-primary"
+        (click)="submitComplaint()"
+      ></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="modalVisible"
+  [modal]="true"
+  [closable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: '470px', 'border-radius': '20px', position: 'relative' }"
+  [contentStyle]="{ 'text-align': 'center', paddingTop: '0.5rem' }"
+  styleClass="dark:bg-red-900 bg-white rounded-[20px]"
+>
+  <button
+    (click)="modalVisible = false"
+    class="w-8 h-8 flex items-center justify-center rounded-full text-white dark:text-textDark"
+    style="background-color: #D9D9D9; border: none; position: absolute; top: 8px; right: 8px;"
+    aria-label="Close"
+  >
+    <i class="fa-solid fa-xmark text-sm"></i>
+  </button>
+
+  <!-- Dialog Inner Content Container -->
+  <div class="bg-white dark:bg-tileBlack rounded-[20px] p-4">
+    <!-- Top Info Text -->
+    <div *ngIf="sanitizedImageUrls.length > 0">
+      <h3 class="text-md font-semibold text-gray-800 dark:text-textDark mb-2">
+        {{ sanitizedImageUrls.length }} Photos were provided
+      </h3>
+      <p class="text-sm text-gray-500 dark:text-textDark mb-4">
+        {{ currentIndex + 1 }} out of {{ sanitizedImageUrls.length }}
+      </p>
+
+      <!-- Image Navigation -->
+      <div class="relative flex items-center justify-center">
+        <!-- Left Arrow -->
+        <button
+          class="absolute left-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
+          (click)="prevImage()"
+          [disabled]="currentIndex === 0"
+          aria-label="Previous Image"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Image Box -->
+        <div
+          class="rounded-md border border-[#D9D9D9] dark:border-[#444444] p-2 inline-block"
+        >
+          <img
+            [src]="sanitizedImageUrls[currentIndex]"
+            alt="Complaint image"
+            class="max-w-[250px] max-h-[250px] object-contain rounded shadow-md"
+            (error)="handleImageError($event)"
+          />
+        </div>
+
+        <!-- Right Arrow -->
+        <button
+          class="absolute right-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
+          (click)="nextImage()"
+          [disabled]="currentIndex === sanitizedImageUrls.length - 1"
+          aria-label="Next Image"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Image Message -->
+    <div *ngIf="sanitizedImageUrls.length === 0">
+      <p class="text-gray-500 dark:text-textDark">No images available</p>
+    </div>
+  </div>
+</p-dialog>
+
+
+

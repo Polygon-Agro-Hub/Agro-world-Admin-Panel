@@ -1,0 +1,260 @@
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+
+interface Complaint {
+  id: string;
+  refNo: string;
+  complainCategory: string;
+  firstName: string;
+  lastName: string;
+  contactNumber: string;
+  createdAt: string;
+  status: string;
+  reply?: string;
+  complain: string;
+}
+
+interface DropdownOption {
+  label: string;
+  value: string;
+}
+
+interface ApiResponse {
+  status: boolean;
+  data: any[];
+  total?: number;
+}
+
+@Component({
+  selector: 'app-retail-complaints',
+  standalone: true,
+  imports: [
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    InputTextareaModule,
+    DropdownModule,
+    FormsModule,
+    NgxPaginationModule,
+    LoadingSpinnerComponent,
+  ],
+  templateUrl: './retail-complaints.component.html',
+  styleUrls: ['./retail-complaints.component.css'],
+  providers: [DatePipe],
+})
+export class RetailComplaintsComponent implements OnInit {
+
+  complaints: Complaint[] = [];
+  filteredComplaints: Complaint[] = [];
+
+  isLoading = false;
+  display = false;
+  messageContent = '';
+  selectedComplaint = {} as Complaint;
+
+  // filters + pagination
+  searchText = '';
+  rpst: string | null = null;
+  filterComCategory: string | null = null;
+  filterStatus: string | null = null;
+  totalItems = 0;
+  itemsPerPage = 10;
+  page = 1;
+
+  // dropdown data
+  replyStatus: DropdownOption[] = [
+    { label: 'Yes', value: 'Yes' },
+    { label: 'No', value: 'No' },
+  ];
+  comCategories: DropdownOption[] = [];
+  status: DropdownOption[] = [];
+
+  constructor(
+    private router: Router,
+    private datePipe: DatePipe,
+    private http: HttpClient
+  ) {}
+
+  ngOnInit(): void {
+    this.fetchComplaints();
+    this.fetchComplaintCategories();
+  }
+
+  private fetchComplaints(): void {
+    this.isLoading = true;
+    const token = localStorage.getItem('AdminLoginToken');
+    if (!token) {
+      alert('No authentication token found. Please log in.');
+      this.router.navigate(['login']);
+      this.isLoading = false;
+      return;
+    }
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    this.http
+      .get<ApiResponse>(
+        'http://localhost:3000/agro-api/admin-api/api/complain/get-marketplace-complaint',
+        { headers }
+      )
+      .pipe(
+        catchError(err => {
+          this.isLoading = false;
+          if (err.status === 401) {
+            alert('You are not authorized. Please log in.');
+            this.router.navigate(['login']);
+          } else {
+            alert('Failed to load complaints. Please try again later.');
+          }
+          return throwError(() => err);
+        })
+      )
+      .subscribe(resp => {
+        this.complaints = resp.data.map(item => ({
+          id: item.id.toString(),
+          refNo: item.refNo,
+          complainCategory: item.categoryEnglish,
+          firstName: item.firstName,
+          lastName: item.lastName,
+          contactNumber: item.ContactNumber,
+          createdAt: this.formatDate(item.createdAt),
+          status: this.normalizeStatus(item.status, item.createdAt),
+          reply: item.reply || undefined,
+          complain: item.complain,
+        }));
+        this.filteredComplaints = [...this.complaints];
+        this.totalItems = this.filteredComplaints.length;
+        this.comCategories = Array.from(
+          new Set(this.complaints.map(c => c.complainCategory))
+        ).map(cat => ({ label: cat, value: cat }));
+        this.status = Array.from(
+          new Set(this.complaints.map(c => c.status))
+        ).map(st => ({ label: st, value: st }));
+        this.isLoading = false;
+      });
+  }
+
+  private fetchComplaintCategories(): void {
+    const token = localStorage.getItem('AdminLoginToken');
+    if (!token) return;
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    this.http
+      .get<any>(
+        'http://localhost:3000/agro-api/admin-api/api/complain/get-all-complain-category',
+        { headers }
+      )
+      .subscribe({
+        next: resp => {
+          this.comCategories = resp.map((c: any) => ({
+            label: c.categoryEnglish,
+            value: c.categoryEnglish,
+          }));
+        },
+        error: err => console.error('Category fetch error', err),
+      });
+  }
+
+  private formatDate(dateString: string): string {
+    return (
+      this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') ||
+      ''
+    );
+  }
+
+  private normalizeStatus(status: string, createdAt: string): string {
+    if (status.toLowerCase() === 'opened') {
+      const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
+      return diff >= 3 ? 'Pending' : 'Assigned';
+    }
+    return status;
+  }
+
+  /** apply dropdown & text search together */
+ applyFilters(): void {
+  const txt = this.searchText.trim().toLowerCase();
+
+  this.filteredComplaints = this.complaints.filter(item => {
+    const matchesSearch = !txt || [
+      item.refNo,
+      item.complainCategory,
+      item.firstName,
+      item.lastName,
+      item.contactNumber
+    ].some(field => field?.toLowerCase().includes(txt));
+
+    const matchesReply =
+      !this.rpst || (this.rpst === 'Yes' ? !!item.reply : !item.reply);
+
+    const matchesCat =
+      !this.filterComCategory || item.complainCategory === this.filterComCategory;
+
+    const matchesStat =
+      !this.filterStatus || item.status === this.filterStatus;
+
+    return matchesSearch && matchesReply && matchesCat && matchesStat;
+  });
+
+  this.totalItems = this.filteredComplaints.length;
+  this.page = 1;
+}
+
+
+searchComplain(): void {
+  console.log('[searchComplain] searchText =', this.searchText);
+  this.applyFilters();
+}
+
+  /** bound to clear-* button */
+  clearSearch(): void {
+    this.searchText = '';
+    this.applyFilters();
+  }
+
+  /** bound to React-style dropdown change */
+  regStatusFil(): void {
+    this.applyFilters();
+  }
+
+  onPageChange(p: number): void {
+    this.page = p;
+  }
+
+  /* navigation & dialogs */
+  goBack(): void {
+    this.router.navigate(['/complaints']);
+  }
+
+  navigateSelectComplain(id: string): void {
+    this.router.navigate([`/complaints/selected-retail-complaints/${id}`]);
+  }
+
+  onSearchTextChange(event: string): void {
+  this.searchText = event; // Update searchText
+  this.applyFilters(); // Apply filters immediately
+}
+
+  showReplyDialog(c: Complaint): void {
+    this.selectedComplaint = { ...c };
+    this.messageContent = c.reply || '';
+    this.display = true;
+  }
+
+  hideDialog(): void {
+    this.display = false;
+    this.messageContent = '';
+  }
+
+  submitReply(): void {
+    // your existing POST logic…
+  }
+}

@@ -137,6 +137,8 @@ import { ViewDeliveryChargesComponent } from './application/marketplace/view-del
 import { UploadDeliveryChargesComponent } from './application/marketplace/upload-delivery-charges/upload-delivery-charges.component';
 import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
 import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
+import{RetailComplaintsComponent} from './application/Complaints/retail-complaints/retail-complaints.component';
+import {SelectedRetailComplaintsComponent} from './application/Complaints/selected-retail-complaints/selected-retail-complaints.component'
 export const routes: Routes = [
   {
     path: '',
@@ -785,6 +787,7 @@ export const routes: Routes = [
                 path: 'upload-delivery-charges',
                 component: UploadDeliveryChargesComponent,
               },
+           
             ],
           },
         ],
@@ -858,6 +861,14 @@ export const routes: Routes = [
           {
             path: 'view-selected-sales-dash-complain/:id/:firstName',
             component: ViewSelectedSalesDashComplainComponent,
+          },
+              {
+                path: 'retail-complaints',
+                component: RetailComplaintsComponent,
+              },
+                {
+            path: 'selected-retail-complaints/:id',
+            component: SelectedRetailComplaintsComponent,
           },
         ],
       },

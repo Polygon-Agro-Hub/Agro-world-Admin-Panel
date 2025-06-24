@@ -15,6 +15,7 @@ export class ComplaintsDashbordComponent {
   popupVisibleCollectionCenters = false;
   popupVisibleCategories = false;
   popupVisibleSalesAgents = false;
+  popupVisibleMarketPlace = false;
 
   constructor(private router: Router) {}
 
@@ -23,6 +24,8 @@ export class ComplaintsDashbordComponent {
     this.popupVisiblePlantCare = false;
     this.popupVisibleCollectionCenters = false;
     this.popupVisibleSalesAgents = false;
+    this.popupVisibleMarketPlace = false;
+
   }
 
   togglePopupCategories() {
@@ -43,6 +46,11 @@ export class ComplaintsDashbordComponent {
   togglePopupSalesAgents() {
     this.closeAllPopups();
     this.popupVisibleSalesAgents = !this.popupVisibleSalesAgents;
+  }
+
+   togglepopupVisibleMarketPlace() {
+    this.closeAllPopups();
+    this.popupVisibleMarketPlace = !this.popupVisibleMarketPlace;
   }
 
   navigationPath(path: string) {

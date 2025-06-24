@@ -186,7 +186,9 @@
               
               <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
 
-                <button class="w-6 h-6 mr-3" 
+                <button 
+                (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.packageProductsCount, item.displayName, item.fullTotal)"
+                class="w-6 h-6 mr-3" 
                   [class.text-yellow-500]="item.packageProductStatus === 'Opened'"
                   [class.text-green-500]="item.packageProductStatus === 'Completed'"
                   [class.text-red-500]="item.packageProductStatus === 'Pending'"
@@ -588,10 +590,10 @@
         class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
         Cancel
       </button>
-      <button (click)="saveCheckedItems()"
+      <!-- <button (click)="saveCheckedItems()"
         class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
         Save
-      </button>
+      </button> -->
     </div>
   </div>
 </div>

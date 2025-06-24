@@ -187,7 +187,7 @@ export class PackageItemViewComponent implements OnInit {
       },
       (err) => {
         console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Updated Unsuccessfull', 'error');
+        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
       }
     );
   }

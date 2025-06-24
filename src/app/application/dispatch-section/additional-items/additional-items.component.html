@@ -13,7 +13,7 @@
 
             <div class="">
                 <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
-                <h2 class="  text-[#212121] dark:text-white">{{ name }} : Rs.{{fullTotal | number: '1.2-2'}}</h2>
+                <h2 class="  text-[#212121] dark:text-white">Additional Items : Rs.{{fullTotal | number: '1.2-2'}}</h2>
             </div>
         </div>
 
@@ -22,9 +22,9 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                 <thead class="">
                     <tr>
-                        <th class=" text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                        <!-- <th class=" text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
 
-                        </th>
+                        </th> -->
                         <th class="px-6 py-3 text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             ITEM
                             ({{total}})</th>
@@ -49,17 +49,17 @@
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 ">
 
-                    <tr *ngFor=" let item of packageItemsArr">
-                        <td class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
+                    <tr *ngFor=" let item of additionalItemsArr">
+                        <!-- <td class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
                             <div>
                                 <button
                                     (click)="openPopUp(item.productId, item.displayName, item.quantity, item.price)"><i
                                         class="fa-solid fa-square-minus text-[red] text-lg"></i></button>
                             </div>
 
-                        </td>
+                        </td> -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
-                            {{ item.displayName || 'N/A' }}
+                            {{ item.productName || 'N/A' }}
                         </td>
 
                         <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300 ">
@@ -67,7 +67,7 @@
                         </td>
 
                         <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
-                            {{ (item.quantity != null && item.quantity < 1) ? 'g' : 'kg' }} </td>
+                            {{ item.unitType}} </td>
 
                                 <!-- <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300">
               Rs. {{ item.discountedPrice != null ? item.discountedPrice : '0.00' }}
@@ -116,13 +116,13 @@
 
 
 
-<div *ngIf="isPopupOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+<!-- <div *ngIf="isPopupOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <div class="max-w-5xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto max-h-[800px]">
 
-        <!-- Title -->
+  
         <h2 class="text-lg font-normal text-center text-[#212121] dark:text-white">Replace Product</h2>
 
-        <!-- Selected Product Info -->
+
         <div class="flex justify-center mt-4 mb-10">
             <div class="border-2 border-dashed border-red-400 rounded-md p-4 text-center w-1/2">
                 <p class="text-sm text-[#8492A3] dark:text-gray-200">Selected product</p>
@@ -136,9 +136,9 @@
         <div class="border-b border-gray-300 dark:border-gray-600 w-full mb-6"></div>
 
 
-        <!-- Replace Product Form Row -->
+        
         <div class="flex flex-row gap-6 items-center mb-4">
-            <!-- Product Name Dropdown -->
+    
             <div class="w-1/3">
                 <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">PRODUCT NAME</label>
                 <select class="w-full border rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700"
@@ -156,8 +156,6 @@
 
 
 
-
-            <!-- Quantity Input -->
             <div class="w-2/3 flex flex-row gap-8">
                 <div class="w-1/3">
                     <label class="block text-sm text-center font-medium text-gray-500 dark:text-gray-300 mb-2">
@@ -175,7 +173,6 @@
                   </div>
                   
 
-                <!-- Unit Price -->
                 <div class="w-1/3">
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">UNIT PRICE
                         (RS.)</label>
@@ -184,7 +181,7 @@
 
                 </div>
 
-                <!-- Total -->
+                
                 <div class="w-1/3">
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">TOTAL (RS.)</label>
                     <input type="number" readonly [(ngModel)]="totalPrice" placeholder="----"
@@ -197,7 +194,7 @@
 
         <div class="border-b border-gray-300 dark:border-gray-600 w-full mt-4"></div>
 
-        <!-- Buttons -->
+
         <div class="flex justify-end mt-6 space-x-4">
             <button (click)="onCancelPopup()"
                 class="px-5 py-2  bg-[#74788D] text-[#D3D3D3] rounded-md hover:bg-gray-500">
@@ -213,4 +210,4 @@
             </button>
         </div>
     </div>
-</div>
+</div> -->

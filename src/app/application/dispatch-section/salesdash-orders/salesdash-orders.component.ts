@@ -411,16 +411,14 @@ selectedInvoiceIdAdditional: number = 0;
     this.router.navigate(['/dispatch/package-items'], {
       queryParams: { id, invNo, name, total, fullTotal },
     });
-    // this.isViewPackageItemsPopupOpen = true;
-    // console.log(this.isViewPackageItemsPopupOpen)
-    // console.log(id, name, inv)
-    // this.orderId = id;
-    // this.orderPrice = price;
-    // this.orderName = name;
-    // this.orderInv = inv;
+  }
 
-
-    // this.fetchPackageItems(id)
+  navigateToAdditionalItemView(id: number, invNo: string, total: number, name:string, fullTotal: number) {
+    console.log(id, invNo, name, total);
+    this.router.navigate(['/dispatch/additional-items'], {
+      queryParams: { id, invNo, name, total, fullTotal },
+    });
+    
   }
 
   fetchPackageItems(id: number) {

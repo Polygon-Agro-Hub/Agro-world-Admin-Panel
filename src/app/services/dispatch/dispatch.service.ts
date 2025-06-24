@@ -136,7 +136,31 @@ export class DispatchService {
       return this.http.post<any>(url, { productId, quantity, totalPrice, id, previousProductId }, { headers });
     }
 
+    updateAdditionalItemData(array: any, id: number): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+    
+      const url = `${this.apiUrl}dispatch/update-additional-item-data`;
+    
+      // Send the array as a named field in the body
+      return this.http.post<any>(url, { additionalItems: array, id}, { headers });
+    }
 
+    getAdditionalItems(
+      id: number
+    ): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      });
+  
+  
+      let url = `${this.apiUrl}dispatch/get-additional-items?id=${id}`;
+  
+      return this.http.get<any>(url, { headers });
+    }
 
 
 

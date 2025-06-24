@@ -213,6 +213,7 @@
               </td>
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 <button
+                (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)"
                   class="w-6 h-6 mr-3"
                   [disabled]="item.additionalProductsCount === 0"
                   [ngClass]="{
@@ -247,29 +248,7 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 {{ item.fullTotal | number: '1.2-2' }}
               </td>
-              <!-- <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                {{ item.packingStatus }}
-              </td>   -->
-              <!-- <td class="px-4 py-3 text-green-500 text-center">
-                <div *ngIf="item.packingStatus == 'Todo'">
-                  <span
-                    class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
-                  </span>
-                </div>
-                <div *ngIf="item.packingStatus == 'Pending'">
-                  <span
-                    class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
-                  </span>
-                </div>
-                <div *ngIf="item.packingStatus == 'Opened'">
-                  <span
-                    class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
-                  </span>
-                </div>
-              </td> -->
+              
 
               <td class="px-4 py-3 text-center">
                 <ng-container *ngIf="item.combinedStatus === 'Pending'">

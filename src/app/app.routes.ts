@@ -142,6 +142,7 @@ import {SelectedRetailComplaintsComponent} from './application/Complaints/select
 import { TodoDefinePremadePackagesComponent } from './application/procurement-section/todo-define-premade-packages/todo-define-premade-packages.component';
 import { PackageItemViewComponent } from './application/dispatch-section/package-item-view/package-item-view.component';
 import { AdditionalItemsComponent } from './application/dispatch-section/additional-items/additional-items.component';
+import { CustomAdditionalItemsComponent } from './application/dispatch-section/custom-additional-items/custom-additional-items.component';
 export const routes: Routes = [
   {
     path: '',
@@ -716,6 +717,11 @@ export const routes: Routes = [
           {
             path: 'additional-items',
             component: AdditionalItemsComponent,
+          },
+
+          {
+            path: 'custom-additional-items',
+            component: CustomAdditionalItemsComponent,
           },
         ],
       },

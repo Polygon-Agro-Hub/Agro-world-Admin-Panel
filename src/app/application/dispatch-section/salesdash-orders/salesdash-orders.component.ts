@@ -88,7 +88,7 @@ interface SelectdPackage {
 export class SalesdashOrdersComponent {
   search: string = '';
   isLoading = false;
-  status = ['Todo', 'Completed', 'Opened'];
+  status = ['Pending', 'Completed', 'Opened'];
   selectedStatus: any = '';
   date: string = '';
   itemsPerPage: number = 10;
@@ -417,6 +417,13 @@ selectedInvoiceIdAdditional: number = 0;
     console.log(id, invNo, name, total);
     this.router.navigate(['/dispatch/additional-items'], {
       queryParams: { id, invNo, name, total, fullTotal },
+    });
+    
+  }
+
+  navigateToCustomAdditionalItemView(id: number, invNo: string, total: number, fullTotal: number) {
+    this.router.navigate(['/dispatch/custom-additional-items'], {
+      queryParams: { id, invNo, total, fullTotal },
     });
     
   }

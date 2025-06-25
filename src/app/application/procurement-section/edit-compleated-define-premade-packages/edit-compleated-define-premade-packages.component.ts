@@ -21,7 +21,8 @@ interface ProductTypes {
   quantity?: number;
   calculatedPrice?: number;
   displayName?: string;
-  productDescription?: string; // Add this
+  productDescription?: string;
+  productTypeId?: number;
 }
 
 interface MarketplaceItem {
@@ -511,53 +512,30 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   }
 
   async onUpdate() {
-    // Check if there are any order details
-    if (!this.orderDetails.length) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'No Order Details',
-        text: 'No order details available to update',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
+    // First, prepare all the products to be updated
+    const productsToUpdate = this.orderDetails.flatMap((pkg) =>
+      pkg.productTypes.map((pt) => ({
+        id: pt.id, // This should be the orderpackageitems.id from database
+        productId: pt.productId,
+        productType: pt.typeName, // or pt.id if you need the type ID
+        qty: pt.quantity?.toString() || '0',
+        price: pt.calculatedPrice?.toString() || '0',
+        displayName: pt.displayName,
+      }))
+    );
 
-    // Prepare update data - group products by packageId
-    const updateData: { [key: number]: any[] } = {};
+    // Filter out any invalid entries (where id is missing)
+    const validProducts = productsToUpdate.filter((product) => product.id);
 
-    this.orderDetails.forEach((pkg) => {
-      const productsToUpdate = pkg.productTypes
-        .filter(
-          (pt) =>
-            pt.productId && pt.quantity && pt.calculatedPrice !== undefined
-        )
-        .map((pt) => ({
-          id: pt.id, // orderpackageitems.id from database
-          productType: pt.id, // product type ID
-          productId: pt.productId,
-          qty: pt.quantity,
-          price: pt.calculatedPrice, // Send the TOTAL price (quantity × unit price)
-          // If backend expects unit price, use this instead:
-          // price: pt.selectedProductPrice
-        }));
-
-      if (productsToUpdate.length > 0) {
-        updateData[pkg.packageId] = productsToUpdate;
-      }
-    });
-
-    // Check if we have any valid packages to update
-    if (Object.keys(updateData).length === 0) {
+    if (validProducts.length === 0) {
       Swal.fire({
         icon: 'warning',
         title: 'No Valid Items',
-        text: 'No valid package items to update. Please ensure all items have a product selected, quantity, and price.',
+        text: 'No valid items to update. Please ensure all items have an ID.',
         confirmButtonColor: '#3085d6',
       });
       return;
     }
-
-    console.log('Update data being sent:', JSON.stringify(updateData, null, 2));
 
     Swal.fire({
       title: 'Updating...',
@@ -569,86 +547,26 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     });
 
     try {
-      // Process each package group
-      const updateOperations = Object.entries(updateData).map(
-        async ([packageId, products]) => {
-          try {
-            const updateResponse = await this.procurementService
-              .updateOrderPackageItems(Number(packageId), products)
-              .toPromise();
+      // Send the update request
+      const result = await this.procurementService
+        .updateOrderPackageItems(this.orderId, validProducts)
+        .toPromise();
 
-            console.log(
-              `Items updated for package ${packageId}:`,
-              updateResponse
-            );
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Update completed successfully!',
+        confirmButtonColor: '#3085d6',
+      });
 
-            // Update local data with the response
-            const updatedPackage = this.orderDetails.find(
-              (p) => p.packageId === Number(packageId)
-            );
-            if (updatedPackage) {
-              products.forEach((updatedProduct) => {
-                const productType = updatedPackage.productTypes.find(
-                  (pt) => pt.id === updatedProduct.productType
-                );
-                if (productType) {
-                  productType.quantity = updatedProduct.qty;
-                  productType.calculatedPrice = updatedProduct.price;
-                  // If backend returns unit price:
-                  // productType.selectedProductPrice = updatedProduct.price;
-                  // productType.calculatedPrice = updatedProduct.price * updatedProduct.qty;
-                }
-              });
-            }
-
-            return { packageId, success: true };
-          } catch (error) {
-            console.error(`Error updating package ${packageId}:`, error);
-            return {
-              packageId,
-              success: false,
-              error: this.getErrorMessage(error),
-            };
-          }
-        }
-      );
-
-      // Execute all operations
-      const results = await Promise.all(updateOperations);
-
-      // Check if all operations were successful
-      const failedPackages = results.filter((r) => !r.success);
-
-      if (failedPackages.length > 0) {
-        // Some packages failed
-        const errorMessages = failedPackages
-          .map((p) => `Package ${p.packageId}: ${p.error}`)
-          .join('<br><br>');
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Partial Success',
-          html: `Some packages couldn't be updated:<br><br>${errorMessages}`,
-          confirmButtonColor: '#3085d6',
-        });
-      } else {
-        // All operations successful
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'All items updated successfully!',
-          confirmButtonColor: '#3085d6',
-        }).then(() => {
-          // Refresh data to ensure UI matches backend
-          this.fetchOrderDetails(this.orderId.toString());
-        });
-      }
+      // Refresh the data
+      this.fetchOrderDetails(this.orderId.toString());
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error('Error updating order:', err);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'An unexpected error occurred while updating your request',
+        text: 'An unexpected error occurred',
         confirmButtonColor: '#3085d6',
       });
     }

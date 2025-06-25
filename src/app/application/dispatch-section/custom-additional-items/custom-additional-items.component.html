@@ -20,7 +20,7 @@
 
             <div class="">
                 <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
-                <h2 class="  text-[#212121] dark:text-white">Additional Items : Rs.{{fullTotal | number: '1.2-2'}}</h2>
+                <h2 class="  text-[#212121] dark:text-white">Custom Pack : Rs.{{fullTotal | number: '1.2-2'}}</h2>
             </div>
         </div>
 
@@ -56,15 +56,8 @@
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 ">
 
-                    <tr *ngFor=" let item of additionalItemsArr">
-                        <!-- <td class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
-                            <div>
-                                <button
-                                    (click)="openPopUp(item.productId, item.displayName, item.quantity, item.price)"><i
-                                        class="fa-solid fa-square-minus text-[red] text-lg"></i></button>
-                            </div>
-
-                        </td> -->
+                    <tr *ngFor=" let item of customAdditionalItemsArr">
+                    
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
                             {{ item.productName || 'N/A' }}
                         </td>
@@ -75,10 +68,6 @@
 
                         <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
                             {{ item.unitType}} </td>
-
-                                <!-- <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300">
-              Rs. {{ item.discountedPrice != null ? item.discountedPrice : '0.00' }}
-            </td> -->
 
                         <td class="px-6 text-left py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300">
                             Rs. {{ item.discountedPrice != null ? item.discountedPrice : '0.00' }}

@@ -418,7 +418,7 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center"
               >
                 <button 
-                
+                (click)="navigateToCustomAdditionalItemView(item.id, item.invNo, item.productCount, item.fullTotal)"
                 class="w-6 h-6 mr-3" [class.text-[#EBC351]]="item.customItemStatus === 'Opened'"
                 [disabled]="item.productCount === 0"
                 [ngClass]="{
@@ -444,21 +444,21 @@
                 {{ item.fullTotal | number: '1.2-2'}}
               </td>
               <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                <div *ngIf="item.packingStatus == 'Completed'">
+                <div *ngIf="item.customItemStatus == 'Completed' && item.productCount > 0">
                   <span
                     class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
+                    {{ item.customItemStatus }}
                   </span>
                 </div>
-                <div *ngIf="item.packingStatus == 'Pending'">
+                <div *ngIf="item.customItemStatus == 'Pending' || item.productCount === 0">
                   <span class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
+                    {{ item.customItemStatus }}
                   </span>
                 </div>
-                <div *ngIf="item.packingStatus == 'Opened'">
+                <div *ngIf="item.customItemStatus == 'Opened' && item.productCount > 0">
                   <span
                     class="w-24 h-7 inline-block bg-yellow-100 text-yellow-500 font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
+                    {{ item.customItemStatus }}
                   </span>
                 </div>
 

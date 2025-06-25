@@ -515,12 +515,12 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     // First, prepare all the products to be updated
     const productsToUpdate = this.orderDetails.flatMap((pkg) =>
       pkg.productTypes.map((pt) => ({
-        id: pt.id, // orderpackageitems.id from database
+        id: pt.id,
         productId: pt.productId,
         productType: pt.typeName,
         productTypeId: pt.productTypeId,
         qty: pt.quantity?.toString() || '0',
-        price: pt.calculatedPrice?.toString() || '0', // Use selectedProductPrice instead of calculatedPrice
+        price: pt.calculatedPrice?.toString() || '0',
         displayName: pt.displayName,
       }))
     );

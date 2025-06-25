@@ -39,6 +39,14 @@ interface PackageItem {
   productTypes: ProductTypes[];
 }
 
+interface AdditionalItem {
+  id: number;
+  qty: number;
+  unit: string;
+  displayName: string;
+  quantity?: number; // Optional if you want to allow editing
+}
+
 @Component({
   selector: 'app-edit-compleated-define-premade-packages',
   standalone: true,
@@ -50,12 +58,15 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
   packageItems: any[] = [];
+  additionalItems: AdditionalItem[] = [];
   loading = true;
   error = '';
   invoiceNumber = '';
   totalPrice = 0;
   orderId!: number;
   isWithinLimit = true;
+
+  showAdditionalItemsModal = false;
 
   constructor(
     private procurementService: ProcumentsService,
@@ -574,5 +585,13 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         confirmButtonColor: '#3085d6',
       });
     }
+  }
+
+  closeAdditionalItemsModal() {
+    this.showAdditionalItemsModal = false;
+  }
+
+  openAdditionalItemsModal() {
+    this.showAdditionalItemsModal = true;
   }
 }

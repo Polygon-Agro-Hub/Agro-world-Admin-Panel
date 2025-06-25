@@ -27,7 +27,10 @@
       <!-- Additional Items (outside loop) -->
       <div class="text-sm flex flex-col justify-center items-center">
         <div class="text-gray-700 dark:text-gray-300">Additional Items :</div>
-        <button class="w-5 h-5 text-blue-500 hover:text-blue-700">
+        <button
+          class="w-5 h-5 text-blue-500 hover:text-blue-700"
+          (click)="openAdditionalItemsModal()"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -149,6 +152,69 @@
           Calculated price exceeds the allowed limit!
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="showAdditionalItemsModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeAdditionalItemsModal()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 text-center">
+      <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
+        Additional Items
+      </h3>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="px-6 py-4">
+      <!-- Table Header -->
+      <div
+        class="pb-4 flex justify-between items-center mb-4 text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700"
+      >
+        <div class="flex-1">Item</div>
+        <div class="w-16 text-center">Quantity</div>
+        <div class="w-16 text-center">Unit</div>
+      </div>
+
+      <!-- Additional Items List -->
+      <div class="space-y-3">
+        <div
+          *ngFor="let item of additionalItems"
+          class="flex justify-between items-center py-2"
+        >
+          <div class="flex-1 text-sm text-[#212121] dark:text-gray-100">
+            {{ item.displayName }}
+          </div>
+          <div
+            class="w-16 text-center text-sm text-[#000000] dark:text-gray-100"
+          >
+            {{ item.qty }}
+          </div>
+          <div
+            class="w-16 text-center text-sm text-[#808080] dark:text-gray-400"
+          >
+            {{ item.unit }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center">
+      <button
+        type="button"
+        class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors"
+        (click)="closeAdditionalItemsModal()"
+      >
+        Cancel
+      </button>
     </div>
   </div>
 </div>

@@ -5,6 +5,34 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environment/environment';
 
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message: string;
+}
+
+interface OrderPackageResponse {
+  invNo: string;
+  packages: Package[];
+}
+
+interface Package {
+  packageId: number;
+  displayName: string;
+  productPrice: number;
+  productTypes: ProductType[];
+}
+
+interface ProductType {
+  id: number;
+  typeName: string;
+  productId: number;
+  qty: number;
+  price: number;
+  displayName: string;
+  shortCode: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -282,6 +310,68 @@ export class ProcumentsService {
         catchError((error) => {
           console.error('Error in updateOrderPackagePackingStatus:', error);
           return throwError(() => error);
+        })
+      );
+  }
+
+  getOrderPackagesByOrderId(orderId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}procument/order-packages/${orderId}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      map((response) => {
+        if (response.success) {
+          return {
+            invNo: response.data.invNo,
+            packages: response.data.packages,
+          };
+        } else {
+          throw new Error(response.message);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching order packages:', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message ||
+                'An error occurred while fetching order packages'
+            )
+        );
+      })
+    );
+  }
+
+  updateOrderPackageItems(
+    orderPackageId: number,
+    products: any[]
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Structure the data to match the endpoint's expected format
+    const requestData = {
+      orderPackageId: orderPackageId,
+      products: products,
+    };
+
+    // Log the data being sent
+    console.log('Updating package items:', requestData);
+
+    return this.http
+      .put(`${this.apiUrl}procument/update-order-package-items`, requestData, {
+        headers,
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Error in updateOrderPackageItems:', error);
+          return throwError(() => new Error(error));
         })
       );
   }

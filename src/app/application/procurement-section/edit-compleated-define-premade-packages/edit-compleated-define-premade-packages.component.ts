@@ -159,14 +159,13 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
       next: (response) => {
-        console.log('API Response:', response);
+        console.log('Full API Response:', response); // Log the full response to check structure
 
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
         }
 
         this.orderDetails = response.packages.map((pkg: any) => {
-          // First map the basic package info
           const packageDetail: OrderDetailItem = {
             packageId: pkg.packageId,
             displayName: pkg.displayName,
@@ -178,24 +177,30 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
             productTypes: [],
           };
 
-          // Then map each product type with the correct id (orderpackageitems.id)
           if (pkg.productTypes && Array.isArray(pkg.productTypes)) {
             packageDetail.productTypes = pkg.productTypes.map((pt: any) => {
               const productType: ProductTypes = {
-                id: pt.id, // This must be the orderpackageitems.id from database
+                id: pt.id, // This is orderpackageitems.id (if needed for updates)
                 typeName: pt.typeName,
                 shortCode: pt.shortCode,
                 productId: pt.productId || null,
+                productTypeId: pt.productTypeId, // Check API response for correct field
                 selectedProductPrice: pt.price || undefined,
                 quantity: pt.qty || undefined,
                 calculatedPrice:
                   pt.price && pt.qty ? pt.price * pt.qty : undefined,
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
-                // These are kept for backward compatibility
               };
 
-              // Find and set the display name from marketplace items if not provided
+              // If productTypeId is still null, check alternative fields
+              if (!productType.productTypeId) {
+                // Try to get it from another field (adjust based on API response)
+                productType.productTypeId =
+                  pt.typeId || pt.productType?.id || null;
+              }
+
+              // Set displayName from marketplace if missing
               if (pt.productId && !productType.displayName) {
                 const product = this.marketplaceItems.find(
                   (m) => m.id === pt.productId
@@ -215,8 +220,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         this.invoiceNumber = response.invNo;
         this.calculateTotalPrice();
         this.loading = false;
-
-        // After loading details, fetch package items to get complete data
         this.fetchPackageItems(id);
       },
       error: (err) => {
@@ -512,29 +515,28 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   }
 
   async onUpdate() {
-    // First, prepare all the products to be updated
     const productsToUpdate = this.orderDetails.flatMap((pkg) =>
       pkg.productTypes.map((pt) => ({
-        id: pt.id,
+        id: pt.id, // orderpackageitems.id (if needed for updates)
         productId: pt.productId,
-        productType: pt.typeName,
-        productTypeId: pt.productTypeId,
         qty: pt.quantity?.toString() || '0',
         price: pt.calculatedPrice?.toString() || '0',
         displayName: pt.displayName,
       }))
     );
 
-    // Filter out any invalid entries (where id is missing)
+    console.log('Products to Update:', productsToUpdate); // Verify before sending
+
+    // Filter out invalid entries - now only checking for productId
     const validProducts = productsToUpdate.filter(
-      (product) => product.id && product.productId
+      (product) => product.productId
     );
 
     if (validProducts.length === 0) {
       Swal.fire({
         icon: 'warning',
         title: 'No Valid Items',
-        text: 'No valid items to update. Please ensure all items have an ID and product selected.',
+        text: 'No valid items to update. Ensure all items have a product selected.',
         confirmButtonColor: '#3085d6',
       });
       return;
@@ -550,7 +552,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     });
 
     try {
-      // Send the update request
       const result = await this.procurementService
         .updateOrderPackageItems(this.orderId, validProducts)
         .toPromise();
@@ -562,14 +563,14 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         confirmButtonColor: '#3085d6',
       });
 
-      // Refresh the data
+      // Refresh data
       this.fetchOrderDetails(this.orderId.toString());
     } catch (err) {
       console.error('Error updating order:', err);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'An unexpected error occurred',
+        text: 'Failed to update order. Please check the data and try again.',
         confirmButtonColor: '#3085d6',
       });
     }

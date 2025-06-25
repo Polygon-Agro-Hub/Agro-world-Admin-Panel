@@ -452,4 +452,98 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   openAdditionalItemsModal() {
     this.showAdditionalItemsModal = true;
   }
+
+  async sendDispatch() {
+    try {
+      // Validations
+      if (!this.isWithinLimit) {
+        throw new Error('Calculated price exceeds allowed limit');
+      }
+
+      if (!this.orderDetails?.length) {
+        throw new Error('No packages available to dispatch');
+      }
+
+      // Confirmation dialog
+      const confirm = await Swal.fire({
+        title: 'Confirm Dispatch',
+        text: `Dispatch ${this.orderDetails.length} package(s)?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+      });
+
+      if (!confirm.isConfirmed) return;
+
+      // Show loading indicator
+      Swal.fire({
+        title: 'Updating...',
+        html: 'Please wait while we update the packages',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      // Execute updates for all packages
+      const results = await Promise.all(
+        this.orderDetails.map(async (pkg) => {
+          if (!pkg.packageId) {
+            return {
+              success: false,
+              packageId: 'N/A',
+              error: 'Missing package ID',
+            };
+          }
+
+          try {
+            const response = await this.procurementService
+              .updateOrderPackagePackingStatus(pkg.packageId, 'Dispatch')
+              .toPromise();
+
+            return {
+              success: true,
+              packageId: pkg.packageId,
+              response,
+            };
+          } catch (error) {
+            return {
+              success: false,
+              packageId: pkg.packageId,
+              error: this.getErrorMessage(error),
+            };
+          }
+        })
+      );
+
+      // Handle results
+      const failed = results.filter((r) => !r.success);
+
+      if (failed.length > 0) {
+        const errorMsg = failed
+          .map((f) => `Package ${f.packageId}: ${f.error}`)
+          .join('<br><br>');
+        throw new Error(`Some packages failed to update:<br><br>${errorMsg}`);
+      }
+
+      // Success notification
+      Swal.fire({
+        icon: 'success',
+        title: 'Dispatched!',
+        html: `All ${results.length} packages were updated successfully`,
+        confirmButtonColor: '#3085d6',
+      });
+
+      // Optionally refresh data or navigate back
+      this.fetchOrderDetails(this.orderId.toString());
+      // this.goBack(); // Uncomment if you want to navigate back after success
+    } catch (error) {
+      console.error('Dispatch error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Dispatch Failed',
+        html: this.getErrorMessage(error),
+        confirmButtonColor: '#3085d6',
+      });
+    }
+  }
 }

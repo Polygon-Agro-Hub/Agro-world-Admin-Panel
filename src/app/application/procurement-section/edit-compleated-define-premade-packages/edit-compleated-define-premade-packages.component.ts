@@ -515,23 +515,26 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     // First, prepare all the products to be updated
     const productsToUpdate = this.orderDetails.flatMap((pkg) =>
       pkg.productTypes.map((pt) => ({
-        id: pt.id, // This should be the orderpackageitems.id from database
+        id: pt.id, // orderpackageitems.id from database
         productId: pt.productId,
-        productType: pt.typeName, // or pt.id if you need the type ID
+        productType: pt.typeName,
+        productTypeId: pt.productTypeId,
         qty: pt.quantity?.toString() || '0',
-        price: pt.calculatedPrice?.toString() || '0',
+        price: pt.calculatedPrice?.toString() || '0', // Use selectedProductPrice instead of calculatedPrice
         displayName: pt.displayName,
       }))
     );
 
     // Filter out any invalid entries (where id is missing)
-    const validProducts = productsToUpdate.filter((product) => product.id);
+    const validProducts = productsToUpdate.filter(
+      (product) => product.id && product.productId
+    );
 
     if (validProducts.length === 0) {
       Swal.fire({
         icon: 'warning',
         title: 'No Valid Items',
-        text: 'No valid items to update. Please ensure all items have an ID.',
+        text: 'No valid items to update. Please ensure all items have an ID and product selected.',
         confirmButtonColor: '#3085d6',
       });
       return;

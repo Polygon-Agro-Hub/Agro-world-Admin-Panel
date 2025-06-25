@@ -249,44 +249,55 @@
 </div>
 
 <p-dialog
-  header="Reply to Complaint"
+
   [(visible)]="display"
   [modal]="true"
-  [closable]="true"
+  [closable]="false"
   [style]="{ width: '600px' }"
-  [contentStyle]="{ padding: '1rem' }"
+  [contentStyle]="{ padding: '0' }"
 >
-  <div class="dialog-content text-left">
-    <p>
-      Dear <strong>{{ selectedComplaint.firstName }}</strong>,
+<div class="dialog-header text-center">
+    <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
+   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as AgroWorld</h3>
+
+
+  </div>
+ <div
+  class="dialog-content text-[16px] md:text-[18px] border-t rounded-[20px]
+ border-r border-b border-l border-gray-300 text-[#000000] mt-5 ml-8 mr-8 mb-5"
+>
+ <div class=" p-5 ">
+    <div class="reply-header">
+      <span>Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
+      <p class="mt-3">We are pleased to inform you that your complaint has been resolved.</p>
+    </div>
+    <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap">
+      {{ selectedComplaint.reply }}
     </p>
-    <textarea
-      [(ngModel)]="messageContent"
-      placeholder="Add your message here..."
-      rows="5"
-      class="w-full p-2 border rounded mt-3 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      aria-label="Reply message"
-    ></textarea>
+   
+   
     <p>
-      If you have any further concerns or questions, feel free to reach
-      out. Thank you for your patience and understanding.
+      If you have any further concerns or questions, feel free to reach out. <br>
+      Thank you for your patience and understanding.
     </p>
-    <p>Sincerely,<br />Retail Support Team</p>
+
+    <p class="mt-5">
+      Sincerely,<br />
+      AgroWorld Customer Support Team
+    </p>
+  </div>
+
   </div>
   <ng-template pTemplate="footer">
-    <button
-      pButton
-      type="button"
-      label="Cancel"
-      class="p-button-secondary mr-2"
-      (click)="hideDialog()"
-    ></button>
-    <button
-      pButton
-      type="button"
-      label="Send"
-      class="p-button-primary"
-      (click)="submitReply()"
-    ></button>
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-secondary"
+      style="margin-right: 8px; background-color: #74788D; color: #D3D3D3; border: none; width: 120px; height: 40px;border: none;
+"
+        (click)="hideDialog()"
+      ></button>
+ 
   </ng-template>
 </p-dialog>

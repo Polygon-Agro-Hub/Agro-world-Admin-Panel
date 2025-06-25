@@ -1,8 +1,16 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environment/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { TokenService } from "../token/services/token.service";
+import { catchError } from 'rxjs/operators';
+import Swal from 'sweetalert2';
+
+interface ApiResponse {
+  status: boolean;
+  data: any[];
+  total?: number;
+}
 
 @Injectable({
   providedIn: "root",
@@ -18,7 +26,82 @@ export class ComplaintsService {
     private tokenService: TokenService,
   ) {}
 
+ private getHeaders(): HttpHeaders | null {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      console.error('No token found');
+      Swal.fire({
+        icon: 'error',
+        title: 'Authentication Error',
+        text: 'No authentication token found. Please log in again.',
+      });
+      return null;
+    }
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
   
+   fetchComplain(complainId: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+
+    const url = `${this.apiUrl}complain/get-marketplace-complaint/${complainId}`;
+    console.log('Fetching complaint from:', url);
+    return this.http.get(url, { headers });
+}
+
+  submitComplaint(complainId: string, reply: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+
+    const body = { reply };
+    return this.http.put(
+      `${environment.API_URL}complain/complaints/${complainId}/reply`,
+      body,
+      { headers }
+    );
+  }
+
+    fetchComplaints(): Observable<ApiResponse> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+
+    return this.http
+      .get<ApiResponse>(
+        `${this.apiUrl}complain/get-marketplace-complaint`,
+        { headers }
+      )
+      .pipe(
+        catchError(err => {
+          return throwError(() => err);
+        })
+      );
+}
+fetchComplaintCategories(): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+
+    return this.http
+      .get<any>(
+        `${this.apiUrl}complain/get-all-complain-category`,
+        { headers }
+      )
+      .pipe(
+        catchError(err => {
+          console.error('Category fetch error', err);
+          return throwError(() => err);
+        })
+      );
+}
 
   getAllSystemApplications(): Observable<any> {
     const headers = new HttpHeaders({

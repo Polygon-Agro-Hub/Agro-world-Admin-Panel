@@ -1,5 +1,6 @@
+
+
 import { Component, OnInit } from '@angular/core';
-import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -7,11 +8,25 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environment/environment';
-import { TokenService } from '../../../services/token/services/token.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ComplaintsService } from '../../../services/complaints/complaints.service';
+
+class Complain {
+  id!: string;
+  refNo!: string;
+  status!: string;
+  firstName!: string;
+  lastName!: string;
+  fullName!: string;
+  farmerPhone!: string;
+  complain!: string;
+  complainCategory!: string;
+  language!: string;
+  createdAt!: string;
+  reply!: string;
+  imageUrls: string[] = [];
+}
 
 @Component({
   selector: 'app-view-selected-complain',
@@ -29,24 +44,23 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   providers: [DatePipe],
 })
 export class SelectedRetailComplaintsComponent implements OnInit {
+  selectedComplaint: any;
   complain: Complain = new Complain();
   complainId!: string;
   farmerName!: string;
   display: boolean = false;
   messageContent: string = '';
   isLoading = false;
-  sanitizedImageUrls: SafeUrl[] = []; // Array to hold sanitized image URLs
-  currentIndex: number = 0; // Track current image index
-  modalVisible: boolean = false; // Control modal visibility
-isDarkMode: any;
+  sanitizedImageUrls: SafeUrl[] = [];
+  currentIndex: number = 0;
+  modalVisible: boolean = false;
+  isDarkMode: any;
 
   constructor(
-    private complainSrv: CollectionCenterService,
+    private complainService: ComplaintsService,
     private router: Router,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private http: HttpClient,
-    private tokenService: TokenService,
     private sanitizer: DomSanitizer
   ) {}
 
@@ -71,27 +85,7 @@ isDarkMode: any;
   fetchComplain() {
     this.isLoading = true;
 
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error('No token found');
-      Swal.fire({
-        icon: 'error',
-        title: 'Authentication Error',
-        text: 'No authentication token found. Please log in again.',
-      });
-      this.isLoading = false;
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    const url = `http://localhost:3000/agro-api/admin-api/api/complain/get-marketplace-complaint/${this.complainId}`;
-    console.log('Fetching complaint from:', url);
-
-    this.http.get(url, { headers }).subscribe({
+    this.complainService.fetchComplain(this.complainId).subscribe({
       next: (res: any) => {
         console.log('API Response:', res);
 
@@ -117,7 +111,6 @@ isDarkMode: any;
           imageUrls: this.parseImageUrls(data.imageUrls),
         };
 
-        // Sanitize image URLs
         this.sanitizedImageUrls = this.complain.imageUrls.map(url =>
           this.sanitizer.bypassSecurityTrustUrl(url)
         );
@@ -133,13 +126,16 @@ isDarkMode: any;
           errorMessage = `Complaint with ID ${this.complainId} not found.`;
         } else if (err.status === 401) {
           errorMessage = 'Unauthorized access. Please log in again.';
-          this.router.navigate(['/login']);
+         
         } else if (err.status === 0) {
           errorMessage = 'Unable to connect to the server. Please check if the backend is running.';
         } else if (err.status >= 500) {
           errorMessage = 'Server error. Please try again later.';
         } else if (err.message.includes('Invalid response structure')) {
           errorMessage = 'Invalid response from server. Please contact support.';
+        } else if (err.message.includes('No authentication token found')) {
+          errorMessage = 'No authentication token found. Please log in again.';
+          this.router.navigate(['/login']);
         }
 
         Swal.fire({
@@ -152,10 +148,9 @@ isDarkMode: any;
     });
   }
 
-  // Handle broken images
   handleImageError(event: Event) {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = 'assets/images/fallback-image.png'; // Path to a fallback image
+    imgElement.src = 'assets/images/fallback-image.png';
   }
 
   private parseImageUrls(imageUrls: string | undefined): string[] {
@@ -171,33 +166,10 @@ isDarkMode: any;
 
   submitComplaint() {
     this.isLoading = true;
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error('No token found');
-      Swal.fire({
-        icon: 'error',
-        title: 'Authentication Error',
-        text: 'No authentication token found. Please log in again.',
-      });
-      this.isLoading = false;
-      this.router.navigate(['/login']);
-      return;
-    }
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    const body = { reply: this.messageContent };
-
-    this.http
-      .put(
-        `${environment.API_URL}complain/update-marketplace-complaint/${this.complainId}`,
-        body,
-        { headers }
-      )
-      .subscribe({
-        next: () => {
+    this.complainService.submitComplaint(this.complainId, this.messageContent).subscribe({
+      next: (response: any) => {
+        if (response.status) {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -206,31 +178,41 @@ isDarkMode: any;
           this.fetchComplain();
           this.hideDialog();
           this.messageContent = '';
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error sending reply:', error);
-          let errorMessage = 'Error sending reply.';
-          if (error.status === 404) {
-            errorMessage = 'Complaint not found. Please verify the complaint ID.';
-          } else if (error.status === 401) {
-            errorMessage = 'Unauthorized access. Please log in again.';
-            this.router.navigate(['/login']);
-          }
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'Unsuccessful',
-            text: errorMessage,
+            text: response.message || 'Failed to send reply.',
           });
-          this.isLoading = false;
-        },
-      });
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error sending reply:', error);
+        let errorMessage = 'Error sending reply.';
+        if (error.status === 404) {
+          errorMessage = 'Complaint not found. Please verify the complaint ID.';
+        } else if (error.status === 401) {
+          errorMessage = 'Unauthorized access. Please log in again.';
+          this.router.navigate(['/login']);
+        } else if (error.status === 400) {
+          errorMessage = error.error.message || 'Invalid input. Please check your reply.';
+        } else if (error.message.includes('No authentication token found')) {
+          errorMessage = 'No authentication token found. Please log in again.';
+          this.router.navigate(['/login']);
+        }
+        Swal.fire({
+          icon: 'error',
+          title: 'Unsuccessful',
+          text: errorMessage,
+        });
+        this.isLoading = false;
+      },
+    });
   }
 
   showReplyDialog(language: string) {
-    // Assuming this method sets up the reply dialog
     this.display = true;
-    // Additional logic for language can be added here if needed
   }
 
   openImageViewer(index: number) {
@@ -255,20 +237,8 @@ isDarkMode: any;
       this.currentIndex = (this.currentIndex - 1 + this.sanitizedImageUrls.length) % this.sanitizedImageUrls.length;
     }
   }
-}
 
-class Complain {
-  id!: string;
-  refNo!: string;
-  status!: string;
-  firstName!: string;
-  lastName!: string;
-  fullName!: string;
-  farmerPhone!: string;
-  complain!: string;
-  complainCategory!: string;
-  language!: string;
-  createdAt!: string;
-  reply!: string;
-  imageUrls: string[] = [];
+  submitReply() {
+    throw new Error('Method not implemented.');
+  }
 }

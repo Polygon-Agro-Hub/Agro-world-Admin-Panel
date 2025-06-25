@@ -1,4 +1,5 @@
 
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -8,10 +9,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import {  ComplaintsService } from '../../../services/complaints/complaints.service';
 
 interface Complaint {
   id: string;
@@ -55,7 +54,6 @@ interface ApiResponse {
   providers: [DatePipe],
 })
 export class RetailComplaintsComponent implements OnInit {
-
   complaints: Complaint[] = [];
   filteredComplaints: Complaint[] = [];
 
@@ -76,7 +74,7 @@ export class RetailComplaintsComponent implements OnInit {
   // dropdown data
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: 'No' },
+    { label: 'No', value: '' },
   ];
   comCategories: DropdownOption[] = [];
   status: DropdownOption[] = [];
@@ -84,7 +82,7 @@ export class RetailComplaintsComponent implements OnInit {
   constructor(
     private router: Router,
     private datePipe: DatePipe,
-    private http: HttpClient
+    private  ComplaintsService: ComplaintsService
   ) {}
 
   ngOnInit(): void {
@@ -94,32 +92,9 @@ export class RetailComplaintsComponent implements OnInit {
 
   private fetchComplaints(): void {
     this.isLoading = true;
-    const token = localStorage.getItem('AdminLoginToken');
-    if (!token) {
-      alert('No authentication token found. Please log in.');
-      this.router.navigate(['login']);
-      this.isLoading = false;
-      return;
-    }
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http
-      .get<ApiResponse>(
-        'http://localhost:3000/agro-api/admin-api/api/complain/get-marketplace-complaint',
-        { headers }
-      )
-      .pipe(
-        catchError(err => {
-          this.isLoading = false;
-          if (err.status === 401) {
-            alert('You are not authorized. Please log in.');
-            this.router.navigate(['login']);
-          } else {
-            alert('Failed to load complaints. Please try again later.');
-          }
-          return throwError(() => err);
-        })
-      )
-      .subscribe(resp => {
+
+    this. ComplaintsService.fetchComplaints().subscribe({
+      next: (resp: ApiResponse) => {
         this.complaints = resp.data.map(item => ({
           id: item.id.toString(),
           refNo: item.refNo,
@@ -141,27 +116,39 @@ export class RetailComplaintsComponent implements OnInit {
           new Set(this.complaints.map(c => c.status))
         ).map(st => ({ label: st, value: st }));
         this.isLoading = false;
-      });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        if (err.message.includes('No authentication token found')) {
+          alert('No authentication token found. Please log in.');
+          this.router.navigate(['login']);
+        } else if (err.status === 401) {
+          alert('You are not authorized. Please log in.');
+          this.router.navigate(['login']);
+        } else {
+          alert('Failed to load complaints. Please try again later.');
+        }
+      }
+    });
   }
 
   private fetchComplaintCategories(): void {
-    const token = localStorage.getItem('AdminLoginToken');
-    if (!token) return;
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
-    this.http
-      .get<any>(
-        'http://localhost:3000/agro-api/admin-api/api/complain/get-all-complain-category',
-        { headers }
-      )
-      .subscribe({
-        next: resp => {
-          this.comCategories = resp.map((c: any) => ({
-            label: c.categoryEnglish,
-            value: c.categoryEnglish,
-          }));
-        },
-        error: err => console.error('Category fetch error', err),
-      });
+    this. ComplaintsService.fetchComplaintCategories().subscribe({
+      next: (resp: any) => {
+        this.comCategories = resp.map((c: any) => ({
+          label: c.categoryEnglish,
+          value: c.categoryEnglish,
+        }));
+      },
+      error: (err) => {
+        if (err.message.includes('No authentication token found')) {
+          alert('No authentication token found. Please log in.');
+          this.router.navigate(['login']);
+        } else {
+          console.error('Category fetch error', err);
+        }
+      }
+    });
   }
 
   private formatDate(dateString: string): string {
@@ -179,48 +166,44 @@ export class RetailComplaintsComponent implements OnInit {
     return status;
   }
 
-  /** apply dropdown & text search together */
- applyFilters(): void {
-  const txt = this.searchText.trim().toLowerCase();
+  applyFilters(): void {
+    const txt = this.searchText.trim().toLowerCase();
 
-  this.filteredComplaints = this.complaints.filter(item => {
-    const matchesSearch = !txt || [
-      item.refNo,
-      item.complainCategory,
-      item.firstName,
-      item.lastName,
-      item.contactNumber
-    ].some(field => field?.toLowerCase().includes(txt));
+    this.filteredComplaints = this.complaints.filter(item => {
+      const matchesSearch = !txt || [
+        item.refNo,
+        item.complainCategory,
+        item.firstName,
+        item.lastName,
+        item.contactNumber
+      ].some(field => field?.toLowerCase().includes(txt));
 
-    const matchesReply =
-      !this.rpst || (this.rpst === 'Yes' ? !!item.reply : !item.reply);
+      const matchesReply =
+        !this.rpst || (this.rpst === 'Yes' ? !!item.reply : !item.reply);
 
-    const matchesCat =
-      !this.filterComCategory || item.complainCategory === this.filterComCategory;
+      const matchesCat =
+        !this.filterComCategory || item.complainCategory === this.filterComCategory;
 
-    const matchesStat =
-      !this.filterStatus || item.status === this.filterStatus;
+      const matchesStat =
+        !this.filterStatus || item.status === this.filterStatus;
 
-    return matchesSearch && matchesReply && matchesCat && matchesStat;
-  });
+      return matchesSearch && matchesReply && matchesCat && matchesStat;
+    });
 
-  this.totalItems = this.filteredComplaints.length;
-  this.page = 1;
-}
+    this.totalItems = this.filteredComplaints.length;
+    this.page = 1;
+  }
 
+  searchComplain(): void {
+    console.log('[searchComplain] searchText =', this.searchText);
+    this.applyFilters();
+  }
 
-searchComplain(): void {
-  console.log('[searchComplain] searchText =', this.searchText);
-  this.applyFilters();
-}
-
-  /** bound to clear-* button */
   clearSearch(): void {
     this.searchText = '';
     this.applyFilters();
   }
 
-  /** bound to React-style dropdown change */
   regStatusFil(): void {
     this.applyFilters();
   }
@@ -229,7 +212,6 @@ searchComplain(): void {
     this.page = p;
   }
 
-  /* navigation & dialogs */
   goBack(): void {
     this.router.navigate(['/complaints']);
   }
@@ -239,9 +221,9 @@ searchComplain(): void {
   }
 
   onSearchTextChange(event: string): void {
-  this.searchText = event; // Update searchText
-  this.applyFilters(); // Apply filters immediately
-}
+    this.searchText = event;
+    this.applyFilters();
+  }
 
   showReplyDialog(c: Complaint): void {
     this.selectedComplaint = { ...c };

@@ -137,11 +137,13 @@ import { ViewDeliveryChargesComponent } from './application/marketplace/view-del
 import { UploadDeliveryChargesComponent } from './application/marketplace/upload-delivery-charges/upload-delivery-charges.component';
 import { EditDistributionOfficerComponent } from './application/distribution-hub/edit-distribution-officer/edit-distribution-officer.component';
 import { DefinePackagesComponent } from './application/procurement-section/define-packages/define-packages.component';
-import{RetailComplaintsComponent} from './application/Complaints/retail-complaints/retail-complaints.component';
-import {SelectedRetailComplaintsComponent} from './application/Complaints/selected-retail-complaints/selected-retail-complaints.component'
+import { RetailComplaintsComponent } from './application/Complaints/retail-complaints/retail-complaints.component';
+import { SelectedRetailComplaintsComponent } from './application/Complaints/selected-retail-complaints/selected-retail-complaints.component';
 import { TodoDefinePremadePackagesComponent } from './application/procurement-section/todo-define-premade-packages/todo-define-premade-packages.component';
 import { PackageItemViewComponent } from './application/dispatch-section/package-item-view/package-item-view.component';
 import { AdditionalItemsComponent } from './application/dispatch-section/additional-items/additional-items.component';
+import { CompletedDefinePackageComponent } from './application/procurement-section/completed-define-package/completed-define-package.component';
+import { EditCompleatedDefinePremadePackagesComponent } from './application/procurement-section/edit-compleated-define-premade-packages/edit-compleated-define-premade-packages.component';
 export const routes: Routes = [
   {
     path: '',
@@ -693,6 +695,10 @@ export const routes: Routes = [
             path: 'todo-define-premade-packages',
             component: TodoDefinePremadePackagesComponent,
           },
+          {
+            path: 'edit-completed-define-package',
+            component: EditCompleatedDefinePremadePackagesComponent,
+          },
         ],
       },
 
@@ -804,7 +810,6 @@ export const routes: Routes = [
                 path: 'upload-delivery-charges',
                 component: UploadDeliveryChargesComponent,
               },
-           
             ],
           },
         ],
@@ -879,11 +884,11 @@ export const routes: Routes = [
             path: 'view-selected-sales-dash-complain/:id/:firstName',
             component: ViewSelectedSalesDashComplainComponent,
           },
-              {
-                path: 'retail-complaints',
-                component: RetailComplaintsComponent,
-              },
-                {
+          {
+            path: 'retail-complaints',
+            component: RetailComplaintsComponent,
+          },
+          {
             path: 'selected-retail-complaints/:id',
             component: SelectedRetailComplaintsComponent,
           },

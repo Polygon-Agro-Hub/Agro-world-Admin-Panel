@@ -157,7 +157,7 @@ export class CompletedDefinePackageComponent {
   }
 
   viewPremadePackages(id: number) {
-    this.router.navigate(['/procurement/todo-define-premade-packages'], {
+    this.router.navigate(['/procurement/edit-completed-define-package'], {
       queryParams: { id },
     });
   }

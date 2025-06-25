@@ -142,6 +142,12 @@ export class ProcumentsService {
         shortCode: string;
       }>;
     }>;
+    additionalItems?: Array<{
+      id: number;
+      qty: number;
+      unit: string;
+      displayName: string;
+    }>;
   }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -166,20 +172,26 @@ export class ProcumentsService {
             }>;
           }>;
         };
+        additionalItems?: Array<{
+          id: number;
+          qty: number;
+          unit: string;
+          displayName: string;
+        }>;
         message?: string;
       }>(url, { headers })
       .pipe(
         map((response) => {
           if (response.success) {
-            // Transform the data if needed (though DAO now returns correct structure)
             return {
               invNo: response.data.invNo,
               packages: response.data.packages.map((pkg) => ({
                 packageId: pkg.packageId,
                 displayName: pkg.displayName,
                 productPrice: pkg.productPrice,
-                productTypes: pkg.productTypes || [], // Ensure productTypes is always an array
+                productTypes: pkg.productTypes || [],
               })),
+              additionalItems: response.additionalItems || [],
             };
           } else {
             throw new Error(
@@ -374,5 +386,34 @@ export class ProcumentsService {
           return throwError(() => new Error(error));
         })
       );
+  }
+
+  getAllOrdersWithProcessInfoDispatched(
+    page: number,
+    limit: number,
+    filterType: string = '',
+    date: string = '',
+    search: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}procument/orders-process-info-dispatched?page=${page}&limit=${limit}`;
+
+    if (filterType) {
+      url += `&filterType=${filterType}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    if (search) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+
+    return this.http.get<any>(url, { headers });
   }
 }

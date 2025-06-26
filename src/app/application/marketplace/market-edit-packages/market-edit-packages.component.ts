@@ -14,7 +14,6 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   styleUrl: './market-edit-packages.component.css',
 })
 export class MarketEditPackagesComponent {
-
   packageId!: number;
 
   packageObj: Package = new Package();
@@ -37,14 +36,13 @@ export class MarketEditPackagesComponent {
   }
 
   ngOnInit(): void {
-    
     this.route.params.subscribe((params) => {
       if (params && params['id']) {
         this.packageId = +params['id'];
-        console.log(this.packageId)
+        console.log(this.packageId);
         if (this.packageId) {
-          this.getProductTypes()
-          this.getPackageDetails()
+          this.getProductTypes();
+          this.getPackageDetails();
           // this.calculateApproximatedPrice()
           // this.getPackage();
         } else {
@@ -60,15 +58,13 @@ export class MarketEditPackagesComponent {
 
   getPackageDetails() {
     this.marketSrv.getPackageById(this.packageId).subscribe((res) => {
-      console.log('this is response', res)
+      console.log('this is response', res);
       this.packageObj = res;
       // console.log('this is type', this.productTypeObj);
       // // Initialize quantities with 0 for each product type
       this.selectedImage = this.packageObj.imageUrl;
     });
-
   }
-
 
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
@@ -93,11 +89,11 @@ export class MarketEditPackagesComponent {
   }
 
   onSubmit() {
-    console.log('seleced image', this.selectedImage)
+    console.log('seleced image', this.selectedImage);
     console.log('submit', this.packageObj);
     console.log('Final quantities:', this.packageObj.quantities);
     this.isLoading = true;
-    
+
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
@@ -131,54 +127,56 @@ export class MarketEditPackagesComponent {
     }
 
     // ✅ New validation: Ensure at least one quantity is > 0
-  const hasAtLeastOneQuantity = Object.values(this.packageObj.quantities).some(qty => qty > 0);
+    const hasAtLeastOneQuantity = Object.values(
+      this.packageObj.quantities
+    ).some((qty) => qty > 0);
 
-  if (!hasAtLeastOneQuantity) {
-    Swal.fire({
-      icon: 'error',
-      title: 'No product type selected',
-      text: 'You should select at least on product type.',
-      confirmButtonText: 'OK',
-    });
-    this.isLoading = false;
-    return;
-  }
+    if (!hasAtLeastOneQuantity) {
+      Swal.fire({
+        icon: 'error',
+        title: 'No product type selected',
+        text: 'You should select at least on product type.',
+        confirmButtonText: 'OK',
+      });
+      this.isLoading = false;
+      return;
+    }
 
     // All quantities are already stored in kg, no conversion needed before submit
-    this.marketSrv.editPackage(this.packageObj, this.selectedImage, this.packageId ).subscribe(
-
-      (res) => {
-        if (res.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Package Created',
-            text: 'The package was created successfully!',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            this.packageObj = new Package();
-            this.router.navigate(['/market/action/view-packages-list']);
-          });
-        } else {
+    this.marketSrv
+      .editPackage(this.packageObj, this.selectedImage, this.packageId)
+      .subscribe(
+        (res) => {
+          if (res.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Package Created',
+              text: 'The package was created successfully!',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.packageObj = new Package();
+              this.router.navigate(['/market/action/view-packages-list']);
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Package Not Created',
+              text: 'The package could not be created. Please try again.',
+              confirmButtonText: 'OK',
+            });
+          }
+          this.isLoading = false;
+        },
+        (error) => {
           Swal.fire({
             icon: 'error',
-            title: 'Package Not Created',
-            text: 'The package could not be created. Please try again.',
+            title: 'An Error Occurred',
+            text: 'There was an error while creating the package. Please try again later.',
             confirmButtonText: 'OK',
           });
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'An Error Occurred',
-          text: 'There was an error while creating the package. Please try again later.',
-          confirmButtonText: 'OK',
-        });
-        this.isLoading = false;
-      }
-      
-    );
+      );
   }
 
   onCancel() {
@@ -231,12 +229,13 @@ export class MarketEditPackagesComponent {
   }
 
   calculateApproximatedPrice() {
-    const productPrice = Number(this.packageObj.productPrice) || 0.00;
-    const serviceFee = Number(this.packageObj.serviceFee) || 0.00;
-    const packageFee = Number(this.packageObj.packageFee) || 0.00;
-  
-    this.packageObj.approximatedPrice = productPrice + (serviceFee + packageFee);
-    
+    const productPrice = Number(this.packageObj.productPrice) || 0.0;
+    const serviceFee = Number(this.packageObj.serviceFee) || 0.0;
+    const packageFee = Number(this.packageObj.packageFee) || 0.0;
+
+    this.packageObj.approximatedPrice =
+      productPrice + (serviceFee + packageFee);
+
     console.log('Approximated Price:', this.packageObj.approximatedPrice);
     return this.packageObj.approximatedPrice;
   }
@@ -248,8 +247,26 @@ export class MarketEditPackagesComponent {
       event.preventDefault();
     }
   }
-
-  
+  allowDecimalNumbers(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Allow numbers 0-9
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    // Allow decimal point
+    if (charCode === 46) {
+      const currentValue = (event.target as HTMLInputElement).value;
+      // Prevent more than one decimal point
+      return currentValue.indexOf('.') === -1;
+    }
+    // Allow backspace, tab, enter, arrows
+    if ([8, 9, 13, 37, 39].includes(charCode)) {
+      return true;
+    }
+    // Prevent all other key presses
+    event.preventDefault();
+    return false;
+  }
 }
 
 class Package {
@@ -273,5 +290,3 @@ class ProductType {
   shortCode!: string;
   id!: number;
 }
-
-

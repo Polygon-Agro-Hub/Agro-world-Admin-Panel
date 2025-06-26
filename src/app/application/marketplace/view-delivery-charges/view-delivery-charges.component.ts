@@ -59,11 +59,13 @@ export class ViewDeliveryChargesComponent implements OnInit {
     this.loadDeliveryCharges();
   }
 
+  // In your component.ts
   loadDeliveryCharges(): void {
     this.isLoading = true;
     this.errorMessage = '';
     this.deliveryCharges = []; // Clear previous data
 
+    // Make sure we're passing the correct values
     this.deliveryChargeService
       .getAllDeliveryCharges(this.searchCity, this.exactCity)
       .subscribe({

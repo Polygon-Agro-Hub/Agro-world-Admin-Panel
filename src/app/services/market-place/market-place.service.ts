@@ -438,14 +438,17 @@ export class MarketPlaceService {
     });
 
     let url = `${this.apiUrl}market-place/get-all-delivery-charges`;
-    const params = new HttpParams();
 
+    // Start with an empty HttpParams
+    let params = new HttpParams();
+
+    // Add parameters conditionally
     if (searchCity) {
-      params.set('searchItem', searchCity);
+      params = params.set('searchItem', searchCity);
     }
 
     if (exactCity) {
-      params.set('city', exactCity);
+      params = params.set('city', exactCity);
     }
 
     return this.http.get<any>(url, { headers, params });

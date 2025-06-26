@@ -75,9 +75,8 @@ export class ProcumentsService {
   getAllOrdersWithProcessInfo(
     page: number,
     limit: number,
-    filterType: string = '',
-    date: string = '',
-    search: string = ''
+    statusFilter: string = '',
+    dateFilter: string = '',
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -86,17 +85,21 @@ export class ProcumentsService {
 
     let url = `${this.apiUrl}procument/orders-process-info?page=${page}&limit=${limit}`;
 
-    if (filterType) {
-      url += `&filterType=${filterType}`;
+    if (statusFilter) {
+      url += `&statusFilter=${statusFilter}`;
     }
 
-    if (date) {
-      url += `&date=${date}`;
+    if (dateFilter) {
+      url += `&dateFilter=${dateFilter}`;
     }
 
-    if (search) {
-      url += `&search=${encodeURIComponent(search)}`;
-    }
+    // if (date) {
+    //   url += `&date=${date}`;
+    // }
+
+    // if (search) {
+    //   url += `&search=${encodeURIComponent(search)}`;
+    // }
 
     return this.http.get<any>(url, { headers });
   }

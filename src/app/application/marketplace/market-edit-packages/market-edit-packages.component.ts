@@ -88,12 +88,12 @@ export class MarketEditPackagesComponent {
     console.log(`Product ${id} quantity: ${this.packageObj.quantities[id]}`);
   }
 
-  onSubmit() {
-    console.log('seleced image', this.selectedImage);
+  async onSubmit() {
+    console.log('selected image', this.selectedImage);
     console.log('submit', this.packageObj);
     console.log('Final quantities:', this.packageObj.quantities);
-    this.isLoading = true;
 
+    // First validate all required fields
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
@@ -126,7 +126,7 @@ export class MarketEditPackagesComponent {
       return;
     }
 
-    // ✅ New validation: Ensure at least one quantity is > 0
+    // Check if at least one quantity is > 0
     const hasAtLeastOneQuantity = Object.values(
       this.packageObj.quantities
     ).some((qty) => qty > 0);
@@ -142,41 +142,69 @@ export class MarketEditPackagesComponent {
       return;
     }
 
-    // All quantities are already stored in kg, no conversion needed before submit
-    this.marketSrv
-      .editPackage(this.packageObj, this.selectedImage, this.packageId)
-      .subscribe(
-        (res) => {
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Package Created',
-              text: 'The package was created successfully!',
-              confirmButtonText: 'OK',
-            }).then(() => {
-              this.packageObj = new Package();
-              this.router.navigate(['/market/action/view-packages-list']);
-            });
-          } else {
+    this.isLoading = true;
+
+    try {
+      // First check if display name exists (excluding current package)
+      const nameCheck = await this.marketSrv
+        .checkPackageDisplayName(this.packageObj.displayName)
+        .toPromise();
+
+      if (nameCheck.exists) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Package Name Exists',
+          text: 'A package with this display name already exists. Please choose a different name.',
+          confirmButtonText: 'OK',
+        });
+        this.isLoading = false;
+        return;
+      }
+
+      // If name doesn't exist or is the same as current package, proceed with update
+      this.marketSrv
+        .editPackage(this.packageObj, this.selectedImage, this.packageId)
+        .subscribe(
+          (res) => {
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Package Updated',
+                text: 'The package was updated successfully!',
+                confirmButtonText: 'OK',
+              }).then(() => {
+                this.packageObj = new Package();
+                this.router.navigate(['/market/action/view-packages-list']);
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Package Not Updated',
+                text: 'The package could not be updated. Please try again.',
+                confirmButtonText: 'OK',
+              });
+            }
+            this.isLoading = false;
+          },
+          (error) => {
             Swal.fire({
               icon: 'error',
-              title: 'Package Not Created',
-              text: 'The package could not be created. Please try again.',
+              title: 'An Error Occurred',
+              text: 'There was an error while updating the package. Please try again later.',
               confirmButtonText: 'OK',
             });
+            this.isLoading = false;
           }
-          this.isLoading = false;
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'An Error Occurred',
-            text: 'There was an error while creating the package. Please try again later.',
-            confirmButtonText: 'OK',
-          });
-          this.isLoading = false;
-        }
-      );
+        );
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'An Error Occurred',
+        text: 'There was an error checking the package name. Please try again later.',
+        confirmButtonText: 'OK',
+      });
+      this.isLoading = false;
+    }
   }
 
   onCancel() {

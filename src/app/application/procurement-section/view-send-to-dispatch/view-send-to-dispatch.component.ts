@@ -157,7 +157,7 @@ export class ViewSendToDispatchComponent {
   }
 
   viewPremadePackages(id: number) {
-    this.router.navigate(['/procurement/edit-completed-define-package'], {
+    this.router.navigate(['/procurement/view-dispatched-define-package'], {
       queryParams: { id },
     });
   }

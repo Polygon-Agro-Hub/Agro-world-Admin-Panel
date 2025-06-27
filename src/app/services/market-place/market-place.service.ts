@@ -11,7 +11,7 @@ export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -495,6 +495,23 @@ export class MarketPlaceService {
 
     return this.http.get<any>(
       `${this.apiUrl}market-place/check-package-name?displayName=${displayName}`,
+      { headers }
+    );
+  }
+
+  
+  fetchAllRetailCustomers(page: number = 1, limit: number = 10, searchText: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-retails-customers?page=${page}&limit=${limit}`
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(
+      url,
       { headers }
     );
   }

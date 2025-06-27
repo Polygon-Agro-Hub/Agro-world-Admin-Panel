@@ -77,6 +77,7 @@ export class ProcumentsService {
     limit: number,
     statusFilter: string = '',
     dateFilter: string = '',
+    dateFilter1: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -93,9 +94,9 @@ export class ProcumentsService {
       url += `&dateFilter=${dateFilter}`;
     }
 
-    // if (date) {
-    //   url += `&date=${date}`;
-    // }
+    if (dateFilter1) {
+      url += `&dateFilter1=${dateFilter1}`;
+    }
 
     // if (search) {
     //   url += `&search=${encodeURIComponent(search)}`;
@@ -276,12 +277,38 @@ export class ProcumentsService {
       );
   }
 
+  // getAllOrdersWithProcessInfoCompleted(
+  //   page: number,
+  //   limit: number,
+  //   filterType: string = '',
+  //   dateFilter: string = ''
+  // ): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   let url = `${this.apiUrl}procument/orders-process-info-completed?page=${page}&limit=${limit}`;
+
+  //   if (filterType) {
+  //     url += `&filterType=${filterType}`;
+  //   }
+
+  //   if (dateFilter) {
+  //     url += `&dateFilter=${dateFilter}`;
+  //   }
+
+  //   // if (search) {
+  //   //   url += `&search=${encodeURIComponent(search)}`;
+  //   // }
+
+  //   return this.http.get<any>(url, { headers });
+  // }
+
   getAllOrdersWithProcessInfoCompleted(
     page: number,
     limit: number,
-    filterType: string = '',
-    date: string = '',
-    search: string = ''
+    dateFilter: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -290,16 +317,8 @@ export class ProcumentsService {
 
     let url = `${this.apiUrl}procument/orders-process-info-completed?page=${page}&limit=${limit}`;
 
-    if (filterType) {
-      url += `&filterType=${filterType}`;
-    }
-
-    if (date) {
-      url += `&date=${date}`;
-    }
-
-    if (search) {
-      url += `&search=${encodeURIComponent(search)}`;
+    if (dateFilter) {
+      url += `&dateFilter=${dateFilter}`;
     }
 
     return this.http.get<any>(url, { headers });

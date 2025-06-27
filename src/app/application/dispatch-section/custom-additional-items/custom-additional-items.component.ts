@@ -13,10 +13,8 @@ import { DispatchService } from '../../../services/dispatch/dispatch.service';
 import Swal from 'sweetalert2';
 import { CountDownComponent } from '../../../components/count-down/count-down.component';
 
-
-
 @Component({
-  selector: 'app-additional-items',
+  selector: 'app-custom-additional-items',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,19 +25,19 @@ import { CountDownComponent } from '../../../components/count-down/count-down.co
     LoadingSpinnerComponent,
     CountDownComponent,
   ],
-  templateUrl: './additional-items.component.html',
-  styleUrl: './additional-items.component.css'
+  templateUrl: './custom-additional-items.component.html',
+  styleUrl: './custom-additional-items.component.css'
 })
-export class AdditionalItemsComponent implements OnInit {
+export class CustomAdditionalItemsComponent {
 
   id!: number | null;
   invNo!: string | null;
   total!: number;
   name!: string;
   fullTotal!: number;
-  additionalItemsArr: AdditionalItems[] = [];
+  customAdditionalItemsArr: CustomAdditionalItems[] = [];
   // productItemsArr: ProductItems[] = [];
-  totalAdditionalItems!: number;
+  totalCustomAdditionalItems!: number;
 
   selectedProductId: number | null = null;
   quantity: number | null = null;
@@ -52,7 +50,7 @@ export class AdditionalItemsComponent implements OnInit {
   previousPrice!: number;
 
   productIdsArr: number[] = [];
-  
+
 
   validationFailedMessage: string = '';
   validationSuccessMessage: string = '';
@@ -62,6 +60,8 @@ export class AdditionalItemsComponent implements OnInit {
   isPopupOpen: boolean = false;
 
   showCountdown: boolean = false;
+  // timeLeft: number = 0;
+  
 
   constructor(
     private dispatchService: DispatchService,
@@ -76,36 +76,35 @@ export class AdditionalItemsComponent implements OnInit {
       this.id = params['id'] ? +params['id'] : null;
       this.invNo = params['invNo'] || null;
       this.total = params['total'] ? +params['total'] : 0;
-      this.name = params['name'] || '';
       this.fullTotal = params['fullTotal'] ? +params['fullTotal'] : 0;
       console.log(this.id);
     });
 
-    this.getAdditionalItemData(this.id!);
+    this.getCustomAdditionalItemData(this.id!);
     // this.getAllProducts();
 
   }
 
-  getAdditionalItemData(id: number) {
+  getCustomAdditionalItemData(id: number) {
     this.isLoading = true;
-  
-    this.dispatchService.getAdditionalItems(id).subscribe(
+
+    this.dispatchService.getCustomAdditionalItems(id).subscribe(
       (response) => {
         console.log(response);
-  
-        this.packedAll = response.items.every((item: AdditionalItems) => item.packedStatus === 1);
+
+        this.packedAll = response.items.every((item: CustomAdditionalItems) => item.packedStatus === 1);
         console.log('All Packed:', this.packedAll);
 
         // Map the full item objects
-        this.additionalItemsArr = response.items.map((item: AdditionalItems) => {
+        this.customAdditionalItemsArr = response.items.map((item: CustomAdditionalItems) => {
           return {
             ...item,
             quantity: item.quantity,
             price: item.price
           };
         });
-  
-        this.totalAdditionalItems = response.total;
+
+        this.totalCustomAdditionalItems = response.total;
 
         if (!this.packedAll) {
           this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
@@ -117,7 +116,7 @@ export class AdditionalItemsComponent implements OnInit {
 
         this.isLoading = false;
 
-        console.log('Array:', this.additionalItemsArr);
+        console.log('Array:', this.customAdditionalItemsArr);
       },
       (error) => {
         console.error('Error fetching package items:', error);
@@ -145,11 +144,11 @@ export class AdditionalItemsComponent implements OnInit {
     })
   };
 
-  onCheckboxChange(item: AdditionalItems, event: Event): void {
+  onCheckboxChange(item: CustomAdditionalItems, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.packedStatus = isChecked ? 1 : 0;
 
-    const allPacked = this.additionalItemsArr.every(i => i.packedStatus === 1);
+    const allPacked = this.customAdditionalItemsArr.every(i => i.packedStatus === 1);
 
     if (!allPacked) {
       this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
@@ -158,7 +157,7 @@ export class AdditionalItemsComponent implements OnInit {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    console.log(this.additionalItemsArr);
+    console.log(this.customAdditionalItemsArr);
   }
 
   saveCheckedItems() {
@@ -176,60 +175,31 @@ export class AdditionalItemsComponent implements OnInit {
     this.showCountdown = false;
     // Optionally: reset form or show editing state again
   }
-
+  
   private executeApiCall() {
     this.isLoading = true;
-
-    const updatedData = this.additionalItemsArr.map(item => ({
-
+  
+    const updatedData = this.customAdditionalItemsArr.map(item => ({
       productId: item.productId,
       packedStatus: item.packedStatus,
-
     }));
-
-    console.log('data', updatedData )
-    this.dispatchService.updateAdditionalItemData(updatedData, this.id!).subscribe(
+  
+    this.dispatchService.updateCustomAdditionalItemData(updatedData, this.id!).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Updated Successfully', 'success');
         this.router.navigate(['/dispatch/salesdash-orders']);
       },
       (err) => {
-        console.error('Update failed:', err);
+        this.isLoading = false;
         Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
       }
     );
   }
 
-  // saveCheckedItems() {
-  //   this.isLoading = true;
-
-  //   const updatedData = this.additionalItemsArr.map(item => ({
-
-  //     productId: item.productId,
-  //     packedStatus: item.packedStatus,
-
-  //   }));
-
-  //   console.log('data', updatedData )
-  //   this.dispatchService.updateAdditionalItemData(updatedData, this.id!).subscribe(
-  //     (res) => {
-  //       this.isLoading = false;
-  //       console.log('Updated successfully:', res);
-  //       Swal.fire('Success', 'Product Updated Successfully', 'success');
-  //       this.router.navigate(['/dispatch/salesdash-orders']);
-  //     },
-  //     (err) => {
-  //       console.error('Update failed:', err);
-  //       Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
-  //     }
-  //   );
-  // }
-
 }
 
-class AdditionalItems {
+class CustomAdditionalItems {
   processOrderId!: number;
   orderId!: number;
   invNo!: string;

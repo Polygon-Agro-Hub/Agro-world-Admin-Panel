@@ -1,5 +1,12 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
+<app-count-down
+  *ngIf="showCountdown"
+  [duration]="30"
+  (completed)="onTimerCompleted()"
+  (cancelled)="onTimerCancelled()"
+></app-count-down>
+
 <div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
     <div>
 

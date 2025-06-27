@@ -145,6 +145,7 @@ import { AdditionalItemsComponent } from './application/dispatch-section/additio
 import { CompletedDefinePackageComponent } from './application/procurement-section/completed-define-package/completed-define-package.component';
 import { EditCompleatedDefinePremadePackagesComponent } from './application/procurement-section/edit-compleated-define-premade-packages/edit-compleated-define-premade-packages.component';
 import { ViewDispatchOrdersComponent } from './application/procurement-section/view-dispatch-orders/view-dispatch-orders.component';
+import { CustomAdditionalItemsComponent } from './application/dispatch-section/custom-additional-items/custom-additional-items.component';
 export const routes: Routes = [
   {
     path: '',
@@ -727,6 +728,11 @@ export const routes: Routes = [
           {
             path: 'additional-items',
             component: AdditionalItemsComponent,
+          },
+
+          {
+            path: 'custom-additional-items',
+            component: CustomAdditionalItemsComponent,
           },
         ],
       },

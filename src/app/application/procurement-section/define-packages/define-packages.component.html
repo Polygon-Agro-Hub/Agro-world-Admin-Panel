@@ -4,59 +4,40 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button
-        (click)="setActiveTab('todo')"
-        [ngClass]="
+      <button (click)="setActiveTab('todo')" [ngClass]="
           activeTab === 'todo'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'todo'" class="fa fa-check"></i>
         To Do
       </button>
 
-      <button
-        (click)="setActiveTab('completed')"
-        [ngClass]="
+      <button (click)="setActiveTab('completed')" [ngClass]="
           activeTab === 'completed'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'completed'" class="fa fa-check"></i>
         Completed
       </button>
 
-      <button
-        (click)="setActiveTab('sent')"
-        [ngClass]="
+      <button (click)="setActiveTab('sent')" [ngClass]="
           activeTab === 'sent'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'sent'" class="fa fa-check"></i>
         Sent To Dispatch
       </button>
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
-      <app-todo-define-packages
-        *ngIf="activeTab === 'todo'"
-      ></app-todo-define-packages>
-      <app-completed-define-package
-        *ngIf="activeTab === 'completed'"
-      ></app-completed-define-package>
+      <app-todo-define-packages *ngIf="activeTab === 'todo'"></app-todo-define-packages>
+      <app-completed-define-package *ngIf="activeTab === 'completed'"></app-completed-define-package>
       <app-view-send-to-dispatch *ngIf="activeTab === 'sent'">
       </app-view-send-to-dispatch>
     </div>

@@ -11,6 +11,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { DispatchService } from '../../../services/dispatch/dispatch.service';
 import Swal from 'sweetalert2';
+import { CountDownComponent } from '../../../components/count-down/count-down.component';
 
 @Component({
   selector: 'app-package-item-view',
@@ -21,7 +22,8 @@ import Swal from 'sweetalert2';
     HttpClientModule,
     DropdownModule,
     NgxPaginationModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    CountDownComponent,
   ],
   templateUrl: './package-item-view.component.html',
   styleUrl: './package-item-view.component.css'
@@ -56,6 +58,8 @@ export class PackageItemViewComponent implements OnInit {
 
   isLoading: boolean = false;
   isPopupOpen: boolean = false;
+
+  showCountdown: boolean = false;
 
   constructor(
     private dispatchService: DispatchService,
@@ -168,6 +172,22 @@ export class PackageItemViewComponent implements OnInit {
   }
 
   saveCheckedItems() {
+    this.showCountdown = true;
+  }
+  
+  // Called when countdown finishes or user clicks "Mark as Completed"
+  onTimerCompleted() {
+    this.showCountdown = false;
+    this.executeApiCall(); // Perform the API call
+  }
+  
+  // Called when user clicks "Go Back to Edit"
+  onTimerCancelled() {
+    this.showCountdown = false;
+    // Optionally: reset form or show editing state again
+  }
+
+  private executeApiCall() {
     this.isLoading = true;
 
     const updatedData = this.packageItemsArr.map(item => ({
@@ -191,6 +211,31 @@ export class PackageItemViewComponent implements OnInit {
       }
     );
   }
+
+  // saveCheckedItems() {
+  //   this.isLoading = true;
+
+  //   const updatedData = this.packageItemsArr.map(item => ({
+
+  //     productId: item.productId,
+  //     packedStatus: item.packedStatus,
+  //     quantity: item.quantity,
+  //     price: item.price,
+
+  //   }));
+  //   this.dispatchService.updatePackageItemData(updatedData, this.id!).subscribe(
+  //     (res) => {
+  //       this.isLoading = false;
+  //       console.log('Updated successfully:', res);
+  //       Swal.fire('Success', 'Product Updated Successfully', 'success');
+  //       this.router.navigate(['/dispatch/salesdash-orders']);
+  //     },
+  //     (err) => {
+  //       console.error('Update failed:', err);
+  //       Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+  //     }
+  //   );
+  // }
 
   openPopUp(productId: number, displayName: string, quantity: number, price: number) {
     this.isPopupOpen = true;

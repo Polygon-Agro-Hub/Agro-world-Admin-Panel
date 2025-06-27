@@ -47,29 +47,24 @@ export class TodoDefinePackagesComponent implements OnInit {
   constructor(
     private orderService: ProcumentsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
 
-  fetchOrders(): void {
+  fetchOrders(ordstatus: string = this.statusFilter, dateFilter:string = this.dateFilter): void {
     this.isLoading = true;
 
     // Add packingStatus filter to the request
-    const filters = {
-      statusFilter: this.statusFilter,
-      dateFilter: this.dateFilter,
-      searchTerm: this.searchTerm,
-      packingStatus: 'Todo', // Add this filter
-    };
+    // const filters = {
+    //   statusFilter: this.statusFilter,
+    //   dateFilter: this.dateFilter,
+    //   searchTerm: this.searchTerm,
+    //   packingStatus: 'Todo', // Add this filter
+    // };
 
-    this.orderService
-      .getAllOrdersWithProcessInfo(
-        this.page,
-        this.itemsPerPage,
-        JSON.stringify(filters) // Convert filters object to string
-      )
+    this.orderService.getAllOrdersWithProcessInfo(this.page, this.itemsPerPage, ordstatus, dateFilter)
       .subscribe({
         next: (response) => {
           console.log('API Response:', response); // Debug log

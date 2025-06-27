@@ -29,6 +29,7 @@ export class TodoDefinePackagesComponent implements OnInit {
 
   statusFilter: string = '';
   dateFilter: string = '';
+  dateFilter1: string = '';
   deliveryDateFilter: string = '';
   searchTerm: string = '';
 
@@ -53,22 +54,28 @@ export class TodoDefinePackagesComponent implements OnInit {
     this.fetchOrders();
   }
 
-  fetchOrders(): void {
+  fetchOrders(
+    ordstatus: string = this.statusFilter,
+    dateFilter: string = this.dateFilter,
+    dateFilter1: string = this.dateFilter1
+  ): void {
     this.isLoading = true;
 
     // Add packingStatus filter to the request
-    const filters = {
-      statusFilter: this.statusFilter,
-      dateFilter: this.dateFilter,
-      searchTerm: this.searchTerm,
-      packingStatus: 'Todo', // Add this filter
-    };
+    // const filters = {
+    //   statusFilter: this.statusFilter,
+    //   dateFilter: this.dateFilter,
+    //   searchTerm: this.searchTerm,
+    //   packingStatus: 'Todo', // Add this filter
+    // };
 
     this.orderService
       .getAllOrdersWithProcessInfo(
         this.page,
         this.itemsPerPage,
-        JSON.stringify(filters) // Convert filters object to string
+        ordstatus,
+        dateFilter,
+        dateFilter1
       )
       .subscribe({
         next: (response) => {

@@ -186,7 +186,9 @@
               
               <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
 
-                <button class="w-6 h-6 mr-3" 
+                <button 
+                (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.packageProductsCount, item.displayName, item.fullTotal)"
+                class="w-6 h-6 mr-3" 
                   [class.text-yellow-500]="item.packageProductStatus === 'Opened'"
                   [class.text-green-500]="item.packageProductStatus === 'Completed'"
                   [class.text-red-500]="item.packageProductStatus === 'Pending'"
@@ -211,6 +213,7 @@
               </td>
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 <button
+                (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)"
                   class="w-6 h-6 mr-3"
                   [disabled]="item.additionalProductsCount === 0"
                   [ngClass]="{
@@ -245,29 +248,7 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 {{ item.fullTotal | number: '1.2-2' }}
               </td>
-              <!-- <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                {{ item.packingStatus }}
-              </td>   -->
-              <!-- <td class="px-4 py-3 text-green-500 text-center">
-                <div *ngIf="item.packingStatus == 'Todo'">
-                  <span
-                    class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
-                  </span>
-                </div>
-                <div *ngIf="item.packingStatus == 'Pending'">
-                  <span
-                    class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
-                  </span>
-                </div>
-                <div *ngIf="item.packingStatus == 'Opened'">
-                  <span
-                    class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
-                  </span>
-                </div>
-              </td> -->
+              
 
               <td class="px-4 py-3 text-center">
                 <ng-container *ngIf="item.combinedStatus === 'Pending'">
@@ -437,7 +418,7 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center"
               >
                 <button 
-                
+                (click)="navigateToCustomAdditionalItemView(item.id, item.invNo, item.productCount, item.fullTotal)"
                 class="w-6 h-6 mr-3" [class.text-[#EBC351]]="item.customItemStatus === 'Opened'"
                 [disabled]="item.productCount === 0"
                 [ngClass]="{
@@ -463,21 +444,21 @@
                 {{ item.fullTotal | number: '1.2-2'}}
               </td>
               <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                <div *ngIf="item.packingStatus == 'Completed'">
+                <div *ngIf="item.customItemStatus == 'Completed' && item.productCount > 0">
                   <span
                     class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
+                    {{ item.customItemStatus }}
                   </span>
                 </div>
-                <div *ngIf="item.packingStatus == 'Pending'">
+                <div *ngIf="item.customItemStatus == 'Pending' || item.productCount === 0">
                   <span class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
+                    {{ item.customItemStatus }}
                   </span>
                 </div>
-                <div *ngIf="item.packingStatus == 'Opened'">
+                <div *ngIf="item.customItemStatus == 'Opened' && item.productCount > 0">
                   <span
                     class="w-24 h-7 inline-block bg-yellow-100 text-yellow-500 font-medium rounded-md px-3 py-1 text-sm">
-                    {{ item.packingStatus }}
+                    {{ item.customItemStatus }}
                   </span>
                 </div>
 
@@ -588,10 +569,10 @@
         class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
         Cancel
       </button>
-      <button (click)="saveCheckedItems()"
+      <!-- <button (click)="saveCheckedItems()"
         class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
         Save
-      </button>
+      </button> -->
     </div>
   </div>
 </div>

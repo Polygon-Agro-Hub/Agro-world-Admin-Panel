@@ -53,22 +53,22 @@ export class CompletedDefinePackageComponent {
     this.fetchOrders();
   }
 
-  fetchOrders(): void {
+  fetchOrders(dateFilter: string = this.dateFilter): void {
     this.isLoading = true;
 
     // Add packingStatus filter to the request
-    const filters = {
-      statusFilter: this.statusFilter,
-      dateFilter: this.dateFilter,
-      searchTerm: this.searchTerm,
-      packingStatus: 'Completed', // Add this filter
-    };
+    // const filters = {
+    //   statusFilter: this.statusFilter,
+    //   dateFilter: this.dateFilter,
+    //   searchTerm: this.searchTerm,
+    //   packingStatus: 'Completed', // Add this filter
+    // };
 
     this.orderService
       .getAllOrdersWithProcessInfoCompleted(
         this.page,
         this.itemsPerPage,
-        JSON.stringify(filters) // Convert filters object to string
+        dateFilter
       )
       .subscribe({
         next: (response) => {
@@ -157,7 +157,7 @@ export class CompletedDefinePackageComponent {
   }
 
   viewPremadePackages(id: number) {
-    this.router.navigate(['/procurement/todo-define-premade-packages'], {
+    this.router.navigate(['/procurement/edit-completed-define-package'], {
       queryParams: { id },
     });
   }

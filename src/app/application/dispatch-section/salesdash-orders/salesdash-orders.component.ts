@@ -18,7 +18,7 @@ interface ProductInfo {
 
 
 interface PremadePackages {
-  id: number;
+  processOrderId: number;
   invoiceNum: string;
   displayName: string;
   productPrice: number;
@@ -88,7 +88,7 @@ interface SelectdPackage {
 export class SalesdashOrdersComponent {
   search: string = '';
   isLoading = false;
-  status = ['Todo', 'Completed', 'Opened'];
+  status = ['Pending', 'Completed', 'Opened'];
   selectedStatus: any = '';
   date: string = '';
   itemsPerPage: number = 10;
@@ -405,18 +405,27 @@ selectedInvoiceIdAdditional: number = 0;
     this.showPopupAdditional = false;
   }
 
-  openViewPackageItemPopup(id: number, name: string, price: string, inv: string) {
+  navigateToPackageItemView(id: number, invNo: string, total: number, name:string, fullTotal: number) {
+    console.log(id, invNo, name, total);
+    this.router.navigate(['/dispatch/package-items']);
+    this.router.navigate(['/dispatch/package-items'], {
+      queryParams: { id, invNo, name, total, fullTotal },
+    });
+  }
 
-    this.isViewPackageItemsPopupOpen = true;
-    console.log(this.isViewPackageItemsPopupOpen)
-    console.log(id, name, inv)
-    this.orderId = id;
-    this.orderPrice = price;
-    this.orderName = name;
-    this.orderInv = inv;
+  navigateToAdditionalItemView(id: number, invNo: string, total: number, name:string, fullTotal: number) {
+    console.log(id, invNo, name, total);
+    this.router.navigate(['/dispatch/additional-items'], {
+      queryParams: { id, invNo, name, total, fullTotal },
+    });
+    
+  }
 
-
-    this.fetchPackageItems(id)
+  navigateToCustomAdditionalItemView(id: number, invNo: string, total: number, fullTotal: number) {
+    this.router.navigate(['/dispatch/custom-additional-items'], {
+      queryParams: { id, invNo, total, fullTotal },
+    });
+    
   }
 
   fetchPackageItems(id: number) {
@@ -467,58 +476,58 @@ selectedInvoiceIdAdditional: number = 0;
     }
   }
 
-  saveCheckedItems() {
-    console.log('All items:', this.packageItemsArr);
+  // saveCheckedItems() {
+  //   console.log('All items:', this.packageItemsArr);
   
-    // Create PackedItems for all items, regardless of isPacking value
-    this.packedItems = this.packageItemsArr.map(item => {
-      const packedItem = new PackedItems();
-      packedItem.id = item.packageListId;
-      packedItem.isPacked = item.isPacking; // can be 0 or 1
-      return packedItem;
-    });
+  //   // Create PackedItems for all items, regardless of isPacking value
+  //   this.packedItems = this.packageItemsArr.map(item => {
+  //     const packedItem = new PackedItems();
+  //     packedItem.id = item.packageListId;
+  //     packedItem.isPacked = item.isPacking; // can be 0 or 1
+  //     return packedItem;
+  //   });
   
-    console.log('Packed items:', this.packedItems);
-    console.log('All items:', this.packageItemsArr);
+  //   console.log('Packed items:', this.packedItems);
+  //   console.log('All items:', this.packageItemsArr);
   
-    this.isViewPackageItemsPopupOpen = false;
-    this.setIsPacked(this.packedItems);
-  }
+  //   this.isViewPackageItemsPopupOpen = false;
+  //   this.setIsPacked(this.packedItems);
+  // }
   
   
 
-  setIsPacked(array: PackedItems[]) {
-    this.isLoading = true;
+  // setIsPacked(array: PackedItems[]) {
+  //   this.isLoading = true;
   
-    this.dispatchService
-      .updateIsPacked(this.packedItems)
-      .subscribe(
-        (response) => {
-          if (response && response.success) {
-            console.log('Items updated successfully:', response.message || response);
+  //   this.dispatchService
+  //     .updateIsPacked(this.packedItems)
+  //     .subscribe(
+  //       (response) => {
+  //         if (response && response.success) {
+  //           console.log('Items updated successfully:', response.message || response);
              
-          } else {
-            console.log('Update failed:', response.message || 'Unknown error occurred');
-          }
-          this.isLoading = false;
+  //         } else {
+  //           console.log('Update failed:', response.message || 'Unknown error occurred');
+  //         }
+  //         this.isLoading = false;
 
-          // window.location.reload();
-          this.getPreMadePackages(this.page, this.itemsPerPage);
-        },
-        (error) => {
-          if (error.status === 401) {
-            console.log('Unauthorized access. Maybe redirect to login?');
-          } else {
-            console.log('An unexpected error occurred while updating items.');
-          }
-          this.isLoading = false;
-          this.getPreMadePackages(this.page, this.itemsPerPage);
-          // window.location.reload();
-        }
-      );
+  //         // window.location.reload();
+  //         this.getPreMadePackages(this.page, this.itemsPerPage);
+  //       },
+  //       (error) => {
+  //         if (error.status === 401) {
+  //           console.log('Unauthorized access. Maybe redirect to login?');
+  //         } else {
+  //           console.log('An unexpected error occurred while updating items.');
+  //         }
+  //         this.isLoading = false;
+  //         this.getPreMadePackages(this.page, this.itemsPerPage);
+  //         // window.location.reload();
+  //       }
+  //     );
       
-      this.getPreMadePackages(this.page, this.itemsPerPage);
-  }
+  //     this.getPreMadePackages(this.page, this.itemsPerPage);
+  // }
 
 
 

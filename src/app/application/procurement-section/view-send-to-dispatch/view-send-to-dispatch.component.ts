@@ -53,22 +53,63 @@ export class ViewSendToDispatchComponent {
     this.fetchOrders();
   }
 
-  fetchOrders(): void {
-    this.isLoading = true;
+  // fetchOrders(): void {
+  //   this.isLoading = true;
 
-    // Add packingStatus filter to the request
-    const filters = {
-      statusFilter: this.statusFilter,
-      dateFilter: this.dateFilter,
-      searchTerm: this.searchTerm,
-      packingStatus: 'Dispatch', // Add this filter
-    };
+  //   // Add packingStatus filter to the request
+  //   const filters = {
+  //     statusFilter: this.statusFilter,
+  //     dateFilter: this.dateFilter,
+  //     searchTerm: this.searchTerm,
+  //     packingStatus: 'Dispatch', // Add this filter
+  //   };
+
+  //   this.orderService
+  //     .getAllOrdersWithProcessInfoDispatched(
+  //       this.page,
+  //       this.itemsPerPage,
+  //       JSON.stringify(filters) // Convert filters object to string
+  //     )
+  //     .subscribe({
+  //       next: (response) => {
+  //         console.log('API Response:', response); // Debug log
+
+  //         if (response && response.data) {
+  //           // Optional: Filter on client side if needed (but better to do it server-side)
+  //           this.orders = response.data.filter(
+  //             (order: { packingStatus: string }) =>
+  //               order.packingStatus === 'Dispatch'
+  //           );
+  //           this.totalItems = response.total || response.totalCount || 0;
+  //         } else {
+  //           // Fallback client-side filtering if API doesn't support it
+  //           const allOrders = Array.isArray(response) ? response : [];
+  //           this.orders = allOrders.filter(
+  //             (order) => order.packingStatus === 'Dispatch'
+  //           );
+  //           this.totalItems = this.orders.length;
+  //         }
+
+  //         console.log('Orders:', this.orders.length, 'Total:', this.totalItems); // Debug log
+  //         this.isLoading = false;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching orders:', error);
+  //         this.orders = [];
+  //         this.totalItems = 0;
+  //         this.isLoading = false;
+  //       },
+  //     });
+  // }
+
+  fetchOrders(dateFilter: string = this.dateFilter): void {
+    this.isLoading = true;
 
     this.orderService
       .getAllOrdersWithProcessInfoDispatched(
         this.page,
         this.itemsPerPage,
-        JSON.stringify(filters) // Convert filters object to string
+        dateFilter
       )
       .subscribe({
         next: (response) => {

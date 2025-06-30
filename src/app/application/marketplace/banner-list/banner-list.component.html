@@ -268,11 +268,18 @@
             class="cursor-pointer w-full h-full flex flex-col items-center justify-center"
           >
             <ng-container *ngIf="selectedRetailImageUrl; else placeholder">
-              <img
-                [src]="selectedRetailImageUrl"
-                alt="Preview"
-                class="max-h-48 rounded-md object-contain"
-              />
+              <div class="flex flex-col items-center">
+                <img
+                  [src]="selectedRetailImageUrl"
+                  alt="Preview"
+                  class="max-h-48 rounded-md object-contain"
+                />
+                <p
+                  class="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs"
+                >
+                  {{ selectedFile?.name }}
+                </p>
+              </div>
             </ng-container>
             <ng-template #placeholder>
               <svg
@@ -385,11 +392,18 @@
             class="cursor-pointer w-full h-full flex flex-col items-center justify-center"
           >
             <ng-container *ngIf="selectedWholesaleImageUrl; else placeholder">
-              <img
-                [src]="selectedWholesaleImageUrl"
-                alt="Preview"
-                class="max-h-48 rounded-md object-contain"
-              />
+              <div class="flex flex-col items-center">
+                <img
+                  [src]="selectedWholesaleImageUrl"
+                  alt="Preview"
+                  class="max-h-48 rounded-md object-contain"
+                />
+                <p
+                  class="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs"
+                >
+                  {{ selectedFileWholesale?.name }}
+                </p>
+              </div>
             </ng-container>
             <ng-template #placeholder>
               <svg

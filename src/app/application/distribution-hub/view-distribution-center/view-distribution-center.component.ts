@@ -307,7 +307,7 @@ export class ViewDistributionCenterComponent implements OnInit {
   }
 
   add(): void {
-    // this.router.navigate(['/collection-hub/add-collection-center']);
+    this.router.navigate(['/distribution-hub/action/add-destribition-center']);
   }
 
   navigateDashboard(id: number) {

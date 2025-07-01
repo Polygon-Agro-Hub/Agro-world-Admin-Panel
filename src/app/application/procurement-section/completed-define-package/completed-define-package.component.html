@@ -15,45 +15,15 @@
 
         <div class="flex items-center flex-wrap gap-4">
           <div>
-            <p-dropdown
-              [(ngModel)]="statusFilter"
-              (onChange)="onFilterChange()"
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="statusOptions"
-              [checkmark]="true"
-              optionLabel="label"
-              optionValue="value"
-              [showClear]="true"
-              placeholder="Status"
-            ></p-dropdown>
-          </div>
-
-          <div>
-            <p-dropdown
-              [(ngModel)]="dateFilter"
-              (onChange)="onFilterChange()"
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="dateOptions"
-              [checkmark]="true"
-              optionLabel="label"
-              optionValue="value"
-              [showClear]="true"
+            <input
+              id="fromDate"
+              type="date"
+              name="dateFilter"
+              class="w-48 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
+              (change)="fetchOrders()"
               placeholder="Ordered Date"
-            ></p-dropdown>
-          </div>
-
-          <div>
-            <p-dropdown
-              [(ngModel)]="deliveryDateFilter"
-              (onChange)="onFilterChange()"
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="dateOptions"
-              [checkmark]="true"
-              optionLabel="label"
-              optionValue="value"
-              [showClear]="true"
-              placeholder="Delivery Date"
-            ></p-dropdown>
+              [(ngModel)]="dateFilter"
+            />
           </div>
 
           <div

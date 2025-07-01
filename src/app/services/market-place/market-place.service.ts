@@ -11,7 +11,7 @@ export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -438,14 +438,17 @@ export class MarketPlaceService {
     });
 
     let url = `${this.apiUrl}market-place/get-all-delivery-charges`;
-    const params = new HttpParams();
 
+    // Start with an empty HttpParams
+    let params = new HttpParams();
+
+    // Add parameters conditionally
     if (searchCity) {
-      params.set('searchItem', searchCity);
+      params = params.set('searchItem', searchCity);
     }
 
     if (exactCity) {
-      params.set('city', exactCity);
+      params = params.set('city', exactCity);
     }
 
     return this.http.get<any>(url, { headers, params });
@@ -492,6 +495,23 @@ export class MarketPlaceService {
 
     return this.http.get<any>(
       `${this.apiUrl}market-place/check-package-name?displayName=${displayName}`,
+      { headers }
+    );
+  }
+
+  
+  fetchAllRetailCustomers(page: number = 1, limit: number = 10, searchText: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-retails-customers?page=${page}&limit=${limit}`
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(
+      url,
       { headers }
     );
   }

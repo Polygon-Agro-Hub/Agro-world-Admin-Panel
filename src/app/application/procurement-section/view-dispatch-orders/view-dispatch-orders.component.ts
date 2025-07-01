@@ -32,13 +32,6 @@ interface MarketplaceItem {
   discountedPrice: number;
 }
 
-interface PackageItem {
-  packageId: number;
-  displayName: string;
-  productPrice: number;
-  productTypes: ProductTypes[];
-}
-
 interface AdditionalItem {
   id: number;
   qty: number;
@@ -48,13 +41,13 @@ interface AdditionalItem {
 }
 
 @Component({
-  selector: 'app-edit-compleated-define-premade-packages',
+  selector: 'app-view-dispatch-orders',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './edit-compleated-define-premade-packages.component.html',
-  styleUrl: './edit-compleated-define-premade-packages.component.css',
+  templateUrl: './view-dispatch-orders.component.html',
+  styleUrl: './view-dispatch-orders.component.css',
 })
-export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
+export class ViewDispatchOrdersComponent implements OnInit {
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
   packageItems: any[] = [];
@@ -383,167 +376,11 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     );
   }
 
-  async onUpdate() {
-    const productsToUpdate = this.orderDetails.flatMap((pkg) =>
-      pkg.productTypes.map((pt) => ({
-        id: pt.id, // orderpackageitems.id (if needed for updates)
-        productId: pt.productId,
-        qty: pt.quantity?.toString() || '0',
-        price: pt.calculatedPrice?.toString() || '0',
-        displayName: pt.displayName,
-      }))
-    );
-
-    console.log('Products to Update:', productsToUpdate); // Verify before sending
-
-    // Filter out invalid entries - now only checking for productId
-    const validProducts = productsToUpdate.filter(
-      (product) => product.productId
-    );
-
-    if (validProducts.length === 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'No Valid Items',
-        text: 'No valid items to update. Ensure all items have a product selected.',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
-
-    Swal.fire({
-      title: 'Updating...',
-      html: 'Please wait while we update your order',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
-
-    try {
-      const result = await this.procurementService
-        .updateOrderPackageItems(this.orderId, validProducts)
-        .toPromise();
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'Update completed successfully!',
-        confirmButtonColor: '#3085d6',
-      });
-
-      // Refresh data
-      this.fetchOrderDetails(this.orderId.toString());
-    } catch (err) {
-      console.error('Error updating order:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to update order. Please check the data and try again.',
-        confirmButtonColor: '#3085d6',
-      });
-    }
-  }
-
   closeAdditionalItemsModal() {
     this.showAdditionalItemsModal = false;
   }
 
   openAdditionalItemsModal() {
     this.showAdditionalItemsModal = true;
-  }
-
-  async sendDispatch() {
-    try {
-      // Validations
-      if (!this.isWithinLimit) {
-        throw new Error('Calculated price exceeds allowed limit');
-      }
-
-      if (!this.orderDetails?.length) {
-        throw new Error('No packages available to dispatch');
-      }
-
-      // Confirmation dialog
-      const confirm = await Swal.fire({
-        title: 'Confirm Dispatch',
-        text: `Dispatch ${this.orderDetails.length} package(s)?`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-      });
-
-      if (!confirm.isConfirmed) return;
-
-      // Show loading indicator
-      Swal.fire({
-        title: 'Updating...',
-        html: 'Please wait while we update the packages',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading(),
-      });
-
-      // Execute updates for all packages
-      const results = await Promise.all(
-        this.orderDetails.map(async (pkg) => {
-          if (!pkg.packageId) {
-            return {
-              success: false,
-              packageId: 'N/A',
-              error: 'Missing package ID',
-            };
-          }
-
-          try {
-            const response = await this.procurementService
-              .updateOrderPackagePackingStatus(pkg.packageId, 'Dispatch')
-              .toPromise();
-
-            return {
-              success: true,
-              packageId: pkg.packageId,
-              response,
-            };
-          } catch (error) {
-            return {
-              success: false,
-              packageId: pkg.packageId,
-              error: this.getErrorMessage(error),
-            };
-          }
-        })
-      );
-
-      // Handle results
-      const failed = results.filter((r) => !r.success);
-
-      if (failed.length > 0) {
-        const errorMsg = failed
-          .map((f) => `Package ${f.packageId}: ${f.error}`)
-          .join('<br><br>');
-        throw new Error(`Some packages failed to update:<br><br>${errorMsg}`);
-      }
-
-      // Success notification
-      Swal.fire({
-        icon: 'success',
-        title: 'Dispatched!',
-        html: `All ${results.length} packages were updated successfully`,
-        confirmButtonColor: '#3085d6',
-      });
-
-      // Optionally refresh data or navigate back
-      this.fetchOrderDetails(this.orderId.toString());
-      // this.goBack(); // Uncomment if you want to navigate back after success
-    } catch (error) {
-      console.error('Dispatch error:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Dispatch Failed',
-        html: this.getErrorMessage(error),
-        confirmButtonColor: '#3085d6',
-      });
-    }
   }
 }

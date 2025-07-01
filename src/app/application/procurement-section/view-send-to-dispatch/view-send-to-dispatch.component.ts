@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { FormsModule } from '@angular/forms';
+import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-todo-define-packages',
+  selector: 'app-view-send-to-dispatch',
   standalone: true,
   imports: [
     CommonModule,
@@ -17,10 +17,10 @@ import { Router } from '@angular/router';
     NgxPaginationModule,
     FormsModule,
   ],
-  templateUrl: './todo-define-packages.component.html',
-  styleUrl: './todo-define-packages.component.css',
+  templateUrl: './view-send-to-dispatch.component.html',
+  styleUrl: './view-send-to-dispatch.component.css',
 })
-export class TodoDefinePackagesComponent implements OnInit {
+export class ViewSendToDispatchComponent {
   isLoading = false;
   orders: any[] = [];
   page: number = 1;
@@ -29,7 +29,6 @@ export class TodoDefinePackagesComponent implements OnInit {
 
   statusFilter: string = '';
   dateFilter: string = '';
-  dateFilter1: string = '';
   deliveryDateFilter: string = '';
   searchTerm: string = '';
 
@@ -54,28 +53,63 @@ export class TodoDefinePackagesComponent implements OnInit {
     this.fetchOrders();
   }
 
-  fetchOrders(
-    ordstatus: string = this.statusFilter,
-    dateFilter: string = this.dateFilter,
-    dateFilter1: string = this.dateFilter1
-  ): void {
+  // fetchOrders(): void {
+  //   this.isLoading = true;
+
+  //   // Add packingStatus filter to the request
+  //   const filters = {
+  //     statusFilter: this.statusFilter,
+  //     dateFilter: this.dateFilter,
+  //     searchTerm: this.searchTerm,
+  //     packingStatus: 'Dispatch', // Add this filter
+  //   };
+
+  //   this.orderService
+  //     .getAllOrdersWithProcessInfoDispatched(
+  //       this.page,
+  //       this.itemsPerPage,
+  //       JSON.stringify(filters) // Convert filters object to string
+  //     )
+  //     .subscribe({
+  //       next: (response) => {
+  //         console.log('API Response:', response); // Debug log
+
+  //         if (response && response.data) {
+  //           // Optional: Filter on client side if needed (but better to do it server-side)
+  //           this.orders = response.data.filter(
+  //             (order: { packingStatus: string }) =>
+  //               order.packingStatus === 'Dispatch'
+  //           );
+  //           this.totalItems = response.total || response.totalCount || 0;
+  //         } else {
+  //           // Fallback client-side filtering if API doesn't support it
+  //           const allOrders = Array.isArray(response) ? response : [];
+  //           this.orders = allOrders.filter(
+  //             (order) => order.packingStatus === 'Dispatch'
+  //           );
+  //           this.totalItems = this.orders.length;
+  //         }
+
+  //         console.log('Orders:', this.orders.length, 'Total:', this.totalItems); // Debug log
+  //         this.isLoading = false;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching orders:', error);
+  //         this.orders = [];
+  //         this.totalItems = 0;
+  //         this.isLoading = false;
+  //       },
+  //     });
+  // }
+
+  fetchOrders(dateFilter: string = this.dateFilter): void {
     this.isLoading = true;
 
-    // Add packingStatus filter to the request
-    // const filters = {
-    //   statusFilter: this.statusFilter,
-    //   dateFilter: this.dateFilter,
-    //   searchTerm: this.searchTerm,
-    //   packingStatus: 'Todo', // Add this filter
-    // };
-
     this.orderService
-      .getAllOrdersWithProcessInfo(
+      .getAllOrdersWithProcessInfoDispatched(
         this.page,
         this.itemsPerPage,
-        ordstatus,
-        dateFilter,
-        dateFilter1
+        dateFilter
       )
       .subscribe({
         next: (response) => {
@@ -85,14 +119,14 @@ export class TodoDefinePackagesComponent implements OnInit {
             // Optional: Filter on client side if needed (but better to do it server-side)
             this.orders = response.data.filter(
               (order: { packingStatus: string }) =>
-                order.packingStatus === 'Todo'
+                order.packingStatus === 'Dispatch'
             );
             this.totalItems = response.total || response.totalCount || 0;
           } else {
             // Fallback client-side filtering if API doesn't support it
             const allOrders = Array.isArray(response) ? response : [];
             this.orders = allOrders.filter(
-              (order) => order.packingStatus === 'Todo'
+              (order) => order.packingStatus === 'Dispatch'
             );
             this.totalItems = this.orders.length;
           }
@@ -164,7 +198,7 @@ export class TodoDefinePackagesComponent implements OnInit {
   }
 
   viewPremadePackages(id: number) {
-    this.router.navigate(['/procurement/todo-define-premade-packages'], {
+    this.router.navigate(['/procurement/view-dispatched-define-package'], {
       queryParams: { id },
     });
   }

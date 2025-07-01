@@ -6,6 +6,14 @@ import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
+interface AdditionalItem {
+  id: number;
+  qty: number;
+  unit: string;
+  displayName: string;
+  quantity?: number; // Optional if you want to allow editing
+}
+
 interface OrderDetailItem {
   packageId: number;
   displayName: string;
@@ -48,12 +56,15 @@ interface PackageItem {
 export class TodoDefinePremadePackagesComponent implements OnInit {
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
+  additionalItems: AdditionalItem[] = [];
   loading = true;
   error = '';
   invoiceNumber = '';
   totalPrice = 0;
   orderId!: number;
   isWithinLimit = true;
+
+  showAdditionalItemsModal = false;
 
   constructor(
     private procurementService: ProcumentsService,
@@ -142,6 +153,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         }));
 
         this.invoiceNumber = response.invNo;
+        this.additionalItems = response.additionalItems || []; // Add this line
         this.calculateTotalPrice();
         this.loading = false;
       },
@@ -427,5 +439,13 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       (sum, pkg) => sum + this.getPackageTotal(pkg),
       0
     );
+  }
+
+  openAdditionalItemsModal() {
+    this.showAdditionalItemsModal = true;
+  }
+
+  closeAdditionalItemsModal() {
+    this.showAdditionalItemsModal = false;
   }
 }

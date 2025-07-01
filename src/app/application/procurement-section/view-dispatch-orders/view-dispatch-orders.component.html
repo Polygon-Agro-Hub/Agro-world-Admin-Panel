@@ -12,7 +12,7 @@
       <div class="text-sm">
         <div class="text-gray-700 dark:text-gray-300">INV No :</div>
         <div class="font-semibold text-gray-900 dark:text-gray-300">
-          {{ orderDetails[0].invNo || "N/A" }}
+          {{ invoiceNumber || "N/A" }}
         </div>
       </div>
 
@@ -46,21 +46,28 @@
           </svg>
         </button>
       </div>
-    </div>
 
-    <div class="flex space-x-2">
-      <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm">
-        Clear
-      </button>
-      <button
-        class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm"
-        [disabled]="!isWithinLimit"
-        [class.opacity-50]="!isWithinLimit"
-        [class.cursor-not-allowed]="!isWithinLimit"
-        (click)="onComplete()"
-      >
-        Complete
-      </button>
+      <div class="text-sm flex flex-col justify-center items-center">
+        <div class="text-gray-700 dark:text-gray-300">Excluded Items :</div>
+        <button
+          class="w-5 h-5 text-blue-500 hover:text-blue-700"
+          (click)="openAdditionalItemsModal()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -72,13 +79,10 @@
           class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl"
         >
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            Package : {{ item.displayName }} (Rs.{{ item.productPrice }})
+            Package : {{ item.displayName }} (Rs.{{
+              item.productPrice.toFixed(2)
+            }})
           </span>
-          <button
-            class="w-6 h-6 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center"
-          >
-            <span class="text-sm font-bold">+</span>
-          </button>
         </div>
 
         <div class="space-y-3">
@@ -88,13 +92,18 @@
                 {{ typeItems.shortCode }}
               </div>
               <select
-                class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm"
+                class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm appearance-none cursor-default"
+                disabled
                 (change)="onProductSelected(typeItems, $event)"
               >
-                <option>--Select Product--</option>
+                <option value="">--Select Product--</option>
                 <option
                   *ngFor="let product of marketplaceItems"
                   [value]="product.id"
+                  [selected]="
+                    product.id === typeItems.productId ||
+                    product.displayName === typeItems.productDescription
+                  "
                 >
                   {{ product.displayName }}
                 </option>
@@ -104,8 +113,8 @@
                 step="0.01"
                 min="0"
                 placeholder="--Quantity in kg--"
-                class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 text-sm"
-                (input)="onQuantityChanged(typeItems, $event)"
+                class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 text-sm appearance-none"
+                readonly
                 [value]="typeItems.quantity || ''"
               />
               <div
@@ -138,18 +147,6 @@
           <span class="ml-2"
             >Rs.{{ getCombinedCalculatedTotal().toFixed(2) }}</span
           >
-        </div>
-        <div class="text-xs text-blue-600 dark:text-blue-400">
-          Allowed limit : {{ getCombinedProductPrice().toFixed(2) }} +
-          {{ (getCombinedProductPrice() * 0.08).toFixed(2) }} = Rs.{{
-            (getCombinedProductPrice() * 1.08).toFixed(2)
-          }}
-        </div>
-        <div
-          *ngIf="!isWithinLimit"
-          class="text-xs text-red-600 dark:text-red-400 mt-1"
-        >
-          Calculated price exceeds the allowed limit!
         </div>
       </div>
     </div>

@@ -92,7 +92,7 @@ fetchComplaintCategories(): Observable<any> {
 
     return this.http
       .get<any>(
-        `${this.apiUrl}complain/get-all-complain-category`,
+        `${this.apiUrl}complain/complaint-categories/3`,
         { headers }
       )
       .pipe(

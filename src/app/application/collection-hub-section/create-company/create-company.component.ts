@@ -414,7 +414,7 @@ export class CreateCompanyComponent {
         this.isLoading = false;
         console.log('Data saved successfully:', response);
         Swal.fire('Success', 'Company Created Successfully', 'success');
-        this.router.navigate(['/collection-hub/manage-company']);
+        this.router.navigate(['/distribution-hub/action/view-companies']);
       },
       (error) => {
         this.isLoading = false;

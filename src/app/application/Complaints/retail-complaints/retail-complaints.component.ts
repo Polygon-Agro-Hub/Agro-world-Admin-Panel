@@ -132,24 +132,24 @@ export class RetailComplaintsComponent implements OnInit {
     });
   }
 
-  private fetchComplaintCategories(): void {
-    this. ComplaintsService.fetchComplaintCategories().subscribe({
-      next: (resp: any) => {
-        this.comCategories = resp.map((c: any) => ({
-          label: c.categoryEnglish,
-          value: c.categoryEnglish,
-        }));
-      },
-      error: (err) => {
-        if (err.message.includes('No authentication token found')) {
-          alert('No authentication token found. Please log in.');
-          this.router.navigate(['login']);
-        } else {
-          console.error('Category fetch error', err);
-        }
+private fetchComplaintCategories(): void {
+  this.ComplaintsService.fetchComplaintCategories().subscribe({
+    next: (resp: { categories: { id: number; categoryEnglish: string }[] }) => {
+      this.comCategories = resp.categories.map((c: { id: number; categoryEnglish: string }) => ({
+        label: c.categoryEnglish,
+        value: c.categoryEnglish,
+      }));
+    },
+    error: (err) => {
+      if (err.message.includes('No authentication token found')) {
+        alert('No authentication token found. Please log in.');
+        this.router.navigate(['login']);
+      } else {
+        console.error('Category fetch error', err);
       }
-    });
-  }
+    }
+  });
+}
 
   private formatDate(dateString: string): string {
     return (
@@ -158,13 +158,16 @@ export class RetailComplaintsComponent implements OnInit {
     );
   }
 
-  private normalizeStatus(status: string, createdAt: string): string {
-    if (status.toLowerCase() === 'opened') {
-      const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
-      return diff >= 3 ? 'Pending' : 'Assigned';
-    }
-    return status;
+ private normalizeStatus(status: string | null | undefined, createdAt: string): string {
+  if (!status) {
+    return 'Unknown'; // Fallback status if null or undefined
   }
+  if (status.toLowerCase() === 'opened') {
+    const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
+    return diff >= 3 ? 'Pending' : 'Assigned';
+  }
+  return status;
+}
 
   applyFilters(): void {
     const txt = this.searchText.trim().toLowerCase();

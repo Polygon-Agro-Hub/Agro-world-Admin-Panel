@@ -147,6 +147,7 @@ import { EditCompleatedDefinePremadePackagesComponent } from './application/proc
 import { ViewDispatchOrdersComponent } from './application/procurement-section/view-dispatch-orders/view-dispatch-orders.component';
 import { CustomAdditionalItemsComponent } from './application/dispatch-section/custom-additional-items/custom-additional-items.component';
 import { ViewRetailCustomeresComponent } from './application/marketplace/view-retail-customeres/view-retail-customeres.component';
+import { DefinePackageViewComponent } from './application/marketplace/define-package-view/define-package-view.component';
 export const routes: Routes = [
   {
     path: '',
@@ -825,6 +826,10 @@ export const routes: Routes = [
               {
                 path: 'view-retail-customers',
                 component: ViewRetailCustomeresComponent,
+              },
+              {
+                path: 'define-package-view/:id',
+                component: DefinePackageViewComponent,
               },
             ],
           },

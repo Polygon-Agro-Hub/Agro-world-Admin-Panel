@@ -28,7 +28,7 @@ export class ViewPackageListComponent {
     { label: 'Disabled', value: 'Disabled' },
   ];
   selectedStatus: any;
-  searchtext:string = '';
+  searchtext: string = '';
 
   constructor(
     private router: Router,
@@ -135,16 +135,19 @@ export class ViewPackageListComponent {
     );
   }
 
-  onSearch(){
+  onSearch() {
     this.fetchAllPackages();
   }
 
-  offSearch(){
+  offSearch() {
     this.searchtext = '';
     this.fetchAllPackages();
   }
-}
 
+  viewDefinePackage(id: number) {
+    this.router.navigate([`/market/action/define-package-view/${id}`]);
+  }
+}
 
 class PackageList {
   id!: number;

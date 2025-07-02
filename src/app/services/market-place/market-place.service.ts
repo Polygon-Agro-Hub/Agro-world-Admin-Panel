@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -499,20 +499,83 @@ export class MarketPlaceService {
     );
   }
 
-  
-  fetchAllRetailCustomers(page: number = 1, limit: number = 10, searchText: string = ''): Observable<any> {
+  fetchAllRetailCustomers(
+    page: number = 1,
+    limit: number = 10,
+    searchText: string = ''
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    let url = `${this.apiUrl}market-place/get-all-retails-customers?page=${page}&limit=${limit}`
+    let url = `${this.apiUrl}market-place/get-all-retails-customers?page=${page}&limit=${limit}`;
     if (searchText) {
       url += `&searchText=${searchText}`;
     }
 
-    return this.http.get<any>(
-      url,
-      { headers }
-    );
+    return this.http.get<any>(url, { headers });
+  }
+
+  getOrderDetailsById(id: string): Observable<{
+    success: boolean;
+    data: {
+      packages: Array<{
+        packageId: number;
+        displayName: string;
+        productPrice: string | null;
+        productTypes: Array<{
+          id: number;
+          qty: number;
+        }>;
+      }>;
+    };
+    message?: string;
+  }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}market-place/get-order-details/${id}`;
+
+    return this.http
+      .get<{
+        success: boolean;
+        data: {
+          packages: Array<{
+            packageId: number;
+            displayName: string;
+            productPrice: string | null;
+            productTypes: Array<{
+              id: number;
+              qty: number;
+            }>;
+          }>;
+        };
+        message?: string;
+      }>(url, { headers })
+      .pipe(
+        map((response) => {
+          if (response.success) {
+            return response;
+          } else {
+            throw new Error(
+              response.message || 'Failed to fetch order details'
+            );
+          }
+        }),
+        catchError((error) => {
+          console.error('Error fetching order details:', error);
+
+          let errorMessage = 'An error occurred while fetching order details';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          return throwError(() => new Error(errorMessage));
+        })
+      );
   }
 }

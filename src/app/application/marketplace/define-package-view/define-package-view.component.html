@@ -9,7 +9,10 @@
     <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm">
       Cancel
     </button>
-    <button class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm">
+    <button
+      class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm"
+      (click)="onSave()"
+    >
       Save
     </button>
   </div>
@@ -25,11 +28,6 @@
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
             Package : {{ item.displayName }} (Rs.{{ item.productPrice }})
           </span>
-          <button
-            class="w-6 h-6 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center"
-          >
-            <span class="text-sm font-bold">+</span>
-          </button>
         </div>
 
         <div class="space-y-3">

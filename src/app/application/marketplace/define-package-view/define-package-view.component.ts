@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 interface OrderDetailItem {
   packageId: number;
@@ -230,5 +231,113 @@ export class DefinePackageViewComponent implements OnInit {
       (sum, pkg) => sum + this.getPackageTotal(pkg),
       0
     );
+  }
+
+  async onSave() {
+    // Check if calculated price is within limit
+    if (!this.isWithinLimit) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot Complete Package',
+        text: 'Calculated price exceeds the allowed limit!',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    // Check if there are any order details
+    if (!this.orderDetails.length) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Package Details',
+        text: 'No package details available',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    // Prepare the package data and items
+    const packageData = {
+      packageId: String(this.id),
+      price: this.getCombinedCalculatedTotal(),
+    };
+
+    const packageItems = this.orderDetails.flatMap((pkg) =>
+      pkg.productTypes
+        .filter(
+          (pt) =>
+            pt.productId !== null &&
+            pt.productId !== undefined &&
+            pt.quantity !== undefined &&
+            pt.selectedProductPrice !== undefined
+        )
+        .map((pt) => ({
+          productType: String(pt.id),
+          productId: pt.productId as number,
+          qty: pt.quantity as number,
+          price: pt.selectedProductPrice as number,
+        }))
+    );
+
+    // Check if we have any valid items
+    if (packageItems.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Valid Items',
+        text: 'No valid package items to save. Please ensure all items have a product selected, quantity, and price.',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+
+    console.log('Package data to save:', { packageData, packageItems });
+
+    Swal.fire({
+      title: 'Processing...',
+      html: 'Please wait while we create your package',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      // Create the package with items
+      const response = await this.marketplaceService
+        .createDefinePackageWithItems(packageData, packageItems)
+        .toPromise();
+
+      console.log('Package created successfully:', response);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Package created successfully!',
+        confirmButtonColor: '#3085d6',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.goBack();
+        }
+      });
+    } catch (error) {
+      console.error('Error creating package:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: this.getErrorMessage(error) || 'Failed to create package',
+        confirmButtonColor: '#3085d6',
+      });
+    }
+  }
+
+  // Helper function to get error message
+  private getErrorMessage(error: any): string {
+    if (error?.error?.message) {
+      return error.error.message;
+    }
+    if (error?.message) {
+      return error.message;
+    }
+    return 'An unknown error occurred';
   }
 }

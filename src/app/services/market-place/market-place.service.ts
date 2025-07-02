@@ -611,4 +611,43 @@ export class MarketPlaceService {
       })
     );
   }
+
+  createDefinePackageWithItems(
+    packageData: { packageId: string; price: number },
+    packageItems: Array<{
+      productType: string;
+      productId: number;
+      qty: number;
+      price: number;
+    }>
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Structure the data to match the endpoint's expected format
+    const requestData = {
+      packageData: packageData,
+      packageItems: packageItems,
+    };
+
+    // Log the data being sent
+    console.log('Creating package with items:', requestData);
+
+    return this.http
+      .post(
+        `${this.apiUrl}market-place/create-package-with-items`,
+        requestData,
+        {
+          headers,
+        }
+      )
+      .pipe(
+        catchError((error) => {
+          console.error('Error in createDefinePackageWithItems:', error);
+          return throwError(() => new Error(error));
+        })
+      );
+  }
 }

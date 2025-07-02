@@ -30,6 +30,10 @@ export class ViewRetailCustomeresComponent implements OnInit {
     this.fetchRetailCustomers();
   }
 
+  goBack(): void {
+    this.router.navigate(['/market/action']);
+  }
+
   fetchRetailCustomers(
     page: number = this.page,
     limit: number = this.itemsPerPage,

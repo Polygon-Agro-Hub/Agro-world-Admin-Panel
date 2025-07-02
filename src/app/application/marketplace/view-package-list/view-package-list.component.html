@@ -177,7 +177,12 @@
                   {{ pkg.status }}
                 </span>
               </td>
-              <td class="py-4 text-textLight dark:text-textDark"></td>
+              <td class="py-4 text-textLight dark:text-textDark">
+                <ng-container *ngIf="lastDefinedDates[pkg.id]; else notDefined">
+                  {{ lastDefinedDates[pkg.id] | date : "mediumDate" }}
+                </ng-container>
+                <ng-template #notDefined> Not Defined Yet </ng-template>
+              </td>
               <td
                 class="py-4 text-textLight dark:text-textDark text-2xl text-center"
               >

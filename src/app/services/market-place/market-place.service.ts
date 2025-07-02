@@ -525,6 +525,8 @@ export class MarketPlaceService {
         productPrice: string | null;
         productTypes: Array<{
           id: number;
+          typeName: string | null;
+          shortCode: string | null;
           qty: number;
         }>;
       }>;
@@ -548,6 +550,8 @@ export class MarketPlaceService {
             productPrice: string | null;
             productTypes: Array<{
               id: number;
+              typeName: string | null;
+              shortCode: string | null;
               qty: number;
             }>;
           }>;
@@ -577,5 +581,34 @@ export class MarketPlaceService {
           return throwError(() => new Error(errorMessage));
         })
       );
+  }
+
+  getAllMarketplaceItems(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}market-place/get-marketplace-item/${id}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      map((response) => {
+        if (response.success) {
+          return response.data;
+        } else {
+          throw new Error(response.message);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching marketplace items:', error);
+        return throwError(
+          () =>
+            new Error(
+              error.error?.message ||
+                'An error occurred while fetching marketplace items'
+            )
+        );
+      })
+    );
   }
 }

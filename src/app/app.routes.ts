@@ -828,7 +828,7 @@ export const routes: Routes = [
                 component: ViewRetailCustomeresComponent,
               },
               {
-                path: 'define-package-view/:id',
+                path: 'define-package-view',
                 component: DefinePackageViewComponent,
               },
             ],

@@ -6,19 +6,19 @@ import { ActivatedRoute } from '@angular/router';
 interface OrderDetailItem {
   packageId: number;
   displayName: string;
-  productPrice: number;
-  invNo: string;
+  productPrice: number | null;
   productTypes: ProductTypes[];
 }
 
 interface ProductTypes {
   id: number;
-  typeName: string;
-  shortCode: string;
+  typeName: string | null; // Make nullable
+  shortCode: string | null; // Make nullable
+  qty: number; // Add this missing property
   productId: number | null;
   selectedProductPrice?: number;
-  quantity?: number; // Add this
-  calculatedPrice?: number; // Add this
+  quantity?: number;
+  calculatedPrice?: number;
 }
 
 interface MarketplaceItem {
@@ -40,16 +40,101 @@ export class DefinePackageViewComponent implements OnInit {
   marketplaceItems: MarketplaceItem[] = [];
   totalPrice = 0;
   isWithinLimit = true;
+  id!: number;
+  loading = true;
+  error = '';
 
   constructor(
     private marketplaceService: MarketPlaceService,
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('Component initialized');
+    this.route.queryParamMap.subscribe((params) => {
+      const id = params.get('id');
+      console.log('Query parameter ID:', id);
+      if (!id) {
+        this.error = 'No order ID provided in URL';
+        this.loading = false;
+        return;
+      }
+
+      this.id = Number(id);
+
+      // First fetch marketplace items
+      this.fetchMarketplaceItems(() => {
+        // Then fetch order details
+        this.fetchOrderDetails(id);
+      });
+    });
+  }
 
   goBack() {
     window.history.back();
+  }
+
+  fetchOrderDetails(id: string) {
+    console.log('Fetching order details for ID:', id);
+    this.loading = true;
+    this.error = '';
+
+    this.marketplaceService.getOrderDetailsById(id).subscribe({
+      next: (response) => {
+        console.log('API Response:', response);
+
+        // Validate response structure
+        if (!response?.success || !response.data?.packages) {
+          throw new Error('Invalid response structure from API');
+        }
+
+        // Transform the response to match our component's OrderDetailItem[]
+        this.orderDetails = response.data.packages.map((pkg) => ({
+          packageId: pkg.packageId,
+          displayName: pkg.displayName,
+          productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
+          productTypes: pkg.productTypes.map((pt) => ({
+            id: pt.id,
+            typeName: pt.typeName,
+            shortCode: pt.shortCode,
+            qty: pt.qty,
+            productId: null,
+            selectedProductPrice: undefined,
+            quantity: undefined,
+            calculatedPrice: undefined,
+          })),
+        }));
+
+        this.calculateTotalPrice();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching order details:', err);
+        this.error =
+          err.error?.message || err.message || 'Failed to load order details';
+        this.loading = false;
+      },
+    });
+  }
+
+  fetchMarketplaceItems(callback?: () => void) {
+    this.marketplaceService.getAllMarketplaceItems(this.id).subscribe({
+      next: (data: any) => {
+        this.marketplaceItems = data.items.map((item: any) => ({
+          id: item.id,
+          displayName: item.displayName,
+          normalPrice: item.normalPrice,
+          discountedPrice: item.discountedPrice,
+        }));
+        console.log('Fetched marketplace items:', this.marketplaceItems);
+        if (callback) callback();
+      },
+      error: (err) => {
+        console.error('Error fetching marketplace items:', err);
+        this.error = 'Failed to load product options';
+        if (callback) callback();
+      },
+    });
   }
 
   onProductSelected(productType: ProductTypes, event: Event) {

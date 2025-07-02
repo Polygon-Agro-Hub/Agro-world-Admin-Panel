@@ -145,7 +145,9 @@ export class ViewPackageListComponent {
   }
 
   viewDefinePackage(id: number) {
-    this.router.navigate([`/market/action/define-package-view/${id}`]);
+    this.router.navigate([`/market/action/define-package-view`], {
+      queryParams: { id },
+    });
   }
 }
 

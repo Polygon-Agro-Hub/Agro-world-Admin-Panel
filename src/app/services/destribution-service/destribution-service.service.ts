@@ -104,7 +104,7 @@ export class DestributionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     let url = `${this.apiUrl}distribution/get-company`;
     return this.http.get<ApiResponse>(url, {
       headers,

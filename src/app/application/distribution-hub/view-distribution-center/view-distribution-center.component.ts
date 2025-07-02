@@ -141,13 +141,14 @@ export class ViewDistributionCenterComponent implements OnInit {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Companies fetched:', response);
+        console.log('Raw API response:', response); // Add this line
+        console.log('Companies fetched:', response.data); // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data
             .map((company) => ({
-              label: company.companyNameEnglish, // Use companyNameEnglish directly
-              value: company.companyNameEnglish, // Use name as value since ID isn't returned
+              label: company.companyNameEnglish,
+              value: company.companyNameEnglish,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }

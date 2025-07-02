@@ -333,6 +333,17 @@
         </div>
         <p class="text-lg text-[#000000]">{{ cusObjDetails.totalOrders }}</p>
       </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-house text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Address:</p>
+        </div>
+        <p class="text-lg text-[#000000]">
+          {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
+          {{ cusObjDetails.city }}
+        </p>
+      </div>
     </div>
 
     <hr class="my-4 border-gray-300 dark:border-gray-600" />

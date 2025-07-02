@@ -134,89 +134,103 @@ export class ProcumentsService {
   //   );
   // }
 
-  getOrderDetailsById(id: string): Observable<{
-    invNo: string;
-    packages: Array<{
-      packageId: number;
-      displayName: string;
-      productPrice: string;
-      productTypes: Array<{
-        id: number;
-        typeName: string;
-        shortCode: string;
-      }>;
-    }>;
-    additionalItems?: Array<{
-      id: number;
-      qty: number;
-      unit: string;
-      displayName: string;
-    }>;
-  }> {
+  getOrderDetailsById(
+    id: string
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}procument/get-order-details/${id}`;
 
-    return this.http
-      .get<{
-        success: boolean;
-        data: {
-          invNo: string;
-          packages: Array<{
-            packageId: number;
-            displayName: string;
-            productPrice: string;
-            productTypes: Array<{
-              id: number;
-              typeName: string;
-              shortCode: string;
-            }>;
-          }>;
-        };
-        additionalItems?: Array<{
-          id: number;
-          qty: number;
-          unit: string;
-          displayName: string;
-        }>;
-        message?: string;
-      }>(url, { headers })
-      .pipe(
-        map((response) => {
-          if (response.success) {
-            return {
-              invNo: response.data.invNo,
-              packages: response.data.packages.map((pkg) => ({
-                packageId: pkg.packageId,
-                displayName: pkg.displayName,
-                productPrice: pkg.productPrice,
-                productTypes: pkg.productTypes || [],
-              })),
-              additionalItems: response.additionalItems || [],
-            };
-          } else {
-            throw new Error(
-              response.message || 'Failed to fetch order details'
-            );
-          }
-        }),
-        catchError((error) => {
-          console.error('Error fetching order details:', error);
+    let url = `${this.apiUrl}procument/get-order-details/${id}`;
 
-          let errorMessage = 'An error occurred while fetching order details';
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
-
-          return throwError(() => new Error(errorMessage));
-        })
-      );
+    return this.http.get<any>(url, { headers });
   }
+
+  // getOrderDetailsById(id: string): Observable<{
+  //   invNo: string;
+  //   packages: Array<{
+  //     packageId: number;
+  //     displayName: string;
+  //     productPrice: string;
+  //     productTypes: Array<{
+  //       id: number;
+  //       typeName: string;
+  //       shortCode: string;
+  //     }>;
+  //   }>;
+  //   additionalItems?: Array<{
+  //     id: number;
+  //     qty: number;
+  //     unit: string;
+  //     displayName: string;
+  //   }>;
+  // }> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   const url = `${this.apiUrl}procument/get-order-details/${id}`;
+
+  //   return this.http
+  //     .get<{
+  //       success: boolean;
+  //       data: {
+  //         invNo: string;
+  //         packages: Array<{
+  //           packageId: number;
+  //           displayName: string;
+  //           productPrice: string;
+  //           productTypes: Array<{
+  //             id: number;
+  //             typeName: string;
+  //             shortCode: string;
+  //           }>;
+  //         }>;
+  //       };
+  //       additionalItems?: Array<{
+  //         id: number;
+  //         qty: number;
+  //         unit: string;
+  //         displayName: string;
+  //       }>;
+  //       message?: string;
+  //     }>(url, { headers })
+  //     .pipe(
+  //       map((response) => {
+  //         if (response.success) {
+  //           return {
+  //             invNo: response.data.invNo,
+  //             packages: response.data.packages.map((pkg) => ({
+  //               packageId: pkg.packageId,
+  //               displayName: pkg.displayName,
+  //               productPrice: pkg.productPrice,
+  //               productTypes: pkg.productTypes || [],
+  //             })),
+  //             additionalItems: response.additionalItems || [],
+  //           };
+  //         } else {
+  //           throw new Error(
+  //             response.message || 'Failed to fetch order details'
+  //           );
+  //         }
+  //       }),
+  //       catchError((error) => {
+  //         console.error('Error fetching order details:', error);
+
+  //         let errorMessage = 'An error occurred while fetching order details';
+  //         if (error.error?.message) {
+  //           errorMessage = error.error.message;
+  //         } else if (error.message) {
+  //           errorMessage = error.message;
+  //         }
+
+  //         return throwError(() => new Error(errorMessage));
+  //       })
+  //     );
+  // }
 
   getAllMarketplaceItems(orderId: number): Observable<any> {
     const headers = new HttpHeaders({

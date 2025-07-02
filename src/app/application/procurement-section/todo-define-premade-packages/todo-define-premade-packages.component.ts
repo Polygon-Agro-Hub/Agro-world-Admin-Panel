@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 interface AdditionalItem {
   id: number;
@@ -49,11 +50,12 @@ interface PackageItem {
 @Component({
   selector: 'app-todo-define-premade-packages',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './todo-define-premade-packages.component.html',
   styleUrl: './todo-define-premade-packages.component.css',
 })
 export class TodoDefinePremadePackagesComponent implements OnInit {
+  orderdetailsArr: OrderDetails[] = [];
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
   additionalItems: AdditionalItem[] = [];
@@ -66,16 +68,19 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   showAdditionalItemsModal = false;
 
+  totalDefinePkgPrice: number = 0.00;
+
   constructor(
     private procurementService: ProcumentsService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   goBack() {
     window.history.back();
   }
 
   ngOnInit() {
+    this.recalculatePackageTotal();
     console.log('Component initialized');
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
@@ -94,6 +99,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.fetchOrderDetails(id);
       });
     });
+
   }
 
   fetchMarketplaceItems(callback?: () => void) {
@@ -121,50 +127,111 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.procurementService.getOrderDetailsById(id).subscribe({
-      next: (response) => {
-        console.log('API Response:', response);
+    this.procurementService.getOrderDetailsById(id).subscribe(
+      (response) => {
+        console.log('response', response);
 
-        // Type guard to ensure response has the expected structure
-        if (!response || !response.packages) {
-          throw new Error('Invalid response structure from API');
-        }
-
-        // Transform the response to match our component's OrderDetailItem[]
-        this.orderDetails = response.packages.map((pkg) => ({
-          packageId: pkg.packageId,
-          displayName: pkg.displayName,
-          productPrice:
-            typeof pkg.productPrice === 'string'
-              ? parseFloat(pkg.productPrice)
-              : pkg.productPrice,
-          invNo: response.invNo,
-          productTypes: pkg.productTypes
-            ? pkg.productTypes.map((pt) => ({
-                id: pt.id,
-                typeName: pt.typeName,
-                shortCode: pt.shortCode,
-                productId: null,
-                selectedProductPrice: undefined,
-                quantity: undefined,
-                calculatedPrice: undefined,
-              }))
-            : [],
-        }));
-
-        this.invoiceNumber = response.invNo;
-        this.additionalItems = response.additionalItems || []; // Add this line
-        this.calculateTotalPrice();
-        this.loading = false;
+        this.orderdetailsArr = response.data
+        console.log('orderdetailsArr', this.orderdetailsArr);
+        // this.totalItemssl = response.total;
+        // console.log(this.selectdPackage)
+        // this.purchaseReport.forEach((head) => {
+        //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
+        // });
+        // this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Error fetching order details:', err);
-        this.error =
-          err.error?.message || err.message || 'Failed to load order details';
-        this.loading = false;
-      },
+      (error) => {
+        console.error('Error fetching order details:', error);
+      }
+    );
+  }
+
+  // fetchOrderDetails(id: string) {
+  //   console.log('Fetching order details for ID:', id);
+  //   this.loading = true;
+  //   this.error = '';
+
+  //   this.procurementService.getOrderDetailsById(id).subscribe({
+  //     next: (response) => {
+  //       console.log('API Response:', response);
+
+  //       // Type guard to ensure response has the expected structure
+  //       if (!response || !response.packages) {
+  //         throw new Error('Invalid response structure from API');
+  //       }
+
+  //       // Transform the response to match our component's OrderDetailItem[]
+  //       this.orderDetails = response.packages.map((pkg) => ({
+  //         packageId: pkg.packageId,
+  //         displayName: pkg.displayName,
+  //         productPrice:
+  //           typeof pkg.productPrice === 'string'
+  //             ? parseFloat(pkg.productPrice)
+  //             : pkg.productPrice,
+  //         invNo: response.invNo,
+  //         productTypes: pkg.productTypes
+  //           ? pkg.productTypes.map((pt) => ({
+  //               id: pt.id,
+  //               typeName: pt.typeName,
+  //               shortCode: pt.shortCode,
+  //               productId: null,
+  //               selectedProductPrice: undefined,
+  //               quantity: undefined,
+  //               calculatedPrice: undefined,
+  //             }))
+  //           : [],
+  //       }));
+
+  //       this.invoiceNumber = response.invNo;
+  //       this.additionalItems = response.additionalItems || []; // Add this line
+  //       this.calculateTotalPrice();
+  //       this.loading = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching order details:', err);
+  //       this.error =
+  //         err.error?.message || err.message || 'Failed to load order details';
+  //       this.loading = false;
+  //     },
+  //   });
+  // }
+
+  calculatePrice(item: OrderItem): void {
+    console.log('id', item.productId)
+    console.log('maitems', this.marketplaceItems)
+    const selectedProduct = this.marketplaceItems.find(
+      product => +product.id === +item.productId
+    );
+    console.log('selectedProduct', selectedProduct)
+
+    if (selectedProduct) {
+      const price = selectedProduct.discountedPrice ?? 0;
+      const qty = item.qty ?? 0;
+
+      item.price = price * qty;
+    } else {
+      item.price = 0;
+    }
+    console.log(item.price);
+
+    this.recalculatePackageTotal();
+  }
+
+
+  recalculatePackageTotal(): void {
+    this.totalDefinePkgPrice = 0.00; // reset before calculation
+
+    this.orderdetailsArr.forEach((pkg: OrderDetails) => {
+      pkg.definePkgPrice = pkg.items.reduce((total, item) => {
+        return total + (+item.price || 0);
+      }, 0);
+
+      this.totalDefinePkgPrice += pkg.definePkgPrice;
+      console.log('hhsdhfkhd', this.totalDefinePkgPrice)
     });
   }
+
+
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
@@ -448,4 +515,26 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   closeAdditionalItemsModal() {
     this.showAdditionalItemsModal = false;
   }
+}
+
+class OrderDetails {
+  invNo!: string;
+  displayName!: string;
+  processOrderId!: number;
+  orderId!: number;
+  packageId!: number;
+  productPrice!: number;
+  definePackageId!: number;
+  definePkgPrice: number = 0.00;
+  items!: OrderItem[];
+
+}
+
+class OrderItem {
+  productTypeId!: number;
+  productTypeShortCode!: string;
+  productId!: number;
+  productName!: string;
+  qty!: number;
+  price!: number;
 }

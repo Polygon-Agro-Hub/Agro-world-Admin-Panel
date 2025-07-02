@@ -191,6 +191,15 @@ export class ViewDistributionCenterComponent implements OnInit {
     company: string = this.selectCompany,
     searchItem?: string
   ) {
+    console.log('Request params:', {
+      page,
+      limit,
+      district,
+      province,
+      company,
+      searchItem,
+    });
+
     this.isLoading = true;
     this.DestributionSrv.getAllDistributionCentre(
       page,
@@ -207,8 +216,10 @@ export class ViewDistributionCenterComponent implements OnInit {
         this.totalItems = response.total;
       },
       (error) => {
+        console.error('API Error:', error);
+        this.isLoading = false;
         if (error.status === 401) {
-          // Unauthorized access handling (left empty intentionally)
+          // Unauthorized access handling
         }
       }
     );
@@ -239,7 +250,6 @@ export class ViewDistributionCenterComponent implements OnInit {
         (p) => p.province === this.selectProvince
       );
 
-      // Filter and sort districts for selected province
       this.districtOptions =
         selected?.district
           .map((d) => ({
@@ -248,10 +258,8 @@ export class ViewDistributionCenterComponent implements OnInit {
           }))
           .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-      // Reset district selection
       this.selectDistrict = '';
     } else {
-      // Province cleared → show all districts, sorted
       this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
         .map((d) => ({
           label: d.districtName,
@@ -260,9 +268,15 @@ export class ViewDistributionCenterComponent implements OnInit {
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    console.log(this.selectProvince);
-
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    // Call fetch with updated filters
+    this.fetchAllCollectionCenter(
+      this.page,
+      this.itemsPerPage,
+      this.selectDistrict,
+      this.selectProvince, // Make sure this is the correct format
+      this.selectCompany,
+      this.searchItem
+    );
   }
 
   applyDistrictFilters() {

@@ -62,28 +62,41 @@ export class DestributionService {
     company: string = '',
     searchItem: string = ''
   ): Observable<any> {
-    console.log(page, limit, searchItem);
+    console.log('Request params:', {
+      page,
+      limit,
+      district,
+      province,
+      company,
+      searchItem,
+    });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
+    // Base URL with required params
     let url = `${this.apiUrl}distribution/get-all-distribution-centre?page=${page}&limit=${limit}`;
+
+    // Add optional params with proper encoding
     if (searchItem) {
-      url += `&searchItem=${searchItem}`;
+      url += `&search=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
     }
 
     if (district) {
-      url += `&district=${district}`;
+      url += `&district=${encodeURIComponent(district)}`;
     }
 
     if (province) {
-      url += `&province=${province}`;
-    }
-    if (province) {
-      url += `&company=${company}`;
+      url += `&province=${encodeURIComponent(province)}`;
     }
 
+    if (company) {
+      // Fixed: separate condition for company
+      url += `&company=${encodeURIComponent(company)}`;
+    }
+
+    console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });
   }
 

@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
-import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-view-distribution-center',
+  selector: 'app-view-polygon-centers',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,10 +22,10 @@ import { PermissionService } from '../../../services/roles-permission/permission
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: './view-distribution-center.component.html',
-  styleUrl: './view-distribution-center.component.css',
+  templateUrl: './view-polygon-centers.component.html',
+  styleUrl: './view-polygon-centers.component.css'
 })
-export class ViewDistributionCenterComponent implements OnInit {
+export class ViewPolygonCentersComponent implements OnInit {
   companyId!: number;
   distributionCentreObj!: DistributionCentre[];
   districts: string[] = [];
@@ -115,7 +115,7 @@ export class ViewDistributionCenterComponent implements OnInit {
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -186,7 +186,8 @@ export class ViewDistributionCenterComponent implements OnInit {
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
     company: string = this.selectCompany,
-    searchItem?: string
+    searchItem?: string,
+    centerType: string = 'polygon' // Default to 'polygon' type
   ) {
     this.isLoading = true;
     this.DestributionSrv.getAllDistributionCentre(
@@ -195,7 +196,8 @@ export class ViewDistributionCenterComponent implements OnInit {
       district,
       province,
       company,
-      searchItem
+      searchItem,
+      centerType
     ).subscribe(
       (response) => {
         this.isLoading = false;
@@ -213,7 +215,7 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.fetchAllCollectionCenter();
   }
 
   searchPlantCareUsers() {
@@ -227,7 +229,7 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.fetchAllCollectionCenter();
   }
 
   applyProvinceFilters() {
@@ -259,7 +261,7 @@ export class ViewDistributionCenterComponent implements OnInit {
 
     console.log(this.selectProvince);
 
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.fetchAllCollectionCenter();
   }
 
   applyDistrictFilters() {
@@ -310,6 +312,35 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
+  }
+
+  deleteCenter(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this center!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DestributionSrv.deleteDistributedCenter(id).subscribe(
+          (res) => {
+            if (res.success) {
+              Swal.fire('Deleted!', 'The center has been deleted.', 'success');
+              this.fetchAllCollectionCenter();
+            } else {
+              Swal.fire('Error!', 'Failed to delete the center.', 'error');
+            }
+          },
+          (error) => {
+            console.error('Error deleting center:', error);
+            Swal.fire('Error!', 'Failed to delete the center.', 'error');
+          }
+        );
+      }
+    });
   }
 }
 

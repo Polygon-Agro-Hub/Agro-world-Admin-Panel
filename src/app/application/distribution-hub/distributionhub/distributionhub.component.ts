@@ -108,4 +108,8 @@ export class DistributionhubComponent {
   feedBack(): void {
     this.router.navigate(['/distribution-hub/action']);
   }
+
+  viewPolygon(): void {
+    this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
+  }
 }

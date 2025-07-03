@@ -35,7 +35,7 @@ export class DestributionService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     const token = this.tokenService.getToken();
@@ -60,7 +60,8 @@ export class DestributionService {
     district: string = '',
     province: string = '',
     company: string = '',
-    searchItem: string = ''
+    searchItem: string = '',
+    centerType: string = ''
   ): Observable<any> {
     console.log(page, limit, searchItem);
 
@@ -83,6 +84,9 @@ export class DestributionService {
     if (province) {
       url += `&company=${company}`;
     }
+    if (centerType) {
+      url += `&centerType=${centerType}`;
+    }
 
     return this.http.get<any>(url, { headers: headers });
   }
@@ -104,9 +108,21 @@ export class DestributionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     let url = `${this.apiUrl}distribution/get-company`;
     return this.http.get<ApiResponse>(url, {
+      headers,
+    });
+  }
+
+  deleteDistributedCenter(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}distribution/delete-distributed-center/${id}`;
+    return this.http.delete<any>(url, {
       headers,
     });
   }

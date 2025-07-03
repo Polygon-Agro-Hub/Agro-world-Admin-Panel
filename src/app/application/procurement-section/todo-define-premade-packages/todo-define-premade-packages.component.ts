@@ -38,6 +38,13 @@ interface MarketplaceItem {
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
+  category: string;
+  changeby: string;
+  discount: string;
+  isExcluded: boolean;
+  startValue: string;
+  unitType: string;
+  varietyId: number;
 }
 
 interface PackageItem {
@@ -69,6 +76,10 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   showAdditionalItemsModal = false;
 
   totalDefinePkgPrice: number = 0.00;
+
+  totalPackagePrice: number = 0.00;
+
+  selectedOption: string = '';
 
   constructor(
     private procurementService: ProcumentsService,
@@ -102,14 +113,31 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   }
 
+  onSelectionChange() {
+    console.log('Selected option:', this.selectedOption);
+    // Add any additional logic here
+  }
+
+  getSelectedOptionText(): string {
+    switch(this.selectedOption) {
+      case 'option1': return 'First Option';
+      case 'option2': return 'Second Option';
+      case 'option3': return 'Third Option';
+      default: return '';
+    }
+  }
+
   fetchMarketplaceItems(callback?: () => void) {
     this.procurementService.getAllMarketplaceItems(this.orderId).subscribe({
       next: (data: any) => {
+        console.log('data', data);
         this.marketplaceItems = data.items.map((item: any) => ({
           id: item.id,
           displayName: item.displayName,
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
+          isExcluded: item.isExcluded,
+    
         }));
         console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
@@ -126,28 +154,58 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     console.log('Fetching order details for ID:', id);
     this.loading = true;
     this.error = '';
-
+  
     this.procurementService.getOrderDetailsById(id).subscribe(
-      
       (response) => {
         console.log('response', response);
-        
-
-        this.orderdetailsArr = response.data
+  
+        this.orderdetailsArr = response.data;
         this.additionalItems = response.additionalItems;
+  
         console.log('orderdetailsArr', this.orderdetailsArr);
-        // this.totalItemssl = response.total;
-        // console.log(this.selectdPackage)
-        // this.purchaseReport.forEach((head) => {
-        //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-        // });
-        // this.isLoading = false;
+  
+        // ✅ Reset totals
+        this.totalDefinePkgPrice = 0.00;
+        this.totalPackagePrice = 0.00;
+  
+        this.orderdetailsArr.forEach(order => {
+          let packageTotal = 0.00;
+  
+          // ✅ Sum package's productPrice for totalPackagePrice
+          this.totalPackagePrice += order.productPrice ?? 0;
+  
+          order.items.forEach(item => {
+            const selectedProduct = this.marketplaceItems.find(
+              product => +product.id === +item.productId
+            );
+            item.isExcluded = selectedProduct?.isExcluded ?? false;
+  
+            const qty = item.qty ?? 0;
+            const discountedPrice = selectedProduct?.discountedPrice ?? 0;
+  
+            item.price = discountedPrice * qty;
+            packageTotal += item.price;
+          });
+  
+          order.definePkgPrice = packageTotal;
+          this.totalDefinePkgPrice += packageTotal;
+        });
+  
+        console.log('Total Define Package Price (discounted):', this.totalDefinePkgPrice);
+        console.log('Total Package Price (original from OrderDetails):', this.totalPackagePrice);
+  
+        this.loading = false;
       },
       (error) => {
         console.error('Error fetching order details:', error);
       }
     );
   }
+  
+  
+  
+  
+  
 
   // fetchOrderDetails(id: string) {
   //   console.log('Fetching order details for ID:', id);
@@ -200,39 +258,60 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   // }
 
   calculatePrice(item: OrderItem): void {
-    console.log('id', item.productId)
-    console.log('maitems', this.marketplaceItems)
+    console.log('id', item.productId);
+    console.log('maitems', this.marketplaceItems);
+  
     const selectedProduct = this.marketplaceItems.find(
       product => +product.id === +item.productId
     );
-    console.log('selectedProduct', selectedProduct)
-
+    console.log('selectedProduct', selectedProduct);
+  
     if (selectedProduct) {
       const price = selectedProduct.discountedPrice ?? 0;
       const qty = item.qty ?? 0;
-
+  
       item.price = price * qty;
+  
+      
+      item.isExcluded = selectedProduct.isExcluded;
     } else {
       item.price = 0;
+      item.isExcluded = false; // fallback
     }
+  
     console.log(item.price);
-
+  
     this.recalculatePackageTotal();
   }
+  
 
 
   recalculatePackageTotal(): void {
-    this.totalDefinePkgPrice = 0.00; // reset before calculation
-
+    this.totalDefinePkgPrice = 0.00;
+    this.totalPackagePrice = 0.00;
+  
     this.orderdetailsArr.forEach((pkg: OrderDetails) => {
+      // Sum up the definePkgPrice using item prices
       pkg.definePkgPrice = pkg.items.reduce((total, item) => {
         return total + (+item.price || 0);
       }, 0);
-
+  
       this.totalDefinePkgPrice += pkg.definePkgPrice;
-      console.log('hhsdhfkhd', this.totalDefinePkgPrice)
+  
+      // Sum up the original productPrice per package
+      this.totalPackagePrice += +pkg.productPrice || 0;
     });
+  
+    console.log('Total Define Package Price:', this.totalDefinePkgPrice);
+    console.log('Total Package Price (Original):', this.totalPackagePrice);
+  
+    // Compare against 1.08 * totalPackagePrice
+    const limit = 1.08 * this.totalPackagePrice;
+    this.isWithinLimit = this.totalDefinePkgPrice <= limit;
+  
+    console.log('Is Within Limit:', this.isWithinLimit);
   }
+  
 
 
 
@@ -313,25 +392,47 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   async onComplete() {
-    console.log('orderdetailsArr', this.orderdetailsArr)
+    console.log('orderdetailsArr', this.orderdetailsArr);
     this.loading = true;
+  
+    const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        console.log(`Package ${pkgIndex}, Item ${itemIndex}, productId:`, item.productId, 'Type:', typeof item.productId);
+    
+        return (
+          item.productId === null ||
+          item.productId === undefined ||
+          item.productId === null || 
+          Number.isNaN(item.productId)
+        );
+      });
+    });
 
+    console.log('hasInvalidProduct', hasInvalidProduct);
+    
+  
+    if (hasInvalidProduct) {
+      this.loading = false;
+      Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
+      return;
+    }
+  
     this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
-      
       (res) => {
-        
         this.loading = false;
         console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Updated Successfully', 'success');
-
       },
       (err) => {
+        this.loading = false;
         console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+        Swal.fire('Error', 'Product Update Unsuccessful', 'error');
       }
     );
-
   }
+  
+  
+  
 
   // async onComplete() {
   //   // Check if calculated price is within limit
@@ -539,6 +640,14 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   closeAdditionalItemsModal() {
     this.showAdditionalItemsModal = false;
   }
+
+  // isvalid(id:number, item:any):Boolean{
+  //   if(id===item.id){
+  //     return item.isExcluded
+  //   }
+  // }
+
+  
 }
 
 class OrderDetails {
@@ -562,4 +671,5 @@ class OrderItem {
   productName!: string;
   qty!: number;
   price!: number;
+  isExcluded: boolean = false;
 }

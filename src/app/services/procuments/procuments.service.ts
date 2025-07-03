@@ -414,4 +414,30 @@ export class ProcumentsService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  // updateDefinePackageItemData(array: any, id: number): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+  
+  //   const url = `${this.apiUrl}dispatch/update-package-data`;
+  
+  //   // Send the array as a named field in the body
+  //   return this.http.post<any>(url, { packedItems: array, id}, { headers });
+  // }
+
+  updateDefinePackageItemData(array: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}procument/update-define-package-data`;
+  
+    // Send the array as a named field in the body
+    return this.http.post<any>(url, { definePackageItems: array}, { headers });
+  }
 }
+
+

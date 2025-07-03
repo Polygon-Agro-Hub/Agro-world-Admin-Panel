@@ -176,9 +176,9 @@
           <span class="ml-2">Rs.{{ this.totalDefinePkgPrice | number: '1.2-2' }}</span>
         </div>
         <div class="text-xs text-blue-600 dark:text-blue-400">
-          Allowed limit : {{ getCombinedProductPrice().toFixed(2) }} +
-          {{ (getCombinedProductPrice() * 0.08).toFixed(2) }} = Rs.{{
-          (getCombinedProductPrice() * 1.08).toFixed(2)
+          Allowed limit : {{ this.totalDefinePkgPrice | number: '1.2-2'}} +
+          {{ this.totalDefinePkgPrice * 0.08 | number: '1.2-2'}} = Rs.{{
+          this.totalDefinePkgPrice * 1.08 | number: '1.2-2'
           }}
         </div>
         <div *ngIf="!isWithinLimit" class="text-xs text-red-600 dark:text-red-400 mt-1">

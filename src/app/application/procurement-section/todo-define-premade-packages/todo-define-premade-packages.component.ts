@@ -128,10 +128,13 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.error = '';
 
     this.procurementService.getOrderDetailsById(id).subscribe(
+      
       (response) => {
         console.log('response', response);
+        
 
         this.orderdetailsArr = response.data
+        this.additionalItems = response.additionalItems;
         console.log('orderdetailsArr', this.orderdetailsArr);
         // this.totalItemssl = response.total;
         // console.log(this.selectdPackage)
@@ -310,146 +313,167 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   async onComplete() {
-    // Check if calculated price is within limit
-    if (!this.isWithinLimit) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Cannot Complete Order',
-        text: 'Calculated price exceeds the allowed limit!',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
+    console.log('orderdetailsArr', this.orderdetailsArr)
+    this.loading = true;
 
-    // Check if there are any order details
-    if (!this.orderDetails.length) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'No Order Details',
-        text: 'No order details available',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
+    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
+      
+      (res) => {
+        
+        this.loading = false;
+        console.log('Updated successfully:', res);
+        Swal.fire('Success', 'Product Updated Successfully', 'success');
 
-    // Group products by packageId
-    const packageGroups: { [key: number]: any[] } = {};
-
-    this.orderDetails.forEach((pkg) => {
-      const validProducts = pkg.productTypes
-        .filter((pt) => pt.productId && pt.quantity && pt.selectedProductPrice)
-        .map((pt) => ({
-          productType: pt.id,
-          productId: pt.productId,
-          qty: pt.quantity,
-          price: pt.selectedProductPrice,
-        }));
-
-      if (validProducts.length > 0) {
-        if (!packageGroups[pkg.packageId]) {
-          packageGroups[pkg.packageId] = [];
-        }
-        packageGroups[pkg.packageId].push(...validProducts);
-      }
-    });
-
-    // Check if we have any valid packages
-    if (Object.keys(packageGroups).length === 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'No Valid Items',
-        text: 'No valid package items to save. Please ensure all items have a product selected, quantity, and price.',
-        confirmButtonColor: '#3085d6',
-      });
-      return;
-    }
-
-    console.log('Package groups to save:', packageGroups);
-
-    Swal.fire({
-      title: 'Processing...',
-      html: 'Please wait while we save your order and update status',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
       },
-    });
-
-    try {
-      // Process each package group
-      const saveOperations = Object.entries(packageGroups).map(
-        async ([packageId, products]) => {
-          try {
-            // Step 1: Save the package items
-            const saveResponse = await this.procurementService
-              .createOrderPackageItems(Number(packageId), products)
-              .toPromise();
-
-            console.log(`Items saved for package ${packageId}`, saveResponse);
-
-            // Step 2: Update packing status to "Completed"
-            const statusResponse = await this.procurementService
-              .updateOrderPackagePackingStatus(Number(packageId), 'Completed')
-              .toPromise();
-
-            console.log(
-              `Status updated for package ${packageId}`,
-              statusResponse
-            );
-
-            return { packageId, success: true };
-          } catch (error) {
-            console.error(`Error processing package ${packageId}:`, error);
-            return {
-              packageId,
-              success: false,
-              error: this.getErrorMessage(error),
-            };
-          }
-        }
-      );
-
-      // Execute all operations
-      const results = await Promise.all(saveOperations);
-
-      // Check if all operations were successful
-      const failedPackages = results.filter((r) => !r.success);
-
-      if (failedPackages.length > 0) {
-        // Some packages failed
-        const errorMessages = failedPackages
-          .map((p) => `Package ${p.packageId}: ${p.error}`)
-          .join('<br><br>');
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Partial Success',
-          html: `Some packages couldn't be processed:<br><br>${errorMessages}`,
-          confirmButtonColor: '#3085d6',
-        });
-      } else {
-        // All operations successful
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'All items saved and packing status updated successfully!',
-          confirmButtonColor: '#3085d6',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.goBack();
-          }
-        });
+      (err) => {
+        console.error('Update failed:', err);
+        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
       }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An unexpected error occurred while processing your request',
-        confirmButtonColor: '#3085d6',
-      });
-    }
+    );
+
   }
+
+  // async onComplete() {
+  //   // Check if calculated price is within limit
+  //   if (!this.isWithinLimit) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Cannot Complete Order',
+  //       text: 'Calculated price exceeds the allowed limit!',
+  //       confirmButtonColor: '#3085d6',
+  //     });
+  //     return;
+  //   }
+
+  //   // Check if there are any order details
+  //   if (!this.orderdetailsArr.length) {
+  //     Swal.fire({
+  //       icon: 'warning',
+  //       title: 'No Order Details',
+  //       text: 'No order details available',
+  //       confirmButtonColor: '#3085d6',
+  //     });
+  //     return;
+  //   }
+
+  //   // Group products by packageId
+  //   const packageGroups: { [key: number]: any[] } = {};
+
+  //   this.orderDetails.forEach((pkg) => {
+  //     const validProducts = pkg.productTypes
+  //       .filter((pt) => pt.productId && pt.quantity && pt.selectedProductPrice)
+  //       .map((pt) => ({
+  //         productType: pt.id,
+  //         productId: pt.productId,
+  //         qty: pt.quantity,
+  //         price: pt.selectedProductPrice,
+  //       }));
+
+  //     if (validProducts.length > 0) {
+  //       if (!packageGroups[pkg.packageId]) {
+  //         packageGroups[pkg.packageId] = [];
+  //       }
+  //       packageGroups[pkg.packageId].push(...validProducts);
+  //     }
+  //   });
+
+  //   // Check if we have any valid packages
+  //   if (Object.keys(packageGroups).length === 0) {
+  //     Swal.fire({
+  //       icon: 'warning',
+  //       title: 'No Valid Items',
+  //       text: 'No valid package items to save. Please ensure all items have a product selected, quantity, and price.',
+  //       confirmButtonColor: '#3085d6',
+  //     });
+  //     return;
+  //   }
+
+  //   console.log('Package groups to save:', packageGroups);
+
+  //   Swal.fire({
+  //     title: 'Processing...',
+  //     html: 'Please wait while we save your order and update status',
+  //     allowOutsideClick: false,
+  //     didOpen: () => {
+  //       Swal.showLoading();
+  //     },
+  //   });
+
+  //   try {
+  //     // Process each package group
+  //     const saveOperations = Object.entries(packageGroups).map(
+  //       async ([packageId, products]) => {
+  //         try {
+  //           // Step 1: Save the package items
+  //           const saveResponse = await this.procurementService
+  //             .createOrderPackageItems(Number(packageId), products)
+  //             .toPromise();
+
+  //           console.log(`Items saved for package ${packageId}`, saveResponse);
+
+  //           // Step 2: Update packing status to "Completed"
+  //           const statusResponse = await this.procurementService
+  //             .updateOrderPackagePackingStatus(Number(packageId), 'Completed')
+  //             .toPromise();
+
+  //           console.log(
+  //             `Status updated for package ${packageId}`,
+  //             statusResponse
+  //           );
+
+  //           return { packageId, success: true };
+  //         } catch (error) {
+  //           console.error(`Error processing package ${packageId}:`, error);
+  //           return {
+  //             packageId,
+  //             success: false,
+  //             error: this.getErrorMessage(error),
+  //           };
+  //         }
+  //       }
+  //     );
+
+  //     // Execute all operations
+  //     const results = await Promise.all(saveOperations);
+
+  //     // Check if all operations were successful
+  //     const failedPackages = results.filter((r) => !r.success);
+
+  //     if (failedPackages.length > 0) {
+  //       // Some packages failed
+  //       const errorMessages = failedPackages
+  //         .map((p) => `Package ${p.packageId}: ${p.error}`)
+  //         .join('<br><br>');
+
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Partial Success',
+  //         html: `Some packages couldn't be processed:<br><br>${errorMessages}`,
+  //         confirmButtonColor: '#3085d6',
+  //       });
+  //     } else {
+  //       // All operations successful
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Success!',
+  //         text: 'All items saved and packing status updated successfully!',
+  //         confirmButtonColor: '#3085d6',
+  //       }).then((result) => {
+  //         if (result.isConfirmed) {
+  //           this.goBack();
+  //         }
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.error('Unexpected error:', err);
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Error',
+  //       text: 'An unexpected error occurred while processing your request',
+  //       confirmButtonColor: '#3085d6',
+  //     });
+  //   }
+  // }
 
   private getErrorMessage(error: any): string {
     if (error?.error?.message) {
@@ -531,6 +555,7 @@ class OrderDetails {
 }
 
 class OrderItem {
+  itemId!: number;
   productTypeId!: number;
   productTypeShortCode!: string;
   productId!: number;

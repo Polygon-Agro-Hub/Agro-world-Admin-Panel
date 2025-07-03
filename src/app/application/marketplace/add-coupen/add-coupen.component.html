@@ -9,23 +9,23 @@
       Add a Coupon
     </p>
     <div>
-      <button
-        class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
-        (click)="onCancel()"
+      <span
+        class="bg-[#74788D] text-lg text-white px-3 py-2 rounded-lg mx-2 cursor-pointer"
+        onclick="history.back()"
       >
         Cancel
-      </button>
-      <button
-        class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2"
-        type="submit"
+      </span>
+      <span
+        class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer"
+        (click)="onSubmit()"
       >
         Save
-      </button>
+      </span>
     </div>
   </div>
 
   <div class="flex flex-row justify-between items-center">
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack px-5 pt-9 pb-12 shadow-md rounded-md w-[60%]">
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack px-5 pt-9 pb-12 shadow-md rounded-md w-[60%] h-full">
       <div class="mb-8">
         <label class="text-[#534E4E] dark:text-textDark">Code</label>
         <input
@@ -105,7 +105,11 @@
           min="0"
           max="100"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          (change)="checkPrecentageValue(coupenObj.percentage)"
         />
+        <div class="text-red-500 text-sm mt-1">
+          <div>{{checkPrecentageValueMessage}}</div>
+        </div>
       </div>
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
@@ -116,8 +120,12 @@
           name="fixDiscount"
           [(ngModel)]="coupenObj.fixDiscount"
           min="0"
+          (change)="checkFixAmountValue(coupenObj.fixDiscount)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div class="text-red-500 text-sm mt-1">
+          <div>{{checkfixAmountValueMessage}}</div>
+        </div>
       </div>
 
       <div class="flex flex-row mb-6">

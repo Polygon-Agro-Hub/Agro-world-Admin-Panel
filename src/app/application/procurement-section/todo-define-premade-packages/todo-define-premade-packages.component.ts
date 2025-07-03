@@ -63,6 +63,7 @@ interface PackageItem {
 })
 export class TodoDefinePremadePackagesComponent implements OnInit {
   orderdetailsArr: OrderDetails[] = [];
+  excludeItemsArr: ExcludeItems[] = [];
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
   additionalItems: AdditionalItem[] = [];
@@ -161,8 +162,11 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   
         this.orderdetailsArr = response.data;
         this.additionalItems = response.additionalItems;
+        this.excludeItemsArr = response.excludeList;
+
   
         console.log('orderdetailsArr', this.orderdetailsArr);
+        console.log('sdfasd', this.excludeItemsArr);
   
         // ✅ Reset totals
         this.totalDefinePkgPrice = 0.00;
@@ -672,4 +676,9 @@ class OrderItem {
   qty!: number;
   price!: number;
   isExcluded: boolean = false;
+}
+
+class ExcludeItems {
+  id!: number;
+  displayName!: string;
 }

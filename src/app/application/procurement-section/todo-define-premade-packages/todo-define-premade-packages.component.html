@@ -4,15 +4,13 @@
 </button>
 <div class="min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
   <!-- Header -->
-  <div
-    class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
-  >
+  <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
     <div class="flex items-center space-x-6">
       <!-- Invoice Number (outside loop) -->
       <div class="text-sm">
         <div class="text-gray-700 dark:text-gray-300">INV No :</div>
         <div class="font-semibold text-gray-900 dark:text-gray-300">
-          {{ orderDetails[0].invNo || "N/A" }}
+          {{ orderdetailsArr[0].invNo || "N/A" }}
         </div>
       </div>
 
@@ -27,22 +25,11 @@
       <!-- Additional Items (outside loop) -->
       <div class="text-sm flex flex-col justify-center items-center">
         <div class="text-gray-700 dark:text-gray-300">Additional Items :</div>
-        <button
-          class="w-5 h-5 text-blue-500 hover:text-blue-700"
-          (click)="openAdditionalItemsModal()"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="openAdditionalItemsModal()">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
       </div>
@@ -52,20 +39,71 @@
       <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm">
         Clear
       </button>
-      <button
-        class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm"
-        [disabled]="!isWithinLimit"
-        [class.opacity-50]="!isWithinLimit"
-        [class.cursor-not-allowed]="!isWithinLimit"
-        (click)="onComplete()"
-      >
+      <button class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm" [disabled]="!isWithinLimit"
+        [class.opacity-50]="!isWithinLimit" [class.cursor-not-allowed]="!isWithinLimit" (click)="onComplete()">
         Complete
       </button>
     </div>
   </div>
+  <span *ngFor="let package of orderdetailsArr">
+    <div class="p-10 space-y-4">
+      <div>
+        <div class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl">
+          <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+            Package : {{ package.displayName }} (Rs.{{ package.productPrice }})
+          </span>
+          <button class="w-6 h-6 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
+            <span class="text-sm font-bold">+</span>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <span *ngFor="let item of package.items">
+            <div class="flex items-center space-x-3 border-b-2 py-4 px-5">
+              <div class="w-8 text-sm text-gray-700 dark:text-gray-300">
+                {{ item.productTypeShortCode }}
+              </div>
+              <select
+                class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm"
+                [(ngModel)]="item.productId" (change)="calculatePrice(item)">
+                <option [value]="null">--Select Product--</option>
+                <option *ngFor="let product of marketplaceItems" [value]="product.id">
+                  {{ product.displayName }}
+                </option>
+               
+              </select>
+
+              <input type="number" step="0.01" min="0" placeholder="--Quantity in kg--"
+                class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 text-sm"
+                [(ngModel)]="item.qty" (change)="calculatePrice(item)" />
+
+              <div class="w-16 text-right text-sm text-gray-900 dark:text-gray-100">
+                Rs.{{ item.price | number: '1.2-2' }}
+              </div>
+
+              <!-- <div
+                class="w-16 text-right text-sm text-gray-900 dark:text-gray-100"
+              >
+                Rs.{{ item.calculatedPrice?.toFixed(2) || "0.00" }}
+              </div> -->
+            </div>
+          </span>
+
+          <div class="mt-3 flex justify-end px-10">
+            <div class="text-sm text-gray-900 dark:text-gray-100">
+              Full Total :
+              <span class="ml-2"
+                >Rs.{{ package.definePkgPrice | number: '1.2-2' }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </span>
 
   <!-- Content -->
-  <span *ngFor="let item of orderDetails">
+  <!-- <span *ngFor="let item of orderDetails">
     <div class="p-10 space-y-4">
       <div>
         <div
@@ -127,7 +165,7 @@
         </div>
       </div>
     </div>
-  </span>
+  </span> -->
 
   <!-- Combined Grand Total -->
   <div class="px-10 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
@@ -135,20 +173,15 @@
       <div class="text-right">
         <div class="text-sm text-gray-900 dark:text-gray-100 mb-1">
           Grand Total :
-          <span class="ml-2"
-            >Rs.{{ getCombinedCalculatedTotal().toFixed(2) }}</span
-          >
+          <span class="ml-2">Rs.{{ this.totalDefinePkgPrice | number: '1.2-2' }}</span>
         </div>
         <div class="text-xs text-blue-600 dark:text-blue-400">
-          Allowed limit : {{ getCombinedProductPrice().toFixed(2) }} +
-          {{ (getCombinedProductPrice() * 0.08).toFixed(2) }} = Rs.{{
-            (getCombinedProductPrice() * 1.08).toFixed(2)
+          Allowed limit : {{ this.totalDefinePkgPrice | number: '1.2-2'}} +
+          {{ this.totalDefinePkgPrice * 0.08 | number: '1.2-2'}} = Rs.{{
+          this.totalDefinePkgPrice * 1.08 | number: '1.2-2'
           }}
         </div>
-        <div
-          *ngIf="!isWithinLimit"
-          class="text-xs text-red-600 dark:text-red-400 mt-1"
-        >
+        <div *ngIf="!isWithinLimit" class="text-xs text-red-600 dark:text-red-400 mt-1">
           Calculated price exceeds the allowed limit!
         </div>
       </div>
@@ -156,15 +189,9 @@
   </div>
 </div>
 
-<div
-  *ngIf="showAdditionalItemsModal"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="closeAdditionalItemsModal()"
->
-  <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4"
-    (click)="$event.stopPropagation()"
-  >
+<div *ngIf="showAdditionalItemsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeAdditionalItemsModal()">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="px-6 py-4 text-center">
       <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
@@ -176,8 +203,7 @@
     <div class="px-6 py-4">
       <!-- Table Header -->
       <div
-        class="pb-4 flex justify-between items-center mb-4 text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700"
-      >
+        class="pb-4 flex justify-between items-center mb-4 text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700">
         <div class="flex-1">Item</div>
         <div class="w-16 text-center">Quantity</div>
         <div class="w-16 text-center">Unit</div>
@@ -185,21 +211,14 @@
 
       <!-- Additional Items List -->
       <div class="space-y-3">
-        <div
-          *ngFor="let item of additionalItems"
-          class="flex justify-between items-center py-2"
-        >
+        <div *ngFor="let item of additionalItems" class="flex justify-between items-center py-2">
           <div class="flex-1 text-sm text-[#212121] dark:text-gray-100">
             {{ item.displayName }}
           </div>
-          <div
-            class="w-16 text-center text-sm text-[#000000] dark:text-gray-100"
-          >
+          <div class="w-16 text-center text-sm text-[#000000] dark:text-gray-100">
             {{ item.qty }}
           </div>
-          <div
-            class="w-16 text-center text-sm text-[#808080] dark:text-gray-400"
-          >
+          <div class="w-16 text-center text-sm text-[#808080] dark:text-gray-400">
             {{ item.unit }}
           </div>
         </div>
@@ -208,11 +227,9 @@
 
     <!-- Modal Footer -->
     <div class="px-6 py-4 flex justify-center">
-      <button
-        type="button"
+      <button type="button"
         class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors"
-        (click)="closeAdditionalItemsModal()"
-      >
+        (click)="closeAdditionalItemsModal()">
         Cancel
       </button>
     </div>

@@ -245,19 +245,25 @@
               {{ item.code1 }} {{ item.contact01 }}
             </td>
 
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               <a
                 *ngIf="item.longitude && item.latitude"
                 href="https://www.google.com/maps?q={{ item.latitude }},{{
                   item.longitude
                 }}"
                 target="_blank"
-                class="text-blue-600 hover:underline"
+                class="text-red-600 hover:text-blue-800 text-xl"
+                title="View on map"
               >
-                {{ item.longitude }} {{ item.latitude }}
+                <i class="fas fa-map-marker-alt"></i>
+                <!-- Font Awesome map pin icon -->
               </a>
-              <span *ngIf="!item.longitude || !item.latitude">
-                {{ item.longitude }} {{ item.latitude }}
+              <span
+                *ngIf="!item.longitude || !item.latitude"
+                class="text-gray-400"
+              >
+                <i class="fas fa-map-marker-alt"></i>
+                <!-- Disabled/grayed out icon when no coordinates -->
               </span>
             </td>
 

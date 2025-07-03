@@ -123,4 +123,17 @@ export class DestributionService {
       headers,
     });
   }
+
+  getDistributionCentreById(id: number): Observable<any> {
+    console.log('Request ID:', id);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const url = `${this.apiUrl}distribution/get-distribution-centre/${id}`;
+
+    console.log('Final URL:', url);
+    return this.http.get<any>(url, { headers: headers });
+  }
 }

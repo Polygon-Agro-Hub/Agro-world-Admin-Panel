@@ -137,6 +137,12 @@ export class ViewDistributionCenterComponent implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
+  viewDistributionCenter(id: number): void {
+    this.router.navigate([
+      `/distribution-hub/action/view-distribution-centre/${id}`,
+    ]);
+  }
+
   fetchCompanies(): void {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({

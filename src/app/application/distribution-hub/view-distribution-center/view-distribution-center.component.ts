@@ -222,6 +222,10 @@ export class ViewDistributionCenterComponent implements OnInit {
     );
   }
 
+  formatCount(count: number): string {
+    return count < 10 ? `0${count}` : `${count}`;
+  }
+
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);

@@ -197,15 +197,6 @@ export class ViewDistributionCenterComponent implements OnInit {
     company: string = this.selectCompany,
     searchItem?: string
   ) {
-    console.log('Request params:', {
-      page,
-      limit,
-      district,
-      province,
-      company,
-      searchItem,
-    });
-
     this.isLoading = true;
     this.DestributionSrv.getAllDistributionCentre(
       page,
@@ -219,7 +210,7 @@ export class ViewDistributionCenterComponent implements OnInit {
         this.isLoading = false;
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
-        this.totalItems = response.total;
+        this.totalItems = response.total; // This updates the count
       },
       (error) => {
         console.error('API Error:', error);

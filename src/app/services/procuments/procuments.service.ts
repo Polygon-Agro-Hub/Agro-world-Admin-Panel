@@ -294,17 +294,24 @@ export class ProcumentsService {
   getAllOrdersWithProcessInfoCompleted(
     page: number,
     limit: number,
-    dateFilter: string = ''
+    dateFilter: string = '',
+    searchTerm: string = '',
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
+    console.log('dateFilter', dateFilter, 'searchTerm', searchTerm)
+
     let url = `${this.apiUrl}procument/orders-process-info-completed?page=${page}&limit=${limit}`;
 
     if (dateFilter) {
       url += `&dateFilter=${dateFilter}`;
+    }
+
+    if (searchTerm) {
+      url += `&searchTerm=${searchTerm}`;
     }
 
     return this.http.get<any>(url, { headers });
@@ -313,6 +320,7 @@ export class ProcumentsService {
   // In your procurement service
   updateOrderPackagePackingStatus(
     orderPackageId: number,
+    orderId: number,
     status: string
   ): Observable<any> {
     const headers = new HttpHeaders({
@@ -323,7 +331,7 @@ export class ProcumentsService {
     return this.http
       .put(
         `${this.apiUrl}procument/update-order-package-status`, // Remove the ID from URL
-        { orderPackageId, status }, // Send both fields in body
+        { orderPackageId, orderId, status }, // Send both fields in body
         { headers }
       )
       .pipe(
@@ -335,6 +343,7 @@ export class ProcumentsService {
   }
 
   getOrderPackagesByOrderId(orderId: number): Observable<any> {
+    console.log('sending oid', orderId)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -399,17 +408,24 @@ export class ProcumentsService {
   getAllOrdersWithProcessInfoDispatched(
     page: number,
     limit: number,
-    dateFilter: string = ''
+    dateFilter: string = '',
+    searchTerm: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
+    console.log('datefilte', dateFilter, 'searchTerm', searchTerm)
+
     let url = `${this.apiUrl}procument/orders-process-info-dispatched?page=${page}&limit=${limit}`;
 
     if (dateFilter) {
       url += `&dateFilter=${dateFilter}`;
+    }
+
+    if (searchTerm) {
+      url += `&searchTerm=${searchTerm}`;
     }
 
     return this.http.get<any>(url, { headers });
@@ -437,6 +453,18 @@ export class ProcumentsService {
   
     // Send the array as a named field in the body
     return this.http.post<any>(url, { definePackageItems: array}, { headers });
+  }
+
+  getExcludedItems(orderId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+  
+    let url = `${this.apiUrl}procument/get-excluded-items/${orderId}`;
+  
+    return this.http.get<any>(url, { headers });
   }
 }
 

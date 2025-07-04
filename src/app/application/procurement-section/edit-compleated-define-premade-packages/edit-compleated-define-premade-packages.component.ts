@@ -4,32 +4,14 @@ import { ProcumentsService } from '../../../services/procuments/procuments.servi
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
-interface OrderDetailItem {
-  packageId: number;
-  displayName: string;
-  productPrice: number;
-  invNo: string;
-  productTypes: ProductTypes[];
-}
 
-interface ProductTypes {
-  id: number;
-  typeName: string;
-  shortCode: string;
-  productId: number | null;
-  selectedProductPrice?: number;
-  quantity?: number;
-  calculatedPrice?: number;
-  displayName?: string;
-  productDescription?: string;
-  productTypeId?: number;
-}
 
 interface MarketplaceItem {
   id: number;
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
+  isExcluded: boolean;
 }
 
 interface PackageItem {
@@ -55,6 +37,7 @@ interface AdditionalItem {
   styleUrl: './edit-compleated-define-premade-packages.component.css',
 })
 export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
+  excludedItemsArr: ExcludeItems[] = [];
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
   packageItems: any[] = [];
@@ -66,7 +49,9 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   orderId!: number;
   isWithinLimit = true;
 
-  showAdditionalItemsModal = false;
+  showAdditionalItemsModal: boolean = false;
+  showExcludedItemsModal: boolean = false; 
+excludedItemsCount: any;
 
   constructor(
     private procurementService: ProcumentsService,
@@ -95,7 +80,27 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         // Then fetch order details
         this.fetchOrderDetails(id);
       });
+
+      this.fetchExcludedList(this.orderId);
     });
+  }
+
+  fetchExcludedList(orderId: number) {
+    this.procurementService
+      .getExcludedItems(orderId)
+      .subscribe(
+        (response) => {
+          console.log('response', response);
+    
+          this.excludedItemsArr = response;
+          console.log('excludeItemsArr', this.excludedItemsArr)
+    
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Error fetching order details:', error);
+        }
+      );
   }
 
   fetchPackageItems(orderId: string) {
@@ -151,6 +156,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
           displayName: item.displayName,
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
+          isExcluded: item.isExcluded,
         }));
         console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
@@ -170,7 +176,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
       next: (response) => {
-        console.log('Full API Response:', response); // Log the full response to check structure
+        console.log('order details response:', response); // Log the full response to check structure
 
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
@@ -199,9 +205,10 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
                 selectedProductPrice: pt.price || undefined,
                 quantity: pt.qty || undefined,
                 calculatedPrice:
-                  pt.price && pt.qty ? pt.price * pt.qty : undefined,
+                  pt.price && pt.qty ? pt.price * pt.qty : 0,
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
+                isExcluded: false
               };
 
               // If productTypeId is still null, check alternative fields
@@ -232,6 +239,8 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         this.calculateTotalPrice();
         this.loading = false;
         this.fetchPackageItems(id);
+        console.log('orderDetails', this.orderDetails)
+        this.modifyOrderDetails();
       },
       error: (err) => {
         console.error('Error fetching order details:', err);
@@ -241,6 +250,22 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       },
     });
   }
+
+  modifyOrderDetails() {
+    this.orderDetails.forEach(order => {
+      order.productTypes.forEach(productType => {
+        if (productType.productId !== null) {
+          const matchedItem = this.marketplaceItems.find(item => item.id === productType.productId);
+          if (matchedItem) {
+            // Assign the isExcluded property
+            (productType as any).isExcluded = matchedItem.isExcluded;
+          }
+        }
+      });
+    });
+    console.log('orderDetails here we go again ', this.orderDetails)
+  }
+  
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
@@ -271,38 +296,46 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   onProductSelected(productType: ProductTypes, event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
-
+  
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
-
+  
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
       productType.displayName = selectedProduct.displayName;
-
+  
+      // ✅ Add this line to control the red styling
+      productType.isExcluded = selectedProduct.isExcluded;
+  
       // Update calculated price based on current quantity
       if (productType.quantity && productType.quantity > 0) {
         productType.calculatedPrice =
           productType.quantity * selectedProduct.discountedPrice;
       } else {
-        productType.calculatedPrice = selectedProduct.discountedPrice; // Default to unit price
+        productType.calculatedPrice = selectedProduct.discountedPrice;
       }
     } else {
       productType.productId = null;
       productType.selectedProductPrice = 0;
       productType.calculatedPrice = 0;
-      productType.quantity = undefined;
+      productType.quantity = 0;
+      
+      // ✅ Reset styling state if no valid product selected
+      productType.isExcluded = false;
     }
+  
     this.calculateTotalPrice();
   }
+  
 
   onQuantityChanged(productType: ProductTypes, event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const quantity = Number(inputElement.value);
 
     if (isNaN(quantity) || quantity <= 0) {
-      productType.quantity = undefined;
+      productType.quantity = 0;
       productType.calculatedPrice = 0;
     } else {
       productType.quantity = quantity;
@@ -384,6 +417,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   }
 
   async onUpdate() {
+    console.log('od', this.orderDetails)
     const productsToUpdate = this.orderDetails.flatMap((pkg) =>
       pkg.productTypes.map((pt) => ({
         id: pt.id, // orderpackageitems.id (if needed for updates)
@@ -453,6 +487,14 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     this.showAdditionalItemsModal = true;
   }
 
+  closeExcludedItemsModal() {
+    this.showExcludedItemsModal = false;
+  }
+
+  openExcludedItemsModal() {
+    this.showExcludedItemsModal = true;
+  }
+
   async sendDispatch() {
     try {
       // Validations
@@ -485,6 +527,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       });
 
       // Execute updates for all packages
+      console.log('orderdetails', this.orderDetails);
       const results = await Promise.all(
         this.orderDetails.map(async (pkg) => {
           if (!pkg.packageId) {
@@ -497,7 +540,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
 
           try {
             const response = await this.procurementService
-              .updateOrderPackagePackingStatus(pkg.packageId, 'Dispatch')
+              .updateOrderPackagePackingStatus(pkg.packageId, this.orderId, 'Dispatch')
               .toPromise();
 
             return {
@@ -547,3 +590,34 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
     }
   }
 }
+
+class OrderDetailItem {
+  packageId!: number;
+  displayName!: string;
+  productPrice!: number;
+  invNo!: string;
+  productTypes!: ProductTypes[];
+}
+
+class ProductTypes {
+  id!: number;
+  typeName!: string;
+  shortCode!: string;
+  productId!: number | null;
+  selectedProductPrice!: number;
+  quantity!: number;
+  calculatedPrice!: number;
+  displayName!: string;
+  productDescription!: string;
+  productTypeId!: number;
+  isExcluded!: boolean;
+}
+
+class ExcludeItems {
+  id!: number;
+  displayName!: string;
+}
+
+
+// const btype = await procumentDao.getOrderTypeDao(id);
+//     const excludeList = await procumentDao.getExcludeListDao(btype.userId);

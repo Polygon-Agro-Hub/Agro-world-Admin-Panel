@@ -23,6 +23,7 @@ interface ProductTypes {
   displayName?: string;
   productDescription?: string;
   productTypeId?: number;
+  isExcluded?: boolean;
 }
 
 interface MarketplaceItem {
@@ -30,6 +31,7 @@ interface MarketplaceItem {
   displayName: string;
   normalPrice: number;
   discountedPrice: number;
+  isExcluded: boolean;
 }
 
 interface AdditionalItem {
@@ -48,6 +50,7 @@ interface AdditionalItem {
   styleUrl: './view-dispatch-orders.component.css',
 })
 export class ViewDispatchOrdersComponent implements OnInit {
+  excludedItemsArr: ExcludeItems[] = [];
   orderDetails: OrderDetailItem[] = [];
   marketplaceItems: MarketplaceItem[] = [];
   packageItems: any[] = [];
@@ -60,6 +63,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
   isWithinLimit = true;
 
   showAdditionalItemsModal = false;
+  showExcludedItemsModal = false;
 
   constructor(
     private procurementService: ProcumentsService,
@@ -89,6 +93,27 @@ export class ViewDispatchOrdersComponent implements OnInit {
         this.fetchOrderDetails(id);
       });
     });
+
+    this.fetchExcludedList(this.orderId!);
+  }
+
+  fetchExcludedList(orderId: number) {
+    this.loading = false;
+    this.procurementService
+      .getExcludedItems(orderId)
+      .subscribe(
+        (response) => {
+          console.log('response', response);
+    
+          this.excludedItemsArr = response;
+          console.log('excludeItemsArr', this.excludedItemsArr)
+    
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Error fetching order details:', error);
+        }
+      );
   }
 
   fetchPackageItems(orderId: string) {
@@ -144,6 +169,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
           displayName: item.displayName,
           normalPrice: item.normalPrice,
           discountedPrice: item.discountedPrice,
+          isExcluded: false,
         }));
         console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
@@ -195,6 +221,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
                   pt.price && pt.qty ? pt.price * pt.qty : undefined,
                 displayName: pt.displayName || undefined,
                 productDescription: pt.productDescription || undefined,
+                isExcluded: pt.isExcluded,
               };
 
               // If productTypeId is still null, check alternative fields
@@ -383,4 +410,17 @@ export class ViewDispatchOrdersComponent implements OnInit {
   openAdditionalItemsModal() {
     this.showAdditionalItemsModal = true;
   }
+
+  closeExcludedItemsModal() {
+    this.showExcludedItemsModal = false;
+  }
+
+  openExcludedItemsModal() {
+    this.showExcludedItemsModal = true;
+  }
+}
+
+class ExcludeItems {
+  id!: number;
+  displayName!: string;
 }

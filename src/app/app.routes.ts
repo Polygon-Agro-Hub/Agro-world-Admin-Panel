@@ -150,6 +150,7 @@ import { ViewRetailCustomeresComponent } from './application/marketplace/view-re
 import { DefinePackageViewComponent } from './application/marketplace/define-package-view/define-package-view.component';
 import { ViewDestributionCenterComponent } from './application/marketplace/view-destribution-center/view-destribution-center.component';
 import { EditDistributionCentreComponent } from './application/distribution-hub/edit-distribution-centre/edit-distribution-centre.component';
+import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
 export const routes: Routes = [
   {
     path: '',
@@ -832,6 +833,10 @@ export const routes: Routes = [
               {
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
+              },
+              {
+                path: 'view-wholesale-customers',
+                component: ViewWholesaleCustomersComponent,
               },
             ],
           },

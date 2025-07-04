@@ -1,0 +1,363 @@
+<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="flex space-x-4"></div>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Wholesale Customer ({{ totalItems }})
+        </h2>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+        >
+          <div
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+            Search by name, nic and telphone
+          </div>
+
+          <input
+            type="text"
+            placeholder="Search.."
+            [(ngModel)]="searchText"
+            name="searchText"
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+          />
+
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!hasData" class="text-center py-8">
+      <p class="text-textLight dark:text-textDark text-lg">
+        No data to display
+      </p>
+    </div>
+
+    <div *ngIf="hasData" class="w-full py-4">
+      <table
+        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Customer ID
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Customer Name
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Created At
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Contact
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              No. of Orders
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Customer Details
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Orders Details
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let item of customerObj
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            "
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+          >
+            <td class="px-3 py-3">
+              {{ item.cusId }}
+            </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.firstName }} {{ item.lastName }}
+            </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.created_at | date : "dd/MM/yyyy hh:mm a" }}
+            </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.phoneCode }} - {{ item.phoneNumber }}
+            </td>
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.totalOrders }}
+            </td>
+            <td class="px-3 py-3 text-center">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="detailsPop(item)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+            <td class="px-3 py-3 text-center">
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 32 32"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title>Edit</title>
+                  <path
+                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
+                  ></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="dark:bg-[#262f45]">
+        <pagination-controls
+          (pageChange)="onPageChange($event)"
+          [responsive]="true"
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'"
+          [screenReaderPaginationLabel]="'Pagination'"
+          [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'"
+        >
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="isPopupOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="isPopupOpen = false"
+>
+  <div
+    class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-xl text-[#545454] mb-4">CUSTOMER INFO</h2>
+    <div class="my-5 flex flex-col gap-4">
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-user text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Name:</p>
+        </div>
+        <p class="text-lg text-[#000000]">
+          {{ cusObjDetails.firstName }} {{ cusObjDetails.lastName }}
+        </p>
+      </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-phone text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Phone:</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <p
+            class="text-lg text-[#000000] cursor-pointer hover:underline"
+            (click)="
+              copyToClipboard(
+                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
+                'phone'
+              )
+            "
+          >
+            {{
+              copiedPhone ===
+              cusObjDetails.phoneCode + " " + cusObjDetails.phoneNumber
+                ? "Copied!"
+                : cusObjDetails.phoneCode
+            }}
+            {{ cusObjDetails.phoneNumber }}
+          </p>
+          <i
+            class="fa-regular fa-copy text-[#727272] text-lg cursor-pointer hover:text-[#000000]"
+            (click)="
+              copyToClipboard(
+                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
+                'phone'
+              )
+            "
+          ></i>
+        </div>
+      </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-regular fa-envelope text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Email:</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <p
+            class="text-lg text-[#000000] cursor-pointer hover:underline"
+            (click)="copyToClipboard(cusObjDetails.email, 'email')"
+          >
+            {{
+              copiedEmail === cusObjDetails.email
+                ? "Copied!"
+                : cusObjDetails.email
+            }}
+          </p>
+          <i
+            class="fa-regular fa-copy text-[#727272] text-lg cursor-pointer hover:text-[#000000]"
+            (click)="copyToClipboard(cusObjDetails.email, 'email')"
+          ></i>
+        </div>
+      </div>
+
+      <div
+        *ngIf="cusObjDetails.buildingType === 'House'"
+        class="flex flex-row items-center gap-4"
+      >
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Address:</p>
+        </div>
+        <p class="text-lg text-[#000000]">
+          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }},
+          {{ cusObjDetails.city }}
+        </p>
+      </div>
+
+      <div
+        *ngIf="cusObjDetails.buildingType === 'Apartment'"
+        class="flex flex-row items-center gap-4"
+      >
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Address:</p>
+        </div>
+        <div class="flex flex-col">
+          <p class="text-lg text-[#000000]">
+            {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }},
+            {{ cusObjDetails.unitNo }}, {{ cusObjDetails.floorNo }},
+            {{ cusObjDetails.AparthouseNo }},
+            {{ cusObjDetails.ApartstreetName }}, {{ cusObjDetails.Apartcity }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-receipt text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">No of Orders:</p>
+        </div>
+        <p class="text-lg text-[#000000]">{{ cusObjDetails.totalOrders }}</p>
+      </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-house text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Address:</p>
+        </div>
+        <p class="text-lg text-[#000000]">
+          {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
+          {{ cusObjDetails.city }}
+        </p>
+      </div>
+    </div>
+
+    <hr class="my-4 border-gray-300 dark:border-gray-600" />
+
+    <div class="my-5 flex flex-col gap-4">
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-calendar-days text-[#727272] text-lg"></i>
+          <p class="text-lg text-[#727272]">Created At:</p>
+        </div>
+        <p class="text-lg text-[#000000]">
+          {{ cusObjDetails.created_at | date : "dd/MM/yyyy hh:mm a" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

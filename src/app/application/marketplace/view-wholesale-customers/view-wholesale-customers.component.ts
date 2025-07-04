@@ -112,4 +112,5 @@ class Customers {
   AparthouseNo!: string;
   ApartstreetName!: string;
   Apartcity!: string;
+  companyName!: string;
 }

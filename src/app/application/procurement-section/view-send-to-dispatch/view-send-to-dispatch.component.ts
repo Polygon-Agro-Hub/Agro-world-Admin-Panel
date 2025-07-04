@@ -5,7 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { Router } from '@angular/router';
+import { Router , ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-send-to-dispatch',
@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
   styleUrl: './view-send-to-dispatch.component.css',
 })
 export class ViewSendToDispatchComponent {
+
   isLoading = false;
   orders: any[] = [];
   page: number = 1;
@@ -31,6 +32,7 @@ export class ViewSendToDispatchComponent {
   dateFilter: string = '';
   deliveryDateFilter: string = '';
   searchTerm: string = '';
+
 
   statusOptions = [
     { label: 'Paid', value: 'Paid' },
@@ -46,12 +48,15 @@ export class ViewSendToDispatchComponent {
 
   constructor(
     private orderService: ProcumentsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.fetchOrders();
   }
+  
+
 
   // fetchOrders(): void {
   //   this.isLoading = true;
@@ -102,14 +107,15 @@ export class ViewSendToDispatchComponent {
   //     });
   // }
 
-  fetchOrders(dateFilter: string = this.dateFilter): void {
+  fetchOrders(dateFilter: string = this.dateFilter, searchTerm: string = this.searchTerm): void {
     this.isLoading = true;
 
     this.orderService
       .getAllOrdersWithProcessInfoDispatched(
         this.page,
         this.itemsPerPage,
-        dateFilter
+        dateFilter,
+        searchTerm
       )
       .subscribe({
         next: (response) => {
@@ -202,4 +208,10 @@ export class ViewSendToDispatchComponent {
       queryParams: { id },
     });
   }
+}
+
+
+class ExcludeItems {
+  id!: number;
+  displayName!: string;
 }

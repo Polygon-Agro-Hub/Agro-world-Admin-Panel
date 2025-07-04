@@ -75,6 +75,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   isWithinLimit = true;
 
   showAdditionalItemsModal = false;
+  showExcludedItemsModal = false;
+  excludedItemsCount!: number;
+
 
   totalDefinePkgPrice: number = 0.00;
 
@@ -129,6 +132,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   fetchMarketplaceItems(callback?: () => void) {
+    this.loading = true;
     this.procurementService.getAllMarketplaceItems(this.orderId).subscribe({
       next: (data: any) => {
         console.log('data', data);
@@ -143,12 +147,14 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
       },
+      
       error: (err) => {
         console.error('Error fetching marketplace items:', err);
         this.error = 'Failed to load product options';
         if (callback) callback();
       },
     });
+    this.loading = false;
   }
 
   fetchOrderDetails(id: string) {
@@ -163,6 +169,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.orderdetailsArr = response.data;
         this.additionalItems = response.additionalItems;
         this.excludeItemsArr = response.excludeList;
+        this.excludedItemsCount = response.excludeList.length;
 
   
         console.log('orderdetailsArr', this.orderdetailsArr);
@@ -412,12 +419,26 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       });
     });
 
+    const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        console.log(`Package ${pkgIndex}, Item ${itemIndex}, productId:`, item.productId, 'Type:', typeof item.productId);
+    
+        return (
+          item.isExcluded === true
+        );
+      });
+    });
+
     console.log('hasInvalidProduct', hasInvalidProduct);
     
   
     if (hasInvalidProduct) {
       this.loading = false;
       Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
+      return;
+    } else if(hasExcludeProduct){
+      this.loading = false;
+      Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
       return;
     }
   
@@ -645,6 +666,14 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.showAdditionalItemsModal = false;
   }
 
+  openExcludedItemsModal() {
+    this.showExcludedItemsModal = true;
+  }
+
+  closeExcludedItemsModal() {
+    this.showExcludedItemsModal = false;
+  }
+
   // isvalid(id:number, item:any):Boolean{
   //   if(id===item.id){
   //     return item.isExcluded
@@ -660,6 +689,7 @@ class OrderDetails {
   processOrderId!: number;
   orderId!: number;
   packageId!: number;
+  orderpkgId!: number;
   productPrice!: number;
   definePackageId!: number;
   definePkgPrice: number = 0.00;

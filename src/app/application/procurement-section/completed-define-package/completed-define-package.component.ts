@@ -53,7 +53,7 @@ export class CompletedDefinePackageComponent {
     this.fetchOrders();
   }
 
-  fetchOrders(dateFilter: string = this.dateFilter): void {
+  fetchOrders(dateFilter: string = this.dateFilter, searchTerm: string = this.searchTerm): void {
     this.isLoading = true;
 
     // Add packingStatus filter to the request
@@ -68,7 +68,8 @@ export class CompletedDefinePackageComponent {
       .getAllOrdersWithProcessInfoCompleted(
         this.page,
         this.itemsPerPage,
-        dateFilter
+        dateFilter,
+        searchTerm
       )
       .subscribe({
         next: (response) => {
@@ -91,6 +92,7 @@ export class CompletedDefinePackageComponent {
           }
 
           console.log('Orders:', this.orders.length, 'Total:', this.totalItems); // Debug log
+          console.log('here are the orders,', this.orders)
           this.isLoading = false;
         },
         error: (error) => {
@@ -145,11 +147,11 @@ export class CompletedDefinePackageComponent {
 
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
-      case 'paid':
+      case 'Completed':
         return 'bg-green-100 text-green-800';
-      case 'pending':
+      case 'ToDo':
         return 'bg-yellow-100 text-yellow-800';
-      case 'cancelled':
+      case 'Dispatch':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';

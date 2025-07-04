@@ -84,34 +84,34 @@
           <thead>
             <tr>
               <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left"
               >
                 No
               </th>
               <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+                class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left"
               >
                 Invoice No
               </th>
               <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left"
               >
                 Application
               </th>
               <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left"
               >
-                Total Price of Products (Rs.)
+                Total Price of <br> Products (Rs.)
               </th>
               <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left"
               >
                 Sent By
               </th>
               <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
               >
-                Sent To Dispatch
+                Sent To <br> Dispatch
               </th>
               <th
                 class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -134,30 +134,32 @@
               "
               class="hover:bg-gray-50 dark:hover:bg-gray-700"
             >
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ (page - 1) * itemsPerPage + i + 1 }}
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 text-left text-[#000000] dark:text-textDark"
               >
                 {{ order.invNo || "N/A" }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.orderApp }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.total | number : "1.2-2" }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.createdAt | date : "mediumDate" }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ order.sheduleDate | date : "mediumDate" }}
+              <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+                {{ order.sheduleDate | date: 'd MMM, y' }}<br>
+                {{ order.sheduleDate | date: 'hh:mm a' }}
               </td>
+              
               <td class="px-4 py-3 text-center">
                 <button
                   class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                  (click)="viewPremadePackages(order.id)"
+                  (click)="viewPremadePackages(order.processOrderId)"
                 >
                   <svg
                     viewBox="0 0 24 24"

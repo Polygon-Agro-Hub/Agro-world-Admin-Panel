@@ -152,4 +152,14 @@ export class DestributionService {
       { headers }
     );
   }
+
+  deleteDistributionCenter(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}distribution/delete-distribution-centre/${id}`;
+    return this.http.delete<any>(url, { headers });
+  }
 }

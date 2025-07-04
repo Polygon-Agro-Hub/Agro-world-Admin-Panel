@@ -12,7 +12,7 @@
     Edit Distribution Centre
   </h2>
 
-  <form [formGroup]="distributionForm">
+  <form [formGroup]="distributionForm" (ngSubmit)="updateDistributionCentre()">
     <!-- Row 1 -->
 
     <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">

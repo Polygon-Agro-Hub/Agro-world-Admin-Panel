@@ -48,6 +48,9 @@ export class EditDistributionCentreComponent implements OnInit {
   distributionCenterDetails?: DistributionCenter;
   hasData = false;
 
+  submitError: string | null = null;
+  submitSuccess: string | null = null;
+
   companyOptions: any[] = [];
 
   phoneCodes: PhoneCode[] = [
@@ -131,7 +134,12 @@ export class EditDistributionCentreComponent implements OnInit {
   fetchAllCompanies() {
     this.distributionService.getAllCompanies().subscribe(
       (res) => {
-        this.companyList = res.data;
+        // Make sure the response contains id and companyNameEnglish
+        this.companyList = res.data.map((company: any) => ({
+          id: company.id,
+          companyNameEnglish: company.companyNameEnglish,
+        }));
+        console.log('Company list loaded:', this.companyList);
       },
       (error) => {
         console.error('Error fetching companies:', error);
@@ -248,6 +256,138 @@ export class EditDistributionCentreComponent implements OnInit {
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  updateDistributionCentre() {
+    if (this.distributionForm.valid) {
+      // Debug: Check if companyList is loaded
+      if (!this.companyList || this.companyList.length === 0) {
+        this.showErrorAlert(
+          'Company list not loaded. Please wait or refresh the page.'
+        );
+        return;
+      }
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to update this distribution centre?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Update it!',
+        cancelButtonText: 'No, Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.isLoading = true;
+
+          // Get company ID and ensure it's a number
+          const companyId = Number(this.distributionForm.value.company);
+
+          // Debug logs
+          console.log('Selected company ID:', companyId);
+          console.log('Company list:', this.companyList);
+          console.log('First company in list:', this.companyList[0]);
+
+          // Find the selected company with type conversion
+          const selectedCompany = this.companyList.find(
+            (company) => Number(company.id) === companyId
+          );
+
+          if (!selectedCompany) {
+            this.isLoading = false;
+            console.error('Company not found. Searched ID:', companyId);
+            console.error(
+              'Available company IDs:',
+              this.companyList.map((c) => c.id)
+            );
+            this.showErrorAlert(
+              `Company ID ${companyId} not found. Available companies: ${this.companyList
+                .map((c) => c.id)
+                .join(', ')}`
+            );
+            return;
+          }
+
+          // Prepare the update data
+          const updateData = {
+            centerName: this.distributionForm.value.name,
+            officerName: this.distributionForm.value.officerInCharge,
+            code1: this.distributionForm.value.contact1Code,
+            contact01: this.distributionForm.value.contact1,
+            code2: this.distributionForm.value.contact2Code,
+            contact02: this.distributionForm.value.contact2,
+            city: this.distributionForm.value.city,
+            district: this.distributionForm.value.district,
+            province: this.distributionForm.value.province,
+            country: this.distributionForm.value.country,
+            longitude: parseFloat(
+              this.distributionForm.value.longitude
+            ).toString(),
+            latitude: parseFloat(
+              this.distributionForm.value.latitude
+            ).toString(),
+            email: this.distributionForm.value.email,
+            companyId: companyId,
+            companyNameEnglish: selectedCompany.companyNameEnglish,
+          };
+
+          console.log('Final update data:', updateData);
+
+          const id = this.route.snapshot.params['id'];
+
+          this.distributionService
+            .updateDistributionCentreDetails(id, updateData)
+            .subscribe({
+              next: (response) => {
+                this.isLoading = false;
+                if (response.success) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Distribution centre updated successfully!',
+                  }).then(() => {
+                    this.router.navigate([
+                      '/distribution-hub/action/view-destribition-center',
+                    ]);
+                  });
+                } else {
+                  this.showErrorAlert(response.error || 'Update failed');
+                }
+              },
+              error: (error) => {
+                this.isLoading = false;
+                console.error('Update error:', error);
+                this.showErrorAlert(this.getErrorMessage(error));
+              },
+            });
+        }
+      });
+    } else {
+      this.markFormGroupTouched(this.distributionForm);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Form',
+        text: 'Please correct the errors in the form before submitting.',
+      });
+    }
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error.error?.message) return error.error.message;
+    if (error.status === 400) return 'Invalid data';
+    if (error.status === 401) return 'Unauthorized';
+    if (error.status === 404) return 'Not found';
+    if (error.status === 500) return 'Server error';
+    return 'An unexpected error occurred';
   }
 }
 

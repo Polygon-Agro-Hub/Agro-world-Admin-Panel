@@ -220,6 +220,10 @@ export class ViewDistributionCenterComponent implements OnInit {
     );
   }
 
+  formatCount(count: number): string {
+    return count < 10 ? `0${count}` : `${count}`;
+  }
+
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -313,7 +317,9 @@ export class ViewDistributionCenterComponent implements OnInit {
   }
 
   navigateEdit(id: number) {
-    // this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
+    this.router.navigate([
+      `/distribution-hub/action/edit-distribution-centre/${id}`,
+    ]);
   }
 
   add(): void {
@@ -322,6 +328,42 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
+  }
+
+  deleteDistributionCenter(id: number): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.DestributionSrv.deleteDistributionCenter(id).subscribe({
+          next: () => {
+            Swal.fire(
+              'Deleted!',
+              'Distribution center has been deleted.',
+              'success'
+            );
+            // Refresh the list after deletion
+            this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error deleting distribution center:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete distribution center',
+            });
+          },
+        });
+      }
+    });
   }
 }
 

@@ -315,7 +315,9 @@ export class ViewDistributionCenterComponent implements OnInit {
   }
 
   navigateEdit(id: number) {
-    // this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
+    this.router.navigate([
+      `/distribution-hub/action/edit-distribution-centre/${id}`,
+    ]);
   }
 
   add(): void {

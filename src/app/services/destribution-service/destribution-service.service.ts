@@ -35,7 +35,7 @@ export class DestributionService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   private getHeaders(): HttpHeaders {
     const token = this.tokenService.getToken();
@@ -63,31 +63,47 @@ export class DestributionService {
     searchItem: string = '',
     centerType: string = ''
   ): Observable<any> {
-    console.log(page, limit, searchItem);
+    console.log('Request params:', {
+      page,
+      limit,
+      district,
+      province,
+      company,
+      searchItem,
+    });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
+    // Base URL with required params
     let url = `${this.apiUrl}distribution/get-all-distribution-centre?page=${page}&limit=${limit}`;
+
+    // Add optional params with proper encoding
     if (searchItem) {
-      url += `&searchItem=${searchItem}`;
+      url += `&search=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
     }
 
     if (district) {
-      url += `&district=${district}`;
+      url += `&district=${encodeURIComponent(district)}`;
     }
 
     if (province) {
-      url += `&province=${province}`;
+      url += `&province=${encodeURIComponent(province)}`;
     }
-    if (province) {
-      url += `&company=${company}`;
+
+    if (company) {
+      // Fixed: separate condition for company
+      url += `&company=${encodeURIComponent(company)}`;
+    }
+    if (centerType) {
+      url += `&centerType=${centerType}`;
     }
     if (centerType) {
       url += `&centerType=${centerType}`;
     }
 
+    console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });
   }
 
@@ -125,5 +141,18 @@ export class DestributionService {
     return this.http.delete<any>(url, {
       headers,
     });
+  }
+
+  getDistributionCentreById(id: number): Observable<any> {
+    console.log('Request ID:', id);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const url = `${this.apiUrl}distribution/get-distribution-centre/${id}`;
+
+    console.log('Final URL:', url);
+    return this.http.get<any>(url, { headers: headers });
   }
 }

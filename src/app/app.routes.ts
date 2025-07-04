@@ -149,6 +149,7 @@ import { CustomAdditionalItemsComponent } from './application/dispatch-section/c
 import { ViewRetailCustomeresComponent } from './application/marketplace/view-retail-customeres/view-retail-customeres.component';
 import { DefinePackageViewComponent } from './application/marketplace/define-package-view/define-package-view.component';
 import { ViewPolygonCentersComponent } from './application/distribution-hub/view-polygon-centers/view-polygon-centers.component';
+import { ViewDestributionCenterComponent } from './application/marketplace/view-destribution-center/view-destribution-center.component';
 export const routes: Routes = [
   {
     path: '',
@@ -975,6 +976,10 @@ export const routes: Routes = [
               {
                 path: 'view-polygon-centers',
                 component: ViewPolygonCentersComponent,
+              },
+              {
+                path: 'view-distribution-centre/:id',
+                component: ViewDestributionCenterComponent,
               },
             ],
           },

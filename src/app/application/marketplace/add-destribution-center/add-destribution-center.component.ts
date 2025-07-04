@@ -322,7 +322,7 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action']);
+    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
 
   navigatePath(path: string) {

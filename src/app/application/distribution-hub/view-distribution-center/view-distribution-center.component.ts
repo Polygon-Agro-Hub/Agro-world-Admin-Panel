@@ -135,17 +135,24 @@ export class ViewDistributionCenterComponent implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
+  viewDistributionCenter(id: number): void {
+    this.router.navigate([
+      `/distribution-hub/action/view-distribution-centre/${id}`,
+    ]);
+  }
+
   fetchCompanies(): void {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Companies fetched:', response);
+        console.log('Raw API response:', response); // Add this line
+        console.log('Companies fetched:', response.data); // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data
             .map((company) => ({
-              label: company.companyNameEnglish, // Use companyNameEnglish directly
-              value: company.companyNameEnglish, // Use name as value since ID isn't returned
+              label: company.companyNameEnglish,
+              value: company.companyNameEnglish,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
@@ -201,11 +208,13 @@ export class ViewDistributionCenterComponent implements OnInit {
         this.isLoading = false;
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
-        this.totalItems = response.total;
+        this.totalItems = response.total; // This updates the count
       },
       (error) => {
+        console.error('API Error:', error);
+        this.isLoading = false;
         if (error.status === 401) {
-          // Unauthorized access handling (left empty intentionally)
+          // Unauthorized access handling
         }
       }
     );
@@ -236,7 +245,6 @@ export class ViewDistributionCenterComponent implements OnInit {
         (p) => p.province === this.selectProvince
       );
 
-      // Filter and sort districts for selected province
       this.districtOptions =
         selected?.district
           .map((d) => ({
@@ -245,10 +253,8 @@ export class ViewDistributionCenterComponent implements OnInit {
           }))
           .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-      // Reset district selection
       this.selectDistrict = '';
     } else {
-      // Province cleared → show all districts, sorted
       this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
         .map((d) => ({
           label: d.districtName,
@@ -257,9 +263,15 @@ export class ViewDistributionCenterComponent implements OnInit {
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    console.log(this.selectProvince);
-
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    // Call fetch with updated filters
+    this.fetchAllCollectionCenter(
+      this.page,
+      this.itemsPerPage,
+      this.selectDistrict,
+      this.selectProvince, // Make sure this is the correct format
+      this.selectCompany,
+      this.searchItem
+    );
   }
 
   applyDistrictFilters() {

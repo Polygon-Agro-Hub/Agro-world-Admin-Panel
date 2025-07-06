@@ -1,0 +1,145 @@
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
+      <button
+        [ngClass]="
+          activeTab === 'assigned'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'assigned'" class="fa fa-check"></i>
+        Assigned
+      </button>
+      <button
+        [ngClass]="
+          activeTab === 'processing'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'processing'" class="fa fa-check"></i>
+        Processing
+      </button>
+      <button
+        [ngClass]="
+          activeTab === 'delivered'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'delivered'" class="fa fa-check"></i>
+        Delivered
+      </button>
+      <button
+        [ngClass]="
+          activeTab === 'cancelled'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'cancelled'" class="fa fa-check"></i>
+        Cancelled
+      </button>
+      <button
+        [ngClass]="
+          activeTab === 'failed'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'failed'" class="fa fa-check"></i>
+        Failed
+      </button>
+    </div>
+    <div class="h-5"></div>
+    <div class="px-5">
+      <table
+        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Invoice No
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Order Time
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Schedule
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Payment
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Payment Status
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Amount
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Order Status
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Invoice
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-200 dark:border-[#4B555A]">
+            <td class="px-3 py-3"></td>
+            <td
+              class="px-3 py-3 text-left text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-3 py-3 text-left text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td class="px-3 py-3 text-center"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

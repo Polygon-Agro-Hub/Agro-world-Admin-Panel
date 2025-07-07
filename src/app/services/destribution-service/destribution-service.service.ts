@@ -63,14 +63,15 @@ export class DestributionService {
     searchItem: string = '',
     centerType: string = ''
   ): Observable<any> {
-    console.log('Request params:', {
-      page,
-      limit,
-      district,
-      province,
-      company,
-      searchItem,
-    });
+    console.log('district', district, 'province', province, 'company', company, 'searchItem', searchItem, 'centerType', centerType)
+    // console.log('Request params:', {
+    //   page,
+    //   limit,
+    //   district,
+    //   province,
+    //   company,
+    //   searchItem,
+    // });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

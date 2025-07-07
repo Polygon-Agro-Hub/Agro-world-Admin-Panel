@@ -74,7 +74,7 @@ export class AddDestributionCenterComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private distributionService: DestributionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
@@ -258,7 +258,7 @@ export class AddDestributionCenterComponent implements OnInit {
                     timer: 2000,
                     showConfirmButton: false,
                   });
-                  this.navigatePath('/market/action');
+                  this.navigatePath('/distribution-hub/action');
                 } else {
                   this.submitError =
                     response.error || 'Failed to create distribution centre';
@@ -322,7 +322,7 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action']);
+    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
 
   navigatePath(path: string) {

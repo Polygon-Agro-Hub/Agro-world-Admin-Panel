@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
-import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-view-distribution-center',
+  selector: 'app-view-polygon-centers',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,10 +22,10 @@ import { PermissionService } from '../../../services/roles-permission/permission
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  templateUrl: './view-distribution-center.component.html',
-  styleUrl: './view-distribution-center.component.css',
+  templateUrl: './view-polygon-centers.component.html',
+  styleUrl: './view-polygon-centers.component.css'
 })
-export class ViewDistributionCenterComponent implements OnInit {
+export class ViewPolygonCentersComponent implements OnInit {
   companyId!: number;
   distributionCentreObj!: DistributionCentre[];
   districts: string[] = [];
@@ -115,7 +115,7 @@ export class ViewDistributionCenterComponent implements OnInit {
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -135,24 +135,17 @@ export class ViewDistributionCenterComponent implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
-  viewDistributionCenter(id: number): void {
-    this.router.navigate([
-      `/distribution-hub/action/view-distribution-centre/${id}`,
-    ]);
-  }
-
   fetchCompanies(): void {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Raw API response:', response); // Add this line
-        console.log('Companies fetched:', response.data); // Check the data structure
+        console.log('Companies fetched:', response);
 
         if (response.success && response.data) {
           this.companyOptions = response.data
             .map((company) => ({
-              label: company.companyNameEnglish,
-              value: company.companyNameEnglish,
+              label: company.companyNameEnglish, // Use companyNameEnglish directly
+              value: company.companyNameEnglish, // Use name as value since ID isn't returned
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
@@ -193,7 +186,8 @@ export class ViewDistributionCenterComponent implements OnInit {
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
     company: string = this.selectCompany,
-    searchItem?: string
+    searchItem?: string,
+    centerType: string = 'polygon' // Default to 'polygon' type
   ) {
     this.isLoading = true;
     this.DestributionSrv.getAllDistributionCentre(
@@ -202,31 +196,26 @@ export class ViewDistributionCenterComponent implements OnInit {
       district,
       province,
       company,
-      searchItem
+      searchItem,
+      centerType
     ).subscribe(
       (response) => {
         this.isLoading = false;
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
-        this.totalItems = response.total; // This updates the count
+        this.totalItems = response.total;
       },
       (error) => {
-        console.error('API Error:', error);
-        this.isLoading = false;
         if (error.status === 401) {
-          // Unauthorized access handling
+          // Unauthorized access handling (left empty intentionally)
         }
       }
     );
   }
 
-  formatCount(count: number): string {
-    return count < 10 ? `0${count}` : `${count}`;
-  }
-
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.fetchAllCollectionCenter();
   }
 
   searchPlantCareUsers() {
@@ -240,7 +229,7 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.fetchAllCollectionCenter();
   }
 
   applyProvinceFilters() {
@@ -249,6 +238,7 @@ export class ViewDistributionCenterComponent implements OnInit {
         (p) => p.province === this.selectProvince
       );
 
+      // Filter and sort districts for selected province
       this.districtOptions =
         selected?.district
           .map((d) => ({
@@ -257,8 +247,10 @@ export class ViewDistributionCenterComponent implements OnInit {
           }))
           .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
+      // Reset district selection
       this.selectDistrict = '';
     } else {
+      // Province cleared → show all districts, sorted
       this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
         .map((d) => ({
           label: d.districtName,
@@ -267,15 +259,9 @@ export class ViewDistributionCenterComponent implements OnInit {
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    // Call fetch with updated filters
-    this.fetchAllCollectionCenter(
-      this.page,
-      this.itemsPerPage,
-      this.selectDistrict,
-      this.selectProvince, // Make sure this is the correct format
-      this.selectCompany,
-      this.searchItem
-    );
+    console.log(this.selectProvince);
+
+    this.fetchAllCollectionCenter();
   }
 
   applyDistrictFilters() {
@@ -317,9 +303,7 @@ export class ViewDistributionCenterComponent implements OnInit {
   }
 
   navigateEdit(id: number) {
-    this.router.navigate([
-      `/distribution-hub/action/edit-distribution-centre/${id}`,
-    ]);
+    // this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
   }
 
   add(): void {
@@ -330,10 +314,10 @@ export class ViewDistributionCenterComponent implements OnInit {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
 
-  deleteDistributionCenter(id: number): void {
+  deleteCenter(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: 'You will not be able to recover this center!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -341,27 +325,20 @@ export class ViewDistributionCenterComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.isLoading = true;
-        this.DestributionSrv.deleteDistributionCenter(id).subscribe({
-          next: () => {
-            Swal.fire(
-              'Deleted!',
-              'Distribution center has been deleted.',
-              'success'
-            );
-            // Refresh the list after deletion
-            this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+        this.DestributionSrv.deleteDistributedCenter(id).subscribe(
+          (res) => {
+            if (res.success) {
+              Swal.fire('Deleted!', 'The center has been deleted.', 'success');
+              this.fetchAllCollectionCenter();
+            } else {
+              Swal.fire('Error!', 'Failed to delete the center.', 'error');
+            }
           },
-          error: (error) => {
-            this.isLoading = false;
-            console.error('Error deleting distribution center:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to delete distribution center',
-            });
-          },
-        });
+          (error) => {
+            console.error('Error deleting center:', error);
+            Swal.fire('Error!', 'Failed to delete the center.', 'error');
+          }
+        );
       }
     });
   }

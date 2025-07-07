@@ -60,30 +60,50 @@ export class DestributionService {
     district: string = '',
     province: string = '',
     company: string = '',
-    searchItem: string = ''
+    searchItem: string = '',
+    centerType: string = ''
   ): Observable<any> {
-    console.log(page, limit, searchItem);
+    console.log('Request params:', {
+      page,
+      limit,
+      district,
+      province,
+      company,
+      searchItem,
+    });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
+    // Base URL with required params
     let url = `${this.apiUrl}distribution/get-all-distribution-centre?page=${page}&limit=${limit}`;
+
+    // Add optional params with proper encoding
     if (searchItem) {
-      url += `&searchItem=${searchItem}`;
+      url += `&search=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
     }
 
     if (district) {
-      url += `&district=${district}`;
+      url += `&district=${encodeURIComponent(district)}`;
     }
 
     if (province) {
-      url += `&province=${province}`;
-    }
-    if (province) {
-      url += `&company=${company}`;
+      url += `&province=${encodeURIComponent(province)}`;
     }
 
+    if (company) {
+      // Fixed: separate condition for company
+      url += `&company=${encodeURIComponent(company)}`;
+    }
+    if (centerType) {
+      url += `&centerType=${centerType}`;
+    }
+    if (centerType) {
+      url += `&centerType=${centerType}`;
+    }
+
+    console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });
   }
 
@@ -104,10 +124,61 @@ export class DestributionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     let url = `${this.apiUrl}distribution/get-company`;
     return this.http.get<ApiResponse>(url, {
       headers,
     });
+  }
+
+  deleteDistributedCenter(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}distribution/delete-distributed-center/${id}`;
+    return this.http.delete<any>(url, {
+      headers,
+    });
+  }
+
+  getDistributionCentreById(id: number): Observable<any> {
+    console.log('Request ID:', id);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const url = `${this.apiUrl}distribution/get-distribution-centre/${id}`;
+
+    console.log('Final URL:', url);
+    return this.http.get<any>(url, { headers: headers });
+  }
+
+  updateDistributionCentreDetails(
+    id: number,
+    updateData: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put(
+      `${this.apiUrl}distribution/update-distribution-centre/${id}`,
+      updateData,
+      { headers }
+    );
+  }
+
+  deleteDistributionCenter(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}distribution/delete-distribution-centre/${id}`;
+    return this.http.delete<any>(url, { headers });
   }
 }

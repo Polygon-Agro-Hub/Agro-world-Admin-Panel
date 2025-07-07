@@ -1,18 +1,18 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
-  selector: 'app-view-retail-customeres',
+  selector: 'app-view-wholesale-customers',
   standalone: true,
   imports: [CommonModule, FormsModule, NgxPaginationModule],
-  templateUrl: './view-retail-customeres.component.html',
-  styleUrl: './view-retail-customeres.component.css',
+  templateUrl: './view-wholesale-customers.component.html',
+  styleUrl: './view-wholesale-customers.component.css',
 })
-export class ViewRetailCustomeresComponent implements OnInit {
+export class ViewWholesaleCustomersComponent implements OnInit {
   customerObj: Customers[] = [];
   searchText: string = '';
   isPopupOpen: boolean = false;
@@ -27,20 +27,20 @@ export class ViewRetailCustomeresComponent implements OnInit {
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   ngOnInit(): void {
-    this.fetchRetailCustomers();
+    this.fetchWholesaleCustomers();
   }
 
   goBack(): void {
     this.router.navigate(['/market/action']);
   }
 
-  fetchRetailCustomers(
+  fetchWholesaleCustomers(
     page: number = this.page,
     limit: number = this.itemsPerPage,
     searchText: string = this.searchText
   ) {
     this.marketSrv
-      .fetchAllRetailCustomers(page, limit, searchText)
+      .fetchAllWholesaleCustomers(page, limit, searchText)
       .subscribe((res) => {
         console.log(res);
         this.customerObj = res.items;
@@ -50,16 +50,16 @@ export class ViewRetailCustomeresComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchRetailCustomers();
+    this.fetchWholesaleCustomers();
   }
 
   onSearch() {
-    this.fetchRetailCustomers();
+    this.fetchWholesaleCustomers();
   }
 
   offSearch() {
     this.searchText = '';
-    this.fetchRetailCustomers();
+    this.fetchWholesaleCustomers();
   }
 
   detailsPop(Obj: Customers) {
@@ -112,4 +112,5 @@ class Customers {
   AparthouseNo!: string;
   ApartstreetName!: string;
   Apartcity!: string;
+  companyName!: string;
 }

@@ -148,6 +148,10 @@ import { ViewDispatchOrdersComponent } from './application/procurement-section/v
 import { CustomAdditionalItemsComponent } from './application/dispatch-section/custom-additional-items/custom-additional-items.component';
 import { ViewRetailCustomeresComponent } from './application/marketplace/view-retail-customeres/view-retail-customeres.component';
 import { DefinePackageViewComponent } from './application/marketplace/define-package-view/define-package-view.component';
+import { ViewPolygonCentersComponent } from './application/distribution-hub/view-polygon-centers/view-polygon-centers.component';
+import { ViewDestributionCenterComponent } from './application/marketplace/view-destribution-center/view-destribution-center.component';
+import { EditDistributionCentreComponent } from './application/distribution-hub/edit-distribution-centre/edit-distribution-centre.component';
+import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
 export const routes: Routes = [
   {
     path: '',
@@ -831,6 +835,10 @@ export const routes: Routes = [
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
               },
+              {
+                path: 'view-wholesale-customers',
+                component: ViewWholesaleCustomersComponent,
+              },
             ],
           },
         ],
@@ -970,6 +978,18 @@ export const routes: Routes = [
               {
                 path: 'edit-distribution-officer/:id',
                 component: EditDistributionOfficerComponent,
+              },
+              {
+                path: 'view-polygon-centers',
+                component: ViewPolygonCentersComponent,
+              },
+              {
+                path: 'view-distribution-centre/:id',
+                component: ViewDestributionCenterComponent,
+              },
+              {
+                path: 'edit-distribution-centre/:id',
+                component: EditDistributionCentreComponent,
               },
             ],
           },

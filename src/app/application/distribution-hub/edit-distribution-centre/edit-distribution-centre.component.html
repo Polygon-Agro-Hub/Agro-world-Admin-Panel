@@ -1,0 +1,245 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-2 mt-0 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="w-full mx-auto pt-6 py-6 px-12 bg-white dark:bg-tileBlack rounded-lg shadow-md"
+>
+  <h2 class="font-medium text-[#292929] mb-6 dark:text-textDark">
+    Edit Distribution Centre
+  </h2>
+
+  <form [formGroup]="distributionForm" (ngSubmit)="updateDistributionCentre()">
+    <!-- Row 1 -->
+
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2"
+          >Distribution Centre Name</label
+        >
+        <input
+          type="text"
+          formControlName="name"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <div class="flex-1 mb-4 md:mb-0"></div>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="dark:text-textDark block text-sm font-medium text-[#534E4E] mb-2"
+          >Company</label
+        >
+        <select
+          formControlName="company"
+          [class]="
+            ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+            (isFieldInvalid('company') ? 'border-red-500' : 'border-gray-300')
+          "
+        >
+          <option value="company" disabled selected>Select a company</option>
+          <option *ngFor="let company of companyList" [value]="company.id">
+            {{ company.companyNameEnglish }}
+          </option>
+        </select>
+      </div>
+
+      <div class="flex-1">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Officer In-Charge Name</label
+        >
+        <input
+          type="text"
+          formControlName="officerInCharge"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Contact Number 01</label
+        >
+        <div class="flex">
+          <select
+            formControlName="contact1Code"
+            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option *ngFor="let code of phoneCodes" [value]="code.value">
+              {{ code.label }}
+            </option>
+          </select>
+          <input
+            type="tel"
+            formControlName="contact1"
+            placeholder="XXXXXXXXX"
+            class="dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Contact Number 02</label
+        >
+        <div class="flex">
+          <select
+            formControlName="contact2Code"
+            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option *ngFor="let code of phoneCodes" [value]="code.value">
+              {{ code.label }}
+            </option>
+          </select>
+          <input
+            type="tel"
+            formControlName="contact2"
+            placeholder="XXXXXXXXX"
+            class="dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Latitude</label
+        >
+        <input
+          type="text"
+          formControlName="latitude"
+          placeholder="e.g., 6.9271"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="flex-1">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Longitude</label
+        >
+        <input
+          type="text"
+          formControlName="longitude"
+          placeholder="e.g., 79.8612"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Email</label
+        >
+        <input
+          type="email"
+          formControlName="email"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="flex-1">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Country</label
+        >
+        <select
+          formControlName="country"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>Select Country</option>
+          <option value="Sri Lanka">Sri Lanka</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 5 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Province</label
+        >
+        <select
+          formControlName="province"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Select Province</option>
+          <option *ngFor="let province of provinces" [value]="province">
+            {{ province }}
+          </option>
+        </select>
+      </div>
+
+      <div class="flex-1">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >District</label
+        >
+        <select
+          formControlName="district"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>Select District</option>
+          <option *ngFor="let district of getDistricts()" [value]="district">
+            {{ district }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Row 6 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >City</label
+        >
+        <input
+          type="text"
+          formControlName="city"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <div class="flex-1 mb-4 md:mb-0"></div>
+    </div>
+
+    <div class="flex justify-end space-x-4 pt-6">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="px-4 w-30 py-2 bg-[#74788D] border border-gray-300 rounded-md text-[#D3D3D3] focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [class]="
+          'px-4 min-w-30 py-2 bg-[#3980C0] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#D3D3D3] ' +
+          (distributionForm.invalid
+            ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+            : 'bg-[#3980C0] text-white  hover:bg-[#3980C0]')
+        "
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</div>

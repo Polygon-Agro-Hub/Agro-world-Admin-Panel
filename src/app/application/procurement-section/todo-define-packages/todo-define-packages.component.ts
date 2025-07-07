@@ -87,6 +87,7 @@ export class TodoDefinePackagesComponent implements OnInit {
               (order: { packingStatus: string }) =>
                 order.packingStatus === 'Todo'
             );
+            console.log('orders', this.orders);
             this.totalItems = response.total || response.totalCount || 0;
           } else {
             // Fallback client-side filtering if API doesn't support it

@@ -302,9 +302,9 @@ export class ViewPolygonCentersComponent implements OnInit {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  navigateEdit(id: number) {
-    // this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
-  }
+  // navigateEdit(id: number) {
+  //   this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
+  // }
 
   add(): void {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);
@@ -341,6 +341,14 @@ export class ViewPolygonCentersComponent implements OnInit {
         );
       }
     });
+  }
+
+  viewCenter(id: number) {
+    this.router.navigate([`/distribution-hub/action/view-distribution-centre/${id}`]);
+  }
+
+  editCenter(id: number) {
+    this.router.navigate([`/distribution-hub/action/edit-distribution-centre/${id}`]);
   }
 }
 

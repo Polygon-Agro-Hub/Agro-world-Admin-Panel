@@ -182,7 +182,10 @@
               </button>
             </td>
             <td class="px-3 py-3 text-center">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewOrderDetails(item.id)"
+              >
                 <svg
                   fill="currentColor"
                   viewBox="0 0 32 32"

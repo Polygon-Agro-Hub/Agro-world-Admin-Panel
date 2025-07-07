@@ -667,4 +667,24 @@ export class MarketPlaceService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  fetchUserOrders(
+    userId: string,
+    statusFilter: string = 'Ordered'
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log('userId:', userId);
+
+    const url = `${this.apiUrl}market-place/get-user-orders/${userId}?status=${statusFilter}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError((error) => {
+        // You can handle specific error cases here if needed
+        console.error('Error fetching user orders:', error);
+        return throwError(error);
+      })
+    );
+  }
 }

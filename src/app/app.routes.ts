@@ -152,6 +152,7 @@ import { ViewPolygonCentersComponent } from './application/distribution-hub/view
 import { ViewDestributionCenterComponent } from './application/marketplace/view-destribution-center/view-destribution-center.component';
 import { EditDistributionCentreComponent } from './application/distribution-hub/edit-distribution-centre/edit-distribution-centre.component';
 import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
+import { ViewCustomerOrdersComponent } from './application/marketplace/view-customer-orders/view-customer-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -838,6 +839,10 @@ export const routes: Routes = [
               {
                 path: 'view-wholesale-customers',
                 component: ViewWholesaleCustomersComponent,
+              },
+              {
+                path: 'view-order-details/:id',
+                component: ViewCustomerOrdersComponent,
               },
             ],
           },

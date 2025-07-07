@@ -89,6 +89,9 @@ export class ViewWholesaleCustomersComponent implements OnInit {
         console.error('Failed to copy:', err);
       });
   }
+  viewOrderDetails(id: string) {
+    this.router.navigate(['/market/action/view-order-details', id]);
+  }
 }
 
 class Customers {

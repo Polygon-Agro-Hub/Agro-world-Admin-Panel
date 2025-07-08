@@ -273,6 +273,7 @@ export class EditDistributionOfficerComponent implements OnInit {
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
+  
 
   EpmloyeIdCreate() {
     const currentCompanyId = this.personalData.companyId;

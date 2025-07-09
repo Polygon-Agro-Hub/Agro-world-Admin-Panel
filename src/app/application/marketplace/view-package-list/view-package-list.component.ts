@@ -42,30 +42,6 @@ export class ViewPackageListComponent {
     this.router.navigate(['/market/action']);
   }
 
-  // fetchAllPackages(searchText: string = this.searchtext) {
-  //   this.isLoading = true;
-  //   this.viewPackagesList.getAllMarketplacePackages(searchText).subscribe(
-  //     (response) => {
-  //       console.log('Package list response:', response);
-  //       // Flatten the packages array from all status groups
-  //       this.viewPackageList = response.data.flatMap((group: any) =>
-  //         group.packages.map((pkg: any) => ({
-  //           ...pkg,
-  //           groupStatus: group.status,
-  //         }))
-  //       );
-  //       this.hasData = this.viewPackageList.length > 0;
-  //       this.isLoading = false;
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching all Packages', error);
-  //       this.isLoading = false;
-  //       if (error.status === 401) {
-  //         this.router.navigate(['/login']);
-  //       }
-  //     }
-  //   );
-  // }
 
   fetchAllPackages(searchText: string = this.searchtext) {
     this.isLoading = true;
@@ -79,12 +55,6 @@ export class ViewPackageListComponent {
           }))
         );
         this.hasData = this.viewPackageList.length > 0;
-
-        // Fetch last defined dates for each package
-        this.viewPackageList.forEach((pkg) => {
-          this.getLastDefinedDate(pkg.id);
-        });
-
         this.isLoading = false;
       },
       (error) => {
@@ -93,20 +63,6 @@ export class ViewPackageListComponent {
         if (error.status === 401) {
           this.router.navigate(['/login']);
         }
-      }
-    );
-  }
-
-  getLastDefinedDate(packageId: number) {
-    this.viewPackagesList.getLatestPackageDateByPackageId(packageId).subscribe(
-      (response) => {
-        if (response.success && response.data.length > 0) {
-          const latestEntry = response.data[0].entries[0];
-          this.lastDefinedDates[packageId] = latestEntry.createdAt;
-        }
-      },
-      (error) => {
-        console.error('Error fetching last defined date:', error);
       }
     );
   }
@@ -205,6 +161,7 @@ class PackageList {
   status!: string;
   discount!: number;
   subtotal!: number;
+  defineDate!: string;
   createdAt!: string;
   groupStatus: any;
 }

@@ -90,11 +90,11 @@ export class DefinePackageViewComponent implements OnInit {
         }
 
         // Transform the response to match our component's OrderDetailItem[]
-        this.orderDetails = response.data.packages.map((pkg) => ({
+        this.orderDetails = response.data.packages.map((pkg:any) => ({
           packageId: pkg.packageId,
           displayName: pkg.displayName,
           productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
-          productTypes: pkg.productTypes.map((pt) => ({
+          productTypes: pkg.productTypes.map((pt:any) => ({
             id: pt.id,
             typeName: pt.typeName,
             shortCode: pt.shortCode,

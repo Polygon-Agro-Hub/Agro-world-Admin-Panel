@@ -214,17 +214,54 @@ export class ViewRetailOrdersComponent implements OnInit {
     this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
 
-  downloadInvoice(id: number, invoiceNumber: string): void {
+  downloadInvoice(id: number, tableInvoiceNo: string): void {
     this.isLoading = true;
+    console.log(
+      'Starting download - Table InvoiceNo:',
+      tableInvoiceNo,
+      'ID:',
+      id
+    ); // Debug log
+
     this.getInvoiceDetails
       .getInvoiceDetails(id)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          console.log('Finished loading invoice details'); // Debug log
+        })
+      )
       .subscribe({
         next: (response: any) => {
-          // Transform the API response to match InvoiceData interface
-          const invoiceData = {
-            invoiceNumber:
-              response.data.invoice?.invoiceNumber || invoiceNumber,
+          console.log('API Response:', response); // Debug entire response
+
+          // Debug invoice number sources
+          const apiInvoiceNo = response.data.invoice?.invoiceNumber;
+          console.log(
+            'API InvoiceNo:',
+            apiInvoiceNo,
+            'Table InvoiceNo:',
+            tableInvoiceNo
+          );
+
+          // Determine which invoice number to use (prefer table's version)
+          const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
+          console.log('Using InvoiceNo:', finalInvoiceNo);
+
+          if (!finalInvoiceNo || finalInvoiceNo === 'N/A') {
+            console.error('No valid invoice number found');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Could not determine invoice number',
+              confirmButtonColor: '#3085d6',
+            });
+            return;
+          }
+
+          // Transform the API response
+          const invoiceData: InvoiceData = {
+            invoiceNumber: finalInvoiceNo, // Use the determined invoice number
             deliveryMethod: response.data.invoice?.deliveryMethod || 'N/A',
             invoiceDate: response.data.invoice?.invoiceDate || 'N/A',
             scheduledDate: response.data.invoice?.scheduledDate || 'N/A',
@@ -276,15 +313,22 @@ export class ViewRetailOrdersComponent implements OnInit {
                   0
                 )
                 .toFixed(2) || '0.00',
-            deliveryFee: '0.00', // You might need to get this from the API
+            deliveryFee: response.data.invoice?.deliveryFee || '0.00',
             discount: response.data.invoice?.orderDiscount || '0.00',
           };
 
+          console.log('Final Invoice Data:', invoiceData); // Debug final data
           this.generatePDF(invoiceData);
         },
         error: (error) => {
           console.error('Error fetching invoice details:', error);
           this.errorMessage = 'Failed to download invoice';
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to download invoice. Please try again.',
+            confirmButtonColor: '#3085d6',
+          });
         },
       });
   }

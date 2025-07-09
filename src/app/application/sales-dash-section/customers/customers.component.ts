@@ -1,13 +1,16 @@
+
+
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CustomersService } from '../../../services/dash/customers.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { response } from 'express';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { debounceTime, Subject } from 'rxjs';
 
 interface Customers {
   id: number;
@@ -44,10 +47,11 @@ interface Customers {
     NgxPaginationModule,
   ],
   templateUrl: './customers.component.html',
-  styleUrl: './customers.component.css',
+  styleUrls: ['./customers.component.css'],
 })
-export class CustomersComponent {
+export class CustomersComponent implements OnInit {
   customers: Customers[] = [];
+  filteredCustomers: Customers[] = [];
   isLoading = true;
   hasData: boolean = true;
   isPopupOpen = false;
@@ -58,18 +62,24 @@ export class CustomersComponent {
   itemsPerPage: number = 10;
   searchText: string = '';
 
+  private searchSubject = new Subject<string>();
+
   constructor(
     private customerService: CustomersService,
     private http: HttpClient,
     private router: Router
-  ) {}
-
-  back(): void {
-    this.router.navigate(['sales-dash']);
+  ) {
+    this.searchSubject.pipe(debounceTime(300)).subscribe((searchText) => {
+      this.filterCustomers(searchText);
+    });
   }
 
   ngOnInit() {
     this.fetchAllCustomers();
+  }
+
+  back(): void {
+    this.router.navigate(['sales-dash']);
   }
 
   openPopup(customer: any) {
@@ -83,7 +93,7 @@ export class CustomersComponent {
   }
 
   copyToClipboard(value: string | undefined) {
-    if (!value) return; // Prevent copying if value is undefined
+    if (!value) return;
 
     navigator.clipboard
       .writeText(value)
@@ -106,35 +116,68 @@ export class CustomersComponent {
       });
   }
 
-  fetchAllCustomers(
-    page: number = this.page,
-    limit: number = this.itemsPerPage,
-    search: string = this.searchText
-  ) {
-    this.customerService.getCustomers(page, limit, search).subscribe(
+  fetchAllCustomers(page: number = this.page, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
+    this.customerService.getCustomers(page, limit, '').subscribe(
       (response: any) => {
-        console.log(response);
         this.isLoading = false;
-        this.customers = response.items;
+        this.customers = response.items || [];
+        this.totalItems = response.totalItems || this.customers.length;
+        this.filteredCustomers = [...this.customers];
+        this.hasData = this.filteredCustomers.length > 0;
       },
       (error) => {
         console.error('Error fetching customers', error);
         this.isLoading = false;
+        this.customers = [];
+        this.filteredCustomers = [];
+        this.hasData = false;
       }
     );
   }
 
-  onSearch() {
-    this.fetchAllCustomers();
+  onSearchChange(searchText: string) {
+    this.searchSubject.next(searchText);
+  }
+
+  filterCustomers(searchText: string) {
+    const loweredSearch = searchText.trim().toLowerCase();
+    if (!loweredSearch) {
+      this.filteredCustomers = [...this.customers];
+    } else {
+      this.filteredCustomers = this.customers.filter((customer) =>
+        this.searchInCustomer(customer, loweredSearch)
+      );
+    }
+    this.hasData = this.filteredCustomers.length > 0;
+    this.page = 1;
+    this.totalItems = this.filteredCustomers.length;
+  }
+
+  private searchInCustomer(customer: Customers, searchText: string): boolean {
+    const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+    const agentName = `${customer.salesAgentFirstName} ${customer.salesAgentLastName}`.toLowerCase();
+
+    const fieldsToSearch = [
+      customer.cusId,
+      fullName,
+      customer.phoneNumber,
+      customer.email,
+      customer.empId,
+      agentName,
+    ];
+
+    return fieldsToSearch.some((field) =>
+      field?.toLowerCase().includes(searchText)
+    );
   }
 
   offSearch() {
     this.searchText = '';
-    this.fetchAllCustomers();
+    this.filterCustomers('');
   }
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllCustomers();
   }
 }

@@ -346,7 +346,7 @@ export class MarketPlaceService {
     });
 
     return this.http.post(
-      `${this.apiUrl}market-place/edit-package/${id}`,
+      `${this.apiUrl}market-place/edit-packagee/${id}`,
       formData,
       {
         headers,

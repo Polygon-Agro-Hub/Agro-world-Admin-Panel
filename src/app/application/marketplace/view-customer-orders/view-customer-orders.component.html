@@ -159,71 +159,27 @@
                 <span
                   [class]="order.isPaid ? 'text-green-500' : 'text-red-500'"
                 >
-                  {{ order.isPaid ? "Paid" : "Unpaid" }}
+                  {{ order.isPaid ? "Paid" : "Pending" }}
                 </span>
               </td>
               <td class="px-3 py-3 text-center">
                 {{ order.fullTotal | currency : "LKR" : "code" : "1.2-2" }}
               </td>
               <td class="px-3 py-3 text-center">
-                <!-- Assigned Status -->
                 <span
-                  *ngIf="order.status === 'Assinged'"
-                  class="bg-[#E6F0FF] text-[#415CFF] px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  Assigned
-                </span>
-
-                <!-- Processing Status -->
-                <span
-                  *ngIf="order.status === 'Processing'"
-                  class="bg-[#FFF8E6] text-[#FFB800] px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  Processing
-                </span>
-
-                <!-- Delivered Status -->
-                <span
-                  *ngIf="order.status === 'Delivered'"
-                  class="bg-[#E6FFEE] text-[#00A441] px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  Delivered
-                </span>
-
-                <!-- On the way Status -->
-                <span
-                  *ngIf="order.status === 'On the way'"
-                  class="bg-[#F3E6FF] text-[#8A3FFC] px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  On the way
-                </span>
-
-                <!-- Cancelled Status -->
-                <span
-                  *ngIf="order.status === 'Cancelled'"
-                  class="bg-[#FFE6E6] text-[#FF0000] px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  Cancelled
-                </span>
-
-                <!-- Failed Status -->
-                <span
-                  *ngIf="order.status === 'Faild'"
-                  class="bg-[#FFE6E6] text-[#FF0000] px-3 py-1 rounded-full text-xs font-medium"
-                >
-                  Failed
-                </span>
-
-                <!-- Default case for unknown statuses -->
-                <span
-                  *ngIf="
-                    order.status !== 'Assinged' &&
-                    order.status !== 'Processing' &&
-                    order.status !== 'Delivered' &&
-                    order.status !== 'On the way' &&
-                    order.status !== 'Cancelled' &&
-                    order.status !== 'Faild'
-                  "
+                  [ngClass]="{
+                    'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
+                      order.status === 'On the way',
+                    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
+                      order.status === 'Delivered',
+                    'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-3xl':
+                      order.status === 'Cancelled',
+                    'font-bold px-3 py-1 text-sm bg-[#CFE1FF] text-[#3B82F6] rounded-3xl':
+                      order.status === 'Processing',
+                    'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
+                      order.status === 'Ordered'
+                  }"
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center"
                   class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-medium"
                 >
                   {{ order.status }}

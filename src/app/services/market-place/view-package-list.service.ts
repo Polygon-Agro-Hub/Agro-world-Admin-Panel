@@ -25,12 +25,4 @@ export class ViewPackageListService {
     return this.http.get<any>(url, { headers });
   }
 
-  getLatestPackageDateByPackageId(packageId: number): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-
-    const url = `${this.apiUrl}market-place/get-latest-package-date/${packageId}`;
-    return this.http.get<any>(url, { headers });
-  }
 }

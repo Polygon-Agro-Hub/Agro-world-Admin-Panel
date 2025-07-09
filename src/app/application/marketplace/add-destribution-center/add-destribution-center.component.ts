@@ -36,6 +36,8 @@ export class AddDestributionCenterComponent implements OnInit {
   submitError: string | null = null;
   submitSuccess: string | null = null;
 
+  isLoadingregcode = false;
+
   // Flag to prevent infinite loops when programmatically setting values
   private updatingDropdowns = false;
 
@@ -85,10 +87,10 @@ export class AddDestributionCenterComponent implements OnInit {
     this.distributionForm = this.fb.group({
       name: ['', Validators.required],
       company: ['', Validators.required],
-      officerInCharge: [
-        '',
-        [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)],
-      ],
+      // officerInCharge: [
+      //   '',
+      //   [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)],
+      // ],
       contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       contact1Code: ['+94', Validators.required],
       contact2: ['', [Validators.pattern(/^\d{9}$/)]],
@@ -112,6 +114,7 @@ export class AddDestributionCenterComponent implements OnInit {
       province: ['', Validators.required],
       district: ['', Validators.required],
       city: ['', Validators.required],
+      regCode: ['', Validators.required],
     });
 
     // Watch province changes to update districts
@@ -140,6 +143,45 @@ export class AddDestributionCenterComponent implements OnInit {
           }
         }
       });
+  }
+
+  onProvinceChange() {
+    console.log('called')
+    const selectedProvince = this.distributionForm.get('province')?.value;
+    const selectedDistrict = this.distributionForm.get('district')?.value;
+    const selectedCity = this.distributionForm.get('city')?.value;
+
+    this.updateRegCode();
+
+    if (selectedProvince && selectedDistrict && selectedCity) {
+      this.isLoadingregcode = true;
+      this.distributionService
+        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe((response) => {
+          console.log('reg code', response.regCode)
+          this.distributionForm.patchValue({ regCode: response.regCode });
+          const selectedRegCode = this.distributionForm.get('regCode')?.value
+          console.log('selectedRegCode', selectedRegCode)
+          this.isLoadingregcode = false;
+        });
+    }
+  }
+
+  updateRegCode() {
+    console.log('update reg code')
+    const province = this.distributionForm.get('province')?.value;
+    const district = this.distributionForm.get('district')?.value;
+    const city = this.distributionForm.get('city')?.value;
+
+    console.log('province', province, 'district', district, 'city', city)
+
+    if (province && district && city) {
+      const regCode = `${province.slice(0, 2).toUpperCase()}${district
+        .slice(0, 1)
+        .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
+        console.log('regCode', regCode)
+      this.distributionForm.patchValue({ regCode });
+    }
   }
 
   // Helper method to find province by district
@@ -191,7 +233,7 @@ export class AddDestributionCenterComponent implements OnInit {
     const labels: { [key: string]: string } = {
       name: 'Distribution Centre Name',
       company: 'Company Name',
-      officerInCharge: 'Officer In-Charge Name',
+      // officerInCharge: 'Officer In-Charge Name',
       contact1: 'Contact Number 01',
       contact2: 'Contact Number 02',
       latitude: 'Latitude',
@@ -201,6 +243,7 @@ export class AddDestributionCenterComponent implements OnInit {
       province: 'Province',
       district: 'District',
       city: 'City',
+      regCode: 'Reg Code'
     };
     return labels[fieldName] || fieldName;
   }
@@ -215,6 +258,8 @@ export class AddDestributionCenterComponent implements OnInit {
       (error) => console.error('Error fetching companies:', error)
     );
   }
+
+  
 
   onSubmit() {
     if (this.distributionForm.valid) {
@@ -240,6 +285,8 @@ export class AddDestributionCenterComponent implements OnInit {
               this.distributionForm.value.longitude
             ).toString(),
           };
+
+          console.log('form data', formData)
 
           this.distributionService
             .createDistributionCentre(formData)
@@ -328,6 +375,8 @@ export class AddDestributionCenterComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  
 }
 
 class CompanyList {

@@ -7,7 +7,6 @@ import { TokenService } from '../token/services/token.service';
 export interface DistributionCentreRequest {
   name: string;
   company: number;
-  officerInCharge: string;
   contact1: string;
   contact1Code: string;
   contact2: string;
@@ -19,6 +18,7 @@ export interface DistributionCentreRequest {
   province: string;
   district: string;
   city: string;
+  regCode: string;
 }
 
 export interface ApiResponse<T = any> {
@@ -45,9 +45,20 @@ export class DestributionService {
     });
   }
 
+  // createDistributionCentre(
+  //   data: DistributionCentreRequest
+  // ): Observable<ApiResponse> {
+  //   console.log('data', data);
+  //   const url = `${this.apiUrl}distribution/create-distribution-center`;
+  //   return this.http.post<ApiResponse>(url, data, {
+  //     headers: this.getHeaders(),
+  //   });
+  // }
+
   createDistributionCentre(
-    data: DistributionCentreRequest
+    data: any
   ): Observable<ApiResponse> {
+    console.log('data', data);
     const url = `${this.apiUrl}distribution/create-distribution-center`;
     return this.http.post<ApiResponse>(url, data, {
       headers: this.getHeaders(),
@@ -63,14 +74,15 @@ export class DestributionService {
     searchItem: string = '',
     centerType: string = ''
   ): Observable<any> {
-    console.log('Request params:', {
-      page,
-      limit,
-      district,
-      province,
-      company,
-      searchItem,
-    });
+    console.log('district', district, 'province', province, 'company', company, 'searchItem', searchItem, 'centerType', centerType)
+    // console.log('Request params:', {
+    //   page,
+    //   limit,
+    //   district,
+    //   province,
+    //   company,
+    //   searchItem,
+    // });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -160,6 +172,7 @@ export class DestributionService {
     id: number,
     updateData: any
   ): Observable<any> {
+    console.log('updateData', updateData)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -180,5 +193,16 @@ export class DestributionService {
 
     const url = `${this.apiUrl}distribution/delete-distribution-centre/${id}`;
     return this.http.delete<any>(url, { headers });
+  }
+
+  generateRegCode(
+    province: string,
+    district: string,
+    city: string
+  ): Observable<{ regCode: string }> {
+    return this.http.post<{ regCode: string }>(
+      `${this.apiUrl}distribution/generate-regcode`,
+      { province, district, city }
+    );
   }
 }

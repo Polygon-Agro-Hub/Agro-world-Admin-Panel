@@ -516,29 +516,13 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
-  getOrderDetailsById(id: string): Observable<{
-    success: boolean;
-    data: {
-      packages: Array<{
-        packageId: number;
-        displayName: string;
-        productPrice: string | null;
-        productTypes: Array<{
-          id: number;
-          typeName: string | null;
-          shortCode: string | null;
-          qty: number;
-        }>;
-      }>;
-    };
-    message?: string;
-  }> {
+  getOrderDetailsById(id: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}market-place/get-order-details/${id}`;
+    const url = `${this.apiUrl}market-place/get-define-package-details/${id}`;
 
     return this.http
       .get<{
@@ -666,5 +650,25 @@ export class MarketPlaceService {
     }
 
     return this.http.get<any>(url, { headers });
+  }
+
+  fetchUserOrders(
+    userId: string,
+    statusFilter: string = 'Ordered'
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log('userId:', userId);
+
+    const url = `${this.apiUrl}market-place/get-user-orders/${userId}?status=${statusFilter}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError((error) => {
+        // You can handle specific error cases here if needed
+        console.error('Error fetching user orders:', error);
+        return throwError(error);
+      })
+    );
   }
 }

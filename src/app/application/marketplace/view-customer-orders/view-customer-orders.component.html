@@ -1,0 +1,261 @@
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
+      <button
+        [ngClass]="
+          activeButton === 'assigned'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('assigned')"
+      >
+        <i *ngIf="activeButton === 'assigned'" class="fa fa-check"></i>
+        Assigned
+      </button>
+      <button
+        [ngClass]="
+          activeButton === 'processing'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('processing')"
+      >
+        <i *ngIf="activeButton === 'processing'" class="fa fa-check"></i>
+        Processing
+      </button>
+      <button
+        [ngClass]="
+          activeButton === 'delivered'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('delivered')"
+      >
+        <i *ngIf="activeButton === 'delivered'" class="fa fa-check"></i>
+        Delivered
+      </button>
+      <button
+        [ngClass]="
+          activeButton === 'On the way'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('On the way')"
+      >
+        <i *ngIf="activeButton === 'On the way'" class="fa fa-check"></i>
+        On the way
+      </button>
+      <button
+        [ngClass]="
+          activeButton === 'cancelled'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('cancelled')"
+      >
+        <i *ngIf="activeButton === 'cancelled'" class="fa fa-check"></i>
+        Cancelled
+      </button>
+      <button
+        [ngClass]="
+          activeButton === 'failed'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('failed')"
+      >
+        <i *ngIf="activeButton === 'failed'" class="fa fa-check"></i>
+        Failed
+      </button>
+    </div>
+
+    <div class="h-5"></div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="flex justify-center p-8">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#415CFF]"
+      ></div>
+    </div>
+
+    <div class="px-5" *ngIf="!isLoading && !errorMessage">
+      <table
+        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Invoice No
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Order Time
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Schedule
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Payment
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Payment Status
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Amount
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Order Status
+            </th>
+            <th
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Invoice
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="orders && orders.length > 0; else noData">
+            <tr
+              *ngFor="let order of orders"
+              class="border-b border-gray-200 dark:border-[#4B555A]"
+            >
+              <td class="px-3 py-3 text-left">{{ order.invNo }}</td>
+              <td class="px-3 py-3 text-center">
+                {{ order.sheduleDate | date : "medium" }}
+              </td>
+              <td class="px-3 py-3 text-left">{{ order.sheduleType }}</td>
+              <td class="px-3 py-3 text-center">{{ order.paymentMethod }}</td>
+              <td class="px-3 py-3 text-center">
+                <span
+                  [class]="order.isPaid ? 'text-green-500' : 'text-red-500'"
+                >
+                  {{ order.isPaid ? "Paid" : "Unpaid" }}
+                </span>
+              </td>
+              <td class="px-3 py-3 text-center">
+                {{ order.fullTotal | currency : "LKR" : "code" : "1.2-2" }}
+              </td>
+              <td class="px-3 py-3 text-center">
+                <!-- Assigned Status -->
+                <span
+                  *ngIf="order.status === 'Assinged'"
+                  class="bg-[#E6F0FF] text-[#415CFF] px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  Assigned
+                </span>
+
+                <!-- Processing Status -->
+                <span
+                  *ngIf="order.status === 'Processing'"
+                  class="bg-[#FFF8E6] text-[#FFB800] px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  Processing
+                </span>
+
+                <!-- Delivered Status -->
+                <span
+                  *ngIf="order.status === 'Delivered'"
+                  class="bg-[#E6FFEE] text-[#00A441] px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  Delivered
+                </span>
+
+                <!-- On the way Status -->
+                <span
+                  *ngIf="order.status === 'On the way'"
+                  class="bg-[#F3E6FF] text-[#8A3FFC] px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  On the way
+                </span>
+
+                <!-- Cancelled Status -->
+                <span
+                  *ngIf="order.status === 'Cancelled'"
+                  class="bg-[#FFE6E6] text-[#FF0000] px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  Cancelled
+                </span>
+
+                <!-- Failed Status -->
+                <span
+                  *ngIf="order.status === 'Faild'"
+                  class="bg-[#FFE6E6] text-[#FF0000] px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  Failed
+                </span>
+
+                <!-- Default case for unknown statuses -->
+                <span
+                  *ngIf="
+                    order.status !== 'Assinged' &&
+                    order.status !== 'Processing' &&
+                    order.status !== 'Delivered' &&
+                    order.status !== 'On the way' &&
+                    order.status !== 'Cancelled' &&
+                    order.status !== 'Faild'
+                  "
+                  class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-3 py-3 text-center">
+                <button class="text-[#415CFF] hover:underline">View</button>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #noData>
+            <tr>
+              <td colspan="8" class="px-3 py-16 text-center">
+                <div
+                  class="flex flex-col items-center justify-center space-y-3"
+                >
+                  <i
+                    class="fa-solid fa-box-open text-5xl text-gray-400 dark:text-gray-500"
+                  ></i>
+                  <p
+                    class="text-lg font-medium text-textLight dark:text-textDark"
+                  >
+                    No orders available
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    There are no orders for the selected status
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

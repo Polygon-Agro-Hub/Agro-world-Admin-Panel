@@ -18,26 +18,23 @@
         </h2>
       </div>
       <div class="flex items-center">
-
         <div class="mr-5">
-            <p-calendar
-              [(ngModel)]="selectDate"
-              [showIcon]="true"
-              [showClear]="true"
-              dateFormat="yy-mm-dd"
-              placeholder="Date"
-              (onSelect)="onDateSelect()"
-              (ngModelChange)="onDateChange($event)"
-              [styleClass]="
-                isDateSelected
-                  ? 'w-48 border border-2 text-center rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]'
-                  : 'w-32 border border-2 text-center rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]'
-              "
-            ></p-calendar>
-          </div>
-          
-          
-          
+          <p-calendar
+            [(ngModel)]="selectDate"
+            [showIcon]="true"
+            [showClear]="true"
+            dateFormat="yy-mm-dd"
+            placeholder="Date"
+            (onSelect)="onDateSelect()"
+            (ngModelChange)="onDateChange($event)"
+            [styleClass]="
+              isDateSelected
+                ? 'w-48 border border-2 text-center rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]'
+                : 'w-32 border border-2 text-center rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]'
+            "
+          ></p-calendar>
+        </div>
+
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
@@ -51,7 +48,6 @@
             (onChange)="applyStatusFilters()"
           ></p-dropdown>
         </div>
-
 
         <div class="mr-5">
           <p-dropdown
@@ -143,7 +139,7 @@
               ORDERED DATE
             </th>
             <th
-              class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left "
+              class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left"
             >
               CUSTOMER NAME
             </th>
@@ -183,17 +179,19 @@
               let i = index
             "
           >
-          <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-            {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, '0') }}
-          </td>
-          
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                {{ item.invNo }}
+              {{
+                ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, "0")
+              }}
             </td>
 
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                {{ item.orderdDate | date: 'd MMM, y h:mma' }}
-              </td>              
+              {{ item.invNo }}
+            </td>
+
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.orderdDate | date : "d MMM, y h:mma" }}
+            </td>
 
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.customerName }}
@@ -202,7 +200,7 @@
               {{ item.method }}
             </td>
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-                {{ item.amount | number:'1.2-2' }}
+              {{ item.amount | number : "1.2-2" }}
             </td>
 
             <!-- <div>
@@ -219,49 +217,35 @@
                   {{ item.status }}
                 </span>
               </div> -->
-            
-              <td class="px-4 py-3 text-center dark:text-textDark">
-                <span
-                  class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1"
-                  [ngClass]="{
-                    'text-blue-500 bg-blue-100': item.status === 'Ordered',
-                    'text-[#308233] bg-green-100 border-[#BBFFC6]': item.status === 'Delivered',
-                    'text-[#A8A100] bg-yellow-100 border-[#F8FFA6]': item.status === 'Assigned',
-                    'text-[#BBFFC6] bg-purple-100 border-[#308233]': item.status === 'Picked Up',
-                    'text-[#3B82F6] bg-orange-100 border-[#CFE1FF]': item.status === 'Processing'
-                  }"
-                >
-                  {{ item.status }}
-                </span>
-              </td>
-              
-              
-              
-              
-            <td>
-              <!-- <button
-                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                  (click)="navigateEdit(item.id)"
-                 *ngIf="
-                  permissionService.hasPermission('Edit Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                "
-                >
-                  <svg
-                    fill="currentColor"
-                    viewBox="0 0 32 32"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <title>Edit</title>
-                    <path
-                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
-                    ></path>
-                  </svg>
-                </button> -->
 
-                
-                  
+            <td class="px-4 py-3 text-center dark:text-textDark">
+              <span
+                class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1"
+                [ngClass]="{
+                  'text-blue-500 bg-blue-100': item.status === 'Ordered',
+                  'text-[#308233] bg-green-100 border-[#BBFFC6]':
+                    item.status === 'Delivered',
+                  'text-[#A8A100] bg-yellow-100 border-[#F8FFA6]':
+                    item.status === 'Assigned',
+                  'text-[#BBFFC6] bg-purple-100 border-[#308233]':
+                    item.status === 'Picked Up',
+                  'text-[#3B82F6] bg-orange-100 border-[#CFE1FF]':
+                    item.status === 'Processing'
+                }"
+              >
+                {{ item.status }}
+              </span>
+            </td>
+
+            <td
+              class="px-4 py-3 flex justify-center text-center dark:text-textDark"
+            >
+              <button
+                class="text-textLight dark:text-textDark flex justify-center gap-1"
+                (click)="downloadInvoice(item.id, item.invNo)"
+              >
+                <i class="fa-solid fa-file-lines text-2xl"></i>
+              </button>
             </td>
           </tr>
         </tbody>

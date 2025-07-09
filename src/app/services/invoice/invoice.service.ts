@@ -13,16 +13,15 @@ export class InvoiceService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  getInvoiceDetails(processOrderId: number, userId: number): Observable<any> {
+  getInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.get(
-      `${this.apiUrl}market-place/invoices/${processOrderId}`,
+      `${this.apiUrl}market-place/invoice/${processOrderId}`,
       {
         headers,
-        params: { userId }, // Or include userId in headers if preferred
       }
     );
   }

@@ -34,11 +34,15 @@
             />
           </div> -->
           <div class="flex items-center gap-2 h-8">
-            <input id="toDate" type="date"
+            <input
+              id="toDate"
+              type="date"
               class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64 h-8"
-              placeholder="Delivery Date" [(ngModel)]="date" (change)="dateFilter()" />
+              placeholder="Delivery Date"
+              [(ngModel)]="date"
+              (change)="dateFilter()"
+            />
           </div>
-
 
           <div>
             <p-dropdown
@@ -81,7 +85,7 @@
               (onChange)="applyOrderStatusFilters()"
             />
           </div>
-          
+
           <div
             class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
           >
@@ -133,8 +137,6 @@
               </svg>
             </button>
           </div>
-
-
         </div>
       </div>
     </div>
@@ -291,8 +293,7 @@
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.fullTotal - item.fullDiscount | number:'1.2-2' }}
-
+              {{ item.fullTotal - item.fullDiscount | number : "1.2-2" }}
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
@@ -319,7 +320,9 @@
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <i class="fa-solid fa-file-lines text-xl text-[#5C5C5C]"></i>
+              <button (click)="downloadInvoice(item.id, item.invNo)">
+                <i class="fa-solid fa-file-lines text-xl text-[#5C5C5C]"></i>
+              </button>
             </td>
 
             <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">

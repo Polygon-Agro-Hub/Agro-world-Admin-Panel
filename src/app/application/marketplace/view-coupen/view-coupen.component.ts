@@ -60,17 +60,17 @@ export class ViewCoupenComponent implements OnInit {
     const status = this.selectedStatus?.name || '';
     const types = this.selectedType?.name || '';
     const search = this.searchText || '';
+    this.hasData = true;
     this.marketSrv
       .getAllCoupen(page, limit, status, types, search)
       .subscribe((res) => {
         // console.log(res);
 
-        if (res.items.length > 0) {
-          this.hasData = false;
-        }
+        this.hasData = res.items.length > 0;
         this.coupenObj = res.items;
         this.totalItems = res.total;
         this.isLoading = false;
+        
       });
   }
 
@@ -180,6 +180,10 @@ export class ViewCoupenComponent implements OnInit {
 
   navPath(path:string): void {
     this.router.navigate([path]);
+  }
+
+  naviagteCoupon(id: number) {
+    this.router.navigate([`market/action/edit-coupen/${id}`]);
   }
 }
 

@@ -53,6 +53,7 @@ export class MarketPlaceService {
     types: any,
     search: string
   ): Observable<any> {
+    console.log('search', search)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -687,4 +688,26 @@ export class MarketPlaceService {
       })
     );
   }
+
+  getCoupen(coupenId: number): Observable<any> {
+    console.log('coupenId', coupenId)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}market-place/get-coupen/${coupenId}`, {
+      headers,
+    });
+  }
+
+  updateCoupen(Data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}market-place/update-coupen`, Data, {
+      headers,
+    });
+  }
 }
+

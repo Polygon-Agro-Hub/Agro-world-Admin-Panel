@@ -19,7 +19,6 @@ interface PhoneCode {
 interface DistributionCenter {
   id: number;
   centerName: string;
-  officerName: string;
   code1: string;
   contact01: string;
   code2: string;
@@ -33,6 +32,7 @@ interface DistributionCenter {
   email: string;
   company?: string; // Changed from companyId to string to match API
   companyId?: number; // Keep this if you still need it elsewhere
+  regCode: string;
 }
 @Component({
   selector: 'app-edit-distribution-centre',
@@ -50,6 +50,8 @@ export class EditDistributionCentreComponent implements OnInit {
 
   submitError: string | null = null;
   submitSuccess: string | null = null;
+
+  isLoadingregcode: boolean = false;
 
   companyOptions: any[] = [];
 
@@ -106,7 +108,6 @@ export class EditDistributionCentreComponent implements OnInit {
     this.distributionForm = this.fb.group({
       name: ['', Validators.required],
       company: ['', Validators.required],
-      officerInCharge: ['', Validators.required],
       contact1Code: ['+94', Validators.required],
       contact1: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
       contact2Code: ['+94', Validators.required],
@@ -124,12 +125,52 @@ export class EditDistributionCentreComponent implements OnInit {
       province: ['', Validators.required],
       district: ['', Validators.required],
       city: ['', Validators.required],
+      regCode: ['', Validators.required],
     });
     // No form.disable() here
   }
 
   back(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+  }
+
+  onProvinceChange() {
+    console.log('called')
+    const selectedProvince = this.distributionForm.get('province')?.value;
+    const selectedDistrict = this.distributionForm.get('district')?.value;
+    const selectedCity = this.distributionForm.get('city')?.value;
+
+    this.updateRegCode();
+
+    if (selectedProvince && selectedDistrict && selectedCity) {
+      this.isLoadingregcode = true;
+      this.distributionService
+        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+        .subscribe((response) => {
+          console.log('reg code', response.regCode)
+          this.distributionForm.patchValue({ regCode: response.regCode });
+          const selectedRegCode = this.distributionForm.get('regCode')?.value
+          console.log('selectedRegCode', selectedRegCode)
+          this.isLoadingregcode = false;
+        });
+    }
+  }
+
+  updateRegCode() {
+    console.log('update reg code')
+    const province = this.distributionForm.get('province')?.value;
+    const district = this.distributionForm.get('district')?.value;
+    const city = this.distributionForm.get('city')?.value;
+
+    console.log('province', province, 'district', district, 'city', city)
+
+    if (province && district && city) {
+      const regCode = `${province.slice(0, 2).toUpperCase()}${district
+        .slice(0, 1)
+        .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
+        console.log('regCode', regCode)
+      this.distributionForm.patchValue({ regCode });
+    }
   }
 
   fetchAllCompanies() {
@@ -188,7 +229,6 @@ export class EditDistributionCentreComponent implements OnInit {
     this.distributionForm.patchValue({
       name: data.centerName,
       company: matchingCompany ? matchingCompany.id : null,
-      officerInCharge: data.officerName,
       contact1Code: data.code1,
       contact1: data.contact01,
       contact2Code: data.code2,
@@ -200,7 +240,10 @@ export class EditDistributionCentreComponent implements OnInit {
       province: data.province,
       district: data.district,
       city: data.city,
+      regCode: data.regCode,
     });
+
+    console.log('distributionForm', this.distributionForm)
     // No form.disable() here
   }
 
@@ -320,6 +363,7 @@ export class EditDistributionCentreComponent implements OnInit {
             district: this.distributionForm.value.district,
             province: this.distributionForm.value.province,
             country: this.distributionForm.value.country,
+            regCode: this.distributionForm.value.regCode,
             longitude: parseFloat(
               this.distributionForm.value.longitude
             ).toString(),

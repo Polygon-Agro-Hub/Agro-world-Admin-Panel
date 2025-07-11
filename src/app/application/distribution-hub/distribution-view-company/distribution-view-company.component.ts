@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
+import { CollectionService } from '../../../services/collection.service';
 
 @Component({
   selector: 'app-distribution-view-company',
@@ -40,7 +41,8 @@ export class DistributionViewCompanyComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe,
-    private distributionHubService: DistributionHubService
+    private distributionHubService: DistributionHubService,
+    private collectionService: CollectionService
   ) {}
 
   add(): void {
@@ -153,6 +155,112 @@ export class DistributionViewCompanyComponent implements OnInit {
       '/distribution-hub/action/edit-distribution-officer/',
       id,
     ]);
+  }
+
+  openPopup(item: any) {
+    this.isPopupVisible = true;
+
+    const tableHtml = `
+        <div class="container mx-auto">
+          <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstNameEnglish}</h1>
+          <div>
+            <p class="text-center">Are you sure you want to approve or reject this collection?</p>
+          </div>
+          <div class="flex justify-center mt-4">
+            <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
+            <button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>
+          </div>
+        </div>
+      `;
+
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      didOpen: () => {
+        document
+          .getElementById('approveButton')
+          ?.addEventListener('click', () => {
+            Swal.close();
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The collection was approved successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                  this.fetchAllCompanyHeads();
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              },
+              (err) => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while approving. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              }
+            );
+          });
+
+        document
+          .getElementById('rejectButton')
+          ?.addEventListener('click', () => {
+            Swal.close();
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The collection was rejected successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                  this.fetchAllCompanyHeads();
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              },
+              (err) => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while rejecting. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              }
+            );
+          });
+      },
+    });
   }
 }
 

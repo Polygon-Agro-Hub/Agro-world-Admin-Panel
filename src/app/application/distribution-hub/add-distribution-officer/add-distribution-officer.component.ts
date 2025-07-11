@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -35,6 +35,10 @@ interface BranchesData {
   styleUrl: './add-distribution-officer.component.css',
 })
 export class AddDistributionOfficerComponent implements OnInit {
+
+  id: number | null = null;
+  companyName: string | null = null;
+
   officerId: number | null = null;
   isLoading = false;
   selectedFile: File | null = null;
@@ -102,15 +106,34 @@ export class AddDistributionOfficerComponent implements OnInit {
     private http: HttpClient,
     private collectionCenterSrv: CollectionCenterService,
     private distributionHubSrv: DistributionHubService,
-    private location: Location
-  ) {}
+    private location: Location,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const idParam = params.get('id');
+      this.id = idParam ? +idParam : null;
+  
+      const companyNameParam = params.get('companyName');
+      this.companyName = companyNameParam ? companyNameParam : null;
+  
+      console.log('Received ID:', this.id);
+      console.log('Received Company Name:', this.companyName);
+
+      this.personalData.companyId = this.id;
+      console.log('personalData', this.personalData)
+    });
+  
     this.loadBanks();
     this.loadBranches();
     this.getAllCompanies();
-    this.EpmloyeIdCreate();
+  
+    if (!this.id) {
+      this.EpmloyeIdCreate();
+    }
   }
+  
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -235,7 +258,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -301,14 +324,19 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   checkFormValidity(): boolean {
-    const isFirstNameValid = !!this.personalData.firstNameEnglish;
-    const isLastNameValid = !!this.personalData.lastNameEnglish;
-    const isPhoneNumberValid = this.isValidPhoneNumber(
-      this.personalData.phoneNumber01
-    );
+    const namePattern = /^[A-Za-z ]+$/;
+
+    const isFirstNameValid =
+      !!this.personalData.firstNameEnglish &&
+      namePattern.test(this.personalData.firstNameEnglish);
+
+    const isLastNameValid =
+      !!this.personalData.lastNameEnglish &&
+      namePattern.test(this.personalData.lastNameEnglish); // Optional: apply pattern here too
+
+    const isPhoneNumberValid = this.isValidPhoneNumber(this.personalData.phoneNumber01);
     const isEmailValid = this.isValidEmail(this.personalData.email);
     const isLanguagesSelected = !!this.personalData.languages;
-    const isCompanySelected = !!this.personalData.companyId;
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicSelected = !!this.personalData.nic;
 
@@ -318,11 +346,11 @@ export class AddDistributionOfficerComponent implements OnInit {
       isPhoneNumberValid &&
       isEmailValid &&
       isLanguagesSelected &&
-      isCompanySelected &&
       isJobRoleSelected &&
       isNicSelected
     );
   }
+
 
   updateProvince(event: Event): void {
     const target = event.target as HTMLSelectElement;
@@ -372,6 +400,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('PERSONAL',this.personalData)
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to create the distribution center head?',
@@ -384,6 +413,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
         this.distributionHubSrv
+        
           .createDistributionHead(this.personalData, this.selectedImage)
           .subscribe(
             (res: any) => {
@@ -430,12 +460,15 @@ export class AddDistributionOfficerComponent implements OnInit {
       companyId,
     } = this.personalData;
 
+    const namePattern = /^[A-Za-z ]+$/;
+
+
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
     if (companyId === '1') {
       const isBankDetailsValid =
-        !!accHolderName &&
+        !!accHolderName && namePattern.test(this.personalData.accHolderName) &&
         !!accNumber &&
         !!bankName &&
         !!branchName &&
@@ -454,6 +487,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   getAllDistributedCenters(id: number) {
+    console.log('id', id)
     this.loaded = false;
     this.distributionHubSrv.getAllDistributedCentersByCompany(id).subscribe(
       (res) => {
@@ -472,7 +506,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       (data) => {
         this.banks = data;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -481,7 +515,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       (data) => {
         this.allBranches = data;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 }

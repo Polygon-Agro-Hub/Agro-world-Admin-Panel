@@ -982,7 +982,7 @@ export const routes: Routes = [
                 component: ViewDistributionCenterComponent,
               },
               {
-                path: 'add-distribution-officer',
+                path: 'add-distribution-officer/:id/:companyName',
                 component: AddDistributionOfficerComponent,
               },
 

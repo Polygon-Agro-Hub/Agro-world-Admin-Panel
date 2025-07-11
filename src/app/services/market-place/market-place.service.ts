@@ -334,8 +334,6 @@ export class MarketPlaceService {
 
     formData.append('package', JSON.stringify(Data));
 
-    // Only append file if selectedImage is a base64 string (new image)
-    // If it's a URL string (old image), don't append it
     if (selectedImage && selectedImage.toString().startsWith('data:')) {
       formData.append('file', selectedImage);
     }
@@ -347,7 +345,7 @@ export class MarketPlaceService {
     });
 
     return this.http.post(
-      `${this.apiUrl}market-place/edit-packagee/${id}`,
+      `${this.apiUrl}market-place/edit-package/${id}`,
       formData,
       {
         headers,

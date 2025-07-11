@@ -189,6 +189,7 @@
                       item.status === 'Rejected'
                   }"
                   class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                  (click)="openPopup(item)"
                 >
                   {{ item.status }}
                 </span>

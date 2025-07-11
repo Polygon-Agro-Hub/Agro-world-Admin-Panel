@@ -155,6 +155,8 @@ import { ViewWholesaleCustomersComponent } from './application/marketplace/view-
 import { ViewCustomerOrdersComponent } from './application/marketplace/view-customer-orders/view-customer-orders.component';
 import { WholesaleComplaintsComponent } from './application/Complaints/wholesale-complaints/wholesale-complaints.component';
 import { W } from '@angular/cdk/keycodes';
+import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
+import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -846,6 +848,14 @@ export const routes: Routes = [
                 path: 'view-order-details/:id',
                 component: ViewCustomerOrdersComponent,
               },
+              {
+                path: 'edit-coupen/:id',
+                component: EditCoupenComponent,
+              },
+              {
+                path: 'view-wholesale-orders',
+                component: ViewWholwsaleOrdersComponent,
+              },
             ],
           },
         ],
@@ -978,7 +988,7 @@ export const routes: Routes = [
                 component: ViewDistributionCenterComponent,
               },
               {
-                path: 'add-distribution-officer',
+                path: 'add-distribution-officer/:id/:companyName',
                 component: AddDistributionOfficerComponent,
               },
 

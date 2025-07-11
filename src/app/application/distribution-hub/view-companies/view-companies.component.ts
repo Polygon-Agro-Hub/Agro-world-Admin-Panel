@@ -109,6 +109,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   }
 
   viewCompanyHeadPortals(id: number, companyName: string) {
+    console.log('id', id, 'companyName', companyName)
     this.router.navigate(
       ['/distribution-hub/action/view-distribution-company'],
       {

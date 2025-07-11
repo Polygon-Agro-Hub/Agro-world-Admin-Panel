@@ -79,37 +79,37 @@ export class MarketEditPackagesComponent {
     // console.log('Final quantities:', this.packageObj.quantities);
 
     // First validate all required fields
-    // if (
-    //   !this.packageObj.displayName ||
-    //   !this.packageObj.description ||
-    //   !this.packageObj.productPrice ||
-    //   !this.packageObj.packageFee ||
-    //   !this.packageObj.serviceFee ||
-    //   !this.selectedImage
-    // ) {
-    //   let errorMessage = '';
+    if (
+      !this.packageObj.displayName ||
+      !this.packageObj.description ||
+      !this.packageObj.productPrice ||
+      !this.packageObj.packageFee ||
+      !this.packageObj.serviceFee ||
+      !this.selectedImage
+    ) {
+      let errorMessage = '';
 
-    //   if (!this.packageObj.displayName)
-    //     errorMessage += 'Display Package Name is required.<br>';
-    //   if (!this.packageObj.description)
-    //     errorMessage += 'Description is required.<br>';
-    //   if (!this.packageObj.productPrice)
-    //     errorMessage += 'Product price is required.<br>';
-    //   if (!this.packageObj.packageFee)
-    //     errorMessage += 'Package fee is required.<br>';
-    //   if (!this.packageObj.serviceFee)
-    //     errorMessage += 'Service fee is required.<br>';
-    //   if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
+      if (!this.packageObj.displayName)
+        errorMessage += 'Display Package Name is required.<br>';
+      if (!this.packageObj.description)
+        errorMessage += 'Description is required.<br>';
+      if (!this.packageObj.productPrice)
+        errorMessage += 'Product price is required.<br>';
+      if (!this.packageObj.packageFee)
+        errorMessage += 'Package fee is required.<br>';
+      if (!this.packageObj.serviceFee)
+        errorMessage += 'Service fee is required.<br>';
+      if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
 
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Missing Required Fields',
-    //     html: errorMessage,
-    //     confirmButtonText: 'OK',
-    //   });
-    //   this.isLoading = false;
-    //   return;
-    // }
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+      });
+      this.isLoading = false;
+      return;
+    }
 
   
 

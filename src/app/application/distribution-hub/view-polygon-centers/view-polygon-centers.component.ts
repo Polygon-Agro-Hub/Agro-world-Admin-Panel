@@ -168,10 +168,6 @@ export class ViewPolygonCentersComponent implements OnInit {
     this.fetchAllCollectionCenter(
       this.page,
       this.itemsPerPage,
-      this.selectDistrict,
-      this.selectProvince,
-      this.selectCompany,
-      this.searchItem
     );
   }
 
@@ -186,7 +182,7 @@ export class ViewPolygonCentersComponent implements OnInit {
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
     company: string = this.selectCompany,
-    searchItem?: string,
+    searchItem: string = this.searchItem,
     centerType: string = 'polygon' // Default to 'polygon' type
   ) {
     this.isLoading = true;
@@ -219,17 +215,17 @@ export class ViewPolygonCentersComponent implements OnInit {
   }
 
   searchPlantCareUsers() {
+    console.log()
     this.page = 1;
     this.fetchAllCollectionCenter(
       this.page,
       this.itemsPerPage,
-      this.searchItem
     );
   }
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchAllCollectionCenter();
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage,);
   }
 
   applyProvinceFilters() {

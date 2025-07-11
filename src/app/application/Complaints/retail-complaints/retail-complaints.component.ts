@@ -71,10 +71,12 @@ export class RetailComplaintsComponent implements OnInit {
   itemsPerPage = 10;
   page = 1;
 
+  hasData: boolean = false;
+
   // dropdown data
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: '' },
+    { label: 'No', value: 'No' },
   ];
   comCategories: DropdownOption[] = [];
   status: DropdownOption[] = [];
@@ -95,6 +97,11 @@ export class RetailComplaintsComponent implements OnInit {
 
     this. ComplaintsService.fetchComplaints().subscribe({
       next: (resp: ApiResponse) => {
+        console.log('ApiResponsethis', resp)
+        if (resp.data.length === 0) {
+          this.hasData = false;
+        }
+        this.hasData = true;
         this.complaints = resp.data.map(item => ({
           id: item.id.toString(),
           refNo: item.refNo,
@@ -169,33 +176,42 @@ private fetchComplaintCategories(): void {
   return status;
 }
 
-  applyFilters(): void {
-    const txt = this.searchText.trim().toLowerCase();
+applyFilters(): void {
+  const txt = this.searchText.trim().toLowerCase();
 
-    this.filteredComplaints = this.complaints.filter(item => {
-      const matchesSearch = !txt || [
-        item.refNo,
-        item.complainCategory,
-        item.firstName,
-        item.lastName,
-        item.contactNumber
-      ].some(field => field?.toLowerCase().includes(txt));
+  this.filteredComplaints = this.complaints.filter(item => {
+    const matchesSearch = !txt || [
+      item.refNo,
+      item.complainCategory,
+      item.firstName,
+      item.lastName,
+      item.contactNumber
+    ].some(field => field?.toLowerCase().includes(txt));
 
-      const matchesReply =
-        !this.rpst || (this.rpst === 'Yes' ? !!item.reply : !item.reply);
+    const matchesReply =
+  this.rpst === 'Yes'
+    ? !!item.reply
+    : this.rpst === 'No'
+    ? !item.reply
+    : true;
 
-      const matchesCat =
-        !this.filterComCategory || item.complainCategory === this.filterComCategory;
+    const matchesCat =
+      !this.filterComCategory || item.complainCategory === this.filterComCategory;
 
-      const matchesStat =
-        !this.filterStatus || item.status === this.filterStatus;
+    const matchesStat =
+      !this.filterStatus || item.status === this.filterStatus;
 
-      return matchesSearch && matchesReply && matchesCat && matchesStat;
-    });
+    return matchesSearch && matchesReply && matchesCat && matchesStat;
+  });
 
-    this.totalItems = this.filteredComplaints.length;
-    this.page = 1;
-  }
+  this.totalItems = this.filteredComplaints.length;
+  this.page = 1;
+
+  // ✅ Set true if results exist, false if not
+  this.hasData = this.filteredComplaints.length > 0 ? true : false;
+}
+
+
 
   searchComplain(): void {
     console.log('[searchComplain] searchText =', this.searchText);
@@ -208,6 +224,7 @@ private fetchComplaintCategories(): void {
   }
 
   regStatusFil(): void {
+    console.log('replyStatus', this.rpst)
     this.applyFilters();
   }
 

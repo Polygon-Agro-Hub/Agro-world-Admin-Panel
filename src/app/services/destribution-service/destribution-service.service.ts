@@ -93,7 +93,8 @@ export class DestributionService {
 
     // Add optional params with proper encoding
     if (searchItem) {
-      url += `&search=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
+      console.log('has search')
+      url += `&searchItem=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
     }
 
     if (district) {
@@ -111,9 +112,9 @@ export class DestributionService {
     if (centerType) {
       url += `&centerType=${centerType}`;
     }
-    if (centerType) {
-      url += `&centerType=${centerType}`;
-    }
+    // if (centerType) {
+    //   url += `&centerType=${centerType}`;
+    // }
 
     console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });

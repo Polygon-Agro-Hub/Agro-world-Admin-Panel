@@ -45,14 +45,16 @@ export class DistributionViewCompanyComponent implements OnInit {
     private collectionService: CollectionService
   ) {}
 
-  add(): void {
-    this.router.navigate(['/distribution-hub/action/add-distribution-officer']);
+  add(id: number, companyName: string): void {
+    this.router.navigate(['/distribution-hub/action/add-distribution-officer', id, companyName]);
   }
 
   ngOnInit(): void {
+    console.log('ngonitni')
     this.route.queryParams.subscribe((params) => {
       this.companyId = params['id'] ? +params['id'] : null;
       this.companyName = params['companyName'] ? params['companyName'] : null;
+      console.log('companyId', this.companyId);
     });
     this.fetchAllCompanyHeads();
   }

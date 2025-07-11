@@ -347,7 +347,7 @@ export class MarketPlaceService {
     });
 
     return this.http.post(
-      `${this.apiUrl}market-place/edit-package/${id}`,
+      `${this.apiUrl}market-place/edit-packagee/${id}`,
       formData,
       {
         headers,
@@ -517,29 +517,13 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
-  getOrderDetailsById(id: string): Observable<{
-    success: boolean;
-    data: {
-      packages: Array<{
-        packageId: number;
-        displayName: string;
-        productPrice: string | null;
-        productTypes: Array<{
-          id: number;
-          typeName: string | null;
-          shortCode: string | null;
-          qty: number;
-        }>;
-      }>;
-    };
-    message?: string;
-  }> {
+  getOrderDetailsById(id: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}market-place/get-order-details/${id}`;
+    const url = `${this.apiUrl}market-place/get-define-package-details/${id}`;
 
     return this.http
       .get<{
@@ -687,6 +671,41 @@ export class MarketPlaceService {
         return throwError(error);
       })
     );
+  }
+
+  getAllWholesaleOrders(
+    page: number,
+    limit: number,
+    status: string = '',
+    method: string = '',
+    searchItem: string = '',
+    formattedDate: string = ''
+  ): Observable<any> {
+    console.log(page, limit, status, method, searchItem, formattedDate);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-wholesale-orders?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (method) {
+      url += `&method=${method}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (formattedDate) {
+      url += `&formattedDate=${formattedDate}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
   }
 
   getCoupen(coupenId: number): Observable<any> {

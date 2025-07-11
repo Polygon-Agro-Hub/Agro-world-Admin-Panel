@@ -154,6 +154,7 @@ import { EditDistributionCentreComponent } from './application/distribution-hub/
 import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
 import { ViewCustomerOrdersComponent } from './application/marketplace/view-customer-orders/view-customer-orders.component';
 import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
+import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -848,6 +849,10 @@ export const routes: Routes = [
               {
                 path: 'edit-coupen/:id',
                 component: EditCoupenComponent,
+              },
+              {
+                path: 'view-wholesale-orders',
+                component: ViewWholwsaleOrdersComponent,
               },
             ],
           },

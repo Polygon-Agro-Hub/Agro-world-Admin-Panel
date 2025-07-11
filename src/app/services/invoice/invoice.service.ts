@@ -7,22 +7,22 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class ViewPackageListService {
+export class InvoiceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  getAllMarketplacePackages(searchText: string = ''): Observable<any> {
+  getInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    let url = `${this.apiUrl}market-place/get-all-package-list`;
-    if (searchText) {
-      url += `?searchText=${searchText}`;
-    }
-    return this.http.get<any>(url, { headers });
+    return this.http.get(
+      `${this.apiUrl}market-place/invoice/${processOrderId}`,
+      {
+        headers,
+      }
+    );
   }
-
 }

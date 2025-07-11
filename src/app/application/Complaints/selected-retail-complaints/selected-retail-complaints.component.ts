@@ -166,6 +166,7 @@ export class SelectedRetailComplaintsComponent implements OnInit {
 
   submitComplaint() {
     this.isLoading = true;
+    this.hideDialog();
 
     this.complainService.submitComplaint(this.complainId, this.messageContent).subscribe({
       next: (response: any) => {
@@ -178,6 +179,7 @@ export class SelectedRetailComplaintsComponent implements OnInit {
           this.fetchComplain();
           this.hideDialog();
           this.messageContent = '';
+          this.router.navigate(['complaints/retail-complaints']);
         } else {
           Swal.fire({
             icon: 'error',

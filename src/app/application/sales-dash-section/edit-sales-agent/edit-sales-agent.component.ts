@@ -328,10 +328,13 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.accNumber ||
       !this.personalData.bankName ||
       !this.personalData.branchName ||
-      this.personalData.accNumber !== this.confirmAccNumber
+      this.personalData.accNumber !== this.confirmAccNumber ||
+      (this.personalData.phoneNumber2 &&
+       this.personalData.phoneNumber2 === this.personalData.phoneNumber1)
     ) {
       return;
     }
+    
 
     this.isLoading = true;
 

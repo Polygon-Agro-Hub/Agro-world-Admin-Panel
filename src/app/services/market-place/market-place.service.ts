@@ -53,6 +53,7 @@ export class MarketPlaceService {
     types: any,
     search: string
   ): Observable<any> {
+    console.log('search', search)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -333,8 +334,6 @@ export class MarketPlaceService {
 
     formData.append('package', JSON.stringify(Data));
 
-    // Only append file if selectedImage is a base64 string (new image)
-    // If it's a URL string (old image), don't append it
     if (selectedImage && selectedImage.toString().startsWith('data:')) {
       formData.append('file', selectedImage);
     }
@@ -671,4 +670,61 @@ export class MarketPlaceService {
       })
     );
   }
+
+  getAllWholesaleOrders(
+    page: number,
+    limit: number,
+    status: string = '',
+    method: string = '',
+    searchItem: string = '',
+    formattedDate: string = ''
+  ): Observable<any> {
+    console.log(page, limit, status, method, searchItem, formattedDate);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-wholesale-orders?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (method) {
+      url += `&method=${method}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (formattedDate) {
+      url += `&formattedDate=${formattedDate}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
+
+  getCoupen(coupenId: number): Observable<any> {
+    console.log('coupenId', coupenId)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}market-place/get-coupen/${coupenId}`, {
+      headers,
+    });
+  }
+
+  updateCoupen(Data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}market-place/update-coupen`, Data, {
+      headers,
+    });
+  }
 }
+

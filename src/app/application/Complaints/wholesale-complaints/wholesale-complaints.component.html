@@ -120,13 +120,13 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData"
-            class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
-            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
-            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
-        </div>
+    <div *ngIf="!filteredComplaints.length" class="text-center py-6">
+      <p class="text-gray-900 dark:text-gray-100 text-lg">
+        No data to display
+      </p>
+    </div>
 
-    <div  *ngIf="hasData" class="overflow-x-auto">
+    <div class="overflow-x-auto">
       <table
         class="min-w-full divide-y divide-gray-200 mt-6 dark:divide-[#4B555A] table-auto"
       >
@@ -220,10 +220,9 @@
               </button>
             </td>
             <td class="px-4 py-3 text-center">
-              <span *ngIf="!item.reply && item.status !== 'Closed'" class="italic opacity-60 ">No</span>
-              <span *ngIf="item.reply && item.status === 'Closed'" class="underline">Yes</span>
+              <span *ngIf="!item.reply">No</span>
+              <span *ngIf="item.reply">Yes</span>
             </td>
-            
             <td class="px-3 py-2 whitespace-nowrap text-center">
               <button
                 (click)="item.reply && showReplyDialog(item)"
@@ -259,7 +258,7 @@
 >
 <div class="dialog-header text-center">
     <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
-   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as Polygon</h3>
+   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as AgroWorld</h3>
 
 
   </div>
@@ -284,7 +283,7 @@
 
     <p class="mt-5">
       Sincerely,<br />
-      Polygon Customer Support Team
+      AgroWorld Customer Support Team
     </p>
   </div>
 

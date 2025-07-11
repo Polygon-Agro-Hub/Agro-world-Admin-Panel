@@ -210,7 +210,7 @@
             <input
               id="phoneNumber2"
               name="phoneNumber2"
-              type="number"
+              type="text" 
               [(ngModel)]="personalData.phoneNumber2"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
@@ -220,13 +220,15 @@
               pattern="^[0-9]{9}$"
             />
           </div>
+        
+          <!-- Length Validation -->
           <div
-            *ngIf="phoneNumber2Input.touched && phoneNumber2Input.errors?.['maxlength']"
+            *ngIf="phoneNumber2Input.touched && (phoneNumber2Input.errors?.['maxlength'] || phoneNumber2Input.errors?.['minlength'])"
             class="text-red-500 text-sm mt-1"
           >
             <div>Phone Number must be exactly 9 digits</div>
           </div>
-
+        
           <!-- Pattern Validation (Ensuring Only Numbers) -->
           <div
             *ngIf="phoneNumber2Input.touched && phoneNumber2Input.errors?.['pattern']"
@@ -234,7 +236,16 @@
           >
             <div>Phone Number can only contain numbers</div>
           </div>
+        
+          <!-- Duplicate Validation -->
+          <div
+            *ngIf="phoneNumber2Input.touched && personalData.phoneNumber2?.trim() === personalData.phoneNumber1?.trim()"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>Phone number 2 cannot be the same as Phone number 1.</div>
+          </div>
         </div>
+        
 
         <div>
           <label

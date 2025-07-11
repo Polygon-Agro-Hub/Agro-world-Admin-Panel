@@ -1,3 +1,4 @@
+import { W } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +16,8 @@ export class ComplaintsDashbordComponent {
   popupVisibleCollectionCenters = false;
   popupVisibleCategories = false;
   popupVisibleSalesAgents = false;
-  popupVisibleMarketPlace = false;
+  popupVisibleMPRetail = false;
+   popupVisibleMPWholesale = false;
 
   constructor(private router: Router) {}
 
@@ -24,7 +26,8 @@ export class ComplaintsDashbordComponent {
     this.popupVisiblePlantCare = false;
     this.popupVisibleCollectionCenters = false;
     this.popupVisibleSalesAgents = false;
-    this.popupVisibleMarketPlace = false;
+    this.popupVisibleMPRetail = false;
+     this.popupVisibleMPWholesale = false;
 
   }
 
@@ -48,10 +51,16 @@ export class ComplaintsDashbordComponent {
     this.popupVisibleSalesAgents = !this.popupVisibleSalesAgents;
   }
 
-   togglepopupVisibleMarketPlace() {
+  togglepopupVisibleMPRetail(): void {
     this.closeAllPopups();
-    this.popupVisibleMarketPlace = !this.popupVisibleMarketPlace;
+    this.popupVisibleMPRetail = !this.popupVisibleMPRetail;
   }
+
+  togglepopupVisibleMPWholesale(): void {
+    this.closeAllPopups();
+    this.popupVisibleMPWholesale = !this.popupVisibleMPWholesale;
+  }
+
 
   navigationPath(path: string) {
     this.router.navigate([path]);

@@ -1,9 +1,5 @@
-<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
-  <i class="fa-solid fa-arrow-left"></i>
-  Back
-</button>
 
 <div class="flex space-x-4"></div>
 
@@ -24,12 +20,6 @@
         <div
           class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
         >
-          <div
-            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          >
-            Search by name, nic and telphone
-          </div>
-
           <input
             type="text"
             placeholder="Search.."
@@ -181,24 +171,19 @@
                 </svg>
               </button>
             </td>
-            <td class="px-3 py-3 text-center">
-              <button
-                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="viewOrderDetails(item.id)"
-              >
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 32 32"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <title>Edit</title>
-                  <path
-                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
-                  ></path>
-                </svg>
-              </button>
-            </td>
+           <td class="px-3 py-3 text-center">
+  <button
+    class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+    (click)="viewOrderDetails(item.id)"
+  >
+    <img
+      src="assets/icons/orderdetails.png"
+      alt="Order Details"
+      class="w-full h-full object-contain"
+    />
+  </button>
+</td>
+
           </tr>
         </tbody>
       </table>
@@ -223,144 +208,146 @@
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="isPopupOpen = false"
 >
-  <div
-    class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto"
-    (click)="$event.stopPropagation()"
-  >
-    <h2 class="text-xl text-[#545454] mb-4">CUSTOMER INFO</h2>
-    <div class="my-5 flex flex-col gap-4">
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-user text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Name:</p>
-        </div>
-        <p class="text-lg text-[#000000]">
-          {{ cusObjDetails.firstName }} {{ cusObjDetails.lastName }}
+<div
+  class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto"
+  (click)="$event.stopPropagation()"
+>
+  <h2 class="text-xl text-[#545454] mb-4">CUSTOMER INFO</h2>
+  <div class="my-5 flex flex-col gap-4">
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-user text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Name:</p>
+      </div>
+      <p class="text-lg text-[#000000] dark:text-white">
+        {{ cusObjDetails.firstName }} {{ cusObjDetails.lastName }}
+      </p>
+    </div>
+
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-phone text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Phone:</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <p
+          class="text-lg text-[#000000] dark:text-white cursor-pointer hover:underline"
+          (click)="
+            copyToClipboard(
+              cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
+              'phone'
+            )
+          "
+        >
+          {{
+            copiedPhone ===
+            cusObjDetails.phoneCode + " " + cusObjDetails.phoneNumber
+              ? ""
+              : cusObjDetails.phoneCode
+          }}
+          {{ cusObjDetails.phoneNumber }}
         </p>
+        <i
+          class="fa-regular fa-copy text-[#727272] text-lg cursor-pointer hover:text-[#000000] dark:hover:text-white"
+          (click)="
+            copyToClipboard(
+              cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
+              'phone'
+            )
+          "
+        ></i>
       </div>
+    </div>
 
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-phone text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Phone:</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <p
-            class="text-lg text-[#000000] cursor-pointer hover:underline"
-            (click)="
-              copyToClipboard(
-                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
-                'phone'
-              )
-            "
-          >
-            {{
-              copiedPhone ===
-              cusObjDetails.phoneCode + " " + cusObjDetails.phoneNumber
-                ? "Copied!"
-                : cusObjDetails.phoneCode
-            }}
-            {{ cusObjDetails.phoneNumber }}
-          </p>
-          <i
-            class="fa-regular fa-copy text-[#727272] text-lg cursor-pointer hover:text-[#000000]"
-            (click)="
-              copyToClipboard(
-                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
-                'phone'
-              )
-            "
-          ></i>
-        </div>
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-regular fa-envelope text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Email:</p>
       </div>
-
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-regular fa-envelope text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Email:</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <p
-            class="text-lg text-[#000000] cursor-pointer hover:underline"
-            (click)="copyToClipboard(cusObjDetails.email, 'email')"
-          >
-            {{
-              copiedEmail === cusObjDetails.email
-                ? "Copied!"
-                : cusObjDetails.email
-            }}
-          </p>
-          <i
-            class="fa-regular fa-copy text-[#727272] text-lg cursor-pointer hover:text-[#000000]"
-            (click)="copyToClipboard(cusObjDetails.email, 'email')"
-          ></i>
-        </div>
-      </div>
-
-      <div
-        *ngIf="cusObjDetails.buildingType === 'House'"
-        class="flex flex-row items-center gap-4"
-      >
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Address:</p>
-        </div>
-        <p class="text-lg text-[#000000]">
-          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }},
-          {{ cusObjDetails.city }}
+      <div class="flex items-center gap-2">
+        <p
+          class="text-lg text-[#000000] dark:text-white cursor-pointer hover:underline"
+          (click)="copyToClipboard(cusObjDetails.email, 'email')"
+        >
+          {{
+            copiedEmail === cusObjDetails.email
+              ? ""
+              : cusObjDetails.email
+          }}
         </p>
+        <i
+          class="fa-regular fa-copy text-[#727272] text-lg cursor-pointer hover:text-[#000000] dark:hover:text-white"
+          (click)="copyToClipboard(cusObjDetails.email, 'email')"
+        ></i>
       </div>
+    </div>
 
-      <div
-        *ngIf="cusObjDetails.buildingType === 'Apartment'"
-        class="flex flex-row items-center gap-4"
-      >
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Address:</p>
-        </div>
-        <div class="flex flex-col">
-          <p class="text-lg text-[#000000]">
-            {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }},
-            {{ cusObjDetails.unitNo }}, {{ cusObjDetails.floorNo }},
-            {{ cusObjDetails.AparthouseNo }},
-            {{ cusObjDetails.ApartstreetName }}, {{ cusObjDetails.Apartcity }}
-          </p>
-        </div>
+    <div
+      *ngIf="cusObjDetails.buildingType === 'House'"
+      class="flex flex-row items-center gap-4"
+    >
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Address:</p>
       </div>
+      <p class="text-lg text-[#000000] dark:text-white">
+        {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }},
+        {{ cusObjDetails.city }}
+      </p>
+    </div>
 
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-receipt text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">No of Orders:</p>
-        </div>
-        <p class="text-lg text-[#000000]">{{ cusObjDetails.totalOrders }}</p>
+    <div
+      *ngIf="cusObjDetails.buildingType === 'Apartment'"
+      class="flex flex-row items-center gap-4"
+    >
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Address:</p>
       </div>
-
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-house text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Address:</p>
-        </div>
-        <p class="text-lg text-[#000000]">
-          {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
-          {{ cusObjDetails.city }}
+      <div class="flex flex-col">
+        <p class="text-lg text-[#000000] dark:text-white">
+          {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }},
+          {{ cusObjDetails.unitNo }}, {{ cusObjDetails.floorNo }},
+          {{ cusObjDetails.AparthouseNo }},
+          {{ cusObjDetails.ApartstreetName }}, {{ cusObjDetails.Apartcity }}
         </p>
       </div>
     </div>
 
-    <hr class="my-4 border-gray-300 dark:border-gray-600" />
-
-    <div class="my-5 flex flex-col gap-4">
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-calendar-days text-[#727272] text-lg"></i>
-          <p class="text-lg text-[#727272]">Created At:</p>
-        </div>
-        <p class="text-lg text-[#000000]">
-          {{ cusObjDetails.created_at | date : "dd/MM/yyyy hh:mm a" }}
-        </p>
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-receipt text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">No of Orders:</p>
       </div>
+      <p class="text-lg text-[#000000] dark:text-white">
+        {{ cusObjDetails.totalOrders }}
+      </p>
+    </div>
+
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-house text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Address:</p>
+      </div>
+      <p class="text-lg text-[#000000] dark:text-white">
+        {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
+        {{ cusObjDetails.city }}
+      </p>
+    </div>
+  </div>
+
+  <hr class="my-4 border-gray-300 dark:border-gray-600" />
+
+  <div class="my-5 flex flex-col gap-4">
+    <div class="flex flex-row items-center gap-4">
+      <div class="flex flex-row items-center justify-center gap-3">
+        <i class="fa-solid fa-calendar-days text-[#727272] text-lg"></i>
+        <p class="text-lg text-[#727272]">Created At:</p>
+      </div>
+      <p class="text-lg text-[#000000] dark:text-white">
+        {{ cusObjDetails.created_at | date : "dd/MM/yyyy hh:mm a" }}
+      </p>
     </div>
   </div>
 </div>
+

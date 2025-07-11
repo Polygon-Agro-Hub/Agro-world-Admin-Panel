@@ -35,7 +35,7 @@
         <div>
           <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80">
             <input type="text" placeholder="Search by Code" class="bg-transparent outline-none w-full text-gray-600"
-              [(ngModel)]="searchText" />
+              [(ngModel)]="searchText" (keydown.enter) = "searchCode()"/>
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
               (click)="searchCode()">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -56,9 +56,12 @@
     </div>
   </div>
 
-  <div *ngIf="hasData" class="text-center py-8">
-    <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
-  </div>
+  <div *ngIf="!hasData"
+            class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
+            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+   </div>
+
   <div *ngIf="checkDelete" class="flex flex-col items-start">
     <button (click)="deleteAllCoupon()"
       class="border border-[#D16D6A] border-spacing-1 rounded-lg px-2 py-1 transition duration-300 ease-in-out w-36">
@@ -69,7 +72,7 @@
     </button>
   </div>
 
-  <div *ngIf="!hasData" class="overflow-x-auto">
+  <div *ngIf="hasData" class="overflow-x-auto">
     <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto mb-4">
       <thead>
         <tr>
@@ -135,7 +138,7 @@
             {{ item.endDate | date : "yyyy-MM-dd" }}
           </td>
           <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-            <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]">
+            <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]" (click)="naviagteCoupon(item.id)">
               <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <title>pen-to-square</title>
                 <path

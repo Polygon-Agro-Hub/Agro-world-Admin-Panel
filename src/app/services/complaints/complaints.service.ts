@@ -41,6 +41,24 @@ export class ComplaintsService {
       Authorization: `Bearer ${token}`,
     });
   }
+
+   fetchWholesaleComplaints(): Observable<ApiResponse> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+
+    return this.http
+      .get<ApiResponse>(
+        `${this.apiUrl}complain/get-marketplace-complaintWholesale`,
+        { headers }
+      )
+      .pipe(
+        catchError(err => {
+          return throwError(() => err);
+        })
+      );
+  }
   
    fetchComplain(complainId: string): Observable<any> {
     const headers = this.getHeaders();
@@ -83,6 +101,8 @@ export class ComplaintsService {
           return throwError(() => err);
         })
       );
+
+      
 }
 fetchComplaintCategories(): Observable<any> {
     const headers = this.getHeaders();

@@ -4,11 +4,12 @@
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 
+<!-- Popup -->
 <div
   *ngIf="isPopupOpen"
-  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center"
+  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
 >
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[500px]">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto">
     <div class="p-10">
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-10">
         CUSTOMER INFO
@@ -48,12 +49,6 @@
           <i class="fa-regular fa-clone"></i>
         </div>
       </div>
-      <!-- <div class="mb-5 flex  text-textLight dark:text-textDark">
-                <div class="mr-5">
-                    <i class="fa-solid fa-location-dot"></i>
-                </div>
-                <span>Address: {{ selectedCustomer?.address }}</span>
-            </div> -->
       <div class="mb-5 flex text-textLight dark:text-textDark">
         <div class="mr-5">
           <i class="fa-solid fa-location-dot"></i>
@@ -73,7 +68,6 @@
           {{ selectedCustomer?.apartmentCity }}
         </span>
       </div>
-
       <div class="mb-5 flex text-textLight dark:text-textDark">
         <div class="mr-5">
           <i class="fa-solid fa-list"></i>
@@ -86,7 +80,6 @@
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-10">
         AGENT INFO
       </h3>
-
       <div class="mb-5 flex text-textLight dark:text-textDark">
         <div class="mr-5">
           <i class="fa-solid fa-id-card-clip"></i>
@@ -135,11 +128,11 @@
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Customers
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+         All Customers ({{ filteredCustomers.length | number: '2.0' }})
         </h2>
       </div>
-      <div class="mr-8">
+      <div class="mr-48">
         <div
           class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
         >
@@ -147,7 +140,7 @@
           <div
             class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           >
-            Search by name, nic and telphone
+            Search by name, ID, phone, email, address, or agent
           </div>
 
           <!-- Input field -->
@@ -156,6 +149,7 @@
             placeholder="Search.."
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
             [(ngModel)]="searchText"
+            (ngModelChange)="onSearchChange($event)"
             name="searchText"
           />
 
@@ -163,7 +157,7 @@
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
+            (click)="onSearchChange(searchText)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -186,6 +180,7 @@
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none"
             (click)="offSearch()"
+            *ngIf="searchText"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -263,7 +258,7 @@
         <tbody>
           <tr
             *ngFor="
-              let customer of customers
+              let customer of filteredCustomers
                 | paginate
                   : {
                       itemsPerPage: itemsPerPage,

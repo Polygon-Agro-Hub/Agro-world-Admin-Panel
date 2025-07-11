@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-view-retail-customeres',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
   templateUrl: './view-retail-customeres.component.html',
   styleUrl: './view-retail-customeres.component.css',
 })
@@ -39,14 +40,24 @@ export class ViewRetailCustomeresComponent implements OnInit {
     limit: number = this.itemsPerPage,
     searchText: string = this.searchText
   ) {
+    this.isLoading = true;
+  
     this.marketSrv
       .fetchAllRetailCustomers(page, limit, searchText)
-      .subscribe((res) => {
-        console.log(res);
-        this.customerObj = res.items;
-        this.totalItems = res.total;
-      });
+      .subscribe(
+        (res) => {
+          console.log(res);
+          this.customerObj = res.items;
+          this.totalItems = res.total;
+          this.isLoading = false; // ✅ set loading false after success
+        },
+        (err) => {
+          console.error('Error fetching customers', err);
+          this.isLoading = false; // ✅ also handle error case
+        }
+      );
   }
+  
 
   onPageChange(event: number) {
     this.page = event;

@@ -335,6 +335,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       firstName,
       lastName,
       phoneNumber1,
+      phoneNumber2,
       email,
       empType,
       nic,
@@ -357,13 +358,19 @@ export class CreateSalesAgentsComponent implements OnInit {
     const isEmpTypeSelected = !!empType;
     const isNicSelected = !!nic;
 
+    let isPhoneValid = true;
+
+    if (phoneNumber2) {
+      isPhoneValid = phoneNumber2 !== phoneNumber1
+    }
+
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
  
     const isBankDetailsValid =
         !!accHolderName && !!accNumber && !!bankName && !!branchName && !! confirmAccNumber && accNumber === confirmAccNumber;
-      return isBankDetailsValid && isAddressValid && isFirstNameValid && isPhoneNumber1Valid && isEmailValid && isEmpTypeSelected && isNicSelected;
+      return isBankDetailsValid && isAddressValid && isFirstNameValid && isPhoneNumber1Valid && isEmailValid && isEmpTypeSelected && isNicSelected && isPhoneValid;
     
   }
 

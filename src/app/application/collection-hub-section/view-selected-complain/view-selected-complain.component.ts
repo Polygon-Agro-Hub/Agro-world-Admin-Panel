@@ -82,57 +82,70 @@ export class ViewSelectedComplainComponent implements OnInit {
   //   this.hideDialog(); // Close the dialog after submission
   // }
 
-  submitComplaint() {
-    this.isLoading = true;
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+ submitComplaint() {
+  // Check if messageContent is empty or contains only whitespace
+  if (!this.messageContent || this.messageContent.trim() === '') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Reply field is required!',
     });
-
-    this.hideDialog();
-
-    console.log(this.complainId);
-    console.log(this.messageContent);
-
-    const body = { reply: this.messageContent };
-
-    this.http
-      .put(
-        `${environment.API_URL}auth/reply-complain/${this.complainId}`,
-        body,
-        { headers }
-      )
-      .subscribe(
-        (res: any) => {
-          
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Reply was sent successfully!',
-          });
-          this.fetchComplain();
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error updating news', error);
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Unsuccessful',
-            text: 'Error sending reply',
-          });
-          this.fetchComplain();
-          this.isLoading = false;
-        }
-      );
+    this.isLoading = false;
+    return;
   }
 
+  this.isLoading = true;
+  const token = this.tokenService.getToken();
+  if (!token) {
+    console.error('No token found');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Authentication token not found!',
+    });
+    this.isLoading = false;
+    return;
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.hideDialog();
+
+  console.log(this.complainId);
+  console.log(this.messageContent);
+
+  const body = { reply: this.messageContent };
+
+  this.http
+    .put(
+      `${environment.API_URL}auth/reply-complain/${this.complainId}`,
+      body,
+      { headers }
+    )
+    .subscribe(
+      (res: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Reply was sent successfully!',
+        });
+        this.fetchComplain();
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error updating news', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Unsuccessful',
+          text: 'Error sending reply',
+        });
+        this.fetchComplain();
+        this.isLoading = false;
+      }
+    );
+}
   // showReplyDialog() {
   //   Swal.fire({
   //     title: 'Reply as AgroWorld',

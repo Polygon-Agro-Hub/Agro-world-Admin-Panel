@@ -29,7 +29,7 @@ export class MarketEditPackagesComponent {
     private marketSrv: MarketPlaceService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   back(): void {
     this.router.navigate(['market/action/view-packages-list']);
@@ -43,7 +43,7 @@ export class MarketEditPackagesComponent {
         if (this.packageId) {
           this.getProductTypes();
           this.getPackageDetails();
-          // this.calculateApproximatedPrice()
+          this.calculateApproximatedPrice()
           // this.getPackage();
         } else {
           console.error('No package ID provided');
@@ -60,8 +60,6 @@ export class MarketEditPackagesComponent {
     this.marketSrv.getPackageById(this.packageId).subscribe((res) => {
       console.log('this is response', res);
       this.packageObj = res;
-      // console.log('this is type', this.productTypeObj);
-      // // Initialize quantities with 0 for each product type
       this.selectedImage = this.packageObj.imageUrl;
     });
   }
@@ -70,28 +68,15 @@ export class MarketEditPackagesComponent {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
       console.log('this is type', this.productTypeObj);
-      // Initialize quantities with 0 for each product type
-      for (let item of this.productTypeObj) {
-        this.packageObj.quantities[item.id] = 0;
-      }
-      console.log('Initial quantities:', this.packageObj.quantities);
     });
   }
 
-  // Fixed method - removed the problematic null check that was resetting values
-  onInputChange(id: number, event: Event) {
-    const target = event.target as HTMLInputElement;
-    // Convert to number, default to 0 if invalid
-    const numValue = Number(target.value) || 0;
-    this.packageObj.quantities[id] = numValue;
-    console.log('Updated quantities:', this.packageObj.quantities);
-    console.log(`Product ${id} quantity: ${this.packageObj.quantities[id]}`);
-  }
+
 
   async onSubmit() {
     console.log('selected image', this.selectedImage);
     console.log('submit', this.packageObj);
-    console.log('Final quantities:', this.packageObj.quantities);
+    // console.log('Final quantities:', this.packageObj.quantities);
 
     // First validate all required fields
     if (
@@ -126,42 +111,16 @@ export class MarketEditPackagesComponent {
       return;
     }
 
-    // Check if at least one quantity is > 0
-    const hasAtLeastOneQuantity = Object.values(
-      this.packageObj.quantities
-    ).some((qty) => qty > 0);
+  
 
-    if (!hasAtLeastOneQuantity) {
-      Swal.fire({
-        icon: 'error',
-        title: 'No product type selected',
-        text: 'You should select at least on product type.',
-        confirmButtonText: 'OK',
-      });
-      this.isLoading = false;
-      return;
-    }
+   
+    //   this.isLoading = false;
+    //   return;
+    // }
 
-    this.isLoading = true;
+    // this.isLoading = true;
 
     try {
-      // First check if display name exists (excluding current package)
-      const nameCheck = await this.marketSrv
-        .checkPackageDisplayName(this.packageObj.displayName)
-        .toPromise();
-
-      if (nameCheck.exists) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Package Name Exists',
-          text: 'A package with this display name already exists. Please choose a different name.',
-          confirmButtonText: 'OK',
-        });
-        this.isLoading = false;
-        return;
-      }
-
-      // If name doesn't exist or is the same as current package, proceed with update
       this.marketSrv
         .editPackage(this.packageObj, this.selectedImage, this.packageId)
         .subscribe(
@@ -180,7 +139,7 @@ export class MarketEditPackagesComponent {
               Swal.fire({
                 icon: 'error',
                 title: 'Package Not Updated',
-                text: 'The package could not be updated. Please try again.',
+                text: res.message,
                 confirmButtonText: 'OK',
               });
             }
@@ -295,6 +254,10 @@ export class MarketEditPackagesComponent {
     event.preventDefault();
     return false;
   }
+
+  trackByFn(index: number, item: any): any {
+  return item.productTypeId; // or item.id if it's unique
+}
 }
 
 class Package {
@@ -309,12 +272,19 @@ class Package {
   packageFee!: number;
   serviceFee!: number;
   approximatedPrice!: number;
-  quantities: { [id: number]: number } = {};
   imageUrl!: string;
+  packageItems:PackageItems[] = [];
 }
 
 class ProductType {
   typeName!: string;
   shortCode!: string;
   id!: number;
+}
+
+class PackageItems {
+  id!:number | null
+  productTypeId!:number | null
+  typeName!:number | null 
+  qty!:number | null
 }

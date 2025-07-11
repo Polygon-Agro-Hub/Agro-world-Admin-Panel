@@ -671,4 +671,39 @@ export class MarketPlaceService {
       })
     );
   }
+
+  getAllWholesaleOrders(
+    page: number,
+    limit: number,
+    status: string = '',
+    method: string = '',
+    searchItem: string = '',
+    formattedDate: string = ''
+  ): Observable<any> {
+    console.log(page, limit, status, method, searchItem, formattedDate);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-wholesale-orders?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (method) {
+      url += `&method=${method}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (formattedDate) {
+      url += `&formattedDate=${formattedDate}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
 }

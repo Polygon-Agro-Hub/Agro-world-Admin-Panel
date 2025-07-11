@@ -153,6 +153,7 @@ import { ViewDestributionCenterComponent } from './application/marketplace/view-
 import { EditDistributionCentreComponent } from './application/distribution-hub/edit-distribution-centre/edit-distribution-centre.component';
 import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
 import { ViewCustomerOrdersComponent } from './application/marketplace/view-customer-orders/view-customer-orders.component';
+import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -843,6 +844,10 @@ export const routes: Routes = [
               {
                 path: 'view-order-details/:id',
                 component: ViewCustomerOrdersComponent,
+              },
+              {
+                path: 'view-wholesale-orders',
+                component: ViewWholwsaleOrdersComponent,
               },
             ],
           },

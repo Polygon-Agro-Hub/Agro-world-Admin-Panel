@@ -153,6 +153,8 @@ import { ViewDestributionCenterComponent } from './application/marketplace/view-
 import { EditDistributionCentreComponent } from './application/distribution-hub/edit-distribution-centre/edit-distribution-centre.component';
 import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
 import { ViewCustomerOrdersComponent } from './application/marketplace/view-customer-orders/view-customer-orders.component';
+import { WholesaleComplaintsComponent } from './application/Complaints/wholesale-complaints/wholesale-complaints.component';
+import { W } from '@angular/cdk/keycodes';
 export const routes: Routes = [
   {
     path: '',
@@ -921,6 +923,10 @@ export const routes: Routes = [
           {
             path: 'retail-complaints',
             component: RetailComplaintsComponent,
+          },
+          {
+            path: 'wholesale-complaints',
+            component: WholesaleComplaintsComponent,
           },
           {
             path: 'selected-retail-complaints/:id',

@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -42,7 +42,7 @@ interface BranchesData {
   templateUrl: './create-company.component.html',
   styleUrl: './create-company.component.css',
 })
-export class CreateCompanyComponent {
+export class CreateCompanyComponent implements OnInit {
   companyData: Company = new Company();
   userForm: FormGroup;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
@@ -63,12 +63,15 @@ export class CreateCompanyComponent {
   selectedLogoFile: File | null = null;
   selectedFaviconFile: File | null = null;
 
+  companyType: string = '';
+
   constructor(
     private fb: FormBuilder,
     private collectionCenterSrv: CollectionCenterService,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.userForm = this.fb.group({
       regNumber: ['', Validators.required],
@@ -91,6 +94,25 @@ export class CreateCompanyComponent {
       foConNum: ['', Validators.required],
       foEmail: ['', [Validators.required]],
     });
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.companyType = params['type'];
+      console.log('Received type:', this.companyType);
+    });
+
+
+    this.loadBanks();
+    this.loadBranches();
+    this.route.queryParams.subscribe((params) => {
+      this.itemId = params['id'] ? +params['id'] : null;
+      this.isView = params['isView'] === 'true';
+    });
+    this.userForm.valueChanges.subscribe((formValues) => {
+      this.companyData = { ...this.companyData, ...formValues };
+    });
+    this.getCompanyData();
   }
 
   async compressImage(
@@ -229,18 +251,7 @@ export class CreateCompanyComponent {
     this.touchedFields['favicon'] = true;
   }
 
-  ngOnInit() {
-    this.loadBanks();
-    this.loadBranches();
-    this.route.queryParams.subscribe((params) => {
-      this.itemId = params['id'] ? +params['id'] : null;
-      this.isView = params['isView'] === 'true';
-    });
-    this.userForm.valueChanges.subscribe((formValues) => {
-      this.companyData = { ...this.companyData, ...formValues };
-    });
-    this.getCompanyData();
-  }
+
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -249,7 +260,7 @@ export class CreateCompanyComponent {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -259,7 +270,7 @@ export class CreateCompanyComponent {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -409,12 +420,13 @@ export class CreateCompanyComponent {
       }
     });
 
-    this.collectionCenterSrv.createCompany(this.companyData).subscribe(
+    this.collectionCenterSrv.createCompany(this.companyData, this.companyType).subscribe(
       (response) => {
         this.isLoading = false;
         console.log('Data saved successfully:', response);
         Swal.fire('Success', 'Company Created Successfully', 'success');
-        this.router.navigate(['/distribution-hub/action/view-companies']);
+        // this.router.navigate(['/distribution-hub/action/view-companies']);
+        this.location.back(); 
       },
       (error) => {
         this.isLoading = false;

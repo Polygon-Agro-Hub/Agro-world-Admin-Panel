@@ -88,7 +88,6 @@
               name="centerId"
               (change)="getAllDistributedCenters(personalData.companyId)"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
-              [disabled]="!!itemId"
             >
               <option
                 *ngFor="let company of CompanyData"

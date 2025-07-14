@@ -31,7 +31,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.setupSearch();
@@ -162,15 +162,22 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   }
 
   add(): void {
-    this.router.navigate(['/distribution-hub/action/create-company']);
+    // this.router.navigate(['/distribution-hub/action/create-company']);
+    this.router.navigate(['/distribution-hub/action/create-company'], {
+      queryParams: { type: 'distribution' }
+    }).then(() => {
+      this.isLoading = false;
+    });
   }
-openImageInNewTab(imageUrl: string): void {
-  if (imageUrl.startsWith('data:')) {
-    // Open a blank tab first
-    const newWindow = window.open();
-    if (newWindow) {
-      // Write HTML to display the image
-      newWindow.document.write(`
+
+  
+  openImageInNewTab(imageUrl: string): void {
+    if (imageUrl.startsWith('data:')) {
+      // Open a blank tab first
+      const newWindow = window.open();
+      if (newWindow) {
+        // Write HTML to display the image
+        newWindow.document.write(`
         <html>
           <head><title>Image Preview</title></head>
           <body style="margin:0">
@@ -178,24 +185,24 @@ openImageInNewTab(imageUrl: string): void {
           </body>
         </html>
       `);
-      newWindow.document.close();
+        newWindow.document.close();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Popup Blocked',
+          text: 'Please allow popups for this site to view the image.',
+        });
+      }
+    } else if (imageUrl.startsWith('http')) {
+      window.open(imageUrl, '_blank');
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Popup Blocked',
-        text: 'Please allow popups for this site to view the image.',
+        icon: 'warning',
+        title: 'Invalid Image URL',
+        text: 'Image URL is not valid. Cannot open in new tab.',
       });
     }
-  } else if (imageUrl.startsWith('http')) {
-    window.open(imageUrl, '_blank');
-  } else {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Invalid Image URL',
-      text: 'Image URL is not valid. Cannot open in new tab.',
-    });
   }
-}
 
 
 }

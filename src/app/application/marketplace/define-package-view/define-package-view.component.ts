@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { FormsModule } from '@angular/forms';
 
 interface OrderDetailItem {
   packageId: number;
@@ -13,9 +15,9 @@ interface OrderDetailItem {
 
 interface ProductTypes {
   id: number;
-  typeName: string | null; // Make nullable
-  shortCode: string | null; // Make nullable
-  qty: number; // Add this missing property
+  typeName: string | null;
+  shortCode: string | null;
+  qty: number;
   productId: number | null;
   selectedProductPrice?: number;
   quantity?: number;
@@ -32,7 +34,7 @@ interface MarketplaceItem {
 @Component({
   selector: 'app-define-package-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './define-package-view.component.html',
   styleUrl: './define-package-view.component.css',
 })
@@ -44,11 +46,13 @@ export class DefinePackageViewComponent implements OnInit {
   id!: number;
   loading = true;
   error = '';
+  packagePrice: number = 0;
+  isLoading: boolean = true;
 
   constructor(
     private marketplaceService: MarketPlaceService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     console.log('Component initialized');
@@ -67,6 +71,7 @@ export class DefinePackageViewComponent implements OnInit {
       this.fetchMarketplaceItems(() => {
         // Then fetch order details
         this.fetchOrderDetails(id);
+        this.isLoading = false;
       });
     });
   }
@@ -84,17 +89,15 @@ export class DefinePackageViewComponent implements OnInit {
       next: (response) => {
         console.log('API Response:', response);
 
-        // Validate response structure
         if (!response?.success || !response.data?.packages) {
           throw new Error('Invalid response structure from API');
         }
 
-        // Transform the response to match our component's OrderDetailItem[]
-        this.orderDetails = response.data.packages.map((pkg:any) => ({
+        this.orderDetails = response.data.packages.map((pkg: any) => ({
           packageId: pkg.packageId,
           displayName: pkg.displayName,
           productPrice: pkg.productPrice ? parseFloat(pkg.productPrice) : null,
-          productTypes: pkg.productTypes.map((pt:any) => ({
+          productTypes: pkg.productTypes.map((pt: any) => ({
             id: pt.id,
             typeName: pt.typeName,
             shortCode: pt.shortCode,
@@ -105,6 +108,7 @@ export class DefinePackageViewComponent implements OnInit {
             calculatedPrice: undefined,
           })),
         }));
+        this.packagePrice = response.data.packages[0].productPrice;
 
         this.calculateTotalPrice();
         this.loading = false;
@@ -142,7 +146,6 @@ export class DefinePackageViewComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
 
-    // Find the selected product
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
@@ -150,51 +153,51 @@ export class DefinePackageViewComponent implements OnInit {
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
-      // Set calculated price to normal price by default (for 1 unit)
       productType.calculatedPrice = selectedProduct.discountedPrice;
     } else {
       productType.productId = null;
       productType.selectedProductPrice = 0;
       productType.calculatedPrice = 0;
     }
-    productType.quantity = undefined; // Reset quantity
+    productType.quantity = undefined;
+  }
+
+  preventNegative(event: KeyboardEvent) {
+    // Prevent minus key
+    if (event.key === '-' || event.key === 'Subtract') {
+      event.preventDefault();
+    }
   }
 
   onQuantityChanged(productType: ProductTypes, event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    const quantity = parseFloat(inputElement.value);
+    let quantity = parseFloat(inputElement.value);
 
+    // Ensure quantity is not negative
     if (isNaN(quantity)) {
       productType.quantity = undefined;
       productType.calculatedPrice = productType.selectedProductPrice || 0;
     } else {
+      if (quantity < 0) {
+        quantity = 0;
+        Swal.fire('Warning', 'Can not enter negative numbers!','warning')
+        inputElement.value = '0';
+      }
       productType.quantity = quantity;
-      productType.calculatedPrice =
-        quantity * (productType.selectedProductPrice || 0);
+      productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
     }
-    this.calculateTotalPrice(); // Add this line
+    this.calculateTotalPrice();
   }
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
       this.totalPrice = this.getCombinedProductPrice();
-
-      // Calculate the allowed limit (8% of the total price)
       const allowedLimit = this.totalPrice * 1.08;
-
-      // Calculate the current total (sum of all package totals)
       const currentTotal = this.orderDetails.reduce(
         (sum: number, pkg: OrderDetailItem) => sum + this.getPackageTotal(pkg),
         0
       );
-
-      // Validate if current total is within the allowed limit
       this.isWithinLimit = currentTotal <= allowedLimit;
-
-      console.log('Calculated total price:', this.totalPrice);
-      console.log('Allowed limit:', allowedLimit);
-      console.log('Current total:', currentTotal);
-      console.log('Is within limit:', this.isWithinLimit);
     } else {
       this.totalPrice = 0;
       this.isWithinLimit = true;
@@ -205,8 +208,6 @@ export class DefinePackageViewComponent implements OnInit {
     if (!this.orderDetails || this.orderDetails.length === 0) {
       return 0;
     }
-
-    // Sum of all package product prices
     return this.orderDetails.reduce(
       (sum, pkg) => sum + (pkg.productPrice || 0),
       0
@@ -215,7 +216,6 @@ export class DefinePackageViewComponent implements OnInit {
 
   getPackageTotal(packageItem: OrderDetailItem): number {
     if (!packageItem.productTypes) return 0;
-
     return packageItem.productTypes.reduce((sum, productType) => {
       return sum + (productType.calculatedPrice || 0);
     }, 0);
@@ -225,8 +225,6 @@ export class DefinePackageViewComponent implements OnInit {
     if (!this.orderDetails || this.orderDetails.length === 0) {
       return 0;
     }
-
-    // Sum of all package calculated totals
     return this.orderDetails.reduce(
       (sum, pkg) => sum + this.getPackageTotal(pkg),
       0
@@ -234,7 +232,6 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   async onSave() {
-    // Check if calculated price is within limit
     if (!this.isWithinLimit) {
       Swal.fire({
         icon: 'error',
@@ -245,7 +242,6 @@ export class DefinePackageViewComponent implements OnInit {
       return;
     }
 
-    // Check if there are any order details
     if (!this.orderDetails.length) {
       Swal.fire({
         icon: 'warning',
@@ -256,7 +252,6 @@ export class DefinePackageViewComponent implements OnInit {
       return;
     }
 
-    // Prepare the package data and items
     const packageData = {
       packageId: String(this.id),
       price: this.getCombinedCalculatedTotal(),
@@ -279,7 +274,6 @@ export class DefinePackageViewComponent implements OnInit {
         }))
     );
 
-    // Check if we have any valid items
     if (packageItems.length === 0) {
       Swal.fire({
         icon: 'warning',
@@ -289,8 +283,6 @@ export class DefinePackageViewComponent implements OnInit {
       });
       return;
     }
-
-    console.log('Package data to save:', { packageData, packageItems });
 
     Swal.fire({
       title: 'Processing...',
@@ -302,12 +294,9 @@ export class DefinePackageViewComponent implements OnInit {
     });
 
     try {
-      // Create the package with items
       const response = await this.marketplaceService
         .createDefinePackageWithItems(packageData, packageItems)
         .toPromise();
-
-      console.log('Package created successfully:', response);
 
       Swal.fire({
         icon: 'success',
@@ -330,7 +319,6 @@ export class DefinePackageViewComponent implements OnInit {
     }
   }
 
-  // Helper function to get error message
   private getErrorMessage(error: any): string {
     if (error?.error?.message) {
       return error.error.message;

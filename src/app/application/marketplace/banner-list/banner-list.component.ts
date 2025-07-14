@@ -75,7 +75,7 @@ export class BannerListComponent {
 
 
     back(): void {
-    this.router.navigate(['/dispatch']);
+    this.router.navigate(['/market/action']);
   }
 
     toogleRetail(isRetail: boolean) {

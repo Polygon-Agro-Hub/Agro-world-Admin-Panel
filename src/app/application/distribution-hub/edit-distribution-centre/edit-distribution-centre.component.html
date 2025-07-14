@@ -14,7 +14,6 @@
 
   <form [formGroup]="distributionForm" (ngSubmit)="updateDistributionCentre()">
     <!-- Row 1 -->
-
     <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
         <label
@@ -25,7 +24,13 @@
           type="text"
           formControlName="name"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('name')}"
         />
+        <div *ngIf="isFieldInvalid('name')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('name')?.errors?.['required']">
+            Distribution centre name is required
+          </span>
+        </div>
       </div>
       <div class="flex-1 mb-4 md:mb-0">
         <label
@@ -34,16 +39,19 @@
         >
         <select
           formControlName="company"
-          [class]="
-            ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-            (isFieldInvalid('company') ? 'border-red-500' : 'border-gray-300')
-          "
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('company')}"
         >
-          <option value="company" disabled selected>Select a company</option>
+          <option value="" disabled>Select a company</option>
           <option *ngFor="let company of companyList" [value]="company.id">
             {{ company.companyNameEnglish }}
           </option>
         </select>
+        <div *ngIf="isFieldInvalid('company')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('company')?.errors?.['required']">
+            Company is required
+          </span>
+        </div>
       </div>
     </div>
 
@@ -58,6 +66,7 @@
           <select
             formControlName="contact1Code"
             class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{'border-red-500': isFieldInvalid('contact1Code')}"
           >
             <option *ngFor="let code of phoneCodes" [value]="code.value">
               {{ code.label }}
@@ -68,19 +77,29 @@
             formControlName="contact1"
             placeholder="XXXXXXXXX"
             class="dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{'border-red-500': isFieldInvalid('contact1')}"
           />
+        </div>
+        <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('contact1')?.errors?.['required']">
+            Contact number 1 is required
+          </span>
+          <span *ngIf="distributionForm.get('contact1')?.errors?.['invalidPhone']">
+            {{ distributionForm.get('contact1')?.errors?.['invalidPhone'] }}
+          </span>
         </div>
       </div>
 
       <div class="flex-1">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Contact Number 02</label
+          >Contact Number 02 (Optional)</label
         >
         <div class="flex">
           <select
             formControlName="contact2Code"
             class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{'border-red-500': isFieldInvalid('contact2Code')}"
           >
             <option *ngFor="let code of phoneCodes" [value]="code.value">
               {{ code.label }}
@@ -89,9 +108,15 @@
           <input
             type="tel"
             formControlName="contact2"
-            placeholder="XXXXXXXXX"
+            placeholder="XXXXXXXXX (optional)"
             class="dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{'border-red-500': isFieldInvalid('contact2')}"
           />
+        </div>
+        <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('contact2')?.errors?.['invalidPhone']">
+            {{ distributionForm.get('contact2')?.errors?.['invalidPhone'] }}
+          </span>
         </div>
       </div>
     </div>
@@ -108,7 +133,16 @@
           formControlName="latitude"
           placeholder="e.g., 6.9271"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('latitude')}"
         />
+        <div *ngIf="isFieldInvalid('latitude')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('latitude')?.errors?.['required']">
+            Latitude is required
+          </span>
+          <span *ngIf="distributionForm.get('latitude')?.errors?.['pattern']">
+            Enter a valid latitude (e.g., 6.9271)
+          </span>
+        </div>
       </div>
 
       <div class="flex-1">
@@ -121,7 +155,16 @@
           formControlName="longitude"
           placeholder="e.g., 79.8612"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('longitude')}"
         />
+        <div *ngIf="isFieldInvalid('longitude')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('longitude')?.errors?.['required']">
+            Longitude is required
+          </span>
+          <span *ngIf="distributionForm.get('longitude')?.errors?.['pattern']">
+            Enter a valid longitude (e.g., 79.8612)
+          </span>
+        </div>
       </div>
     </div>
 
@@ -136,7 +179,16 @@
           type="email"
           formControlName="email"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('email')}"
         />
+        <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('email')?.errors?.['required']">
+            Email is required
+          </span>
+          <span *ngIf="distributionForm.get('email')?.errors?.['email']">
+            Enter a valid email address
+          </span>
+        </div>
       </div>
 
       <div class="flex-1">
@@ -147,10 +199,16 @@
         <select
           formControlName="country"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('country')}"
         >
           <option value="" disabled>Select Country</option>
           <option value="Sri Lanka">Sri Lanka</option>
         </select>
+        <div *ngIf="isFieldInvalid('country')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('country')?.errors?.['required']">
+            Country is required
+          </span>
+        </div>
       </div>
     </div>
 
@@ -163,14 +221,20 @@
         >
         <select
           formControlName="province"
-          (input)="onProvinceChange()"
+          (change)="onProvinceChange()"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('province')}"
         >
-          <option value="">Select Province</option>
+          <option value="" disabled>Select Province</option>
           <option *ngFor="let province of provinces" [value]="province">
             {{ province }}
           </option>
         </select>
+        <div *ngIf="isFieldInvalid('province')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('province')?.errors?.['required']">
+            Province is required
+          </span>
+        </div>
       </div>
 
       <div class="flex-1">
@@ -180,14 +244,20 @@
         >
         <select
           formControlName="district"
-          (input)="onProvinceChange()"
+          (change)="onProvinceChange()"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('district')}"
         >
           <option value="" disabled>Select District</option>
           <option *ngFor="let district of getDistricts()" [value]="district">
             {{ district }}
           </option>
         </select>
+        <div *ngIf="isFieldInvalid('district')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('district')?.errors?.['required']">
+            District is required
+          </span>
+        </div>
       </div>
     </div>
 
@@ -203,21 +273,60 @@
           formControlName="city"
           (input)="onProvinceChange()"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('city')}"
         />
+        <div *ngIf="isFieldInvalid('city')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('city')?.errors?.['required']">
+            City is required
+          </span>
+        </div>
       </div>
       <div class="flex-1 mb-4 md:mb-0">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Reg Code</label
+          >Registration Code</label
         >
         <input
-          type="regCode"
+          type="text"
           formControlName="regCode"
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('regCode')}"
+          readonly
         />
+        <div *ngIf="isFieldInvalid('regCode')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('regCode')?.errors?.['required']">
+            Registration code is required
+          </span>
+        </div>
+        <div *ngIf="isLoadingregcode" class="text-sm text-gray-500 mt-1">
+          Generating registration code...
+        </div>
       </div>
     </div>
 
+    <!-- Row 7 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+      <div class="flex-1 mb-4 md:mb-0">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Officer in Charge</label
+        >
+        <input
+          type="text"
+          formControlName="officerInCharge"
+          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': isFieldInvalid('officerInCharge')}"
+        />
+        <div *ngIf="isFieldInvalid('officerInCharge')" class="text-red-500 text-sm mt-1">
+          <span *ngIf="distributionForm.get('officerInCharge')?.errors?.['required']">
+            Officer in charge is required
+          </span>
+        </div>
+      </div>
+      <div class="flex-1"></div> <!-- Empty div for layout consistency -->
+    </div>
+
+    <!-- Buttons -->
     <div class="flex justify-end space-x-4 pt-6">
       <button
         type="button"
@@ -228,12 +337,12 @@
       </button>
       <button
         type="submit"
-        [class]="
-          'px-4 min-w-30 py-2 bg-[#3980C0] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#D3D3D3] ' +
-          (distributionForm.invalid
-            ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-            : 'bg-[#3980C0] text-white  hover:bg-[#3980C0]')
-        "
+        class="px-4 min-w-30 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#D3D3D3]"
+        [ngClass]="{
+          'bg-gray-400 text-gray-700 cursor-not-allowed': distributionForm.invalid || isLoading,
+          'bg-[#3980C0] text-white hover:bg-[#2e66a0]': distributionForm.valid && !isLoading
+        }"
+        [disabled]="distributionForm.invalid || isLoading"
       >
         Save
       </button>

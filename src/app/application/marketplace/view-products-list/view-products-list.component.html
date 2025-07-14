@@ -14,7 +14,6 @@
   </button>
 
   <button
-    
     class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="navigateToAddProduct()"
   >
@@ -40,36 +39,34 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Products ({{this.totalItems}})
+          All Products ({{ this.totalItems }})
         </h2>
       </div>
       <div class="flex items-center">
-
         <div class="mr-5">
           <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-          [options]="categoryOption"
-          [(ngModel)]="selectedCategoryOption"
-          (onChange)="onDisplayTypeChange()"
-          [checkmark]="true"
-          optionLabel="name"
-          [showClear]="true"
-          placeholder="Category"
-        ></p-dropdown>
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="categoryOption"
+            [(ngModel)]="selectedCategoryOption"
+            (onChange)="onDisplayTypeChange()"
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Category"
+          ></p-dropdown>
         </div>
 
-
         <div class="mr-5">
           <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-          [options]="displayOptions"
-          [(ngModel)]="selectedDisplayType"
-          (onChange)="onDisplayTypeChange()"
-          [checkmark]="true"
-          optionLabel="name"
-          [showClear]="true"
-          placeholder="Display"
-        ></p-dropdown>
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="displayOptions"
+            [(ngModel)]="selectedDisplayType"
+            (onChange)="onDisplayTypeChange()"
+            [checkmark]="true"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Display"
+          ></p-dropdown>
         </div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
@@ -85,7 +82,6 @@
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchProduct()"
-
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +121,14 @@
         </div>
       </div>
     </div>
-    <div class="overflow-x-auto">
+
+    <div *ngIf="!hasData" class="text-center py-8">
+      <p class="text-textLight dark:text-textDark text-lg">
+        No data to display
+      </p>
+    </div>
+
+    <div *ngIf="hasData" class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
@@ -183,7 +186,8 @@
               <span *ngIf="!item.displayType">No</span>
               <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
               <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
-              <span *ngIf="item.displayType === 'AP&SP&D'">%, Actual, Sale</span
+              <span *ngIf="item.displayType === 'AP&SP&D'"
+                >%, Actual, Sale</span
               >
               <span
                 *ngIf="

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TokenService } from '../token/services/token.service';
 import { Observable } from 'rxjs';
 
@@ -13,16 +13,47 @@ export class ViewPackageListService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  getAllMarketplacePackages(searchText: string = ''): Observable<any> {
+  // getAllMarketplacePackages(
+  //   searchText: string = '',
+  //   date: string
+  // ): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //   });
+
+  //   let url = `${this.apiUrl}market-place/get-all-package-list`;
+  //   if (searchText) {
+  //     url += `?searchText=${searchText}`;
+  //   }
+
+  //   if (date) {
+  //     url += `&date=${date}`;
+  //   }
+  //   return this.http.get<any>(url, { headers });
+  // }
+
+  getAllMarketplacePackages(
+    searchText: string = '',
+    date?: string
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    let url = `${this.apiUrl}market-place/get-all-package-list`;
+    let params = new HttpParams();
     if (searchText) {
-      url += `?searchText=${searchText}`;
+      params = params.append('searchText', searchText);
     }
-    return this.http.get<any>(url, { headers });
-  }
+    if (date) {
+      params = params.append('date', date);
+    }
 
+    return this.http.get<any>(
+      `${this.apiUrl}market-place/get-all-package-list`,
+      {
+        headers,
+        params,
+      }
+    );
+  }
 }

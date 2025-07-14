@@ -218,10 +218,12 @@ export class AddCollectionCenterComponent implements OnInit {
       text: 'Form has been cleared!',
       timer: 2000,
       showConfirmButton: false,
+    }).then(() => {
+      this.collectionCenterForm.reset();
+      this.selectedDistrict = [];
+      this.selectProvince = '';
+      this.router.navigate(['/collection-hub/view-collection-centers']);
     });
-    this.collectionCenterForm.reset();
-    this.selectedDistrict = [];
-    this.selectProvince = '';
   }
 
   getAllCompanies() {

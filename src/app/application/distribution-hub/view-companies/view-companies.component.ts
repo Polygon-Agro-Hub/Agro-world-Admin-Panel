@@ -144,6 +144,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
           () => {
             Swal.fire('Deleted!', 'The company has been deleted.', 'success');
             this.fetchAllCompanys();
+            window.location.reload();
           },
           () => {
             Swal.fire(

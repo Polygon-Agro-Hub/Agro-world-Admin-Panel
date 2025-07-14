@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -103,7 +103,8 @@ export class EditDistributionOfficerComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     private distributionHubSrv: DistributionHubService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -260,20 +261,24 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
+    // Mark as required if empty
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
 
+    // Check if both account numbers exist and match
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.personalData.accNumber !== this.personalData.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
+
+    // Force UI update
+    this.cdr.detectChanges();
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
-  
 
   EpmloyeIdCreate() {
     const currentCompanyId = this.personalData.companyId;
@@ -489,18 +494,21 @@ export class EditDistributionOfficerComponent implements OnInit {
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
+    // For companyId === '1', we require all bank details including matching account numbers
     if (companyId === '1') {
       const isBankDetailsValid =
         !!accHolderName &&
         !!accNumber &&
+        !!confirmAccNumber && // Explicit check for confirmAccNumber
         !!bankName &&
         !!branchName &&
-        !!confirmAccNumber &&
-        accNumber === confirmAccNumber;
+        accNumber === confirmAccNumber; // Must match
+
       return isBankDetailsValid && isAddressValid;
-    } else {
-      return isAddressValid;
     }
+
+    // For other companies, just require address
+    return isAddressValid;
   }
 
   getAllCompanies() {

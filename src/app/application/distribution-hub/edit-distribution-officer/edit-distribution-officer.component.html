@@ -604,6 +604,7 @@
           type="number"
           [(ngModel)]="personalData.confirmAccNumber"
           (blur)="onBlur('confirmAccNumber')"
+          (input)="validateConfirmAccNumber()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
 
@@ -680,8 +681,9 @@
       <button
         type="submit"
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        (click)="onSubmit()"
+        [class.opacity-50]="!checkSubmitValidity()"
         [disabled]="!checkSubmitValidity()"
+        (click)="onSubmit()"
       >
         Update
       </button>

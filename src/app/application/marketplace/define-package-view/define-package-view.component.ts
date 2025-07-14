@@ -180,7 +180,7 @@ export class DefinePackageViewComponent implements OnInit {
     } else {
       if (quantity < 0) {
         quantity = 0;
-        Swal.fire('Warning', 'Can not enter negative numbers!','warning')
+        Swal.fire('Warning', 'Can not enter negative numbers!', 'warning')
         inputElement.value = '0';
       }
       productType.quantity = quantity;
@@ -284,16 +284,17 @@ export class DefinePackageViewComponent implements OnInit {
       return;
     }
 
-    Swal.fire({
-      title: 'Processing...',
-      html: 'Please wait while we create your package',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    // Swal.fire({
+    //   title: 'Processing...',
+    //   html: 'Please wait while we create your package',
+    //   allowOutsideClick: false,
+    //   didOpen: () => {
+    //     Swal.showLoading();
+    //   },
+    // });
 
     try {
+      this.isLoading = true;
       const response = await this.marketplaceService
         .createDefinePackageWithItems(packageData, packageItems)
         .toPromise();
@@ -304,11 +305,13 @@ export class DefinePackageViewComponent implements OnInit {
         text: 'Package created successfully!',
         confirmButtonColor: '#3085d6',
       }).then((result) => {
+        this.isLoading = false;
         if (result.isConfirmed) {
           this.goBack();
         }
       });
     } catch (error) {
+      this.isLoading = false;
       console.error('Error creating package:', error);
       Swal.fire({
         icon: 'error',

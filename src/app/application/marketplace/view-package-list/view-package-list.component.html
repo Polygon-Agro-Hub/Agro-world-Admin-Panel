@@ -234,9 +234,9 @@
                   (click)="viewDefinePackage(pkg.id)"
                 ></i>
               </td>
-              <td
-                class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
-              ></td>
+              <td class="py-4 text-[#000000] dark:text-textDark text-center">
+                {{ pkg.adminUser ? pkg.adminUser : "No One" }}
+              </td>
               <td>
                 <button
                   (click)="viewPackage(pkg.id)"

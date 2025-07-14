@@ -190,6 +190,7 @@ export class ViewPackageListComponent {
 
 class PackageList {
   id!: number;
+  adminUser!: string;
   displayName!: string;
   image!: string;
   description!: string;

@@ -33,7 +33,7 @@
   >
     <div class="flex justify-between items-center align-middle mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           All Packages ({{
             this.filteredPackages.length < 9
               ? "0" + this.filteredPackages.length
@@ -158,32 +158,32 @@
         <thead>
           <tr>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Package Name
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Total Price (Rs.)
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Status
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Last Defined
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
             >
               Define
             </th>
@@ -195,13 +195,13 @@
         <tbody>
           <ng-container>
             <tr *ngFor="let pkg of filteredPackages; let i = index">
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 {{ i < 9 ? "0" + (i + 1) : i + 1 }}
               </td>
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 {{ pkg.displayName }}
               </td>
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 {{ pkg.total | number : "1.2-2" }}
               </td>
               <td>
@@ -215,14 +215,14 @@
                   {{ pkg.status }}
                 </span>
               </td>
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 <ng-container *ngIf="pkg.defineDate !== null; else notDefined">
                   {{ pkg.defineDate | date : "mediumDate" }}
                 </ng-container>
                 <ng-template #notDefined> Not Defined Yet </ng-template>
               </td>
               <td
-                class="py-4 text-textLight dark:text-textDark text-2xl text-center"
+                class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
               >
                 <i
                   class="fa-solid fa-square-arrow-up-right cursor-pointer"

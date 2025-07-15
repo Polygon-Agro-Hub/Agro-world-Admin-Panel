@@ -261,10 +261,8 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
-    // Mark as required if empty
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
 
-    // Check if both account numbers exist and match
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.personalData.accNumber !== this.personalData.confirmAccNumber;
@@ -272,7 +270,6 @@ export class EditDistributionOfficerComponent implements OnInit {
       this.confirmAccountNumberError = false;
     }
 
-    // Force UI update
     this.cdr.detectChanges();
   }
 
@@ -284,6 +281,7 @@ export class EditDistributionOfficerComponent implements OnInit {
     const currentCompanyId = this.personalData.companyId;
     const currentCenterId = this.personalData.centerId;
 
+    this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
@@ -320,6 +318,17 @@ export class EditDistributionOfficerComponent implements OnInit {
     });
   }
 
+  getAllCollectionManagers() {
+    this.collectionCenterSrv
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.distributionHeadData = res;
+      });
+  }
+
   isValidPhoneNumber(phone: string): boolean {
     const phoneRegex = /^[0-9]{9}$/;
     return phoneRegex.test(phone);
@@ -345,7 +354,7 @@ export class EditDistributionOfficerComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
+        this.location.back(); // This will navigate back to the previous page
       }
     });
   }
@@ -355,8 +364,16 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   checkFormValidity(): boolean {
-    const isFirstNameValid = !!this.personalData.firstNameEnglish;
-    const isLastNameValid = !!this.personalData.lastNameEnglish;
+    const namePattern = /^[A-Za-z ]+$/;
+
+    const isFirstNameValid =
+      !!this.personalData.firstNameEnglish &&
+      namePattern.test(this.personalData.firstNameEnglish);
+
+    const isLastNameValid =
+      !!this.personalData.lastNameEnglish &&
+      namePattern.test(this.personalData.lastNameEnglish);
+
     const isPhoneNumberValid = this.isValidPhoneNumber(
       this.personalData.phoneNumber01
     );
@@ -364,7 +381,8 @@ export class EditDistributionOfficerComponent implements OnInit {
     const isLanguagesSelected = !!this.personalData.languages;
     const isCompanySelected = !!this.personalData.companyId;
     const isJobRoleSelected = !!this.personalData.jobRole;
-    const isNicSelected = !!this.personalData.nic;
+    const isNicSelected =
+      !!this.personalData.nic && this.isValidNIC(this.personalData.nic);
 
     return (
       isFirstNameValid &&
@@ -384,12 +402,10 @@ export class EditDistributionOfficerComponent implements OnInit {
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
     );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
+    if (selected) {
+      this.personalData.province = selected.province;
+    } else {
+      this.personalData.province = '';
     }
   }
 
@@ -455,7 +471,6 @@ export class EditDistributionOfficerComponent implements OnInit {
                 'Updated Distribution Center Head Successfully',
                 'success'
               ).then(() => {
-                // Redirect back after success
                 this.location.back();
               });
             },
@@ -469,7 +484,6 @@ export class EditDistributionOfficerComponent implements OnInit {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
           () => {
-            // Redirect back on cancel
             this.location.back();
           }
         );
@@ -491,24 +505,24 @@ export class EditDistributionOfficerComponent implements OnInit {
       companyId,
     } = this.personalData;
 
+    const namePattern = /^[A-Za-z ]+$/;
+
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
-    // For companyId === '1', we require all bank details including matching account numbers
     if (companyId === '1') {
       const isBankDetailsValid =
         !!accHolderName &&
+        namePattern.test(accHolderName) &&
         !!accNumber &&
-        !!confirmAccNumber && // Explicit check for confirmAccNumber
+        !!confirmAccNumber &&
         !!bankName &&
         !!branchName &&
-        accNumber === confirmAccNumber; // Must match
-
+        accNumber === confirmAccNumber;
       return isBankDetailsValid && isAddressValid;
+    } else {
+      return isAddressValid;
     }
-
-    // For other companies, just require address
-    return isAddressValid;
   }
 
   getAllCompanies() {

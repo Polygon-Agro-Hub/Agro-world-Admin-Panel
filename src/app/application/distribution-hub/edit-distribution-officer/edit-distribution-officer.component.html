@@ -249,34 +249,58 @@
             id="firstNameEnglish"
             [(ngModel)]="personalData.firstNameEnglish"
             name="firstNameEnglish"
+            #firstNameEnglishRef="ngModel"
+            required
+            pattern="^[A-Za-z ]+$"
             (blur)="onBlur('firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
-            *ngIf="isFieldInvalid('firstNameEnglish')"
+            *ngIf="
+              firstNameEnglishRef.invalid &&
+              (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)
+            "
             class="text-red-600 text-sm"
-            >First Name is required.</span
           >
+            <ng-container *ngIf="firstNameEnglishRef.errors?.['required']"
+              >First Name is required.</ng-container
+            >
+            <ng-container *ngIf="firstNameEnglishRef.errors?.['pattern']"
+              >Special characters are not allowed.</ng-container
+            >
+          </span>
         </div>
 
         <div>
           <label
-            for="variety"
+            for="lastNameEnglish"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >Last Name (in English)</label
           >
           <input
-            id="lastName"
-            name="lastName"
+            id="lastNameEnglish"
+            name="lastNameEnglish"
             [(ngModel)]="personalData.lastNameEnglish"
+            #lastNameEnglishRef="ngModel"
+            required
+            pattern="^[A-Za-z ]+$"
             (blur)="onBlur('lastNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
-            *ngIf="isFieldInvalid('lastNameEnglish')"
+            *ngIf="
+              lastNameEnglishRef.invalid &&
+              (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)
+            "
             class="text-red-600 text-sm"
-            >Last Name is required.</span
           >
+            <ng-container *ngIf="lastNameEnglishRef.errors?.['required']"
+              >Last Name is required.</ng-container
+            >
+            <ng-container *ngIf="lastNameEnglishRef.errors?.['pattern']"
+              >Special characters are not allowed.</ng-container
+            >
+          </span>
         </div>
 
         <div>
@@ -393,7 +417,7 @@
           <input
             type="email"
             id="email"
-            name="nic"
+            name="email"
             [(ngModel)]="personalData.email"
             (blur)="onBlur('email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -561,14 +585,26 @@
           id="accHolderName"
           name="accHolderName"
           [(ngModel)]="personalData.accHolderName"
+          #accHolderNameRef="ngModel"
+          required
+          pattern="^[A-Za-z ]+$"
           (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <span
-          *ngIf="isFieldInvalid('accHolderName')"
+          *ngIf="
+            accHolderNameRef.invalid &&
+            (accHolderNameRef.dirty || accHolderNameRef.touched)
+          "
           class="text-red-600 text-sm"
-          >city is required.</span
         >
+          <ng-container *ngIf="accHolderNameRef.errors?.['required']"
+            >Account Holder's Name is required.</ng-container
+          >
+          <ng-container *ngIf="accHolderNameRef.errors?.['pattern']"
+            >Special characters are not allowed.</ng-container
+          >
+        </span>
       </div>
 
       <div class="pb-6">

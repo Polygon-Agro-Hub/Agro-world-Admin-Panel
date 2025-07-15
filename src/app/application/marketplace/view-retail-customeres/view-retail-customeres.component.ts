@@ -11,19 +11,21 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   standalone: true,
   imports: [CommonModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
   templateUrl: './view-retail-customeres.component.html',
-  styleUrl: './view-retail-customeres.component.css',
+  styleUrls: ['./view-retail-customeres.component.css'],
 })
 export class ViewRetailCustomeresComponent implements OnInit {
   customerObj: Customers[] = [];
   searchText: string = '';
   isPopupOpen: boolean = false;
   cusObjDetails: Customers = new Customers();
-
   hasData: boolean = true;
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  isLoading = true;
+  isLoading: boolean = true;
+  copiedEmail: string = '';
+  copiedPhone: string = '';
+  showToast: boolean = false; // New property for toast visibility
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
@@ -41,7 +43,7 @@ export class ViewRetailCustomeresComponent implements OnInit {
     searchText: string = this.searchText
   ) {
     this.isLoading = true;
-  
+
     this.marketSrv
       .fetchAllRetailCustomers(page, limit, searchText)
       .subscribe(
@@ -49,15 +51,16 @@ export class ViewRetailCustomeresComponent implements OnInit {
           console.log(res);
           this.customerObj = res.items;
           this.totalItems = res.total;
-          this.isLoading = false; // ✅ set loading false after success
+          this.hasData = res.items.length > 0;
+          this.isLoading = false;
         },
         (err) => {
           console.error('Error fetching customers', err);
-          this.isLoading = false; // ✅ also handle error case
+          this.hasData = false;
+          this.isLoading = false;
         }
       );
   }
-  
 
   onPageChange(event: number) {
     this.page = event;
@@ -65,24 +68,21 @@ export class ViewRetailCustomeresComponent implements OnInit {
   }
 
   onSearch() {
+    this.page = 1; // Reset to first page on search
     this.fetchRetailCustomers();
   }
 
   offSearch() {
     this.searchText = '';
+    this.page = 1; // Reset to first page on clear search
     this.fetchRetailCustomers();
   }
 
   detailsPop(Obj: Customers) {
     console.log('customer popup');
-
     this.isPopupOpen = true;
     this.cusObjDetails = Obj;
   }
-
-  // In your component class
-  copiedEmail: string = '';
-  copiedPhone: string = '';
 
   copyToClipboard(text: string, type: 'email' | 'phone') {
     navigator.clipboard
@@ -90,11 +90,20 @@ export class ViewRetailCustomeresComponent implements OnInit {
       .then(() => {
         if (type === 'email') {
           this.copiedEmail = text;
-          setTimeout(() => (this.copiedEmail = ''), 2000);
         } else {
           this.copiedPhone = text;
-          setTimeout(() => (this.copiedPhone = ''), 2000);
         }
+        // Show toast
+        this.showToast = true;
+        // Hide toast after 2 seconds
+        setTimeout(() => {
+          this.showToast = false;
+          if (type === 'email') {
+            this.copiedEmail = '';
+          } else {
+            this.copiedPhone = '';
+          }
+        }, 2000);
       })
       .catch((err) => {
         console.error('Failed to copy:', err);

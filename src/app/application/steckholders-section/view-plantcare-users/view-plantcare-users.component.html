@@ -48,7 +48,7 @@
 </div>
 
 <div
-*ngIf="
+  *ngIf="
     permissionService.hasPermission('View all plant care users') ||
     tokenService.getUserDetails().role === '1'
   "
@@ -66,11 +66,12 @@
 
       <div class="flex items-center gap-3">
         <div
-        *ngIf="
-            permissionService.hasPermission('Filter plant care user by register status') ||
-            tokenService.getUserDetails().role === '1'
-          ">
-                  
+          *ngIf="
+            permissionService.hasPermission(
+              'Filter plant care user by register status'
+            ) || tokenService.getUserDetails().role === '1'
+          "
+        >
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="registerStatusFilter"
@@ -85,10 +86,12 @@
         </div>
 
         <div
-        *ngIf="
-                    permissionService.hasPermission('Filter plant care user by district') ||
-                    tokenService.getUserDetails().role === '1'
-                  ">
+          *ngIf="
+            permissionService.hasPermission(
+              'Filter plant care user by district'
+            ) || tokenService.getUserDetails().role === '1'
+          "
+        >
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="districtFilter"
@@ -105,9 +108,9 @@
         <div
           class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
           *ngIf="
-                    permissionService.hasPermission('Search plant care users') ||
-                    tokenService.getUserDetails().role === '1'
-                  "
+            permissionService.hasPermission('Search plant care users') ||
+            tokenService.getUserDetails().role === '1'
+          "
         >
           <!-- Popover -->
           <div
@@ -235,9 +238,13 @@
             <th
               class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
               *ngIf="
-                permissionService.hasPermission('View individual plantcare user') ||
+                permissionService.hasPermission(
+                  'View individual plantcare user'
+                ) ||
                 permissionService.hasPermission('Manage plant care users') ||
-                permissionService.hasPermission('Delete(remove) plant care user') ||
+                permissionService.hasPermission(
+                  'Delete(remove) plant care user'
+                ) ||
                 tokenService.getUserDetails().role === '1'
               "
             >
@@ -330,15 +337,26 @@
                 <span
                   [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+                      item.activeStatus === 'Inactive' ||
                       item.activeStatus === 'inactive',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg':
+                      item.activeStatus === 'Active' ||
                       item.activeStatus === 'active',
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
-                      item.activeStatus === 'deactive'
+                      item.activeStatus === 'Deactive' ||
+                      item.activeStatus === 'deactive',
                   }"
                   class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
                 >
-                  {{ item.activeStatus }}
+                  {{
+                    item.activeStatus === "inactive"
+                      ? "Inactive"
+                      : item.activeStatus === "active"
+                      ? "Active"
+                      : item.activeStatus === "deactive"
+                      ? "Deactive"
+                      : item.activeStatus
+                  }}
                 </span>
               </div>
             </td>
@@ -350,8 +368,9 @@
                   class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                   (click)="viewFarmer(item.id, true)"
                   *ngIf="
-                    permissionService.hasPermission('View individual plantcare user') ||
-                    tokenService.getUserDetails().role === '1'
+                    permissionService.hasPermission(
+                      'View individual plantcare user'
+                    ) || tokenService.getUserDetails().role === '1'
                   "
                 >
                   <svg
@@ -373,8 +392,9 @@
                   class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                   (click)="editPlantCareUser(item.id)"
                   *ngIf="
-                    permissionService.hasPermission('Manage plant care users') ||
-                    tokenService.getUserDetails().role === '1'
+                    permissionService.hasPermission(
+                      'Manage plant care users'
+                    ) || tokenService.getUserDetails().role === '1'
                   "
                 >
                   <svg
@@ -394,8 +414,9 @@
                   class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                   (click)="deletePlantCareUser(item.id)"
                   *ngIf="
-                    permissionService.hasPermission('Delete(remove) plant care user') ||
-                    tokenService.getUserDetails().role === '1'
+                    permissionService.hasPermission(
+                      'Delete(remove) plant care user'
+                    ) || tokenService.getUserDetails().role === '1'
                   "
                 >
                   <svg

@@ -5,8 +5,10 @@
   Back
 </button>
 <button
-*ngIf="permissionService.hasPermission('Onboard sales agent') ||
-                  tokenService.getUserDetails().role === '1'"
+  *ngIf="
+    permissionService.hasPermission('Onboard sales agent') ||
+    tokenService.getUserDetails().role === '1'
+  "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="
     navigatePath('/steckholders/action/sales-agents/create-sales-agents')
@@ -145,7 +147,7 @@
               Last Name
             </th>
 
-            <th 
+            <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Status
@@ -166,17 +168,27 @@
             >
               Activity Status
             </th> -->
-            
-            <th *ngIf="permissionService.hasPermission('View individual sales agent') ||
-                  tokenService.getUserDetails().role === '1'"
+
+            <th
+              *ngIf="
+                permissionService.hasPermission(
+                  'View individual sales agent'
+                ) || tokenService.getUserDetails().role === '1'
+              "
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="permissionService.hasPermission('Manage sales agent') ||
-                  tokenService.getUserDetails().role === '1'"
+            <th
+              *ngIf="
+                permissionService.hasPermission('Manage sales agent') ||
+                tokenService.getUserDetails().role === '1'
+              "
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
-            <th *ngIf="permissionService.hasPermission('Delete(remove) sales agent') ||
-                  tokenService.getUserDetails().role === '1'"
+            <th
+              *ngIf="
+                permissionService.hasPermission('Delete(remove) sales agent') ||
+                tokenService.getUserDetails().role === '1'
+              "
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
             ></th>
           </tr>
@@ -209,7 +221,9 @@
             <td class="pl-10 text-left text-textLight dark:text-textDark">
               {{ item.lastName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td
+              class="px-4 py-3 flex justify-center text-center text-textLight dark:text-textDark"
+            >
               <div>
                 <span
                   [ngClass]="{
@@ -221,8 +235,16 @@
                       item.status === 'Rejected'
                   }"
                   class="font-medium rounded-md px-4 py-2 text-xs text-center w-24 flex items-center justify-center"
-                  [class.cursor-pointer]="permissionService.hasPermission('Approve sales agent') || tokenService.getUserDetails().role === '1'"
-                  (click)="(permissionService.hasPermission('Approve sales agent') || tokenService.getUserDetails().role === '1') ? openPopup(item) : null"
+                  [class.cursor-pointer]="
+                    permissionService.hasPermission('Approve sales agent') ||
+                    tokenService.getUserDetails().role === '1'
+                  "
+                  (click)="
+                    permissionService.hasPermission('Approve sales agent') ||
+                    tokenService.getUserDetails().role === '1'
+                      ? openPopup(item)
+                      : null
+                  "
                 >
                   {{ item.status }}
                 </span>
@@ -236,14 +258,18 @@
               {{ item.nic }}
             </td>
 
-            
             <!-- <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               
             </td> -->
 
-            <td *ngIf="permissionService.hasPermission('View individual sales agent') ||
-                  tokenService.getUserDetails().role === '1'" 
-                  class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td
+              *ngIf="
+                permissionService.hasPermission(
+                  'View individual sales agent'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-2 py-3 text-center text-textLight dark:text-textDark"
+            >
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="viewSalesAgent(item.id)"
@@ -264,9 +290,13 @@
               </button>
             </td>
 
-            <td *ngIf="permissionService.hasPermission('Manage sales agent') ||
-                  tokenService.getUserDetails().role === '1'"
-                  class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td
+              *ngIf="
+                permissionService.hasPermission('Manage sales agent') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+            >
               <button
                 class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompanyHead(item.id)"
@@ -285,9 +315,13 @@
               </button>
             </td>
 
-            <td *ngIf="permissionService.hasPermission('Delete(remove) sales agent') ||
-                  tokenService.getUserDetails().role === '1'"
-                  class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td
+              *ngIf="
+                permissionService.hasPermission('Delete(remove) sales agent') ||
+                tokenService.getUserDetails().role === '1'
+              "
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+            >
               <button
                 class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteSalesAgent(item.id)"

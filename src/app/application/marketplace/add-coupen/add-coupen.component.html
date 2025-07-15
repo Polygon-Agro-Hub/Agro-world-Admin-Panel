@@ -25,7 +25,9 @@
   </div>
 
   <div class="flex flex-row justify-between items-center">
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack px-5 pt-9 pb-12 shadow-md rounded-md w-[60%] h-full">
+    <div
+      class="bg-[#FFFFFF] dark:bg-tileBlack px-5 pt-9 pb-12 shadow-md rounded-md w-[60%] h-full"
+    >
       <div class="mb-8">
         <label class="text-[#534E4E] dark:text-textDark">Code</label>
         <input
@@ -43,7 +45,7 @@
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
             <input
-              class="w-5 h-5"
+              class="w-5 h-5 cursor-pointer"
               type="radio"
               id="type"
               name="type"
@@ -59,7 +61,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <input
-              class="w-5 h-5"
+              class="w-5 h-5 cursor-pointer"
               type="radio"
               id="type"
               name="type"
@@ -76,7 +78,7 @@
 
           <div class="flex items-center space-x-2">
             <input
-              class="w-5 h-5"
+              class="w-5 h-5 cursor-pointer"
               type="radio"
               id="type"
               name="type"
@@ -108,7 +110,7 @@
           (change)="checkPrecentageValue(coupenObj.percentage)"
         />
         <div class="text-red-500 text-sm mt-1">
-          <div>{{checkPrecentageValueMessage}}</div>
+          <div>{{ checkPrecentageValueMessage }}</div>
         </div>
       </div>
 
@@ -124,7 +126,7 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <div class="text-red-500 text-sm mt-1">
-          <div>{{checkfixAmountValueMessage}}</div>
+          <div>{{ checkfixAmountValueMessage }}</div>
         </div>
       </div>
 
@@ -135,7 +137,7 @@
           name="checkLimit"
           [(ngModel)]="coupenObj.checkLimit"
           [value]="true"
-          class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150"
+          class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150 cursor-pointer"
         />
 
         <label for="chekLimit" class="text-[#534E4E] dark:text-textDark">
@@ -167,7 +169,7 @@
         <div class="flex items-center space-x-2 my-5">
           <!-- With Discount Radio Button -->
           <input
-            class="w-5 h-5"
+            class="w-5 h-5 cursor-pointer"
             type="radio"
             id="status"
             name="status"
@@ -184,7 +186,7 @@
 
         <div class="flex items-center space-x-2 my-5">
           <input
-            class="w-5 h-5"
+            class="w-5 h-5 cursor-pointer"
             type="radio"
             id="status"
             name="status"

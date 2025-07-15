@@ -11,14 +11,13 @@
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    
     <div class="flex justify-left items-left mb-2">
-        <h2
-          class="text-2xl font-normal text-left text-textLight dark:text-textDark"
-        >
-          Center : {{ this.centerName }}
-        </h2>
-      </div>
+      <h2
+        class="text-2xl font-normal text-left text-textLight dark:text-textDark"
+      >
+        Center : {{ this.centerName }}
+      </h2>
+    </div>
     <div class="flex justify-left items-left mb-2">
       <h2
         class="text-2xl font-normal text-left text-textLight dark:text-textDark"
@@ -137,7 +136,7 @@
               Crop Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
             >
               Variety
             </th>
@@ -152,18 +151,16 @@
               Price ( per 1 Kg )
             </th>
             <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
-          >
-           Updated Price ( per 1 Kg )
-          </th>
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
+            >
+              Updated Price ( per 1 Kg )
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr
             class="border-b border-gray-200 dark:border-[#4B555A]"
-            *ngFor="
-              let item of market
-            "
+            *ngFor="let item of market"
           >
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.cropName }}
@@ -178,8 +175,8 @@
               {{ item.price }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                {{ item.updatedPrice }}
-              </td>
+              {{ item.updatedPrice }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -197,6 +194,6 @@
         </pagination-controls>
       </div>
     </div> -->
+    </div>
   </div>
 </div>
-

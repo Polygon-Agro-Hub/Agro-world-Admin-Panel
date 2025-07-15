@@ -41,7 +41,7 @@ export class AddCollectionCenterComponent implements OnInit {
       contact01Code: ['+94', Validators.required],
       contact02: [
         '',
-        [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)],
+        [Validators.pattern(/^[7][0-9]{8}$/)],
       ],
       contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],

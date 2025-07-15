@@ -307,9 +307,9 @@ class CollectionCenter {
   regCode!: string;
   centerName!: string;
   contact01!: number;
-  code1!: string;
+  code1: string = '+94';
   contact02!: number;
-  code2!: string;
+  code2: string = '+94';
   buildingNumber!: string;
   street!: string;
   city!: string;

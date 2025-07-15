@@ -144,6 +144,7 @@ export class CollectiveofficersEditComponent {
           this.personalData.branchName = officerData.branchName || '';
           this.personalData.accHolderName = officerData.accHolderName || '';
           this.personalData.accNumber = officerData.accNumber || '';
+          this.personalData.confirmAccNumber = officerData.accNumber || '';
           this.personalData.empType = officerData.empType || '';
           this.personalData.irmId = officerData.irmId || '';
           this.personalData.image = officerData.image || '';
@@ -447,7 +448,8 @@ export class CollectiveofficersEditComponent {
       !this.personalData.accHolderName ||
       !this.personalData.accNumber ||
       !this.personalData.bankName ||
-      !this.personalData.branchName
+      !this.personalData.branchName ||
+      this.personalData.accNumber !== this.personalData.confirmAccNumber
     ) {
       return;
     }
@@ -530,6 +532,7 @@ class Personal {
   image!: string;
   accHolderName!: any;
   accNumber!: any;
+  confirmAccNumber!: any;
   bankName!: string;
   branchName!: string;
 }

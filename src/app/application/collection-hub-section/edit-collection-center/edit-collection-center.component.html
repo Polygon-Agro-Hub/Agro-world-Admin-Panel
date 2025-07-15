@@ -99,9 +99,9 @@
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
-
+        
           <!-- Contact Number Input -->
-          <div class="flex flex-col">
+          <div class="flex-1">
             <input
               type="text"
               [(ngModel)]="centerFetchData.contact01"
@@ -113,21 +113,22 @@
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
             />
-
-            <!-- Validation Messages -->
-            <div
-              *ngIf="contact01.invalid && contact01.touched"
-              class="text-red-500 text-sm mt-1"
-            >
-              <span *ngIf="contact01.errors?.['required']"
-                >Contact number is required</span
-              >
-              <span *ngIf="contact01.errors?.['pattern']"
-                >Please enter a valid phone number</span
-              >
-            </div>
           </div>
         </div>
+        
+        <!-- ✅ Validation Messages Below Full Row -->
+        <div
+          *ngIf="contact01.invalid && contact01.touched"
+          class="text-red-500 text-sm mt-1"
+        >
+          <span *ngIf="contact01.errors?.['required']">
+            Contact number-01 is required
+          </span>
+          <span *ngIf="contact01.errors?.['pattern']">
+            Please enter a valid contact number
+          </span>
+        </div>
+        
       </div>
 
       <!-- Contact Number 02 -->
@@ -135,9 +136,12 @@
         <label
           for="contact02Code"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Contact Number 02</label
         >
+          Contact Number 02
+        </label>
+      
         <div class="mt-1 flex">
+          <!-- Country Code Dropdown -->
           <select
             [(ngModel)]="centerFetchData.code2"
             id="code2"
@@ -149,33 +153,29 @@
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
-          <div class="flex flex-col">
-            <input
-              type="number"
-              [(ngModel)]="centerFetchData.contact02"
-              id="contact02"
-              name="contact02"
-              #contact02="ngModel"
-              required
-              pattern="^[7][0-9]{8}$"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number"
-            />
-
-            <div
-              *ngIf="contact02.invalid && contact02.touched"
-              class="text-red-500 text-sm mt-1"
-            >
-              <span *ngIf="contact02.errors?.['required']"
-                >Contact number is required</span
-              >
-              <span *ngIf="contact02.errors?.['pattern']"
-                >Please enter a valid number</span
-              >
-            </div>
-          </div>
+      
+          <!-- Contact Input -->
+          <input
+            type="number"
+            [(ngModel)]="centerFetchData.contact02"
+            id="contact02"
+            name="contact02"
+            #contact02="ngModel"
+            pattern="^[7][0-9]{8}$"
+            class="flex-1 block p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="Enter your phone number"
+          />
+        </div>
+      
+        <!-- Validation Message Below the Row -->
+        <div
+          *ngIf="contact02.invalid && contact02.touched && contact02.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1"
+        >
+          Please enter a valid contact number
         </div>
       </div>
+      
 
       <!-- Building Number -->
       <div>

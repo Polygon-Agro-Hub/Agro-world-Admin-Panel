@@ -4,6 +4,9 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
@@ -30,10 +33,12 @@ interface DistributionCenter {
   longitude: string;
   latitude: string;
   email: string;
-  company?: string; // Changed from companyId to string to match API
-  companyId?: number; // Keep this if you still need it elsewhere
+  company?: string;
+  companyId?: number;
   regCode: string;
+  officerName?: string; // Added to match updateData
 }
+
 @Component({
   selector: 'app-edit-distribution-centre',
   standalone: true,
@@ -101,41 +106,79 @@ export class EditDistributionCentreComponent implements OnInit {
     if (id) {
       this.fetchDistributionCenterById(id);
     }
+    // Add value change listeners for phone code to trigger validation
+    this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
+      this.distributionForm.get('contact1')?.updateValueAndValidity();
+    });
+    this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
+      this.distributionForm.get('contact2')?.updateValueAndValidity();
+    });
   }
-  
+
+  // Custom validator for phone numbers based on country code
+  phoneNumberValidator(codeControlName: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const phoneNumber = control.value;
+      const phoneCode = control.parent?.get(codeControlName)?.value;
+
+      if (!phoneNumber && codeControlName === 'contact2Code') {
+        // Allow empty secondary contact
+        return null;
+      }
+
+      if (!phoneNumber) {
+        return { required: true };
+      }
+
+      // Define phone number patterns based on country code
+      const patterns: { [key: string]: RegExp } = {
+        '+94': /^[0-9]{9}$/, // Sri Lanka: 9 digits
+        '+91': /^[6-9][0-9]{9}$/, // India: 10 digits, starts with 6-9
+        '+1': /^[0-9]{10}$/, // USA: 10 digits
+        '+44': /^[0-9]{10}$/, // UK: 10 digits
+      };
+
+      const pattern = patterns[phoneCode];
+      if (!pattern) {
+        return { invalidPhone: 'Unsupported country code' };
+      }
+
+      if (!pattern.test(phoneNumber)) {
+        return {
+          invalidPhone: `Phone number must match the format for ${phoneCode} (e.g., ${pattern.toString().replace(/^\^|\$$/g, '')})`,
+        };
+      }
+
+      return null;
+    };
+  }
 
   initializeForm(): void {
     this.distributionForm = this.fb.group({
       name: ['', Validators.required],
       company: ['', Validators.required],
       contact1Code: ['+94', Validators.required],
-      contact1: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
-      contact2Code: ['+94', Validators.required],
-      contact2: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
-      latitude: [
-        '',
-        [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)],
-      ],
-      longitude: [
-        '',
-        [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)],
-      ],
+      contact1: ['', [Validators.required, this.phoneNumberValidator('contact1Code')]],
+      contact2Code: ['+94'],
+      contact2: ['', [this.phoneNumberValidator('contact2Code')]], // Optional
+      latitude: ['', [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)]],
+      longitude: ['', [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)]],
       email: ['', [Validators.required, Validators.email]],
       country: ['Sri Lanka', Validators.required],
       province: ['', Validators.required],
       district: ['', Validators.required],
       city: ['', Validators.required],
       regCode: ['', Validators.required],
+      officerInCharge: ['', Validators.required], // Added for officerName
     });
-    // No form.disable() here
   }
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+    this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
   }
 
   onProvinceChange() {
-    console.log('called')
+    console.log('called');
     const selectedProvince = this.distributionForm.get('province')?.value;
     const selectedDistrict = this.distributionForm.get('district')?.value;
     const selectedCity = this.distributionForm.get('city')?.value;
@@ -147,28 +190,28 @@ export class EditDistributionCentreComponent implements OnInit {
       this.distributionService
         .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
         .subscribe((response) => {
-          console.log('reg code', response.regCode)
+          console.log('reg code', response.regCode);
           this.distributionForm.patchValue({ regCode: response.regCode });
-          const selectedRegCode = this.distributionForm.get('regCode')?.value
-          console.log('selectedRegCode', selectedRegCode)
+          const selectedRegCode = this.distributionForm.get('regCode')?.value;
+          console.log('selectedRegCode', selectedRegCode);
           this.isLoadingregcode = false;
         });
     }
   }
 
   updateRegCode() {
-    console.log('update reg code')
+    console.log('update reg code');
     const province = this.distributionForm.get('province')?.value;
     const district = this.distributionForm.get('district')?.value;
     const city = this.distributionForm.get('city')?.value;
 
-    console.log('province', province, 'district', district, 'city', city)
+    console.log('province', province, 'district', district, 'city', city);
 
     if (province && district && city) {
       const regCode = `${province.slice(0, 2).toUpperCase()}${district
         .slice(0, 1)
         .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
-        console.log('regCode', regCode)
+      console.log('regCode', regCode);
       this.distributionForm.patchValue({ regCode });
     }
   }
@@ -176,7 +219,6 @@ export class EditDistributionCentreComponent implements OnInit {
   fetchAllCompanies() {
     this.distributionService.getAllCompanies().subscribe(
       (res) => {
-        // Make sure the response contains id and companyNameEnglish
         this.companyList = res.data.map((company: any) => ({
           id: company.id,
           companyNameEnglish: company.companyNameEnglish,
@@ -197,7 +239,6 @@ export class EditDistributionCentreComponent implements OnInit {
     this.distributionService.getDistributionCentreById(id).subscribe(
       (response: DistributionCenter) => {
         console.log('Distribution center details:', response);
-
         this.isLoading = false;
         this.distributionCenterDetails = response;
         this.hasData = !!response;
@@ -241,10 +282,10 @@ export class EditDistributionCentreComponent implements OnInit {
       district: data.district,
       city: data.city,
       regCode: data.regCode,
+      officerInCharge: data.officerName, // Added for officerName
     });
 
-    console.log('distributionForm', this.distributionForm)
-    // No form.disable() here
+    console.log('distributionForm', this.distributionForm);
   }
 
   getDistricts(): string[] {
@@ -265,8 +306,8 @@ export class EditDistributionCentreComponent implements OnInit {
     this.isLoading = true;
     this.distributionService.getCompanies().subscribe({
       next: (response) => {
-        console.log('Raw API response:', response); // Add this line
-        console.log('Companies fetched:', response.data); // Check the data structure
+        console.log('Raw API response:', response);
+        console.log('Companies fetched:', response.data);
 
         if (response.success && response.data) {
           this.companyOptions = response.data
@@ -294,6 +335,7 @@ export class EditDistributionCentreComponent implements OnInit {
     this.distributionForm.reset({
       contact1Code: '+94',
       contact2Code: '+94',
+      country: 'Sri Lanka',
     });
   }
 
@@ -304,7 +346,6 @@ export class EditDistributionCentreComponent implements OnInit {
 
   updateDistributionCentre() {
     if (this.distributionForm.valid) {
-      // Debug: Check if companyList is loaded
       if (!this.companyList || this.companyList.length === 0) {
         this.showErrorAlert(
           'Company list not loaded. Please wait or refresh the page.'
@@ -323,15 +364,11 @@ export class EditDistributionCentreComponent implements OnInit {
         if (result.isConfirmed) {
           this.isLoading = true;
 
-          // Get company ID and ensure it's a number
           const companyId = Number(this.distributionForm.value.company);
-
-          // Debug logs
           console.log('Selected company ID:', companyId);
           console.log('Company list:', this.companyList);
           console.log('First company in list:', this.companyList[0]);
 
-          // Find the selected company with type conversion
           const selectedCompany = this.companyList.find(
             (company) => Number(company.id) === companyId
           );
@@ -351,7 +388,6 @@ export class EditDistributionCentreComponent implements OnInit {
             return;
           }
 
-          // Prepare the update data
           const updateData = {
             centerName: this.distributionForm.value.name,
             officerName: this.distributionForm.value.officerInCharge,
@@ -419,7 +455,6 @@ export class EditDistributionCentreComponent implements OnInit {
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
-
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
       }

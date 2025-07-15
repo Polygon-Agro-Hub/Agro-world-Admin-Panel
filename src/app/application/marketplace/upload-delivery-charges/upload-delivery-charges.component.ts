@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { saveAs } from 'file-saver';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-upload-delivery-charges',
@@ -23,11 +24,12 @@ export class UploadDeliveryChargesComponent {
 
   constructor(
     private router: Router,
-    private uploadservice: MarketPlaceService
+    private uploadservice: MarketPlaceService,
+    private location: Location
   ) {}
 
   back(): void {
-    this.router.navigate(['market/action/view-delivery-charges']);
+    this.location.back();
   }
 
   onDragOver(event: any): void {

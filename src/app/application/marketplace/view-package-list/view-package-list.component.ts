@@ -19,6 +19,7 @@ import { environment } from '../../../environment/environment';
   styleUrl: './view-package-list.component.css',
 })
 export class ViewPackageListComponent {
+  date: string = '';
   viewPackageList: PackageList[] = [];
   isLoading = false;
   hasData: boolean = true;
@@ -42,10 +43,9 @@ export class ViewPackageListComponent {
     this.router.navigate(['/market/action']);
   }
 
-
-  fetchAllPackages(searchText: string = this.searchtext) {
+  fetchAllPackages(searchText: string = this.searchtext, date?: string) {
     this.isLoading = true;
-    this.viewPackagesList.getAllMarketplacePackages(searchText).subscribe(
+    this.viewPackagesList.getAllMarketplacePackages(searchText, date).subscribe(
       (response) => {
         console.log('Package list response:', response);
         this.viewPackageList = response.data.flatMap((group: any) =>
@@ -137,12 +137,17 @@ export class ViewPackageListComponent {
   }
 
   onSearch() {
-    this.fetchAllPackages();
+    this.fetchAllPackages(this.searchtext, this.date);
   }
 
   offSearch() {
     this.searchtext = '';
-    this.fetchAllPackages();
+    this.fetchAllPackages('', this.date); // Keep date filter when clearing search
+  }
+
+  clearDateFilter() {
+    this.date = '';
+    this.fetchAllPackages(this.searchtext);
   }
 
   viewDefinePackage(id: number) {
@@ -150,10 +155,42 @@ export class ViewPackageListComponent {
       queryParams: { id },
     });
   }
+
+  dateFilter() {
+    if (this.date) {
+      this.isLoading = true;
+      this.viewPackagesList
+        .getAllMarketplacePackages(this.searchtext, this.date)
+        .subscribe(
+          (response) => {
+            console.log('Filtered package list response:', response);
+            this.viewPackageList = response.data.flatMap((group: any) =>
+              group.packages.map((pkg: any) => ({
+                ...pkg,
+                groupStatus: group.status,
+              }))
+            );
+            this.hasData = this.viewPackageList.length > 0;
+            this.isLoading = false;
+          },
+          (error) => {
+            console.error('Error filtering packages by date', error);
+            this.isLoading = false;
+            if (error.status === 401) {
+              this.router.navigate(['/login']);
+            }
+          }
+        );
+    } else {
+      // If date is cleared, fetch all packages without date filter
+      this.fetchAllPackages();
+    }
+  }
 }
 
 class PackageList {
   id!: number;
+  adminUser!: string;
   displayName!: string;
   image!: string;
   description!: string;

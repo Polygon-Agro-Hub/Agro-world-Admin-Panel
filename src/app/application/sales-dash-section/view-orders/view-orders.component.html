@@ -300,23 +300,29 @@
               <div>
                 <span
                   [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
+                    'font-bold px-3 py-1 text-sm bg-[#FFEDCF] text-[#D17A00] rounded-3xl':
                       item.orderStatus === 'On the way',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
                       item.orderStatus === 'Delivered',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-3xl':
+                    'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
                       item.orderStatus === 'Cancelled',
                     'font-bold px-3 py-1 text-sm bg-[#CFE1FF] text-[#3B82F6] rounded-3xl':
                       item.orderStatus === 'Processing',
-                    'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
-                      item.orderStatus === 'Ordered'
+                    'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
+                      item.orderStatus === 'Ordered' ||
+                      item.orderStatus === 'Assigned',
+                    'font-bold px-3 py-1 text-sm bg-[#FFDCDA] text-[#FF1100] rounded-3xl':
+                      item.orderStatus === 'Failed'
                   }"
                   class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center"
                 >
-                  {{ item.orderStatus }}
+                  {{
+                    item.orderStatus === "Ordered"
+                      ? "Assigned"
+                      : item.orderStatus
+                  }}
                 </span>
               </div>
-              <!-- {{ item.orderStatus }} -->
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">

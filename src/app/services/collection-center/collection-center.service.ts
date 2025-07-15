@@ -22,7 +22,7 @@ interface centerData {
 export class CollectionCenterService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
@@ -288,14 +288,19 @@ export class CollectionCenterService {
     });
   }
 
-  createCompany(companyData: any): Observable<any> {
+  createCompany(companyData: any, companyType: string = ''): Observable<any> {
     console.log(companyData);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${this.apiUrl}auth/create-company`, companyData, {
+    let url = `${this.apiUrl}auth/create-company`
+    if (companyType === 'distribution') {
+      url += `?type=${companyType}`
+    }
+
+    return this.http.post(url, companyData, {
       headers,
     });
   }

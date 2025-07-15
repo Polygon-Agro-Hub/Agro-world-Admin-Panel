@@ -20,14 +20,19 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Product Types ( {{productCount < 9 ? '0' +productCount : productCount}} ) </h2>
+          Product Types ( {{productCount < 9 ? '0' + productCount : productCount}} ) </h2>
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+      <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
           <!-- Input field -->
-          <input type="text" placeholder="Search.."
-            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" />
+          <input 
+            type="text" 
+            placeholder="Search.." 
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
+            [(ngModel)]="searchText" 
+            (ngModelChange)="filterProducts()"
+          />
 
           <!-- Search button -->
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
@@ -39,7 +44,11 @@
           </button>
 
           <!-- Clear button -->
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+          <button 
+            type="button" 
+            class="text-gray-500 hover:text-gray-700 focus:outline-none" 
+            (click)="clearSearch()"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -50,59 +59,42 @@
     </div>
 
     <div class="w-full py-4">
-      <!-- Added py-4 for vertical padding -->
       <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
         <thead>
           <tr>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              <!-- Reduced px-4 to px-3 -->
-              No
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              <!-- Reduced px-4 to px-3 -->
-              Short Code
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
-              <!-- Reduced px-4 to px-3 -->
-              Type Name
-            </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
-              <!-- Reduced px-4 to px-3 -->
-              Actions
-            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">No</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Short Code</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Type Name</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of productArr let i = index">
+          <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of filteredProductArr; let i = index">
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
-              {{i<10 ? '0' + (i + 1) : i + 1}} </td>
+              {{i < 10 ? '0' + (i + 1) : i + 1}}
+            </td>
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
-              <!-- Reduced px-4 to px-3 -->
               {{item.shortCode}}
             </td>
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
-              <!-- Reduced px-4 to px-3 -->
               {{item.typeName}}
             </td>
-
             <td class="px-3 py-3 text-center">
-              <!-- Reduced px-4 to px-3 -->
               <div class="flex justify-center space-x-4">
                 <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)">
                   <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <title>Edit</title>
                     <path
-                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c thousandths place 0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
                     </path>
                   </svg>
                 </button>
-
                 <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProductType(item.id)">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                     viewBox="0 0 24 24">
                     <title>Delete</title>
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                   </svg>
                 </button>
               </div>
@@ -110,9 +102,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="dark:bg-[#262f45]">
-        <!-- Added py-4 for vertical padding -->
-      </div>
+      <div class="dark:bg-[#262f45]"></div>
     </div>
   </div>
 </div>

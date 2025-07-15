@@ -81,6 +81,7 @@ export class OngoingCultivationComponent {
       .fetchAllOngoingCultivations(page, limit, this.searchNIC)
       .subscribe(
         (response) => {
+          console.log('response', response)
           this.ongoingCultivation = response.items;
           this.hasData = this.ongoingCultivation.length > 0;
           this.totalItems = response.total;

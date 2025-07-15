@@ -649,7 +649,7 @@
         </span>
 
         <span
-          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+          *ngIf="!confirmAccountNumberRequired && confirmAccountNumberError"
           class="text-red-600 text-sm"
         >
           Account Numbers do not match.

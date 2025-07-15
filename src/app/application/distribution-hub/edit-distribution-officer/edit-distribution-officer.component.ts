@@ -261,20 +261,25 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
-    // Check if confirmAccNumber is empty or just whitespace
-    this.confirmAccountNumberRequired =
-      !this.personalData.confirmAccNumber ||
-      this.personalData.confirmAccNumber.toString().trim() === '';
+    // Reset both flags initially
+    this.confirmAccountNumberRequired = false;
+    this.confirmAccountNumberError = false;
 
-    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
-      this.confirmAccountNumberError =
-        this.personalData.accNumber !== this.personalData.confirmAccNumber;
-    } else {
-      this.confirmAccountNumberError = false;
+    // Check if confirmAccNumber is empty
+    if (
+      !this.personalData.confirmAccNumber ||
+      this.personalData.confirmAccNumber.toString().trim() === ''
+    ) {
+      this.confirmAccountNumberRequired = true;
+      return;
     }
 
-    // Force change detection
-    this.cdr.detectChanges();
+    // Check if both account numbers exist and match
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber.toString() !==
+        this.personalData.confirmAccNumber.toString();
+    }
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
@@ -513,19 +518,26 @@ export class EditDistributionOfficerComponent implements OnInit {
 
     // For companyId === 1, validate bank details
     if (this.personalData.companyId === '1') {
-      // Explicitly check for empty confirmAccNumber
-      const isConfirmAccNumberValid =
-        !!this.personalData.confirmAccNumber &&
-        this.personalData.confirmAccNumber.toString().trim() !== '';
+      // First validate that confirmAccNumber is not empty
+      if (
+        !this.personalData.confirmAccNumber ||
+        this.personalData.confirmAccNumber.toString().trim() === ''
+      ) {
+        return false;
+      }
+
+      // Then check if numbers match (convert both to string for comparison)
+      const accNumbersMatch =
+        this.personalData.accNumber.toString() ===
+        this.personalData.confirmAccNumber.toString();
 
       const isBankDetailsValid =
         !!this.personalData.accHolderName &&
         /^[A-Za-z ]+$/.test(this.personalData.accHolderName) &&
         !!this.personalData.accNumber &&
-        isConfirmAccNumberValid && // Use the explicit check here
         !!this.personalData.bankName &&
         !!this.personalData.branchName &&
-        this.personalData.accNumber === this.personalData.confirmAccNumber;
+        accNumbersMatch;
 
       return isAddressValid && isBankDetailsValid;
     }

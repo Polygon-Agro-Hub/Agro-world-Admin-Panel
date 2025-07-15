@@ -261,7 +261,10 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
-    this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
+    // Check if confirmAccNumber is empty or just whitespace
+    this.confirmAccountNumberRequired =
+      !this.personalData.confirmAccNumber ||
+      this.personalData.confirmAccNumber.toString().trim() === '';
 
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
@@ -270,6 +273,7 @@ export class EditDistributionOfficerComponent implements OnInit {
       this.confirmAccountNumberError = false;
     }
 
+    // Force change detection
     this.cdr.detectChanges();
   }
 
@@ -442,6 +446,14 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   onSubmit() {
+    if (
+      !this.personalData.confirmAccNumber ||
+      this.personalData.confirmAccNumber.toString().trim() === '' ||
+      !this.checkSubmitValidity()
+    ) {
+      Swal.fire('Error', 'Please fill the confirm account number', 'error');
+      return;
+    }
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to update the distribution center head?',
@@ -492,37 +504,33 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   checkSubmitValidity(): boolean {
-    const {
-      accHolderName,
-      accNumber,
-      confirmAccNumber,
-      bankName,
-      branchName,
-      houseNumber,
-      streetName,
-      city,
-      district,
-      companyId,
-    } = this.personalData;
-
-    const namePattern = /^[A-Za-z ]+$/;
-
+    // Basic address validation
     const isAddressValid =
-      !!houseNumber && !!streetName && !!city && !!district;
+      !!this.personalData.houseNumber &&
+      !!this.personalData.streetName &&
+      !!this.personalData.city &&
+      !!this.personalData.district;
 
-    if (companyId === '1') {
+    // For companyId === 1, validate bank details
+    if (this.personalData.companyId === '1') {
+      // Explicitly check for empty confirmAccNumber
+      const isConfirmAccNumberValid =
+        !!this.personalData.confirmAccNumber &&
+        this.personalData.confirmAccNumber.toString().trim() !== '';
+
       const isBankDetailsValid =
-        !!accHolderName &&
-        namePattern.test(accHolderName) &&
-        !!accNumber &&
-        !!confirmAccNumber &&
-        !!bankName &&
-        !!branchName &&
-        accNumber === confirmAccNumber;
-      return isBankDetailsValid && isAddressValid;
-    } else {
-      return isAddressValid;
+        !!this.personalData.accHolderName &&
+        /^[A-Za-z ]+$/.test(this.personalData.accHolderName) &&
+        !!this.personalData.accNumber &&
+        isConfirmAccNumberValid && // Use the explicit check here
+        !!this.personalData.bankName &&
+        !!this.personalData.branchName &&
+        this.personalData.accNumber === this.personalData.confirmAccNumber;
+
+      return isAddressValid && isBankDetailsValid;
     }
+
+    return isAddressValid;
   }
 
   getAllCompanies() {

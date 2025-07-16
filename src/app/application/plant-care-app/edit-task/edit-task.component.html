@@ -286,7 +286,15 @@
         id="imageLink"
         [(ngModel)]="taskItems.imageLink"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        #imageLink="ngModel"
+        required
       />
+      <div
+        *ngIf="imageLink.invalid && (imageLink.dirty || imageLink.touched)"
+        class="text-red-500 text-sm mt-1"
+      >
+        Image Link is required when "Has Image Link" is set to Yes
+      </div>
     </div>
 
     <div class="mb-4">

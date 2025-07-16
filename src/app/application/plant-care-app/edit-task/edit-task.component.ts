@@ -111,6 +111,16 @@ export class EditTaskComponent implements OnInit {
   }
 
   updateTask() {
+    // Check if image link is required but not provided
+    if (this.hasImageLink && !this.taskItems.imageLink) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Image Link is required when "Has Image Link" is set to Yes',
+      });
+      return;
+    }
+
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -143,7 +153,7 @@ export class EditTaskComponent implements OnInit {
       this.taskItems.taskDescriptionTamil
     );
     formData.append('reqImages', this.taskItems.reqImages);
-    formData.append('imageLink', this.taskItems.imageLink);
+    formData.append('imageLink', this.taskItems.imageLink || '');
     formData.append('videoLink', this.taskItems.videoLinkEnglish);
     formData.append('videoLink', this.taskItems.videoLinkSinhala);
     formData.append('videoLink', this.taskItems.videoLinkTamil);
@@ -162,7 +172,7 @@ export class EditTaskComponent implements OnInit {
           title: 'Success',
           text: 'Task updated successfully!',
         }).then(() => {
-          this.location.back(); // This will navigate back to the previous page
+          this.location.back();
         });
       },
       (error) => {

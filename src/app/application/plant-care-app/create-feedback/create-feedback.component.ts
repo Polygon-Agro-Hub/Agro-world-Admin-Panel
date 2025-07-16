@@ -165,7 +165,7 @@ export class CreateFeedbackComponent {
   deleteFeedback(feedbackId: number): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'This will delete the feedback and reorder subsequent feedback entries.',
+      text: 'This will delete the feedback option and re-order the subsequent feedback option entries',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -175,7 +175,11 @@ export class CreateFeedbackComponent {
       if (result.isConfirmed) {
         this.plantcareUsersService.deleteFeedback(feedbackId).subscribe({
           next: () => {
-            Swal.fire('Deleted!', 'Feedback has been deleted.', 'success');
+            Swal.fire(
+              'Deleted!',
+              'Feedback option has been deleted',
+              'success'
+            );
             this.getAllFeedbacks();
             this.loadNextNumber();
           },

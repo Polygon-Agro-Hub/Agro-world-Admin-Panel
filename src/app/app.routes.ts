@@ -157,6 +157,7 @@ import { WholesaleComplaintsComponent } from './application/Complaints/wholesale
 import { W } from '@angular/cdk/keycodes';
 import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
 import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
+import{SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
 export const routes: Routes = [
   {
     path: '',
@@ -941,6 +942,10 @@ export const routes: Routes = [
           {
             path: 'selected-retail-complaints/:id',
             component: SelectedRetailComplaintsComponent,
+          },
+          {
+            path: 'selected-wholesale-complaints/:id',
+            component: SelectedwholesaleComplaintsComponent,
           },
         ],
       },

@@ -85,7 +85,7 @@ export class MarketPriceBulkDeleteComponent {
 
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this Admin? This action cannot be undone.',
+      text: 'Do you really want to delete this market prices? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -104,7 +104,11 @@ export class MarketPriceBulkDeleteComponent {
           })
           .subscribe(
             () => {
-              Swal.fire('Deleted!', 'The Admin has been deleted.', 'success');
+              Swal.fire(
+                'Deleted!',
+                'Sucessfully deleted the uploaded market prices',
+                'success'
+              );
               this.fetchAllXl();
             },
             () => {

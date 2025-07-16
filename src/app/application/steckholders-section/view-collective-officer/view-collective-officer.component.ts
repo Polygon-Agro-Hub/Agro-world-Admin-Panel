@@ -453,7 +453,7 @@ export class ViewCollectiveOfficerComponent {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Officer ID sent successfully!',
+            text: 'User disclaimed successfully!',
             confirmButtonText: 'OK',
           }).then((result) => {
             if (result.isConfirmed) {
@@ -466,7 +466,7 @@ export class ViewCollectiveOfficerComponent {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to send Officer ID!',
+            text: 'Failed to disclaim User successfully!',
             confirmButtonText: 'Try Again',
           });
         }

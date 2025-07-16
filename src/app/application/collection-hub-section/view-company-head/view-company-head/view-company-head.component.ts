@@ -1,19 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
-
-import {
-  HttpClient,
-  HttpClientModule,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
-
 import { FormsModule } from '@angular/forms';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { CollectionService } from '../../../../services/collection.service';
@@ -116,6 +109,7 @@ export class ViewCompanyHeadComponent implements OnInit {
   }
 
   onSearch() {
+    this.page = 1; // Reset to first page on new search
     this.fetchAllCompanyHeads(
       this.companyId!,
       this.page,
@@ -126,12 +120,19 @@ export class ViewCompanyHeadComponent implements OnInit {
 
   offSearch() {
     this.searchText = '';
+    this.page = 1; // Reset to first page when clearing search
     this.fetchAllCompanyHeads(
       this.companyId!,
       this.page,
       this.itemsPerPage,
       this.searchText
     );
+  }
+
+  handleSearchKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onSearch();
+    }
   }
 
   deleteCompanyHead(id: any) {

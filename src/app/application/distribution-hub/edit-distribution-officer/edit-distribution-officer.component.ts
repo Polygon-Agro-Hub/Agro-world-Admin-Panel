@@ -261,19 +261,25 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
-    // Mark as required if empty
-    this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
+    // Reset both flags initially
+    this.confirmAccountNumberRequired = false;
+    this.confirmAccountNumberError = false;
+
+    // Check if confirmAccNumber is empty
+    if (
+      !this.personalData.confirmAccNumber ||
+      this.personalData.confirmAccNumber.toString().trim() === ''
+    ) {
+      this.confirmAccountNumberRequired = true;
+      return;
+    }
 
     // Check if both account numbers exist and match
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
-        this.personalData.accNumber !== this.personalData.confirmAccNumber;
-    } else {
-      this.confirmAccountNumberError = false;
+        this.personalData.accNumber.toString() !==
+        this.personalData.confirmAccNumber.toString();
     }
-
-    // Force UI update
-    this.cdr.detectChanges();
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
@@ -284,6 +290,7 @@ export class EditDistributionOfficerComponent implements OnInit {
     const currentCompanyId = this.personalData.companyId;
     const currentCenterId = this.personalData.centerId;
 
+    this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
@@ -320,6 +327,17 @@ export class EditDistributionOfficerComponent implements OnInit {
     });
   }
 
+  getAllCollectionManagers() {
+    this.collectionCenterSrv
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.distributionHeadData = res;
+      });
+  }
+
   isValidPhoneNumber(phone: string): boolean {
     const phoneRegex = /^[0-9]{9}$/;
     return phoneRegex.test(phone);
@@ -345,7 +363,7 @@ export class EditDistributionOfficerComponent implements OnInit {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
+        this.location.back(); // This will navigate back to the previous page
       }
     });
   }
@@ -355,8 +373,16 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   checkFormValidity(): boolean {
-    const isFirstNameValid = !!this.personalData.firstNameEnglish;
-    const isLastNameValid = !!this.personalData.lastNameEnglish;
+    const namePattern = /^[A-Za-z ]+$/;
+
+    const isFirstNameValid =
+      !!this.personalData.firstNameEnglish &&
+      namePattern.test(this.personalData.firstNameEnglish);
+
+    const isLastNameValid =
+      !!this.personalData.lastNameEnglish &&
+      namePattern.test(this.personalData.lastNameEnglish);
+
     const isPhoneNumberValid = this.isValidPhoneNumber(
       this.personalData.phoneNumber01
     );
@@ -364,7 +390,8 @@ export class EditDistributionOfficerComponent implements OnInit {
     const isLanguagesSelected = !!this.personalData.languages;
     const isCompanySelected = !!this.personalData.companyId;
     const isJobRoleSelected = !!this.personalData.jobRole;
-    const isNicSelected = !!this.personalData.nic;
+    const isNicSelected =
+      !!this.personalData.nic && this.isValidNIC(this.personalData.nic);
 
     return (
       isFirstNameValid &&
@@ -384,12 +411,10 @@ export class EditDistributionOfficerComponent implements OnInit {
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
     );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
+    if (selected) {
+      this.personalData.province = selected.province;
+    } else {
+      this.personalData.province = '';
     }
   }
 
@@ -426,6 +451,14 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   onSubmit() {
+    if (
+      !this.personalData.confirmAccNumber ||
+      this.personalData.confirmAccNumber.toString().trim() === '' ||
+      !this.checkSubmitValidity()
+    ) {
+      Swal.fire('Error', 'Please fill the confirm account number', 'error');
+      return;
+    }
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to update the distribution center head?',
@@ -455,7 +488,6 @@ export class EditDistributionOfficerComponent implements OnInit {
                 'Updated Distribution Center Head Successfully',
                 'success'
               ).then(() => {
-                // Redirect back after success
                 this.location.back();
               });
             },
@@ -469,7 +501,6 @@ export class EditDistributionOfficerComponent implements OnInit {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
           () => {
-            // Redirect back on cancel
             this.location.back();
           }
         );
@@ -478,36 +509,39 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   checkSubmitValidity(): boolean {
-    const {
-      accHolderName,
-      accNumber,
-      confirmAccNumber,
-      bankName,
-      branchName,
-      houseNumber,
-      streetName,
-      city,
-      district,
-      companyId,
-    } = this.personalData;
-
+    // Basic address validation
     const isAddressValid =
-      !!houseNumber && !!streetName && !!city && !!district;
+      !!this.personalData.houseNumber &&
+      !!this.personalData.streetName &&
+      !!this.personalData.city &&
+      !!this.personalData.district;
 
-    // For companyId === '1', we require all bank details including matching account numbers
-    if (companyId === '1') {
+    // For companyId === 1, validate bank details
+    if (this.personalData.companyId === '1') {
+      // First validate that confirmAccNumber is not empty
+      if (
+        !this.personalData.confirmAccNumber ||
+        this.personalData.confirmAccNumber.toString().trim() === ''
+      ) {
+        return false;
+      }
+
+      // Then check if numbers match (convert both to string for comparison)
+      const accNumbersMatch =
+        this.personalData.accNumber.toString() ===
+        this.personalData.confirmAccNumber.toString();
+
       const isBankDetailsValid =
-        !!accHolderName &&
-        !!accNumber &&
-        !!confirmAccNumber && // Explicit check for confirmAccNumber
-        !!bankName &&
-        !!branchName &&
-        accNumber === confirmAccNumber; // Must match
+        !!this.personalData.accHolderName &&
+        /^[A-Za-z ]+$/.test(this.personalData.accHolderName) &&
+        !!this.personalData.accNumber &&
+        !!this.personalData.bankName &&
+        !!this.personalData.branchName &&
+        accNumbersMatch;
 
-      return isBankDetailsValid && isAddressValid;
+      return isAddressValid && isBankDetailsValid;
     }
 
-    // For other companies, just require address
     return isAddressValid;
   }
 

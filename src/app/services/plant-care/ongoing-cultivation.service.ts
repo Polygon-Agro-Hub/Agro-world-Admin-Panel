@@ -21,6 +21,7 @@ export class OngoingCultivationService {
     limit: number,
     searchNIC: string = "",
   ): Observable<any> {
+    console.log('searchNIC', searchNIC)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

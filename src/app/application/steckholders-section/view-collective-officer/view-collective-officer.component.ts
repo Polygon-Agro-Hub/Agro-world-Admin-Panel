@@ -77,6 +77,8 @@ export class ViewCollectiveOfficerComponent {
   selectCenterStatus: string = '';
   selectStatus: string = '';
 
+  hasData: boolean = false;
+
   centerStatusOptions = [
     { label: 'Disclaimed', value: 'Disclaimed' },
     { label: 'Claimed', value: 'Claimed' },
@@ -127,6 +129,11 @@ export class ViewCollectiveOfficerComponent {
       .subscribe(
         (response) => {
           this.isLoading = false;
+          if (response.total > 0) {
+            this.hasData = true
+          }else {
+            this.hasData = false
+          }
           this.collectionOfficers = response.items;
           this.totalItems = response.total;
         },

@@ -52,12 +52,14 @@ export class CollectionCenterDashboardComponent {
       console.log(res);
       this.isLoading = false;
 
-      this.centerNameObj = res.officerCount;
-      this.transCount = res.transCount.transactionCount;
-      this.transAmount = res.transAmountCount.transAmountCount;
+      
       this.resentCollectionArr = res.limitedResentCollection;
+      console.log('resentCollectionArr', this.resentCollectionArr)
       this.totExpences = res.totExpences.totExpences;
       this.expencePrecentage = res.difExpences;
+      // this.centerNameObj = res.officerCount;
+      // this.transCount = res.transCount.transactionCount;
+      // this.transAmount = res.transAmountCount.transAmountCount;
       this.isLoading = false;
     });
   }

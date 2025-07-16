@@ -24,15 +24,11 @@
       </div>
 
       <div class="flex items-center gap-3">
-      <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
           <!-- Input field -->
-          <input 
-            type="text" 
-            placeholder="Search.." 
-            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
-            [(ngModel)]="searchText" 
-            (ngModelChange)="filterProducts()"
-          />
+          <input type="text" placeholder="Search.."
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="searchText"
+            (keydown.enter)="filterProducts()" />
 
           <!-- Search button -->
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
@@ -44,11 +40,7 @@
           </button>
 
           <!-- Clear button -->
-          <button 
-            type="button" 
-            class="text-gray-500 hover:text-gray-700 focus:outline-none" 
-            (click)="clearSearch()"
-          >
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -69,10 +61,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of filteredProductArr; let i = index">
+          <tr class="border-b border-gray-200 dark:border-[#4B555A]"
+            *ngFor="let item of filteredProductArr; let i = index">
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
-              {{i < 10 ? '0' + (i + 1) : i + 1}}
-            </td>
+              {{i < 10 ? '0' + (i + 1) : i + 1}} </td>
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{item.shortCode}}
             </td>

@@ -364,6 +364,10 @@ export class CollectionAllViewComponent implements OnInit {
   viewCollectionCenter(id: number) {
     this.router.navigate([`/collection-hub/preview-collection-center/${id}`]);
   }
+
+  back(): void {
+    this.router.navigate(['collection-hub']);
+  }
 }
 
 class CenterName {

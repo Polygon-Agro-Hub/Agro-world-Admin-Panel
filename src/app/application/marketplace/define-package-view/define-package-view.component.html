@@ -72,15 +72,15 @@
           Grand Total :
           <span class="ml-2 font-semibold">Rs.{{ getCombinedCalculatedTotal() | number : "1.2-2" }}</span>
         </div>
-        <div *ngIf="isWithinLimit" class=" text-[#006C5A] dark:text-blue-400">
+        <div *ngIf="isWithinLimit" class=" text-[#006C5A] dark:text-blue-400 italic">
           Allowed limit : {{ getCombinedProductPrice() | number : "1.2-2" }} +
           {{ (getCombinedProductPrice() * 0.08) | number : "1.2-2" }} = Rs.{{
           (getCombinedProductPrice() * 1.08) | number : "1.2-2"
           }}
         </div>
-        <div *ngIf="!isWithinLimit" class="text-[#E11E21] dark:text-red-400 mt-1">
-          Calculated price exceeds the allowed limit ({{ packagePrice | number:'1.2-2' }} + {{ packagePrice * 0.08 |
-          number:'1.2-2' }} = Rs.{{ packagePrice * 1.08 | number:'1.2-2' }}).
+        <div *ngIf="!isWithinLimit" class="text-[#E11E21] dark:text-red-400 mt-1 italic">
+          Calculated price exceeds the allowed limit ({{ packagePrice | number:'1.2-2' }} + {{ packagePrice |
+          number:'1.2-2' }} * 8% = Rs.{{ packagePrice * 1.08 | number:'1.2-2' }}).
           To save the order, it must be within 8% of the target price.
         </div>
       </div>

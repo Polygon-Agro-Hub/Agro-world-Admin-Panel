@@ -112,7 +112,7 @@ export class PermissionAreaComponent {
           if (response.status) {
             Swal.fire({
               title: 'Success!',
-              text: 'Category created successfully.',
+              text: 'New feature has been added to the list successfully.',
               icon: 'success',
               confirmButtonText: 'OK',
             }).then((result) => {
@@ -133,7 +133,7 @@ export class PermissionAreaComponent {
         (error) => {
           Swal.fire({
             title: 'Error!',
-            text: 'Failed to create category.',
+            text: 'Failed to create feature.',
             icon: 'error',
             confirmButtonText: 'OK',
           });
@@ -260,7 +260,7 @@ export class PermissionAreaComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: 'Give Permission successfully!',
+                detail: 'Gave Permission Sucessfully!',
                 life: 3000,
               });
             }

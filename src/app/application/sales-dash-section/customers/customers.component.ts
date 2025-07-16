@@ -180,4 +180,8 @@ export class CustomersComponent implements OnInit {
   onPageChange(event: number) {
     this.page = event;
   }
+
+  viewOrderDetails(id: number) {
+    this.router.navigate(['/sales-dash/customers-orders', id]);
+  }
 }

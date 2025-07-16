@@ -8,6 +8,7 @@ import { error, log } from 'node:console';
 import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
+import { Location } from '@angular/common';
 
 class CropTask {
   'id': number;
@@ -57,7 +58,8 @@ export class EditTaskComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private taskService: CropCalendarService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private location: Location
   ) {}
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
@@ -159,6 +161,8 @@ export class EditTaskComponent implements OnInit {
           icon: 'success',
           title: 'Success',
           text: 'Task updated successfully!',
+        }).then(() => {
+          this.location.back(); // This will navigate back to the previous page
         });
       },
       (error) => {

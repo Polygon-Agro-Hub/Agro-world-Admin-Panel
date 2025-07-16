@@ -1,5 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="back()" class=" text-textLight dark:text-textDark">
+<button (click)="back()" class="text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 
@@ -222,12 +222,6 @@
           class="text-red-500 text-sm mt-1"
         >
           <div>Street is required</div>
-        </div>
-        <div
-          *ngIf="streetInput.touched && streetInput.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1"
-        >
-          <div>Can not enter special character & Numers</div>
         </div>
       </div>
 

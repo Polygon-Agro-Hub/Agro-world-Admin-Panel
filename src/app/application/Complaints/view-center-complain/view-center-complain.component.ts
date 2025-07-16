@@ -55,7 +55,7 @@ export class ViewCenterComplainComponent {
   }
 
   back(): void {
-    this.router.navigate(['complaints/view-complains']);
+    this.router.navigate(['complaints/collection-center-complains']);
   }
 
 

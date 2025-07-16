@@ -121,11 +121,11 @@ export class SlaveCropCalendarComponent {
     );
   }
 
-  viewTaskByUser(cropCalendarId: any, userId: any, onCulscropID: any) {
+  viewTaskByUser(cropCalendarId: any, userId: any, onCulscropID: any, cultivationId: any, userName: any) {
     if (cropCalendarId) {
       this.router.navigate(
         ['/plant-care/action/view-crop-task-by-user/user-task-list'],
-        { queryParams: { cropCalendarId, userId, onCulscropID } }
+        { queryParams: { cropCalendarId, userId, onCulscropID, cultivationId, userName } }
       );
     }
   }

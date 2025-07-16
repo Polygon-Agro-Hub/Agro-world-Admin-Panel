@@ -61,10 +61,10 @@ export class EditDistributionCentreComponent implements OnInit {
   companyOptions: any[] = [];
 
   phoneCodes: PhoneCode[] = [
-    { value: '+94', label: '+94 (SL)' },
-    { value: '+91', label: '+91 (India)' },
-    { value: '+1', label: '+1 (USA)' },
-    { value: '+44', label: '+44 (UK)' },
+    { value: '+94', label: '+94' },
+    { value: '+91', label: '+91' },
+    { value: '+1', label: '+1' },
+    { value: '+44', label: '+44' },
   ];
 
   provinces: string[] = [
@@ -145,7 +145,7 @@ export class EditDistributionCentreComponent implements OnInit {
 
       if (!pattern.test(phoneNumber)) {
         return {
-          invalidPhone: `Phone number must match the format for ${phoneCode} (e.g., ${pattern.toString().replace(/^\^|\$$/g, '')})`,
+          invalidPhone: `Invalid format. Use only numbers.`,
         };
       }
 
@@ -158,11 +158,20 @@ export class EditDistributionCentreComponent implements OnInit {
       name: ['', Validators.required],
       company: ['', Validators.required],
       contact1Code: ['+94', Validators.required],
-      contact1: ['', [Validators.required, this.phoneNumberValidator('contact1Code')]],
+      contact1: [
+        '',
+        [Validators.required, this.phoneNumberValidator('contact1Code')],
+      ],
       contact2Code: ['+94'],
       contact2: ['', [this.phoneNumberValidator('contact2Code')]], // Optional
-      latitude: ['', [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)]],
-      longitude: ['', [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)]],
+      latitude: [
+        '',
+        [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)],
+      ],
+      longitude: [
+        '',
+        [Validators.required, Validators.pattern(/^-?\d+\.?\d*$/)],
+      ],
       email: ['', [Validators.required, Validators.email]],
       country: ['Sri Lanka', Validators.required],
       province: ['', Validators.required],

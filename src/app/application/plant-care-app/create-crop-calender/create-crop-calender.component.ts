@@ -456,6 +456,23 @@ export class CreateCropCalenderComponent {
   backEdit(): void {
     this.router.navigate(['/plant-care/action/view-crop-calender']);
   }
+
+  preventNegativeNumbers(event: KeyboardEvent) {
+    // Prevent minus key
+    if (event.key === '-' || event.key === 'Subtract') {
+      event.preventDefault();
+    }
+
+    // Prevent pasting negative numbers
+    if (event.ctrlKey && event.key === 'v') {
+      setTimeout(() => {
+        const control = this.cropForm?.get('cropDuration');
+        if (control && control.value < 0) {
+          control.setValue(null);
+        }
+      });
+    }
+  }
 }
 
 export function nonZeroValidator(

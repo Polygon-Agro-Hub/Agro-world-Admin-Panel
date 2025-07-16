@@ -158,6 +158,7 @@
               formControlName="cropDuration"
               id="cropDuration"
               name="cropDuration"
+              (keydown)="preventNegativeNumbers($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
             <div

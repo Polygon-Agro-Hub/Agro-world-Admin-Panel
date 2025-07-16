@@ -18,8 +18,8 @@
         Roles & Permissions Management
       </h2>
     </div>
-    <div class="flex items-center space-x-3 pl-6 pr-6">
-      <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Category</label>
+    <div class="flex items-center space-x-3 px-6">
+      <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
       <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
         <!-- Bind to the 'category' name but store the 'id' -->
@@ -29,7 +29,7 @@
 
       <!-- Show input field only when 'Add New' is selected -->
       <input *ngIf="selectedCategory === 'add_new'" type="text" [(ngModel)]="newCategory" (blur)="addNewCategory()"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full mt-2"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
         placeholder="Enter new category" />
 
 
@@ -37,7 +37,7 @@
       <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Feature </label>
       <input type="text" id="featureCategory" name="category" [(ngModel)]="createCategroyObj.category"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
-        placeholder="Enter category" />
+        placeholder="Enter feature" />
 
       <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
         Add

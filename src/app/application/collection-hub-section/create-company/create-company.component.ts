@@ -97,11 +97,10 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.companyType = params['type'];
       console.log('Received type:', this.companyType);
     });
-
 
     this.loadBanks();
     this.loadBranches();
@@ -251,8 +250,6 @@ export class CreateCompanyComponent implements OnInit {
     this.touchedFields['favicon'] = true;
   }
 
-
-
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
@@ -260,7 +257,7 @@ export class CreateCompanyComponent implements OnInit {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -270,7 +267,7 @@ export class CreateCompanyComponent implements OnInit {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -420,20 +417,22 @@ export class CreateCompanyComponent implements OnInit {
       }
     });
 
-    this.collectionCenterSrv.createCompany(this.companyData, this.companyType).subscribe(
-      (response) => {
-        this.isLoading = false;
-        console.log('Data saved successfully:', response);
-        Swal.fire('Success', 'Company Created Successfully', 'success');
-        // this.router.navigate(['/distribution-hub/action/view-companies']);
-        this.location.back(); 
-      },
-      (error) => {
-        this.isLoading = false;
-        console.error('Error saving data:', error);
-        Swal.fire('Error', error, 'error');
-      }
-    );
+    this.collectionCenterSrv
+      .createCompany(this.companyData, this.companyType)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          console.log('Data saved successfully:', response);
+          Swal.fire('Success', 'Company Created Successfully', 'success');
+          // this.router.navigate(['/distribution-hub/action/view-companies']);
+          this.location.back();
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error saving data:', error);
+          Swal.fire('Error', error, 'error');
+        }
+      );
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
@@ -559,6 +558,34 @@ export class CreateCompanyComponent implements OnInit {
         this.router.navigate(['/collection-hub/manage-company']);
       }
     });
+  }
+
+  numberOnly(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+
+    // Allow only numbers (0-9)
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  onPaste(event: ClipboardEvent, fieldName: string): void {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
+
+    // Only allow paste if the text contains numbers only
+    if (/^\d+$/.test(pastedText)) {
+      if (fieldName === 'accNumber') {
+        this.companyData.accNumber =
+          (this.companyData.accNumber || '') + pastedText;
+      } else if (fieldName === 'confirmAccNumber') {
+        this.companyData.confirmAccNumber =
+          (this.companyData.confirmAccNumber || '') + pastedText;
+      }
+    }
   }
 }
 

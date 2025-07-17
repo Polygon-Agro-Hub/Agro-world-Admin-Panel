@@ -93,7 +93,7 @@ export class CustomerOrdersComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dasService:CustomersService,
-    private getInvoiceDetails: InvoiceService,
+    private invoiceSrv: InvoiceService,
     private http: HttpClient
   ) {}
 
@@ -167,7 +167,7 @@ export class CustomerOrdersComponent implements OnInit {
 
   downloadInvoice(orderId: string, invoiceNumber: string): void {
     this.isLoading = true;
-    this.getInvoiceDetails
+    this.invoiceSrv
       .getInvoiceDetails(parseInt(orderId))
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({

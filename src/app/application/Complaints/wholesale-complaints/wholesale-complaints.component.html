@@ -21,7 +21,7 @@
       <h2
         class="text-[20px] md:text-[24px] font-normal text-gray-900 dark:text-gray-100"
       >
-        Complaint List ({{ totalItems }})
+       Complaint List ({{ totalItems < 10 ? '0' + totalItems : totalItems }})
       </h2>
       <div class="flex items-center space-x-3">
         <!-- Reply Status -->
@@ -220,8 +220,8 @@
               </button>
             </td>
             <td class="px-4 py-3 text-center">
-              <span *ngIf="!item.reply">No</span>
-              <span *ngIf="item.reply">Yes</span>
+                     <span *ngIf="!item.reply && item.status !== 'Closed'" class="italic opacity-60 ">No</span>
+              <span *ngIf="item.reply && item.status === 'Closed'" class="underline">Yes</span>
             </td>
             <td class="px-3 py-2 whitespace-nowrap text-center">
               <button
@@ -231,7 +231,8 @@
                 class="text-blue-600 hover:text-blue-900"
                 aria-label="View complaint reply"
               >
-                <i class="fa-solid fa-file-export"></i>
+               <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
+
               </button>
             </td>
           </tr>
@@ -258,7 +259,7 @@
 >
 <div class="dialog-header text-center">
     <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
-   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as AgroWorld</h3>
+   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as Polygon</h3>
 
 
   </div>
@@ -283,7 +284,7 @@
 
     <p class="mt-5">
       Sincerely,<br />
-      AgroWorld Customer Support Team
+      Polygon Customer Support Team
     </p>
   </div>
 

@@ -159,6 +159,7 @@ import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-
 import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
 import{SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
 import { CustomerOrdersComponent } from './application/sales-dash-section/customer-orders/customer-orders.component';
+import {ViewHeadPortalComponent} from './application/distribution-hub/view-head-portal/view-head-portal.component';
 export const routes: Routes = [
   {
     path: '',
@@ -1021,6 +1022,10 @@ export const routes: Routes = [
               {
                 path: 'edit-distribution-centre/:id',
                 component: EditDistributionCentreComponent,
+              },
+              {
+                path: 'view-head-portal/:id',
+                component: ViewHeadPortalComponent,
               },
             ],
           },

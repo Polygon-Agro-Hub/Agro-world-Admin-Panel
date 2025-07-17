@@ -21,7 +21,7 @@
       <h2
         class="text-[20px] md:text-[24px] font-normal text-gray-900 dark:text-gray-100"
       >
-        Complaint List ({{ totalItems }})
+         Complaint List ({{ totalItems < 10 ? '0' + totalItems : totalItems }})
       </h2>
       <div class="flex items-center space-x-3">
         <!-- Reply Status -->
@@ -232,7 +232,8 @@
                 class="text-blue-600 hover:text-blue-900"
                 aria-label="View complaint reply"
               >
-                <i class="fa-solid fa-file-export"></i>
+                <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
+
               </button>
             </td>
           </tr>

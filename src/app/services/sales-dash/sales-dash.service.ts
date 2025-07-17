@@ -79,6 +79,7 @@ export class SalesDashService {
     date: string
    
   ): Observable<any> {
+    console.log('date', date)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

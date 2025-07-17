@@ -94,7 +94,7 @@ export class ViewOrdersComponent implements OnInit {
   ];
 
   orderStatusArr = [
-    { orderStatus: 'Ordered', value: 'Ordered' },
+    { orderStatus: 'Assigned', value: 'Ordered' },
     { orderStatus: 'Processing', value: 'Processing' },
     { orderStatus: 'On the way', value: 'On the way' },
     { orderStatus: 'Delivered', value: 'Delivered' },
@@ -205,7 +205,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   applyPaymentStatusFilters() {
-    console.log(this.paymentStatusFilter);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -218,7 +217,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   applydeliveryTypeFilters() {
-    console.log(this.deliveryTypeFilter);
+    console.log('deliveryTypeFilter', this.deliveryTypeFilter);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -231,6 +230,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   dateFilter() {
+    console.log()
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,

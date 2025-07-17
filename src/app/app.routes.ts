@@ -158,6 +158,7 @@ import { W } from '@angular/cdk/keycodes';
 import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
 import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
 import{SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
+import { ViewCurrentCenterTargetComponent } from './application/collection-hub-section/view-current-center-target/view-current-center-target.component';
 export const routes: Routes = [
   {
     path: '',
@@ -630,6 +631,10 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
+            path: 'view-current-centre-target',
+            component: ViewCurrentCenterTargetComponent,
+          },
+          {
             path: 'collection-center-dashboard/:id/:comid/:centerName',
             component: CollectionCenterDashboardComponent,
             canActivate: [PermissionGuard],
@@ -687,6 +692,7 @@ export const routes: Routes = [
             path: 'preview-collection-center/:id',
             component: PreviewCollectionCenterComponent,
           },
+          
         ],
       },
 

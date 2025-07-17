@@ -33,7 +33,7 @@
               (onChange)="applydeliveryTypeFilters()"
             />
           </div> -->
-          <div class="flex items-center gap-2 h-8">
+          <div class="flex items-center gap-2 h-8 ml-2">
             <input
               id="toDate"
               type="date"
@@ -51,8 +51,8 @@
               [checkmark]="true"
               optionLabel="paymentMethod"
               optionValue="value"
-              [showClear]="true"
-              placeholder="payment method"
+              [showClear]="!!paymentMethodFilter"
+              placeholder="Payment Method"
               [(ngModel)]="paymentMethodFilter"
               (onChange)="applyPaymentMethodFilters()"
             />
@@ -65,8 +65,8 @@
               [checkmark]="true"
               optionLabel="paymentStatus"
               optionValue="value"
-              [showClear]="true"
-              placeholder="payment status"
+              [showClear]="!!paymentStatusFilter" 
+              placeholder="Payment Status"
               [(ngModel)]="paymentStatusFilter"
               (onChange)="applyPaymentStatusFilters()"
             />
@@ -79,8 +79,8 @@
               [checkmark]="true"
               optionLabel="orderStatus"
               optionValue="value"
-              [showClear]="true"
-              placeholder="order status"
+              [showClear]="!!orderStatusFilter"
+              placeholder="Order Status"
               [(ngModel)]="orderStatusFilter"
               (onChange)="applyOrderStatusFilters()"
             />
@@ -142,10 +142,9 @@
     </div>
 
     <!-- Table Section -->
-    <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-textLight dark:text-textDark text-lg">
-        No data to display
-      </p>
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div *ngIf="hasData">
@@ -199,7 +198,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              payment
+              Payment
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"

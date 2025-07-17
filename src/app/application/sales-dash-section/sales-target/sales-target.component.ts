@@ -33,7 +33,7 @@ export class SalesTargetComponent implements OnInit {
   }
   // targetForm: FormGroup;
   currentDailyTarget!: number;
-  newTargetValue: number = 0;
+  newTargetValue!: number;
 
   agentsArr!: Agents[];
 

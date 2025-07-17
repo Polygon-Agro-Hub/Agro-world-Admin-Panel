@@ -111,7 +111,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          console.log(res.results);
+          console.log('results', res.results);
 
           // Map response data to ensure createdAt is in a readable date format
         
@@ -372,6 +372,10 @@ export class CollectionCenterViewComplainComponent implements OnInit {
           }
         );
    
+    }
+
+    back(): void {
+      this.router.navigate(['complaints']);
     }
     
 

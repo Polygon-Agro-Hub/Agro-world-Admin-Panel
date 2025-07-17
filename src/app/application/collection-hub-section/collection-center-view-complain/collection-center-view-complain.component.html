@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -32,7 +32,7 @@
           optionLabel="status"
           optionValue="value"
           [showClear]="true"
-          placeholder="Reply Status"
+          placeholder="Reply"
           [(ngModel)]="rpst"
           (onChange)="regStatusFil()"
         />
@@ -185,7 +185,7 @@
           <th
             class="py-3 font-normal text-textLight dark:text-textDark text-left"
           >
-            Center Code
+            Centre Code
           </th>
           <th
             class="py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -236,10 +236,16 @@
             {{ item.companyName }}
           </td>
           <td class="py-3 dark:text-textDark text-left">
-            {{ item.regCode }}
+            <ng-container *ngIf="item.regCode && item.regCode.trim(); else noRegCode">
+              {{ item.regCode }}
+            </ng-container>
+            <ng-template #noRegCode>
+              <span class="text-gray-400 italic">--No--</span>
+            </ng-template>
           </td>
           <td class="py-3 dark:text-textDark text-center">
-            {{ item.createdAt | date: 'yyyy/MM/dd hh.mm a' : 'UTC' }}
+            {{ item.createdAt | date: 'yyyy/MM/dd' : 'Asia/Colombo' }}<br>
+            {{ item.createdAt | date: 'hh.mm a' : 'Asia/Colombo' }}
           </td>
           <td class="py-3 dark:text-textDark text-center">
             <div *ngIf="item.status === 'Assigned'">

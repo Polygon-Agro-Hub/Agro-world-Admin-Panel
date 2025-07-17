@@ -139,6 +139,8 @@ export class CollectionCenterService {
       'Content-Type': 'application/json',
     });
 
+    console.log('searchText', searchText)
+
     let url = `${this.apiUrl}auth/get-all-center-complains?page=${page}&limit=${limit}`;
 
     if (status) {

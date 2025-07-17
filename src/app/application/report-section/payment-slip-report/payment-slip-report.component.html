@@ -105,32 +105,32 @@
       <thead>
         <tr>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 px-4 font-normal text-textLight dark:text-textDark text-left"
           >
            GRN Number
           </th>
           <th
-            class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            class="py-3 px-4 font-normal text-textLight dark:text-textDark text-left"
           >
             First Name
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
           >
             Last Name
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             NIC
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Bill Id
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
           >
             Collection
           </th>
@@ -139,19 +139,19 @@
       
       <tbody>
         <tr *ngFor="let item of payments">
-          <td class="py-3 dark:text-textDark">
+          <td class="py-3 px-4 dark:text-textDark text-left">
             {{ item.invNo }}
           </td>
-          <td class="py-3 dark:text-textDark">
+          <td class="py-3 px-4 dark:text-textDark text-left">
             {{ item.firstName }}
           </td>
-          <td class="py-3 dark:text-textDark text-center">
+          <td class="py-3 px-4 dark:text-textDark text-left">
             {{ item.lastName }}
           </td>
-          <td class="py-3 dark:text-textDark text-center">
+          <td class="py-3 px-4 dark:text-textDark text-center">
             {{ item.NICnumber }}
           </td>
-          <td class="py-3 dark:text-textDark text-center">
+          <td class="py-3 px-4 dark:text-textDark text-center">
             {{ item.id }}
           </td>
           <td class="text-center">

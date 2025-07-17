@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -168,11 +168,10 @@
             >
               City
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
-              Contact Number 01
-            </th>
+   <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+  Contact<br>Number 01
+</th>
+
 
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -201,7 +200,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ item.regCode }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -226,9 +225,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.street }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.code1 }} {{ item.contact01 }}
-            </td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+  {{ item.code1 }}&nbsp;{{ item.contact01 }}
+</td>
+
 
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               <button

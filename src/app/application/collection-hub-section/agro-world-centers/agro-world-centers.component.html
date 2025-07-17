@@ -145,7 +145,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Contact Number 01
+              Contact <br> Number 01
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -172,9 +172,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.regCode }}
-            </td>
+           <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+  {{ item.regCode }}
+</td>
+
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.centerName }}
             </td>
@@ -187,9 +188,9 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.street }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.code1 }} {{ item.contact01 }}
-            </td>
+                 <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+  {{ item.code1 }}&nbsp;{{ item.contact01 }}
+</td>
             <td
               *ngIf="
                 permissionService.hasPermission('Assign Center Target') ||
@@ -235,21 +236,31 @@
                 </svg>
               </button>
             </td>
+                <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="
+                  permissionService.hasPermission('Edit Collection Center') ||
+                  tokenService.getUserDetails().role === '1'
+                "
+                class="text-blue-500 hover:text-blue-700"
+                (click)="navigateEdit(item.id)"
+                [disabled]="isLoading"
+                title="Edit Collection Center"
+              >
+                <i class="fa-solid fa-pen-to-square fa-xl"></i>
+              </button>
+            </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                
-              >
-                <i class="fa-solid fa-pen-to-square fa-xl text-blue-500 hover:text-blue-700"></i>
-              </button>
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                
-              >
-                <i class="fa-solid fa-trash fa-xl text-red-500"></i>
-              </button>
-            </td>
+      
+       <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+  <button
+    *ngIf="permissionService.hasPermission('Delete Collection Center') || tokenService.getUserDetails().role === '1'"
+    class="text-red-500 hover:text-red-700"
+    (click)="deleteCollectionCenter(item.id)"
+  >
+    <i class="fa-solid fa-trash fa-xl"></i>
+  </button>
+</td>
             <!-- <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
               *ngIf="permissionService.hasPermission('Edit Collection Center') || tokenService.getUserDetails().role === '1'"

@@ -15,6 +15,9 @@ import { Router } from '@angular/router';
 export class AddCoupenComponent {
   coupenObj: Coupen = new Coupen();
   today: string = this.getTodayDate();
+  isValid: boolean = true;
+  checkPrecentageValueMessage: string = '';
+  checkfixAmountValueMessage: string = '';
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
@@ -68,6 +71,11 @@ export class AddCoupenComponent {
   }
 
   onSubmit() {
+    if(this.isValid){
+      this.checkPrecentageValueMessage = 'Precentage value is required';
+      this.checkfixAmountValueMessage = 'Fix amount value is required';
+      return;
+    }
     if (
       !this.coupenObj.code ||
       !this.coupenObj.endDate ||
@@ -111,12 +119,36 @@ export class AddCoupenComponent {
   onCancel() {
     this.coupenObj = new Coupen();
   }
+
+  checkPrecentageValue(num: number) {
+    if (num < 0) {
+      this.isValid = true
+      this.checkPrecentageValueMessage = 'Can not be negative number';
+    } else if (num > 100) {
+      this.isValid = true
+      this.checkPrecentageValueMessage = 'Can not be greater than 100';
+    } else {
+      this.isValid = false
+      this.checkPrecentageValueMessage = 'Precentage value is required';
+    }
+  }
+
+
+  checkFixAmountValue(num: number) {
+    if (num < 0) {
+      this.isValid = true
+      this.checkfixAmountValueMessage = 'Can not be negative number';
+    } else {
+      this.isValid = false
+      this.checkfixAmountValueMessage = 'Fix amount value is required';
+    }
+  }
 }
 
 class Coupen {
   code!: string;
   type: string = 'Percentage';
-  percentage!: string;
+  percentage!: number;
   status: string = 'Disabled';
   startDate!: string;
   endDate!: string;

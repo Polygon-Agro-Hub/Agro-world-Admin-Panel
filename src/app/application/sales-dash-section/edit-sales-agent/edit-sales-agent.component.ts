@@ -65,6 +65,7 @@ export class EditSalesAgentComponent implements OnInit {
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
+  nicError: boolean = false;
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -296,6 +297,27 @@ export class EditSalesAgentComponent implements OnInit {
     }
   }
 
+  validateNIC(): boolean {
+    if (!this.personalData.nic) {
+      this.nicError = true;
+      return false;
+    }
+
+    // Sri Lankan NIC validation: 
+    // Old format: 9 digits + V/X
+    // New format: 12 digits
+    const oldNicPattern = /^[0-9]{9}[vVxX]$/;
+    const newNicPattern = /^[0-9]{12}$/;
+    
+    if (!oldNicPattern.test(this.personalData.nic) && !newNicPattern.test(this.personalData.nic)) {
+      this.nicError = true;
+      return false;
+    }
+    
+    this.nicError = false;
+    return true;
+  }
+
   onCancel() {
     Swal.fire({
       icon: 'warning',
@@ -317,6 +339,7 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.lastName ||
       !this.personalData.phoneNumber1 ||
       !this.personalData.nic ||
+      !this.validateNIC() ||
       !this.personalData.email ||
       !this.personalData.empType ||
       !this.personalData.houseNumber ||
@@ -328,8 +351,13 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.accNumber ||
       !this.personalData.bankName ||
       !this.personalData.branchName ||
-      this.personalData.accNumber !== this.confirmAccNumber
+      this.personalData.accNumber !== this.confirmAccNumber ||
+      (this.personalData.phoneNumber2 &&
+       this.personalData.phoneNumber2 === this.personalData.phoneNumber1)
     ) {
+      if (this.nicError) {
+        Swal.fire('Error', 'Invalid NIC format. Must be 9 digits + V/X or 12 digits', 'error');
+      }
       return;
     }
 

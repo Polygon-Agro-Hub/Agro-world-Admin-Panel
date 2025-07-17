@@ -33,7 +33,7 @@
   >
     <div class="flex justify-between items-center align-middle mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           All Packages ({{
             this.filteredPackages.length < 9
               ? "0" + this.filteredPackages.length
@@ -42,7 +42,38 @@
         </h2>
       </div>
 
-      <div class="flex flex-row gap-4 items-center">
+      <div class="flex items-center h-8">
+        <input
+          id="toDate"
+          type="date"
+          class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64 h-8"
+          placeholder="Delivery Date"
+          [(ngModel)]="date"
+          (change)="dateFilter()"
+        />
+        <button
+          *ngIf="date"
+          (click)="clearDateFilter()"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex flex-row items-center">
         <div class="mr-5">
           <p-dropdown
             [options]="statusOptions"
@@ -115,39 +146,51 @@
         </div>
       </div>
     </div>
-    <div>
+
+    <div *ngIf="!hasData" class="text-center py-8">
+      <p class="text-textLight dark:text-textDark text-lg">
+        No data to display
+      </p>
+    </div>
+
+    <div *ngIf="hasData">
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Package Name
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Total Price (Rs.)
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Status
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Last Defined
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
             >
               Define
+            </th>
+            <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
+            >
+              Last Modified By
             </th>
             <th></th>
             <th></th>
@@ -157,13 +200,13 @@
         <tbody>
           <ng-container>
             <tr *ngFor="let pkg of filteredPackages; let i = index">
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 {{ i < 9 ? "0" + (i + 1) : i + 1 }}
               </td>
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 {{ pkg.displayName }}
               </td>
-              <td class="py-4 text-textLight dark:text-textDark">
+              <td class="py-4 text-[#000000] dark:text-textDark">
                 {{ pkg.total | number : "1.2-2" }}
               </td>
               <td>
@@ -177,19 +220,22 @@
                   {{ pkg.status }}
                 </span>
               </td>
-              <td class="py-4 text-textLight dark:text-textDark">
-                <ng-container *ngIf="lastDefinedDates[pkg.id]; else notDefined">
-                  {{ lastDefinedDates[pkg.id] | date : "mediumDate" }}
+              <td class="py-4 text-[#000000] dark:text-textDark">
+                <ng-container *ngIf="pkg.defineDate !== null; else notDefined">
+                  {{ pkg.defineDate | date : "mediumDate" }}
                 </ng-container>
                 <ng-template #notDefined> Not Defined Yet </ng-template>
               </td>
               <td
-                class="py-4 text-textLight dark:text-textDark text-2xl text-center"
+                class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
               >
                 <i
                   class="fa-solid fa-square-arrow-up-right cursor-pointer"
                   (click)="viewDefinePackage(pkg.id)"
                 ></i>
+              </td>
+              <td class="py-4 text-[#000000] dark:text-textDark text-center">
+                {{ pkg.adminUser ? pkg.adminUser : "No One" }}
               </td>
               <td>
                 <button

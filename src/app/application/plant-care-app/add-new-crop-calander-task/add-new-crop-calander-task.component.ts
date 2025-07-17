@@ -31,6 +31,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
   styleUrl: './add-new-crop-calander-task.component.css',
 })
 export class AddNewCropCalanderTaskComponent implements OnInit {
+  cultivationId: any | null = null;
+  userName: string = '';
   isLoading = false;
   cropId!: string;
   userId!: string;
@@ -64,14 +66,22 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       taskDescriptionSinhala: ['', [Validators.required]],
       taskDescriptionTamil: ['', [Validators.required]],
       reqImages: ['', [Validators.required]],
-      imageLink: ['', [Validators.required]],
-      videoLinkEnglish: [''],
-      videoLinkSinhala: [''],
-      videoLinkTamil: [''],
+      imageLink: ['',],
+      videoLinkEnglish: ['', [Validators.required]],
+      videoLinkSinhala: ['', [Validators.required]],
+      videoLinkTamil: ['', [Validators.required]],
+      images: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.cultivationId = params['cultivationId']
+        ? +params['cultivationId']
+        : null;
+      this.userName = params['userName'] ? params['userName'] : '';
+    console.log('cultivationId', this.cultivationId);
+    });
     this.cropId = this.route.snapshot.params['cropId'];
     this.indexId = this.route.snapshot.params['indexId'];
     this.userId = this.route.snapshot.params['userId'];
@@ -86,19 +96,54 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   onSubmit() {
     console.log('onsubmit:', this.cropId, this.indexId, this.userId);
 
+    if (
+      !this.cropTaskObj.startingDate ||
+      !this.cropTaskObj.taskTypeEnglish ||
+      !this.cropTaskObj.taskTypeSinhala ||
+      !this.cropTaskObj.taskTypeTamil ||
+      !this.cropTaskObj.taskCategoryEnglish ||
+      !this.cropTaskObj.taskCategorySinhala ||
+      !this.cropTaskObj.taskCategoryTamil ||
+      !this.cropTaskObj.taskEnglish ||
+      !this.cropTaskObj.taskSinhala ||
+      !this.cropTaskObj.taskTamil ||
+      !this.cropTaskObj.taskDescriptionEnglish ||
+      !this.cropTaskObj.taskDescriptionSinhala ||
+      !this.cropTaskObj.taskDescriptionTamil ||
+      !this.cropTaskObj.reqImages ||
+      !this.cropTaskObj.videoLinkEnglish ||
+      !this.cropTaskObj.videoLinkSinhala || 
+      !this.cropTaskObj.videoLinkTamil ||
+      (this.requireImageLink === 'yes' && !this.cropTaskObj.imageLink) // ✅ condition fixed here
+    ) {
+      this.taskForm.markAllAsTouched();
+      console.log('failed')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Error',
+        text: 'Please fill in all required fields before submitting.',
+      });
+      return;
+    }
+    
     if (this.userId == 'null') {
+      this.isLoading = true;
+      console.log('no user', this.userId)
       this.cropCalendarService
         .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
         .subscribe((res) => {
+          this.isLoading = false;
           if (res) {
             Swal.fire('Success', 'New Crop Calander Task Added !', 'success');
 
-            history.back();
+            this.router.navigate(['/view-crop-task-by-user/user-task-list']);
           } else {
             Swal.fire('Error', 'Error occor in adding task !', 'error');
           }
         });
     } else {
+      this.isLoading = true;
+      console.log('has user', this.userId)
       this.cropCalendarService
         .createNewCropTaskU(
           this.cropId,
@@ -108,10 +153,15 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
           this.onCulscropID
         )
         .subscribe((res) => {
+          this.isLoading = false;
           if (res) {
             Swal.fire('Success', 'New Crop Calander Task Added !', 'success');
 
-            this.back(this.cropId, this.userId);
+            // this.back(this.cropId, this.userId);
+            this.router.navigate(
+              ['/plant-care/action/view-crop-task-by-user'],
+              { queryParams: { cultivationId: this.cultivationId, userId: this.userId, userName: this.userName } }
+            );
           } else {
             Swal.fire('Error', 'Error occor in adding task !', 'error');
           }

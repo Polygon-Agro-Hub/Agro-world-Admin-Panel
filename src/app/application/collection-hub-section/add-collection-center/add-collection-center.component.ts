@@ -41,7 +41,7 @@ export class AddCollectionCenterComponent implements OnInit {
       contact01Code: ['+94', Validators.required],
       contact02: [
         '',
-        [Validators.required, Validators.pattern(/^[7][0-9]{8}$/)],
+        [Validators.pattern(/^[7][0-9]{8}$/)],
       ],
       contact02Code: ['+94'],
       buildingNumber: ['', Validators.required],
@@ -218,10 +218,12 @@ export class AddCollectionCenterComponent implements OnInit {
       text: 'Form has been cleared!',
       timer: 2000,
       showConfirmButton: false,
+    }).then(() => {
+      this.collectionCenterForm.reset();
+      this.selectedDistrict = [];
+      this.selectProvince = '';
+      this.router.navigate(['/collection-hub/view-collection-centers']);
     });
-    this.collectionCenterForm.reset();
-    this.selectedDistrict = [];
-    this.selectProvince = '';
   }
 
   getAllCompanies() {

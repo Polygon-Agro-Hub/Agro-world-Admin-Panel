@@ -134,89 +134,103 @@ export class ProcumentsService {
   //   );
   // }
 
-  getOrderDetailsById(id: string): Observable<{
-    invNo: string;
-    packages: Array<{
-      packageId: number;
-      displayName: string;
-      productPrice: string;
-      productTypes: Array<{
-        id: number;
-        typeName: string;
-        shortCode: string;
-      }>;
-    }>;
-    additionalItems?: Array<{
-      id: number;
-      qty: number;
-      unit: string;
-      displayName: string;
-    }>;
-  }> {
+  getOrderDetailsById(
+    id: string
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}procument/get-order-details/${id}`;
 
-    return this.http
-      .get<{
-        success: boolean;
-        data: {
-          invNo: string;
-          packages: Array<{
-            packageId: number;
-            displayName: string;
-            productPrice: string;
-            productTypes: Array<{
-              id: number;
-              typeName: string;
-              shortCode: string;
-            }>;
-          }>;
-        };
-        additionalItems?: Array<{
-          id: number;
-          qty: number;
-          unit: string;
-          displayName: string;
-        }>;
-        message?: string;
-      }>(url, { headers })
-      .pipe(
-        map((response) => {
-          if (response.success) {
-            return {
-              invNo: response.data.invNo,
-              packages: response.data.packages.map((pkg) => ({
-                packageId: pkg.packageId,
-                displayName: pkg.displayName,
-                productPrice: pkg.productPrice,
-                productTypes: pkg.productTypes || [],
-              })),
-              additionalItems: response.additionalItems || [],
-            };
-          } else {
-            throw new Error(
-              response.message || 'Failed to fetch order details'
-            );
-          }
-        }),
-        catchError((error) => {
-          console.error('Error fetching order details:', error);
+    let url = `${this.apiUrl}procument/get-order-details/${id}`;
 
-          let errorMessage = 'An error occurred while fetching order details';
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
-
-          return throwError(() => new Error(errorMessage));
-        })
-      );
+    return this.http.get<any>(url, { headers });
   }
+
+  // getOrderDetailsById(id: string): Observable<{
+  //   invNo: string;
+  //   packages: Array<{
+  //     packageId: number;
+  //     displayName: string;
+  //     productPrice: string;
+  //     productTypes: Array<{
+  //       id: number;
+  //       typeName: string;
+  //       shortCode: string;
+  //     }>;
+  //   }>;
+  //   additionalItems?: Array<{
+  //     id: number;
+  //     qty: number;
+  //     unit: string;
+  //     displayName: string;
+  //   }>;
+  // }> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   const url = `${this.apiUrl}procument/get-order-details/${id}`;
+
+  //   return this.http
+  //     .get<{
+  //       success: boolean;
+  //       data: {
+  //         invNo: string;
+  //         packages: Array<{
+  //           packageId: number;
+  //           displayName: string;
+  //           productPrice: string;
+  //           productTypes: Array<{
+  //             id: number;
+  //             typeName: string;
+  //             shortCode: string;
+  //           }>;
+  //         }>;
+  //       };
+  //       additionalItems?: Array<{
+  //         id: number;
+  //         qty: number;
+  //         unit: string;
+  //         displayName: string;
+  //       }>;
+  //       message?: string;
+  //     }>(url, { headers })
+  //     .pipe(
+  //       map((response) => {
+  //         if (response.success) {
+  //           return {
+  //             invNo: response.data.invNo,
+  //             packages: response.data.packages.map((pkg) => ({
+  //               packageId: pkg.packageId,
+  //               displayName: pkg.displayName,
+  //               productPrice: pkg.productPrice,
+  //               productTypes: pkg.productTypes || [],
+  //             })),
+  //             additionalItems: response.additionalItems || [],
+  //           };
+  //         } else {
+  //           throw new Error(
+  //             response.message || 'Failed to fetch order details'
+  //           );
+  //         }
+  //       }),
+  //       catchError((error) => {
+  //         console.error('Error fetching order details:', error);
+
+  //         let errorMessage = 'An error occurred while fetching order details';
+  //         if (error.error?.message) {
+  //           errorMessage = error.error.message;
+  //         } else if (error.message) {
+  //           errorMessage = error.message;
+  //         }
+
+  //         return throwError(() => new Error(errorMessage));
+  //       })
+  //     );
+  // }
 
   getAllMarketplaceItems(orderId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -280,17 +294,24 @@ export class ProcumentsService {
   getAllOrdersWithProcessInfoCompleted(
     page: number,
     limit: number,
-    dateFilter: string = ''
+    dateFilter: string = '',
+    searchTerm: string = '',
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
+    console.log('dateFilter', dateFilter, 'searchTerm', searchTerm)
+
     let url = `${this.apiUrl}procument/orders-process-info-completed?page=${page}&limit=${limit}`;
 
     if (dateFilter) {
       url += `&dateFilter=${dateFilter}`;
+    }
+
+    if (searchTerm) {
+      url += `&searchTerm=${searchTerm}`;
     }
 
     return this.http.get<any>(url, { headers });
@@ -299,6 +320,7 @@ export class ProcumentsService {
   // In your procurement service
   updateOrderPackagePackingStatus(
     orderPackageId: number,
+    orderId: number,
     status: string
   ): Observable<any> {
     const headers = new HttpHeaders({
@@ -309,7 +331,7 @@ export class ProcumentsService {
     return this.http
       .put(
         `${this.apiUrl}procument/update-order-package-status`, // Remove the ID from URL
-        { orderPackageId, status }, // Send both fields in body
+        { orderPackageId, orderId, status }, // Send both fields in body
         { headers }
       )
       .pipe(
@@ -321,6 +343,7 @@ export class ProcumentsService {
   }
 
   getOrderPackagesByOrderId(orderId: number): Observable<any> {
+    console.log('sending oid', orderId)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -385,12 +408,15 @@ export class ProcumentsService {
   getAllOrdersWithProcessInfoDispatched(
     page: number,
     limit: number,
-    dateFilter: string = ''
+    dateFilter: string = '',
+    searchTerm: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
+
+    console.log('datefilte', dateFilter, 'searchTerm', searchTerm)
 
     let url = `${this.apiUrl}procument/orders-process-info-dispatched?page=${page}&limit=${limit}`;
 
@@ -398,6 +424,48 @@ export class ProcumentsService {
       url += `&dateFilter=${dateFilter}`;
     }
 
+    if (searchTerm) {
+      url += `&searchTerm=${searchTerm}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  // updateDefinePackageItemData(array: any, id: number): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+  
+  //   const url = `${this.apiUrl}dispatch/update-package-data`;
+  
+  //   // Send the array as a named field in the body
+  //   return this.http.post<any>(url, { packedItems: array, id}, { headers });
+  // }
+
+  updateDefinePackageItemData(array: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}procument/update-define-package-data`;
+  
+    // Send the array as a named field in the body
+    return this.http.post<any>(url, { definePackageItems: array}, { headers });
+  }
+
+  getExcludedItems(orderId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+  
+    let url = `${this.apiUrl}procument/get-excluded-items/${orderId}`;
+  
     return this.http.get<any>(url, { headers });
   }
 }
+
+

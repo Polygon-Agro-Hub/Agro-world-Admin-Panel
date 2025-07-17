@@ -77,6 +77,8 @@ export class ViewCollectiveOfficerComponent {
   selectCenterStatus: string = '';
   selectStatus: string = '';
 
+  hasData: boolean = false;
+
   centerStatusOptions = [
     { label: 'Disclaimed', value: 'Disclaimed' },
     { label: 'Claimed', value: 'Claimed' },
@@ -127,6 +129,11 @@ export class ViewCollectiveOfficerComponent {
       .subscribe(
         (response) => {
           this.isLoading = false;
+          if (response.total > 0) {
+            this.hasData = true
+          }else {
+            this.hasData = false
+          }
           this.collectionOfficers = response.items;
           this.totalItems = response.total;
         },
@@ -453,7 +460,7 @@ export class ViewCollectiveOfficerComponent {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Officer ID sent successfully!',
+            text: 'User disclaimed successfully!',
             confirmButtonText: 'OK',
           }).then((result) => {
             if (result.isConfirmed) {
@@ -466,7 +473,7 @@ export class ViewCollectiveOfficerComponent {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to send Officer ID!',
+            text: 'Failed to disclaim User successfully!',
             confirmButtonText: 'Try Again',
           });
         }

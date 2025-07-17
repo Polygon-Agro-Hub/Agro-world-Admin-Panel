@@ -109,18 +109,18 @@
     <div>
       <!-- Icon -->
       <div class="mb-4 flex justify-center">
-        <i class="fa-solid fa-triangle-exclamation"></i>
+        <i class="fa-solid fa-triangle-exclamation dark:text-white"></i>
       </div>
 
       <div class="mb-4 text-center">
-        <p class="text-lg mb-2">
-          Are you sure you want to Discharge the officer
+        <p class="text-lg mb-2 dark:text-textDark">
+          Are you sure you want to Disclaim the officer
         </p>
-        <p class="font-semibold text-lg">
+        <p class="font-semibold text-lg dark:text-white">
           "{{ selectedOfficer?.firstNameEnglish }}
           {{ selectedOfficer?.lastNameEnglish }}" (EMP ID -
           {{ selectedOfficer?.empId }})"
-          <span class="font-normal">from center</span> <br />
+          <span class="font-normal dark:text-textDark">from center</span> <br />
           <span class="font-semibold text-lg">
             "{{ selectedOfficer?.centerName }}"?</span
           >
@@ -139,7 +139,7 @@
         >
           <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
           <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
-            >Discharge</span
+            >Disclaim</span
           >
         </button>
         <button
@@ -282,7 +282,14 @@
         </div>
       </div>
     </div>
-    <div class="w-full">
+
+    <div *ngIf="!hasData"
+            class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
+            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+        </div>
+
+    <div *ngIf="hasData" class="w-full">
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>

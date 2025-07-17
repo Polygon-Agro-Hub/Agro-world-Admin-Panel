@@ -47,7 +47,7 @@ export class PermissionAreaComponent {
   role_id!: number;
   createCategroyObj: CreateCategory = new CreateCategory();
   categories: { id: number; category: string }[] = [];
-  selectedCategory: string = '';
+  selectedCategory: string | number = '';
   newCategory: string = '';
   isFeatureEdit: boolean = false;
   existEditName: string = '';
@@ -63,7 +63,7 @@ export class PermissionAreaComponent {
     private permissionManagerService: PermissionManagerService,
     private tokenService: TokenService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.role_id = this.route.snapshot.params['id'];
@@ -109,24 +109,31 @@ export class PermissionAreaComponent {
       )
       ?.subscribe(
         (response) => {
-          Swal.fire({
-            title: 'Success!',
-            text: 'Category created successfully.',
-            icon: 'success',
-            confirmButtonText: 'OK',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.getAllPosition();
-              this.getAllFeatures();
-              this.getAllRoleFeatures();
-              this.getAllfeatureCategory();
-            }
-          });
+          if (response.status) {
+            Swal.fire({
+              title: 'Success!',
+              text: 'New feature has been added to the list successfully.',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.getAllPosition();
+                this.getAllFeatures();
+                this.getAllRoleFeatures();
+                this.getAllfeatureCategory();
+                this.newCategory = '';
+                this.createCategroyObj.category = '';
+
+              }
+            });
+          } else {
+            Swal.fire("Error!", response.message, 'error');
+          }
         },
         (error) => {
           Swal.fire({
             title: 'Error!',
-            text: 'Failed to create category.',
+            text: 'Failed to create feature.',
             icon: 'error',
             confirmButtonText: 'OK',
           });
@@ -253,7 +260,7 @@ export class PermissionAreaComponent {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Success',
-                detail: 'Give Permission successfully!',
+                detail: 'Gave Permission Sucessfully!',
                 life: 3000,
               });
             }
@@ -349,6 +356,21 @@ export class PermissionAreaComponent {
     }
   }
 
+  setSelectedCategoryIfMatch() {
+    if (this.newCategory !== '') {
+      const foundCategory = this.categories.find(
+        (cat: any) => cat.category === this.newCategory
+      );
+
+      if (foundCategory) {
+        this.selectedCategory = foundCategory.id;
+      } else {
+        // Optional: handle case when no match is found
+        this.selectedCategory = ''; // or undefined or whatever default you prefer
+      }
+    }
+  }
+
   getAllfeatureCategory() {
     this.isLoading = true;
 
@@ -361,6 +383,7 @@ export class PermissionAreaComponent {
             id: cat.id,
             category: cat.category,
           }));
+          this.setSelectedCategoryIfMatch()
         } else {
           console.error('Invalid response structure:', response);
         }
@@ -468,6 +491,11 @@ export class PermissionAreaComponent {
           Swal.fire('Error', res.message, 'error');
         }
       });
+  }
+
+  viewConsole() {
+    console.log("categories", this.categories);
+
   }
 }
 

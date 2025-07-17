@@ -55,14 +55,14 @@ export class DistributionhubComponent {
     }
   }
 
-  navigateToCreateNews(): void {
-    this.isLoading = true;
-    this.router
-      .navigate(['/distribution-hub/action/create-company'])
-      .then(() => {
-        this.isLoading = false;
-      });
-  }
+navigateToCreateNews(): void {
+  this.isLoading = true;
+  this.router.navigate(['/distribution-hub/action/create-company'], {
+    queryParams: { type: 'distribution' }
+  }).then(() => {
+    this.isLoading = false;
+  });
+}
 
   navigateToViewCompanies(): void {
     this.isLoading = true;
@@ -107,5 +107,9 @@ export class DistributionhubComponent {
 
   feedBack(): void {
     this.router.navigate(['/distribution-hub/action']);
+  }
+
+  viewPolygon(): void {
+    this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
   }
 }

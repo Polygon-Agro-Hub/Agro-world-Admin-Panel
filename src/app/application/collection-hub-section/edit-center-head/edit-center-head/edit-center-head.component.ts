@@ -421,7 +421,7 @@ export class EditCenterHeadComponent {
               this.isLoading = false;
               Swal.fire(
                 'Success',
-                'Center Head Edited Successfully',
+                'Center Head updated Successfully',
                 'success'
               );
               this.navigatePath('/collection-hub/manage-company');

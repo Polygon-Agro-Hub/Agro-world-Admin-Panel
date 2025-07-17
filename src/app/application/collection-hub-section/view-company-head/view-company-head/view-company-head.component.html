@@ -4,89 +4,50 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button
-  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-  (click)="navigatePath('/collection-hub/create-center-head')"
->
-  <svg
-    class="w-5 h-5 mr-3"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 12H20M12 4V20"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
+<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+  (click)="navigatePath('/collection-hub/create-center-head')">
+  <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
   Add New
 </button>
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-1 pl-12 pb-5 min-w-full w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex justify-between items-center mb-8 gap-0">
+  <div class="flex items-center">
+    <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+      {{ companyName }} Profiles ({{ totalItems }})
+    </h2>
+  </div>
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-full w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          {{ companyName }} Profiles ({{ totalItems }})
-        </h2>
-      </div>
-      <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
-      >
-        <input
-          type="text"
-          placeholder="Search by EMP ID, First / Last Name"
-          [(ngModel)]="searchText"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-          (click)="onSearch()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
-          </svg>
-        </button>
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-          (click)="offSearch()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
+    class="flex items-center rounded-full mr-56 px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
+    
+    <input
+      type="text"
+      placeholder="Search by EMP ID, First / Last Name"
+      [(ngModel)]="searchText"
+      (keydown)="handleSearchKeydown($event)"
+      class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+    />
+    
+    <!-- Search button with negative left margin -->
+    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none -ml-1" (click)="onSearch()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+      </svg>
+    </button>
+
+    <!-- Optional: close button with adjusted margin -->
+    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none ml-1" (click)="offSearch()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
 
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-textLight dark:text-textDark text-lg">
@@ -95,65 +56,40 @@
     </div>
 
     <div *ngIf="hasData">
-      <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
-      >
+      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th
-              class="pr-20 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="pr-20 font-normal text-textLight dark:text-textDark text-left">
               EMP ID
             </th>
-            <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
               First Name
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Last Name
             </th>
-            <th
-              class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-center">
               Email
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Phone Number-1
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Phone Number-2
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Created At
             </th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            ></th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            ></th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            ></th>
+            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let item of companyHead
                 | paginate
                   : {
@@ -162,9 +98,7 @@
                       totalItems: totalItems
                     };
               let i = index
-            "
-            class="border-b border-gray-200 dark:border-[#4B555A]"
-          >
+            " class="border-b border-gray-200 dark:border-[#4B555A]">
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
@@ -179,18 +113,15 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
-                <span
-                  [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
-                      item.status === 'Not Approved',
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg':
-                      item.status === 'Approved',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-lg':
-                      item.status === 'Rejected'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
-                  (click)="openPopup(item)"
-                >
+                <span [ngClass]="{
+    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+      item.status === 'Not Approved',
+    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-lg':
+      item.status === 'Approved',
+    'font-bold px-3 py-1 text-sm bg-red-100 text-red-500 rounded-lg':
+      item.status === 'Rejected'
+  }" class="inline-block w-28 font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                  (click)="openPopup(item)">
                   {{ item.status }}
                 </span>
               </div>
@@ -199,80 +130,55 @@
               {{ item.phoneCode01 + "" + item.phoneNumber01 }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <span
-                *ngIf="item.phoneNumber02 === null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-                >Phone number 2 not provided</span
-              >
-              <span
-                *ngIf="item.phoneNumber02 != null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-                >{{ item.phoneCode02 + "" + item.phoneNumber02 }}</span
-              >
+              <span *ngIf="item.phoneNumber02 === null"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark">Phone number 2 not provided</span>
+              <span *ngIf="item.phoneNumber02 != null"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneCode02 + "" +
+                item.phoneNumber02 }}</span>
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}
             </td>
+            
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <!-- <button
+              <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700 mr-2"
-                (click)="ViewCroptask(item.id)"
+              
               >
                 <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button> -->
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+              </button>
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="editCompanyHead(item.id)"
-              >
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 32 32"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              <button class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]" (click)="editCompanyHead(item.id)">
+                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>click to edit profile</title>
                   <path
-                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
-                  ></path>
+                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                  </path>
                 </svg>
               </button>
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
-                (click)="deleteCompanyHead(item.id)"
-              >
-                <svg
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                  />
+              <button class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
+                (click)="deleteCompanyHead(item.id)">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                  viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                 </svg>
               </button>
             </td>
@@ -280,15 +186,9 @@
         </tbody>
       </table>
       <div class="dark:bg-[#262f45]">
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>
     </div>

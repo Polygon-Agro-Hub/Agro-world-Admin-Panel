@@ -183,7 +183,7 @@ export class MarketAddProductComponent implements OnInit {
     if (this.productObj.salePrice <= 0) {
       Swal.fire(
         'Invalid Value',
-        'sale Price must be greater than 0, check the discount you applied',
+        'Sale Price must be greater than 0, check the discount you applied',
         'warning'
       );
       return;
@@ -237,9 +237,8 @@ export class MarketAddProductComponent implements OnInit {
     if (this.productObj.unitType == 'g') {
       this.productObj.startValue = this.productObj.startValue / 1000;
       this.productObj.changeby = this.productObj.changeby / 1000;
-      this.productObj.unitType = 'Kg';
     }
-
+    console.log('productObj', this.productObj)
     this.marketSrv.createProduct(this.productObj).subscribe(
       (res) => {
         if (res.status === true) {

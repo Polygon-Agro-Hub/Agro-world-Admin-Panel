@@ -35,6 +35,7 @@ export class MarketPlaceService {
       }
     );
   }
+  
 
   createCoupen(Data: any): Observable<any> {
     const headers = new HttpHeaders({
@@ -53,6 +54,7 @@ export class MarketPlaceService {
     types: any,
     search: string
   ): Observable<any> {
+    console.log('search', search)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -333,8 +335,6 @@ export class MarketPlaceService {
 
     formData.append('package', JSON.stringify(Data));
 
-    // Only append file if selectedImage is a base64 string (new image)
-    // If it's a URL string (old image), don't append it
     if (selectedImage && selectedImage.toString().startsWith('data:')) {
       formData.append('file', selectedImage);
     }
@@ -516,29 +516,13 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
-  getOrderDetailsById(id: string): Observable<{
-    success: boolean;
-    data: {
-      packages: Array<{
-        packageId: number;
-        displayName: string;
-        productPrice: string | null;
-        productTypes: Array<{
-          id: number;
-          typeName: string | null;
-          shortCode: string | null;
-          qty: number;
-        }>;
-      }>;
-    };
-    message?: string;
-  }> {
+  getOrderDetailsById(id: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}market-place/get-order-details/${id}`;
+    const url = `${this.apiUrl}market-place/get-define-package-details/${id}`;
 
     return this.http
       .get<{
@@ -650,4 +634,98 @@ export class MarketPlaceService {
         })
       );
   }
+
+  fetchAllWholesaleCustomers(
+    page: number = 1,
+    limit: number = 10,
+    searchText: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-wholesale-customers?page=${page}&limit=${limit}`;
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  fetchUserOrders(
+    userId: string,
+    statusFilter: string = 'Ordered'
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log('userId:', userId);
+
+    const url = `${this.apiUrl}market-place/get-user-orders/${userId}?status=${statusFilter}`;
+
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError((error) => {
+        // You can handle specific error cases here if needed
+        console.error('Error fetching user orders:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  getAllWholesaleOrders(
+    page: number,
+    limit: number,
+    status: string = '',
+    method: string = '',
+    searchItem: string = '',
+    formattedDate: string = ''
+  ): Observable<any> {
+    console.log(page, limit, status, method, searchItem, formattedDate);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/get-all-wholesale-orders?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (method) {
+      url += `&method=${method}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (formattedDate) {
+      url += `&formattedDate=${formattedDate}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
+
+  getCoupen(coupenId: number): Observable<any> {
+    console.log('coupenId', coupenId)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}market-place/get-coupen/${coupenId}`, {
+      headers,
+    });
+  }
+
+  updateCoupen(Data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}market-place/update-coupen`, Data, {
+      headers,
+    });
+  }
 }
+

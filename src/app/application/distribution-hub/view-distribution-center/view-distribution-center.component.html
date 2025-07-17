@@ -35,7 +35,7 @@
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           <!-- Other Distribution Centres ({{ this.totalItems }}) -->
-          Other Distribution Centres (01)
+          Other Distribution Centres ({{ formatCount(totalItems) }})
         </h2>
       </div>
       <div class="flex items-center">
@@ -245,12 +245,33 @@
               {{ item.code1 }} {{ item.contact01 }}
             </td>
 
-            <td
-              class="px-4 py-3 text-left text-[#000000] dark:text-textDark"
-            ></td>
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+              <a
+                *ngIf="item.longitude && item.latitude"
+                href="https://www.google.com/maps?q={{ item.latitude }},{{
+                  item.longitude
+                }}"
+                target="_blank"
+                class="text-red-600 hover:text-blue-800 text-xl"
+                title="View on map"
+              >
+                <i class="fas fa-map-marker-alt"></i>
+                <!-- Font Awesome map pin icon -->
+              </a>
+              <span
+                *ngIf="!item.longitude || !item.latitude"
+                class="text-gray-400"
+              >
+                <i class="fas fa-map-marker-alt"></i>
+                <!-- Disabled/grayed out icon when no coordinates -->
+              </span>
+            </td>
 
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewDistributionCenter(item.id)"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -317,6 +338,7 @@
                   tokenService.getUserDetails().role === '1'
                 "
                 class="text-red-500 hover:text-red-700"
+                (click)="deleteDistributionCenter(item.id)"
               >
                 <svg
                   aria-hidden="true"

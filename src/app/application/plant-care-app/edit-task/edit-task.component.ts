@@ -8,6 +8,7 @@ import { error, log } from 'node:console';
 import { environment } from '../../../environment/environment';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
+import { Location } from '@angular/common';
 
 class CropTask {
   'id': number;
@@ -57,7 +58,8 @@ export class EditTaskComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private taskService: CropCalendarService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private location: Location
   ) {}
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
@@ -109,6 +111,16 @@ export class EditTaskComponent implements OnInit {
   }
 
   updateTask() {
+    // Check if image link is required but not provided
+    if (this.hasImageLink && !this.taskItems.imageLink) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Image Link is required when "Has Image Link" is set to Yes',
+      });
+      return;
+    }
+
     const token = this.tokenService.getToken();
 
     if (!token) {
@@ -141,7 +153,7 @@ export class EditTaskComponent implements OnInit {
       this.taskItems.taskDescriptionTamil
     );
     formData.append('reqImages', this.taskItems.reqImages);
-    formData.append('imageLink', this.taskItems.imageLink);
+    formData.append('imageLink', this.taskItems.imageLink || '');
     formData.append('videoLink', this.taskItems.videoLinkEnglish);
     formData.append('videoLink', this.taskItems.videoLinkSinhala);
     formData.append('videoLink', this.taskItems.videoLinkTamil);
@@ -159,6 +171,8 @@ export class EditTaskComponent implements OnInit {
           icon: 'success',
           title: 'Success',
           text: 'Task updated successfully!',
+        }).then(() => {
+          this.location.back();
         });
       },
       (error) => {

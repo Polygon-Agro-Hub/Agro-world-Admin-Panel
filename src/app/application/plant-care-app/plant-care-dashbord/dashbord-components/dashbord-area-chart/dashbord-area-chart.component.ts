@@ -57,33 +57,35 @@ export class DashbordAreaChartComponent implements OnChanges {
     { districtName: 'Kegalle' },
   ];
 
+  selectedDistrict: any = { districtName: 'All' };
   loading: boolean = true;
 
   constructor(private dashbordService: PlantcareDashbordService) {}
 
   ngOnInit() {
+    // Sort districts alphabetically, keeping "All" at the top
+    const allDistrict = this.district.find(d => d.districtName === 'All');
+    const otherDistricts = this.district
+      .filter(d => d.districtName !== 'All')
+      .sort((a, b) => a.districtName.localeCompare(b.districtName));
+    this.district = [allDistrict!, ...otherDistricts];
+
     this.fetchDashboardData();
   }
-  selectedDistrict: any = { districtName: 'All' };
 
   fetchDashboardData(district?: string): void {
     const apiDistrict = district === 'All' ? undefined : district;
-    this.loading = true; // Show skeleton
+    this.loading = true;
     this.dashbordService.getDashboardData(apiDistrict).subscribe(
       (data: any) => {
-        console.log('These are the data', data);
-
         if (data && data.data) {
           if (district && district !== 'All') {
-            // For specific districts, use farmerRegistrationCounts
             const registeredCount =
               data.data.farmerRegistrationCounts.registered_count;
             const unregisteredCount =
               data.data.farmerRegistrationCounts.unregistered_count;
             this.initializeChart(registeredCount, unregisteredCount, true);
-            this.loading = false;
           } else {
-            // For "All" districts, use qrUsers and allusers
             this.qrUsers = data.data.qrUsers;
             this.allusers = data.data.allusers;
             this.initializeChart(
@@ -91,19 +93,19 @@ export class DashbordAreaChartComponent implements OnChanges {
               this.allusers - this.qrUsers,
               false
             );
-            this.loading = false;
           }
         }
+        this.loading = false;
       },
       (error) => {
         console.error('Error fetching dashboard data:', error);
+        this.loading = false;
       }
     );
   }
 
   onDistrictChange(event: any): void {
     if (!event.value) {
-      // When cleared, set back to "All" and hide clear button
       this.selectedDistrict = { districtName: 'All' };
       this.showClearButton = false;
     } else {

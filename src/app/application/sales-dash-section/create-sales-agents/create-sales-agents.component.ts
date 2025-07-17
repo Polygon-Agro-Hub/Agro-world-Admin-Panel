@@ -5,11 +5,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -40,13 +36,11 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
-
   ],
   templateUrl: './create-sales-agents.component.html',
-  styleUrl: './create-sales-agents.component.css'
+  styleUrl: './create-sales-agents.component.css',
 })
 export class CreateSalesAgentsComponent implements OnInit {
-
   isLoading = false;
   empType!: string;
   personalData: Personal = new Personal();
@@ -56,7 +50,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   officerId: number | null = null;
-  
+
   banks: Bank[] = [];
   branches: Branch[] = [];
   selectedBankId: number | null = null;
@@ -67,7 +61,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileName!: string;
   invalidFields: Set<string> = new Set();
-  
+
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
@@ -98,9 +92,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     { name: 'Puttalam', province: 'North Western' },
     { name: 'Rathnapura', province: 'Sabaragamuwa' },
     { name: 'Trincomalee', province: 'Eastern' },
-    { name: 'Vavuniya', province: 'Northern' }
+    { name: 'Vavuniya', province: 'Northern' },
   ];
-  
+
   constructor(
     private collectionOfficerService: CollectionOfficerService,
     private fb: FormBuilder,
@@ -108,11 +102,10 @@ export class CreateSalesAgentsComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private salesAgentService: SalesAgentsService,
+    private salesAgentService: SalesAgentsService
   ) {}
 
   ngOnInit(): void {
-    
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
@@ -120,11 +113,10 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      data => {
+      (data) => {
         this.banks = data;
-       
       },
-      error => {
+      (error) => {
         console.error('Error loading banks:', error);
       }
     );
@@ -132,11 +124,10 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      data => {
+      (data) => {
         this.allBranches = data;
-        
       },
-      error => {
+      (error) => {
         console.error('Error loading branches:', error);
       }
     );
@@ -166,11 +157,10 @@ export class CreateSalesAgentsComponent implements OnInit {
       this.selectedFile = file;
       this.personalData.image = file;
       this.selectedFileName = file.name;
-      
+
       // console.log(this.selectedFile);
       // console.log(this.personalData.image);
       // console.log(this.selectedFileName);
-      
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -205,13 +195,13 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   EpmloyeIdCreate() {
     // const currentCompanyId = this.personalData.companyId;
-  
+
     let rolePrefix: string;
 
     // Map job roles to their respective prefixes
     // const rolePrefixes: { [key: string]: string } = {
     //   'Collection Center Head': 'CCH',
-      
+
     // };
 
     // Get the prefix based on the job role
@@ -231,7 +221,6 @@ export class CreateSalesAgentsComponent implements OnInit {
         console.error('Error fetching last ID:', error);
       });
     // this.personalData.companyId = currentCompanyId;
-    
   }
 
   getLastID(): Promise<string> {
@@ -254,14 +243,16 @@ export class CreateSalesAgentsComponent implements OnInit {
     if (this.selectedBankId) {
       // Update branches based on selected bank
       this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      
+
       // Update company data with bank name
-      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
       if (selectedBank) {
         this.personalData.bankName = selectedBank.name;
         this.invalidFields.delete('bankName');
       }
-      
+
       // Reset branch selection
       this.selectedBranchId = null;
       this.personalData.branchName = '';
@@ -274,7 +265,9 @@ export class CreateSalesAgentsComponent implements OnInit {
   onBranchChange() {
     if (this.selectedBranchId) {
       // Update company data with branch name
-      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
         this.invalidFields.delete('branchName');
@@ -285,25 +278,24 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   isEmpTypeSelected(): boolean {
-    return !!this.empType; // Returns true if empType is not null or undefined
+    return !!this.touchedFields.empType;
   }
 
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
-  
-    
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
   }
 
   validateConfirmAccNumber(): void {
-   
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
-  
+
     // Check if account numbers match
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
-      this.confirmAccountNumberError = this.personalData.accNumber !== this.personalData.confirmAccNumber;
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
     } else {
       this.confirmAccountNumberError = false;
     }
@@ -316,7 +308,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   isValidPhoneNumber(phone: string): boolean {
     const phoneRegex = /^[0-9]{9}$/; // Allows only 9-digit numbers
     return phoneRegex.test(phone);
-}
+  }
 
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -328,13 +320,12 @@ export class CreateSalesAgentsComponent implements OnInit {
     return nicRegex.test(nic);
   }
 
-  
   checkSubmitValidity(): boolean {
     const {
-      
       firstName,
       lastName,
       phoneNumber1,
+      phoneNumber2,
       email,
       empType,
       nic,
@@ -347,24 +338,41 @@ export class CreateSalesAgentsComponent implements OnInit {
       streetName,
       city,
       district,
-      
     } = this.personalData;
 
     const isFirstNameValid = !!firstName;
 
-    const isPhoneNumber1Valid = !!phoneNumber1
+    const isPhoneNumber1Valid = !!phoneNumber1;
     const isEmailValid = this.isValidEmail(email);
     const isEmpTypeSelected = !!empType;
     const isNicSelected = !!nic;
 
+    let isPhoneValid = true;
+
+    if (phoneNumber2) {
+      isPhoneValid = phoneNumber2 !== phoneNumber1;
+    }
+
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
- 
     const isBankDetailsValid =
-        !!accHolderName && !!accNumber && !!bankName && !!branchName && !! confirmAccNumber && accNumber === confirmAccNumber;
-      return isBankDetailsValid && isAddressValid && isFirstNameValid && isPhoneNumber1Valid && isEmailValid && isEmpTypeSelected && isNicSelected;
-    
+      !!accHolderName &&
+      !!accNumber &&
+      !!bankName &&
+      !!branchName &&
+      !!confirmAccNumber &&
+      accNumber === confirmAccNumber;
+    return (
+      isBankDetailsValid &&
+      isAddressValid &&
+      isFirstNameValid &&
+      isPhoneNumber1Valid &&
+      isEmailValid &&
+      isEmpTypeSelected &&
+      isNicSelected &&
+      isPhoneValid
+    );
   }
 
   onSubmit() {
@@ -430,12 +438,9 @@ export class CreateSalesAgentsComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-
-
 }
 
 class Personal {
-  
   empId!: string;
   empType!: string;
   firstName!: string;

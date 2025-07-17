@@ -148,6 +148,17 @@ import { ViewDispatchOrdersComponent } from './application/procurement-section/v
 import { CustomAdditionalItemsComponent } from './application/dispatch-section/custom-additional-items/custom-additional-items.component';
 import { ViewRetailCustomeresComponent } from './application/marketplace/view-retail-customeres/view-retail-customeres.component';
 import { DefinePackageViewComponent } from './application/marketplace/define-package-view/define-package-view.component';
+import { ViewPolygonCentersComponent } from './application/distribution-hub/view-polygon-centers/view-polygon-centers.component';
+import { ViewDestributionCenterComponent } from './application/marketplace/view-destribution-center/view-destribution-center.component';
+import { EditDistributionCentreComponent } from './application/distribution-hub/edit-distribution-centre/edit-distribution-centre.component';
+import { ViewWholesaleCustomersComponent } from './application/marketplace/view-wholesale-customers/view-wholesale-customers.component';
+import { ViewCustomerOrdersComponent } from './application/marketplace/view-customer-orders/view-customer-orders.component';
+import { WholesaleComplaintsComponent } from './application/Complaints/wholesale-complaints/wholesale-complaints.component';
+import { W } from '@angular/cdk/keycodes';
+import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
+import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
+import{SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
+import { CustomerOrdersComponent } from './application/sales-dash-section/customer-orders/customer-orders.component';
 export const routes: Routes = [
   {
     path: '',
@@ -831,6 +842,22 @@ export const routes: Routes = [
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
               },
+              {
+                path: 'view-wholesale-customers',
+                component: ViewWholesaleCustomersComponent,
+              },
+              {
+                path: 'view-order-details/:id',
+                component: ViewCustomerOrdersComponent,
+              },
+              {
+                path: 'edit-coupen/:id',
+                component: EditCoupenComponent,
+              },
+              {
+                path: 'view-wholesale-orders',
+                component: ViewWholwsaleOrdersComponent,
+              },
             ],
           },
         ],
@@ -855,6 +882,10 @@ export const routes: Routes = [
           {
             path: 'sales-targets',
             component: SalesTargetComponent,
+          },
+          {
+            path: 'customers-orders/:id',
+            component: CustomerOrdersComponent,
           },
         ],
       },
@@ -910,8 +941,16 @@ export const routes: Routes = [
             component: RetailComplaintsComponent,
           },
           {
+            path: 'wholesale-complaints',
+            component: WholesaleComplaintsComponent,
+          },
+          {
             path: 'selected-retail-complaints/:id',
             component: SelectedRetailComplaintsComponent,
+          },
+          {
+            path: 'selected-wholesale-complaints/:id',
+            component: SelectedwholesaleComplaintsComponent,
           },
         ],
       },
@@ -959,7 +998,7 @@ export const routes: Routes = [
                 component: ViewDistributionCenterComponent,
               },
               {
-                path: 'add-distribution-officer',
+                path: 'add-distribution-officer/:id/:companyName',
                 component: AddDistributionOfficerComponent,
               },
 
@@ -970,6 +1009,18 @@ export const routes: Routes = [
               {
                 path: 'edit-distribution-officer/:id',
                 component: EditDistributionOfficerComponent,
+              },
+              {
+                path: 'view-polygon-centers',
+                component: ViewPolygonCentersComponent,
+              },
+              {
+                path: 'view-distribution-centre/:id',
+                component: ViewDestributionCenterComponent,
+              },
+              {
+                path: 'edit-distribution-centre/:id',
+                component: EditDistributionCentreComponent,
               },
             ],
           },

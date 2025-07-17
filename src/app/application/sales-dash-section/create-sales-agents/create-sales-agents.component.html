@@ -1,8 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-onclick="history.back()"
-  class="text-textLight dark:text-textDark"
->
+<button onclick="history.back()" class="text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -54,19 +51,18 @@ onclick="history.back()"
             />
           </span> -->
 
-           <span
-              (click)="triggerFileInput($event)"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
-            >
-              <i class="fa-solid fa-pen text-lg text-white"></i>
-            </span>
+          <span
+            (click)="triggerFileInput($event)"
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
+          >
+            <i class="fa-solid fa-pen text-lg text-white"></i>
+          </span>
         </div>
       </div>
 
       <div class="h-[20px]"></div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -76,10 +72,7 @@ onclick="history.back()"
             <span
               class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
             >
-              <p >
-                SA
-              </p>
-              
+              <p>SA</p>
             </span>
             <input
               type="text"
@@ -131,15 +124,13 @@ onclick="history.back()"
               </label>
             </div>
           </div>
-          <p *ngIf="!isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
+          <p *ngIf="isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
             Please select an employee type.
           </p>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        
-
         <div>
           <label
             for="firstNameEnglish"
@@ -153,9 +144,7 @@ onclick="history.back()"
             (blur)="onBlur('firstName')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span
-            *ngIf="isFieldInvalid('firstName')"
-            class="text-red-600 text-sm"
+          <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm"
             >First Name is required.</span
           >
         </div>
@@ -164,7 +153,7 @@ onclick="history.back()"
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in English)</label
+            >Last Name</label
           >
           <input
             id="lastName"
@@ -173,14 +162,10 @@ onclick="history.back()"
             (blur)="onBlur('lastName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span
-            *ngIf="isFieldInvalid('lastName')"
-            class="text-red-600 text-sm"
+          <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm"
             >Last Name is required.</span
           >
         </div>
-
-        
 
         <div>
           <label
@@ -225,48 +210,56 @@ onclick="history.back()"
         </div>
 
         <div>
-            <label
-              for="phoNumTwo"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          <label
+            for="phoNumTwo"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Phone Number - 2
+          </label>
+          <div class="mt-1 flex">
+            <select
+              id="phoneNumber2Code"
+              name="phoneNumber2Code"
+              [(ngModel)]="personalData.phoneCode2"
+              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
             >
-              Phone Number - 2
-            </label>
-            <div class="mt-1 flex">
-              <select
-                id="phoneNumber2Code"
-                name="phoneNumber2Code"
-                [(ngModel)]="personalData.phoneCode2"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+              <option value="+94">+94 (LK)</option>
+              <option value="+1">+1 (US)</option>
+              <option value="+44">+44 (UK)</option>
+              <option value="+91">+91 (India)</option>
+            </select>
+            <div class="w-full flex flex-col">
+              <input
+                id="phoneNumber2"
+                name="phoneNumber2"
+                type="number"
+                [(ngModel)]="personalData.phoneNumber2"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                placeholder="Enter your phone number"
+                (blur)="onBlur('phoneNumber2')"
+              />
+              <span
+                *ngIf="
+                  touchedFields.phoneNumber2 &&
+                  !isValidPhoneNumber(personalData.phoneNumber2)
+                "
+                class="text-red-600 text-sm"
               >
-                <option value="+94">+94 (LK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+91">+91 (India)</option>
-              </select>
-              <div class="w-full flex flex-col">
-                <input
-                  id="phoneNumber2"
-                  name="phoneNumber2"
-                  type="number"
-                  [(ngModel)]="personalData.phoneNumber2"
-                  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                  placeholder="Enter your phone number"
-                  (blur)="onBlur('phoneNumber2')"
-                />
-                <span
-                  *ngIf="
-                    touchedFields.phoneNumber2 &&
-                    !isValidPhoneNumber(personalData.phoneNumber2)
-                  "
-                  class="text-red-600 text-sm"
-                >
-                  Invalid phone number.
-                </span>
-              </div>
+                Invalid phone number.
+              </span>
+
+              <span
+                *ngIf="
+                  touchedFields.phoneNumber2 &&
+                  personalData.phoneNumber2 === personalData.phoneNumber1
+                "
+                class="text-red-600 text-sm"
+              >
+                Phone number 2 cannot be the same as Phone number 1.
+              </span>
             </div>
           </div>
-
-        
+        </div>
 
         <div>
           <label
@@ -334,7 +327,7 @@ onclick="history.back()"
 
   <div>
     <!-- <div> -->
-    <h2 class="text-2xl mb-6 mt-10 text-textLight dark:text-textDark ">
+    <h2 class="text-2xl mb-6 mt-10 text-textLight dark:text-textDark">
       Residential Details
     </h2>
     <div>
@@ -393,7 +386,7 @@ onclick="history.back()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm"
-            >city is required.</span
+            >City is required.</span
           >
         </div>
 
@@ -473,12 +466,15 @@ onclick="history.back()"
         <span
           *ngIf="isFieldInvalid('accHolderName')"
           class="text-red-600 text-sm"
-          >city is required.</span
+          >Account Holder's Name is required.</span
         >
       </div>
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Account Number
         </label>
         <input
@@ -492,9 +488,12 @@ onclick="history.back()"
           Account Number is required.
         </span>
       </div>
-      
+
       <div class="pb-6">
-        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="confirmAccNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Confirm Account Number
         </label>
         <input
@@ -504,33 +503,39 @@ onclick="history.back()"
           (blur)="onBlur('confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        
+
         <!-- Required validation message -->
         <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
           Confirm Account Number is required.
         </span>
-      
+
         <!-- Mismatch validation message -->
-        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span
+          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+          class="text-red-600 text-sm"
+        >
           Account Numbers do not match.
         </span>
       </div>
 
-      
-
-
       <div class="pb-6">
-        <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="bankDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Bank Name
         </label>
-        <select 
-          id="bankDropdown" 
+        <select
+          id="bankDropdown"
           name="bankDropdown"
           [(ngModel)]="selectedBankId"
           (change)="onBankChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option [ngValue]="null" disabled>Select a bank</option>
-          <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
+          <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+            {{ bank.name }}
+          </option>
         </select>
         <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
           Bank Name is required.
@@ -538,18 +543,24 @@ onclick="history.back()"
       </div>
 
       <div class="pb-6">
-        <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label
+          for="branchDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
           Branch Name
         </label>
-        <select 
-          id="branchDropdown" 
+        <select
+          id="branchDropdown"
           name="branchDropdown"
           [(ngModel)]="selectedBranchId"
           (change)="onBranchChange()"
           [disabled]="!selectedBankId"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
           <option [ngValue]="null" disabled>Select a branch</option>
-          <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
+          <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+            {{ branch.name }}
+          </option>
         </select>
         <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
           Branch Name is required.
@@ -563,7 +574,7 @@ onclick="history.back()"
         (click)="onCancel()"
         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
       >
-        cancel
+        Cancel
       </button>
       <button
         type="submit"
@@ -575,8 +586,4 @@ onclick="history.back()"
       </button>
     </div>
   </div>
-
-  
-
 </div>
-

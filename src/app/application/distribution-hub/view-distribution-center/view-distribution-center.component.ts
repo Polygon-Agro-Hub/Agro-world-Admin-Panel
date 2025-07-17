@@ -26,10 +26,8 @@ import { PermissionService } from '../../../services/roles-permission/permission
   styleUrl: './view-distribution-center.component.css',
 })
 export class ViewDistributionCenterComponent implements OnInit {
-  // centerNameObj: CenterName = new CenterName();
   companyId!: number;
   distributionCentreObj!: DistributionCentre[];
-  // filteredCollection!: CollectionCenter[];
   districts: string[] = [];
   selectedDistrict: string | null = null;
   searchItem: string = '';
@@ -137,17 +135,24 @@ export class ViewDistributionCenterComponent implements OnInit {
       .sort((a, b) => a.label.localeCompare(b.label));
   }
 
+  viewDistributionCenter(id: number): void {
+    this.router.navigate([
+      `/distribution-hub/action/view-distribution-centre/${id}`,
+    ]);
+  }
+
   fetchCompanies(): void {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Companies fetched:', response);
+        console.log('Raw API response:', response); // Add this line
+        console.log('Companies fetched:', response.data); // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data
             .map((company) => ({
-              label: company.companyNameEnglish, // Use companyNameEnglish directly
-              value: company.companyNameEnglish, // Use name as value since ID isn't returned
+              label: company.companyNameEnglish,
+              value: company.companyNameEnglish,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
@@ -203,14 +208,20 @@ export class ViewDistributionCenterComponent implements OnInit {
         this.isLoading = false;
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
-        this.totalItems = response.total;
+        this.totalItems = response.total; // This updates the count
       },
       (error) => {
+        console.error('API Error:', error);
+        this.isLoading = false;
         if (error.status === 401) {
-          // Unauthorized access handling (left empty intentionally)
+          // Unauthorized access handling
         }
       }
     );
+  }
+
+  formatCount(count: number): string {
+    return count < 10 ? `0${count}` : `${count}`;
   }
 
   onPageChange(event: number) {
@@ -238,7 +249,6 @@ export class ViewDistributionCenterComponent implements OnInit {
         (p) => p.province === this.selectProvince
       );
 
-      // Filter and sort districts for selected province
       this.districtOptions =
         selected?.district
           .map((d) => ({
@@ -247,10 +257,8 @@ export class ViewDistributionCenterComponent implements OnInit {
           }))
           .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-      // Reset district selection
       this.selectDistrict = '';
     } else {
-      // Province cleared → show all districts, sorted
       this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
         .map((d) => ({
           label: d.districtName,
@@ -259,9 +267,15 @@ export class ViewDistributionCenterComponent implements OnInit {
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    console.log(this.selectProvince);
-
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    // Call fetch with updated filters
+    this.fetchAllCollectionCenter(
+      this.page,
+      this.itemsPerPage,
+      this.selectDistrict,
+      this.selectProvince, // Make sure this is the correct format
+      this.selectCompany,
+      this.searchItem
+    );
   }
 
   applyDistrictFilters() {
@@ -303,7 +317,9 @@ export class ViewDistributionCenterComponent implements OnInit {
   }
 
   navigateEdit(id: number) {
-    // this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
+    this.router.navigate([
+      `/distribution-hub/action/edit-distribution-centre/${id}`,
+    ]);
   }
 
   add(): void {
@@ -312,6 +328,42 @@ export class ViewDistributionCenterComponent implements OnInit {
 
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
+  }
+
+  deleteDistributionCenter(id: number): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.DestributionSrv.deleteDistributionCenter(id).subscribe({
+          next: () => {
+            Swal.fire(
+              'Deleted!',
+              'Distribution center has been deleted.',
+              'success'
+            );
+            // Refresh the list after deletion
+            this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error deleting distribution center:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete distribution center',
+            });
+          },
+        });
+      }
+    });
   }
 }
 

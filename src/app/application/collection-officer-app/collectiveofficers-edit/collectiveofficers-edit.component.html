@@ -509,6 +509,20 @@
           </div>
       </div>
 
+      <div class="pb-6">
+        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Confirm Account Number</label>
+        <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+          #confirmAccNumberInput="ngModel" required />
+          <div *ngIf="confirmAccNumberInput.touched && !personalData.confirmAccNumber" class="text-red-500 text-sm mt-1">
+            <div>Confirm Account Number is required</div>
+          </div>
+
+          <div *ngIf="confirmAccNumberInput.touched && personalData.confirmAccNumber && (personalData.accNumber !== personalData.confirmAccNumber)" class="text-red-500 text-sm mt-1">
+            <div>Account Numbers do not match</div>
+          </div>
+      </div>
+
       <!-- <div class="pb-6">
           <label
             for="bankName"

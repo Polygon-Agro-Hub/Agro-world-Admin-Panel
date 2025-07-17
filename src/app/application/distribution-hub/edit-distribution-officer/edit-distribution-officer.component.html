@@ -53,7 +53,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >EMP ID / User name</label
           >
           <div class="flex mt-1">
@@ -76,7 +76,7 @@
         <div>
           <label
             for="centerId"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             Company Name
           </label>
@@ -88,7 +88,6 @@
               name="centerId"
               (change)="getAllDistributedCenters(personalData.companyId)"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
-              [disabled]="!!itemId"
             >
               <option
                 *ngFor="let company of CompanyData"
@@ -110,7 +109,7 @@
         <div>
           <label
             for="enpType"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             Staff Employee Type
           </label>
@@ -118,7 +117,7 @@
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
               >
                 <input
                   class="w-5 h-5"
@@ -133,7 +132,7 @@
             </div>
             <div class="flex items-center space-x-2">
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+                class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
               >
                 <input
                   class="w-5 h-5"
@@ -155,7 +154,7 @@
         <div>
           <label
             for="languages"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             Preferred Languages
           </label>
@@ -171,7 +170,9 @@
                 (change)="onCheckboxChange('Sinhala', $event)"
                 [checked]="personalData.languages.includes('Sinhala')"
               />
-              <label for="sinhala" class="text-gray-700">Sinhala</label>
+              <label for="sinhala" class="text-[#534E4E] dark:text-textDark"
+                >Sinhala</label
+              >
             </div>
             <div class="flex items-center space-x-2">
               <input
@@ -183,7 +184,9 @@
                 (change)="onCheckboxChange('English', $event)"
                 [checked]="personalData.languages.includes('English')"
               />
-              <label for="english" class="text-gray-700">English</label>
+              <label for="english" class="text-[#534E4E] dark:text-textDark"
+                >English</label
+              >
             </div>
             <div class="flex items-center space-x-2">
               <input
@@ -195,7 +198,9 @@
                 (change)="onCheckboxChange('Tamil', $event)"
                 [checked]="personalData.languages.includes('Tamil')"
               />
-              <label for="tamil" class="text-gray-700">Tamil</label>
+              <label for="tamil" class="text-[#534E4E] dark:text-textDark"
+                >Tamil</label
+              >
             </div>
           </div>
           <p
@@ -237,47 +242,71 @@
         <div>
           <label
             for="firstNameEnglish"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >First Name (in English)</label
           >
           <input
             id="firstNameEnglish"
             [(ngModel)]="personalData.firstNameEnglish"
             name="firstNameEnglish"
+            #firstNameEnglishRef="ngModel"
+            required
+            pattern="^[A-Za-z ]+$"
             (blur)="onBlur('firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
-            *ngIf="isFieldInvalid('firstNameEnglish')"
+            *ngIf="
+              firstNameEnglishRef.invalid &&
+              (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)
+            "
             class="text-red-600 text-sm"
-            >First Name is required.</span
           >
+            <ng-container *ngIf="firstNameEnglishRef.errors?.['required']"
+              >First Name is required.</ng-container
+            >
+            <ng-container *ngIf="firstNameEnglishRef.errors?.['pattern']"
+              >Special characters are not allowed.</ng-container
+            >
+          </span>
         </div>
 
         <div>
           <label
-            for="variety"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            for="lastNameEnglish"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >Last Name (in English)</label
           >
           <input
-            id="lastName"
-            name="lastName"
+            id="lastNameEnglish"
+            name="lastNameEnglish"
             [(ngModel)]="personalData.lastNameEnglish"
+            #lastNameEnglishRef="ngModel"
+            required
+            pattern="^[A-Za-z ]+$"
             (blur)="onBlur('lastNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
-            *ngIf="isFieldInvalid('lastNameEnglish')"
+            *ngIf="
+              lastNameEnglishRef.invalid &&
+              (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)
+            "
             class="text-red-600 text-sm"
-            >Last Name is required.</span
           >
+            <ng-container *ngIf="lastNameEnglishRef.errors?.['required']"
+              >Last Name is required.</ng-container
+            >
+            <ng-container *ngIf="lastNameEnglishRef.errors?.['pattern']"
+              >Special characters are not allowed.</ng-container
+            >
+          </span>
         </div>
 
         <div>
           <label
             for="phoneNumber01"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             Phone Number - 1
           </label>
@@ -319,7 +348,7 @@
         <div>
           <label
             for="phoNumTwo"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             Phone Number - 2
           </label>
@@ -361,7 +390,7 @@
         <div>
           <label
             for="nic"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >NIC Number</label
           >
           <input
@@ -382,13 +411,13 @@
         <div>
           <label
             for="email"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >Email</label
           >
           <input
             type="email"
             id="email"
-            name="nic"
+            name="email"
             [(ngModel)]="personalData.email"
             (blur)="onBlur('email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -431,7 +460,7 @@
         <div class="pb-6">
           <label
             for="house"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >House / Plot Number</label
           >
           <input
@@ -451,7 +480,7 @@
         <div class="pb-6">
           <label
             for="street"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >Street Name</label
           >
           <input
@@ -471,7 +500,7 @@
         <div class="pb-6">
           <label
             for="city"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >City</label
           >
           <input
@@ -489,7 +518,7 @@
         <div class="pb-6">
           <label
             for="district"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             District
           </label>
@@ -514,7 +543,7 @@
         <div class="pb-6">
           <label
             for="province"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
             Province
           </label>
@@ -530,7 +559,7 @@
         <div class="pb-6">
           <label
             for="country"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
             >Country</label
           >
           <input
@@ -549,27 +578,39 @@
       <div class="pb-6">
         <label
           for="accHolderName"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >Account Holder's Name</label
         >
         <input
           id="accHolderName"
           name="accHolderName"
           [(ngModel)]="personalData.accHolderName"
+          #accHolderNameRef="ngModel"
+          required
+          pattern="^[A-Za-z ]+$"
           (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <span
-          *ngIf="isFieldInvalid('accHolderName')"
+          *ngIf="
+            accHolderNameRef.invalid &&
+            (accHolderNameRef.dirty || accHolderNameRef.touched)
+          "
           class="text-red-600 text-sm"
-          >city is required.</span
         >
+          <ng-container *ngIf="accHolderNameRef.errors?.['required']"
+            >Account Holder's Name is required.</ng-container
+          >
+          <ng-container *ngIf="accHolderNameRef.errors?.['pattern']"
+            >Special characters are not allowed.</ng-container
+          >
+        </span>
       </div>
 
       <div class="pb-6">
         <label
           for="accNumber"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
         >
           Account Number
         </label>
@@ -589,7 +630,7 @@
       <div class="pb-6">
         <label
           for="confirmAccNumber"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
         >
           Confirm Account Number
         </label>
@@ -599,6 +640,7 @@
           type="number"
           [(ngModel)]="personalData.confirmAccNumber"
           (blur)="onBlur('confirmAccNumber')"
+          (input)="validateConfirmAccNumber()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
 
@@ -607,7 +649,7 @@
         </span>
 
         <span
-          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+          *ngIf="!confirmAccountNumberRequired && confirmAccountNumberError"
           class="text-red-600 text-sm"
         >
           Account Numbers do not match.
@@ -617,7 +659,7 @@
       <div class="pb-6">
         <label
           for="bankDropdown"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
         >
           Bank Name
         </label>
@@ -641,7 +683,7 @@
       <div class="pb-6">
         <label
           for="branchDropdown"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
         >
           Branch Name
         </label>
@@ -675,8 +717,9 @@
       <button
         type="submit"
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        (click)="onSubmit()"
+        [class.opacity-50]="!checkSubmitValidity()"
         [disabled]="!checkSubmitValidity()"
+        (click)="onSubmit()"
       >
         Update
       </button>

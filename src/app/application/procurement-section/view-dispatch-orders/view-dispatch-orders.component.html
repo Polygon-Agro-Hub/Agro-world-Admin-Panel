@@ -51,7 +51,7 @@
         <div class="text-gray-700 dark:text-gray-300">Excluded Items :</div>
         <button
           class="w-5 h-5 text-blue-500 hover:text-blue-700"
-          (click)="openAdditionalItemsModal()"
+          (click)="openExcludedItemsModal()"
         >
           <svg
             viewBox="0 0 24 24"
@@ -152,6 +152,74 @@
     </div>
   </div>
 </div>
+
+<div
+  *ngIf="showExcludedItemsModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeExcludedItemsModal()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 text-center">
+      <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
+        Excluded List Items
+      </h3>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="px-6 py-4">
+      <!-- Table Header -->
+      <div
+        class="pb-4 flex justify-between items-center mb-4 text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700"
+      >
+        <div class="flex-1">Item</div>
+        <div class="w-16 text-center">Quantity</div>
+        <div class="w-16 text-center">Unit</div>
+      </div>
+
+      <!-- Additional Items List -->
+      <div class="px-6 py-4">
+        <div class="max-w-md mx-auto overflow-x-auto">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-separate border-spacing-x-8">
+            <!-- Table Header -->
+            <thead class="uppercase text-[#8492A3] dark:text-gray-400 border-b border-gray-300 dark:border-gray-700 text-sm font-medium">
+              <tr>
+                <th class="py-3 text-center w-20 whitespace-nowrap">
+                  Item ({{ excludedItemsArr.length }})
+                </th>
+                <th class="py-3 text-left whitespace-nowrap">
+                  Item Name
+                </th>
+              </tr>
+            </thead>
+  
+            <!-- Table Body -->
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+              <tr *ngFor="let item of excludedItemsArr; let i = index">
+                <td class="py-2 text-center">{{ i + 1 }}</td>
+                <td class="py-2 text-left">{{ item.displayName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center">
+      <button
+        type="button"
+        class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors"
+        (click)="closeExcludedItemsModal()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
 
 <div
   *ngIf="showAdditionalItemsModal"

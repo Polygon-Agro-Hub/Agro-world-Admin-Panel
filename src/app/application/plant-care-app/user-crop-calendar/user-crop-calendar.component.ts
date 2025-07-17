@@ -42,6 +42,8 @@ interface TaskList {
 })
 export class UserCropCalendarComponent {
   cropCalendarId: any | null = null;
+  cultivationId: any | null = null;
+  userName: string = '';
   userId: any | null = null;
   onCulscropID: any | null = null;
   taskList: TaskList[] = [];
@@ -71,7 +73,13 @@ export class UserCropCalendarComponent {
       this.onCulscropID = params['onCulscropID']
         ? +params['onCulscropID']
         : null;
+      this.cultivationId = params['cultivationId']
+        ? +params['cultivationId']
+        : null;
+      this.userName = params['userName'] ? params['userName'] : '';
     });
+
+    console.log('onCulscropID', this.onCulscropID, 'userName', this.userName);
     this.getchUserTaskList(this.cropCalendarId, this.userId);
   }
 
@@ -175,7 +183,7 @@ export class UserCropCalendarComponent {
     );
   }
 
-  addNewTask(cropId: string, indexId: string, userId: string) {
+  addNewTask(cropId: string, indexId: string, userId: string, cultivationId: any, userName: string ) {
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
@@ -190,10 +198,13 @@ export class UserCropCalendarComponent {
           'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]',
       },
     }).then((result) => {
+      console.log('this.onCulscropID', this.onCulscropID)
       if (result.isConfirmed) {
         this.router.navigate([
           `/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`,
-        ]);
+        ],
+        { queryParams: { cultivationId, userName } }
+      );
       }
     });
   }

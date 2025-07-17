@@ -955,9 +955,22 @@
           id="companyNameEnglish"
           name="companyNameEnglish"
           [(ngModel)]="companyData.companyNameEnglish"
-          [disabled]="true"
+          (blur)="onBlur('companyNameEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div class="flex items-center mt-1">
+          <span *ngIf="isCheckingCompanyName" class="text-blue-600 text-sm">
+            Checking company name...
+          </span>
+          <span *ngIf="companyNameError" class="text-red-600 text-sm">
+            {{ companyNameError }}
+          </span>
+          <span
+            *ngIf="isFieldInvalid('companyNameEnglish') && !companyNameError"
+            class="text-red-600 text-sm"
+            >Company Name in English required.</span
+          >
+        </div>
       </div>
 
       <div class="pb-6">

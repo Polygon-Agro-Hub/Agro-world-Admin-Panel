@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
 interface centerData {
@@ -22,7 +22,7 @@ interface centerData {
 export class CollectionCenterService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
@@ -139,7 +139,7 @@ export class CollectionCenterService {
       'Content-Type': 'application/json',
     });
 
-    console.log('searchText', searchText)
+    console.log('searchText', searchText);
 
     let url = `${this.apiUrl}auth/get-all-center-complains?page=${page}&limit=${limit}`;
 
@@ -297,9 +297,9 @@ export class CollectionCenterService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    let url = `${this.apiUrl}auth/create-company`
+    let url = `${this.apiUrl}auth/create-company`;
     if (companyType === 'distribution') {
-      url += `?type=${companyType}`
+      url += `?type=${companyType}`;
     }
 
     return this.http.post(url, companyData, {
@@ -477,5 +477,20 @@ export class CollectionCenterService {
     }
 
     return this.http.get<any>(url, { headers: headers });
+  }
+
+  checkCompanyNameExists(companyNameEnglish: string): Observable<boolean> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http
+      .get<any>(
+        `${this.apiUrl}auth/check-company-name?companyNameEnglish=${companyNameEnglish}`,
+        { headers }
+      )
+      .pipe(
+        map((response) => response.exists) // Assuming your API returns {exists: boolean}
+      );
   }
 }

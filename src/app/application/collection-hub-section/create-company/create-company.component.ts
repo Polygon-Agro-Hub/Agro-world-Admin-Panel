@@ -62,6 +62,8 @@ export class CreateCompanyComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
   selectedLogoFile: File | null = null;
   selectedFaviconFile: File | null = null;
+  companyNameError: string = '';
+  isCheckingCompanyName: boolean = false;
 
   companyType: string = '';
 
@@ -396,6 +398,15 @@ export class CreateCompanyComponent implements OnInit {
 
   saveCompanyData() {
     // Validate contact numbers first
+    if (this.companyNameError) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Company Name Exists',
+        text: 'Please choose a different company name',
+      });
+      return;
+    }
+
     if (
       this.companyData.oicConNum1 &&
       this.companyData.oicConNum2 &&
@@ -494,15 +505,19 @@ export class CreateCompanyComponent implements OnInit {
       .subscribe(
         (response) => {
           this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Company created successfully',
-            timer: 2000,
-            showConfirmButton: false,
-          }).then(() => {
-            this.location.back();
-          });
+          if (response.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Company created successfully',
+              timer: 2000,
+              showConfirmButton: false,
+            }).then(() => {
+              this.location.back();
+            });
+          } else {
+            Swal.fire('Error!', response.message, 'error');
+          }
         },
         (error) => {
           this.isLoading = false;
@@ -692,6 +707,31 @@ export class CreateCompanyComponent implements OnInit {
       // Clear the second number
       this.companyData.oicConNum2 = '';
     }
+  }
+
+  checkCompanyName(): void {
+    const companyName = this.companyData.companyNameEnglish;
+
+    if (!companyName) {
+      this.companyNameError = '';
+      return;
+    }
+
+    this.isCheckingCompanyName = true;
+    this.companyNameError = '';
+
+    this.collectionCenterSrv.checkCompanyNameExists(companyName).subscribe({
+      next: (exists) => {
+        this.isCheckingCompanyName = false;
+        if (exists) {
+          this.companyNameError = 'This company name already exists';
+        }
+      },
+      error: () => {
+        this.isCheckingCompanyName = false;
+        this.companyNameError = 'Error checking company name availability';
+      },
+    });
   }
 }
 

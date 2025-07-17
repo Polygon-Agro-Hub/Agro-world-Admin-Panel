@@ -234,6 +234,9 @@ export class ViewDistributionCenterComponent implements OnInit {
     this.fetchAllCollectionCenter(
       this.page,
       this.itemsPerPage,
+      this.selectDistrict,
+      this.selectProvince,
+      this.selectCompany,
       this.searchItem
     );
   }

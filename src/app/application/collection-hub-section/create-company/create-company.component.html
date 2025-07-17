@@ -434,6 +434,7 @@
                 id="phoneNumber02Code"
                 name="oicConCode2"
                 [(ngModel)]="companyData.oicConCode2"
+                (blur)="validateContactNumbers()"
                 class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
               >
                 <option value="+94">+94 (LK)</option>
@@ -446,6 +447,7 @@
                   id="phoneNumber02"
                   name="oicConNum2"
                   type="number"
+                  (blur)="validateContactNumbers()"
                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                   placeholder="7XXXXXXXX"
                   [(ngModel)]="companyData.oicConNum2"

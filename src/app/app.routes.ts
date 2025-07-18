@@ -161,6 +161,7 @@ import{SelectedwholesaleComplaintsComponent } from './application/Complaints/sel
 import { CustomerOrdersComponent } from './application/sales-dash-section/customer-orders/customer-orders.component';
 import {ViewHeadPortalComponent} from './application/distribution-hub/view-head-portal/view-head-portal.component';
 import { ViewCurrentCenterTargetComponent } from './application/collection-hub-section/view-current-center-target/view-current-center-target.component';
+import { ViewCenterHeadComponent } from './application/collection-hub-section/view-center-head/view-center-head.component';
 export const routes: Routes = [
   {
     path: '',
@@ -693,6 +694,10 @@ export const routes: Routes = [
           {
             path: 'preview-collection-center/:id',
             component: PreviewCollectionCenterComponent,
+          },
+          {
+            path: 'view-center-head/:id',
+            component: ViewCenterHeadComponent,
           },
           
         ],

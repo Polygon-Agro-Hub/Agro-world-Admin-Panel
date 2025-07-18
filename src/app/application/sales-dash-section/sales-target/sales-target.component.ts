@@ -22,7 +22,7 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
     ReactiveFormsModule,
     HttpClientModule,
     LoadingSpinnerComponent
-],
+  ],
   templateUrl: './sales-target.component.html',
   styleUrl: './sales-target.component.css',
 })
@@ -33,7 +33,7 @@ export class SalesTargetComponent implements OnInit {
   }
   // targetForm: FormGroup;
   currentDailyTarget!: number;
-  newTargetValue!: number;
+  newTargetValue: any = '';
 
   agentsArr!: Agents[];
 
@@ -55,7 +55,7 @@ export class SalesTargetComponent implements OnInit {
     private fb: FormBuilder,
     private salesDashSrv: SalesDashService,
     private router: Router
-  ) {}
+  ) { }
 
   back(): void {
     this.router.navigate(['sales-dash']);
@@ -145,6 +145,10 @@ export class SalesTargetComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  formatAgentCount(): string {
+    return this.agentCount < 10 ? '0' + this.agentCount : this.agentCount.toString();
   }
 
   fetchAllSalesAgents(
@@ -248,7 +252,7 @@ export class SalesTargetComponent implements OnInit {
   validateTargetInput() {
     // If value is not a number, set to 0
     if (isNaN(this.newTargetValue)) {
-      this.newTargetValue = 0;
+      this.newTargetValue = '';
       return;
     }
 
@@ -257,7 +261,7 @@ export class SalesTargetComponent implements OnInit {
 
     // Ensure minimum value of 1
     if (this.newTargetValue < 1) {
-      this.newTargetValue = 0;
+      this.newTargetValue = '';
     }
   }
 

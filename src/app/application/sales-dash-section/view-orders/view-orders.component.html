@@ -6,19 +6,14 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-full w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-full w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <!-- Header and Filters Section -->
     <div class="mb-8">
       <div class="flex justify-between items-center mb-5">
-        <div>
-          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All Orders ({{ totalItems }})
-          </h2>
-        </div>
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          All Orders ({{ formatTotalItems() }})
+        </h2>
         <div class="flex items-center gap-3">
           <!-- <div>
             <p-dropdown
@@ -33,107 +28,62 @@
               (onChange)="applydeliveryTypeFilters()"
             />
           </div> -->
+          <!-- <div class="flex items-center gap-2 h-8 ml-2">
+            <input id="toDate" type="text"
+              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-48 h-8"
+              placeholder="Delivery Date" [(ngModel)]="date" (click)="openDatePicker()" readonly />
+            <input #datePicker type="date" style="position: absolute; visibility: hidden; pointer-events: none;"
+              [(ngModel)]="date" (change)="dateFilter()" />
+          </div> -->
+
           <div class="flex items-center gap-2 h-8 ml-2">
-            <input
-              id="toDate"
-              type="date"
-              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64 h-8"
-              placeholder="Delivery Date"
-              [(ngModel)]="date"
-              (change)="dateFilter()"
-            />
+            <p-calendar [(ngModel)]="date" placeholder="Delivery Date" dateFormat="dd/mm/yy" [showIcon]="false"
+              [showClear]="true" styleClass="custom-calendar"
+              inputStyleClass="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-48 h-8"
+              (onSelect)="dateFilter()" (onClear)="onDateClear()">
+            </p-calendar>
           </div>
 
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="paymentMethodArr"
-              [checkmark]="true"
-              optionLabel="paymentMethod"
-              optionValue="value"
-              [showClear]="!!paymentMethodFilter"
-              placeholder="Payment Method"
-              [(ngModel)]="paymentMethodFilter"
-              (onChange)="applyPaymentMethodFilters()"
-            />
+              [options]="paymentMethodArr" [checkmark]="true" optionLabel="paymentMethod" optionValue="value"
+              [showClear]="!!paymentMethodFilter" placeholder="Payment Method" [(ngModel)]="paymentMethodFilter"
+              (onChange)="applyPaymentMethodFilters()" />
           </div>
 
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="paymentStatusArr"
-              [checkmark]="true"
-              optionLabel="paymentStatus"
-              optionValue="value"
-              [showClear]="!!paymentStatusFilter" 
-              placeholder="Payment Status"
-              [(ngModel)]="paymentStatusFilter"
-              (onChange)="applyPaymentStatusFilters()"
-            />
+              [options]="paymentStatusArr" [checkmark]="true" optionLabel="paymentStatus" optionValue="value"
+              [showClear]="!!paymentStatusFilter" placeholder="Payment Status" [(ngModel)]="paymentStatusFilter"
+              (onChange)="applyPaymentStatusFilters()" />
           </div>
 
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="orderStatusArr"
-              [checkmark]="true"
-              optionLabel="orderStatus"
-              optionValue="value"
-              [showClear]="!!orderStatusFilter"
-              placeholder="Order Status"
-              [(ngModel)]="orderStatusFilter"
-              (onChange)="applyOrderStatusFilters()"
-            />
+              [options]="orderStatusArr" [checkmark]="true" optionLabel="orderStatus" optionValue="value"
+              [showClear]="!!orderStatusFilter" placeholder="Order Status" [(ngModel)]="orderStatusFilter"
+              (onChange)="applyOrderStatusFilters()" />
           </div>
 
           <div
-            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
-          >
-            <input
-              type="text"
-              placeholder="Search..."
-              [(ngModel)]="searchText"
-              (keydown.enter)="onSearch()"
-              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-            />
-            <button
-              type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-              (click)="onSearch()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-                />
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
+            <input type="text" placeholder="Search..." [(ngModel)]="searchText" (keydown.enter)="onSearch()"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
               </svg>
             </button>
-            <button
-              type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none"
-              (click)="offSearch()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
@@ -148,45 +98,29 @@
     </div>
 
     <div *ngIf="hasData">
-      <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
-      >
+      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th
-              class="ml-10 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="ml-10 font-normal text-textLight dark:text-textDark text-left">
               Invoice No
             </th>
-            <th
-              class="font-normal text-textLight dark:text-textDark text-center pl-5"
-            >
+            <th class="font-normal text-textLight dark:text-textDark text-center pl-5">
               Customer ID
             </th>
-            <th
-              class="pl-5 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="pl-5 font-normal text-textLight dark:text-textDark text-center">
               Customer Name
             </th>
-            <th
-              class="font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="font-normal text-textLight dark:text-textDark text-center">
               Agent ID
             </th>
-            <th
-              class="font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="font-normal text-textLight dark:text-textDark text-center">
               Order Time
             </th>
-            <th
-              class="font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="font-normal text-textLight dark:text-textDark text-center">
               Delivery date
             </th>
 
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Schedule
             </th>
             <!-- <th
@@ -195,29 +129,19 @@
               Schedule
             </th> -->
 
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Payment
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Payment Status
             </th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Amount
             </th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Order Status
             </th>
-            <th
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Invoice
             </th>
             <!-- <th
@@ -227,8 +151,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let item of ordersArr
                 | paginate
                   : {
@@ -237,9 +160,7 @@
                       totalItems: totalItems
                     };
               let i = index
-            "
-            class="border-b border-gray-200 dark:border-[#4B555A]"
-          >
+            " class="border-b border-gray-200 dark:border-[#4B555A]">
             <!-- <td class="text-start text-textLight dark:text-textDark ">
               {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(2, '0') }}
             </td> -->
@@ -277,15 +198,13 @@
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <div>
-                <span
-                  [ngClass]="{
+                <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
                       item.paymentStatus === 1,
                     'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
                       item.paymentStatus === 0
                   }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center"
-                >
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center">
                   {{ item.paymentStatus == 1 ? "Paid" : "Pending" }}
                 </span>
               </div>
@@ -297,8 +216,7 @@
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <div>
-                <span
-                  [ngClass]="{
+                <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#FFEDCF] text-[#D17A00] rounded-3xl':
                       item.orderStatus === 'On the way',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
@@ -313,12 +231,11 @@
                     'font-bold px-3 py-1 text-sm bg-[#FFDCDA] text-[#FF1100] rounded-3xl':
                       item.orderStatus === 'Failed'
                   }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center"
-                >
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center">
                   {{
-                    item.orderStatus === "Ordered"
-                      ? "Assigned"
-                      : item.orderStatus
+                  item.orderStatus === "Ordered"
+                  ? "Assigned"
+                  : item.orderStatus
                   }}
                 </span>
               </div>
@@ -397,15 +314,9 @@
         </tbody>
       </table>
       <div class="dark:bg-[#262f45]">
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>
     </div>

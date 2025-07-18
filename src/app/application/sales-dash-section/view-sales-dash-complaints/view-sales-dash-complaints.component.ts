@@ -42,6 +42,8 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   filterComCategory: any = {};
   status!: Status[];
   category!: Category[];
+  replyStatus!: any[];
+  rpst:string = '';
 
   searchText: string = '';
   isLoading = false;
@@ -54,7 +56,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
     // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log('user role', this.tokenService.getUserDetails().role);
@@ -71,6 +73,12 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       { id: 3, type: 'Call Center' },
       { id: 4, type: 'Procuiment' },
     ];
+
+    this.replyStatus = [
+      { label: 'Yes', value: 'Yes' },
+      { label: 'No', value: 'No' },
+    ];
+
 
     if (this.tokenService.getUserDetails().role === '2') {
       this.filterCategory.type = 'Agriculture';
@@ -105,6 +113,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
         limit,
         this.filterStatus?.type,
         this.filterCategory?.type,
+        this.rpst,
         this.filterComCategory?.id,
         this.searchText
       )
@@ -194,8 +203,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
 
       this.http
         .get<any>(
-          `${environment.API_URL}auth/get-all-complain-category-list/${
-            this.tokenService.getUserDetails().role
+          `${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role
           }/4`,
           {
             headers,
@@ -345,6 +353,11 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
           this.fetchAllComplain(this.page, this.itemsPerPage);
         }
       );
+  }
+
+  regStatusFil(): void {
+    console.log('replyStatus', this.rpst)
+    this.applyFilters();
   }
 }
 

@@ -115,6 +115,7 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
           });
           this.fetchComplain();
           this.isLoading = false;
+          this.router.navigate(['/complaints/view-sales-dash-complain'])
         },
         (error) => {
           console.error("Error updating news", error);

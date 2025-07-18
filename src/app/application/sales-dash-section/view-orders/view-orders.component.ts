@@ -32,6 +32,12 @@ interface InvoiceData {
   familyPackItems: any[];
   additionalItems: any[];
   buildingType: string;
+  deliveryCharge?: {
+    id: number;
+    companycenterId: number | null;
+    city: string;
+    charge: string;
+  } | null;
   billingInfo: {
     title: string;
     fullName: string;
@@ -341,6 +347,12 @@ export class ViewOrdersComponent implements OnInit {
           const invoiceDetails = response.data?.invoice || {};
           const billingDetails = response.data?.billing || {};
 
+          // Use delivery charge from API response if available, otherwise fall back to invoiceDetails.deliveryFee
+          const deliveryFee =
+            response.data?.deliveryCharge?.charge ||
+            invoiceDetails.deliveryFee ||
+            '0.00';
+
           const invoiceData: InvoiceData = {
             invoiceNumber: finalInvoiceNo,
             deliveryMethod: invoiceDetails.deliveryMethod || 'N/A',
@@ -392,7 +404,8 @@ export class ViewOrdersComponent implements OnInit {
                   0
                 )
                 .toFixed(2) || '0.00',
-            deliveryFee: invoiceDetails.deliveryFee || '0.00',
+            deliveryFee: deliveryFee, // Use the calculated delivery fee
+            deliveryCharge: response.data?.deliveryCharge || null, // Include the full delivery charge object
             discount: invoiceDetails.orderDiscount || '0.00',
           };
 

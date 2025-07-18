@@ -145,22 +145,29 @@ export class DefinePackageViewComponent implements OnInit {
   onProductSelected(productType: ProductTypes, event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
-
+  
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
-
+  
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
-      productType.calculatedPrice = selectedProduct.discountedPrice;
     } else {
       productType.productId = null;
       productType.selectedProductPrice = 0;
+    }
+  
+    // Recalculate price if quantity already exists
+    if (productType.quantity !== undefined) {
+      productType.calculatedPrice = (productType.quantity || 0) * (productType.selectedProductPrice || 0);
+    } else {
       productType.calculatedPrice = 0;
     }
-    productType.quantity = undefined;
+  
+    this.calculateTotalPrice(); // optional if you're summing all calculated prices
   }
+  
 
   preventNegative(event: KeyboardEvent) {
     // Prevent minus key

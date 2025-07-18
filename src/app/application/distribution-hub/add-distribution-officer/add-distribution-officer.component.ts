@@ -457,27 +457,28 @@ export class AddDistributionOfficerComponent implements OnInit {
       streetName,
       city,
       district,
-      companyId,
     } = this.personalData;
-
+  
     const namePattern = /^[A-Za-z ]+$/;
-
-
+  
+    // Validate address fields
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
-
-    if (companyId === '1') {
-      const isBankDetailsValid =
-        !!accHolderName && namePattern.test(this.personalData.accHolderName) &&
-        !!accNumber &&
-        !!bankName &&
-        !!branchName &&
-        !!confirmAccNumber &&
-        accNumber === confirmAccNumber;
-      return isBankDetailsValid && isAddressValid;
-    } else {
-      return isAddressValid;
-    }
+  
+    // If accHolderName exists, validate it with the pattern
+    const isNameValid = accHolderName ? namePattern.test(accHolderName) : false;
+  
+    // Validate bank details
+    const isBankDetailsValid =
+      !!accHolderName &&
+      isNameValid &&
+      !!accNumber &&
+      !!confirmAccNumber &&
+      !!bankName &&
+      !!branchName &&
+      accNumber === confirmAccNumber;
+  
+    return isBankDetailsValid && isAddressValid;
   }
 
   getAllCompanies() {

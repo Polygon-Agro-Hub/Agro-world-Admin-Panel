@@ -31,6 +31,7 @@ interface InvoiceData {
   grandTotal: string;
   familyPackItems: any[];
   additionalItems: any[];
+  buildingType: string;
   billingInfo: {
     title: string;
     fullName: string;
@@ -38,7 +39,10 @@ interface InvoiceData {
     street: string;
     city: string;
     phone: string;
-    fullAddress?: string; // Add this new field
+    buildingNo?: string;
+    buildingName?: string;
+    unitNo?: string;
+    floorNo?: string;
   };
   pickupInfo?: {
     centerName: string;
@@ -308,9 +312,8 @@ export class ViewOrdersComponent implements OnInit {
       )
       .subscribe({
         next: (response: any) => {
-          console.log('Full API Response:', response); // Debug entire response
+          console.log('Full API Response:', response);
 
-          // Debug invoice number sources
           const apiInvoiceNo = response.data?.invoice?.invoiceNumber;
           console.log(
             'API InvoiceNo:',
@@ -319,7 +322,6 @@ export class ViewOrdersComponent implements OnInit {
             tableInvoiceNo
           );
 
-          // Determine which invoice number to use (prefer table's version)
           const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
           console.log('Using InvoiceNo:', finalInvoiceNo);
 
@@ -334,34 +336,9 @@ export class ViewOrdersComponent implements OnInit {
             return;
           }
 
-          // Get address components from the response
           const invoiceDetails = response.data?.invoice || {};
           const billingDetails = response.data?.billing || {};
 
-          // Construct full address based on building type
-          let fullAddress = '';
-          if (invoiceDetails.buildingType === 'Apartment') {
-            fullAddress = [
-              `No. ${invoiceDetails.houseNo || ''}`,
-              invoiceDetails.streetName || '',
-              invoiceDetails.city || '',
-              `Building: ${invoiceDetails.buildingName || ''}`,
-              `Unit: ${invoiceDetails.unitNo || ''}`,
-              `Floor: ${invoiceDetails.floorNo || ''}`,
-            ]
-              .filter(Boolean)
-              .join(', ');
-          } else {
-            fullAddress = [
-              `No. ${invoiceDetails.houseNo || ''}`,
-              invoiceDetails.streetName || '',
-              invoiceDetails.city || '',
-            ]
-              .filter(Boolean)
-              .join(', ');
-          }
-
-          // Transform the API response
           const invoiceData: InvoiceData = {
             invoiceNumber: finalInvoiceNo,
             deliveryMethod: invoiceDetails.deliveryMethod || 'N/A',
@@ -369,16 +346,20 @@ export class ViewOrdersComponent implements OnInit {
             scheduledDate: invoiceDetails.scheduledDate || 'N/A',
             paymentMethod: invoiceDetails.paymentMethod || 'N/A',
             grandTotal: invoiceDetails.grandTotal || '0.00',
+            buildingType: invoiceDetails.buildingType || 'House',
             familyPackItems: response.data?.items?.familyPacks || [],
             additionalItems: response.data?.items?.additionalItems || [],
             billingInfo: {
               title: billingDetails.title || '',
-              fullName: billingDetails.fullName || 'N/A',
+              fullName: billingDetails.firstName || 'N/A',
               houseNo: invoiceDetails.houseNo || 'N/A',
               street: invoiceDetails.streetName || 'N/A',
               city: invoiceDetails.city || 'N/A',
               phone: billingDetails.phone1 || 'N/A',
-              fullAddress: fullAddress, // Added full address field
+              buildingNo: invoiceDetails.buildingNo || '',
+              buildingName: invoiceDetails.buildingName || '',
+              unitNo: invoiceDetails.unitNo || '',
+              floorNo: invoiceDetails.floorNo || '',
             },
             pickupInfo: response.data?.pickupCenter
               ? {
@@ -489,10 +470,10 @@ export class ViewOrdersComponent implements OnInit {
     // Invoice Title
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(62, 32, 109); // #3E206D
+    doc.setTextColor(62, 32, 109);
     doc.text('INVOICE', 105, 20, { align: 'center' });
 
-    // Bill To section
+    // Bill To section - Dynamic address display
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.text('Bill To:', 15, 50);
@@ -502,69 +483,111 @@ export class ViewOrdersComponent implements OnInit {
       invoice.billingInfo?.fullName || ''
     }`.trim();
     doc.text(billingName || 'N/A', 15, 55);
-    doc.text(`No. ${invoice.billingInfo?.houseNo || 'N/A'}`, 15, 60);
-    doc.text(invoice.billingInfo?.street || 'N/A', 15, 65);
-    doc.text(invoice.billingInfo?.city || 'N/A', 15, 70);
-    doc.text(invoice.billingInfo?.phone || 'N/A', 15, 75);
+
+    let yPosition = 60;
+
+    // Display address based on building type
+    if (invoice.buildingType === 'Apartment') {
+      const aptAddress = [
+        `No. ${invoice.billingInfo.houseNo || 'N/A'}`,
+        invoice.billingInfo.street || 'N/A',
+        invoice.billingInfo.city || 'N/A',
+        ...(invoice.billingInfo.buildingName
+          ? [`Building: ${invoice.billingInfo.buildingName}`]
+          : []),
+        ...(invoice.billingInfo.buildingNo
+          ? [`Building No: ${invoice.billingInfo.buildingNo}`]
+          : []),
+        ...(invoice.billingInfo.unitNo
+          ? [`Unit No: ${invoice.billingInfo.unitNo}`]
+          : []),
+        ...(invoice.billingInfo.floorNo
+          ? [`Floor No: ${invoice.billingInfo.floorNo}`]
+          : []),
+      ];
+
+      aptAddress.forEach((line, i) => {
+        doc.text(line, 15, yPosition + i * 5);
+      });
+      yPosition += aptAddress.length * 5;
+    } else {
+      // House address format
+      doc.text(`No. ${invoice.billingInfo.houseNo || 'N/A'}`, 15, yPosition);
+      doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
+      doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
+      yPosition += 15;
+    }
 
     // Invoice Details
     doc.setFont('helvetica', 'bold');
-    doc.text('Invoice No:', 15, 85);
+    doc.text('Invoice No:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.invoiceNumber || 'N/A', 15, 90);
+    doc.text(invoice.invoiceNumber || 'N/A', 15, yPosition + 5);
+    yPosition += 10;
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Delivery Method:', 15, 100);
+    doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.deliveryMethod || 'N/A', 15, 105);
+    doc.text(invoice.deliveryMethod || 'N/A', 15, yPosition + 5);
+    yPosition += 10;
 
     if (
       invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
       invoice.pickupInfo
     ) {
       doc.setFont('helvetica', 'bold');
-      doc.text(`Center: ${invoice.pickupInfo.centerName || 'N/A'}`, 15, 115);
+      doc.text(
+        `Center: ${invoice.pickupInfo.centerName || 'N/A'}`,
+        15,
+        yPosition
+      );
       doc.setFont('helvetica', 'normal');
       doc.text(
         `${invoice.pickupInfo.address?.city || 'N/A'}, ${
           invoice.pickupInfo.address?.district || 'N/A'
         }`,
         15,
-        120
+        yPosition + 5
       );
       doc.text(
         `${invoice.pickupInfo.address?.province || 'N/A'}, ${
           invoice.pickupInfo.address?.country || 'N/A'
         }`,
         15,
-        125
+        yPosition + 10
       );
+      yPosition += 20;
     }
 
     // Right side details
+    const rightYStart = 50;
     doc.setFont('helvetica', 'bold');
-    doc.text('Grand Total:', 140, 50);
+    doc.text('Grand Total:', 140, rightYStart);
     doc.setFontSize(11);
-    doc.text(`Rs. ${parseNum(invoice.grandTotal).toFixed(2)}`, 140, 55);
+    doc.text(
+      `Rs. ${parseNum(invoice.grandTotal).toFixed(2)}`,
+      140,
+      rightYStart + 5
+    );
     doc.setFontSize(9);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Payment Method:', 140, 65);
+    doc.text('Payment Method:', 140, rightYStart + 15);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.paymentMethod || 'N/A', 140, 70);
+    doc.text(invoice.paymentMethod || 'N/A', 140, rightYStart + 20);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Ordered Date:', 140, 80);
+    doc.text('Ordered Date:', 140, rightYStart + 30);
     doc.setFont('helvetica', 'normal');
-    doc.text(formatDate(invoice.invoiceDate), 140, 85);
+    doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 35);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Scheduled Date:', 140, 95);
+    doc.text('Scheduled Date:', 140, rightYStart + 45);
     doc.setFont('helvetica', 'normal');
-    doc.text(formatDate(invoice.scheduledDate), 140, 100);
+    doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
 
     // Family Pack Items
-    let yPosition = 130;
+    yPosition = Math.max(yPosition, rightYStart + 60);
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       for (const pack of invoice.familyPackItems) {
         const estimatedPackHeight = 15 + (pack.packageDetails?.length || 0) * 8;
@@ -643,10 +666,7 @@ export class ViewOrdersComponent implements OnInit {
       const estimatedAdditionalItemsHeight =
         15 + invoice.additionalItems.length * 8;
 
-      if (
-        (invoice.familyPackItems?.length || 0) > 0 ||
-        yPosition + estimatedAdditionalItemsHeight > 250
-      ) {
+      if (yPosition + estimatedAdditionalItemsHeight > 250) {
         doc.addPage();
         yPosition = 20;
       }

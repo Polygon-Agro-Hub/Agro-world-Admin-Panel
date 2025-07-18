@@ -4,105 +4,117 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
+
 <form>
-  <!-- save button -->
+  <!-- Header -->
   <div class="flex flex-row justify-between items-center mb-6">
-    <p class="text-lg text-[#292929] font-normal dark:text-textDark">
+    <p class="text-lg text-[#292929] dark:text-textDark font-normal">
       Edit Package
     </p>
     <div>
-      <button type="button" class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
+      <button type="button" class="bg-[#74788D] text-white text-lg px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="button" class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" (click)="onSubmit()"
-        [disabled]="
-          this.packageObj.productPrice < 0.0 ||
-          this.packageObj.packageFee < 0.0 ||
-          this.packageObj.serviceFee < 0.0
-        ">
+      <button
+        type="button"
+        class="bg-[#3980C0] text-white text-lg px-5 py-1 rounded-lg mx-2"
+        (click)="onSubmit()"
+        [disabled]="packageObj.productPrice < 0.0 || packageObj.packageFee < 0.0 || packageObj.serviceFee < 0.0"
+      >
         Save
       </button>
     </div>
   </div>
 
   <div class="flex flex-row justify-between">
-    <div class="bg-[#FFFFFF] py-10 px-14 shadow-md rounded-md w-[70%] dark:bg-tileBlack">
+    <!-- Main Form -->
+    <div class="bg-white dark:bg-tileBlack py-10 px-14 shadow-md rounded-md w-[70%]">
+      <!-- Top Row -->
       <div class="flex flex-row justify-between items-center mb-6">
         <div class="w-[70%]">
           <label class="text-[#534E4E] dark:text-textDark">Display Package Name *</label>
-          <input type="text" id="name" name="name" [(ngModel)]="packageObj.displayName" placeholder="Fruit Pack"
-            class="mt-1 block w-full p-2 border border-[#D9D9D9] rounded-md text-[#858585] dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input
+            type="text"
+            [(ngModel)]="packageObj.displayName"
+            name="name"
+            placeholder="Fruit Pack"
+            class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-[#858585] dark:text-white bg-tileLight dark:bg-gray-800"
+          />
         </div>
 
         <div class="flex flex-row items-center gap-3 mt-6">
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
           <label class="text-[#534E4E] font-semibold dark:text-textDark">Add Image</label>
-          <div class="py-1 px-2 rounded-lg shadow-lg border-[1px] border-[#3980C0] cursor-pointer"
-            (click)="triggerFileInput($event)">
-            <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
+          <div
+            class="py-1 px-2 rounded-lg shadow-lg border border-[#3980C0] cursor-pointer dark:border-blue-400"
+            (click)="triggerFileInput($event)"
+          >
+            <i class="fa-solid fa-plus text-3xl text-[#A3A3A3] dark:text-white"></i>
           </div>
         </div>
       </div>
 
+      <!-- Description -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Description *</label>
-        <textarea rows="4" id="priceLimit" name="description" [(ngModel)]="packageObj.description"
+        <textarea
+          rows="4"
+          [(ngModel)]="packageObj.description"
+          name="description"
           placeholder="Enter Description"
-          class="mt-1 block w-full p-2 border border-[#D9D9D9] rounded-md text-[#858585] dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
+          class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-[#858585] dark:text-white bg-tileLight dark:bg-gray-800"
+        ></textarea>
       </div>
 
-      <hr class="my-8 border-[1px] border-[#D9D9D9]" />
+      <hr class="my-8 border-[1px] border-[#D9D9D9] dark:border-gray-600" />
 
-      <div class="w-full m-0 gap-5">
-        <!-- Row with three inputs -->
-        <div class="grid grid-cols-3 gap-8 mb-6">
-          <!-- Price of Products -->
-          <div>
-            <label class="block text-sm text-[#534E4E] font-medium mb-2">
-              Price of Products (Rs.)
-            </label>
-            <input type="number" id="productPrice" name="productPrice" [(ngModel)]="packageObj.productPrice"
-              placeholder="Enter Amount"
-              class="w-full border border-[#D9D9D9] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              (change)="calculateApproximatedPrice()" (keypress)="allowDecimalNumbers($event)" />
-
-            <div *ngIf="packageObj.productPrice < 0.0" class="text-red-500 text-sm mt-1">
-              Please enter a positive value.
-            </div>
-          </div>
-
-          <!-- Service Fee -->
-          <div>
-            <label class="block text-sm font-medium text-[#534E4E] mb-2">
-              Service Fee (Rs.)
-            </label>
-            <input type="number" id="serviceFee" name="serviceFee" [(ngModel)]="packageObj.serviceFee"
-              placeholder="Enter Amount"
-              class="w-full border border-[#D9D9D9] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              (keypress)="allowDecimalNumbers($event)" (change)="calculateApproximatedPrice()" />
-
-            <div *ngIf="packageObj.serviceFee < 0.0" class="text-red-500 text-sm mt-1">
-              Please enter a positive value.
-            </div>
-          </div>
-
-          <!-- Package Calculation -->
-          <div class="relative">
-            <label class="block text-sm font-medium text-[#534E4E] mb-2">
-              Packaging Fee (Rs.)
-            </label>
-            <input type="number" id="packageFee" name="packageFee" [(ngModel)]="packageObj.packageFee"
-              placeholder="Enter Amount"
-              class="w-full border border-[#D9D9D9] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              (keypress)="allowDecimalNumbers($event)" (change)="calculateApproximatedPrice()" />
-            <div *ngIf="packageObj.packageFee < 0.0" class="text-red-500 text-sm mt-1">
-              Please enter a positive value.
-            </div>
-          </div>
+      <!-- Pricing -->
+      <div class="grid grid-cols-3 gap-8 mb-6">
+        <div>
+          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Price of Products (Rs.)</label>
+          <input
+            type="number"
+            [(ngModel)]="packageObj.productPrice"
+            name="productPrice"
+            (change)="calculateApproximatedPrice()"
+            (keypress)="allowDecimalNumbers($event)"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+            placeholder="Enter Amount"
+          />
+          <div *ngIf="packageObj.productPrice < 0.0" class="text-red-500 text-sm mt-1">Please enter a positive value.</div>
         </div>
 
-        <!-- Final Approximated Price -->
         <div>
+          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Service Fee (Rs.)</label>
+          <input
+            type="number"
+            [(ngModel)]="packageObj.serviceFee"
+            name="serviceFee"
+            (change)="calculateApproximatedPrice()"
+            (keypress)="allowDecimalNumbers($event)"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+            placeholder="Enter Amount"
+          />
+          <div *ngIf="packageObj.serviceFee < 0.0" class="text-red-500 text-sm mt-1">Please enter a positive value.</div>
+        </div>
+
+        <div>
+          <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Packaging Fee (Rs.)</label>
+          <input
+            type="number"
+            [(ngModel)]="packageObj.packageFee"
+            name="packageFee"
+            (change)="calculateApproximatedPrice()"
+            (keypress)="allowDecimalNumbers($event)"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+            placeholder="Enter Amount"
+          />
+          <div *ngIf="packageObj.packageFee < 0.0" class="text-red-500 text-sm mt-1">Please enter a positive value.</div>
+        </div>
+      </div>
+
+      <!-- Final Price -->
+     <div>
           <label class="block text-sm font-medium text-[#534E4E] mb-2">
             Approximated Package Price (Rs.)
           </label>
@@ -110,31 +122,31 @@
             [value]="packageObj.approximatedPrice | number : '1.2-2'" placeholder="--"
             class="w-full border border-[#D9D9D9] rounded-md px-3 py-2" />
         </div>
-      </div>
 
-      <hr class="my-8 border-[1px]" />
+      <hr class="my-8 border-[1px] border-[#D9D9D9] dark:border-gray-600" />
 
-      <!-- product-types-table.component.html -->
-      <div class="w-full mx-auto border border-gray-300 rounded-lg">
+      <!-- Product Table -->
+      <div class="w-full border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
         <table class="w-full font-normal">
-          <thead class="text-gray-500 border-b border-[#CFCFCF]">
+          <thead class=" dark:bg-gray-700 text-gray-500 dark:text-gray-300 border-b border-[#CFCFCF] dark:border-gray-600">
             <tr>
-              <th class="text-left font-normal px-4 py-3 text-[#8492A3]">
-                Product Type
-              </th>
-              <th class="text-right font-normal px-4 py-3 text-[#8492A3]">
-                No. of Items
-              </th>
+              <th class="text-left font-normal px-4 py-3">Product Type</th>
+              <th class="text-right font-normal px-4 py-3">No. of Items</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of packageObj.packageItems trackBy: trackByFn" class="">
-              <td class="px-4 py-3 text-[#534E4E]">{{ item.typeName }}</td>
+            <tr *ngFor="let item of packageObj.packageItems trackBy: trackByFn" class="hover:bg-gray-50 dark:hover:bg-gray-800">
+              <td class="px-4 py-3 text-[#534E4E] dark:text-textDark">{{ item.typeName }}</td>
               <td class="px-4 py-2 text-right">
-                <input type="number" min="0" [(ngModel)]="item.qty" [name]="'qty-' + item.productTypeId"
+                <input
+                  type="number"
+                  min="0"
+                  [(ngModel)]="item.qty"
+                  [name]="'qty-' + item.productTypeId"
                   (keypress)="allowOnlyNumbers($event)"
-                  class="w-20 text-center border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-5000"
-                  placeholder="--" />
+                  class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 px-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                  placeholder="--"
+                />
               </td>
             </tr>
           </tbody>
@@ -142,27 +154,22 @@
       </div>
     </div>
 
+    <!-- Sidebar -->
     <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
-      <div class="rounded-lg shadow-lg px-12 py-6 dark:bg-tileBlack">
-        <p class="text-lg text-[#000000s] font-normal dark:text-textDark">
-          Preview
-        </p>
-
-        <div class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl">
+      <div class="rounded-lg shadow-lg px-12 py-6 bg-white dark:bg-tileBlack">
+        <p class="text-lg text-black dark:text-textDark font-normal">Preview</p>
+        <div class="flex flex-col justify-center items-center my-3 bg-white dark:bg-gray-900 px-5 py-3 rounded-xl">
           <img [src]="selectedImage" class="w-full h-auto object-cover px-4 py-2 mt-8" />
-
-          <div class="flex flex-col items-center justify-center gap-y-2">
-            <!-- Display Name OR Fallback -->
-            <p class="text-lg text-[#393939] font-medium" *ngIf="packageObj.displayName; else noDisplayName">
+          <div class="flex flex-col items-center gap-y-2">
+            <p class="text-lg text-[#393939] dark:text-white font-medium" *ngIf="packageObj.displayName; else noDisplayName">
               {{ packageObj.displayName }}
             </p>
             <ng-template #noDisplayName>
               <p class="text-lg text-gray-500 italic">--Package Name--</p>
             </ng-template>
 
-            <!-- Price OR Fallback -->
             <p class="text-sm text-[#00957D]" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
-              Rs.{{ packageObj.approximatedPrice | number : "1.2-2" }}
+              Rs.{{ packageObj.approximatedPrice | number : '1.2-2' }}
             </p>
             <ng-template #noPrice>
               <p class="text-sm text-gray-500 italic">--Price--</p>
@@ -171,23 +178,18 @@
         </div>
       </div>
 
-      <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack">
-        <label class="text-[#000000] font-normal dark:text-textDark">Status</label>
+      <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg px-12 py-3 mt-10">
+        <label class="text-black dark:text-textDark font-normal">Status</label>
         <div class="flex items-center space-x-2 my-5">
-          <!-- With Discount Radio Button -->
-          <input class="w-5 h-5 text-[#534E4E]" type="radio" id="statusEnabled" name="status" [value]="'Enabled'"
-            [(ngModel)]="packageObj.status" />
-          <label for="statusEnabled" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Enabled
-          </label>
+          <input type="radio" id="statusEnabled" name="status" [value]="'Enabled'" [(ngModel)]="packageObj.status"
+            class="w-5 h-5 text-[#534E4E] dark:bg-gray-800 dark:border-gray-600" />
+          <label for="statusEnabled" class="text-sm text-gray-700 dark:text-textDark">Enabled</label>
         </div>
 
         <div class="flex items-center space-x-2 my-5">
-          <input class="w-5 h-5 text-[#534E4E]" type="radio" id="statusDisabled" name="status" [value]="'Disabled'"
-            [(ngModel)]="packageObj.status" />
-          <label for="statusDisabled" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Disabled
-          </label>
+          <input type="radio" id="statusDisabled" name="status" [value]="'Disabled'" [(ngModel)]="packageObj.status"
+            class="w-5 h-5 text-[#534E4E] dark:bg-gray-800 dark:border-gray-600" />
+          <label for="statusDisabled" class="text-sm text-gray-700 dark:text-textDark">Disabled</label>
         </div>
       </div>
     </div>

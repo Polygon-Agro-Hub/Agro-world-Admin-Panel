@@ -25,7 +25,7 @@ interface Complaint {
 
 interface DropdownOption {
   label: string;
-  value: string;
+  value: string | null; // Allow null for clearer type safety
 }
 
 interface ApiResponse {
@@ -62,7 +62,7 @@ export class WholesaleComplaintsComponent implements OnInit {
 
   // filters + pagination
   searchText = '';
-  rpst: string | null = null;
+  rpst: string | null = null; // Explicitly allow null
   filterComCategory: string | null = null;
   filterStatus: string | null = null;
   totalItems = 0;
@@ -72,7 +72,7 @@ export class WholesaleComplaintsComponent implements OnInit {
   // dropdown data
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: '' },
+    { label: 'No', value: '' }, // Keep empty string for "No"
   ];
   comCategories: DropdownOption[] = [];
   status: DropdownOption[] = [];
@@ -93,18 +93,23 @@ export class WholesaleComplaintsComponent implements OnInit {
 
     this.complaintsService.fetchWholesaleComplaints().subscribe({
       next: (resp: ApiResponse) => {
-        this.complaints = resp.data.map(item => ({
-          id: item.id.toString(),
-          refNo: item.refNo,
-          complainCategory: item.categoryEnglish,
-          firstName: item.firstName,
-          lastName: item.lastName,
-          contactNumber: item.ContactNumber,
-          createdAt: this.formatDate(item.createdAt),
-          status: this.normalizeStatus(item.status, item.createdAt),
-          reply: item.reply || undefined,
-          complain: item.complain,
-        }));
+        this.complaints = resp.data.map(item => {
+          const complaint: Complaint = {
+            id: item.id.toString(),
+            refNo: item.refNo,
+            complainCategory: item.categoryEnglish,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            contactNumber: item.ContactNumber,
+            createdAt: this.formatDate(item.createdAt),
+            status: this.normalizeStatus(item.status, item.createdAt),
+            reply: item.reply || undefined, // Ensure reply is undefined if empty
+            complain: item.complain,
+          };
+          // Debug reply values
+          console.log(`Complaint ID: ${complaint.id}, Reply:`, complaint.reply);
+          return complaint;
+        });
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.comCategories = Array.from(
@@ -114,6 +119,8 @@ export class WholesaleComplaintsComponent implements OnInit {
           new Set(this.complaints.map(c => c.status))
         ).map(st => ({ label: st, value: st }));
         this.isLoading = false;
+        // Debug initial filter state
+        console.log('Initial filtered complaints:', this.filteredComplaints.length);
       },
       error: (err) => {
         this.isLoading = false;
@@ -168,6 +175,7 @@ export class WholesaleComplaintsComponent implements OnInit {
   }
 
   applyFilters(): void {
+    console.log('Applying filters with rpst:', this.rpst); // Debug rpst value
     const txt = this.searchText.trim().toLowerCase();
 
     this.filteredComplaints = this.complaints.filter(item => {
@@ -179,8 +187,9 @@ export class WholesaleComplaintsComponent implements OnInit {
         item.contactNumber
       ].some(field => field?.toLowerCase().includes(txt));
 
-      const matchesReply =
-        !this.rpst || (this.rpst === 'Yes' ? !!item.reply : !item.reply);
+      // Handle reply filter explicitly
+      const matchesReply = this.rpst === null || // No filter applied
+        (this.rpst === 'Yes' ? !!item.reply : item.reply === undefined || item.reply === '');
 
       const matchesCat =
         !this.filterComCategory || item.complainCategory === this.filterComCategory;
@@ -188,11 +197,13 @@ export class WholesaleComplaintsComponent implements OnInit {
       const matchesStat =
         !this.filterStatus || item.status === this.filterStatus;
 
+      console.log(`Complaint ID: ${item.id}, Matches Reply: ${matchesReply}, Reply Value:`, item.reply); // Debug each complaint
       return matchesSearch && matchesReply && matchesCat && matchesStat;
     });
 
     this.totalItems = this.filteredComplaints.length;
     this.page = 1;
+    console.log('Filtered complaints count:', this.totalItems); // Debug final count
   }
 
   searchComplain(): void {
@@ -202,10 +213,14 @@ export class WholesaleComplaintsComponent implements OnInit {
 
   clearSearch(): void {
     this.searchText = '';
+    this.rpst = null; // Reset reply status filter
+    this.filterComCategory = null;
+    this.filterStatus = null;
     this.applyFilters();
   }
 
   regStatusFil(): void {
+    console.log('Reply Status Filter Changed, rpst:', this.rpst); // Debug rpst change
     this.applyFilters();
   }
 

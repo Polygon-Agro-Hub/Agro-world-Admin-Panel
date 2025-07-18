@@ -147,6 +147,10 @@ export class SalesTargetComponent implements OnInit {
     });
   }
 
+  formatAgentCount(): string {
+    return this.agentCount < 10 ? '0' + this.agentCount : this.agentCount.toString();
+  }
+
   fetchAllSalesAgents(
     page: number = 1,
     limit: number = this.itemsPerPage,

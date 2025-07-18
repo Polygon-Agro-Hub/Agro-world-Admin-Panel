@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 
 import {
   HttpClient,
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe,} from '@angular/common';
 import { Router } from '@angular/router';
 
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -63,6 +64,7 @@ interface InvoiceData {
     NgxPaginationModule,
     FormsModule,
     DropdownModule,
+    CalendarModule,
   ],
   templateUrl: './view-orders.component.html',
   styleUrl: './view-orders.component.css',
@@ -134,6 +136,7 @@ export class ViewOrdersComponent implements OnInit {
     search: string = this.searchText
   ) {
     this.isLoading = true;
+    console.log('date')
     this.salesDashService
       .getAllOrders(
         page,
@@ -230,7 +233,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   dateFilter() {
-    console.log()
+    console.log('date', this.date)
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -244,6 +247,10 @@ export class ViewOrdersComponent implements OnInit {
 
   formatDate(date: Date | string | null): string {
     return date ? this.datePipe.transform(date, 'yyyy-MM-dd') || '' : '';
+  }
+
+  formatTotalItems(): string {
+    return this.totalItems < 10 ? '0' + this.totalItems : this.totalItems.toString();
   }
 
   onSearch() {

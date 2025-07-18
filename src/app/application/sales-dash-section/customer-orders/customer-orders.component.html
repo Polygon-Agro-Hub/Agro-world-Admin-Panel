@@ -66,7 +66,12 @@
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#415CFF]"></div>
         </div>
 
-        <div class="px-5" *ngIf="!isLoading && !errorMessage">
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+
+        <div class="px-5" *ngIf="!isLoading && !errorMessage && hasData">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
                 <thead>
                     <tr>
@@ -102,16 +107,16 @@
                 <tbody>
                     <ng-container *ngIf="orders && orders.length > 0; else noData">
                         <tr *ngFor="let order of orders" class="border-b border-gray-200 dark:border-[#4B555A]">
-                            <td class="px-3 py-3 text-left">{{ order.invNo }}</td>
-                            <td class="px-3 py-3 text-left">
+                            <td class="px-3 py-3 text-left dark:text-textDark">{{ order.invNo }}</td>
+                            <td class="px-3 py-3 text-left dark:text-textDark">
                                 <span *ngIf="order.isPackage === 1">Package</span>
                                 <span *ngIf="order.isPackage === 0">Custom</span>
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td class="px-3 py-3 text-center dark:text-textDark">
                                 {{ order.sheduleDate | date : "medium" }}
                             </td>
-                            <td class="px-3 py-3 text-left">{{ order.sheduleType }}</td>
-                            <td class="px-3 py-3 text-center">{{ order.paymentMethod }}</td>
+                            <td class="px-3 py-3 text-left dark:text-textDark">{{ order.sheduleType }}</td>
+                            <td class="px-3 py-3 text-center dark:text-textDark">{{ order.paymentMethod }}</td>
                             <td class="px-3 py-3 text-center">
                                 <!-- <span
                   [class]="order.isPaid ? 'text-green-500' : 'text-red-500'"
@@ -123,7 +128,7 @@
                                 <span *ngIf="order.isPaid === 0"
                                     class="bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-4 py-2">Pending</span>
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td class="px-3 py-3 text-center dark:text-textDark">
                                 {{ order.fullTotal | currency : "LKR" : "code" : "1.2-2" }}
                             </td>
                             <td class="px-3 py-3 text-center">

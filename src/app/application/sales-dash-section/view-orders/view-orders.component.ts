@@ -8,7 +8,7 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { CommonModule, DatePipe,} from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -38,6 +38,7 @@ interface InvoiceData {
     street: string;
     city: string;
     phone: string;
+    fullAddress?: string; // Add this new field
   };
   pickupInfo?: {
     centerName: string;
@@ -136,7 +137,7 @@ export class ViewOrdersComponent implements OnInit {
     search: string = this.searchText
   ) {
     this.isLoading = true;
-    console.log('date')
+    console.log('date');
     this.salesDashService
       .getAllOrders(
         page,
@@ -233,7 +234,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   dateFilter() {
-    console.log('date', this.date)
+    console.log('date', this.date);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -250,7 +251,9 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   formatTotalItems(): string {
-    return this.totalItems < 10 ? '0' + this.totalItems : this.totalItems.toString();
+    return this.totalItems < 10
+      ? '0' + this.totalItems
+      : this.totalItems.toString();
   }
 
   onSearch() {
@@ -293,22 +296,22 @@ export class ViewOrdersComponent implements OnInit {
       tableInvoiceNo,
       'ID:',
       id
-    ); // Debug log
+    );
 
     this.getInvoiceDetails
       .getInvoiceDetails(id)
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          console.log('Finished loading invoice details'); // Debug log
+          console.log('Finished loading invoice details');
         })
       )
       .subscribe({
         next: (response: any) => {
-          console.log('API Response:', response); // Debug entire response
+          console.log('Full API Response:', response); // Debug entire response
 
           // Debug invoice number sources
-          const apiInvoiceNo = response.data.invoice?.invoiceNumber;
+          const apiInvoiceNo = response.data?.invoice?.invoiceNumber;
           console.log(
             'API InvoiceNo:',
             apiInvoiceNo,
@@ -331,34 +334,53 @@ export class ViewOrdersComponent implements OnInit {
             return;
           }
 
+          // Get address components from the response
+          const invoiceDetails = response.data?.invoice || {};
+          const billingDetails = response.data?.billing || {};
+
+          // Construct full address based on building type
+          let fullAddress = '';
+          if (invoiceDetails.buildingType === 'Apartment') {
+            fullAddress = [
+              `No. ${invoiceDetails.houseNo || ''}`,
+              invoiceDetails.streetName || '',
+              invoiceDetails.city || '',
+              `Building: ${invoiceDetails.buildingName || ''}`,
+              `Unit: ${invoiceDetails.unitNo || ''}`,
+              `Floor: ${invoiceDetails.floorNo || ''}`,
+            ]
+              .filter(Boolean)
+              .join(', ');
+          } else {
+            fullAddress = [
+              `No. ${invoiceDetails.houseNo || ''}`,
+              invoiceDetails.streetName || '',
+              invoiceDetails.city || '',
+            ]
+              .filter(Boolean)
+              .join(', ');
+          }
+
           // Transform the API response
           const invoiceData: InvoiceData = {
-            invoiceNumber: finalInvoiceNo, // Use the determined invoice number
-            deliveryMethod: response.data.invoice?.deliveryMethod || 'N/A',
-            invoiceDate: response.data.invoice?.invoiceDate || 'N/A',
-            scheduledDate: response.data.invoice?.scheduledDate || 'N/A',
-            paymentMethod: response.data.invoice?.paymentMethod || 'N/A',
-            grandTotal: response.data.invoice?.grandTotal || '0.00',
-            familyPackItems: response.data.items?.familyPacks || [],
-            additionalItems: response.data.items?.additionalItems || [],
-            billingInfo: response.data.billing
-              ? {
-                  title: response.data.billing.title || '',
-                  fullName: response.data.billing.fullName || '',
-                  houseNo: response.data.billing.houseNo || '',
-                  street: response.data.billing.street || '',
-                  city: response.data.billing.city || '',
-                  phone: response.data.billing.phone1 || '',
-                }
-              : {
-                  title: '',
-                  fullName: 'N/A',
-                  houseNo: 'N/A',
-                  street: 'N/A',
-                  city: 'N/A',
-                  phone: 'N/A',
-                },
-            pickupInfo: response.data.pickupCenter
+            invoiceNumber: finalInvoiceNo,
+            deliveryMethod: invoiceDetails.deliveryMethod || 'N/A',
+            invoiceDate: invoiceDetails.invoiceDate || 'N/A',
+            scheduledDate: invoiceDetails.scheduledDate || 'N/A',
+            paymentMethod: invoiceDetails.paymentMethod || 'N/A',
+            grandTotal: invoiceDetails.grandTotal || '0.00',
+            familyPackItems: response.data?.items?.familyPacks || [],
+            additionalItems: response.data?.items?.additionalItems || [],
+            billingInfo: {
+              title: billingDetails.title || '',
+              fullName: billingDetails.fullName || 'N/A',
+              houseNo: invoiceDetails.houseNo || 'N/A',
+              street: invoiceDetails.streetName || 'N/A',
+              city: invoiceDetails.city || 'N/A',
+              phone: billingDetails.phone1 || 'N/A',
+              fullAddress: fullAddress, // Added full address field
+            },
+            pickupInfo: response.data?.pickupCenter
               ? {
                   centerName: response.data.pickupCenter.name || '',
                   address: {
@@ -370,7 +392,7 @@ export class ViewOrdersComponent implements OnInit {
                 }
               : undefined,
             familyPackTotal:
-              response.data.items?.familyPacks
+              response.data?.items?.familyPacks
                 ?.reduce(
                   (sum: number, pack: any) =>
                     sum + parseFloat(pack.amount || '0'),
@@ -378,18 +400,18 @@ export class ViewOrdersComponent implements OnInit {
                 )
                 .toFixed(2) || '0.00',
             additionalItemsTotal:
-              response.data.items?.additionalItems
+              response.data?.items?.additionalItems
                 ?.reduce(
                   (sum: number, item: any) =>
                     sum + parseFloat(item.amount || '0'),
                   0
                 )
                 .toFixed(2) || '0.00',
-            deliveryFee: response.data.invoice?.deliveryFee || '0.00',
-            discount: response.data.invoice?.orderDiscount || '0.00',
+            deliveryFee: invoiceDetails.deliveryFee || '0.00',
+            discount: invoiceDetails.orderDiscount || '0.00',
           };
 
-          console.log('Final Invoice Data:', invoiceData); // Debug final data
+          console.log('Final Invoice Data:', invoiceData);
           this.generatePDF(invoiceData);
         },
         error: (error) => {

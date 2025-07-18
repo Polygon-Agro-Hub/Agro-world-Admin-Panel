@@ -453,7 +453,7 @@ export class ViewOrdersComponent implements OnInit {
     doc.setTextColor(62, 32, 109);
     doc.text('INVOICE', 105, 15, { align: 'center' });
 
-    // Load and add logo (positioned below title)
+    // Load and add logo
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
@@ -463,7 +463,7 @@ export class ViewOrdersComponent implements OnInit {
       console.warn('Could not load logo:', error);
     }
 
-    // Company Info (positioned below title)
+    // Company Info
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text('Polygon Holdings (Private) Ltd', 15, 25);
@@ -473,10 +473,10 @@ export class ViewOrdersComponent implements OnInit {
     doc.text('Contact No: +94 112 700 900', 15, 35);
     doc.text('info@polygon.lk', 15, 40);
 
-    // Bill To section - Dynamic address display
+    // Bill To section
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.text('Bill To:', 15, 55); // Adjusted y-position
+    doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
     const billingName = `${invoice.billingInfo?.title || ''} ${
@@ -486,7 +486,7 @@ export class ViewOrdersComponent implements OnInit {
 
     let yPosition = 65;
 
-    // Display address based on building type
+    // Address display
     if (invoice.buildingType === 'Apartment') {
       const aptAddress = [
         `No. ${invoice.billingInfo.houseNo || 'N/A'}`,
@@ -511,14 +511,12 @@ export class ViewOrdersComponent implements OnInit {
       });
       yPosition += aptAddress.length * 5;
     } else {
-      // House address format
       doc.text(`No. ${invoice.billingInfo.houseNo || 'N/A'}`, 15, yPosition);
       doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
       doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
       yPosition += 15;
     }
 
-    // Reduced space between address and invoice details
     yPosition += 5;
 
     // Invoice Details
@@ -528,7 +526,6 @@ export class ViewOrdersComponent implements OnInit {
     doc.text(invoice.invoiceNumber || 'N/A', 15, yPosition + 5);
     yPosition += 10;
 
-    // Reduced space between Invoice No and Delivery Method
     yPosition += 3;
 
     doc.setFont('helvetica', 'bold');
@@ -669,7 +666,6 @@ export class ViewOrdersComponent implements OnInit {
 
     // Additional Items
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
-      // Added space between Delivery Method and Additional Items
       yPosition += 5;
 
       const estimatedAdditionalItemsHeight =
@@ -827,52 +823,61 @@ export class ViewOrdersComponent implements OnInit {
 
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
-    // Remarks
-    const estimatedRemarksHeight = 30;
+    // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
+    const estimatedRemarksHeight = 50;
     if (yPosition + estimatedRemarksHeight > 250) {
       doc.addPage();
       yPosition = 20;
     }
 
-    doc.setFontSize(9);
+    // Remarks Title without underline
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('Remarks:', 15, yPosition);
-    yPosition += 5;
+    yPosition += 8;
+
+    // Remarks content
+    doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     const remarks = [
       'Kindly inspect all goods at the time of delivery to ensure accuracy and condition.',
+      '',
       'Polygon does not accept returns under any circumstances.',
+      '',
       'Please report any issues or discrepancies within 24 hours of delivery to ensure prompt attention.',
+      '',
       'For any assistance, feel free to contact our customer service team.',
     ];
+
     remarks.forEach((remark) => {
-      doc.text(remark, 15, yPosition);
-      yPosition += 5;
+      if (remark) {
+        doc.text(remark, 15, yPosition);
+      }
+      yPosition += 4;
     });
 
     // Footer
-    const estimatedFooterHeight = 20;
-    if (yPosition + estimatedFooterHeight > 250) {
-      doc.addPage();
-      yPosition = 20;
-    }
-
-    doc.setFontSize(9);
+    yPosition += 8;
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
     doc.text('Thank you for shopping with us!', 105, yPosition, {
       align: 'center',
     });
-    yPosition += 5;
+
+    yPosition += 6;
+    doc.setFontSize(9);
     doc.text(
-      'WE WILL SEND YOU MORE OFFERS, LOWEST PRICED VEGGIES FROM US',
+      'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
       105,
       yPosition,
       { align: 'center' }
     );
-    yPosition += 5;
+
+    yPosition += 6;
     doc.setTextColor(128, 128, 128);
+    doc.setFontSize(8);
     doc.text(
-      '-THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED-',
+      '- THIS IS A COMPUTER GENERATED INVOICE, THUS NO SIGNATURE REQUIRED -',
       105,
       yPosition,
       { align: 'center' }

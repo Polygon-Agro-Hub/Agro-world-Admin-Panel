@@ -185,7 +185,7 @@ export class ViewOrdersComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllOrders(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.fetchAllOrders(this.page, this.itemsPerPage);
   }
 
   applyOrderStatusFilters() {
@@ -414,6 +414,11 @@ export class ViewOrdersComponent implements OnInit {
 
   async generatePDF(invoice: InvoiceData): Promise<void> {
     // Helper functions
+    const formatNumberWithCommas = (value: string | number): string => {
+      const num = parseNum(value);
+      return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    };
+
     const parseNum = (value: string | number): number => {
       if (typeof value === 'number') return value;
       if (!value) return 0;
@@ -585,7 +590,7 @@ export class ViewOrdersComponent implements OnInit {
     }
 
     // Add extra space here between Delivery Method and Package Title
-    yPosition += 10; // This is the added line for extra spacing
+    yPosition += 10;
 
     // Right side details
     const rightYStart = 55;
@@ -593,7 +598,7 @@ export class ViewOrdersComponent implements OnInit {
     doc.text('Grand Total:', 140, rightYStart);
     doc.setFontSize(11);
     doc.text(
-      `Rs. ${parseNum(invoice.grandTotal).toFixed(2)}`,
+      `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
       140,
       rightYStart + 5
     );
@@ -632,7 +637,7 @@ export class ViewOrdersComponent implements OnInit {
           15,
           yPosition
         );
-        doc.text(`Rs. ${parseNum(pack.amount).toFixed(2)}`, 180, yPosition, {
+        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 180, yPosition, {
           align: 'right',
         });
         yPosition += 5;
@@ -681,10 +686,10 @@ export class ViewOrdersComponent implements OnInit {
           alternateRowStyles: {
             fillColor: [255, 255, 255],
           },
-          tableLineColor: [209, 213, 219], // Keep outer border color
-          tableLineWidth: 0.5, // Keep outer border width
-          showHorizontalLines: false, // Remove inner horizontal lines
-          showVerticalLines: false, // Remove inner vertical lines
+          tableLineColor: [209, 213, 219],
+          tableLineWidth: 0.5,
+          showHorizontalLines: false,
+          showVerticalLines: false,
         });
 
         yPosition = (doc as any).lastAutoTable.finalY + 10;
@@ -708,7 +713,7 @@ export class ViewOrdersComponent implements OnInit {
       doc.setFont('helvetica', 'bold');
       doc.text(addTitle, 15, yPosition);
       doc.text(
-        `Rs. ${parseNum(invoice.additionalItemsTotal).toFixed(2)}`,
+        `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
         180,
         yPosition,
         { align: 'right' }
@@ -747,10 +752,10 @@ export class ViewOrdersComponent implements OnInit {
           `${i + 1}.`,
           it.name || 'N/A',
           it.unitPrice
-            ? `Rs. ${parseNum(it.unitPrice).toFixed(2)}`
+            ? `Rs. ${formatNumberWithCommas(it.unitPrice)}`
             : 'Rs. 0.00',
           `${it.quantity || '0'} ${it.unit || ''}`.trim(),
-          it.amount ? `Rs. ${parseNum(it.amount).toFixed(2)}` : 'Rs. 0.00',
+          it.amount ? `Rs. ${formatNumberWithCommas(it.amount)}` : 'Rs. 0.00',
         ]),
       ];
 
@@ -771,10 +776,10 @@ export class ViewOrdersComponent implements OnInit {
         alternateRowStyles: {
           fillColor: [255, 255, 255],
         },
-        tableLineColor: [209, 213, 219], // Keep outer border color
-        tableLineWidth: 0.5, // Keep outer border width
-        showHorizontalLines: false, // Remove inner horizontal lines
-        showVerticalLines: false, // Remove inner vertical lines
+        tableLineColor: [209, 213, 219],
+        tableLineWidth: 0.5,
+        showHorizontalLines: false,
+        showVerticalLines: false,
       });
 
       yPosition = (doc as any).lastAutoTable.finalY + 10;
@@ -798,22 +803,25 @@ export class ViewOrdersComponent implements OnInit {
     yPosition += 5;
 
     const grandTotalBody: any[] = [
-      ['Family Packs', `Rs. ${parseNum(invoice.familyPackTotal).toFixed(2)}`],
+      [
+        'Family Packs',
+        `Rs. ${formatNumberWithCommas(invoice.familyPackTotal)}`,
+      ],
       [
         'Additional Items',
-        `Rs. ${parseNum(invoice.additionalItemsTotal).toFixed(2)}`,
+        `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
       ],
-      ['Delivery Fee', `Rs. ${parseNum(invoice.deliveryFee).toFixed(2)}`],
-      ['Discount', `Rs. ${parseNum(invoice.discount).toFixed(2)}`],
+      ['Delivery Fee', `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`],
+      ['Discount', `Rs. ${formatNumberWithCommas(invoice.discount)}`],
       [
         { content: 'Total', styles: { fontStyle: 'bold' } },
         {
-          content: `Rs. ${(
+          content: `Rs. ${formatNumberWithCommas(
             parseNum(invoice.familyPackTotal) +
-            parseNum(invoice.additionalItemsTotal) +
-            parseNum(invoice.deliveryFee) -
-            parseNum(invoice.discount)
-          ).toFixed(2)}`,
+              parseNum(invoice.additionalItemsTotal) +
+              parseNum(invoice.deliveryFee) -
+              parseNum(invoice.discount)
+          )}`,
           styles: { fontStyle: 'bold' },
         },
       ],
@@ -919,8 +927,6 @@ export class ViewOrdersComponent implements OnInit {
   private async getLogoUrl(): Promise<string | null> {
     try {
       const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
-
-      // Add type assertion
       const logoBlob = (await this.http
         .get(logoPath, { responseType: 'blob' })
         .toPromise()) as Blob;
@@ -957,7 +963,3 @@ class Orders {
   formattedCreatedDate!: string;
   scheduleDateFormattedSL?: string;
 }
-
-// applyFilters() {
-//   this.fetchAllSalesAgents(this.page, this.itemsPerPage, this.searchText, this.statusFilter);
-// }

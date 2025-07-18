@@ -854,7 +854,7 @@ export class ViewOrdersComponent implements OnInit {
 
     // Add final total
     grandTotalBody.push([
-      { content: 'Total', styles: { fontStyle: 'bold' } },
+      { content: 'Grand Total', styles: { fontStyle: 'bold' } },
       {
         content: `Rs. ${formatNumberWithCommas(
           parseNum(invoice.familyPackTotal) +

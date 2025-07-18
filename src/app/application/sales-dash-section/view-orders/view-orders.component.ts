@@ -672,8 +672,6 @@ export class ViewOrdersComponent implements OnInit {
           styles: {
             fontSize: 9,
             cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
-            lineColor: [209, 213, 219],
-            lineWidth: 0.5,
           },
           headStyles: {
             fillColor: [248, 248, 248],
@@ -683,6 +681,10 @@ export class ViewOrdersComponent implements OnInit {
           alternateRowStyles: {
             fillColor: [255, 255, 255],
           },
+          tableLineColor: [209, 213, 219], // Keep outer border color
+          tableLineWidth: 0.5, // Keep outer border width
+          showHorizontalLines: false, // Remove inner horizontal lines
+          showVerticalLines: false, // Remove inner vertical lines
         });
 
         yPosition = (doc as any).lastAutoTable.finalY + 10;
@@ -760,8 +762,6 @@ export class ViewOrdersComponent implements OnInit {
         styles: {
           fontSize: 9,
           cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
-          lineColor: [209, 213, 219],
-          lineWidth: 0.5,
         },
         headStyles: {
           fillColor: [243, 244, 246],
@@ -771,6 +771,10 @@ export class ViewOrdersComponent implements OnInit {
         alternateRowStyles: {
           fillColor: [255, 255, 255],
         },
+        tableLineColor: [209, 213, 219], // Keep outer border color
+        tableLineWidth: 0.5, // Keep outer border width
+        showHorizontalLines: false, // Remove inner horizontal lines
+        showVerticalLines: false, // Remove inner vertical lines
       });
 
       yPosition = (doc as any).lastAutoTable.finalY + 10;

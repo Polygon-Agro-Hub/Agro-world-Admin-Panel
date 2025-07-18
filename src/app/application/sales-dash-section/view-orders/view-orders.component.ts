@@ -786,7 +786,8 @@ export class ViewOrdersComponent implements OnInit {
     }
 
     // Grand Total
-    const estimatedTotalHeight = 30;
+    const estimatedTotalHeight =
+      30 + (invoice.familyPackItems?.length || 0) * 5;
     if (yPosition + estimatedTotalHeight > 250) {
       doc.addPage();
       yPosition = 20;
@@ -802,30 +803,50 @@ export class ViewOrdersComponent implements OnInit {
     doc.line(15, yPosition, 195, yPosition);
     yPosition += 5;
 
-    const grandTotalBody: any[] = [
-      [
-        'Family Packs',
-        `Rs. ${formatNumberWithCommas(invoice.familyPackTotal)}`,
-      ],
-      [
+    // Create grand total body with individual packages
+    const grandTotalBody: any[] = [];
+
+    // Add each family pack separately if they exist
+    if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
+      invoice.familyPackItems.forEach((pack) => {
+        grandTotalBody.push([
+          pack.name || 'Family Pack',
+          `Rs. ${formatNumberWithCommas(pack.amount)}`,
+        ]);
+      });
+    }
+
+    // Add additional items total if they exist
+    if (invoice.additionalItems && invoice.additionalItems.length > 0) {
+      grandTotalBody.push([
         'Additional Items',
         `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
-      ],
-      ['Delivery Fee', `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`],
-      ['Discount', `Rs. ${formatNumberWithCommas(invoice.discount)}`],
-      [
-        { content: 'Total', styles: { fontStyle: 'bold' } },
-        {
-          content: `Rs. ${formatNumberWithCommas(
-            parseNum(invoice.familyPackTotal) +
-              parseNum(invoice.additionalItemsTotal) +
-              parseNum(invoice.deliveryFee) -
-              parseNum(invoice.discount)
-          )}`,
-          styles: { fontStyle: 'bold' },
-        },
-      ],
-    ];
+      ]);
+    }
+
+    // Add delivery fee and discount
+    grandTotalBody.push([
+      'Delivery Fee',
+      `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+    ]);
+    grandTotalBody.push([
+      'Discount',
+      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+    ]);
+
+    // Add final total
+    grandTotalBody.push([
+      { content: 'Total', styles: { fontStyle: 'bold' } },
+      {
+        content: `Rs. ${formatNumberWithCommas(
+          parseNum(invoice.familyPackTotal) +
+            parseNum(invoice.additionalItemsTotal) +
+            parseNum(invoice.deliveryFee) -
+            parseNum(invoice.discount)
+        )}`,
+        styles: { fontStyle: 'bold' },
+      },
+    ]);
 
     (doc as any).autoTable({
       startY: yPosition,

@@ -40,6 +40,7 @@ interface InvoiceData {
     city: string;
     phonecode1: string;
     phone1: string;
+    userEmail: string;
     buildingNo?: string;
     buildingName?: string;
     unitNo?: string;
@@ -358,6 +359,7 @@ export class ViewOrdersComponent implements OnInit {
               city: invoiceDetails.city || 'N/A',
               phonecode1: invoiceDetails.phonecode1 || 'N/A',
               phone1: invoiceDetails.phone1 || 'N/A',
+              userEmail: invoiceDetails.userEmail || 'N/A',
               buildingNo: invoiceDetails.buildingNo || '',
               buildingName: invoiceDetails.buildingName || '',
               unitNo: invoiceDetails.unitNo || '',
@@ -525,6 +527,14 @@ export class ViewOrdersComponent implements OnInit {
       }`.trim();
       if (phoneNumber) {
         doc.text(`${phoneNumber}`, 15, yPosition);
+        yPosition += 5;
+      }
+    }
+
+    if (invoice.billingInfo.userEmail) {
+      const email = `${invoice.billingInfo.userEmail} `.trim();
+      if (email) {
+        doc.text(`${email}`, 15, yPosition);
         yPosition += 5;
       }
     }

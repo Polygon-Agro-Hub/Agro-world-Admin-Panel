@@ -1,7 +1,10 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="flex space-x-4"></div>
-
+ <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
@@ -228,12 +231,13 @@
           <p class="[font-size:14px] text-[#727272]">Phone:</p>
         </div>
         <div class="flex items-center gap-2">
-          <p
-            class="text-lg text-[#000000] dark:text-white cursor-pointer hover:underline"
-            (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"
-          >
-            {{ copiedPhone === cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber ? '' : cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber }}
-          </p>
+         <p
+  class="text-lg text-[#000000] dark:text-white cursor-pointer hover:underline"
+  (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"
+>
+  {{ cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber }}
+</p>
+
           <i
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"
@@ -247,12 +251,13 @@
           <p class="[font-size:14px] text-[#727272]">Email:</p>
         </div>
         <div class="flex items-center gap-2">
-          <p
-            class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
-            (click)="copyToClipboard(cusObjDetails.email, 'email')"
-          >
-            {{ copiedEmail === cusObjDetails.email ? '' : cusObjDetails.email }}
-          </p>
+         <p
+  class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
+  (click)="copyToClipboard(cusObjDetails.email, 'email')"
+>
+  {{ cusObjDetails.email }}
+</p>
+
           <i
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="copyToClipboard(cusObjDetails.email, 'email')"

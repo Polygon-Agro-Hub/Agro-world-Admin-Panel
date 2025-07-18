@@ -1,8 +1,17 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
-  <i class="fa-solid fa-arrow-left"></i> Back
-</button>
+<nav class="mb-4">
+    <ol class="flex items-center space-x-2 text-sm text-gray-500">
+      <li>
+        <a routerLink="/sales-dash" >Marketplace</a>
+      </li>
+      <li>
+        <span class="mx-2">></span>
+      </li>
+      <li class="text-gray-500 ">Retail Customer List</li>
+    </ol>
+  </nav>
+
 
 <!-- Popup -->
 <div *ngIf="isPopupOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">

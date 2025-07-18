@@ -1,11 +1,8 @@
-
-
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CustomersService } from '../../../services/dash/customers.service';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -35,6 +32,7 @@ interface Customers {
   apartmentStreetName: string;
   apartmentCity: string;
   apartmentFloorNo: string;
+  title?: string; // Optional to handle title in popup
 }
 
 @Component({
@@ -45,6 +43,7 @@ interface Customers {
     LoadingSpinnerComponent,
     FormsModule,
     NgxPaginationModule,
+    RouterModule,
   ],
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.css'],
@@ -76,10 +75,6 @@ export class CustomersComponent implements OnInit {
 
   ngOnInit() {
     this.fetchAllCustomers();
-  }
-
-  back(): void {
-    this.router.navigate(['sales-dash']);
   }
 
   openPopup(customer: any) {
@@ -157,6 +152,10 @@ export class CustomersComponent implements OnInit {
   private searchInCustomer(customer: Customers, searchText: string): boolean {
     const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
     const agentName = `${customer.salesAgentFirstName} ${customer.salesAgentLastName}`.toLowerCase();
+    const address =
+      customer.buildingType === 'House'
+        ? `${customer.houseHouseNo} ${customer.houseStreetName} ${customer.houseCity}`
+        : `${customer.apartmentBuildingNo} ${customer.apartmentBuildingName} ${customer.apartmentUnitNo} ${customer.apartmentFloorNo} ${customer.apartmentHouseNo} ${customer.apartmentStreetName} ${customer.apartmentCity}`.toLowerCase();
 
     const fieldsToSearch = [
       customer.cusId,
@@ -165,6 +164,7 @@ export class CustomersComponent implements OnInit {
       customer.email,
       customer.empId,
       agentName,
+      address,
     ];
 
     return fieldsToSearch.some((field) =>

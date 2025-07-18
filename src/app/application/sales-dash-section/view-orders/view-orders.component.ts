@@ -611,7 +611,12 @@ export class ViewOrdersComponent implements OnInit {
     doc.text('Grand Total:', 140, rightYStart);
     doc.setFontSize(11);
     doc.text(
-      `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
+      `Rs. ${formatNumberWithCommas(
+        parseNum(invoice.familyPackTotal) +
+          parseNum(invoice.additionalItemsTotal) +
+          parseNum(invoice.deliveryFee) -
+          parseNum(invoice.discount)
+      )}`,
       140,
       rightYStart + 5
     );

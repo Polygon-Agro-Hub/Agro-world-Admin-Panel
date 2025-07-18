@@ -447,44 +447,44 @@ export class ViewOrdersComponent implements OnInit {
       creator: 'Polygon Holdings',
     });
 
-    // Load and add logo
+    // INVOICE TITLE AT THE VERY TOP
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(62, 32, 109);
+    doc.text('INVOICE', 105, 15, { align: 'center' });
+
+    // Load and add logo (positioned below title)
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 150, 10, 40, 15);
+        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 15);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);
     }
 
-    // Company Info
+    // Company Info (positioned below title)
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Polygon Holdings (Private) Ltd', 15, 20);
+    doc.text('Polygon Holdings (Private) Ltd', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('No. 614, Nawam Mawatha, Colombo 02', 15, 25);
-    doc.text('Contact No: +94 112 700 900', 15, 30);
-    doc.text('info@polygon.lk', 15, 35);
-
-    // Invoice Title
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(62, 32, 109);
-    doc.text('INVOICE', 105, 20, { align: 'center' });
+    doc.text('No. 614, Nawam Mawatha, Colombo 02', 15, 30);
+    doc.text('Contact No: +94 112 700 900', 15, 35);
+    doc.text('info@polygon.lk', 15, 40);
 
     // Bill To section - Dynamic address display
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.text('Bill To:', 15, 50);
+    doc.text('Bill To:', 15, 55); // Adjusted y-position
     doc.setFont('helvetica', 'normal');
 
     const billingName = `${invoice.billingInfo?.title || ''} ${
       invoice.billingInfo?.fullName || ''
     }`.trim();
-    doc.text(billingName || 'N/A', 15, 55);
+    doc.text(billingName || 'N/A', 15, 60);
 
-    let yPosition = 60;
+    let yPosition = 65;
 
     // Display address based on building type
     if (invoice.buildingType === 'Apartment') {
@@ -566,7 +566,7 @@ export class ViewOrdersComponent implements OnInit {
     }
 
     // Right side details
-    const rightYStart = 50;
+    const rightYStart = 55;
     doc.setFont('helvetica', 'bold');
     doc.text('Grand Total:', 140, rightYStart);
     doc.setFontSize(11);

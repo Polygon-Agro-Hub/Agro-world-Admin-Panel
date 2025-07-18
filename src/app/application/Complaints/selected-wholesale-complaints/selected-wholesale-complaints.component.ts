@@ -179,7 +179,7 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           this.fetchComplain();
           this.hideDialog();
           this.messageContent = '';
-          this.router.navigate(['complaints/retail-complaints']);
+          this.router.navigate(['complaints/wholesale-complaints']);
         } else {
           Swal.fire({
             icon: 'error',

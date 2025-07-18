@@ -33,7 +33,7 @@ export class ViewRetailCustomeresComponent implements OnInit {
     this.fetchRetailCustomers();
   }
 
-  goBack(): void {
+  back(): void {
     this.router.navigate(['/market/action']);
   }
 

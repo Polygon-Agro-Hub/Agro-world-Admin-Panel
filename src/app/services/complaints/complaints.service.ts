@@ -244,6 +244,7 @@ fetchComplaintCategories(): Observable<any> {
     limit: number,
     status: String,
     category: String,
+    replyStatus:string='',
     comCategory: String,
     searchText: string,
   ): Observable<any> {
@@ -264,6 +265,10 @@ fetchComplaintCategories(): Observable<any> {
 
     if (comCategory) {
       url += `&comCategory=${comCategory}`;
+    }
+
+    if (replyStatus) {
+      url += `&replyStatus=${replyStatus}`;
     }
 
     if (searchText) {

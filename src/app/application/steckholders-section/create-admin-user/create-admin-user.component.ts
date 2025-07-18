@@ -16,12 +16,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Console } from 'node:console';
-import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
-import { position } from 'html2canvas/dist/types/css/property-descriptors/position';
 
 interface Admin {
   id: number;
@@ -69,7 +65,7 @@ export class CreateAdminUserComponent implements OnInit {
       userName: ['', [Validators.required, this.singleWordValidator]],
       role: ['', Validators.required],
       position: ['', Validators.required],
-      password: ['', [Validators.required, this.passwordValidator()]],
+      password: ['', []], // Set validation dynamically
     });
   }
 
@@ -80,6 +76,9 @@ export class CreateAdminUserComponent implements OnInit {
 
     if (this.itemId) {
       this.getAdminById(this.itemId);
+      this.setPasswordValidation(false); // Not required for update
+    } else {
+      this.setPasswordValidation(true); // Required for creation
     }
 
     this.getAllRoles();
@@ -95,127 +94,88 @@ export class CreateAdminUserComponent implements OnInit {
     });
   }
 
+  setPasswordValidation(isRequired: boolean) {
+    const passwordControl = this.userForm.get('password');
+    if (isRequired) {
+      passwordControl?.setValidators([
+        Validators.required,
+        this.passwordValidator(),
+      ]);
+    } else {
+      passwordControl?.clearValidators();
+    }
+    passwordControl?.updateValueAndValidity();
+  }
+
   get isSuperAdminSelected(): boolean {
     return +this.userForm.get('role')?.value === 1;
   }
 
   getAllRoles() {
     const token = this.tokenService.getToken();
+    if (!token) return;
 
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    this.http
-      .get<any>(`${environment.API_URL}auth/get-all-roles`, {
-        headers,
-      })
-      .subscribe(
-        (response) => {
-          this.rolesList = response.roles;
-        },
-        (error) => {
-          console.error('Error fetching news:', error);
-        }
-      );
+    this.http.get<any>(`${environment.API_URL}auth/get-all-roles`, { headers }).subscribe(
+      (response) => (this.rolesList = response.roles),
+      (error) => console.error('Error fetching roles:', error)
+    );
   }
 
   getAllPosition() {
     const token = this.tokenService.getToken();
+    if (!token) return;
 
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    this.http
-      .get<any>(`${environment.API_URL}auth/get-all-position`, {
-        headers,
-      })
-      .subscribe(
-        (response) => {
-          this.positionList = response.positions;
-        },
-        (error) => {
-          console.error('Error fetching news:', error);
-        }
-      );
+    this.http.get<any>(`${environment.API_URL}auth/get-all-position`, { headers }).subscribe(
+      (response) => (this.positionList = response.positions),
+      (error) => console.error('Error fetching positions:', error)
+    );
   }
 
   singleWordValidator(control: AbstractControl): ValidationErrors | null {
     const hasSpace = /\s/.test(control.value);
     const hasNumber = /\d/.test(control.value);
-
-    if (hasNumber) {
-      return { containsNumber: true };
-    }
-
+    if (hasNumber) return { containsNumber: true };
     return hasSpace ? { singleWord: true } : null;
   }
 
-  passwordValidator(): ValidationErrors | null {
+  passwordValidator(): (control: AbstractControl) => ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
       const value: string = control.value;
+      if (!value) return null;
 
-      if (!value) {
-        return null;
-      }
-
-      const hasUpperCase = /[A-Z]/.test(value);
-      const hasLowerCase = /[a-z]/.test(value);
-      const hasNumeric = /[0-9]/.test(value);
-      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(
-        value
-      );
-
-      const passwordValid =
-        hasUpperCase &&
-        hasLowerCase &&
-        hasNumeric &&
-        hasSpecialChar &&
+      const valid =
+        /[A-Z]/.test(value) &&
+        /[a-z]/.test(value) &&
+        /[0-9]/.test(value) &&
+        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value) &&
         value.length >= 8;
 
-      return !passwordValid ? { invalidPassword: true } : null;
+      return !valid ? { invalidPassword: true } : null;
     };
   }
 
   getErrorMessage(controlName: string): string {
     const control = this.userForm.get(controlName);
-    if (control?.hasError('required')) {
-      return 'This field is required';
-    }
-    if (control?.hasError('email')) {
-      return 'Please enter a valid email address';
-    }
-    if (control?.hasError('invalidPassword')) {
-      return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character';
-    }
-    if (control?.hasError('singleWord')) {
-      return 'Username must be a single word (no spaces allowed)';
-    }
-    if (control?.hasError('containsNumber')) {
+    if (control?.hasError('required')) return 'This field is required';
+    if (control?.hasError('email')) return 'Enter a valid email';
+    if (control?.hasError('invalidPassword'))
+      return 'Password must be 8+ chars, include upper/lowercase, number & special char';
+    if (control?.hasError('singleWord'))
+      return 'Username must be a single word (no spaces)';
+    if (control?.hasError('containsNumber'))
       return 'Username cannot contain numbers';
-    }
     return '';
   }
 
-  getAdminById(id: any): void {
+  getAdminById(id: number): void {
     const token = this.tokenService.getToken();
+    if (!token) return;
 
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http
       .get<Admin[]>(`${environment.API_URL}auth/get-admin-by-id/${id}`, {
@@ -224,47 +184,40 @@ export class CreateAdminUserComponent implements OnInit {
       .subscribe(
         (data) => {
           if (data && data.length > 0) {
-            const adminData = data[0];
-
+            const admin = data[0];
             this.userForm.patchValue({
-              id: adminData.id,
-              mail: adminData.mail,
-              userName: adminData.userName,
-              role: adminData.role,
-              position: adminData.position,
+              id: admin.id,
+              mail: admin.mail,
+              userName: admin.userName,
+              role: admin.role,
+              position: admin.position,
             });
-          } else {
-            console.warn('No data found for the provided ID.');
           }
         },
-        (error) => {
-          console.error('Error fetching admin data:', error);
-          if (error.status === 401) {
-          }
-        }
+        (error) => console.error('Error fetching admin:', error)
       );
   }
 
-  openPopup() {
-    this.isPopupVisible = true;
-  }
-
   updateAdmin(id: any) {
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please fill out all required fields correctly.',
+      });
+      return;
+    }
+
     const token = this.tokenService.getToken();
-
-    if (!token) {
-      console.error('No token found');
+    if (!token || this.itemId === null) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Missing authentication or ID.',
+      });
       return;
     }
-
-    if (this.itemId === null) {
-      console.error('No item ID found');
-      return;
-    }
-
-    const originalId = this.userForm.get('id')?.value;
-
-    this.userForm.patchValue({ id: this.itemId });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -278,11 +231,7 @@ export class CreateAdminUserComponent implements OnInit {
         { headers }
       )
       .subscribe(
-        (res: any) => {
-          this.userForm.patchValue(res);
-
-          this.userForm.patchValue({ id: originalId });
-
+        () => {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -292,13 +241,12 @@ export class CreateAdminUserComponent implements OnInit {
           this.navigatePath('/steckholders/action/admin');
         },
         (error) => {
-          console.error('Error updating Admin', error);
-
-          this.userForm.patchValue({ id: originalId });
           Swal.fire({
             icon: 'error',
-            title: 'Unsuccess',
-            text: 'Error updating Admin',
+            title: 'Error',
+            text:
+              'Error updating Admin: ' +
+              (error.error?.error || 'Unknown error'),
           });
         }
       );
@@ -316,11 +264,7 @@ export class CreateAdminUserComponent implements OnInit {
     }
 
     const token = this.tokenService.getToken();
-
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
+    if (!token) return;
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -332,7 +276,7 @@ export class CreateAdminUserComponent implements OnInit {
         headers,
       })
       .subscribe(
-        (res: any) => {
+        () => {
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -342,24 +286,25 @@ export class CreateAdminUserComponent implements OnInit {
           this.navigatePath('/steckholders/action/admin');
         },
         (error) => {
-          console.error('Error creating Admin', error);
           Swal.fire({
             icon: 'error',
             title: 'Unsuccess',
-            text: error.error.error,
+            text: error.error?.error || 'Creation failed',
           });
         }
       );
   }
 
+  openPopup() {
+    this.isPopupVisible = true;
+  }
+
   onCancel() {
     this.userForm.reset();
-    this.navigatePath('/steckholders/action/admin');
   }
 
   onCancel2() {
     this.userForm.reset();
-    this.navigatePath('/steckholders/action/admin');
   }
 
   togglePasswordVisibility() {

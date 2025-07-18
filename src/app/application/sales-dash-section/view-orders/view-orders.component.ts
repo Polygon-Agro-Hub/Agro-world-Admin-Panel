@@ -38,7 +38,8 @@ interface InvoiceData {
     houseNo: string;
     street: string;
     city: string;
-    phone: string;
+    phonecode1: string;
+    phone1: string;
     buildingNo?: string;
     buildingName?: string;
     unitNo?: string;
@@ -350,12 +351,13 @@ export class ViewOrdersComponent implements OnInit {
             familyPackItems: response.data?.items?.familyPacks || [],
             additionalItems: response.data?.items?.additionalItems || [],
             billingInfo: {
-              title: billingDetails.title || '',
-              fullName: billingDetails.firstName || 'N/A',
+              title: invoiceDetails.title || '',
+              fullName: invoiceDetails.fullName || 'N/A',
               houseNo: invoiceDetails.houseNo || 'N/A',
               street: invoiceDetails.streetName || 'N/A',
               city: invoiceDetails.city || 'N/A',
-              phone: billingDetails.phone1 || 'N/A',
+              phonecode1: invoiceDetails.phonecode1 || 'N/A',
+              phone1: invoiceDetails.phone1 || 'N/A',
               buildingNo: invoiceDetails.buildingNo || '',
               buildingName: invoiceDetails.buildingName || '',
               unitNo: invoiceDetails.unitNo || '',
@@ -515,6 +517,16 @@ export class ViewOrdersComponent implements OnInit {
       doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
       doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
       yPosition += 15;
+    }
+
+    if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
+      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
+        invoice.billingInfo.phone1 || ''
+      }`.trim();
+      if (phoneNumber) {
+        doc.text(`${phoneNumber}`, 15, yPosition);
+        yPosition += 5;
+      }
     }
 
     yPosition += 5;

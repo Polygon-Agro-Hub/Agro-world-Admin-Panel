@@ -1,0 +1,199 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-2 mt-0 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="w-full mx-auto pt-6 py-6 px-12 bg-white dark:bg-tileBlack rounded-lg shadow-md"
+>
+  <h2 class="font-medium text-[#292929] mb-6 dark:text-textDark">
+  
+ </h2>
+
+  <!-- Personal Details -->
+  <h3 class="font-medium text-[#292929] mb-4 dark:text-textDark">Personal Details</h3>
+  
+  <!-- Row 1: EMP ID / User Name, Company Name -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">EMP ID / User Name</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('empId')?.value }}
+      </p>
+    </div>
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Company Name</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('companyName')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 2: Staff Employee Type, Job Role -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Staff Employee Type</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('staffEmployeeType')?.value }}
+      </p>
+    </div>
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Job Role</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('jobRole')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 3: Preferred Languages, Status -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Preferred Languages</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('preferredLanguages')?.value.join(', ') }}
+      </p>
+    </div>
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Status</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('status')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 4: First Name, Last Name -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">First Name (in English)</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('firstNameEnglish')?.value }}
+      </p>
+    </div>
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Last Name (in English)</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('lastNameEnglish')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 5: Phone Number 1, Phone Number 2 -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Phone Number 1</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('phoneCode01')?.value }} {{ headForm.get('phoneNumber01')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Phone Number 2 (Optional)</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('phoneCode02')?.value }} {{ headForm.get('phoneNumber02')?.value || 'N/A' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 6: NIC Number, Email -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">NIC Number</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('nic')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Email</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('email')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Residential Details -->
+  <h3 class="font-medium text-[#292929] mb-4 dark:text-textDark">Residential Details</h3>
+
+  <!-- Row 7: House / Plot Number, Street Name -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">House / Plot Number</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('houseNumber')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Street Name</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('streetName')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 8: City, District -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">City</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('city')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">District</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('district')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 9: Province, Country -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Province</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('province')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Country</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('country')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Bank Details -->
+  <h3 class="font-medium text-[#292929] mb-4 dark:text-textDark">Bank Details</h3>
+
+  <!-- Row 10: Account Holder's Name, Account Number -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Account Holder's Name</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('accHolderName')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Account Number</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('accNumber')?.value }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Row 11: Bank Name, Branch Name -->
+  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+    <div class="flex-1 mb-4 md:mb-0">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Bank Name</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('bankName')?.value }}
+      </p>
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Branch Name (Optional)</label>
+      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
+        {{ headForm.get('branchName')?.value || 'N/A' }}
+      </p>
+    </div>
+  </div>
+</div>

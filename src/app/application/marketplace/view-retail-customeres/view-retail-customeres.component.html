@@ -235,7 +235,7 @@
             {{ copiedPhone === cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber ? '' : cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber }}
           </p>
           <i
-            class="fa-regular fa-copy text-[#727272] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
+            class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"
           ></i>
         </div>
@@ -254,7 +254,7 @@
             {{ copiedEmail === cusObjDetails.email ? '' : cusObjDetails.email }}
           </p>
           <i
-            class="fa-regular fa-copy text-[#727272] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
+            class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="copyToClipboard(cusObjDetails.email, 'email')"
           ></i>
         </div>

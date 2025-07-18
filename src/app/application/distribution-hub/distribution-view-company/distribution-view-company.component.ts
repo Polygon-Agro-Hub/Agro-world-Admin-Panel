@@ -58,7 +58,7 @@ export class DistributionViewCompanyComponent implements OnInit {
     });
     this.fetchAllCompanyHeads();
   }
-
+  
   fetchAllCompanyHeads(
     companyId: number = this.companyId!,
     page: number = 1,
@@ -151,6 +151,22 @@ export class DistributionViewCompanyComponent implements OnInit {
       }
     });
   }
+
+view(id: number, isView: boolean): void {
+  if (!id) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Input',
+      text: 'Officer ID is missing.',
+    });
+    return;
+  }
+this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
+  queryParams: { isView }
+});
+
+}
+
 
   edit(id: number): void {
     this.router.navigate([

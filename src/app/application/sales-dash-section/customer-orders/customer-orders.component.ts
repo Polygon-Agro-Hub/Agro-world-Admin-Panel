@@ -51,7 +51,7 @@ interface Order {
   isPaid: number;
   fullTotal: number;
   status: string;
-  isPackage:number
+  isPackage: number
 }
 
 interface ApiResponse {
@@ -72,6 +72,8 @@ interface ApiResponse {
   styleUrl: './customer-orders.component.css'
 })
 export class CustomerOrdersComponent implements OnInit {
+
+  hasData: boolean = false;
   isLoading: boolean = false;
   activeButton: string = 'assigned';
   errorMessage: string | null = null;
@@ -92,10 +94,10 @@ export class CustomerOrdersComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private dasService:CustomersService,
-    private getInvoiceDetails: InvoiceService,
+    private dasService: CustomersService,
+    private invoiceSrv: InvoiceService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -113,8 +115,10 @@ export class CustomerOrdersComponent implements OnInit {
   }
 
   onStatusChange(status: string): void {
+    console.log('calling')
     if (this.activeButton !== status) {
       this.activeButton = status;
+      console.log('activeButton', this.activeButton)
       this.fetchCustomerOrders();
     }
   }
@@ -127,8 +131,9 @@ export class CustomerOrdersComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = null;
+    this.hasData = false; // reset before new fetch
+    console.log('has data', this.hasData)
 
-    // Get the API status value from our mapping
     const apiStatus = this.statusMap[this.activeButton] || 'Ordered';
 
     this.dasService
@@ -136,21 +141,28 @@ export class CustomerOrdersComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: ApiResponse) => {
-          console.log('This is the tesponce', response);
+          console.log('This is the response', response);
+          console.log('has data', this.hasData)
+          this.hasData = response.data.orders.length > 0 ? true : false;
 
           if (response.success) {
             this.orders = response.data.orders;
             this.totalItems = response.data.totalCount;
+
+            // check for data
           } else {
             this.errorMessage = response.message || 'Failed to load orders';
+            this.hasData = false;
           }
         },
         error: (error) => {
           console.error('Error fetching orders:', error);
           this.errorMessage =
             error.message || 'An error occurred while fetching orders';
+          this.hasData = false;
         },
       });
+
   }
 
   getStatusClass(status: string): string {
@@ -167,7 +179,7 @@ export class CustomerOrdersComponent implements OnInit {
 
   downloadInvoice(orderId: string, invoiceNumber: string): void {
     this.isLoading = true;
-    this.getInvoiceDetails
+    this.invoiceSrv
       .getInvoiceDetails(parseInt(orderId))
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
@@ -185,31 +197,31 @@ export class CustomerOrdersComponent implements OnInit {
             additionalItems: response.data.items?.additionalItems || [],
             billingInfo: response.data.billing
               ? {
-                  title: response.data.billing.title || '',
-                  fullName: response.data.billing.fullName || '',
-                  houseNo: response.data.billing.houseNo || '',
-                  street: response.data.billing.street || '',
-                  city: response.data.billing.city || '',
-                  phone: response.data.billing.phone1 || '',
-                }
+                title: response.data.billing.title || '',
+                fullName: response.data.billing.fullName || '',
+                houseNo: response.data.billing.houseNo || '',
+                street: response.data.billing.street || '',
+                city: response.data.billing.city || '',
+                phone: response.data.billing.phone1 || '',
+              }
               : {
-                  title: '',
-                  fullName: 'N/A',
-                  houseNo: 'N/A',
-                  street: 'N/A',
-                  city: 'N/A',
-                  phone: 'N/A',
-                },
+                title: '',
+                fullName: 'N/A',
+                houseNo: 'N/A',
+                street: 'N/A',
+                city: 'N/A',
+                phone: 'N/A',
+              },
             pickupInfo: response.data.pickupCenter
               ? {
-                  centerName: response.data.pickupCenter.name || '',
-                  address: {
-                    city: response.data.pickupCenter.city || '',
-                    district: response.data.pickupCenter.district || '',
-                    province: response.data.pickupCenter.province || '',
-                    country: response.data.pickupCenter.country || '',
-                  },
-                }
+                centerName: response.data.pickupCenter.name || '',
+                address: {
+                  city: response.data.pickupCenter.city || '',
+                  district: response.data.pickupCenter.district || '',
+                  province: response.data.pickupCenter.province || '',
+                  country: response.data.pickupCenter.country || '',
+                },
+              }
               : undefined,
             familyPackTotal:
               response.data.items?.familyPacks
@@ -311,9 +323,8 @@ export class CustomerOrdersComponent implements OnInit {
     doc.text('Bill To:', 15, 50);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title || ''} ${
-      invoice.billingInfo?.fullName || ''
-    }`.trim();
+    const billingName = `${invoice.billingInfo?.title || ''} ${invoice.billingInfo?.fullName || ''
+      }`.trim();
     doc.text(billingName || 'N/A', 15, 55);
     doc.text(`No. ${invoice.billingInfo?.houseNo || 'N/A'}`, 15, 60);
     doc.text(invoice.billingInfo?.street || 'N/A', 15, 65);
@@ -339,15 +350,13 @@ export class CustomerOrdersComponent implements OnInit {
       doc.text(`Center: ${invoice.pickupInfo.centerName || 'N/A'}`, 15, 115);
       doc.setFont('helvetica', 'normal');
       doc.text(
-        `${invoice.pickupInfo.address?.city || 'N/A'}, ${
-          invoice.pickupInfo.address?.district || 'N/A'
+        `${invoice.pickupInfo.address?.city || 'N/A'}, ${invoice.pickupInfo.address?.district || 'N/A'
         }`,
         15,
         120
       );
       doc.text(
-        `${invoice.pickupInfo.address?.province || 'N/A'}, ${
-          invoice.pickupInfo.address?.country || 'N/A'
+        `${invoice.pickupInfo.address?.province || 'N/A'}, ${invoice.pickupInfo.address?.country || 'N/A'
         }`,
         15,
         125

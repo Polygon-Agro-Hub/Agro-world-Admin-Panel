@@ -30,3 +30,66 @@
     color: #B1B1B1 !important;
   }
   
+
+  /* Dark mode styles for PrimeNG Calendar */
+.dark .custom-calendar .p-datepicker {
+  background: #272F45;
+  color: white;
+  border: 1px solid #4a5568;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header {
+  background: #1a202c;
+  border-bottom: 1px solid #4a5568;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-title {
+  color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev,
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next {
+  color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev:hover,
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next:hover {
+  background: #4a5568;
+  color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td {
+  border: 1px solid #4a5568;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span {
+  color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span:hover {
+  background: #4a5568;
+  color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td.p-datepicker-today span {
+  background: #3182ce;
+  color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-datepicker-other-month span {
+  color: #a0aec0;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-highlight {
+  background: #3182ce;
+  color: white;
+}
+
+/* Clear button dark mode */
+.dark .custom-calendar .p-calendar-clear-icon {
+  color: white;
+}
+
+.dark .custom-calendar .p-calendar-clear-icon:hover {
+  color: #cbd5e0;
+}

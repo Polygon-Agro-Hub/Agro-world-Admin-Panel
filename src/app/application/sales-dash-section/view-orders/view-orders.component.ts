@@ -8,7 +8,7 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { CommonModule, DatePipe,} from '@angular/common';
+import { CommonModule, DatePipe, } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -120,7 +120,7 @@ export class ViewOrdersComponent implements OnInit {
     private datePipe: DatePipe,
     private getInvoiceDetails: InvoiceService,
     private salesDashService: SalesDashService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllOrders();
@@ -343,31 +343,31 @@ export class ViewOrdersComponent implements OnInit {
             additionalItems: response.data.items?.additionalItems || [],
             billingInfo: response.data.billing
               ? {
-                  title: response.data.billing.title || '',
-                  fullName: response.data.billing.fullName || '',
-                  houseNo: response.data.billing.houseNo || '',
-                  street: response.data.billing.street || '',
-                  city: response.data.billing.city || '',
-                  phone: response.data.billing.phone1 || '',
-                }
+                title: response.data.billing.title || '',
+                fullName: response.data.billing.fullName || '',
+                houseNo: response.data.billing.houseNo || '',
+                street: response.data.billing.street || '',
+                city: response.data.billing.city || '',
+                phone: response.data.billing.phone1 || '',
+              }
               : {
-                  title: '',
-                  fullName: 'N/A',
-                  houseNo: 'N/A',
-                  street: 'N/A',
-                  city: 'N/A',
-                  phone: 'N/A',
-                },
+                title: '',
+                fullName: 'N/A',
+                houseNo: 'N/A',
+                street: 'N/A',
+                city: 'N/A',
+                phone: 'N/A',
+              },
             pickupInfo: response.data.pickupCenter
               ? {
-                  centerName: response.data.pickupCenter.name || '',
-                  address: {
-                    city: response.data.pickupCenter.city || '',
-                    district: response.data.pickupCenter.district || '',
-                    province: response.data.pickupCenter.province || '',
-                    country: response.data.pickupCenter.country || '',
-                  },
-                }
+                centerName: response.data.pickupCenter.name || '',
+                address: {
+                  city: response.data.pickupCenter.city || '',
+                  district: response.data.pickupCenter.district || '',
+                  province: response.data.pickupCenter.province || '',
+                  country: response.data.pickupCenter.country || '',
+                },
+              }
               : undefined,
             familyPackTotal:
               response.data.items?.familyPacks
@@ -476,9 +476,8 @@ export class ViewOrdersComponent implements OnInit {
     doc.text('Bill To:', 15, 50);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title || ''} ${
-      invoice.billingInfo?.fullName || ''
-    }`.trim();
+    const billingName = `${invoice.billingInfo?.title || ''} ${invoice.billingInfo?.fullName || ''
+      }`.trim();
     doc.text(billingName || 'N/A', 15, 55);
     doc.text(`No. ${invoice.billingInfo?.houseNo || 'N/A'}`, 15, 60);
     doc.text(invoice.billingInfo?.street || 'N/A', 15, 65);
@@ -504,15 +503,13 @@ export class ViewOrdersComponent implements OnInit {
       doc.text(`Center: ${invoice.pickupInfo.centerName || 'N/A'}`, 15, 115);
       doc.setFont('helvetica', 'normal');
       doc.text(
-        `${invoice.pickupInfo.address?.city || 'N/A'}, ${
-          invoice.pickupInfo.address?.district || 'N/A'
+        `${invoice.pickupInfo.address?.city || 'N/A'}, ${invoice.pickupInfo.address?.district || 'N/A'
         }`,
         15,
         120
       );
       doc.text(
-        `${invoice.pickupInfo.address?.province || 'N/A'}, ${
-          invoice.pickupInfo.address?.country || 'N/A'
+        `${invoice.pickupInfo.address?.province || 'N/A'}, ${invoice.pickupInfo.address?.country || 'N/A'
         }`,
         15,
         125
@@ -850,6 +847,18 @@ export class ViewOrdersComponent implements OnInit {
       console.error('Error loading logo:', error);
       return null;
     }
+  }
+
+  // openDatePicker() {
+  //   const dateInput = document.querySelector('#datePicker') as HTMLInputElement;
+  //   if (dateInput) {
+  //     dateInput.showPicker();
+  //   }
+  // }
+
+  onDateClear() {
+    this.date = '';
+    this.dateFilter();
   }
 }
 

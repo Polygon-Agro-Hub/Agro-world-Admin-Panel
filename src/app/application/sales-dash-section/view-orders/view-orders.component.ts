@@ -584,6 +584,9 @@ export class ViewOrdersComponent implements OnInit {
       yPosition += 20;
     }
 
+    // Add extra space here between Delivery Method and Package Title
+    yPosition += 10; // This is the added line for extra spacing
+
     // Right side details
     const rightYStart = 55;
     doc.setFont('helvetica', 'bold');

@@ -518,12 +518,18 @@ export class ViewOrdersComponent implements OnInit {
       yPosition += 15;
     }
 
+    // Reduced space between address and invoice details
+    yPosition += 5;
+
     // Invoice Details
     doc.setFont('helvetica', 'bold');
     doc.text('Invoice No:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
     doc.text(invoice.invoiceNumber || 'N/A', 15, yPosition + 5);
     yPosition += 10;
+
+    // Reduced space between Invoice No and Delivery Method
+    yPosition += 3;
 
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
@@ -663,6 +669,9 @@ export class ViewOrdersComponent implements OnInit {
 
     // Additional Items
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
+      // Added space between Delivery Method and Additional Items
+      yPosition += 5;
+
       const estimatedAdditionalItemsHeight =
         15 + invoice.additionalItems.length * 8;
 

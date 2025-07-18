@@ -29,7 +29,7 @@
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
   }
-  
+
 
   /* Dark mode styles for PrimeNG Calendar */
 .dark .custom-calendar .p-datepicker {
@@ -93,3 +93,40 @@
 .dark .custom-calendar .p-calendar-clear-icon:hover {
   color: #cbd5e0;
 }
+  :host ::ng-deep .p-calendar .p-button {
+    color: black;             
+  }
+  :host-context(.dark) ::ng-deep .p-calendar .p-button {
+    color: white;              
+  }
+
+  ::ng-deep .p-calendar .p-inputtext {
+    padding-right: 3rem !important; /* Make room for both icons */
+  }
+  
+  ::ng-deep .p-calendar .p-calendar-clear-icon {
+    right: 1.2rem !important; /* Position clear button to the left of calendar icon */
+    top: 8.2px !important; /* Move clear button slightly down */
+    order: 1;
+  }
+  
+  
+  ::ng-deep .p-calendar .p-datepicker-trigger {
+    right: 0.5rem !important; /* Position calendar icon on the far right */
+    order: 2;
+  }
+  
+  /* For light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c; /* gray-400 */
+}
+
+/* For dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B; /* gray-300 */
+}
+
+
+
+
+  

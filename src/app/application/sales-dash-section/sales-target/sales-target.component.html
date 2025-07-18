@@ -12,10 +12,11 @@
         <label for="new-target"
           class="text-gray-600 font-medium flex items-center justify-center align-middle w-32 mr-5">Set New
           Target</label>
-        <input type="number" id="new-target" placeholder="--Type New Target--"
-          class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-          [(ngModel)]="newTargetValue" name="newTargetValue" step="1" min="1" (keydown)="preventDecimalInput($event)"
-          (blur)="validateTargetInput()" />
+        <input type="number" id="new-target" placeholder="--Type New Target--" class="border border-gray-300
+         rounded-lg px-4 py-2 focus:outline-none
+         focus:ring-2 focus:ring-blue-500 w-full
+         bg-white dark:bg-[#272F45] dark:border-[#AFAFAF] text-black dark:text-white" [(ngModel)]="newTargetValue" name="newTargetValue"
+          step="1" min="1" (keydown)="preventDecimalInput($event)" (blur)="validateTargetInput()" />
       </div>
 
       <span class="text-sm pt-3 italic text-[#D70000]">
@@ -34,14 +35,15 @@
   </form>
 
   <div
-    class="flex items-center justify-center w-[30%] ml-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    class="flex items-center justify-center w-[30%] ml-5 pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
     <div class="flex flex-col items-center gap-3">
-      <h4 class="text-gray-600 font-medium">Current Daily Target</h4>
+      <h4 class="text-gray-600 dark:text-textDark font-medium">Current Daily Target</h4>
       <div class="flex flex-col justify-center items-center">
-        <p class="text-3xl font-bold text-[#292929]">
+        <p class="text-3xl font-bold dark:text-white text-[#292929]">
           {{ totalTarget === 0 ? "-" : totalTarget }}
         </p>
-        <p class="text-[#7C7B7B] text-sm">per day</p>
+        <p class="text-[#7C7B7B] text-sm dark:text-textDark">per day</p>
       </div>
     </div>
   </div>
@@ -62,10 +64,34 @@
         </svg>
       </i>
 
-      <div class="mr-5">
+      <!-- <div class="mr-5">
         <input type="date" id="start-date" placeholder="date" [(ngModel)]="selectDate" name="selectDate"
           (change)="onDateChange($event)"
           class="px-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]" />
+      </div> -->
+
+      <div class="mr-5">
+        <p-calendar
+  id="toDate"
+  [(ngModel)]="selectDate"
+  (onSelect)="onDateChange($event)"
+  (onClear)="onDateChange($event)"       
+  [showIcon]="true"
+  [showClear]="true"              
+  [showButtonBar]="true"
+  iconDisplay="input"
+  [style]="{ width: '16rem', height: '2rem' }"
+  panelStyleClass="rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+  [appendTo]="'body'"
+/>
       </div>
 
       <div class="mr-5">

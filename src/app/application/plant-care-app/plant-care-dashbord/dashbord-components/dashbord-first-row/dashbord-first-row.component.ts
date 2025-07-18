@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PlantcareDashbordService } from '../../../../../services/plant-care/plantcare-dashbord.service';
 import { CommonModule } from '@angular/common';
 
+
 interface DashboardData {
   active_users: any;
   new_users: number;
@@ -23,7 +24,9 @@ interface DashboardData {
 export class DashbordFirstRowComponent {
   @Input() dashboardData: DashboardData = {} as DashboardData;
 
-  constructor(private dashbordService: PlantcareDashbordService) {}
+  constructor(private dashbordService: PlantcareDashbordService, ) {
+    
+  }
 
   ngOnInit(): void {
     this.dashboardData;

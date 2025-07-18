@@ -225,9 +225,12 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.street }}
             </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-  {{ item.code1 }}&nbsp;{{ item.contact01 }}
-</td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+              <span *ngIf="item.contact01 === null">-</span>
+              <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
+            </td>
+            
+
 
 
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">

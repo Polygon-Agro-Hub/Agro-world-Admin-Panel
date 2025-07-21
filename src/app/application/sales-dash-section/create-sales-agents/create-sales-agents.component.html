@@ -191,12 +191,17 @@
         
             <input
               id="phoneNumber1"
-              name="phoneNumber1"
-              type="number"
+              name="text"
               [(ngModel)]="personalData.phoneNumber1"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
               (blur)="onBlur('phoneNumber1')"
+              #phoneNumber1Input="ngModel"
+              required
+              minlength="9"
+              maxlength="9"
+              (keypress)="allowOnlyNumbers($event)"
+              pattern="^[0-9]{9,}$"
             />
           </div>
         
@@ -204,26 +209,17 @@
           <div class="mt-1 ">
             <!-- Required validation -->
             <span
-              *ngIf="
-                touchedFields.phoneNumber1 &&
-                !personalData.phoneNumber1
-              "
-              class="text-red-600 text-sm block"
-            >
-              Phone number is required.
-            </span>
+            *ngIf="phoneNumber1Input.touched && !personalData.phoneNumber1"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>Phone Number - 1 is required</div>
+          </span>
         
             <!-- Invalid format -->
-            <span
-              *ngIf="
-                touchedFields.phoneNumber1 &&
-                personalData.phoneNumber1 &&
-                !isValidPhoneNumber(personalData.phoneNumber1)
-              "
-              class="text-red-600 text-sm block"
-            >
-              Invalid phone number.
-            </span>
+            <span *ngIf="phoneNumber1Input.touched && personalData.phoneNumber1 && phoneNumber1Input.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            Phone Number must be exactly 9 digits.
+        </span>
           </div>
         </div>
         
@@ -253,35 +249,33 @@
             <input
               id="phoneNumber2"
               name="phoneNumber2"
-              type="number"
+              type="text"
               [(ngModel)]="personalData.phoneNumber2"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
               (blur)="onBlur('phoneNumber2')"
+              #phoneNumber2Input="ngModel"
+              minlength="9"
+              maxlength="9"
+              (keypress)="allowOnlyNumbers($event)"
+              pattern="^[0-9]{9,}$"
             />
           </div>
         
           <!-- Validation messages below full row -->
           <div class="mt-1"> <!-- adjust margin to align with select -->
-            <span
-              *ngIf="
-                touchedFields.phoneNumber2 && personalData.phoneNumber2 &&
-                !isValidPhoneNumber(personalData.phoneNumber2)
-              "
-              class="text-red-600 text-sm block"
-            >
-              Invalid phone number.
-            </span>
+            <div *ngIf="phoneNumber2Input.touched && personalData.phoneNumber2 && phoneNumber2Input.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            Phone Number must be exactly 9 digits.
+                        </div>
         
-            <span
-              *ngIf="
-                touchedFields.phoneNumber2 && personalData.phoneNumber1 &&
-                personalData.phoneNumber2 === personalData.phoneNumber1
-              "
-              class="text-red-600 text-sm block"
-            >
-              Phone number 2 cannot be the same as Phone number 1.
-            </span>
+          <!-- Duplicate Validation -->
+          <div
+            *ngIf="phoneNumber2Input.touched && personalData.phoneNumber1 && !phoneNumber2Input.invalid && personalData.phoneNumber2?.trim() === personalData.phoneNumber1?.trim()"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>Phone number 2 cannot be the same as Phone number 1.</div>
+          </div>
           </div>
         </div>
         
@@ -526,11 +520,26 @@
           name="accNumber"
           [(ngModel)]="personalData.accNumber"
           (blur)="onBlur('accNumber')"
+          #accNumberInput="ngModel"
+          required
+          pattern="^[a-zA-Z0-9]+$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+        <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
           Account Number is required.
-        </span>
+        </span> -->
+        <div
+          *ngIf="accNumberInput.touched && !personalData.accNumber"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Account Number is required</div>
+        </div>
+        <div
+  *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+  class="text-red-500 text-sm mt-1"
+>
+  <div>Account Number cannot contain special characters</div>
+</div>
       </div>
 
       <div class="pb-6">
@@ -544,7 +553,10 @@
           id="confirmAccNumber"
           name="confirmAccNumber"
           [(ngModel)]="personalData.confirmAccNumber"
+          #confirmAccNumberInput="ngModel"
           (blur)="onBlur('confirmAccNumber')"
+          pattern="^[a-zA-Z0-9]+$"
+          (ngModelChange)="validateConfirmAccNumber()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
 
@@ -554,12 +566,16 @@
         </span>
 
         <!-- Mismatch validation message -->
-        <span
-          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
-          class="text-red-600 text-sm"
-        >
+        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
           Account Numbers do not match.
         </span>
+
+        <span
+*ngIf="confirmAccNumberInput.touched && personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+class="text-red-500 text-sm mt-1"
+>
+<div>Account Number cannot contain special characters</div>
+</span>
       </div>
 
       <div class="pb-6">

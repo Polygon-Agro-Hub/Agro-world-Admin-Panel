@@ -152,7 +152,9 @@
               required
               minlength="9"
               maxlength="9"
-              pattern="^[0-9]{9}$"
+              (keypress)="allowOnlyNumbers($event)"
+              pattern="^[0-9]{9,}$"
+ 
             />
           </div>
 
@@ -164,28 +166,11 @@
             <div>Phone Number - 1 is required</div>
           </div>
 
-          <!-- Length Validation -->
-          <div
-            *ngIf="phoneNumber1Input.touched && phoneNumber1Input.errors?.['minlength']"
-            class="text-red-500 text-sm mt-1"
-          >
-            <div>Phone Number must be exactly 9 digits</div>
-          </div>
-
-          <div
-            *ngIf="phoneNumber1Input.touched && phoneNumber1Input.errors?.['maxlength']"
-            class="text-red-500 text-sm mt-1"
-          >
-            <div>Phone Number must be exactly 9 digits</div>
-          </div>
-
           <!-- Pattern Validation (Ensuring Only Numbers) -->
-          <div
-            *ngIf="phoneNumber1Input.touched && phoneNumber1Input.errors?.['pattern']"
-            class="text-red-500 text-sm mt-1"
-          >
-            <div>Phone Number can only contain numbers</div>
-          </div>
+          <div *ngIf="phoneNumber1Input.touched && personalData.phoneNumber1 && phoneNumber1Input.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            Phone Number must be exactly 9 digits.
+                        </div>
         </div>
 
         <div>
@@ -217,29 +202,20 @@
               #phoneNumber2Input="ngModel"
               minlength="9"
               maxlength="9"
-              pattern="^[0-9]{9}$"
+              (keypress)="allowOnlyNumbers($event)"
+              pattern="^[0-9]{9,}$"
             />
           </div>
         
           <!-- Length Validation -->
-          <div
-            *ngIf="phoneNumber2Input.touched && (phoneNumber2Input.errors?.['maxlength'] || phoneNumber2Input.errors?.['minlength'])"
-            class="text-red-500 text-sm mt-1"
-          >
-            <div>Phone Number must be exactly 9 digits</div>
-          </div>
-        
-          <!-- Pattern Validation (Ensuring Only Numbers) -->
-          <div
-            *ngIf="phoneNumber2Input.touched && phoneNumber2Input.errors?.['pattern']"
-            class="text-red-500 text-sm mt-1"
-          >
-            <div>Phone Number can only contain numbers</div>
-          </div>
+          <div *ngIf="phoneNumber2Input.touched && personalData.phoneNumber2 && phoneNumber2Input.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            Phone Number must be exactly 9 digits.
+                        </div>
         
           <!-- Duplicate Validation -->
           <div
-            *ngIf="phoneNumber2Input.touched && personalData.phoneNumber2?.trim() === personalData.phoneNumber1?.trim()"
+            *ngIf="phoneNumber2Input.touched && personalData.phoneNumber1 && !phoneNumber2Input.invalid && personalData.phoneNumber2?.trim() === personalData.phoneNumber1?.trim()"
             class="text-red-500 text-sm mt-1"
           >
             <div>Phone number 2 cannot be the same as Phone number 1.</div>
@@ -260,7 +236,7 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #nicInput="ngModel"
             required
-            pattern="^(\d{9}[VX]|[0-9]{12})$"
+            pattern="^(\d{9}[Vv]|\d{12})$"
           />
 
           <!-- Required Validation -->
@@ -276,7 +252,7 @@
             *ngIf="nicInput.touched && nicInput.errors?.['pattern']"
             class="text-red-500 text-sm mt-1"
           >
-            <div>NIC must be in the format of 9 digits</div>
+          <div>Invalid NIC format (e.g., 123456789V or 200012345678)</div>
           </div>
         </div>
 
@@ -488,6 +464,7 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel"
           required
+          pattern="^[a-zA-Z0-9]+$"
         />
         <div
           *ngIf="accNumberInput.touched && !personalData.accNumber"
@@ -495,6 +472,12 @@
         >
           <div>Account Number is required</div>
         </div>
+        <div
+  *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+  class="text-red-500 text-sm mt-1"
+>
+  <div>Account Number cannot contain special characters</div>
+</div>
       </div>
 
           <div class="pb-6">
@@ -502,10 +485,12 @@
               Confirm Account Number
             </label>
             <input
+              #confirmAccNumberInput="ngModel"
               id="confirmAccNumber"
               name="confirmAccNumber"
               [(ngModel)]="confirmAccNumber"
               (ngModelChange)="validateConfirmAccNumber()"
+              pattern="^[a-zA-Z0-9]+$"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             />
             
@@ -518,6 +503,13 @@
             <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
               Account Numbers do not match.
             </span>
+
+            <span
+  *ngIf="confirmAccNumberInput.touched && this.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+  class="text-red-500 text-sm mt-1"
+>
+  <div>Account Number cannot contain special characters</div>
+</span>
           </div>
     
           
@@ -546,7 +538,7 @@
     
         <div class="flex justify-end">
           <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-            cancel
+            Cancel
           </button>
           <button type="submit" (click)="onSubmit()" [disabled]="!personalData.accNumber || !personalData.accHolderName"
             class="px-4 py-2 bg-[#3980C0] text-white rounded-md">

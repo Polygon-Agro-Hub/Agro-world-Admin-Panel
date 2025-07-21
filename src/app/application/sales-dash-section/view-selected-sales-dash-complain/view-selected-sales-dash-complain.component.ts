@@ -136,7 +136,7 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
 
    showReplyDialog() {
       Swal.fire({
-        title: "Reply as AgroWorld",
+        title: "Reply as Polygon",
         html: `
           <div class="text-left">
             <p>Dear <strong>${this.firstName}</strong>,</p>

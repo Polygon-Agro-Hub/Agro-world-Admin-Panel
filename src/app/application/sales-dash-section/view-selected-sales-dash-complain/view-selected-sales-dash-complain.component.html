@@ -29,8 +29,8 @@
 
     <div class="flex flex-row mb-6 justify-between">
       <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark">Complaint</label>
-      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
-        rows="4" [value]="complain.complain" disabled>
+      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack" disabled
+        rows="4" [value]="complain.complain" >
       </textarea>
     </div>
 
@@ -55,7 +55,7 @@
 
     <div class="text-center">
       <!-- <button pButton type="button" label="Open Popup" icon="pi pi-envelope" (click)="showDialog()"></button> -->
-      <button (click)="showReplyDialog()" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+      <button (click)="showReplyPopUp()" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
         Send Message
       </button>
     </div>
@@ -68,23 +68,20 @@
 
 
 
-<p-dialog header="" [(visible)]="display" [modal]="true" [closable]="true" [style]="{ width: '600px' }"
+<!-- <p-dialog header="" [(visible)]="display" [modal]="true" [closable]="true" [style]="{ width: '600px' }"
   [contentStyle]="{ 'padding': '0' }">
-  <!-- Header Section -->
   <div class="dialog-header text-center">
 
     <i class="fa-regular fa-envelope" style="font-size: 2rem; color: #999;"></i>
     <h3 class="header-title">Reply as Polygon</h3>
   </div>
 
-  <!-- Content Section -->
   <div class="dialog-content">
     <p>Dear <strong>{{this.firstName}}</strong>,</p>
     <p>
       We are pleased to inform you that your complaint has been resolved.
     </p>
 
-    <!-- Editable Text Area -->
     <div class="message-box" *ngIf="!complain.reply">
       <textarea [(ngModel)]="messageContent" placeholder="Add your message here..." rows="5" style="
         width: 100%;
@@ -120,7 +117,6 @@
     </p>
   </div>
 
-  <!-- Footer Buttons -->
   <p-footer>
     <div class="dialog-footer text-right">
       <button pButton type="button" label="Cancel" class="p-button-secondary" style="margin-right: 8px"
@@ -128,4 +124,47 @@
       <button pButton type="button" label="Send" class="p-button-primary" (click)="submitComplaint()"></button>
     </div>
   </p-footer>
-</p-dialog>
+</p-dialog> -->
+
+<div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4">
+    <div class="flex justify-center items-center">
+      <span class="rounded-full px-4 py-3 bg-[#F6F6F6] dark:bg-gray-400">
+        <i class="fa-regular fa-envelope text-2xl text-[#2D2D2D] 0"></i>
+      </span>
+
+    </div>
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-white">Reply as Polygon</h2>
+    
+    <div class="text-left text-[#2D2D2D] dark:text-gray-200">
+      <p>Dear <strong class="dark:text-white">{{complain.firstName}} {{complain.lastName}}</strong>,</p>
+      <textarea 
+        class="w-full p-2 border rounded mt-3 mb-3 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+        rows="5" 
+        placeholder="Add your message here..."
+        [(ngModel)]="complain.reply"
+        name="reply"
+      ></textarea>
+      <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+      <p class="mt-3">
+        Sincerely,<br/>
+        AgroWorld Customer Support Team
+      </p>
+    </div>
+
+    <div class="flex flex-row justify-end gap-x-4 mt-4">
+      <button 
+        (click)="closeReplyPopUp()"
+        class="px-4 py-2 text-[#D3D3D3] dark:text-gray-200 bg-[#74788D] rounded transition"
+      >
+        Cancel
+      </button>
+      <button 
+        (click)="submitComplaint()"
+        class="px-4 py-2 text-white dark:text-gray-200 bg-[#3980C0] rounded transition"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</div>

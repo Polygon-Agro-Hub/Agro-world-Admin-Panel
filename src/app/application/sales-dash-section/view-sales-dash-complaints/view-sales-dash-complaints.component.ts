@@ -44,6 +44,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   category!: Category[];
   replyStatus!: any[];
   rpst: string = '';
+  isPopUpVisible: boolean = true;
 
   searchText: string = '';
   isLoading = false;
@@ -249,7 +250,9 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       this.complain = res;
       console.log(res);
       this.isLoading = false;
-      this.showReplyDialog(id, firstName);
+      // this.showReplyDialog(id, firstName);
+      this.isPopUpVisible = true;
+
     });
   }
 
@@ -341,6 +344,11 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   regStatusFil(): void {
     console.log('replyStatus', this.rpst)
     this.applyFilters();
+  }
+
+  closeDialog() {
+    this.isPopUpVisible = false;
+    this.complain = new ComplainIn();
   }
 }
 

@@ -5,6 +5,8 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
+  AbstractControl,
+  AsyncValidatorFn,
 } from '@angular/forms';
 import {
   DestributionService,
@@ -13,6 +15,14 @@ import {
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
+import { Observable, of } from 'rxjs';
+import {
+  map,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+} from 'rxjs/operators';
 
 interface PhoneCode {
   value: string;
@@ -31,14 +41,11 @@ export class AddDestributionCenterComponent implements OnInit {
   companyList: CompanyList[] = [];
 
   isLoading = false;
-
   isSubmitting = false;
   submitError: string | null = null;
   submitSuccess: string | null = null;
-
   isLoadingregcode = false;
 
-  // Flag to prevent infinite loops when programmatically setting values
   private updatingDropdowns = false;
 
   phoneCodes: PhoneCode[] = [
@@ -86,7 +93,7 @@ export class AddDestributionCenterComponent implements OnInit {
   private initializeForm() {
     this.distributionForm = this.fb.group(
       {
-        name: ['', Validators.required],
+        name: ['', [Validators.required], [this.nameExistsValidator()]],
         company: ['', Validators.required],
         contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
         contact1Code: ['+94', Validators.required],
@@ -121,7 +128,6 @@ export class AddDestributionCenterComponent implements OnInit {
       .get('province')
       ?.valueChanges.subscribe((province) => {
         if (!this.updatingDropdowns && province) {
-          // Clear district when province changes
           this.updatingDropdowns = true;
           this.distributionForm.get('district')?.setValue('');
           this.updatingDropdowns = false;
@@ -133,7 +139,6 @@ export class AddDestributionCenterComponent implements OnInit {
       .get('district')
       ?.valueChanges.subscribe((district) => {
         if (!this.updatingDropdowns && district) {
-          // Find which province this district belongs to
           const matchingProvince = this.findProvinceByDistrict(district);
           if (matchingProvince) {
             this.updatingDropdowns = true;
@@ -159,9 +164,44 @@ export class AddDestributionCenterComponent implements OnInit {
     this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
       this.distributionForm.updateValueAndValidity();
     });
+
+    // Optimize name validation with debounce
+    this.distributionForm
+      .get('name')
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap((value) => {
+          if (value && value.length >= 3) {
+            return this.distributionService.checkDistributionCentreNameExists(
+              value
+            );
+          }
+          return of({ exists: false });
+        })
+      )
+      .subscribe();
   }
 
-  // Custom validator to check if contact numbers are the same
+  private nameExistsValidator(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value || control.value.length < 3) {
+        return Promise.resolve(null);
+      }
+
+      return this.distributionService
+        .checkDistributionCentreNameExists(control.value)
+        .pipe(
+          map((res) => {
+            return res.exists ? { nameExists: true } : null;
+          }),
+          catchError(() => {
+            return Promise.resolve(null);
+          })
+        );
+    };
+  }
+
   private contactNumbersMatchValidator(formGroup: FormGroup) {
     const contact1Control = formGroup.get('contact1');
     const contact1CodeControl = formGroup.get('contact1Code');
@@ -182,18 +222,15 @@ export class AddDestributionCenterComponent implements OnInit {
     const contact1Code = contact1CodeControl.value;
     const contact2Code = contact2CodeControl.value;
 
-    // Only validate if both contact numbers have values
     if (
       contact1 &&
       contact2 &&
       contact1 === contact2 &&
       contact1Code === contact2Code
     ) {
-      // Set error on contact2 control specifically
       contact2Control.setErrors({ sameContactNumbers: true });
       return { sameContactNumbers: true };
     } else {
-      // Clear the error if it was previously set
       if (contact2Control.errors?.['sameContactNumbers']) {
         delete contact2Control.errors['sameContactNumbers'];
         if (Object.keys(contact2Control.errors).length === 0) {
@@ -205,7 +242,6 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   onProvinceChange() {
-    console.log('called');
     const selectedProvince = this.distributionForm.get('province')?.value;
     const selectedDistrict = this.distributionForm.get('district')?.value;
     const selectedCity = this.distributionForm.get('city')?.value;
@@ -217,33 +253,25 @@ export class AddDestributionCenterComponent implements OnInit {
       this.distributionService
         .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
         .subscribe((response) => {
-          console.log('reg code', response.regCode);
           this.distributionForm.patchValue({ regCode: response.regCode });
-          const selectedRegCode = this.distributionForm.get('regCode')?.value;
-          console.log('selectedRegCode', selectedRegCode);
           this.isLoadingregcode = false;
         });
     }
   }
 
   updateRegCode() {
-    console.log('update reg code');
     const province = this.distributionForm.get('province')?.value;
     const district = this.distributionForm.get('district')?.value;
     const city = this.distributionForm.get('city')?.value;
-
-    console.log('province', province, 'district', district, 'city', city);
 
     if (province && district && city) {
       const regCode = `${province.slice(0, 2).toUpperCase()}${district
         .slice(0, 1)
         .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
-      console.log('regCode', regCode);
       this.distributionForm.patchValue({ regCode });
     }
   }
 
-  // Helper method to find province by district
   private findProvinceByDistrict(district: string): string | null {
     for (const province in this.districtsMap) {
       if (this.districtsMap[province].includes(district)) {
@@ -253,13 +281,11 @@ export class AddDestributionCenterComponent implements OnInit {
     return null;
   }
 
-  // Get all districts initially, then filter by province if one is selected
   getDistricts(): string[] {
     const selectedProvince = this.distributionForm.get('province')?.value;
     if (selectedProvince) {
       return this.districtsMap[selectedProvince] || [];
     } else {
-      // Return all districts when no province is selected
       return Object.values(this.districtsMap).flat();
     }
   }
@@ -298,6 +324,9 @@ export class AddDestributionCenterComponent implements OnInit {
     if (field.errors['sameContactNumbers']) {
       return 'Contact Number 02 must be different from Contact Number 01';
     }
+    if (field.errors['nameExists']) {
+      return 'Distribution Centre Name already exists';
+    }
 
     return '';
   }
@@ -306,7 +335,6 @@ export class AddDestributionCenterComponent implements OnInit {
     const labels: { [key: string]: string } = {
       name: 'Distribution Centre Name',
       company: 'Company Name',
-      // officerInCharge: 'Officer In-Charge Name',
       contact1: 'Contact Number 01',
       contact2: 'Contact Number 02',
       latitude: 'Latitude',
@@ -324,9 +352,7 @@ export class AddDestributionCenterComponent implements OnInit {
   fetchAllCompanies() {
     this.distributionService.getAllCompanies().subscribe(
       (res) => {
-        console.log('this is company', res);
         this.companyList = res.data;
-        console.log(this.companyList);
       },
       (error) => console.error('Error fetching companies:', error)
     );
@@ -356,8 +382,6 @@ export class AddDestributionCenterComponent implements OnInit {
               this.distributionForm.value.longitude
             ).toString(),
           };
-
-          console.log('form data', formData);
 
           this.distributionService
             .createDistributionCentre(formData)
@@ -391,7 +415,6 @@ export class AddDestributionCenterComponent implements OnInit {
                 this.isLoading = false;
                 console.error('Error creating distribution centre:', error);
 
-                // Handle specific HTTP status errors
                 if (error.status === 400) {
                   this.submitError = 'Invalid data. Please check your inputs.';
                 } else if (error.status === 401) {

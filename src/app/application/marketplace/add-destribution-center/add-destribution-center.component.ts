@@ -84,100 +84,65 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   private initializeForm() {
-    this.distributionForm = this.fb.group(
-      {
-        name: ['', Validators.required],
-        company: ['', Validators.required],
-        contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-        contact1Code: ['+94', Validators.required],
-        contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-        contact2Code: ['+94'],
-        latitude: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(/^-?([0-8]?[0-9]|90)(\.[0-9]+)?$/),
-          ],
+    this.distributionForm = this.fb.group({
+      name: ['', Validators.required],
+      company: ['', Validators.required],
+      // officerInCharge: [
+      //   '',
+      //   [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)],
+      // ],
+      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      contact1Code: ['+94', Validators.required],
+      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
+      contact2Code: ['+94', Validators.required],
+      latitude: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^-?([0-8]?[0-9]|90)(\.[0-9]+)?$/),
         ],
-        longitude: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(/^-?((1[0-7][0-9])|([0-9]?[0-9]))(\.[0-9]+)?$/),
-          ],
+      ],
+      longitude: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^-?((1[0-7][0-9])|([0-9]?[0-9]))(\.[0-9]+)?$/),
         ],
-        email: ['', [Validators.required, Validators.email]],
-        country: ['', Validators.required],
-        province: ['', Validators.required],
-        district: ['', Validators.required],
-        city: ['', Validators.required],
-        regCode: ['', Validators.required],
-      },
-      { validator: this.contactNumbersMatchValidator }
-    );
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      country: ['', Validators.required],
+      province: ['', Validators.required],
+      district: ['', Validators.required],
+      city: ['', Validators.required],
+      regCode: ['', Validators.required],
+    });
 
-    // Rest of your initialization code...
-  }
-
-  private contactNumbersMatchValidator(formGroup: FormGroup) {
-    const contact1Control = formGroup.get('contact1');
-    const contact1CodeControl = formGroup.get('contact1Code');
-    const contact2Control = formGroup.get('contact2');
-    const contact2CodeControl = formGroup.get('contact2Code');
-
-    if (
-      !contact1Control ||
-      !contact2Control ||
-      !contact1CodeControl ||
-      !contact2CodeControl
-    ) {
-      return null;
-    }
-
-    const contact1 = contact1Control.value;
-    const contact2 = contact2Control.value;
-    const contact1Code = contact1CodeControl.value;
-    const contact2Code = contact2CodeControl.value;
-
-    // Only validate if both contact numbers have values
-    if (
-      contact1 &&
-      contact2 &&
-      contact1 === contact2 &&
-      contact1Code === contact2Code
-    ) {
-      // Set error on contact2 control specifically
-      contact2Control.setErrors({ sameContactNumbers: true });
-      return { sameContactNumbers: true };
-    } else {
-      // Clear the error if it was previously set
-      if (contact2Control.errors?.['sameContactNumbers']) {
-        delete contact2Control.errors['sameContactNumbers'];
-        if (Object.keys(contact2Control.errors).length === 0) {
-          contact2Control.setErrors(null);
+    // Watch province changes to update districts
+    this.distributionForm
+      .get('province')
+      ?.valueChanges.subscribe((province) => {
+        if (!this.updatingDropdowns && province) {
+          // Clear district when province changes
+          this.updatingDropdowns = true;
+          this.distributionForm.get('district')?.setValue('');
+          this.updatingDropdowns = false;
         }
-      }
-      return null;
-    }
-  }
+      });
 
-  // Custom validator to check if contact numbers are the same
-  private contactNumberValidator(formGroup: FormGroup) {
-    const contact1 = formGroup.get('contact1')?.value;
-    const contact2 = formGroup.get('contact2')?.value;
-    const contact1Code = formGroup.get('contact1Code')?.value;
-    const contact2Code = formGroup.get('contact2Code')?.value;
-
-    // Only validate if both contact numbers have values
-    if (
-      contact1 &&
-      contact2 &&
-      contact1 === contact2 &&
-      contact1Code === contact2Code
-    ) {
-      return { sameContactNumbers: true };
-    }
-    return null;
+    // Watch district changes to update province
+    this.distributionForm
+      .get('district')
+      ?.valueChanges.subscribe((district) => {
+        if (!this.updatingDropdowns && district) {
+          // Find which province this district belongs to
+          const matchingProvince = this.findProvinceByDistrict(district);
+          if (matchingProvince) {
+            this.updatingDropdowns = true;
+            this.distributionForm.get('province')?.setValue(matchingProvince);
+            this.updatingDropdowns = false;
+          }
+        }
+      });
   }
 
   onProvinceChange() {
@@ -242,39 +207,25 @@ export class AddDestributionCenterComponent implements OnInit {
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);
-    return !!(
-      field &&
-      field.invalid &&
-      (field.dirty || field.touched || this.distributionForm.dirty)
-    );
+    return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   getFieldError(fieldName: string): string {
     const field = this.distributionForm.get(fieldName);
-
-    if (!field?.errors) return '';
-
-    if (field.errors['required']) {
-      return `${this.getFieldLabel(fieldName)} is required`;
-    }
-    if (field.errors['email']) {
-      return 'Please enter a valid email address';
-    }
-    if (field.errors['pattern']) {
-      if (fieldName.includes('contact')) {
-        return 'Phone number must be exactly 9 digits';
-      }
-      if (fieldName === 'latitude') {
-        return 'Please enter a valid latitude (-90 to 90)';
-      }
-      if (fieldName === 'longitude') {
-        return 'Please enter a valid longitude (-180 to 180)';
+    if (field?.errors) {
+      if (field.errors['required'])
+        return `${this.getFieldLabel(fieldName)} is required`;
+      if (field.errors['email']) return 'Please enter a valid email address';
+      if (field.errors['pattern']) {
+        if (fieldName.includes('contact'))
+          return 'Phone number must be exactly 9 digits';
+        if (fieldName === 'latitude')
+          return 'Please enter a valid latitude (-90 to 90)';
+        if (fieldName === 'longitude')
+          return 'Please enter a valid longitude (-180 to 180)';
+        if (fieldName === 'officerInCharge') return 'Only letters are allowed';
       }
     }
-    if (field.errors['sameContactNumbers']) {
-      return 'Contact Number 02 must be different from Contact Number 01';
-    }
-
     return '';
   }
 

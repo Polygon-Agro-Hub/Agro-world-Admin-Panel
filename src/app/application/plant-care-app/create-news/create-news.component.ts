@@ -11,7 +11,7 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -109,7 +109,8 @@ export class CreateNewsComponent {
     private route: ActivatedRoute,
     private newsService: NewsService,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private location: Location
   ) {}
 
   validateTitleEnglish(value: string): void {
@@ -286,7 +287,7 @@ export class CreateNewsComponent {
       if (result.isConfirmed) {
         this.selectedFile = null;
         this.selectedImage = null;
-        this.router.navigate(['/plant-care/action/manage-content']);
+        this.location.back(); // This will navigate to the previous page
       }
     });
   }

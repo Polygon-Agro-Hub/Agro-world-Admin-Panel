@@ -386,6 +386,8 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
       format: 'a4',
     });
 
+    doc.setTextColor(0, 0, 0);
+
     // Set document properties
     doc.setProperties({
       title: `Invoice ${invoice.invoiceNumber || 'N/A'}`,
@@ -401,11 +403,13 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
     doc.setTextColor(62, 32, 109);
     doc.text('INVOICE', 105, 15, { align: 'center' });
 
+    doc.setTextColor(0, 0, 0);
+
     // Load and add logo
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 15);
+        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);

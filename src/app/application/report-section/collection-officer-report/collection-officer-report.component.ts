@@ -17,6 +17,7 @@ interface OngoingCultivationItem {
   lastNameEnglish: string;
   lastName: string;
   companyNameEnglish: string;
+  phoneCode01: string;
   phoneNumber01: string;
   nic: string;
   status: string;
@@ -65,6 +66,8 @@ export class CollectionOfficerReportComponent {
       .fetchAllCollectionOfficerStatus(page, limit, this.searchNIC, '')
       .subscribe(
         (response) => {
+          console.log('Response:', response);
+
           this.ongoingCultivation = response.items;
           this.totalItems = response.total;
           this.isLoading = false;
@@ -103,7 +106,7 @@ export class CollectionOfficerReportComponent {
     firstName: string,
     lastName: string,
     QRcode: string,
-    empId: string,
+    empId: string
   ) {
     this.router.navigate([`/reports/payment-slip-report/${id}`], {
       queryParams: { firstName, lastName, QRcode, empId },

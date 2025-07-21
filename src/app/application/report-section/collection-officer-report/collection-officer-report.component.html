@@ -40,7 +40,7 @@
         >
           <input
             type="text"
-            placeholder="Search.."
+            placeholder="Search by NIC"
             class="bg-transparent outline-none w-full text-gray-600"
             [(ngModel)]="searchNIC"
             (keydown.enter)="searchCultivations()"
@@ -98,7 +98,7 @@
               Emp ID
             </th>
             <th
-              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left"
+              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left w-32"
             >
               Officer Name
             </th>
@@ -108,9 +108,9 @@
               Company
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start w-32"
             >
-              Centre Name
+              Center Name
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
@@ -123,9 +123,9 @@
               NIC
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-              Districts
+              District
             </th>
             <th
               *ngIf="
@@ -186,12 +186,12 @@
               {{ item.centerName }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.phoneNumber01 }}
+              {{ item.phoneCode01 }} {{ item.phoneNumber01 }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.nic }}
             </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.district }}
             </td>
             <td

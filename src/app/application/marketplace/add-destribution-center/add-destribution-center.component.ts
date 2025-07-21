@@ -84,38 +84,37 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   private initializeForm() {
-    this.distributionForm = this.fb.group({
-      name: ['', Validators.required],
-      company: ['', Validators.required],
-      // officerInCharge: [
-      //   '',
-      //   [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)],
-      // ],
-      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      contact1Code: ['+94', Validators.required],
-      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-      contact2Code: ['+94', Validators.required],
-      latitude: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^-?([0-8]?[0-9]|90)(\.[0-9]+)?$/),
+    this.distributionForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        company: ['', Validators.required],
+        contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+        contact1Code: ['+94', Validators.required],
+        contact2: ['', [Validators.pattern(/^\d{9}$/)]],
+        contact2Code: ['+94'],
+        latitude: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(/^-?([0-8]?[0-9]|90)(\.[0-9]+)?$/),
+          ],
         ],
-      ],
-      longitude: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^-?((1[0-7][0-9])|([0-9]?[0-9]))(\.[0-9]+)?$/),
+        longitude: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(/^-?((1[0-7][0-9])|([0-9]?[0-9]))(\.[0-9]+)?$/),
+          ],
         ],
-      ],
-      email: ['', [Validators.required, Validators.email]],
-      country: ['', Validators.required],
-      province: ['', Validators.required],
-      district: ['', Validators.required],
-      city: ['', Validators.required],
-      regCode: ['', Validators.required],
-    });
+        email: ['', [Validators.required, Validators.email]],
+        country: ['', Validators.required],
+        province: ['', Validators.required],
+        district: ['', Validators.required],
+        city: ['', Validators.required],
+        regCode: ['', Validators.required],
+      },
+      { validator: this.contactNumbersMatchValidator }
+    );
 
     // Watch province changes to update districts
     this.distributionForm
@@ -143,6 +142,66 @@ export class AddDestributionCenterComponent implements OnInit {
           }
         }
       });
+
+    // Watch contact number changes to validate duplicates
+    this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
+      this.distributionForm.updateValueAndValidity();
+    });
+
+    this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
+      this.distributionForm.updateValueAndValidity();
+    });
+
+    this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
+      this.distributionForm.updateValueAndValidity();
+    });
+
+    this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
+      this.distributionForm.updateValueAndValidity();
+    });
+  }
+
+  // Custom validator to check if contact numbers are the same
+  private contactNumbersMatchValidator(formGroup: FormGroup) {
+    const contact1Control = formGroup.get('contact1');
+    const contact1CodeControl = formGroup.get('contact1Code');
+    const contact2Control = formGroup.get('contact2');
+    const contact2CodeControl = formGroup.get('contact2Code');
+
+    if (
+      !contact1Control ||
+      !contact2Control ||
+      !contact1CodeControl ||
+      !contact2CodeControl
+    ) {
+      return null;
+    }
+
+    const contact1 = contact1Control.value;
+    const contact2 = contact2Control.value;
+    const contact1Code = contact1CodeControl.value;
+    const contact2Code = contact2CodeControl.value;
+
+    // Only validate if both contact numbers have values
+    if (
+      contact1 &&
+      contact2 &&
+      contact1 === contact2 &&
+      contact1Code === contact2Code
+    ) {
+      // Set error on contact2 control specifically
+      contact2Control.setErrors({ sameContactNumbers: true });
+      return { sameContactNumbers: true };
+    } else {
+      // Clear the error if it was previously set
+      if (contact2Control.errors?.['sameContactNumbers']) {
+        delete contact2Control.errors['sameContactNumbers'];
+        if (Object.keys(contact2Control.errors).length === 0) {
+          contact2Control.setErrors(null);
+        }
+      }
+      return null;
+    }
   }
 
   onProvinceChange() {
@@ -207,25 +266,39 @@ export class AddDestributionCenterComponent implements OnInit {
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
+    return !!(
+      field &&
+      field.invalid &&
+      (field.dirty || field.touched || this.distributionForm.dirty)
+    );
   }
 
   getFieldError(fieldName: string): string {
     const field = this.distributionForm.get(fieldName);
-    if (field?.errors) {
-      if (field.errors['required'])
-        return `${this.getFieldLabel(fieldName)} is required`;
-      if (field.errors['email']) return 'Please enter a valid email address';
-      if (field.errors['pattern']) {
-        if (fieldName.includes('contact'))
-          return 'Phone number must be exactly 9 digits';
-        if (fieldName === 'latitude')
-          return 'Please enter a valid latitude (-90 to 90)';
-        if (fieldName === 'longitude')
-          return 'Please enter a valid longitude (-180 to 180)';
-        if (fieldName === 'officerInCharge') return 'Only letters are allowed';
+
+    if (!field?.errors) return '';
+
+    if (field.errors['required']) {
+      return `${this.getFieldLabel(fieldName)} is required`;
+    }
+    if (field.errors['email']) {
+      return 'Please enter a valid email address';
+    }
+    if (field.errors['pattern']) {
+      if (fieldName.includes('contact')) {
+        return 'Phone number must be exactly 9 digits';
+      }
+      if (fieldName === 'latitude') {
+        return 'Please enter a valid latitude (-90 to 90)';
+      }
+      if (fieldName === 'longitude') {
+        return 'Please enter a valid longitude (-180 to 180)';
       }
     }
+    if (field.errors['sameContactNumbers']) {
+      return 'Contact Number 02 must be different from Contact Number 01';
+    }
+
     return '';
   }
 

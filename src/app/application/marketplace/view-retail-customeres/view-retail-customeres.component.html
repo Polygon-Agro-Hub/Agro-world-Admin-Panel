@@ -244,6 +244,7 @@
           </p>
 
           <i
+            *ngIf="!copiedPhone"
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="
               copyToClipboard(
@@ -251,6 +252,10 @@
                 'phone'
               )
             "
+          ></i>
+          <i
+            *ngIf="copiedPhone"
+            class="fas fa-check text-green-500 [font-size:14px]"
           ></i>
         </div>
       </div>
@@ -269,8 +274,13 @@
           </p>
 
           <i
+            *ngIf="!copiedEmail"
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="copyToClipboard(cusObjDetails.email, 'email')"
+          ></i>
+          <i
+            *ngIf="copiedEmail"
+            class="fas fa-check text-green-500 [font-size:14px]"
           ></i>
         </div>
       </div>
@@ -314,22 +324,22 @@
 
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-receipt text-[#727272] [font-size:14px]"></i>
-          <p class="[font-size:14px] text-[#727272]">No of Orders:</p>
-        </div>
-        <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.totalOrders }}
-        </p>
-      </div>
-
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
           <i class="fa-solid fa-house text-[#727272] [font-size:14px]"></i>
           <p class="[font-size:14px] text-[#727272]">Address:</p>
         </div>
         <p class="[font-size:14px] text-[#000000] dark:text-white">
           {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
           {{ cusObjDetails.city }}
+        </p>
+      </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-receipt text-[#727272] [font-size:14px]"></i>
+          <p class="[font-size:14px] text-[#727272]">No of Orders:</p>
+        </div>
+        <p class="[font-size:14px] text-[#000000] dark:text-white">
+          {{ cusObjDetails.totalOrders }}
         </p>
       </div>
     </div>

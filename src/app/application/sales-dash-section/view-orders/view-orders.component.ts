@@ -483,7 +483,7 @@ export class ViewOrdersComponent implements OnInit {
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 15);
+        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);

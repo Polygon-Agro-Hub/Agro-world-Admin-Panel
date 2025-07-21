@@ -460,6 +460,8 @@ export class ViewOrdersComponent implements OnInit {
       format: 'a4',
     });
 
+    doc.setTextColor(0, 0, 0);
+
     // Set document properties
     doc.setProperties({
       title: `Invoice ${invoice.invoiceNumber || 'N/A'}`,
@@ -474,6 +476,8 @@ export class ViewOrdersComponent implements OnInit {
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(62, 32, 109);
     doc.text('INVOICE', 105, 15, { align: 'center' });
+
+    doc.setTextColor(0, 0, 0);
 
     // Load and add logo
     try {

@@ -1013,4 +1013,6 @@ class Orders {
   createdAt!: Date;
   formattedCreatedDate!: string;
   scheduleDateFormattedSL?: string;
+  sheduleType!:string;
+  sheduleTime!:string
 }

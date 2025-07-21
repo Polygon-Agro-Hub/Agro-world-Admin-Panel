@@ -44,7 +44,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   category!: Category[];
   replyStatus!: any[];
   rpst: string = '';
-  isPopUpVisible: boolean = true;
+  isPopUpVisible: boolean = false;
 
   searchText: string = '';
   isLoading = false;

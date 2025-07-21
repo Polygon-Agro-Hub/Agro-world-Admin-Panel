@@ -113,7 +113,7 @@
                                 <span *ngIf="order.isPackage === 0">Custom</span>
                             </td>
                             <td class="px-3 py-3 text-center dark:text-textDark">
-                                {{ order.sheduleDate | date : "medium" }}
+                                {{ order.sheduleDate | date : "d MMM, y h:mm a" }}
                             </td>
                             <td class="px-3 py-3 text-left dark:text-textDark">{{ order.sheduleType }}</td>
                             <td class="px-3 py-3 text-center dark:text-textDark">{{ order.paymentMethod }}</td>
@@ -132,12 +132,18 @@
                                 {{ order.fullTotal | number : "1.2-2" }}
                             </td>
                             <td class="px-3 py-3 text-center">
-                                <span *ngIf="activeButton === 'assigned'" class="bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2">Assigned</span>
-                                <span *ngIf="activeButton === 'processing'" class="bg-[#CFE1FF] text-[#3B82F6] rounded-xl px-5 py-2">Processing</span>
-                                <span *ngIf="activeButton === 'delivered'" class="bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2">Delivered</span>
-                                <span *ngIf="activeButton === 'On the way'" class="bg-[#af7ce3] text-[#481c56] rounded-xl px-5 py-2">On the way</span>
-                                <span *ngIf="activeButton === 'cancelled'" class="bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-5 py-2">Cancelled</span>
-                                <span *ngIf="activeButton === 'failed'" class="bg-[#FFDCDA] text-[#FF1100] rounded-xl px-5 py-2">Failed</span>
+                                <span *ngIf="activeButton === 'assigned'"
+                                    class="bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2">Assigned</span>
+                                <span *ngIf="activeButton === 'processing'"
+                                    class="bg-[#CFE1FF] text-[#3B82F6] rounded-xl px-5 py-2">Processing</span>
+                                <span *ngIf="activeButton === 'delivered'"
+                                    class="bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2">Delivered</span>
+                                <span *ngIf="activeButton === 'On the way'"
+                                    class="bg-[#af7ce3] text-[#481c56] rounded-xl px-5 py-2">On the way</span>
+                                <span *ngIf="activeButton === 'cancelled'"
+                                    class="bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-5 py-2">Cancelled</span>
+                                <span *ngIf="activeButton === 'failed'"
+                                    class="bg-[#FFDCDA] text-[#FF1100] rounded-xl px-5 py-2">Failed</span>
                             </td>
                             <td class="px-3 py-3 flex justify-center">
                                 <button class="text-textLight dark:text-textDark flex justify-center gap-1"

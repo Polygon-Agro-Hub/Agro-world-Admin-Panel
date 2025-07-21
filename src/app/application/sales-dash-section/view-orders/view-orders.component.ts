@@ -86,7 +86,7 @@ interface InvoiceData {
 export class ViewOrdersComponent implements OnInit {
   ordersArr: Orders[] = [];
 
-  date: string = '';
+  date: Date | null = null;
   isLoading = false;
   isPopupVisible = false;
 
@@ -149,7 +149,7 @@ export class ViewOrdersComponent implements OnInit {
     search: string = this.searchText
   ) {
     this.isLoading = true;
-    console.log('date');
+    console.log('date', this.date)
     this.salesDashService
       .getAllOrders(
         page,
@@ -159,7 +159,7 @@ export class ViewOrdersComponent implements OnInit {
         paymentStatus,
         deliveryType,
         search,
-        this.date
+        this.formatDateForBackend(this.date)
       )
       .subscribe(
         (data) => {
@@ -188,6 +188,17 @@ export class ViewOrdersComponent implements OnInit {
         }
       );
   }
+
+  formatDateForBackend(date: Date | null): string {
+    if (!date) return '';
+  
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}`;
+  }
+
 
   onPageChange(event: number) {
     this.page = event;
@@ -460,6 +471,8 @@ export class ViewOrdersComponent implements OnInit {
       format: 'a4',
     });
 
+    doc.setTextColor(0, 0, 0);
+
     // Set document properties
     doc.setProperties({
       title: `Invoice ${invoice.invoiceNumber || 'N/A'}`,
@@ -475,11 +488,13 @@ export class ViewOrdersComponent implements OnInit {
     doc.setTextColor(62, 32, 109);
     doc.text('INVOICE', 105, 15, { align: 'center' });
 
+    doc.setTextColor(0, 0, 0);
+
     // Load and add logo
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 15);
+        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);
@@ -989,10 +1004,24 @@ export class ViewOrdersComponent implements OnInit {
   //   }
   // }
 
+  // onDateClear() {
+  //   this.date = '';
+  //   this.dateFilter();
+  // }
+
   onDateClear() {
-    this.date = '';
-    this.dateFilter();
+    console.log('date', this.date)
+    this.fetchAllOrders(
+      this.page,
+      this.itemsPerPage,
+      this.orderStatusFilter,
+      this.paymentMethodFilter,
+      this.paymentStatusFilter,
+      this.deliveryTypeFilter,
+      this.searchText
+    );
   }
+
 }
 
 class Orders {
@@ -1013,4 +1042,6 @@ class Orders {
   createdAt!: Date;
   formattedCreatedDate!: string;
   scheduleDateFormattedSL?: string;
+  sheduleType!:string;
+  sheduleTime!:string
 }

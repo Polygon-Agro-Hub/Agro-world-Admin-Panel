@@ -28,10 +28,10 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
 export class ViewComplainComponent implements OnInit {
 
   showReplyModal: boolean = false;
-selectedLanguage: string = '';
-selectedFarmerName: string = '';
-selectedReply: string = '';
-selectedComplainId: any;
+  selectedLanguage: string = '';
+  selectedFarmerName: string = '';
+  selectedReply: string = '';
+  selectedComplainId: any;
 
   statusFilter: any;
   hasData: boolean = true;
@@ -49,7 +49,7 @@ selectedComplainId: any;
   filterComCategory: any = {};
   status!: Status[];
   category!: Category[];
-  
+
 
   searchText: string = "";
   isLoading = false;
@@ -59,7 +59,7 @@ selectedComplainId: any;
   replyStatus = [
     { status: 'Yes', value: 'Yes' },
     { status: 'No', value: 'No' },
-    
+
   ];
 
   constructor(
@@ -69,11 +69,11 @@ selectedComplainId: any;
     // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log('user role', this.tokenService.getUserDetails().role);
-    
+
 
     this.status = [
       { id: 1, type: "Assigned" },
@@ -105,7 +105,7 @@ selectedComplainId: any;
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    
+
     this.complainSrv
       .getAllComplain(
         page,
@@ -181,14 +181,14 @@ selectedComplainId: any;
     });
   }
 
- 
+
 
 
 
 
   // showReplyDialog(id: any, farmerName: string, language: string) {
   //   let closingMessage = '';
-    
+
   //   if (language === 'Sinhala') {
   //     closingMessage = `
   //       <p>හිතවත් <strong>${farmerName}</strong>,</p>
@@ -242,7 +242,7 @@ selectedComplainId: any;
   //       </p>
   //     `;
   //   }
-  
+
   //   Swal.fire({
   //     title: "Reply as AgroWorld",
   //     html: `<div class="text-left">${closingMessage}</div>`,
@@ -266,10 +266,10 @@ selectedComplainId: any;
   //             'style',
   //             'display: flex; justify-content: flex-end !important; width: 100%;'
   //           );
-      
+
   //           const cancelButton = document.querySelector('.swal2-cancel') as HTMLElement;
   //           const confirmButton = document.querySelector('.swal2-confirm');
-      
+
   //           if (cancelButton && confirmButton) {
   //             cancelButton.style.marginRight = '8px'; // <-- Add right margin here
   //             actionsElement.insertBefore(cancelButton, confirmButton);
@@ -292,17 +292,17 @@ selectedComplainId: any;
     this.selectedReply = this.complain.reply || '';
     this.showReplyModal = true;
   }
-  
+
   sendReply() {
     this.messageContent = this.selectedReply;
     this.submitComplaint(this.selectedComplainId);
     this.closeModal();
   }
-  
+
   closeModal() {
     this.showReplyModal = false;
   }
-  
+
 
   submitComplaint(id: any) {
     const token = this.tokenService.getToken();
@@ -353,7 +353,7 @@ selectedComplainId: any;
 
   getAllComplainCategories() {
 
-    if(this.tokenService.getUserDetails().role === "1"){
+    if (this.tokenService.getUserDetails().role === "1") {
       const token = this.tokenService.getToken();
 
       if (!token) {
@@ -363,7 +363,7 @@ selectedComplainId: any;
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-  
+
       this.http
         .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/1`, {
           headers,
@@ -377,7 +377,7 @@ selectedComplainId: any;
             console.error('Error fetching news:', error);
           }
         );
-    }else{
+    } else {
       const token = this.tokenService.getToken();
 
       if (!token) {
@@ -387,7 +387,7 @@ selectedComplainId: any;
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-  
+
       this.http
         .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/1`, {
           headers,
@@ -402,7 +402,7 @@ selectedComplainId: any;
           }
         );
     }
- 
+
   }
 
   goBack() {

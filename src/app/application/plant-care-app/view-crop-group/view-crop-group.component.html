@@ -5,8 +5,10 @@
   Back
 </button>
 <button
-*ngIf="permissionService.hasPermission('Create crop group') ||
-                  tokenService.getUserDetails().role === '1'" 
+  *ngIf="
+    permissionService.hasPermission('Create crop group') ||
+    tokenService.getUserDetails().role === '1'
+  "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add()"
 >
@@ -39,56 +41,11 @@
           All Crop Groups ({{ this.totalItems }})
         </h2>
       </div>
-      <!-- <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-      >
-        <input
-          type="text"
-          placeholder="Search by Crop Name"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
-          </svg>
-        </button>
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div> -->
       <div
-      *ngIf="permissionService.hasPermission('Search crop group') ||
-                  tokenService.getUserDetails().role === '1'" 
+        *ngIf="
+          permissionService.hasPermission('Search crop group') ||
+          tokenService.getUserDetails().role === '1'
+        "
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
       >
         <input
@@ -164,6 +121,11 @@
               Crop
             </th>
             <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Image
+            </th>
+            <th
               class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Num of Varieties
@@ -201,6 +163,28 @@
             <td class="py-3 px-4 text-textLight dark:text-textDark text-start">
               {{ item.cropNameEnglish }}
             </td>
+            <td class="px-4 py-3 text-center">
+              <div class="flex justify-center">
+                <div
+                  class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center"
+                  [style.backgroundColor]="item.bgColor"
+                >
+                  <img
+                    *ngIf="item.image"
+                    [src]="item.image"
+                    alt="{{ item.cropNameEnglish }}"
+                    class="w-full h-full object-cover"
+                    (error)="(item.image)"
+                  />
+                  <div
+                    *ngIf="!item.image"
+                    class="text-xs text-textLight dark:text-textDark"
+                  >
+                    No Image
+                  </div>
+                </div>
+              </div>
+            </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.varietyCount || 0 }}
             </td>
@@ -222,8 +206,10 @@
               class="flex flex-row gap-x-6 py-3 text-center text-textLight dark:text-textDark"
             >
               <button
-              *ngIf="permissionService.hasPermission('Add varieties') ||
-                  tokenService.getUserDetails().role === '1'" 
+                *ngIf="
+                  permissionService.hasPermission('Add varieties') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="flex w-6 h-6 text-blue-500 hover:text-blue-700 align-middle items-center justify-center"
                 (click)="addVarietie(item.id)"
               >
@@ -231,8 +217,11 @@
               </button>
 
               <button
-              *ngIf="permissionService.hasPermission('View varieties of each group') ||
-                  tokenService.getUserDetails().role === '1'" 
+                *ngIf="
+                  permissionService.hasPermission(
+                    'View varieties of each group'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
                 class="w-6 h-6 text-blue-500 hover:text-blue-700"
                 (click)="Varieties(item.id, item.cropNameEnglish)"
               >
@@ -252,8 +241,10 @@
               </button>
 
               <button
-              *ngIf="permissionService.hasPermission('Edit crop group') ||
-                  tokenService.getUserDetails().role === '1'" 
+                *ngIf="
+                  permissionService.hasPermission('Edit crop group') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCropGroup(item.id)"
               >
@@ -271,8 +262,10 @@
               </button>
 
               <button
-              *ngIf="permissionService.hasPermission('Delete crop group') ||
-                  tokenService.getUserDetails().role === '1'" 
+                *ngIf="
+                  permissionService.hasPermission('Delete crop group') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteCropCalender(item.id)"
               >

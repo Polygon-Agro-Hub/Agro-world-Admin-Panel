@@ -811,7 +811,7 @@
             id="accNumber"
             name="accNumber"
             [(ngModel)]="companyData.accNumber"
-            (blur)="onBlur('accNumber')"
+            (blur)="validateConfirmAccNumber()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -824,22 +824,19 @@
 
         <div class="pb-6">
           <label
-            for="confirmAccNumber"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
             Confirm Account Number
           </label>
           <input
             type="number"
-            id="confirmAccNumber"
-            name="confirmAccNumber"
             [(ngModel)]="companyData.confirmAccNumber"
-            (blur)="onBlur('confirmAccNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-yellow-500 dark:placeholder-yellow-300"
-            placeholder="Please re-enter the account number to submit changes"
+            (blur)="validateConfirmAccNumber()"
+            (input)="validateConfirmAccNumber()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           />
 
-          <!-- Required validation message -->
+          <!-- Show required error only when field is empty -->
           <span
             *ngIf="confirmAccountNumberRequired"
             class="text-red-600 text-sm"
@@ -847,7 +844,7 @@
             Confirm Account Number is required.
           </span>
 
-          <!-- Mismatch validation message -->
+          <!-- Show mismatch error only when numbers don't match and field isn't empty -->
           <span
             *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
             class="text-red-600 text-sm"

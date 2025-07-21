@@ -39,18 +39,17 @@
         </div>
 
         <div class="mr-5">
-                  <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-          [options]="replyStatus" [(ngModel)]="rpst" optionLabel="label" optionValue="value" [showClear]="true"
-          placeholder="Reply Status" (onChange)="regStatusFil()"></p-dropdown>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+            [options]="replyStatus" [(ngModel)]="rpst" optionLabel="label" optionValue="value"
+            [showClear]="rpst === '' ? false : true" placeholder="Reply" (onChange)="regStatusFil()"></p-dropdown>
 
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
           <input type="text" placeholder="Search by RefNo, Category, Name" [(ngModel)]="searchText"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" 
-            (keyup.enter)="searchComplain()"
-            (keyup.esc)="clearSearch()"/>
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            (keyup.enter)="searchComplain()" (keyup.esc)="clearSearch()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchComplain()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -68,10 +67,10 @@
         </div>
       </div>
     </div>
-    <div>
+    <div *ngIf="hasData">
       <table class="max-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
         <thead>
-          <tr>
+          <tr class="cursor-default">
             <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
               Ref No.
             </th>
@@ -130,8 +129,11 @@
               {{ item.lastName }}
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.createdAt }}
+            <td class="px-4 py-3 text-center text-[#3E3E3E] text-normal text-sm dark:text-textDark">
+              <div class="flex flex-col justify-center items-center">
+                <span>{{ item.createdAt | date:'yyyy/MM/dd' }}</span>
+                <span>{{ item.createdAt | date:'h:mm a' }}</span>
+              </div>
             </td>
             <td class="px-4 py-3 text-green-500 text-center">
               <div *ngIf="item.status === 'Assigned'">
@@ -162,24 +164,28 @@
               </button>
             </td>
 
-            <td class="px-4 py-3 text-green-500 text-center">
+            <td class="px-4 py-3 text-green-500 text-center cursor-default">
               <span *ngIf="item.reply === null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark">No</span>
+                class="px-4 py-3 text-center text-textLight dark:text-textDark italic">No</span>
               <span *ngIf="item.reply != null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark">Yes</span>
+                class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
             </td>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.reply === null">
                 <button disabled class="w-5 h-5 text-blue-100" (click)="fetchComplain(item.id, item.firstName)">
-                  <i class="fa-solid fa-file-export"></i>
+                  <!-- <i class="fa-solid fa-file-export"></i> -->
+                  <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block opacity-50 cursor-not-allowed" />
+
                 </button>
               </div>
 
               <div *ngIf="item.reply != null">
                 <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
                   (click)="fetchComplain(item.id, item.firstName)">
-                  <i class="fa-solid fa-file-export"></i>
+                  <!-- <i class="fa-solid fa-file-export"></i> -->
+                  <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
+
                 </button>
               </div>
             </td>
@@ -187,11 +193,55 @@
         </tbody>
       </table>
     </div>
-    <div class="dark:bg-[#262f45]">
+    <div *ngIf="hasData" class="dark:bg-[#262f45]">
       <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
         [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
         [screenReaderCurrentLabel]="'Youre on page'">
       </pagination-controls>
+    </div>
+
+    <!-- No data message -->
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+  </div>
+
+</div>
+
+
+<div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4">
+    <div class="flex justify-center items-center">
+      <span class="rounded-full px-4 py-3 bg-[#F6F6F6] dark:bg-gray-400">
+        <i class="fa-regular fa-envelope text-2xl text-[#2D2D2D] 0"></i>
+      </span>
+
+    </div>
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-white">Reply as Polygon</h2>
+    
+    <div class="text-left text-[#2D2D2D] dark:text-gray-200">
+      <p>Dear <strong class="dark:text-white">{{complain.firstName}} {{complain.lastName}}</strong>,</p>
+      <textarea 
+        class="w-full p-2 border rounded mt-3 mb-3 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
+        rows="5" 
+        placeholder="Add your message here..."
+        disabled
+      >{{complain.reply}}</textarea>
+      <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+      <p class="mt-3">
+        Sincerely,<br/>
+        AgroWorld Customer Support Team
+      </p>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button 
+        (click)="closeDialog()"
+        class="px-4 py-2 text-[#D3D3D3] dark:text-gray-200 bg-[#74788D] rounded transition"
+      >
+        Close
+      </button>
     </div>
   </div>
 </div>

@@ -629,13 +629,22 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
-    this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
+    // Reset error flags
+    this.confirmAccountNumberRequired = false;
+    this.confirmAccountNumberError = false;
 
-    if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
-      this.confirmAccountNumberError =
-        this.companyData.accNumber !== this.companyData.confirmAccNumber;
-    } else {
-      this.confirmAccountNumberError = false;
+    // Check if confirm account number is empty
+    if (!this.companyData.confirmAccNumber) {
+      this.confirmAccountNumberRequired = true;
+      return;
+    }
+
+    // Check if account numbers match (convert to string to avoid number comparison issues)
+    if (
+      String(this.companyData.accNumber) !==
+      String(this.companyData.confirmAccNumber)
+    ) {
+      this.confirmAccountNumberError = true;
     }
   }
 

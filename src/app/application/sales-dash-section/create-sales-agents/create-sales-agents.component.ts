@@ -306,7 +306,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9}$/; // Allows only 9-digit numbers
+    const phoneRegex = /^[0-9]{9,}$/; // Allows only 9-digit numbers
     return phoneRegex.test(phone);
   }
 
@@ -320,7 +320,18 @@ export class CreateSalesAgentsComponent implements OnInit {
     return nicRegex.test(nic);
   }
 
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
   checkSubmitValidity(): boolean {
+    console.log('cehcking submit')
+    const phonePattern = /^[0-9]{9}$/;
+    const accountPattern = /^[a-zA-Z0-9]+$/
+
     const {
       firstName,
       lastName,
@@ -342,15 +353,18 @@ export class CreateSalesAgentsComponent implements OnInit {
 
     const isFirstNameValid = !!firstName;
 
-    const isPhoneNumber1Valid = !!phoneNumber1;
+    const isPhoneNumber1Valid = !!phoneNumber1 && phonePattern.test(phoneNumber1);
     const isEmailValid = this.isValidEmail(email);
     const isEmpTypeSelected = !!empType;
     const isNicSelected = !!nic;
 
+    const isAccNumberPatternValid = accountPattern.test(accNumber);
+    const isConfirmAccNumberPatternValid = accountPattern.test(confirmAccNumber);
+
     let isPhoneValid = true;
 
     if (phoneNumber2) {
-      isPhoneValid = phoneNumber2 !== phoneNumber1;
+      isPhoneValid = (phoneNumber2 !== phoneNumber1) && phonePattern.test(phoneNumber2);
     }
 
     const isAddressValid =
@@ -362,7 +376,12 @@ export class CreateSalesAgentsComponent implements OnInit {
       !!bankName &&
       !!branchName &&
       !!confirmAccNumber &&
-      accNumber === confirmAccNumber;
+      accNumber === confirmAccNumber &&
+      isAccNumberPatternValid &&
+      isConfirmAccNumberPatternValid;
+    console.log('isBankDetailsValid', isBankDetailsValid, 'isAddressValid', isAddressValid, 'isFirstNameValid', isFirstNameValid, 'isPhoneNumber1Valid', isPhoneNumber1Valid, 'isEmailValid', isEmailValid,
+      'isEmpTypeSelected', isEmpTypeSelected, 'isNicSelected', isNicSelected, 'isPhoneValid', isPhoneValid
+     )
     return (
       isBankDetailsValid &&
       isAddressValid &&

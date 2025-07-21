@@ -46,6 +46,31 @@
             </p-calendar>
           </div>
 
+          <div class="flex items-center gap-2 h-8 ml-2">
+            <p-calendar
+            id="toDate"
+            [(ngModel)]="date"
+            (onSelect)="dateFilter()"
+            (onClear)="onDateClear()"       
+            placeholder="Delivery Date"
+            [showIcon]="true"
+            [showClear]="true"              
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '16rem', height: '2rem' }"
+            panelStyleClass="rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                             [&_.p-datepicker-header]:dark:text-white
+                             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                             
+                             [&_.p-button:hover]:dark:bg-[#6b7280]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            [appendTo]="'body'"
+          />
+          </div>
+
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"

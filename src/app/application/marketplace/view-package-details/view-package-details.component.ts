@@ -1,10 +1,11 @@
+
+
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { CommonModule } from '@angular/common';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
@@ -18,6 +19,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 export class ViewPackageDetailsComponent implements OnInit {
   package: Package | null = null;
   packageDetails: PackageDetails[] = [];
+  packageItems: PackageItem[] = [];
   loading = false;
   error: string | null = null;
 
@@ -36,56 +38,78 @@ export class ViewPackageDetailsComponent implements OnInit {
   }
 
   fetchPackageDetails(): void {
-    this.loading = true;
-    this.error = null;
+  this.loading = true;
+  this.error = null;
 
-    this.route.params.subscribe((params) => {
-      const id = +params['id'];
+  this.route.params.subscribe((params) => {
+    const id = +params['id'];
+    console.log('Fetching package with ID:', id); // Debug
 
-      this.marketPlaceService
-        .getPackageWithDetailsById(id)
-        .pipe(
-          catchError((error) => {
-            this.error = error.message || 'Failed to load package details';
-            return of(null);
-          }),
-          finalize(() => {
-            this.loading = false;
-          })
-        )
-        .subscribe((response) => {
-          console.log('Package details response:', response);
+    this.marketPlaceService
+      .getPackageWithDetailsById(id)
+      .pipe(
+        catchError((error) => {
+          this.error = error.message || 'Failed to load package details';
+          console.error('API Error:', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.loading = false;
+          console.log('Loading complete, package:', this.package);
+          console.log('Error state:', this.error);
+        })
+      )
+      .subscribe((response) => {
+        console.log('Raw API response:', response);
 
-          if (response?.success && response.data) {
-            this.package = {
-              id: response.data.id,
-              displayName: response.data.displayName,
-              image: response.data.image,
-              description: response.data.description,
-              status: response.data.status,
-              productPrice: response.data.productPrice,
-              packingFee: response.data.packingFee,
-              serviceFee: response.data.serviceFee,
-            };
+        if (response?.success && response.data) {
+          const definePackageTotal
+ = parseFloat(response.data.pricingSummary?.definePackageTotal
+);
+          
+          // Map Package
+          this.package = {
+            id: response.data.id,
+            displayName: response.data.displayName || 'N/A',
+            image: response.data.image || null,
+            description: response.data.description || '',
+            status: response.data.status || '',
+            productPrice: parseFloat(response.data.productPrice || '0'),
+            packingFee: parseFloat(response.data.packingFee || '0'),
+            serviceFee: parseFloat(response.data.serviceFee || '0'),
+          date: response.data.definePackage?.createdAt || response.data.createdAt || new Date().toISOString(),
 
-            this.packageDetails =
-              response.data.packageDetails?.map(
-                (detail: {
-                  productType: { typeName: string };
-                  qty: number;
-                }) => ({
-                  typeName: detail.productType.typeName,
-                  qty: detail.qty,
-                })
-              ) || [];
-          } else if (response && !response.success) {
-            this.error = response.message || 'Package not found';
-          } else {
-            this.error = 'Invalid package data received';
-          }
-        });
-    });
-  }
+            totalPrice: !isNaN(definePackageTotal
+) ?definePackageTotal
+ : 0,
+          };
+
+          // Map PackageDetails (product type counts)
+          this.packageDetails = response.data.packageDetails?.map(
+            (detail: { productType: { typeName: string }; qty: number }) => ({
+              typeName: detail.productType.typeName || 'N/A',
+              qty: detail.qty || 0,
+            })
+          ) || [];
+
+          // Map PackageItems (items from definePackage.items)
+          this.packageItems = response.data.definePackage?.items?.map((item: any) => ({
+            productType: item.shortCode || 'N/A',
+            productName: item.dN || 'Unknown Product',
+            quantity: parseFloat(item.qty) || 0,
+            price: parseFloat(item.price) || 0,
+          })) || [];
+
+          console.log('Backend-calculated total price:', this.package.totalPrice);
+        } else if (response && !response.success) {
+          this.error = response.message || 'Package not found';
+        } else {
+          this.error = 'Invalid package data received';
+        }
+      });
+  });
+}
+
 
   formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -98,6 +122,7 @@ export class ViewPackageDetailsComponent implements OnInit {
   }
 }
 
+// Interfaces
 interface Package {
   id: number;
   displayName: string;
@@ -107,9 +132,26 @@ interface Package {
   productPrice: number;
   packingFee: number;
   serviceFee: number;
+  date?: string;
+  totalPrice?: number;
 }
 
 interface PackageDetails {
   typeName: string;
   qty: number;
+}
+
+interface PackageItem {
+  productType: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+interface ProductType {
+  id: number;
+  typeName: string | null;
+  shortCode: string | null;
+  qty?: number;
+  displayName: string;
 }

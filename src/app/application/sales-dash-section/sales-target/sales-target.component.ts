@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -10,6 +10,7 @@ import { SalesDashService } from '../../../services/sales-dash/sales-dash.servic
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { Calendar, CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-sales-target',
@@ -21,19 +22,22 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    LoadingSpinnerComponent
-],
+    LoadingSpinnerComponent,
+    CalendarModule,
+    
+  ],
   templateUrl: './sales-target.component.html',
   styleUrl: './sales-target.component.css',
 })
 export class SalesTargetComponent implements OnInit {
+  @ViewChild('calendar') calendar!: Calendar;
   loading: any;
   resetFilters() {
     throw new Error('Method not implemented.');
   }
   // targetForm: FormGroup;
   currentDailyTarget!: number;
-  newTargetValue: number = 0;
+  newTargetValue: any = '';
 
   agentsArr!: Agents[];
 
@@ -44,7 +48,7 @@ export class SalesTargetComponent implements OnInit {
 
   selectStatus: string = '';
   searchText: string = '';
-  selectDate: string = '';
+  selectDate: Date | null = null;
   totalTarget!: number;
   agentCount: number = 0;
 
@@ -55,14 +59,18 @@ export class SalesTargetComponent implements OnInit {
     private fb: FormBuilder,
     private salesDashSrv: SalesDashService,
     private router: Router
-  ) {}
+  ) { }
 
   back(): void {
     this.router.navigate(['sales-dash']);
   }
 
+  toggleCalendar() {
+    this.calendar.overlayVisible = !this.calendar.overlayVisible;
+  }
+
   ngOnInit(): void {
-    this.selectDate = new Date().toISOString().split('T')[0];
+    this.selectDate = new Date()
     this.fetchAllSalesAgents();
   }
 
@@ -147,16 +155,20 @@ export class SalesTargetComponent implements OnInit {
     });
   }
 
+  formatAgentCount(): string {
+    return this.agentCount < 10 ? '0' + this.agentCount : this.agentCount.toString();
+  }
+
   fetchAllSalesAgents(
     page: number = 1,
     limit: number = this.itemsPerPage,
     search: string = this.searchText,
     status: string = this.selectStatus,
-    date: string = this.selectDate
+    date: Date | null = this.selectDate
   ) {
     this.isLoading = true;
     this.salesDashSrv
-      .getAllSalesAgents(page, limit, search, status, date)
+      .getAllSalesAgents(page, limit, search, status, this.formatDateForBackend(date))
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -178,6 +190,16 @@ export class SalesTargetComponent implements OnInit {
           this.isLoading = false;
         },
       });
+  }
+
+  formatDateForBackend(date: Date | null): string {
+    if (!date) return '';
+  
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}`;
   }
 
   onPageChange(event: number) {
@@ -226,9 +248,9 @@ export class SalesTargetComponent implements OnInit {
     );
   }
 
-  onDateChange(event: any) {
-    this.selectDate = event.target.value || '';
-    console.log('Selected Status:', this.selectDate);
+  onDateChange(date: Date | null) {
+    this.selectDate = date;
+    console.log('selectDate:', this.selectDate);
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -237,6 +259,8 @@ export class SalesTargetComponent implements OnInit {
       this.selectDate
     );
   }
+  
+  
 
   preventDecimalInput(event: KeyboardEvent) {
     const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
@@ -248,7 +272,7 @@ export class SalesTargetComponent implements OnInit {
   validateTargetInput() {
     // If value is not a number, set to 0
     if (isNaN(this.newTargetValue)) {
-      this.newTargetValue = 0;
+      this.newTargetValue = '';
       return;
     }
 
@@ -257,7 +281,7 @@ export class SalesTargetComponent implements OnInit {
 
     // Ensure minimum value of 1
     if (this.newTargetValue < 1) {
-      this.newTargetValue = 0;
+      this.newTargetValue = '';
     }
   }
 

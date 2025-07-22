@@ -1,10 +1,10 @@
 <div
-  class="flex flex-col p-5 sm:p-10 items-center justify-center bg-white rounded-lg shadow-lg text-black w-full max-w-full h-auto sm:h-[450px]"
+  class="flex flex-col p-5 dark:bg-[#061E2C] sm:p-10 items-center justify-center bg-white rounded-lg shadow-lg text-black w-full max-w-full h-auto sm:h-[450px]"
 >
   <!-- Header Section -->
   <div class="flex w-full h-full sm:h-[20%] items-center justify-between">
     <div class="w-auto sm:w-[40%]">
-      <h3 class="mb-3 text-lg sm:text-xl font-semibold">Statistics</h3>
+      <h3 class="mb-3 text-lg sm:text-xl dark:text-white font-semibold">Statistics</h3>
     </div>
 
     <!-- Filter Section -->
@@ -21,10 +21,10 @@
         </svg>
       </i>
 
-      <span class="text-xs sm:text-sm md:text-sm xl:text-sm">Filter by</span>
+      <span class="text-xs sm:text-sm md:text-sm xl:text-sm dark:text-white">Filter by</span>
 
       <p-dropdown
-        class="border-2 rounded-xl h-auto bg-[#F1F1F1] dark:bg-[#272F45]"
+        class="border-2 rounded-xl h-auto bg-[#F1F1F1] dark:bg-[#061E2C]"
         [checkmark]="true"
         [options]="district"
         optionLabel="districtName"
@@ -48,7 +48,7 @@
 
   <!-- Chart Section -->
   <ng-container *ngIf="!loading">
-    <div class="w-full h-full sm:h-[80%] max-h-[500px] overflow-hidden">
+    <div class="w-full h-full sm:h-[80%] max-h-[500px] overflow-hidden ">
       <p-chart
         class="w-full h-[500px]"
         type="bar"

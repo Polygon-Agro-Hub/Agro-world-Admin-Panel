@@ -62,6 +62,8 @@ export class CreateCompanyComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
   selectedLogoFile: File | null = null;
   selectedFaviconFile: File | null = null;
+  companyNameError: string = '';
+  isCheckingCompanyName: boolean = false;
 
   companyType: string = '';
 
@@ -97,11 +99,10 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.companyType = params['type'];
       console.log('Received type:', this.companyType);
     });
-
 
     this.loadBanks();
     this.loadBranches();
@@ -251,8 +252,6 @@ export class CreateCompanyComponent implements OnInit {
     this.touchedFields['favicon'] = true;
   }
 
-
-
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
@@ -260,7 +259,7 @@ export class CreateCompanyComponent implements OnInit {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -270,7 +269,7 @@ export class CreateCompanyComponent implements OnInit {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -398,10 +397,88 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   saveCompanyData() {
-    console.log(this.companyData);
+    // Validate contact numbers first
+    if (this.companyNameError) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Company Name Exists',
+        text: 'Please choose a different company name',
+      });
+      return;
+    }
+
+    if (
+      this.companyData.oicConNum1 &&
+      this.companyData.oicConNum2 &&
+      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+      this.companyData.oicConCode1 === this.companyData.oicConCode2
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate Numbers',
+        text: 'Company Contact Number 1 and 2 cannot be the same',
+      });
+      return;
+    }
+
+    // Validate account numbers match
+    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Account Numbers Mismatch',
+        text: 'Account number and confirm account number do not match',
+      });
+      return;
+    }
+
+    // Check required fields
+    const missingFields: string[] = [];
+
+    if (!this.companyData.regNumber) missingFields.push('Registration Number');
+    if (!this.companyData.companyNameEnglish)
+      missingFields.push('Company Name (English)');
+    if (!this.companyData.companyNameSinhala)
+      missingFields.push('Company Name (Sinhala)');
+    if (!this.companyData.companyNameTamil)
+      missingFields.push('Company Name (Tamil)');
+    if (!this.companyData.email) missingFields.push('Email');
+    if (!this.companyData.accHolderName)
+      missingFields.push('Account Holder Name');
+    if (!this.companyData.accNumber) missingFields.push('Account Number');
+    if (!this.companyData.confirmAccNumber)
+      missingFields.push('Confirm Account Number');
+    if (!this.companyData.bankName) missingFields.push('Bank Name');
+    if (!this.companyData.branchName) missingFields.push('Branch Name');
+    if (!this.companyData.foName) missingFields.push('Finance Officer Name');
+    if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1');
+    if (!this.companyData.logo) missingFields.push('Company Logo');
+    if (!this.companyData.favicon) missingFields.push('Company Favicon');
+
+    if (missingFields.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        html: `Please fill in the following fields:<br><ul>${missingFields
+          .map((field) => `<li>${field}</li>`)
+          .join('')}</ul>`,
+      });
+      return;
+    }
+
+    // Validate email format
+    if (!this.isValidEmail(this.companyData.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email',
+        text: 'Please enter a valid email address',
+      });
+      return;
+    }
+
     this.isLoading = true;
     const formData = new FormData();
 
+    // Append all non-file fields
     Object.entries(this.companyData).forEach(([key, value]) => {
       if (
         key !== 'logoFile' &&
@@ -411,31 +488,57 @@ export class CreateCompanyComponent implements OnInit {
       ) {
         formData.append(key, String(value));
       }
-      if (key === 'logoFile' && this.companyData.logoFile) {
-        formData.append('logo', this.companyData.logoFile);
-      } else if (key === 'faviconFile' && this.companyData.faviconFile) {
-        formData.append('favicon', this.companyData.faviconFile);
-      } else if (key !== 'logoFile' && key !== 'faviconFile') {
-        formData.append(key, (this.companyData as any)[key]);
-      }
     });
 
-    this.collectionCenterSrv.createCompany(this.companyData, this.companyType).subscribe(
-      (response) => {
-        this.isLoading = false;
-        console.log('Data saved successfully:', response);
-        Swal.fire('Success', 'Company Created Successfully', 'success');
-        // this.router.navigate(['/distribution-hub/action/view-companies']);
-        this.location.back(); 
-      },
-      (error) => {
-        this.isLoading = false;
-        console.error('Error saving data:', error);
-        Swal.fire('Error', error, 'error');
-      }
-    );
-  }
+    // Append logo file if exists
+    if (this.companyData.logoFile) {
+      formData.append('logo', this.companyData.logoFile);
+    }
 
+    // Append favicon file if exists
+    if (this.companyData.faviconFile) {
+      formData.append('favicon', this.companyData.faviconFile);
+    }
+
+    this.collectionCenterSrv
+      .createCompany(this.companyData, this.companyType)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Company created successfully',
+              timer: 2000,
+              showConfirmButton: false,
+            }).then(() => {
+              this.location.back();
+            });
+          } else {
+            Swal.fire('Error!', response.message, 'error');
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error saving data:', error);
+          let errorMessage = 'Failed to create company. Please try again.';
+
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.status === 0) {
+            errorMessage =
+              'Unable to connect to server. Please check your connection.';
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage,
+          });
+        }
+      );
+  }
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
@@ -526,13 +629,22 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   validateConfirmAccNumber(): void {
-    this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
+    // Reset error flags
+    this.confirmAccountNumberRequired = false;
+    this.confirmAccountNumberError = false;
 
-    if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
-      this.confirmAccountNumberError =
-        this.companyData.accNumber !== this.companyData.confirmAccNumber;
-    } else {
-      this.confirmAccountNumberError = false;
+    // Check if confirm account number is empty
+    if (!this.companyData.confirmAccNumber) {
+      this.confirmAccountNumberRequired = true;
+      return;
+    }
+
+    // Check if account numbers match (convert to string to avoid number comparison issues)
+    if (
+      String(this.companyData.accNumber) !==
+      String(this.companyData.confirmAccNumber)
+    ) {
+      this.confirmAccountNumberError = true;
     }
   }
 
@@ -558,6 +670,76 @@ export class CreateCompanyComponent implements OnInit {
       if (result.isConfirmed) {
         this.router.navigate(['/collection-hub/manage-company']);
       }
+    });
+  }
+
+  numberOnly(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+
+    // Allow only numbers (0-9)
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  onPaste(event: ClipboardEvent, fieldName: string): void {
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
+
+    // Only allow paste if the text contains numbers only
+    if (/^\d+$/.test(pastedText)) {
+      if (fieldName === 'accNumber') {
+        this.companyData.accNumber =
+          (this.companyData.accNumber || '') + pastedText;
+      } else if (fieldName === 'confirmAccNumber') {
+        this.companyData.confirmAccNumber =
+          (this.companyData.confirmAccNumber || '') + pastedText;
+      }
+    }
+  }
+
+  validateContactNumbers(): void {
+    if (
+      this.companyData.oicConNum1 &&
+      this.companyData.oicConNum2 &&
+      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+      this.companyData.oicConCode1 === this.companyData.oicConCode2
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate Numbers',
+        text: 'Company Contact Number 1 and 2 cannot be the same',
+      });
+      // Clear the second number
+      this.companyData.oicConNum2 = '';
+    }
+  }
+
+  checkCompanyName(): void {
+    const companyName = this.companyData.companyNameEnglish;
+
+    if (!companyName) {
+      this.companyNameError = '';
+      return;
+    }
+
+    this.isCheckingCompanyName = true;
+    this.companyNameError = '';
+
+    this.collectionCenterSrv.checkCompanyNameExists(companyName).subscribe({
+      next: (exists) => {
+        this.isCheckingCompanyName = false;
+        if (exists) {
+          this.companyNameError = 'This company name already exists';
+        }
+      },
+      error: () => {
+        this.isCheckingCompanyName = false;
+        this.companyNameError = 'Error checking company name availability';
+      },
     });
   }
 }

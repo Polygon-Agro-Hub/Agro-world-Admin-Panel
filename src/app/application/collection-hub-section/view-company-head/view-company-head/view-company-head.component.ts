@@ -46,7 +46,7 @@ export class ViewCompanyHeadComponent implements OnInit {
     private companyService: CollectionCenterService,
     private datePipe: DatePipe,
     private collectionService: CollectionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -88,6 +88,12 @@ export class ViewCompanyHeadComponent implements OnInit {
 
   editCompanyHead(id: number) {
     this.navigatePath(`/collection-hub/edit-center-head/${id}`);
+  }
+
+  viewCompanyHead(id: number) {
+    this.router.navigate(
+      [`/collection-hub/view-center-head/${id}`]
+    );
   }
 
   onPageChange(event: number) {
@@ -275,6 +281,7 @@ export class ViewCompanyHeadComponent implements OnInit {
       },
     });
   }
+
 }
 
 class CompanyHead {

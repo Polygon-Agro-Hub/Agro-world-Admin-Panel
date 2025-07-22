@@ -14,7 +14,6 @@
 
   <form [formGroup]="distributionForm">
     <!-- Row 1 -->
-
     <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
         <label
@@ -114,35 +113,6 @@
       <div class="flex-1 mb-4 md:mb-0">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Latitude</label
-        >
-        <input
-          type="text"
-          formControlName="latitude"
-          placeholder="e.g., 6.9271"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      <div class="flex-1">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
-          >Longitude</label
-        >
-        <input
-          type="text"
-          formControlName="longitude"
-          placeholder="e.g., 79.8612"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-    </div>
-
-    <!-- Row 4 -->
-    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
-      <div class="flex-1 mb-4 md:mb-0">
-        <label
-          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
           >Email</label
         >
         <input
@@ -151,7 +121,39 @@
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+      <div class="flex-1">
+        <label
+          class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
+          >Geo Location</label
+        >
+      <div class="flex items-center">
+  <div class="border border-red-600 rounded-md px-3 py-2 flex items-center bg-red-50">
+    <ng-container *ngIf="distributionForm.get('latitude')?.value && distributionForm.get('longitude')?.value; else noCoords">
+      <a
+        [href]="'https://www.google.com/maps?q=' + distributionForm.get('latitude')?.value + ',' + distributionForm.get('longitude')?.value"
+        target="_blank"
+        class="text-red-600 text-xl"
+        title="View on map"
+      >
+        <i class="fas fa-map-marker-alt"></i>
+      </a>
+    </ng-container>
+    <ng-template #noCoords>
+      <span
+        class="text-red-600 text-xl"
+        title="Coordinates not available"
+      >
+        <i class="fas fa-map-marker-alt"></i>
+      </span>
+    </ng-template>
+  </div>
+</div>
 
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
@@ -165,10 +167,7 @@
           <option value="Sri Lanka">Sri Lanka</option>
         </select>
       </div>
-    </div>
 
-    <!-- Row 5 -->
-    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
@@ -184,7 +183,10 @@
           </option>
         </select>
       </div>
+    </div>
 
+    <!-- Row 5 -->
+    <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
@@ -200,10 +202,7 @@
           </option>
         </select>
       </div>
-    </div>
 
-    <!-- Row 6 -->
-    <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
         <label
           class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark"
@@ -215,7 +214,6 @@
           class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <div class="flex-1 mb-4 md:mb-0"></div>
     </div>
   </form>
 </div>

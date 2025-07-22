@@ -28,6 +28,8 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
   selectedCrop: Crop | null = null;
   crops!: Crop[];
 
+  hasData: boolean = false;
+
   selectedGrade: Viraity | null = null;
   grades!: Viraity[];
 
@@ -51,15 +53,16 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
 
   fetchAllMarketPrices() {
     this.isLoading = true;
-
+  
     const cropId = this.selectedCrop?.id || '';
     const grade = this.selectedGrade?.Vgrade || '';
-
+  
     this.marketSrv.getAllMarketPrice(cropId, grade, this.searchNIC).subscribe(
       (res) => {
         this.isLoading = false;
         this.market = res.results;
         this.totalItems = res.total;
+        this.hasData = this.market && this.market.length > 0;  // <-- here
       },
       () => {
         this.isLoading = false;
@@ -68,9 +71,11 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
           'There was an error fetching market prices.',
           'error'
         );
+        this.hasData = false;  // <-- also reset on error
       }
     );
   }
+  
 
   getAllCrops() {
     this.marketSrv.getAllCropName().subscribe(

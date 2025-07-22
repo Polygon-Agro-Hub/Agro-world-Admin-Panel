@@ -36,5 +36,7 @@ export class NavbarComponent {
     return this.themeService.getActiveTheme() === 'dark';
   }
 
+  
+
 
 }

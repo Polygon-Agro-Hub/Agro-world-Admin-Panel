@@ -1,7 +1,10 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div class="flex space-x-4"></div>
-
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
@@ -229,14 +232,30 @@
         </div>
         <div class="flex items-center gap-2">
           <p
-            class="text-lg text-[#000000] dark:text-white cursor-pointer hover:underline"
-            (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"
+            class="text-lg [font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
+            (click)="
+              copyToClipboard(
+                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
+                'phone'
+              )
+            "
           >
-            {{ copiedPhone === cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber ? '' : cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber }}
+            {{ cusObjDetails.phoneCode + " " + cusObjDetails.phoneNumber }}
           </p>
+
           <i
-            class="fa-regular fa-copy text-[#727272] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
-            (click)="copyToClipboard(cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber, 'phone')"
+            *ngIf="!copiedPhone"
+            class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
+            (click)="
+              copyToClipboard(
+                cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
+                'phone'
+              )
+            "
+          ></i>
+          <i
+            *ngIf="copiedPhone"
+            class="fas fa-check text-green-500 [font-size:14px]"
           ></i>
         </div>
       </div>
@@ -251,11 +270,17 @@
             class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
             (click)="copyToClipboard(cusObjDetails.email, 'email')"
           >
-            {{ copiedEmail === cusObjDetails.email ? '' : cusObjDetails.email }}
+            {{ cusObjDetails.email }}
           </p>
+
           <i
-            class="fa-regular fa-copy text-[#727272] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
+            *ngIf="!copiedEmail"
+            class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="copyToClipboard(cusObjDetails.email, 'email')"
+          ></i>
+          <i
+            *ngIf="copiedEmail"
+            class="fas fa-check text-green-500 [font-size:14px]"
           ></i>
         </div>
       </div>
@@ -265,11 +290,14 @@
         class="flex flex-row items-center gap-4"
       >
         <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-location-dot text-[#727272] [font-size:14px]"></i>
+          <i
+            class="fa-solid fa-location-dot text-[#727272] [font-size:14px]"
+          ></i>
           <p class="[font-size:14px] text-[#727272]">Address:</p>
         </div>
         <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }}, {{ cusObjDetails.city }}
+          {{ cusObjDetails.houseNo }}, {{ cusObjDetails.streetName }},
+          {{ cusObjDetails.city }}
         </p>
       </div>
 
@@ -278,16 +306,31 @@
         class="flex flex-row items-center gap-4"
       >
         <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-location-dot text-[#727272] [font-size:14px]"></i>
+          <i
+            class="fa-solid fa-location-dot text-[#727272] [font-size:14px]"
+          ></i>
           <p class="[font-size:14px] text-[#727272]">Address:</p>
         </div>
         <div class="flex flex-col">
           <p class="[font-size:14px] text-[#000000] dark:text-white">
-            {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }}, {{ cusObjDetails.unitNo }},
-            {{ cusObjDetails.floorNo }}, {{ cusObjDetails.AparthouseNo }}, {{ cusObjDetails.ApartstreetName }},
+            {{ cusObjDetails.buildingNo }}, {{ cusObjDetails.buildingName }},
+            {{ cusObjDetails.unitNo }}, {{ cusObjDetails.floorNo }},
+            {{ cusObjDetails.AparthouseNo }},
+            {{ cusObjDetails.ApartstreetName }},
             {{ cusObjDetails.Apartcity }}
           </p>
         </div>
+      </div>
+
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-solid fa-house text-[#727272] [font-size:14px]"></i>
+          <p class="[font-size:14px] text-[#727272]">Address:</p>
+        </div>
+        <p class="[font-size:14px] text-[#000000] dark:text-white">
+          {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }}
+          {{ cusObjDetails.city }}
+        </p>
       </div>
 
       <div class="flex flex-row items-center gap-4">
@@ -299,16 +342,6 @@
           {{ cusObjDetails.totalOrders }}
         </p>
       </div>
-
-      <div class="flex flex-row items-center gap-4">
-        <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-house text-[#727272] [font-size:14px]"></i>
-          <p class="[font-size:14px] text-[#727272]">Address:</p>
-        </div>
-        <p class="[font-size:14px] text-[#000000] dark:text-white">
-          {{ cusObjDetails.houseNo }} {{ cusObjDetails.streetName }} {{ cusObjDetails.city }}
-        </p>
-      </div>
     </div>
 
     <hr class="my-4 border-gray-300 dark:border-gray-600" />
@@ -316,7 +349,9 @@
     <div class="my-5 flex flex-col gap-4">
       <div class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
-          <i class="fa-solid fa-calendar-days text-[#727272] [font-size:14px]"></i>
+          <i
+            class="fa-solid fa-calendar-days text-[#727272] [font-size:14px]"
+          ></i>
           <p class="[font-size:14px] text-[#727272]">Created At:</p>
         </div>
         <p class="[font-size:14px] text-[#000000] dark:text-white">

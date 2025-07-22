@@ -83,6 +83,10 @@ export class CollectionCenterDashboardComponent {
       `collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`,
     ]);
   }
+
+  navigateToTarget() {
+    this.router.navigate(['collection-hub/view-current-centre-target']); // Replace with your actual route
+  }
 }
 
 class CenterName {

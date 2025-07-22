@@ -9,7 +9,12 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 @Component({
   selector: 'app-view-retail-customeres',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgxPaginationModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './view-retail-customeres.component.html',
   styleUrls: ['./view-retail-customeres.component.css'],
 })
@@ -23,8 +28,8 @@ export class ViewRetailCustomeresComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   isLoading: boolean = true;
-  copiedEmail: string = '';
-  copiedPhone: string = '';
+  copiedPhone = false;
+  copiedEmail = false;
   showToast: boolean = false; // New property for toast visibility
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
@@ -33,7 +38,7 @@ export class ViewRetailCustomeresComponent implements OnInit {
     this.fetchRetailCustomers();
   }
 
-  goBack(): void {
+  back(): void {
     this.router.navigate(['/market/action']);
   }
 
@@ -44,22 +49,20 @@ export class ViewRetailCustomeresComponent implements OnInit {
   ) {
     this.isLoading = true;
 
-    this.marketSrv
-      .fetchAllRetailCustomers(page, limit, searchText)
-      .subscribe(
-        (res) => {
-          console.log(res);
-          this.customerObj = res.items;
-          this.totalItems = res.total;
-          this.hasData = res.items.length > 0;
-          this.isLoading = false;
-        },
-        (err) => {
-          console.error('Error fetching customers', err);
-          this.hasData = false;
-          this.isLoading = false;
-        }
-      );
+    this.marketSrv.fetchAllRetailCustomers(page, limit, searchText).subscribe(
+      (res) => {
+        console.log(res);
+        this.customerObj = res.items;
+        this.totalItems = res.total;
+        this.hasData = res.items.length > 0;
+        this.isLoading = false;
+      },
+      (err) => {
+        console.error('Error fetching customers', err);
+        this.hasData = false;
+        this.isLoading = false;
+      }
+    );
   }
 
   onPageChange(event: number) {
@@ -84,30 +87,16 @@ export class ViewRetailCustomeresComponent implements OnInit {
     this.cusObjDetails = Obj;
   }
 
-  copyToClipboard(text: string, type: 'email' | 'phone') {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        if (type === 'email') {
-          this.copiedEmail = text;
-        } else {
-          this.copiedPhone = text;
-        }
-        // Show toast
-        this.showToast = true;
-        // Hide toast after 2 seconds
-        setTimeout(() => {
-          this.showToast = false;
-          if (type === 'email') {
-            this.copiedEmail = '';
-          } else {
-            this.copiedPhone = '';
-          }
-        }, 2000);
-      })
-      .catch((err) => {
-        console.error('Failed to copy:', err);
-      });
+  copyToClipboard(text: string, type: 'phone' | 'email') {
+    navigator.clipboard.writeText(text).then(() => {
+      if (type === 'phone') {
+        this.copiedPhone = true;
+        setTimeout(() => (this.copiedPhone = false), 2000);
+      } else {
+        this.copiedEmail = true;
+        setTimeout(() => (this.copiedEmail = false), 2000);
+      }
+    });
   }
 
   viewOrderDetails(id: string) {

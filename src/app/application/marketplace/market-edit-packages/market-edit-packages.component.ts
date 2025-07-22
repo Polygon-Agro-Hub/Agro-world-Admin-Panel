@@ -29,7 +29,7 @@ export class MarketEditPackagesComponent {
     private marketSrv: MarketPlaceService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   back(): void {
     this.router.navigate(['market/action/view-packages-list']);
@@ -43,8 +43,7 @@ export class MarketEditPackagesComponent {
         if (this.packageId) {
           this.getProductTypes();
           this.getPackageDetails();
-          this.calculateApproximatedPrice()
-          // this.getPackage();
+          this.calculateApproximatedPrice();
         } else {
           console.error('No package ID provided');
           this.error = 'No package ID provided';
@@ -61,6 +60,13 @@ export class MarketEditPackagesComponent {
       console.log('this is response', res);
       this.packageObj = res;
       this.selectedImage = this.packageObj.imageUrl;
+
+      // ✅ Sort items by typeName alphabetically
+      this.packageObj.packageItems.sort((a, b) => {
+        const nameA = a.typeName?.toLowerCase() || '';
+        const nameB = b.typeName?.toLowerCase() || '';
+        return nameA.localeCompare(nameB);
+      });
     });
   }
 
@@ -71,14 +77,10 @@ export class MarketEditPackagesComponent {
     });
   }
 
-
-
   async onSubmit() {
     console.log('selected image', this.selectedImage);
     console.log('submit', this.packageObj);
-    // console.log('Final quantities:', this.packageObj.quantities);
 
-    // First validate all required fields
     if (
       !this.packageObj.displayName ||
       !this.packageObj.description ||
@@ -110,15 +112,6 @@ export class MarketEditPackagesComponent {
       this.isLoading = false;
       return;
     }
-
-  
-
-   
-    //   this.isLoading = false;
-    //   return;
-    // }
-
-    // this.isLoading = true;
 
     try {
       this.marketSrv
@@ -229,35 +222,26 @@ export class MarketEditPackagesComponent {
 
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.charCode;
-    // Allow only digits (0-9)
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }
   }
+
   allowDecimalNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
-    // Allow numbers 0-9
-    if (charCode >= 48 && charCode <= 57) {
-      return true;
-    }
-    // Allow decimal point
+    if (charCode >= 48 && charCode <= 57) return true;
     if (charCode === 46) {
       const currentValue = (event.target as HTMLInputElement).value;
-      // Prevent more than one decimal point
       return currentValue.indexOf('.') === -1;
     }
-    // Allow backspace, tab, enter, arrows
-    if ([8, 9, 13, 37, 39].includes(charCode)) {
-      return true;
-    }
-    // Prevent all other key presses
+    if ([8, 9, 13, 37, 39].includes(charCode)) return true;
     event.preventDefault();
     return false;
   }
 
   trackByFn(index: number, item: any): any {
-  return item.productTypeId; // or item.id if it's unique
-}
+    return item.productTypeId;
+  }
 }
 
 class Package {
@@ -273,7 +257,7 @@ class Package {
   serviceFee!: number;
   approximatedPrice!: number;
   imageUrl!: string;
-  packageItems:PackageItems[] = [];
+  packageItems: PackageItems[] = [];
 }
 
 class ProductType {
@@ -283,8 +267,8 @@ class ProductType {
 }
 
 class PackageItems {
-  id!:number | null
-  productTypeId!:number | null
-  typeName!:number | null 
-  qty!:number | null
+  id!: number | null;
+  productTypeId!: number | null;
+  typeName!: string | null; // ✅ Fixed type
+  qty!: number | null;
 }

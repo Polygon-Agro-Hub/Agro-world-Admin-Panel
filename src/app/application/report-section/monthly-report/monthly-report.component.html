@@ -6,56 +6,57 @@
 </button>
 
 <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-<div class="mx-auto min-w-[1200px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
-    <!-- From Date Input (Label and Input on the Same Line) -->
-    <div class="flex items-center gap-2">
-      <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
-      <input
-        id="fromDate"
-        type="date"
-        class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
-        placeholder="YYYY/MM/DD"
-        [(ngModel)]="fromDate"
-        [max]="maxDate"
-      />
-    </div>
-  
-    <!-- To Date Input (Label and Input on the Same Line) -->
-    <div class="flex items-center gap-2">
-      <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
-      <input
-        id="toDate"
-        type="date"
-        class="p-2 border rounded-md focus:ring focus:ring-blue-300 w-64"
-        placeholder="YYYY/MM/DD"
-        [(ngModel)]="toDate"
-        [min]="fromDate"
-      />
-    </div>
-  
-    <!-- Go Button -->
-    <div class="flex items-center">
-      <button
-      (click)="getCollectionReport()"
-        class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
-      >
-        Go
-      </button>
-    </div>
-  
-    <!-- Download Report Button (New Line) -->
-    <div class="w-full text-center" >
-      <button
-    (click)="downloadReport()"
-    class="bg-[#3980C0] text-white px-6 py-2 rounded-md"
-    [disabled]="isDownloading"
-  >
-    <i class="fas fa-download" *ngIf="!isDownloading"></i>
-    <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
-    {{ isDownloading ? ' Downloading...' : ' Download Report' }}
-  </button>
-    </div>
+<div class="mx-auto min-w-[1000px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
+  <!-- From Date Input -->
+  <div class="flex items-center gap-2">
+    <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
+    <input
+      id="fromDate"
+      type="date"
+      class="p-2 w-[450px] border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
+      placeholder="YYYY/MM/DD"
+      [(ngModel)]="fromDate"
+      [max]="maxDate"
+    />
   </div>
+
+  <!-- To Date Input -->
+  <div class="flex items-center gap-2">
+    <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
+    <input
+      id="toDate"
+      type="date"
+      class="p-2 w-[450px] border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
+      placeholder="YYYY/MM/DD"
+      [(ngModel)]="toDate"
+      [max]="maxDate"
+    />
+  </div>
+
+  <!-- Go Button -->
+  <div class="flex items-center">
+    <button
+      (click)="getCollectionReport()"
+      class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
+    >
+      Go
+    </button>
+  </div>
+
+  <!-- Download Report Button -->
+  <div class="w-full text-center mt-10">
+    <button
+      (click)="downloadReport()"
+      class="bg-[#3980C0] text-white px-6 py-2 rounded-md"
+      [disabled]="isDownloading"
+    >
+      <i class="fas fa-download" *ngIf="!isDownloading"></i>
+      <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
+      {{ isDownloading ? ' Downloading...' : ' Download Report' }}
+    </button>
+  </div>
+</div>
+
 
   
   

@@ -61,7 +61,7 @@ export class CreateAdminUserComponent implements OnInit {
   ) {
     this.userForm = this.fb.group({
       id: [''],
-      mail: ['', [Validators.required, Validators.email]],
+      mail: ['', [Validators.required, this.emailValidator()]], 
       userName: ['', [Validators.required, this.singleWordValidator]],
       role: ['', Validators.required],
       position: ['', Validators.required],
@@ -134,6 +134,18 @@ export class CreateAdminUserComponent implements OnInit {
       (error) => console.error('Error fetching positions:', error)
     );
   }
+  emailValidator(): (control: AbstractControl) => ValidationErrors | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value: string = control.value;
+      if (!value) return null;
+
+      // Stricter email regex
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const valid = emailRegex.test(value);
+
+      return !valid ? { invalidEmail: true } : null;
+    };
+  }
 
   singleWordValidator(control: AbstractControl): ValidationErrors | null {
     const hasSpace = /\s/.test(control.value);
@@ -161,7 +173,9 @@ export class CreateAdminUserComponent implements OnInit {
   getErrorMessage(controlName: string): string {
     const control = this.userForm.get(controlName);
     if (control?.hasError('required')) return 'This field is required';
-    if (control?.hasError('email')) return 'Enter a valid email';
+     if (control?.hasError('invalidEmail')) {
+    return 'Invalid email format';
+  }
     if (control?.hasError('invalidPassword'))
       return 'Password must be 8+ chars, include upper/lowercase, number & special char';
     if (control?.hasError('singleWord'))

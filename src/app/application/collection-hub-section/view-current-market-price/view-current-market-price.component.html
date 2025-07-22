@@ -119,11 +119,12 @@
       </div>
     </div>
 
-    <!-- <div *ngIf="!hasData" class="text-center py-8">
-    <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
-  </div> -->
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
 
-    <div class="overflow-x-auto">
+    <div *ngIf="hasData" class="overflow-x-auto ">
       <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
       <table
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"

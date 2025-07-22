@@ -55,9 +55,7 @@ export class DestributionService {
   //   });
   // }
 
-  createDistributionCentre(
-    data: any
-  ): Observable<ApiResponse> {
+  createDistributionCentre(data: any): Observable<ApiResponse> {
     console.log('data', data);
     const url = `${this.apiUrl}distribution/create-distribution-center`;
     return this.http.post<ApiResponse>(url, data, {
@@ -74,7 +72,18 @@ export class DestributionService {
     searchItem: string = '',
     centerType: string = ''
   ): Observable<any> {
-    console.log('district', district, 'province', province, 'company', company, 'searchItem', searchItem, 'centerType', centerType)
+    console.log(
+      'district',
+      district,
+      'province',
+      province,
+      'company',
+      company,
+      'searchItem',
+      searchItem,
+      'centerType',
+      centerType
+    );
     // console.log('Request params:', {
     //   page,
     //   limit,
@@ -93,7 +102,7 @@ export class DestributionService {
 
     // Add optional params with proper encoding
     if (searchItem) {
-      console.log('has search')
+      console.log('has search');
       url += `&searchItem=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
     }
 
@@ -173,7 +182,7 @@ export class DestributionService {
     id: number,
     updateData: any
   ): Observable<any> {
-    console.log('updateData', updateData)
+    console.log('updateData', updateData);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -204,6 +213,17 @@ export class DestributionService {
     return this.http.post<{ regCode: string }>(
       `${this.apiUrl}distribution/generate-regcode`,
       { province, district, city }
+    );
+  }
+
+  checkDistributionCentreNameExists(
+    name: string
+  ): Observable<{ exists: boolean }> {
+    return this.http.get<{ exists: boolean }>(
+      `${this.apiUrl}distribution/check-name-exists?name=${encodeURIComponent(
+        name
+      )}`,
+      { headers: this.getHeaders() }
     );
   }
 }

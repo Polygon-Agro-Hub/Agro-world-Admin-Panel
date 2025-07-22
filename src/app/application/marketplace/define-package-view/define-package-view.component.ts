@@ -482,11 +482,11 @@ export class DefinePackageViewComponent implements OnInit {
   onProductSelected(productType: ProductTypes, event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
-
+  
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
-
+  
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
@@ -496,10 +496,17 @@ export class DefinePackageViewComponent implements OnInit {
     } else {
       productType.productId = null;
       productType.selectedProductPrice = undefined;
+    }
+  
+    // Recalculate price if quantity already exists
+    if (productType.quantity !== undefined) {
+      productType.calculatedPrice = (productType.quantity || 0) * (productType.selectedProductPrice || 0);
+    } else {
       productType.calculatedPrice = undefined;
     }
     this.calculateTotalPrice();
   }
+  
 
   preventNegative(event: KeyboardEvent) {
     if (event.key === '-' || event.key === 'Subtract') {

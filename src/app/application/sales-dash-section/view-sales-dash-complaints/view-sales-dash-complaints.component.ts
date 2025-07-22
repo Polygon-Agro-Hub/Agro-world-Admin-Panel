@@ -27,7 +27,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 })
 export class ViewSalesDashComplaintsComponent implements OnInit {
   statusFilter: any;
-  hasData: boolean = true;
+  hasData: boolean = false;
   complainsData!: Complain[];
   complain: ComplainIn = new ComplainIn();
   messageContent: string = '';
@@ -39,9 +39,12 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
 
   filterStatus: any = '';
   filterCategory: any = {};
-  filterComCategory: any = {};
+  filterComCategory: any = '';
   status!: Status[];
   category!: Category[];
+  replyStatus!: any[];
+  rpst: string = '';
+  isPopUpVisible: boolean = false;
 
   searchText: string = '';
   isLoading = false;
@@ -54,7 +57,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
     // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log('user role', this.tokenService.getUserDetails().role);
@@ -71,6 +74,12 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       { id: 3, type: 'Call Center' },
       { id: 4, type: 'Procuiment' },
     ];
+
+    this.replyStatus = [
+      { label: 'Yes', value: 'Yes' },
+      { label: 'No', value: 'No' },
+    ];
+
 
     if (this.tokenService.getUserDetails().role === '2') {
       this.filterCategory.type = 'Agriculture';
@@ -105,6 +114,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
         limit,
         this.filterStatus?.type,
         this.filterCategory?.type,
+        this.rpst,
         this.filterComCategory?.id,
         this.searchText
       )
@@ -113,11 +123,13 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
           console.log(res.results);
 
           // Map response data to ensure createdAt is in a readable date format
-          this.complainsData = res.results.map((item: any) => ({
-            ...item,
-            createdAt: this.datePipe.transform(item.createdAt, 'yyyy-MM-dd'), // Convert date format
-          }));
+          this.complainsData = res.results
+          // .map((item: any) => ({
+          //   ...item,
+          //   createdAt: this.datePipe.transform(item.createdAt, 'yyyy-MM-dd'), // Convert date format
+          // }));
           this.totalItems = res.total;
+          this.hasData = res.total === 0 ? false : true;
           this.isLoading = false;
         },
         (error) => {
@@ -194,8 +206,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
 
       this.http
         .get<any>(
-          `${environment.API_URL}auth/get-all-complain-category-list/${
-            this.tokenService.getUserDetails().role
+          `${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role
           }/4`,
           {
             headers,
@@ -239,67 +250,50 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       this.complain = res;
       console.log(res);
       this.isLoading = false;
-      this.showReplyDialog(id, firstName);
+      // this.showReplyDialog(id, firstName);
+      this.isPopUpVisible = true;
+
     });
   }
 
   showReplyDialog(id: any, firstName: string) {
     Swal.fire({
-      title: 'Reply as AgroWorld',
+      title: 'Reply as Polygon',
       html: `
-        <div class="text-left">
-          <p>Dear <strong>${firstName}</strong>,</p>
-          <p></p>
-          <textarea 
-            id="messageContent" 
-            class="w-full p-2 border rounded mt-3 mb-3" 
-            rows="5" 
-            placeholder="Add your message here..."
-          >${this.complain.reply || ''}</textarea>
-          <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-          <p class="mt-3">
-            Sincerely,<br/>
-            AgroWorld Customer Support Team
-          </p>
-        </div>
-      `,
+      <div class="text-left">
+        <p>Dear <strong>${firstName}</strong>,</p>
+        <p></p>
+        <textarea 
+          id="messageContent" 
+          class="w-full p-2 border rounded mt-3 mb-3" 
+          rows="5" 
+          placeholder="Add your message here..."
+          disabled 
+        >${this.complain.reply || ''}</textarea>
+        <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+        <p class="mt-3">
+          Sincerely,<br/>
+          AgroWorld Customer Support Team
+        </p>
+      </div>
+    `,
       showCancelButton: true,
-      confirmButtonText: 'Send',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#3980C0', // Green color for Send button
-      cancelButtonColor: '#74788D', // Blue-gray for Cancel button
+      showConfirmButton: false, // Hide the Send button
+      cancelButtonText: 'Close',
+      cancelButtonColor: '#74788D',
       width: '600px',
-      reverseButtons: true, // Swap button positions
-      preConfirm: () => {
-        const textarea = document.getElementById(
-          'messageContent'
-        ) as HTMLTextAreaElement;
-        return textarea.value;
-      },
       didOpen: () => {
-        // Direct DOM manipulation for button alignment
         setTimeout(() => {
           const actionsElement = document.querySelector('.swal2-actions');
           if (actionsElement) {
+            // Align the Close button to the right
             actionsElement.setAttribute(
               'style',
-              'display: flex; justify-content: flex-end !important; width: 100%;'
+              'display: flex; justify-content: flex-end !important; width: 100%; padding: 0.5em;'
             );
-
-            // Also swap buttons if needed (in addition to reverseButtons)
-            const cancelButton = document.querySelector('.swal2-cancel');
-            const confirmButton = document.querySelector('.swal2-confirm');
-            if (cancelButton && confirmButton && actionsElement) {
-              actionsElement.insertBefore(cancelButton, confirmButton);
-            }
           }
-        }); // Small delay to ensure DOM is ready
+        });
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.messageContent = result.value;
-        this.submitComplaint(id);
-      }
     });
   }
 
@@ -345,6 +339,16 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
           this.fetchAllComplain(this.page, this.itemsPerPage);
         }
       );
+  }
+
+  regStatusFil(): void {
+    console.log('replyStatus', this.rpst)
+    this.applyFilters();
+  }
+
+  closeDialog() {
+    this.isPopUpVisible = false;
+    this.complain = new ComplainIn();
   }
 }
 

@@ -11,9 +11,11 @@
     <!-- Header and Filters Section -->
     <div class="mb-8">
       <div class="flex justify-between items-center mb-5">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Orders ({{ formatTotalItems() }})
-        </h2>
+        <div>
+          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+            All Orders ({{ totalItems }})
+          </h2>
+        </div>
         <div class="flex items-center gap-3">
           <!-- <div>
             <p-dropdown
@@ -36,12 +38,31 @@
               [(ngModel)]="date" (change)="dateFilter()" />
           </div> -->
 
+          
+
           <div class="flex items-center gap-2 h-8 ml-2">
-            <p-calendar [(ngModel)]="date" placeholder="Delivery Date" dateFormat="dd/mm/yy" [showIcon]="false"
-              [showClear]="true" styleClass="custom-calendar"
-              inputStyleClass="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-48 h-8"
-              (onSelect)="dateFilter()" (onClear)="onDateClear()">
-            </p-calendar>
+            <p-calendar
+            id="toDate"
+            [(ngModel)]="date"
+            (onSelect)="dateFilter()"
+            (onClear)="onDateClear()"       
+            placeholder="Delivery Date"
+            [showIcon]="true"
+            [showClear]="true"              
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '16rem', height: '2rem' }"
+            panelStyleClass="rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                             [&_.p-datepicker-header]:dark:text-white
+                             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                             
+                             [&_.p-button:hover]:dark:bg-[#6b7280]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            [appendTo]="'body'"
+          />
           </div>
 
           <div>
@@ -64,7 +85,7 @@
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [options]="orderStatusArr" [checkmark]="true" optionLabel="orderStatus" optionValue="value"
-              [showClear]="!!orderStatusFilter" placeholder="Order Status" [(ngModel)]="orderStatusFilter"
+              [showClear]="orderStatusFilter === '' ? false : true" placeholder="Order Status" [(ngModel)]="orderStatusFilter"
               (onChange)="applyOrderStatusFilters()" />
           </div>
 
@@ -117,10 +138,14 @@
               Order Time
             </th>
             <th class="font-normal text-textLight dark:text-textDark text-center">
-              Delivery date
+              Schedule
             </th>
 
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+              Schedule Date
+            </th>
+
+            <th class="font-normal text-textLight dark:text-textDark text-center">
               Schedule
             </th>
             <!-- <th
@@ -181,19 +206,27 @@
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.formattedCreatedDate }}
             </td>
+
+
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.scheduleDateFormattedSL }}
+              {{ item.sheduleType }}
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.deliveryType }}
+              {{ item.scheduleDate | date : "d MMM, y h:mm a" }}
             </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.sheduleTime.replace('Within ', '') }}
+            </td>
+
 
             <!-- <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.timeSlot }}
             </td> -->
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.paymentMethod }}
+              <span *ngIf="item.paymentMethod === 'Card'">Debit/Credit</span>
+              <span *ngIf="item.paymentMethod === 'Cash'">Cash on Delivery</span>
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">

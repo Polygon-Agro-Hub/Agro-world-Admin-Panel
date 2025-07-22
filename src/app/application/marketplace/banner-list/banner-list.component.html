@@ -329,44 +329,121 @@
   </div>
 </div>
 
-<div
-  *ngIf="ViewWholesaleAddBanner"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
->
-  <div
-    class="max-w-2xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto max-h-[120vh]"
-  >
-    <div class="space-y-6">
-      <h2 class="text-xl font-semibold text-center">
-        Upload Wholesale Web Banner
-      </h2>
 
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Index No</label>
-        <input
-          type="text"
-          placeholder="--auto fill--"
-          [(ngModel)]="indexWholesale"
-          disabled
-          class="mt-1 pl-3 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100"
-        />
-      </div>
+      <div
+      *ngIf="ViewWholesaleAddBanner"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <!-- Added overflow-y-auto to the outer container to handle cases where the modal might be taller than screen -->
+      <div
+        class="max-w-2xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto"
+        style="max-height: 90vh"
+      >
+        <!-- Changed from max-h-[120vh] to 90vh for better responsiveness -->
+    
+        <div
+          class="space-y-6 overflow-y-auto"
+          style="max-height: calc(90vh - 48px)"
+        >
+          <!-- 48px accounts for padding (24px top + 24px bottom) -->
+    
+          <h2 class="text-xl font-semibold text-center">
+            Upload Wholesale Web Banner
+          </h2>
+    
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Index No</label>
+            <input
+              type="text"
+              placeholder="--auto fill--"
+              [(ngModel)]="indexWholesale"
+              disabled
+              class="mt-1 pl-3 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-gray-100"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Banner Name here
+              <span class="text-xs text-gray-500">( Maximum 50 characters )</span>
+            </label>
+            <input
+              type="text"
+              placeholder="--Enter Name here--"
+              maxlength="50"
+              [(ngModel)]="bannerNameWholesale"
+              class="mt-1 pl-3 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
 
       <div>
         <label class="block text-sm font-medium text-gray-700">
-          Banner Name here
-          <span class="text-xs text-gray-500">( Maximum 50 characters )</span>
+          Image
+          <span class="text-xs text-gray-500"
+            >( Suggested Dimension : 1200 × 451 px )</span
+          >
         </label>
-        <input
-          type="text"
-          placeholder="--Enter Name here--"
-          maxlength="50"
-          [(ngModel)]="bannerNameWholesale"
-          class="mt-1 pl-3 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
+
+        <div
+          class="mt-2 flex items-center justify-center border-2 border-dashed border-blue-400 rounded-md p-6 text-center text-blue-500 cursor-pointer bg-blue-50 hover:bg-blue-100 relative"
+          (drop)="onDropWholesale($event)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          [class.bg-blue-100]="isDragOver"
+        >
+          <input
+          type="file"
+          accept="image/png, image/jpeg"
+          class="hidden"
+          id="fileUpload"
+          (change)="onFileSelectedWholesale($event)"
+          />
+          <label
+            for="fileUpload"
+            class="cursor-pointer w-full h-full flex flex-col items-center justify-center"
+          >
+            <ng-container *ngIf="selectedWholesaleImageUrl; else placeholder">
+              <div class="flex flex-col items-center">
+                <img
+                [src]="selectedWholesaleImageUrl"
+                  alt="Preview"
+                  class="max-h-48 rounded-md object-contain"
+                />
+                <p
+                  class="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate max-w-xs"
+                >
+                {{ selectedFileWholesale?.name }}
+                </p>
+              </div>
+            </ng-container>
+            <ng-template #placeholder>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-10 w-10 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16V4m0 0L4 7m3-3l3 3M17 16v-6m0 0l-3 3m3-3l3 3M4 20h16"
+                />
+              </svg>
+              <p class="text-sm">
+                <span class="font-medium"
+                  >Select a JPG / PNG file to upload</span
+                >
+                <br />
+                or drag and drop it here
+              </p>
+            </ng-template>
+          </label>
+        </div>
       </div>
 
-      <div>
+      <!-- <div>
         <label class="block text-sm font-medium text-gray-700">
           Image
           <span class="text-xs text-gray-500"
@@ -430,7 +507,9 @@
             </ng-template>
           </label>
         </div>
-      </div>
+      </div> -->
+
+
 
       <div class="flex justify-end space-x-2 pt-4">
         <button

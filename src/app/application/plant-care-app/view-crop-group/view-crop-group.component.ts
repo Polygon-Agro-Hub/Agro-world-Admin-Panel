@@ -24,9 +24,14 @@ interface NewCropCalender {
 interface NewCropGroup {
   id: number;
   cropNameEnglish: string;
+  cropNameSinhala?: string; // Add if exists in service
+  cropNameTamil?: string; // Add if exists in service
   category: string;
   varietyCount: number;
   varietyList: string[];
+  image?: string; // Make optional if not always present
+  bgColor?: string; // Make optional if not always present
+  createdAt?: string; // Add if exists in service
 }
 
 @Component({

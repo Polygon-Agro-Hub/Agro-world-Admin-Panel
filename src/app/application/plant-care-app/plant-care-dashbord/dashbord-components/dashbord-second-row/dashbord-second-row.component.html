@@ -1,6 +1,6 @@
 <div class="flex flex-nowrap justify-between items-center gap-5 w-full">
   <div
-    class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 min-h-32"
+    class="flex flex-row justify-between dark:bg-[#061E2C] items-center bg-white px-4 rounded-lg shadow-lg w-1/3 min-h-32"
   >
     <div
       class="flex justify-center items-center bg-[#CCFBF1] px-5 py-4 rounded-full"
@@ -8,10 +8,10 @@
       <i class="fa-solid fa-user text-2xl text-[#0D9488]"></i>
     </div>
 
-    <div class="flex flex-col items-center py-5 px-4">
+    <div class="flex flex-col items-center py-5 px-4 ">
       <div>
-        <p class="text-[#4B5563] text-sm">Total Farmers</p>
-        <p class="text-black text-xl">{{ dashboardData.allusers }}</p>
+        <p class="text-[#4B5563] text-sm dark:text-white">Total Farmers</p>
+        <p class="text-black text-xl dark:text-white">{{ dashboardData.allusers }}</p>
       </div>
     </div>
 
@@ -44,12 +44,12 @@
           {{ formatPercentage(dashboardData.user_increase_percentage) }}
         </p>
       </div>
-      <p class="text-[#ABB0B8] text-end text-sm">Compared to last month</p>
+      <p class="text-[#ABB0B8] dark:text-white text-end text-sm">Compared to last month</p>
     </div>
   </div>
 
   <div
-    class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 min-h-32"
+    class="flex flex-row justify-between dark:bg-[#061E2C] items-center bg-white px-4 rounded-lg shadow-lg w-1/3 min-h-32"
   >
     <div
       class="flex justify-center items-center bg-[#DBEAFE] px-5 py-4 rounded-full"
@@ -59,8 +59,8 @@
 
     <div class="flex flex-col items-center py-5 px-4">
       <div>
-        <p class="text-[#4B5563] text-sm">Total farmers with QR</p>
-        <p class="text-black text-xl">{{ dashboardData.qrUsers }}</p>
+        <p class="text-[#4B5563] text-sm dark:text-white">Total farmers with QR</p>
+        <p class="text-black text-xl dark:text-white">{{ dashboardData.qrUsers }}</p>
       </div>
     </div>
 
@@ -91,12 +91,12 @@
           {{ formatPercentage(dashboardData.qr_user_increase_percentage) }}
         </p>
       </div>
-      <p class="text-[#ABB0B8] text-end text-sm">Compared to last month</p>
+      <p class="text-[#ABB0B8] text-end text-sm dark:text-white">Compared to last month</p>
     </div>
   </div>
 
   <div
-    class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 min-h-32"
+    class="flex dark:bg-[#061E2C] flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 min-h-32"
   >
     <div
       class="flex justify-center items-center bg-[#FFEDD5] px-5 py-4 rounded-full"
@@ -106,8 +106,8 @@
 
     <div class="flex flex-col items-center py-5 px-4">
       <div>
-        <p class="text-[#4B5563] text-sm">Total Crop Enrollments</p>
-        <p class="text-black text-xl">{{ totalCultivationCount }}</p>
+        <p class="text-[#4B5563] text-sm dark:text-white">Total Crop Enrollments</p>
+        <p class="text-black text-xl dark:text-white">{{ totalCultivationCount }}</p>
       </div>
     </div>
 
@@ -138,7 +138,7 @@
           {{ formatPercentage(dashboardData.cultivation_increase_percentage) }}
         </p>
       </div>
-      <p class="text-[#ABB0B8] text-end text-sm">Compared to last month</p>
+      <p class="text-[#ABB0B8] text-end text-sm dark:text-white">Compared to last month</p>
     </div>
   </div>
 </div>

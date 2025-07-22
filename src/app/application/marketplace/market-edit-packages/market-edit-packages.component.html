@@ -155,28 +155,29 @@
     </div>
 
     <!-- Sidebar -->
-    <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
-      <div class="rounded-lg shadow-lg px-12 py-6 bg-white dark:bg-tileBlack">
-        <p class="text-lg text-black dark:text-textDark font-normal">Preview</p>
-        <div class="flex flex-col justify-center items-center my-3 bg-white dark:bg-gray-900 px-5 py-3 rounded-xl">
-          <img [src]="selectedImage" class="w-full h-auto object-cover px-4 py-2 mt-8" />
-          <div class="flex flex-col items-center gap-y-2">
-            <p class="text-lg text-[#393939] dark:text-white font-medium" *ngIf="packageObj.displayName; else noDisplayName">
-              {{ packageObj.displayName }}
-            </p>
-            <ng-template #noDisplayName>
-              <p class="text-lg text-gray-500 italic">--Package Name--</p>
-            </ng-template>
+<div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
+  <div class="rounded-lg  px-12 py-6" style="border: 1px solid #CFCFCF;">
+    <p class="text-lg text-black dark:text-textDark font-normal">Preview</p>
+    <div class="flex flex-col justify-center items-center my-3 bg-white dark:bg-gray-900 px-5 py-3 rounded-xl">
+      <img [src]="selectedImage" class="w-full h-auto object-cover px-4 py-2 mt-8" />
+      <div class="flex flex-col items-center gap-y-2">
+        <p class="text-lg text-[#393939] dark:text-white font-medium" *ngIf="packageObj.displayName; else noDisplayName">
+          {{ packageObj.displayName }}
+        </p>
+        <ng-template #noDisplayName>
+          <p class="text-lg text-gray-500 italic">--Package Name--</p>
+        </ng-template>
 
-            <p class="text-sm text-[#00957D]" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
-              Rs.{{ packageObj.approximatedPrice | number : '1.2-2' }}
-            </p>
-            <ng-template #noPrice>
-              <p class="text-sm text-gray-500 italic">--Price--</p>
-            </ng-template>
-          </div>
-        </div>
+        <p class="text-sm text-[#00957D]" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
+          Rs.{{ packageObj.approximatedPrice | number : '1.2-2' }}
+        </p>
+        <ng-template #noPrice>
+          <p class="text-sm text-gray-500 italic">--Price--</p>
+        </ng-template>
       </div>
+    </div>
+  </div>
+
 
       <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg px-12 py-3 mt-10">
         <label class="text-black dark:text-textDark font-normal">Status</label>

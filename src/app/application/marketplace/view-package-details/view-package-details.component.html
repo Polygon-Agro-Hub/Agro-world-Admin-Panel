@@ -104,7 +104,7 @@
             </div>
           </div>
           <div
-            class="grid grid-cols-2 gap-4 px-6 py-6 border-b border-gray-200"
+            class="grid grid-cols-2 gap-4 px-6 py-6  border-gray-200"
           >
             <div class="text-sm text-[#3980C0] font-medium">Service Fee</div>
             <div class="text-sm text-[#00957D] font-medium text-right">
@@ -112,7 +112,47 @@
             </div>
           </div>
         </div>
+
+        <div class=" border-gray-200 mt-6">
+       <h3 class="text-lg font-normal text-textLight dark:text-textDark mb-4 border-b border-gray-300 dark:border-gray-600 pb-2"> 
+  Defined Items on <span class="font-semibold">{{ package?.date | date: 'MMMM d, y' }}</span>
+</h3>
+
+
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-900 dark:text-white">
+              <thead class=" text-gray-700  dark:bg-gray-700" style="color: #8492A3;font-size: 16px;">
+
+                <tr>
+                  <th scope="col" class="px-6 py-3">Product Type</th>
+                  <th scope="col" class="px-6 py-3">Product</th>
+                  <th scope="col" class="px-6 py-3">Qty (kg)</th>
+                  <th scope="col" class="px-6 py-3">Price (Rs)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of packageItems" class="bg-white dark:bg-gray-800  dark:border-gray-700">
+                 <td class="px-6 py-4">{{ item.productType }}</td>
+<td class="px-6 py-4">{{ item.productName }}</td>
+<td class="px-6 py-4">{{ item.quantity.toFixed(3) }}</td>
+<td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+         <div class="flex justify-between  mt-4">
+  <p class="text-sm  font-medium text-[#3980C0]">Counted Total For Today</p>
+  <p class="text-sm font-medium mr-35 text-[#00957D]">
+    Rs.{{ package?.totalPrice }}
+  </p>
+</div>
+
+        </div>
       </div>
     </div>
+
+   
   </div>
 </div>

@@ -6,105 +6,188 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 px-16 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 px-16 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Complain List ({{totalItems < 10 ? '0' + totalItems : totalItems}}) </h2>
+          Complain List ({{ totalItems < 10 ? "0" + totalItems : totalItems }})
+        </h2>
       </div>
       <div class="flex items-center">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
-              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+            />
           </svg>
         </i>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="comCategories"
-            [(ngModel)]="filterComCategory" [checkmark]="true" optionLabel="categoryEnglish"
-            [showClear]="filterComCategory === '' ? false : true" placeholder="Category" (onChange)="applyFilters()"
-            appendTo="body"></p-dropdown>
+            [autoZIndex]="true"
+            [baseZIndex]="1000"
+            appendTo="body"
+            [options]="comCategories"
+            [(ngModel)]="filterComCategory"
+            [checkmark]="true"
+            optionLabel="categoryEnglish"
+            [showClear]="filterComCategory === '' ? false : true"
+            placeholder="Category"
+            (onChange)="applyFilters()"
+            appendTo="body"
+          ></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="status" [(ngModel)]="filterStatus"
-            [checkmark]="true" optionLabel="type" [showClear]="filterStatus === '' ? false : true" placeholder="Status"
-            (onChange)="applyFilters()"></p-dropdown>
+            [autoZIndex]="true"
+            [baseZIndex]="1000"
+            appendTo="body"
+            [options]="status"
+            [(ngModel)]="filterStatus"
+            [checkmark]="true"
+            optionLabel="type"
+            [showClear]="filterStatus === '' ? false : true"
+            placeholder="Status"
+            (onChange)="applyFilters()"
+          ></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="replyStatus" [(ngModel)]="rpst" optionLabel="label" optionValue="value"
-            [showClear]="rpst === '' ? false : true" placeholder="Reply" (onChange)="regStatusFil()"></p-dropdown>
-
+            [options]="replyStatus"
+            [(ngModel)]="rpst"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="rpst === '' ? false : true"
+            placeholder="Reply"
+            (onChange)="regStatusFil()"
+          ></p-dropdown>
         </div>
 
-        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by RefNo, Category, Name" [(ngModel)]="searchText"
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+        >
+          <input
+            type="text"
+            placeholder="Search by RefNo, Category, Name"
+            [(ngModel)]="searchText"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-            (keyup.enter)="searchComplain()" (keyup.esc)="clearSearch()" />
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchComplain()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            (keyup.enter)="searchComplain()"
+            (keyup.esc)="clearSearch()"
+          />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="searchComplain()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
             </svg>
           </button>
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="clearSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
       </div>
     </div>
     <div *ngIf="hasData">
-      <table class="max-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
+      >
         <thead>
           <tr class="cursor-default">
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Ref No.
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            >
               Category
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            >
               AgentID
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
+            >
               First Name
             </th>
-            <th class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+            <th
+              class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
+            >
               Last Name
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
+            >
               Received At
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            >
               Status
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            >
               View
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+            >
               Reply
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
+            >
               View Reply
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="
+          <tr
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+            *ngFor="
               let item of complainsData
                 | paginate
                   : {
@@ -112,7 +195,8 @@
                       currentPage: page,
                       totalItems: totalItems
                     }
-            ">
+            "
+          >
             <td class="py-3 dark:text-textDark text-centser">
               {{ item.refNo }}
             </td>
@@ -129,63 +213,96 @@
               {{ item.lastName }}
             </td>
 
-            <td class="px-4 py-3 text-center text-[#3E3E3E] text-normal text-sm dark:text-textDark">
+            <td
+              class="px-4 py-3 text-center text-[#3E3E3E] text-normal text-sm dark:text-textDark"
+            >
               <div class="flex flex-col justify-center items-center">
-                <span>{{ item.createdAt | date:'yyyy/MM/dd' }}</span>
-                <span>{{ item.createdAt | date:'h:mm a' }}</span>
+                <span>{{ item.createdAt | date : "yyyy/MM/dd" }}</span>
+                <span>{{ item.createdAt | date : "h:mm a" }}</span>
               </div>
             </td>
             <td class="px-4 py-3 text-green-500 text-center">
               <div *ngIf="item.status === 'Assigned'">
                 <span
-                  class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
-                  item.status }}</span>
+                  class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
+                  >{{ item.status }}</span
+                >
               </div>
               <div *ngIf="item.status === 'Pending'">
                 <span
-                  class="w-32 h-8 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">{{
-                  item.status }}</span>
+                  class="w-32 h-8 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm"
+                  >{{ item.status }}</span
+                >
               </div>
               <div *ngIf="item.status === 'Closed'">
                 <span
-                  class="w-32 h-8 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">{{
-                  item.status }}</span>
+                  class="w-32 h-8 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm"
+                  >{{ item.status }}</span
+                >
               </div>
             </td>
 
             <td class="px-4 py-3 text-center">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                (click)="navigateSelectComplain(item.id, item.firstName)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <button
+                class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                (click)="navigateSelectComplain(item.id, item.firstName)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
             </td>
 
             <td class="px-4 py-3 text-green-500 text-center cursor-default">
-              <span *ngIf="item.reply === null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark italic">No</span>
-              <span *ngIf="item.reply != null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
+              <span
+                *ngIf="item.reply === null"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark italic"
+                >No</span
+              >
+              <span
+                *ngIf="item.reply != null"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark underline"
+                >Yes</span
+              >
             </td>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.reply === null">
-                <button disabled class="w-5 h-5 text-blue-100" (click)="fetchComplain(item.id, item.firstName)">
+                <button
+                  disabled
+                  class="w-5 h-5 text-blue-100"
+                  (click)="fetchComplain(item.id, item.firstName)"
+                >
                   <!-- <i class="fa-solid fa-file-export"></i> -->
-                  <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block opacity-50 cursor-not-allowed" />
-
+                  <img
+                    src="assets/icons/viewreply.png"
+                    alt="View Reply"
+                    class="w-6 h-6 inline-block opacity-50 cursor-not-allowed"
+                  />
                 </button>
               </div>
 
               <div *ngIf="item.reply != null">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                  (click)="fetchComplain(item.id, item.firstName)">
+                <button
+                  class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                  (click)="fetchComplain(item.id, item.firstName)"
+                >
                   <!-- <i class="fa-solid fa-file-export"></i> -->
-                  <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
-
+                  <img
+                    src="assets/icons/viewreply.png"
+                    alt="View Reply"
+                    class="w-6 h-6 inline-block"
+                  />
                 </button>
               </div>
             </td>
@@ -194,49 +311,73 @@
       </table>
     </div>
     <div *ngIf="hasData" class="dark:bg-[#262f45]">
-      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'">
+      <pagination-controls
+        (pageChange)="onPageChange($event)"
+        [responsive]="true"
+        [previousLabel]="'Previous'"
+        [nextLabel]="'Next'"
+        [screenReaderPaginationLabel]="'Pagination'"
+        [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'"
+      >
       </pagination-controls>
     </div>
 
     <!-- No data message -->
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <div
+      *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+    >
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Available--
+      </p>
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
   </div>
-
 </div>
 
-
-<div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4">
+<div
+  *ngIf="isPopUpVisible"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4"
+  >
     <div class="flex justify-center items-center">
       <span class="rounded-full px-4 py-3 bg-[#F6F6F6] dark:bg-gray-400">
         <i class="fa-regular fa-envelope text-2xl text-[#2D2D2D] 0"></i>
       </span>
-
     </div>
-    <h2 class="text-xl font-semibold text-center mb-4 dark:text-white">Reply as Polygon</h2>
-    
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-white">
+      Reply as Polygon
+    </h2>
+
     <div class="text-left text-[#2D2D2D] dark:text-gray-200">
-      <p>Dear <strong class="dark:text-white">{{complain.firstName}} {{complain.lastName}}</strong>,</p>
-      <textarea 
-        class="w-full p-2 border rounded mt-3 mb-3 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-        rows="5" 
+      <p>
+        Dear
+        <strong class="dark:text-white"
+          >{{ complain.firstName }} {{ complain.lastName }}</strong
+        >,
+      </p>
+      <textarea
+        class="w-full p-2 border rounded mt-3 mb-3 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        rows="5"
         placeholder="Add your message here..."
         disabled
-      >{{complain.reply}}</textarea>
-      <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+        >{{ complain.reply }}</textarea
+      >
+      <p>
+        If you have any further concerns or questions, feel free to reach out.
+        Thank you for your patience and understanding.
+      </p>
       <p class="mt-3">
-        Sincerely,<br/>
+        Sincerely,<br />
         AgroWorld Customer Support Team
       </p>
     </div>
 
     <div class="flex justify-end mt-4">
-      <button 
+      <button
         (click)="closeDialog()"
         class="px-4 py-2 text-[#D3D3D3] dark:text-gray-200 bg-[#74788D] rounded transition"
       >

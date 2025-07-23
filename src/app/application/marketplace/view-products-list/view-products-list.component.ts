@@ -183,6 +183,14 @@ export class ViewProductsListComponent {
   navigateToAddProduct(): void {
     this.router.navigate(['/market/action/add-product']);
   }
+
+  showMaxQuantityColumn(): boolean {
+    // Show if no category selected or if WholeSale is selected
+    return (
+      !this.selectedCategoryOption ||
+      this.selectedCategoryOption.value === 'WholeSale'
+    );
+  }
 }
 
 class ProductList {

@@ -129,28 +129,50 @@
     </div>
 
     <div *ngIf="hasData" class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 ">
+      <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
+            <th class="py-3 px-4 font-normal text-gray-500 text-left">No</th>
             <th class="py-3 px-4 font-normal text-gray-500 text-left">
               Display Name
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">Category</th>
+            <th class="py-3 px-4 font-normal text-gray-500 text-left">
+              Category
+            </th>
             <th class="py-3 px-4 font-normal text-gray-500 text-left">Crop</th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-left">Variety</th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">Display</th>
+            <th class="py-3 px-4 font-normal text-gray-500 text-left">
+              Variety
+            </th>
+            <th class="py-3 px-4 font-normal text-gray-500 text-center">
+              Display
+            </th>
             <th class="py-3 px-4 font-normal text-gray-500 text-center">
               Discount(%)
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">Actual</th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">
+            <th
+              class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap"
+            >
+              Actual Price (Rs.)
+            </th>
+            <!-- <th class="py-3 px-4 font-normal text-gray-500 text-center">
               Discounted Price
-            </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">Unit</th>
+            </th> -->
             <th class="py-3 px-4 font-normal text-gray-500 text-center">
-              Start Value
+              Unit
             </th>
-            <th class="py-3 px-4 font-normal text-gray-500 text-center">
+            <th
+              class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap"
+            >
+              Min QTY
+            </th>
+            <th
+              class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap"
+            >
+              Max QTY
+            </th>
+            <th
+              class="py-3 px-4 font-normal text-gray-500 text-center whitespace-nowrap"
+            >
               Change By
             </th>
             <th class="py-3 px-4 font-normal text-gray-500 text-center"></th>
@@ -166,10 +188,14 @@
                       itemsPerPage: itemsPerPage,
                       currentPage: page,
                       totalItems: totalItems
-                    }
+                    };
+              let i = index
             "
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
+            <td class="py-3 px-4 dark:text-textDark">
+              {{ (page - 1) * itemsPerPage + i + 1 }}
+            </td>
             <td class="py-3 px-4 dark:text-textDark">
               {{ item.displayName }}
             </td>
@@ -182,7 +208,9 @@
             <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
               {{ item.varietyNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
+            <td
+              class="px-4 py-3 text-textLight dark:text-textDark text-left whitespace-nowrap"
+            >
               <span *ngIf="!item.displayType">No</span>
               <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
               <span *ngIf="item.displayType === 'AP&SP'">Actual, Sale</span>
@@ -205,14 +233,17 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.normalPrice }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <!-- <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.discountedPrice }}
-            </td>
+            </td> -->
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.unitType }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.startValue }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.maxQuantity }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.changeby }}

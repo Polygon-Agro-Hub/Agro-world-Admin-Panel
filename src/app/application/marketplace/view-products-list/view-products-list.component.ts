@@ -71,6 +71,8 @@ export class ViewProductsListComponent {
       )
       .subscribe(
         (response) => {
+          console.log('this is the responce', response);
+
           this.viewProductList = response.items;
           this.hasData = this.viewProductList.length > 0;
           this.totalItems = response.total;
@@ -193,6 +195,7 @@ class ProductList {
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
   startValue!: number;
+  maxQuantity!: number;
   discount!: number;
   normalPrice!: number;
   promo!: number;

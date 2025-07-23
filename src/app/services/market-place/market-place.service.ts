@@ -22,6 +22,30 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
+getSubscriptions(buyerType: 'retail' | 'wholesale'): Observable<any[]> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+  const url = `${this.apiUrl}market-place/marketplace-users?buyerType=${buyerType}`;
+  return this.http.get<any[]>(url, { headers });
+}
+
+deleteUser(id: number): Observable<{ status: boolean; message: string }> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+  const url = `${this.apiUrl}market-place/marketplace-dltusers/${id}`;
+  return this.http.delete<{ status: boolean; message: string }>(url, { headers });
+}
+
+getProductTypes(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+  const url = `${this.apiUrl}market-place/get-product-type`;
+  return this.http.get<any>(url, { headers });
+}
+
   createProduct(Data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

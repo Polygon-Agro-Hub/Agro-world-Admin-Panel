@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,6 +10,11 @@ import { CollectionService } from '../../../services/collection.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+
+interface Center {
+  id: string;
+  name: string;
+}
 
 interface OngoingCultivationItem {
   id: number;
@@ -38,10 +44,12 @@ interface OngoingCultivationItem {
     LoadingSpinnerComponent,
   ],
   templateUrl: './collection-officer-report.component.html',
-  styleUrl: './collection-officer-report.component.css',
+  styleUrls: ['./collection-officer-report.component.css'],
 })
-export class CollectionOfficerReportComponent {
+export class CollectionOfficerReportComponent implements OnInit {
   ongoingCultivation: OngoingCultivationItem[] = [];
+  centers: Center[] = [];
+  selectedCenter: Center | null = null;
   isPopupVisible = false;
   page: number = 1;
   totalItems: number = 0;
@@ -50,52 +58,92 @@ export class CollectionOfficerReportComponent {
   isLoading = false;
 
   constructor(
-    private collectionoOfficer: CollectionService,
+    private collectionOfficer: CollectionService,
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.fetchCenters();
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-  fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
+  fetchCenters(): void {
     this.isLoading = true;
-    this.collectionoOfficer
-      .fetchAllCollectionOfficerStatus(page, limit, this.searchNIC, '')
-      .subscribe(
-        (response) => {
-          console.log('Response:', response);
+    this.collectionOfficer.getCollectionCenter().subscribe({
+      next: (response: any) => {
+        if (response.success && Array.isArray(response.data)) {
+          this.centers = response.data.map((item: { centerName: string }) => ({
+            id: item.centerName.trim(),
+            name: item.centerName.trim(),
+          }));
+          this.centers = [...new Map(this.centers.map(item => [item.id.toLowerCase(), item])).values()];
+          console.log('Fetched centers:', this.centers);
+        } else {
+          this.centers = [];
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching centers:', error);
+        this.centers = [];
+        this.isLoading = false;
+      },
+    });
+  }
 
-          this.ongoingCultivation = response.items;
-          this.totalItems = response.total;
+  fetchAllNews(page: number = 1, limit: number = this.itemsPerPage): void {
+    this.isLoading = true;
+    const centerName = this.selectedCenter?.name.trim() || '';
+    const trimmedSearchNIC = this.searchNIC.trim();
+
+
+
+    console.log('Fetching with centerName:', centerName, 'searchNIC:', trimmedSearchNIC);
+    this.collectionOfficer
+      .fetchAllCollectionOfficerStatus(page, limit, trimmedSearchNIC, centerName)
+      .subscribe({
+        next: (response) => {
+          this.ongoingCultivation = response.items || [];
+          this.totalItems = response.total || 0;
+          this.isLoading = false;
+          console.log('Fetched data:', this.ongoingCultivation);
+        },
+        error: (error) => {
+          console.error('Error fetching collection officers:', error);
+          this.ongoingCultivation = [];
+          this.totalItems = 0;
           this.isLoading = false;
         },
-        (error) => {
-          if (error.status === 401) {
-          }
-          this.isLoading = false;
-        }
-      );
+      });
   }
 
-  onPageChange(event: number) {
-    this.page = event;
+   applyFilters(): void {
+    this.page = 1;
+    const centerName = this.selectedCenter?.name.trim() || '';
+    console.log('Applying filter with centerName:', centerName, 'searchNIC:', this.searchNIC);
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-  searchCultivations() {
+  searchCultivations(): void {
     this.page = 1;
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
   clearSearch(): void {
     this.searchNIC = '';
+    this.selectedCenter = null;
+    this.page = 1;
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-  navigateToReport(id: number, name: string) {
+  onPageChange(event: number): void {
+    this.page = event;
+    this.fetchAllNews(this.page, this.itemsPerPage);
+  }
+
+  navigateToReport(id: number, name: string): void {
     this.router.navigate([
       `/reports/collective-officer-report/view/${id}/${name}`,
     ]);
@@ -107,13 +155,13 @@ export class CollectionOfficerReportComponent {
     lastName: string,
     QRcode: string,
     empId: string
-  ) {
+  ): void {
     this.router.navigate([`/reports/payment-slip-report/${id}`], {
       queryParams: { firstName, lastName, QRcode, empId },
     });
   }
 
-  navigateToMonthlyReport(id: number) {
+  navigateToMonthlyReport(id: number): void {
     this.router.navigate([
       `/reports/collective-officer-report/monthly-report/${id}`,
     ]);

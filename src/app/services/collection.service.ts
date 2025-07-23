@@ -109,33 +109,32 @@ export class CollectionService {
     let url = `${this.apiUrl}auth/collection-officer/get-collection-officer/${id}`;
 
     return this.http.get<any>(url, { headers });
+  }fetchAllCollectionOfficerStatus(
+  page: number,
+  limit: number,
+  nic: string = '',
+  centerName: string = ''
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  console.log('Center name sent to API:', centerName);
+
+  let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
+
+  if (centerName.trim()) {
+    url += `&centerName=${encodeURIComponent(centerName.trim())}`; // ✅ Fixed typo and added trim
   }
 
-  fetchAllCollectionOfficerStatus(
-    page: number,
-    limit: number,
-    searchNIC: string = '',
-    company: string
-  ): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    });
-    console.log(company);
-
-    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
-
-    if (company) {
-      url += `&company=${company}`;
-    }
-
-    if (searchNIC) {
-      url += `&nic=${searchNIC}`;
-    }
-    return this.http.get<any>(url, { headers });
+ if (nic.trim()) {
+    url += `&nic=${encodeURIComponent(nic.trim())}`; // Changed from searchNIC to nic
   }
-
-  getCompanyNames(): Observable<any> {
+  console.log('API URL:', url);
+  return this.http.get<any>(url, { headers });
+}
+    getCompanyNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -187,6 +186,15 @@ export class CollectionService {
 
 
 
+  getCollectionCenter(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/collection-officer/centers`;
+    return this.http.get<any>(url, { headers });
+  }
 
 
 

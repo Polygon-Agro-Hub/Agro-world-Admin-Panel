@@ -241,17 +241,25 @@
           >
         </label>
 
-        <mat-form-field class="w-full" color="primary">
-          <mat-label>Tags</mat-label>
-          <mat-chip-grid #templateChipGrid>
+        <mat-form-field
+          class="w-full"
+          color="primary"
+          [class.dark-mode]="themeService.isDarkTheme()"
+        >
+          <mat-label class="dark:bg-tileBlack dark-text">Tags</mat-label>
+          <mat-chip-grid #templateChipGrid class="dark:bg-tileBlack dark-text">
             @for (keyword of templateKeywords(); track keyword) {
             <mat-chip-row
               (removed)="removeTemplateKeyword(keyword)"
-              class="chip-style"
+              class="chip-style dark-bg-tileHoverDark dark-text"
             >
               {{ keyword }}
-              <button matChipRemove [attr.aria-label]="'remove ' + keyword">
-                <mat-icon>cancel</mat-icon>
+              <button
+                matChipRemove
+                [attr.aria-label]="'remove ' + keyword"
+                class="dark-text"
+              >
+                <mat-icon class="dark-text">cancel</mat-icon>
               </button>
             </mat-chip-row>
             }
@@ -262,7 +270,7 @@
             placeholder="New keyword..."
             [matChipInputFor]="templateChipGrid"
             (matChipInputTokenEnd)="addTemplateKeyword($event)"
-            class="input-style"
+            class="input-style dark:bg-tileBlack dark-text dark-placeholder"
           />
         </mat-form-field>
 

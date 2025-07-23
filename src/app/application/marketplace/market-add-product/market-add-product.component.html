@@ -241,11 +241,14 @@
           >
         </label>
 
-        <mat-form-field class="w-[100%]">
+        <mat-form-field class="w-full" color="primary">
           <mat-label>Tags</mat-label>
           <mat-chip-grid #templateChipGrid>
             @for (keyword of templateKeywords(); track keyword) {
-            <mat-chip-row (removed)="removeTemplateKeyword(keyword)">
+            <mat-chip-row
+              (removed)="removeTemplateKeyword(keyword)"
+              class="chip-style"
+            >
               {{ keyword }}
               <button matChipRemove [attr.aria-label]="'remove ' + keyword">
                 <mat-icon>cancel</mat-icon>
@@ -259,6 +262,7 @@
             placeholder="New keyword..."
             [matChipInputFor]="templateChipGrid"
             (matChipInputTokenEnd)="addTemplateKeyword($event)"
+            class="input-style"
           />
         </mat-form-field>
 

@@ -192,7 +192,7 @@
             for="phoneNumber1"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Phone Number - 1
+            Mobile Number - 1
           </label>
           <div class="mt-1 flex">
             <select
@@ -227,7 +227,7 @@
             *ngIf="phoneNumber1Input.touched && !personalData.phoneNumber1"
             class="text-red-500 text-sm mt-1"
           >
-            <div>Phone Number - 1 is required</div>
+            <div>Mobile Number - 1 is required</div>
           </div>
 
           <!-- Pattern Validation (Ensuring Only Numbers) -->
@@ -248,7 +248,7 @@
             for="phoNumTwo"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Phone Number - 2
+            Mobile Number - 2
           </label>
           <div class="mt-1 flex">
             <select
@@ -268,7 +268,7 @@
               type="text"
               [(ngModel)]="personalData.phoneNumber2"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number"
+              placeholder="Enter your mobile number"
               #phoneNumber2Input="ngModel"
               minlength="9"
               maxlength="9"
@@ -300,7 +300,7 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            <div>Phone number 2 cannot be the same as Phone number 1.</div>
+            <div>Mobile Number 2 cannot be the same as Mobile Number 1.</div>
           </div>
         </div>
 

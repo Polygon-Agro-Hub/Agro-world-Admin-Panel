@@ -37,6 +37,10 @@ export class ViewSelectedComplainComponent implements OnInit {
   messageContent: string = '';
   isLoading = false;
 
+  isPopUpVisible:boolean = false;
+  selectedLanguage:string = 'English';
+  selectedFarmerName:string = '';
+
   constructor(
     private complainSrv: CollectionCenterService,
     private router: Router,
@@ -84,7 +88,7 @@ export class ViewSelectedComplainComponent implements OnInit {
 
  submitComplaint() {
   // Check if messageContent is empty or contains only whitespace
-  if (!this.messageContent || this.messageContent.trim() === '') {
+  if (!this.complain.reply || this.complain.reply.trim() === '') {
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -111,12 +115,11 @@ export class ViewSelectedComplainComponent implements OnInit {
     Authorization: `Bearer ${token}`,
   });
 
-  this.hideDialog();
+  // this.hideDialog();
 
   console.log(this.complainId);
-  console.log(this.messageContent);
 
-  const body = { reply: this.messageContent };
+  const body = { reply: this.complain.reply };
 
   this.http
     .put(
@@ -132,6 +135,8 @@ export class ViewSelectedComplainComponent implements OnInit {
           text: 'Reply was sent successfully!',
         });
         this.fetchComplain();
+        this.closeReplyPopUp();
+        this.router.navigate(['/complaints/view-complains'])
         this.isLoading = false;
       },
       (error) => {
@@ -142,62 +147,96 @@ export class ViewSelectedComplainComponent implements OnInit {
           text: 'Error sending reply',
         });
         this.fetchComplain();
+        this.closeReplyPopUp();
         this.isLoading = false;
       }
     );
 }
-  // showReplyDialog() {
+
+
+
+  // showReplyDialog(language: string) {
+  //   let closingMessage = '';
+    
+  //   if (language === 'Sinhala') {
+  //     closingMessage = `
+  //       <p>හිතවත් <strong>${this.farmerName}</strong>,</p>
+  //       <p></p>
+  //       <textarea 
+  //         id="messageContent" 
+  //         class="w-full p-2 border rounded mt-3 mb-3" 
+  //         rows="5" 
+  //         placeholder="ඔබගේ පණිවුඩය මෙතැනට ඇතුලත් කරන්න..."
+  //       >${this.complain.reply || ""}</textarea>
+  //       <p>ඔබට තවත් ගැටළු හෝ ප්‍රශ්න තිබේ නම්, කරුණාකර අප හා සම්බන්ධ වන්න. ඔබේ ඉවසීම සහ අවබෝධය වෙනුවෙන් ස්තූතියි.</p>
+  //       <p class="mt-3">
+  //         මෙයට,<br/>
+  //         AgroWorld පාරිභෝගික සහාය කණ්ඩායම
+  //       </p>
+  //     `;
+  //   } else if (language === 'Tamil') {
+  //     closingMessage = `
+  //       <p>அன்புள்ள <strong>${this.farmerName}</strong>,</p>
+  //       <p></p>
+  //       <textarea 
+  //         id="messageContent" 
+  //         class="w-full p-2 border rounded mt-3 mb-3" 
+  //         rows="5" 
+  //         placeholder="உங்கள் செய்தியை இங்கே சேர்க்கவும்..."
+  //       >${this.complain.reply || ""}</textarea>
+  //       <p>உங்களுக்கு மேலும் ஏதேனும் சிக்கல்கள் அல்லது கேள்விகள் இருந்தால், தயவுசெய்து எங்களைத் தொடர்பு கொள்ளவும். உங்கள் பொறுமைக்கும் புரிதலுக்கும் நன்றி.</p>
+  //       <p class="mt-3">
+  //         இதற்கு,<br/>
+  //         அக்ரோவேர்ல்ட் வாடிக்கையாளர் ஆதரவு குழு
+  //       </p>
+  //     `;
+  //   } else {
+  //     // Default English
+  //     closingMessage = `
+  //       <p>Dear <strong>${this.farmerName}</strong>,</p>
+  //       <p></p>
+  //       <textarea 
+  //         id="messageContent" 
+  //         class="w-full p-2 border rounded mt-3 mb-3" 
+  //         rows="5" 
+  //         placeholder="Add your message here..."
+  //       >${this.complain.reply || ""}</textarea>
+  //       <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+  //       <p class="mt-3">
+  //         Sincerely,<br/>
+  //         AgroWorld Customer Support Team
+  //       </p>
+  //     `;
+  //   }
+  
   //   Swal.fire({
-  //     title: 'Reply as AgroWorld',
-  //     html: `
-  //         <div class="text-left">
-  //           <p>Dear <strong>${this.farmerName}</strong>,</p>
-  //           <p></p>
-  //           <textarea 
-  //             id="messageContent" 
-  //             class="w-full p-2 border rounded mt-3 mb-3" 
-  //             rows="5" 
-  //             placeholder="Add your message here..."
-  //           >${this.complain.reply || ''}</textarea>
-  //           <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-  //           <p class="mt-3">
-  //             Sincerely,<br/>
-  //             AgroWorld Customer Support Team
-  //           </p>
-  //         </div>
-  //       `,
+  //     title: "Reply as AgroWorld",
+  //     html: `<div class="text-left">${closingMessage}</div>`,
   //     showCancelButton: true,
-  //     confirmButtonText: 'Send',
-  //     cancelButtonText: 'Cancel',
-  //     confirmButtonColor: '#3980C0', // Green color for Send button
-  //     cancelButtonColor: '#74788D', // Blue-gray for Cancel button
-  //     width: '600px',
-  //     reverseButtons: true, // Swap button positions
+  //     confirmButtonText: "Send",
+  //     cancelButtonText: "Cancel",
+  //     confirmButtonColor: "#3980C0",
+  //     cancelButtonColor: "#74788D",
+  //     width: "600px",
+  //     reverseButtons: true,
   //     preConfirm: () => {
-  //       const textarea = document.getElementById(
-  //         'messageContent'
-  //       ) as HTMLTextAreaElement;
+  //       const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
   //       return textarea.value;
   //     },
   //     didOpen: () => {
-  //       // Direct DOM manipulation for button alignment
   //       setTimeout(() => {
   //         const actionsElement = document.querySelector('.swal2-actions');
   //         if (actionsElement) {
-  //           actionsElement.setAttribute(
-  //             'style',
-  //             'display: flex; justify-content: flex-end !important; width: 100%;'
-  //           );
-
-  //           // Also swap buttons if needed (in addition to reverseButtons)
+  //           actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
+            
   //           const cancelButton = document.querySelector('.swal2-cancel');
   //           const confirmButton = document.querySelector('.swal2-confirm');
   //           if (cancelButton && confirmButton && actionsElement) {
   //             actionsElement.insertBefore(cancelButton, confirmButton);
   //           }
   //         }
-  //       }); // Small delay to ensure DOM is ready
-  //     },
+  //       }, 0);
+  //     }
   //   }).then((result) => {
   //     if (result.isConfirmed) {
   //       this.messageContent = result.value;
@@ -206,102 +245,22 @@ export class ViewSelectedComplainComponent implements OnInit {
   //   });
   // }
 
+    showReplyPopUp(fname: string, lname: string, language: string) {
+    this.selectedFarmerName = fname + ' ' + lname;
+    this.selectedLanguage = language;
+    this.isPopUpVisible = true;
+  }
 
-
-  showReplyDialog(language: string) {
-    let closingMessage = '';
-    
-    if (language === 'Sinhala') {
-      closingMessage = `
-        <p>හිතවත් <strong>${this.farmerName}</strong>,</p>
-        <p></p>
-        <textarea 
-          id="messageContent" 
-          class="w-full p-2 border rounded mt-3 mb-3" 
-          rows="5" 
-          placeholder="ඔබගේ පණිවුඩය මෙතැනට ඇතුලත් කරන්න..."
-        >${this.complain.reply || ""}</textarea>
-        <p>ඔබට තවත් ගැටළු හෝ ප්‍රශ්න තිබේ නම්, කරුණාකර අප හා සම්බන්ධ වන්න. ඔබේ ඉවසීම සහ අවබෝධය වෙනුවෙන් ස්තූතියි.</p>
-        <p class="mt-3">
-          මෙයට,<br/>
-          AgroWorld පාරිභෝගික සහාය කණ්ඩායම
-        </p>
-      `;
-    } else if (language === 'Tamil') {
-      closingMessage = `
-        <p>அன்புள்ள <strong>${this.farmerName}</strong>,</p>
-        <p></p>
-        <textarea 
-          id="messageContent" 
-          class="w-full p-2 border rounded mt-3 mb-3" 
-          rows="5" 
-          placeholder="உங்கள் செய்தியை இங்கே சேர்க்கவும்..."
-        >${this.complain.reply || ""}</textarea>
-        <p>உங்களுக்கு மேலும் ஏதேனும் சிக்கல்கள் அல்லது கேள்விகள் இருந்தால், தயவுசெய்து எங்களைத் தொடர்பு கொள்ளவும். உங்கள் பொறுமைக்கும் புரிதலுக்கும் நன்றி.</p>
-        <p class="mt-3">
-          இதற்கு,<br/>
-          அக்ரோவேர்ல்ட் வாடிக்கையாளர் ஆதரவு குழு
-        </p>
-      `;
-    } else {
-      // Default English
-      closingMessage = `
-        <p>Dear <strong>${this.farmerName}</strong>,</p>
-        <p></p>
-        <textarea 
-          id="messageContent" 
-          class="w-full p-2 border rounded mt-3 mb-3" 
-          rows="5" 
-          placeholder="Add your message here..."
-        >${this.complain.reply || ""}</textarea>
-        <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-        <p class="mt-3">
-          Sincerely,<br/>
-          AgroWorld Customer Support Team
-        </p>
-      `;
-    }
-  
-    Swal.fire({
-      title: "Reply as AgroWorld",
-      html: `<div class="text-left">${closingMessage}</div>`,
-      showCancelButton: true,
-      confirmButtonText: "Send",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#3980C0",
-      cancelButtonColor: "#74788D",
-      width: "600px",
-      reverseButtons: true,
-      preConfirm: () => {
-        const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
-        return textarea.value;
-      },
-      didOpen: () => {
-        setTimeout(() => {
-          const actionsElement = document.querySelector('.swal2-actions');
-          if (actionsElement) {
-            actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
-            
-            const cancelButton = document.querySelector('.swal2-cancel');
-            const confirmButton = document.querySelector('.swal2-confirm');
-            if (cancelButton && confirmButton && actionsElement) {
-              actionsElement.insertBefore(cancelButton, confirmButton);
-            }
-          }
-        }, 0);
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.messageContent = result.value;
-        this.submitComplaint();
-      }
-    });
+  closeReplyPopUp() {
+    this.isPopUpVisible = false;
+    this.selectedFarmerName = 'English';
+    this.selectedLanguage = '';
   }
   
 }
 
 class Complain {
-  id!: string;
+  id!: number;
   refNo!: string;
   status!: string;
   firstName!: string;

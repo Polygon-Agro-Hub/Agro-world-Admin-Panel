@@ -681,7 +681,7 @@ export class CreateCropCalenderComponent {
     if (missingFields.length > 0) {
       let errorMessage =
         'Please fill in the following required fields:<br><br>';
-      errorMessage += missingFields.map((field) => `• ${field}`).join('<br>');
+      errorMessage += missingFields.map((field) => ` ${field}`).join('<br>');
 
       Swal.fire({
         icon: 'warning',

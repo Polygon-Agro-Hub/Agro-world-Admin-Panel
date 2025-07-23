@@ -9,6 +9,7 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-market-edit-product',
@@ -43,8 +44,9 @@ export class MarketEditProductComponent implements OnInit {
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    public themeService: ThemeService
+  ) {}
 
   back(): void {
     this.router.navigate(['market/action/view-products-list']);
@@ -63,7 +65,7 @@ export class MarketEditProductComponent implements OnInit {
       this.storedDisplayType = res.displaytype;
       this.productObj = res;
       console.log('this is product', this.productObj);
-      this.storedDisplayType
+      this.storedDisplayType;
       this.productObj.selectId = res.cropGroupId;
       this.selectedImage = res.image;
       this.onCropChange();
@@ -167,10 +169,12 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.changeby ||
         !this.productObj.discountedPrice ||
         !this.productObj.salePrice ||
-        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) ||
+        (this.productObj.category === 'WholeSale' &&
+          !this.productObj.maxQuantity) ||
         this.productObj.startValue <= 0.0 ||
         this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0)
+        (this.productObj.category === 'WholeSale' &&
+          this.productObj.maxQuantity <= 0.0)
       ) {
         Swal.fire(
           'Warning',
@@ -188,10 +192,12 @@ export class MarketEditProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) ||
+        (this.productObj.category === 'WholeSale' &&
+          !this.productObj.maxQuantity) ||
         this.productObj.startValue <= 0.0 ||
         this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0)
+        (this.productObj.category === 'WholeSale' &&
+          this.productObj.maxQuantity <= 0.0)
       ) {
         Swal.fire(
           'Warning',
@@ -256,7 +262,7 @@ export class MarketEditProductComponent implements OnInit {
     this.isNoDiscount = false;
     this.productObj.displaytype = this.storedDisplayType;
     console.log('discounted price', this.productObj.discountedPrice);
-  
+
     if (this.productObj.discountedPrice === 0) {
       this.productObj.discountedPrice = this.storedDiscountPercentage;
       this.productObj.salePrice =
@@ -266,11 +272,10 @@ export class MarketEditProductComponent implements OnInit {
       this.productObj.discount =
         (this.productObj.normalPrice * this.productObj.discountedPrice) / 100;
     }
-    console.log('object', this.productObj)
-  
+    console.log('object', this.productObj);
+
     console.log('store', this.storedDisplayType);
   }
-  
 
   compaireDiscount() {
     this.storedDiscountPercentage = this.productObj.discountedPrice;
@@ -348,8 +353,7 @@ class MarketPrice {
   tags: string = '';
   category!: string;
   // displayType!: string;
-  variety!: string
-
+  variety!: string;
 
   selectId!: number;
   displaytype!: string;

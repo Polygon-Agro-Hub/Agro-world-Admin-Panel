@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 
 import { MatInputModule } from '@angular/material/input';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ThemeService } from '../../../services/theme.service';
 @Component({
   selector: 'app-market-add-product',
   standalone: true,
@@ -40,7 +41,11 @@ export class MarketAddProductComponent implements OnInit {
 
   isNoDiscount: boolean = true;
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    public themeService: ThemeService
+  ) {}
 
   ngOnInit(): void {
     this.getAllCropVerity();
@@ -199,10 +204,12 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.startValue ||
         !this.productObj.changeby ||
         !this.productObj.salePrice ||
-        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) ||
+        (this.productObj.category === 'WholeSale' &&
+          !this.productObj.maxQuantity) ||
         this.productObj.startValue <= 0.0 ||
         this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0)
+        (this.productObj.category === 'WholeSale' &&
+          this.productObj.maxQuantity <= 0.0)
       ) {
         Swal.fire(
           'Warning',
@@ -220,10 +227,12 @@ export class MarketAddProductComponent implements OnInit {
         !this.productObj.unitType ||
         !this.productObj.startValue ||
         !this.productObj.changeby ||
-        (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) ||
+        (this.productObj.category === 'WholeSale' &&
+          !this.productObj.maxQuantity) ||
         this.productObj.startValue <= 0.0 ||
         this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0)
+        (this.productObj.category === 'WholeSale' &&
+          this.productObj.maxQuantity <= 0.0)
       ) {
         Swal.fire(
           'Warning',
@@ -238,7 +247,7 @@ export class MarketAddProductComponent implements OnInit {
       this.productObj.startValue = this.productObj.startValue / 1000;
       this.productObj.changeby = this.productObj.changeby / 1000;
     }
-    console.log('productObj', this.productObj)
+    console.log('productObj', this.productObj);
     this.marketSrv.createProduct(this.productObj).subscribe(
       (res) => {
         if (res.status === true) {

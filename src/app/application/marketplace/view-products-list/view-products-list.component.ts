@@ -71,6 +71,8 @@ export class ViewProductsListComponent {
       )
       .subscribe(
         (response) => {
+          console.log('this is the responce', response);
+
           this.viewProductList = response.items;
           this.hasData = this.viewProductList.length > 0;
           this.totalItems = response.total;
@@ -181,6 +183,14 @@ export class ViewProductsListComponent {
   navigateToAddProduct(): void {
     this.router.navigate(['/market/action/add-product']);
   }
+
+  showMaxQuantityColumn(): boolean {
+    // Show if no category selected or if WholeSale is selected
+    return (
+      !this.selectedCategoryOption ||
+      this.selectedCategoryOption.value === 'WholeSale'
+    );
+  }
 }
 
 class ProductList {
@@ -193,6 +203,7 @@ class ProductList {
   varietyNameEnglish!: string;
   discountedPrice: number = -1;
   startValue!: number;
+  maxQuantity!: number;
   discount!: number;
   normalPrice!: number;
   promo!: number;

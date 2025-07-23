@@ -54,6 +54,8 @@ export class BannerListComponent {
   selectedFileWholesale: File | null = null;
   feebackList: any[] = [];
   feebackListWhole: any[] = [];
+  maxBannersReached = false;
+  maxBannersReachedWholesale = false;
 
   selectedWholesaleImageUrl: string | null = null;
   isDragOver = false;
@@ -347,6 +349,7 @@ export class BannerListComponent {
     this.isLoading = true;
     if (!this.bannerName || !this.selectedFile) {
       console.log('this.bannerName', this.bannerName, 'this.selectedFile', this.selectedFile)
+      this.isLoading = false;
       Swal.fire(
         'Missing Data',
         'Please enter a banner name and select an image.',
@@ -388,6 +391,7 @@ export class BannerListComponent {
   uploadBannerWholesale() {
     this.isLoading = true;
     if (!this.bannerNameWholesale || !this.selectedFileWholesale) {
+      this.isLoading = false;
       Swal.fire(
         'Missing Data',
         'Please enter a banner name and select an image.',
@@ -426,55 +430,54 @@ export class BannerListComponent {
     });
   }
 
-  getAllFeedbacks() {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    this.isLoading = true;
-    this.http
-      .get<any>(`${environment.API_URL}market-place/get-all-banners`, {
-        headers,
-      })
-      .subscribe(
-        (response) => {
-          this.feebackList = response.banners;
-          this.isLoading = false;
-        },
-        () => {}
-      );
-    //  this.isLoading = false;
+ getAllFeedbacks() {
+  const token = this.tokenService.getToken();
+  if (!token) {
+    return;
   }
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+  this.isLoading = true;
+  this.http
+    .get<any>(`${environment.API_URL}market-place/get-all-banners`, {
+      headers,
+    })
+    .subscribe(
+      (response) => {
+        this.feebackList = response.banners;
+        this.maxBannersReached = this.feebackList.length >= 5;
+        this.isLoading = false;
+      },
+      () => {}
+    );
+}
 
   getAllFeedbacksWhole() {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    this.isLoading = true;
-    this.http
-      .get<any>(
-        `${environment.API_URL}market-place/get-all-banners-wholesale`,
-        {
-          headers,
-        }
-      )
-      .subscribe(
-        (response) => {
-          this.feebackListWhole = response.banners;
-          this.isLoading = false;
-        },
-        () => {}
-      );
-    //  this.isLoading = false;
+  const token = this.tokenService.getToken();
+  if (!token) {
+    return;
   }
-
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+  this.isLoading = true;
+  this.http
+    .get<any>(
+      `${environment.API_URL}market-place/get-all-banners-wholesale`,
+      {
+        headers,
+      }
+    )
+    .subscribe(
+      (response) => {
+        this.feebackListWhole = response.banners;
+        this.maxBannersReachedWholesale = this.feebackListWhole.length >= 5;
+        this.isLoading = false;
+      },
+      () => {}
+    );
+}
   drop(event: CdkDragDrop<any[]>) {
     this.isLoading = true;
     moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);

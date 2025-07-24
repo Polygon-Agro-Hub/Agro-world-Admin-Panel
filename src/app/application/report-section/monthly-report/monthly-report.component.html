@@ -1,196 +1,142 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+<div>
+  <!-- Back Button -->
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
-</button>
+  </button>
 
-<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-<div class="mx-auto min-w-[1000px] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-16">
-  <!-- From Date Input -->
-  <div class="flex items-center gap-2">
-    <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark">From:</label>
-    <input
-      id="fromDate"
-      type="date"
-      class="p-2 w-[450px] border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
-      placeholder="YYYY/MM/DD"
-      [(ngModel)]="fromDate"
-      [max]="maxDate"
-    />
+  <!-- Date Range Selector -->
+  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg mb-6 overflow-hidden">
+    <div class="flex flex-col md:flex-row justify-between items-stretch gap-4 p-4">
+      <!-- From Date -->
+      <div class="flex items-center gap-2 w-full">
+        <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">From:</label>
+        <input id="fromDate" type="date"
+          class="p-2 w-full border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
+          placeholder="YYYY/MM/DD" [(ngModel)]="fromDate" [max]="maxDate" />
+      </div>
+
+      <!-- To Date -->
+      <div class="flex items-center gap-2 w-full">
+        <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">To:</label>
+        <input id="toDate" type="date"
+          class="p-2 w-full border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
+          placeholder="YYYY/MM/DD" [(ngModel)]="toDate" [max]="maxDate" />
+      </div>
+
+      <!-- Go Button -->
+      <div class="w-full md:w-auto">
+        <button (click)="getCollectionReport()"
+          class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full">
+          Go
+        </button>
+      </div>
+    </div>
+
+    <!-- Download Button -->
+    <div class="w-full text-center pb-5 px-4">
+      <button (click)="downloadReport()" class="bg-[#3980C0] text-white px-6 py-2 rounded-md w-full sm:w-auto"
+        [disabled]="isDownloading">
+        <i class="fas fa-download" *ngIf="!isDownloading"></i>
+        <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
+        {{ isDownloading ? ' Downloading...' : ' Download Report' }}
+      </button>
+    </div>
   </div>
 
-  <!-- To Date Input -->
-  <div class="flex items-center gap-2">
-    <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark">To:</label>
-    <input
-      id="toDate"
-      type="date"
-      class="p-2 w-[450px] border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
-      placeholder="YYYY/MM/DD"
-      [(ngModel)]="toDate"
-      [max]="maxDate"
-    />
-  </div>
+  <!-- Report Content -->
+  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto" *ngIf="go">
+    <div #contentToConvert class="p-4 sm:p-6">
+      <!-- Report Header -->
+      <div class="text-center mb-6">
+        <p class="text-md dark:text-textDark">Collection Officer Report</p>
+        <p class="text-md dark:text-textDark">ID NO : {{ officerData.empId }}</p>
+      </div>
 
-  <!-- Go Button -->
-  <div class="flex items-center">
-    <button
-      (click)="getCollectionReport()"
-      class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
-    >
-      Go
-    </button>
-  </div>
+      <!-- Officer Info Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-6">
+        <!-- From Date -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">From</p>
+          <p class="dark:text-textDark text-gray-800">: {{ fromDate }}</p>
+        </div>
 
-  <!-- Download Report Button -->
-  <div class="w-full text-center mt-10">
-    <button
-      (click)="downloadReport()"
-      class="bg-[#3980C0] text-white px-6 py-2 rounded-md"
-      [disabled]="isDownloading"
-    >
-      <i class="fas fa-download" *ngIf="!isDownloading"></i>
-      <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
-      {{ isDownloading ? ' Downloading...' : ' Download Report' }}
-    </button>
-  </div>
-</div>
+        <!-- To Date -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">To</p>
+          <p class="dark:text-textDark text-gray-800">: {{ toDate }}</p>
+        </div>
 
+        <!-- EMP ID -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>
+          <p class="dark:text-textDark text-gray-800">: {{ officerData.empId }}</p>
+        </div>
 
-  
-  
-  
+        <!-- Role -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">Role</p>
+          <p class="dark:text-textDark text-gray-800">: {{ officerData.jobRole }}</p>
+        </div>
 
-<div class="h-[20px] min-w-[1200px]"></div>
+        <!-- First Name -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">First Name</p>
+          <p class="dark:text-textDark text-gray-800">: {{ officerData.firstNameEnglish }}</p>
+        </div>
 
+        <!-- Last Name -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">Last Name</p>
+          <p class="dark:text-textDark text-gray-800">: {{ officerData.lastNameEnglish }}</p>
+        </div>
 
-<div class="mx-auto min-w-[1200px] p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"  *ngIf="go">
-    <!-- Date Range Filter -->
-    
-  
-    <!-- Officer Info Section -->
-    <div #contentToConvert>
+        <!-- Total Weight -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">Weight</p>
+          <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }}</p>
+        </div>
 
-        <p class="text-md text-center dark:text-textDark">Collection Officer Report</p>
-        <p class="text-md text-center dark:text-textDark">ID NO : {{ officerData.empId }}</p>
+        <!-- Total Farmers -->
+        <div class="flex items-center gap-2">
+          <p class="text-sm dark:text-textDark text-gray-600 w-24">Farmers</p>
+          <p class="dark:text-textDark text-gray-800">: {{ finalTotalFarmers }}</p>
+        </div>
+      </div>
 
-
-
-
-        <div class="grid grid-cols-2 gap-x-8 gap-y-4 p-6">
-            <!-- From Date -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">From</p>
-              <p class="dark:text-textDark text-gray-800">: {{ fromDate }}</p>
-            </div>
-          
-            <!-- To Date -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">To</p>
-              <p class="dark:text-textDark text-gray-800">: {{ toDate }}</p>
-            </div>
-          
-            <!-- EMP ID -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.empId }}</p>
-            </div>
-          
-            <!-- Role -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">Role</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.jobRole }}</p>
-            </div>
-          
-            <!-- First Name -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">First Name</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.firstNameEnglish }}</p>
-            </div>
-          
-            <!-- Last Name -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">Last Name</p>
-              <p class="dark:text-textDark text-gray-800">: {{ officerData.lastNameEnglish }}</p>
-            </div>
-          
-            <!-- Total Weight -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">Weight</p>
-              <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }}</p>
-            </div>
-          
-            <!-- Total Farmers -->
-            <div class="flex items-center gap-2">
-              <p class="text-sm dark:text-textDark text-gray-600 w-24">Farmers</p>
-              <p class="dark:text-textDark text-gray-800">: {{ finalTotalFarmers }}</p>
-            </div>
-          </div>
-          
-          
-  
       <!-- Daily Report Table -->
-      <table class="table-auto w-full border-collapse border border-gray-300">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border border-gray-300 px-4 py-2">Date</th>
-            <th class="border border-gray-300 px-4 py-2">Total Weight</th>
-            <th class="border border-gray-300 px-4 py-2">Total Farmers</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let report of dailyReports">
-            <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.date | date: 'yyyy-MM-dd' }}</td>
-            <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }}</td>
-            <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalPayments }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border border-gray-300 px-4 py-2">Date</th>
+              <th class="border border-gray-300 px-4 py-2">Total Weight</th>
+              <th class="border border-gray-300 px-4 py-2">Total Farmers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let report of dailyReports">
+              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.date | date: 'yyyy-MM-dd' }}</td>
+              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }}</td>
+              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalPayments }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  
       <!-- Generated Time -->
       <p class="text-xs text-gray-500 mt-4 dark:text-textDark" *ngIf="generatedDate && generatedTime">
         This report is generated on {{ generatedDate }} , at {{ generatedTime }}.
       </p>
-      <div class="h-[20px]"></div>
     </div>
   </div>
 
-  <div
-  *ngIf="!go"
-  class="mx-auto min-w-[1200px] p-28 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-col items-center justify-center text-center"
->
-  <i class="fa-solid fa-folder-minus text-4xl text-gray-500 mb-4"></i>
-  <p class="text-sm dark:text-textDark text-gray-600">-- No Data Available --</p>
+  <!-- Empty State -->
+  <div *ngIf="!go"
+    class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-8 sm:p-16 flex flex-col items-center justify-center text-center">
+    <i class="fa-solid fa-folder-minus text-4xl text-gray-500 mb-4"></i>
+    <p class="text-sm dark:text-textDark text-gray-600">-- No Data Available --</p>
+  </div>
 </div>
-
-
-
-
-
-</div>
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

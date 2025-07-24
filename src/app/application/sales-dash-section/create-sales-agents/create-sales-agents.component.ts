@@ -12,6 +12,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
+import { DropdownModule } from 'primeng/dropdown';
 interface Bank {
   ID: number;
   name: string;
@@ -36,6 +37,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './create-sales-agents.component.html',
   styleUrl: './create-sales-agents.component.css',

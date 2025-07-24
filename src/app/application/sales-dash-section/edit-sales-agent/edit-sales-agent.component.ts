@@ -423,8 +423,8 @@ export class EditSalesAgentComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  validateNameInput(event: KeyboardEvent, fieldName: 'firstName' | 'lastName') {
-    // Allow navigation keys
+  validateNameInput(event: KeyboardEvent): void {
+    // Allow navigation and control keys
     const allowedKeys = [
       'Backspace',
       'Delete',
@@ -433,15 +433,19 @@ export class EditSalesAgentComponent implements OnInit {
       'Tab',
       'Home',
       'End',
+      ' ',
+      'Spacebar',
     ];
 
+    // Allow these special keys
     if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
+      return;
     }
 
-    // Only allow alphabetic characters (A-Z, a-z)
-    const englishLetterPattern = /^[a-zA-Z]$/;
-    if (!englishLetterPattern.test(event.key)) {
+    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+    const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+    if (!allowedPattern.test(event.key)) {
       event.preventDefault();
     }
   }
@@ -494,6 +498,24 @@ export class EditSalesAgentComponent implements OnInit {
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+  }
+
+  capitalizeName(fieldName: keyof Personal): void {
+    if (this.personalData[fieldName]) {
+      // Convert to lowercase first
+      let value = (this.personalData[fieldName] as string).toLowerCase();
+
+      // Capitalize first letter of each word
+      value = value.replace(/(^|\s|-|')[a-z]/g, (char) => char.toUpperCase());
+
+      (this.personalData[fieldName] as string) = value;
+    }
+  }
+
+  isValidName(name: string): boolean {
+    // Allows letters, spaces, hyphens, and apostrophes
+    const namePattern = /^[A-Za-z\s'-]+$/;
+    return namePattern.test(name);
   }
 }
 

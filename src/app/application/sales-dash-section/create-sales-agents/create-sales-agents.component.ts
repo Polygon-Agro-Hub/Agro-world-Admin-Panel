@@ -344,6 +344,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     const phonePattern = /^7\d{8}$/;
     const accountPattern = /^[a-zA-Z0-9]+$/;
     const englishNamePattern = /^[A-Z][a-z]*$/;
+    const namePattern = /^[A-Za-z\s'-]+$/; // For account holder's name
 
     const {
       firstName,
@@ -367,6 +368,8 @@ export class CreateSalesAgentsComponent implements OnInit {
     // Name validations
     const isFirstNameValid = !!firstName && englishNamePattern.test(firstName);
     const isLastNameValid = !!lastName && englishNamePattern.test(lastName);
+    const isAccHolderNameValid =
+      !!accHolderName && namePattern.test(accHolderName);
 
     // Contact validations
     const isPhoneNumber1Valid =
@@ -392,7 +395,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       accountPattern.test(confirmAccNumber);
 
     const isBankDetailsValid =
-      !!accHolderName &&
+      isAccHolderNameValid &&
       !!accNumber &&
       isAccNumberPatternValid &&
       !!bankName &&
@@ -406,6 +409,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       isAddressValid,
       isFirstNameValid,
       isLastNameValid,
+      isAccHolderNameValid,
       isPhoneNumber1Valid,
       isEmailValid,
       isEmpTypeSelected,
@@ -490,8 +494,8 @@ export class CreateSalesAgentsComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  validateNameInput(event: KeyboardEvent, fieldName: 'firstName' | 'lastName') {
-    // Allow navigation keys
+  validateNameInput(event: KeyboardEvent): void {
+    // Allow navigation and control keys
     const allowedKeys = [
       'Backspace',
       'Delete',
@@ -500,15 +504,19 @@ export class CreateSalesAgentsComponent implements OnInit {
       'Tab',
       'Home',
       'End',
+      ' ',
+      'Spacebar',
     ];
 
+    // Allow these special keys
     if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
+      return;
     }
 
-    // Only allow alphabetic characters (A-Z, a-z)
-    const englishLetterPattern = /^[a-zA-Z]$/;
-    if (!englishLetterPattern.test(event.key)) {
+    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+    const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+    if (!allowedPattern.test(event.key)) {
       event.preventDefault();
     }
   }
@@ -557,6 +565,39 @@ export class CreateSalesAgentsComponent implements OnInit {
         this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
     }
+  }
+
+  capitalizeName(fieldName: keyof Personal): void {
+    if (!this.personalData[fieldName]) return;
+
+    // Convert to lowercase first
+    let name = this.personalData[fieldName].toLowerCase();
+    let result = '';
+    let capitalizeNext = true;
+
+    for (let i = 0; i < name.length; i++) {
+      const char = name[i];
+
+      if (capitalizeNext && /[a-z]/.test(char)) {
+        result += char.toUpperCase();
+        capitalizeNext = false;
+      } else {
+        result += char;
+      }
+
+      // Set flag to capitalize next letter if current character is a separator
+      if ([' ', '-', "'"].includes(char)) {
+        capitalizeNext = true;
+      }
+    }
+
+    this.personalData[fieldName] = result;
+  }
+
+  isValidName(name: string): boolean {
+    // Allows letters, spaces, hyphens, and apostrophes
+    const namePattern = /^[A-Za-z\s'-]+$/;
+    return namePattern.test(name);
   }
 }
 

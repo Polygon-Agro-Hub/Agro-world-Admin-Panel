@@ -77,7 +77,7 @@
             name="firstName"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameInput="ngModel"
-            (keydown)="validateNameInput($event, 'firstName')"
+            (keydown)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('firstName')"
             required
           />
@@ -101,7 +101,7 @@
             [(ngModel)]="personalData.lastName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameInput="ngModel"
-            (keydown)="validateNameInput($event, 'lastName')"
+            (keydown)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('lastName')"
             required
           />
@@ -522,12 +522,14 @@
         <label
           for="accHolderName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder’s Name</label
+          >Account Holder's Name</label
         >
         <input
           id="accHolderName"
           name="accHolderName"
           [(ngModel)]="personalData.accHolderName"
+          (keydown)="validateNameInput($event)"
+          (input)="capitalizeName('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accHolderNameInput="ngModel"
           required
@@ -537,6 +539,18 @@
           class="text-red-500 text-sm mt-1"
         >
           <div>Account Holder's name is required</div>
+        </div>
+        <div
+          *ngIf="
+            accHolderNameInput.touched &&
+            personalData.accHolderName &&
+            !isValidName(personalData.accHolderName)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>
+            Please use only letters, spaces, hyphens (-), and apostrophes (')
+          </div>
         </div>
       </div>
 

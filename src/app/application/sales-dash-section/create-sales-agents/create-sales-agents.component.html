@@ -146,7 +146,7 @@
             [(ngModel)]="personalData.firstName"
             name="firstNameEnglish"
             (blur)="onBlur('firstName')"
-            (keydown)="validateNameInput($event, 'firstName')"
+            (keydown)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('firstName')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -173,7 +173,7 @@
             name="lastName"
             [(ngModel)]="personalData.lastName"
             (blur)="onBlur('lastName')"
-            (keydown)="validateNameInput($event, 'lastName')"
+            (keydown)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('lastName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -538,13 +538,15 @@
         <label
           for="accHolderName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder’s Name</label
+          >Account Holder's Name</label
         >
         <input
           id="accHolderName"
           name="accHolderName"
           [(ngModel)]="personalData.accHolderName"
-          (blur)="onBlur('accHolderName')"
+          (blur)="onBlur('accHolderName'); capitalizeName('accHolderName')"
+          (keydown)="validateNameInput($event)"
+          (input)="capitalizeName('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <span
@@ -552,6 +554,17 @@
           class="text-red-600 text-sm"
           >Account Holder's Name is required.</span
         >
+        <span
+          *ngIf="
+            touchedFields.accHolderName &&
+            personalData.accHolderName &&
+            !isValidName(personalData.accHolderName)
+          "
+          class="text-red-600 text-sm"
+        >
+          Please enter a valid name (only letters, spaces, hyphens, and
+          apostrophes)
+        </span>
       </div>
 
       <div class="pb-6">

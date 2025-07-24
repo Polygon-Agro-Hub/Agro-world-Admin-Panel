@@ -321,7 +321,8 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #nicInput="ngModel"
             required
-            pattern="^(\d{9}[Vv]|\d{12})$"
+            (keydown)="validateNICInput($event)"
+            (input)="formatNIC()"
           />
 
           <!-- Required Validation -->

@@ -327,6 +327,8 @@
             name="nic"
             [(ngModel)]="personalData.nic"
             (blur)="onBlur('nic')"
+            (keydown)="validateNICInput($event)"
+            (input)="formatNIC()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -337,7 +339,8 @@
             "
             class="text-red-600 text-sm"
           >
-            Invalid NIC number.
+            Please enter a valid NIC number (12 digits or 10 digits followed by
+            'V').
           </span>
 
           <span

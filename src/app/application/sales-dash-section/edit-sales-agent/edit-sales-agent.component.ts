@@ -452,6 +452,43 @@ export class EditSalesAgentComponent implements OnInit {
         this.personalData[fieldName].slice(1).toLowerCase();
     }
   }
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
+
+  formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
+      }
+    }
+  }
 }
 
 class Personal {

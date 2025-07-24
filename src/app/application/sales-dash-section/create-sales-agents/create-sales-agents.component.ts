@@ -306,7 +306,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9,}$/; // Allows only 9-digit numbers
+    const phoneRegex = /^7\d{8}$/; // Allows only 9-digit numbers
     return phoneRegex.test(phone);
   }
 
@@ -328,9 +328,9 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   checkSubmitValidity(): boolean {
-    console.log('cehcking submit')
-    const phonePattern = /^[0-9]{9}$/;
-    const accountPattern = /^[a-zA-Z0-9]+$/
+    console.log('cehcking submit');
+    const phonePattern = /^7\d{8}$/;
+    const accountPattern = /^[a-zA-Z0-9]+$/;
 
     const {
       firstName,
@@ -353,18 +353,21 @@ export class CreateSalesAgentsComponent implements OnInit {
 
     const isFirstNameValid = !!firstName;
 
-    const isPhoneNumber1Valid = !!phoneNumber1 && phonePattern.test(phoneNumber1);
+    const isPhoneNumber1Valid =
+      !!phoneNumber1 && phonePattern.test(phoneNumber1);
     const isEmailValid = this.isValidEmail(email);
     const isEmpTypeSelected = !!empType;
     const isNicSelected = !!nic;
 
     const isAccNumberPatternValid = accountPattern.test(accNumber);
-    const isConfirmAccNumberPatternValid = accountPattern.test(confirmAccNumber);
+    const isConfirmAccNumberPatternValid =
+      accountPattern.test(confirmAccNumber);
 
     let isPhoneValid = true;
 
     if (phoneNumber2) {
-      isPhoneValid = (phoneNumber2 !== phoneNumber1) && phonePattern.test(phoneNumber2);
+      isPhoneValid =
+        phoneNumber2 !== phoneNumber1 && phonePattern.test(phoneNumber2);
     }
 
     const isAddressValid =
@@ -379,9 +382,24 @@ export class CreateSalesAgentsComponent implements OnInit {
       accNumber === confirmAccNumber &&
       isAccNumberPatternValid &&
       isConfirmAccNumberPatternValid;
-    console.log('isBankDetailsValid', isBankDetailsValid, 'isAddressValid', isAddressValid, 'isFirstNameValid', isFirstNameValid, 'isPhoneNumber1Valid', isPhoneNumber1Valid, 'isEmailValid', isEmailValid,
-      'isEmpTypeSelected', isEmpTypeSelected, 'isNicSelected', isNicSelected, 'isPhoneValid', isPhoneValid
-     )
+    console.log(
+      'isBankDetailsValid',
+      isBankDetailsValid,
+      'isAddressValid',
+      isAddressValid,
+      'isFirstNameValid',
+      isFirstNameValid,
+      'isPhoneNumber1Valid',
+      isPhoneNumber1Valid,
+      'isEmailValid',
+      isEmailValid,
+      'isEmpTypeSelected',
+      isEmpTypeSelected,
+      'isNicSelected',
+      isNicSelected,
+      'isPhoneValid',
+      isPhoneValid
+    );
     return (
       isBankDetailsValid &&
       isAddressValid &&

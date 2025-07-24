@@ -19,7 +19,7 @@ export class AddCoupenComponent {
   checkPrecentageValueMessage: string = '';
   checkfixAmountValueMessage: string = '';
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   back(): void {
     this.router.navigate(['market/action']);
@@ -71,7 +71,7 @@ export class AddCoupenComponent {
   }
 
   onSubmit() {
-    if(this.isValid){
+    if (this.isValid) {
       this.checkPrecentageValueMessage = 'Precentage value is required';
       this.checkfixAmountValueMessage = 'Fix amount value is required';
       return;
@@ -121,26 +121,50 @@ export class AddCoupenComponent {
   }
 
   checkPrecentageValue(num: number) {
+    if (num === null || isNaN(num)) {
+      this.isValid = true;
+      this.checkPrecentageValueMessage = 'Percentage value is required';
+      return;
+    }
+
     if (num < 0) {
-      this.isValid = true
-      this.checkPrecentageValueMessage = 'Can not be negative number';
+      this.coupenObj.percentage = 0;
+      this.isValid = true;
+      this.checkPrecentageValueMessage = 'Cannot be negative number';
     } else if (num > 100) {
-      this.isValid = true
-      this.checkPrecentageValueMessage = 'Can not be greater than 100';
+      this.coupenObj.percentage = 100;
+      this.isValid = true;
+      this.checkPrecentageValueMessage = 'Cannot be greater than 100';
     } else {
-      this.isValid = false
-      this.checkPrecentageValueMessage = 'Precentage value is required';
+      this.isValid = false;
+      this.checkPrecentageValueMessage = '';
     }
   }
 
-
   checkFixAmountValue(num: number) {
     if (num < 0) {
-      this.isValid = true
+      this.isValid = true;
       this.checkfixAmountValueMessage = 'Can not be negative number';
     } else {
-      this.isValid = false
+      this.isValid = false;
       this.checkfixAmountValueMessage = 'Fix amount value is required';
+    }
+  }
+
+  preventNegative(e: KeyboardEvent) {
+    // Prevent minus key, comma, and period (for negative numbers in some locales)
+    if (e.key === '-' || e.key === ',' || e.key === '.') {
+      e.preventDefault();
+    }
+
+    // Prevent pasting negative numbers
+    if (e.ctrlKey && e.key === 'v') {
+      // This is a simple prevention, for complete solution you'd need to handle paste event
+      setTimeout(() => {
+        if (this.coupenObj.percentage < 0) {
+          this.coupenObj.percentage = 0;
+        }
+      }, 0);
     }
   }
 }

@@ -83,14 +83,15 @@ export class ReportsFarmerListComponent {
   totalFixed: any;
   searchNIC: string = '';
   isLoading = false;
+  hasData: boolean = true;
 
   constructor(
     private plantcareService: PlantcareUsersService,
     private router: Router,
     private http: HttpClient,
     public permissionService: PermissionService,
-     public tokenService: TokenService
-  ) {}
+    public tokenService: TokenService
+  ) { }
 
   fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
@@ -101,8 +102,11 @@ export class ReportsFarmerListComponent {
           this.isLoading = false;
           this.plantCareUser = response.items;
           this.totalItems = response.total;
+          this.hasData = response.items && response.items.length > 0;
         },
         (error) => {
+          this.isLoading = false;
+          this.hasData = false;
           if (error.status === 401) {
           }
         }

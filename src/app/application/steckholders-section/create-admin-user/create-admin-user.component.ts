@@ -61,7 +61,7 @@ export class CreateAdminUserComponent implements OnInit {
   ) {
     this.userForm = this.fb.group({
       id: [''],
-      mail: ['', [Validators.required, this.emailValidator()]], 
+      mail: ['', [Validators.required, this.emailValidator()]],
       userName: ['', [Validators.required, this.singleWordValidator]],
       role: ['', Validators.required],
       position: ['', Validators.required],
@@ -172,18 +172,40 @@ export class CreateAdminUserComponent implements OnInit {
 
   getErrorMessage(controlName: string): string {
     const control = this.userForm.get(controlName);
-    if (control?.hasError('required')) return 'This field is required';
-     if (control?.hasError('invalidEmail')) {
-    return 'Invalid email format';
-  }
-    if (control?.hasError('invalidPassword'))
-      return 'Password must be 8+ chars, include upper/lowercase, number & special char';
-    if (control?.hasError('singleWord'))
-      return 'Username must be a single word (no spaces)';
-    if (control?.hasError('containsNumber'))
+
+    if (control?.hasError('required')) {
+      switch (controlName) {
+        case 'userName':
+          return 'Username is required';
+        case 'mail':
+          return 'Email is required';
+        case 'password':
+          return 'Password is required';
+        case 'role':
+          return 'Department is required';
+        case 'position':
+          return 'Position is required';
+        default:
+          return 'This field is required';
+      }
+    }
+
+    if (control?.hasError('email')) {
+      return 'Invalid email format !(example@gmail.com)';
+    }
+    if (control?.hasError('invalidPassword')) {
+      return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character';
+    }
+    if (control?.hasError('singleWord')) {
+      return 'Username must be a single word (no spaces allowed)';
+    }
+    if (control?.hasError('containsNumber')) {
       return 'Username cannot contain numbers';
-    return '';
+    }
+
+    return ''; // Default return to satisfy the string return type
   }
+
 
   getAdminById(id: number): void {
     const token = this.tokenService.getToken();

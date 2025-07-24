@@ -159,7 +159,7 @@ export class CollectionAllViewComponent implements OnInit {
     limit: number = this.itemsPerPage,
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
-    searchItem?: string
+    searchItem: string = this.searchItem
   ) {
     this.isLoading = true;
     this.collectionService
@@ -224,7 +224,6 @@ export class CollectionAllViewComponent implements OnInit {
     this.fetchAllCollectionCenter(
       this.page,
       this.itemsPerPage,
-      this.searchItem
     );
   }
 

@@ -751,5 +751,14 @@ getProductTypes(): Observable<any> {
       headers,
     });
   }
+
+   getMarketPlaceDashbordDetails(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/market-dashbord-details`;
+    return this.http.get<any>(url, { headers });
+  }
 }
 

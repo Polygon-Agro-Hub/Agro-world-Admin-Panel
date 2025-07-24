@@ -146,11 +146,20 @@
             [(ngModel)]="personalData.firstName"
             name="firstNameEnglish"
             (blur)="onBlur('firstName')"
+            (keydown)="validateNameInput($event, 'firstName')"
+            (input)="capitalizeFirstLetter('firstName')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm"
             >First Name is required.</span
           >
+          <span
+            *ngIf="isFieldInvalid('firstName')"
+            class="text-red-600 text-sm"
+          >
+            First Name is required and must contain only English letters (first
+            letter capitalized).
+          </span>
         </div>
 
         <div>
@@ -164,11 +173,17 @@
             name="lastName"
             [(ngModel)]="personalData.lastName"
             (blur)="onBlur('lastName')"
+            (keydown)="validateNameInput($event, 'lastName')"
+            (input)="capitalizeFirstLetter('lastName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm"
             >Last Name is required.</span
           >
+          <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm">
+            Last Name is required and must contain only English letters (first
+            letter capitalized).
+          </span>
         </div>
 
         <div>

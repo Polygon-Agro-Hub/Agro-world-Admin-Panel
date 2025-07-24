@@ -77,6 +77,8 @@
             name="firstName"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameInput="ngModel"
+            (keydown)="validateNameInput($event, 'firstName')"
+            (input)="capitalizeFirstLetter('firstName')"
             required
           />
           <div
@@ -99,6 +101,8 @@
             [(ngModel)]="personalData.lastName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameInput="ngModel"
+            (keydown)="validateNameInput($event, 'lastName')"
+            (input)="capitalizeFirstLetter('lastName')"
             required
           />
           <div

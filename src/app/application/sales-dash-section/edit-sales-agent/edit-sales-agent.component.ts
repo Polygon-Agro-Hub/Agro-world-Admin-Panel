@@ -306,24 +306,23 @@ export class EditSalesAgentComponent implements OnInit {
 
   validateNIC(): boolean {
     const nic = this.personalData.nic;
-  
+
     if (!nic) {
       this.nicError = true;
       return false;
     }
-  
+
     // Single pattern: matches either 9 digits + V/v OR 12 digits
     const pattern = /^(\d{9}[Vv]|\d{12})$/;
-  
+
     if (!pattern.test(nic)) {
       this.nicError = true;
       return false;
     }
-  
+
     this.nicError = false;
     return true;
   }
-  
 
   onCancel() {
     Swal.fire({
@@ -342,12 +341,12 @@ export class EditSalesAgentComponent implements OnInit {
 
   onSubmit() {
     const phonePattern = /^[0-9]{9}$/;
-    const accountPattern = /^[a-zA-Z0-9]+$/
+    const accountPattern = /^[a-zA-Z0-9]+$/;
     if (
       !this.personalData.firstName ||
       !this.personalData.lastName ||
       !this.personalData.phoneNumber1 ||
-      !phonePattern.test(this.personalData.phoneNumber1) || 
+      !phonePattern.test(this.personalData.phoneNumber1) ||
       !this.personalData.nic ||
       !this.validateNIC() ||
       !this.personalData.email ||
@@ -359,22 +358,21 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.district ||
       !this.personalData.accHolderName ||
       !this.personalData.accNumber ||
-      !accountPattern.test(this.personalData.accNumber) || 
+      !accountPattern.test(this.personalData.accNumber) ||
       !this.personalData.bankName ||
       !this.personalData.branchName ||
       this.personalData.accNumber !== this.confirmAccNumber ||
-      !accountPattern.test(this.confirmAccNumber) || 
-
-      (
-        this.personalData.phoneNumber2 &&
-        (
-          !phonePattern.test(this.personalData.phoneNumber2) || 
-          this.personalData.phoneNumber2 === this.personalData.phoneNumber1
-        )
-      )
+      !accountPattern.test(this.confirmAccNumber) ||
+      (this.personalData.phoneNumber2 &&
+        (!phonePattern.test(this.personalData.phoneNumber2) ||
+          this.personalData.phoneNumber2 === this.personalData.phoneNumber1))
     ) {
       if (this.nicError) {
-        Swal.fire('Error', 'Invalid NIC format (e.g., 123456789V or 200012345678)', 'error');
+        Swal.fire(
+          'Error',
+          'Invalid NIC format (e.g., 123456789V or 200012345678)',
+          'error'
+        );
       }
       return;
     }
@@ -421,6 +419,38 @@ export class EditSalesAgentComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  validateNameInput(event: KeyboardEvent, fieldName: 'firstName' | 'lastName') {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Only allow alphabetic characters (A-Z, a-z)
+    const englishLetterPattern = /^[a-zA-Z]$/;
+    if (!englishLetterPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
+    if (this.personalData[fieldName]) {
+      // Capitalize first letter and make the rest lowercase
+      this.personalData[fieldName] =
+        this.personalData[fieldName].charAt(0).toUpperCase() +
+        this.personalData[fieldName].slice(1).toLowerCase();
+    }
   }
 }
 

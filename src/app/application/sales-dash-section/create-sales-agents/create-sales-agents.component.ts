@@ -328,9 +328,10 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   checkSubmitValidity(): boolean {
-    console.log('cehcking submit');
+    console.log('Checking submit validity');
     const phonePattern = /^7\d{8}$/;
     const accountPattern = /^[a-zA-Z0-9]+$/;
+    const englishNamePattern = /^[A-Z][a-z]*$/;
 
     const {
       firstName,
@@ -351,59 +352,60 @@ export class CreateSalesAgentsComponent implements OnInit {
       district,
     } = this.personalData;
 
-    const isFirstNameValid = !!firstName;
+    // Name validations
+    const isFirstNameValid = !!firstName && englishNamePattern.test(firstName);
+    const isLastNameValid = !!lastName && englishNamePattern.test(lastName);
 
+    // Contact validations
     const isPhoneNumber1Valid =
       !!phoneNumber1 && phonePattern.test(phoneNumber1);
     const isEmailValid = this.isValidEmail(email);
     const isEmpTypeSelected = !!empType;
-    const isNicSelected = !!nic;
+    const isNicSelected = !!nic && this.isValidNIC(nic);
 
-    const isAccNumberPatternValid = accountPattern.test(accNumber);
-    const isConfirmAccNumberPatternValid =
-      accountPattern.test(confirmAccNumber);
-
+    // Phone number 2 validation (optional)
     let isPhoneValid = true;
-
     if (phoneNumber2) {
       isPhoneValid =
         phoneNumber2 !== phoneNumber1 && phonePattern.test(phoneNumber2);
     }
 
+    // Address validations
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
+
+    // Bank details validations
+    const isAccNumberPatternValid = accountPattern.test(accNumber);
+    const isConfirmAccNumberPatternValid =
+      accountPattern.test(confirmAccNumber);
 
     const isBankDetailsValid =
       !!accHolderName &&
       !!accNumber &&
+      isAccNumberPatternValid &&
       !!bankName &&
       !!branchName &&
       !!confirmAccNumber &&
-      accNumber === confirmAccNumber &&
-      isAccNumberPatternValid &&
-      isConfirmAccNumberPatternValid;
-    console.log(
-      'isBankDetailsValid',
+      isConfirmAccNumberPatternValid &&
+      accNumber === confirmAccNumber;
+
+    console.log('Validation results:', {
       isBankDetailsValid,
-      'isAddressValid',
       isAddressValid,
-      'isFirstNameValid',
       isFirstNameValid,
-      'isPhoneNumber1Valid',
+      isLastNameValid,
       isPhoneNumber1Valid,
-      'isEmailValid',
       isEmailValid,
-      'isEmpTypeSelected',
       isEmpTypeSelected,
-      'isNicSelected',
       isNicSelected,
-      'isPhoneValid',
-      isPhoneValid
-    );
+      isPhoneValid,
+    });
+
     return (
       isBankDetailsValid &&
       isAddressValid &&
       isFirstNameValid &&
+      isLastNameValid &&
       isPhoneNumber1Valid &&
       isEmailValid &&
       isEmpTypeSelected &&
@@ -474,6 +476,38 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  validateNameInput(event: KeyboardEvent, fieldName: 'firstName' | 'lastName') {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Only allow alphabetic characters (A-Z, a-z)
+    const englishLetterPattern = /^[a-zA-Z]$/;
+    if (!englishLetterPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
+    if (this.personalData[fieldName]) {
+      // Capitalize first letter and make the rest lowercase
+      this.personalData[fieldName] =
+        this.personalData[fieldName].charAt(0).toUpperCase() +
+        this.personalData[fieldName].slice(1).toLowerCase();
+    }
   }
 }
 

@@ -1,0 +1,37 @@
+/* Calendar button styling for light mode */
+:host ::ng-deep .p-calendar .p-button {
+  color: black;
+}
+
+/* Calendar button styling for dark mode */
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+  color: white;
+}
+
+/* Input padding to make room for both icons */
+::ng-deep .p-calendar .p-inputtext {
+  padding-right: 3rem !important; /* Make room for both icons */
+}
+
+/* Clear button positioning */
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important; /* Position clear button to the left of calendar icon */
+  top: 8.2px !important; /* Move clear button slightly down */
+  order: 1;
+}
+
+/* Calendar icon positioning */
+::ng-deep .p-calendar .p-datepicker-trigger {
+  right: 0.5rem !important; /* Position calendar icon on the far right */
+  order: 2;
+}
+
+/* Placeholder styling for light mode */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c; /* gray-400 */
+}
+
+/* Placeholder styling for dark mode */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B; /* gray-300 */
+}

@@ -114,7 +114,8 @@ export class CreateSalesAgentsComponent implements OnInit {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort banks alphabetically by name
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => {
         console.error('Error loading banks:', error);
@@ -125,6 +126,10 @@ export class CreateSalesAgentsComponent implements OnInit {
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
+        // If data is { bank1: Branch[], bank2: Branch[], ... }
+        Object.keys(data).forEach((key) => {
+          data[key] = data[key].sort((a, b) => a.name.localeCompare(b.name));
+        });
         this.allBranches = data;
       },
       (error) => {

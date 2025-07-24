@@ -187,6 +187,11 @@
             >
               Define
             </th>
+                <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
+            >
+              History
+            </th>
             <th
               class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
             >
@@ -226,6 +231,7 @@
                 </ng-container>
                 <ng-template #notDefined> Not Defined Yet </ng-template>
               </td>
+             
               <td
                 class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
               >
@@ -234,6 +240,10 @@
                   (click)="viewDefinePackage(pkg.id)"
                 ></i>
               </td>
+               <td class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"><i
+                  class="fa-solid fa-history cursor-pointer"
+                  (click)="viewDefinePackageDate(pkg.id)"
+                ></i></td>
               <td class="py-4 text-[#000000] dark:text-textDark text-center">
                 {{ pkg.adminUser ? pkg.adminUser : "No One" }}
               </td>

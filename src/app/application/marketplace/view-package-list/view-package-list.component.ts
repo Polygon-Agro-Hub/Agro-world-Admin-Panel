@@ -10,11 +10,12 @@ import { response } from 'express';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-view-package-list',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, DropdownModule, FormsModule],
+  imports: [CommonModule, LoadingSpinnerComponent, DropdownModule, FormsModule,CalendarModule],
   templateUrl: './view-package-list.component.html',
   styleUrl: './view-package-list.component.css',
 })

@@ -1,102 +1,167 @@
 <div *ngIf="isLoading">
-    <app-loading-spinner></app-loading-spinner>
-  </div>
-  
-  <button 
-  onclick="history.back()" class="text-textLight dark:text-textDark">
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
-  </button>
-  <div class="h-[20px]"></div>
-  <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-  
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<button onclick="history.back()" class="text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div class="h-[20px]"></div>
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  <div>
+    <!-- <div> -->
+    <h2 class="text-2xl mb-4 text-textLight dark:text-textDark">
+      Edit Sales Agent's Details
+    </h2>
     <div>
-      <!-- <div> -->
-      <h2 class="text-2xl mb-4 text-textLight dark:text-textDark">
-        Edit Sales Agent's Details
-      </h2>
-      <div>
-        <div class="flex justify-center pt-3 pb-9">
-          <div class="relative">
-            <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
-  
-            <!-- Display default image if no file is selected -->
-            <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-60 h-60 object-cover" [src]="personalData.image"
-              alt="Profile Picture" />
-  
-            <img *ngIf="!personalData.image && !selectedImage" class="rounded-full w-60 h-60 object-cover"
-              [src]="'https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg?w=360'"
-              alt="Profile Picture" />
-  
-            <!-- Display the selected image if available -->
-            <img *ngIf="selectedImage" class="rounded-full w-60 h-60 object-cover" [src]="selectedImage" alt="Profile Picture" />
-  
-  
-            <!-- <span (click)="triggerFileInput($event)"
+      <div class="flex justify-center pt-3 pb-9">
+        <div class="relative">
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
+
+          <!-- Display default image if no file is selected -->
+          <img
+            *ngIf="!selectedImage && personalData.image"
+            class="rounded-full w-60 h-60 object-cover"
+            [src]="personalData.image"
+            alt="Profile Picture"
+          />
+
+          <img
+            *ngIf="!personalData.image && !selectedImage"
+            class="rounded-full w-60 h-60 object-cover"
+            [src]="
+              'https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg?w=360'
+            "
+            alt="Profile Picture"
+          />
+
+          <!-- Display the selected image if available -->
+          <img
+            *ngIf="selectedImage"
+            class="rounded-full w-60 h-60 object-cover"
+            [src]="selectedImage"
+            alt="Profile Picture"
+          />
+
+          <!-- <span (click)="triggerFileInput($event)"
               class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer">
               <img src="../../../../assets/images/editIcon.png" alt="Edit Icon" class="w-16 h-16" />
             </span> -->
-            <span
-              (click)="triggerFileInput($event)"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
-            >
-              <i class="fa-solid fa-pen text-lg text-white"></i>
-            </span>
+          <span
+            (click)="triggerFileInput($event)"
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
+          >
+            <i class="fa-solid fa-pen text-lg text-white"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="h-[20px]"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label
+            for="firstName"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name</label
+          >
+          <input
+            id="firstName"
+            [(ngModel)]="personalData.firstName"
+            name="firstName"
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            #firstNameInput="ngModel"
+            required
+          />
+          <div
+            *ngIf="firstNameInput.touched && !personalData.firstName"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>First Name is required</div>
           </div>
         </div>
-  
-        <div class="h-[20px]"></div>
-  
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
-          <div>
-            <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name</label>
-            <input id="firstName" [(ngModel)]="personalData.firstName" name="firstName"
-              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              #firstNameInput="ngModel" required />
-            <div *ngIf="firstNameInput.touched && !personalData.firstName"
-              class="text-red-500 text-sm mt-1">
-              <div>First Name is required</div>
+        <div>
+          <label
+            for="variety"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name (in English)</label
+          >
+          <input
+            id="lastName"
+            name="lastName"
+            [(ngModel)]="personalData.lastName"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            #lastNameInput="ngModel"
+            required
+          />
+          <div
+            *ngIf="lastNameInput.touched && !personalData.lastName"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>Last Name is required</div>
+          </div>
+        </div>
+        <div>
+          <label
+            for="enpType"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Staff Employee Type
+          </label>
+
+          <div class="flex items-center space-x-4 mt-3">
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="radio"
+                id="permanent"
+                name="empType"
+                [value]="'Permanent'"
+                [(ngModel)]="empType"
+                #empTypeInput="ngModel"
+                (ngModelChange)="updateEmployeeType($event)"
+                required
+              />
+              <label
+                for="permanent"
+                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >
+                Permanent
+              </label>
+            </div>
+            <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5"
+                type="radio"
+                id="temporary"
+                name="empType"
+                [value]="'Temporary'"
+                [(ngModel)]="empType"
+                (ngModelChange)="updateEmployeeType($event)"
+                required
+              />
+              <label
+                for="temporary"
+                class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              >
+                Temporary
+              </label>
             </div>
           </div>
-  
-          <div>
-            <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-              English)</label>
-            <input id="lastName" name="lastName" [(ngModel)]="personalData.lastName"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              #lastNameInput="ngModel" required />
-            <div *ngIf="lastNameInput.touched && !personalData.lastName" class="text-red-500 text-sm mt-1">
-              <div>Last Name is required</div>
-            </div>
+
+          <div
+            *ngIf="empTypeInput.touched && !empType"
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>Employee Type is required</div>
           </div>
-          <div>
-            <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Staff Employee Type
-            </label>
-  
-            <div class="flex items-center space-x-4 mt-3">
-              <div class="flex items-center space-x-2">
-                <input class="w-5 h-5" type="radio" id="permanent" name="empType" [value]="'Permanent'"
-                  [(ngModel)]="empType" #empTypeInput="ngModel" (ngModelChange)="updateEmployeeType($event)" required />
-                <label for="permanent" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                  Permanent
-                </label>
-              </div>
-              <div class="flex items-center space-x-2">
-                <input class="w-5 h-5" type="radio" id="temporary" name="empType" [value]="'Temporary'"
-                  [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" required />
-                <label for="temporary" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                  Temporary
-                </label>
-              </div>
-            </div>
-  
-            
-            <div *ngIf="empTypeInput.touched && !empType" class="text-red-500 text-sm mt-1">
-              <div>Employee Type is required</div>
-            </div>
-  
         </div>
 
         <div class="mb-4 w-full">
@@ -127,7 +192,7 @@
             for="phoneNumber1"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Phone Number - 1
+            Mobile Number - 1
           </label>
           <div class="mt-1 flex">
             <select
@@ -153,8 +218,7 @@
               minlength="9"
               maxlength="9"
               (keypress)="allowOnlyNumbers($event)"
-              pattern="^[0-9]{9,}$"
- 
+              pattern="^7\d{8}$"
             />
           </div>
 
@@ -163,14 +227,20 @@
             *ngIf="phoneNumber1Input.touched && !personalData.phoneNumber1"
             class="text-red-500 text-sm mt-1"
           >
-            <div>Phone Number - 1 is required</div>
+            <div>Mobile Number - 1 is required</div>
           </div>
 
           <!-- Pattern Validation (Ensuring Only Numbers) -->
-          <div *ngIf="phoneNumber1Input.touched && personalData.phoneNumber1 && phoneNumber1Input.invalid"
-                            class="text-red-500 text-sm mt-1">
-                            Phone Number must be exactly 9 digits.
-                        </div>
+          <div
+            *ngIf="
+              phoneNumber1Input.touched &&
+              personalData.phoneNumber1 &&
+              phoneNumber1Input.invalid
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            Please enter a valid mobile number (format: +947XXXXXXXX)
+          </div>
         </div>
 
         <div>
@@ -178,7 +248,7 @@
             for="phoNumTwo"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Phone Number - 2
+            Mobile Number - 2
           </label>
           <div class="mt-1 flex">
             <select
@@ -195,33 +265,44 @@
             <input
               id="phoneNumber2"
               name="phoneNumber2"
-              type="text" 
+              type="text"
               [(ngModel)]="personalData.phoneNumber2"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number"
+              placeholder="Enter your mobile number"
               #phoneNumber2Input="ngModel"
               minlength="9"
               maxlength="9"
               (keypress)="allowOnlyNumbers($event)"
-              pattern="^[0-9]{9,}$"
+              pattern="^7\d{8}$"
             />
           </div>
-        
+
           <!-- Length Validation -->
-          <div *ngIf="phoneNumber2Input.touched && personalData.phoneNumber2 && phoneNumber2Input.invalid"
-                            class="text-red-500 text-sm mt-1">
-                            Phone Number must be exactly 9 digits.
-                        </div>
-        
-          <!-- Duplicate Validation -->
           <div
-            *ngIf="phoneNumber2Input.touched && personalData.phoneNumber1 && !phoneNumber2Input.invalid && personalData.phoneNumber2?.trim() === personalData.phoneNumber1?.trim()"
+            *ngIf="
+              phoneNumber2Input.touched &&
+              personalData.phoneNumber2 &&
+              phoneNumber2Input.invalid
+            "
             class="text-red-500 text-sm mt-1"
           >
-            <div>Phone number 2 cannot be the same as Phone number 1.</div>
+            Please enter a valid mobile number (format: +947XXXXXXXX)
+          </div>
+
+          <!-- Duplicate Validation -->
+          <div
+            *ngIf="
+              phoneNumber2Input.touched &&
+              personalData.phoneNumber1 &&
+              !phoneNumber2Input.invalid &&
+              personalData.phoneNumber2?.trim() ===
+                personalData.phoneNumber1?.trim()
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            <div>Mobile Number 2 cannot be the same as Mobile Number 1.</div>
           </div>
         </div>
-        
 
         <div>
           <label
@@ -252,7 +333,7 @@
             *ngIf="nicInput.touched && nicInput.errors?.['pattern']"
             class="text-red-500 text-sm mt-1"
           >
-          <div>Invalid NIC format (e.g., 123456789V or 200012345678)</div>
+            <div>Invalid NIC format (e.g., 123456789V or 200012345678)</div>
           </div>
         </div>
 
@@ -284,7 +365,9 @@
             *ngIf="emailInput.touched && emailInput.errors?.['email']"
             class="text-red-500 text-sm mt-1"
           >
-            <div>Please enter a valid email address</div>
+            <div>
+              Please enter a valid email in the format: example&#64;domain.com
+            </div>
           </div>
         </div>
       </div>
@@ -473,78 +556,107 @@
           <div>Account Number is required</div>
         </div>
         <div
-  *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
-  class="text-red-500 text-sm mt-1"
->
-  <div>Account Number cannot contain special characters</div>
-</div>
-      </div>
-
-          <div class="pb-6">
-            <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Confirm Account Number
-            </label>
-            <input
-              #confirmAccNumberInput="ngModel"
-              id="confirmAccNumber"
-              name="confirmAccNumber"
-              [(ngModel)]="confirmAccNumber"
-              (ngModelChange)="validateConfirmAccNumber()"
-              pattern="^[a-zA-Z0-9]+$"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
-            
-            
-            <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
-              Confirm Account Number is required.
-            </span>
-          
-           
-            <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
-              Account Numbers do not match.
-            </span>
-
-            <span
-  *ngIf="confirmAccNumberInput.touched && this.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
-  class="text-red-500 text-sm mt-1"
->
-  <div>Account Number cannot contain special characters</div>
-</span>
-          </div>
-    
-          
-    
-          <div class="pb-6">
-            <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
-            <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-              <option [ngValue]="null" disabled>Select a bank</option>
-              <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
-            </select>
-          </div>
-    
-          
-          <div class="pb-6">
-            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
-              Name</label>
-            <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
-              [disabled]="!selectedBankId"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-              <option [ngValue]="null" disabled>Select a branch</option>
-              <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
-            </select>
-          </div>
-        </div>
-    
-        <div class="flex justify-end">
-          <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-            Cancel
-          </button>
-          <button type="submit" (click)="onSubmit()" [disabled]="!personalData.accNumber || !personalData.accHolderName"
-            class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
-            Submit
-          </button>
+          *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Account Number cannot contain special characters</div>
         </div>
       </div>
-     
+
+      <div class="pb-6">
+        <label
+          for="confirmAccNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Confirm Account Number
+        </label>
+        <input
+          #confirmAccNumberInput="ngModel"
+          id="confirmAccNumber"
+          name="confirmAccNumber"
+          [(ngModel)]="confirmAccNumber"
+          (ngModelChange)="validateConfirmAccNumber()"
+          pattern="^[a-zA-Z0-9]+$"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Confirm Account Number is required.
+        </span>
+
+        <span
+          *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+          class="text-red-600 text-sm"
+        >
+          Account Numbers do not match.
+        </span>
+
+        <span
+          *ngIf="confirmAccNumberInput.touched && this.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Account Number cannot contain special characters</div>
+        </span>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="bankDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Bank Name</label
+        >
+        <select
+          id="bankDropdown"
+          name="bankDropdown"
+          [(ngModel)]="selectedBankId"
+          (change)="onBankChange()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
+          <option [ngValue]="null" disabled>Select a bank</option>
+          <option *ngFor="let bank of banks" [ngValue]="bank.ID">
+            {{ bank.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="branchDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Branch Name</label
+        >
+        <select
+          id="branchDropdown"
+          name="branchDropdown"
+          [(ngModel)]="selectedBranchId"
+          (change)="onBranchChange()"
+          [disabled]="!selectedBankId"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        >
+          <option [ngValue]="null" disabled>Select a branch</option>
+          <option *ngFor="let branch of branches" [ngValue]="branch.ID">
+            {{ branch.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        (click)="onCancel()"
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        (click)="onSubmit()"
+        [disabled]="!personalData.accNumber || !personalData.accHolderName"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+      >
+        Submit
+      </button>
+    </div>
   </div>
+</div>

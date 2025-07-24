@@ -15,7 +15,7 @@
 
       <!-- Collection Center Name -->
       <div>
-        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre
+        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center
           Name</label>
         <input formControlName="centerName" id="centerName" name="centerName"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -24,7 +24,7 @@
             (collectionCenterForm.get('centerName')?.dirty ||
               collectionCenterForm.get('centerName')?.touched)
           " class="text-red-500 text-sm mt-1">
-          Centre Name is required
+          Center Name is required
         </div>
         <div *ngIf="
             collectionCenterForm
@@ -33,14 +33,14 @@
             (collectionCenterForm.get('centerName')?.dirty ||
               collectionCenterForm.get('centerName')?.touched)
           " class="text-red-500 text-sm mt-1">
-          Centre name cannot contain numbers.
+          Center name cannot contain numbers.
         </div>
       </div>
 
       <div class="relative">
         <!-- Input Field -->
         <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Company Name
+          Companies
         </label>
         <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
           class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
@@ -245,7 +245,7 @@
       </div> -->
 
       <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center Reg Code</label>
         <div class="relative">
           <input formControlName="regCode" id="regCode" name="regCode" [value]="isLoadingregcode ? 'Loading...' : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

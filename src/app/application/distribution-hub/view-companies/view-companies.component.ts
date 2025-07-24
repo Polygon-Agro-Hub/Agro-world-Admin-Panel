@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
@@ -8,7 +7,12 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -31,7 +35,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.setupSearch();
@@ -53,7 +57,9 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
         switchMap((searchTerm: string) => {
           this.isLoading = true;
           console.log('Fetching companies for term:', searchTerm); // Debug: Log API call
-          return this.distributionHubService.getAllCompanyDetails(searchTerm.trim());
+          return this.distributionHubService.getAllCompanyDetails(
+            searchTerm.trim()
+          );
         })
       )
       .subscribe(
@@ -97,8 +103,8 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   }
 
   editCompany(id: number) {
-    this.router.navigate(['/collection-hub/create-company'], {
-      queryParams: { id },
+    this.router.navigate(['/distribution-hub/action/create-company'], {
+      queryParams: { id, type: 'distribution' },
     });
   }
 
@@ -109,7 +115,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   }
 
   viewCompanyHeadPortals(id: number, companyName: string) {
-    console.log('id', id, 'companyName', companyName)
+    console.log('id', id, 'companyName', companyName);
     this.router.navigate(
       ['/distribution-hub/action/view-distribution-company'],
       {
@@ -164,14 +170,15 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
 
   add(): void {
     // this.router.navigate(['/distribution-hub/action/create-company']);
-    this.router.navigate(['/distribution-hub/action/create-company'], {
-      queryParams: { type: 'distribution' }
-    }).then(() => {
-      this.isLoading = false;
-    });
+    this.router
+      .navigate(['/distribution-hub/action/create-company'], {
+        queryParams: { type: 'distribution' },
+      })
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
-  
   openImageInNewTab(imageUrl: string): void {
     if (imageUrl.startsWith('data:')) {
       // Open a blank tab first
@@ -204,8 +211,6 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
       });
     }
   }
-
-
 }
 
 class CompanyDetails {

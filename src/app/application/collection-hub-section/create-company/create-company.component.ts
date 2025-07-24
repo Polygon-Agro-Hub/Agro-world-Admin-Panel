@@ -513,7 +513,14 @@ export class CreateCompanyComponent implements OnInit {
               timer: 2000,
               showConfirmButton: false,
             }).then(() => {
-              this.location.back();
+              // this.location.back();
+              if (this.companyType === 'distribution') {
+                this.router.navigate([
+                  '/distribution-hub/action/view-companies',
+                ]);
+              } else {
+                this.router.navigate(['/collection-hub/manage-company']);
+              }
             });
           } else {
             Swal.fire('Error!', response.message, 'error');
@@ -600,7 +607,11 @@ export class CreateCompanyComponent implements OnInit {
           (response) => {
             this.isLoading = false;
             Swal.fire('Success', 'Company Updated Successfully', 'success');
-            this.router.navigate(['/collection-hub/manage-company']);
+            if (this.companyType === 'distribution') {
+              this.router.navigate(['/distribution-hub/action/view-companies']);
+            } else {
+              this.router.navigate(['/collection-hub/manage-company']);
+            }
           },
           (error) => {
             this.isLoading = false;

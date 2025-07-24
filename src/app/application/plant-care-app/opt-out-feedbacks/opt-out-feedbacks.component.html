@@ -144,73 +144,47 @@
   >
     <div class="flex justify-between items-center mb-8 w-full">
       <div class="overflow-x-auto w-full">
-        <table
-          class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
-        >
+<table class="w-full table-auto">
           <thead>
-            <tr>
-              <th
-                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-              >
+            <tr class="border-b border-gray-300">
+              <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm">
                 No
               </th>
-              <th
-                class="py-3 font-normal text-textLight dark:text-textDark text-center"
-              >
+              <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm text-nowrap">
                 First Name
               </th>
-              <th
-                class="py-3 font-normal text-textLight dark:text-textDark text-center"
-              >
+              <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm text-nowrap">
                 Last Name
               </th>
-              <th
-                class="py-3 font-normal text-textLight dark:text-textDark text-center"
-              >
+              <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm text-nowrap">
                 User Exit Date
               </th>
-              <th
-                class="py-3 font-normal text-textLight dark:text-textDark text-center"
-              >
+              <th class="px-6 py-4 font-normal text-gray-700 text-center text-sm text-nowrap">
                 Feedback No
               </th>
-              <th
-                class="py-3 font-normal text-textLight dark:text-textDark text-center"
-              >
+              <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm">
                 Feedback
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let item of feedbacks; let i = index">
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
+          <tbody class="bg-white">
+            <tr *ngFor="let item of feedbacks; let i = index" class="border-b border-gray-200">
+              <td class="px-6 py-4 text-gray-900 text-sm">
                 {{ (page - 1) * itemsPerPage + i + 1 }}
               </td>
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
+              <td class="px-6 py-4 text-gray-900 text-sm">
                 {{ item.firstName }}
               </td>
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
+              <td class="px-6 py-4 text-gray-900 text-sm">
                 {{ item.lastName }}
               </td>
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
+              <td class="px-6 py-4 text-gray-900 text-sm">
                 {{ item.deletedUserCreatedAt | date }}
               </td>
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
+              <td class="px-6 py-4 text-gray-900 text-sm text-center">
                 {{ item.orderNumbers }}
               </td>
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
+              <td class="px-6 py-4 text-gray-900 text-sm leading-relaxed">
                 {{ item.feedbacks }}
               </td>
             </tr>

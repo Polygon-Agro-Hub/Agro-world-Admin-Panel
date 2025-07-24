@@ -7,6 +7,8 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 w-100 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 w-100 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="w-3/4">
         <div class="flex flex-col">
@@ -48,7 +50,7 @@
       </div>
     </div>
 
-    <div class="relative overflow-x-auto mt-10">
+    <div class="w-3/4 overflow-x-auto mt-10">
       <div class="rounded-lg shadow-sm">
         <div class="grid grid-cols-2 gap-4 px-6 py-4 border-b border-gray-200">
           <div class="text-sm font-medium text-[#8492A3]">Product Type</div>
@@ -94,7 +96,6 @@
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-900 dark:text-white">
               <thead class=" text-gray-700  dark:bg-gray-700" style="color: #8492A3;font-size: 16px;">
-
                 <tr>
                   <th scope="col" class="px-6 py-3">Product Type</th>
                   <th scope="col" class="px-6 py-3">Product</th>
@@ -113,13 +114,13 @@
               </tbody>
             </table>
           </div>
-          <div class="flex justify-between  mt-4">
-            <p class="text-sm  font-medium text-[#3980C0]">Counted Total For Today</p>
-            <p class="text-sm font-medium mr-35 text-[#00957D]">
-              Rs.{{ package?.totalPrice }}
-            </p>
-          </div>
 
+          <div class="grid grid-cols-2 gap-4 px-6 py-4 mt-4">
+            <div class="text-sm text-[#3980C0] font-medium">Counted Total For Today</div>
+            <div class="text-sm text-[#00957D] font-medium text-right">
+              Rs.{{ package?.totalPrice }}
+            </div>
+          </div>
         </div>
       </div>
     </div>

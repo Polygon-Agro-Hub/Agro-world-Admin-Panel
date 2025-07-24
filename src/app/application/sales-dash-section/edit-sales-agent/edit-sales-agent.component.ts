@@ -8,6 +8,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -33,6 +34,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './edit-sales-agent.component.html',
   styleUrl: './edit-sales-agent.component.css',
@@ -61,7 +63,7 @@ export class EditSalesAgentComponent implements OnInit {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
-
+  touchedFields: { [key in keyof Personal]?: boolean } = {};
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
@@ -488,6 +490,10 @@ export class EditSalesAgentComponent implements OnInit {
         this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
     }
+  }
+
+  isFieldInvalid(fieldName: keyof Personal): boolean {
+    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
 }
 

@@ -1,0 +1,52 @@
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden; /* Ensures child items don't spill over rounded corners */
+  /* Scrollbar styles for dark mode */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #8AC440 #2d354d; /* Thumb and track colors */
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::ng-deep .dark .p-dropdown-panel::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+::ng-deep .dark .p-dropdown-panel::-webkit-scrollbar-track {
+  background: #2d354d; /* Matches dropdown panel background */
+  border-radius: 6px;
+}
+
+::ng-deep .dark .p-dropdown-panel::-webkit-scrollbar-thumb {
+  background: #8AC440; /* Matches the green accent from your table scrollbar */
+  border-radius: 6px;
+}
+
+::ng-deep .dark .p-dropdown-panel::-webkit-scrollbar-thumb:hover {
+  background: #6b9c32; /* Slightly darker green for hover effect */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+/* Hide scrollbar in the dropdown trigger (input box) */
+::ng-deep .p-dropdown {
+  scrollbar-width: none; /* Firefox */
+}
+
+::ng-deep .p-dropdown::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}

@@ -4,11 +4,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../../../services/collection.service';
+import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
-import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 
 @Component({
   selector: 'app-view-collective-officer-profile',
@@ -80,6 +80,24 @@ export class ViewCollectiveOfficerProfileComponent {
 
     const pdf = new jsPDF('p', 'mm', 'a4');
     const margin = 10;
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    // Detect dark mode
+    const isDarkMode = document.documentElement.classList.contains('dark');
+
+    // Define colors based on theme
+    const colors = {
+      background: '#FFFFFF', // White background for the page
+      textPrimary: isDarkMode ? '#ffffff' : '#030308',
+      textSecondary: '#627189',
+      border: '#FFFFFF', // White for section backgrounds
+      footerText: '#646464',
+    };
+
+    // Set white background for the entire page
+    pdf.setFillColor(colors.background);
+    pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
     function loadImageAsBase64(url: string): Promise<string> {
       return new Promise((resolve, reject) => {
@@ -121,6 +139,7 @@ export class ViewCollectiveOfficerProfileComponent {
     let y = margin;
     const hasImage = !!this.officerObj.image;
 
+    // Header Section with Image
     if (hasImage) {
       const appendCacheBuster = (url: string) => {
         if (!url) return '';
@@ -137,9 +156,11 @@ export class ViewCollectiveOfficerProfileComponent {
       const imgX = margin;
       const imgY = y;
 
+      // Draw circular border
+      pdf.setDrawColor(colors.border);
+      pdf.setFillColor(colors.background);
+      pdf.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'FD');
       pdf.saveGraphicsState();
-      pdf.setDrawColor(255, 255, 255);
-      pdf.setFillColor(255, 255, 255);
       pdf.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'S');
       pdf.clip();
       pdf.addImage(img, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
@@ -148,13 +169,16 @@ export class ViewCollectiveOfficerProfileComponent {
 
     const detailsX = hasImage ? margin + 40 : margin;
 
-    pdf.setFontSize(10);
+    // Header Text
+    pdf.setFontSize(12);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(
       `${this.officerObj.firstNameEnglish} ${this.officerObj.lastNameEnglish}`,
       detailsX,
       y + 10
     );
     y += 5;
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(
       `${this.officerObj.jobRole} - ${this.empHeader}${this.officerObj.empId}`,
       detailsX,
@@ -162,93 +186,140 @@ export class ViewCollectiveOfficerProfileComponent {
     );
     y += 5;
 
-    // Only show center name if it exists
+    // Center Name (if exists)
     if (this.officerObj.centerName) {
+      pdf.setTextColor(colors.textPrimary);
       pdf.text(`${this.officerObj.centerName}`, detailsX, y + 10);
       y += 5;
     }
 
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`${this.officerObj.companyNameEnglish}`, detailsX, y + 10);
     y += 30;
 
+    // Personal Information Section
+    pdf.setFillColor(colors.border);
+    pdf.rect(margin, y - 5, pageWidth - 2 * margin, 65, 'F');
     pdf.setFontSize(12);
-    pdf.text('Personal Information', margin, y);
+    pdf.setTextColor(colors.textPrimary);
+    pdf.text('Personal Information', margin + 2, y);
     y += 10;
 
     pdf.setFontSize(10);
-    const leftColumnX = margin;
+    const leftColumnX = margin + 2;
     const rightColumnX = margin + 90;
 
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`First Name`, leftColumnX, y);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.firstNameEnglish}`, leftColumnX, y + 7);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`NIC Number`, leftColumnX, y + 21);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.nic}`, leftColumnX, y + 28);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Phone Number - 1`, leftColumnX, y + 42);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(
       `${this.officerObj.phoneCode01} ${this.officerObj.phoneNumber01}`,
       leftColumnX,
       y + 49
     );
 
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Last Name`, rightColumnX, y);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.lastNameEnglish}`, rightColumnX, y + 7);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Email`, rightColumnX, y + 21);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.email}`, rightColumnX, y + 28);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Phone Number - 2`, rightColumnX, y + 42);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(
-      `${this.officerObj.phoneCode02} ${this.officerObj.phoneNumber02}`,
+      this.officerObj.phoneNumber02
+        ? `${this.officerObj.phoneCode02} ${this.officerObj.phoneNumber02}`
+        : '-',
       rightColumnX,
       y + 49
     );
 
     y += 70;
 
+    // Address Details Section
+    pdf.setFillColor(colors.border);
+    pdf.rect(margin, y - 5, pageWidth - 2 * margin, 65, 'F');
     pdf.setFontSize(12);
-    pdf.text('Address Details', margin, y);
+    pdf.setTextColor(colors.textPrimary);
+    pdf.text('Address Details', margin + 2, y);
     y += 10;
 
     pdf.setFontSize(10);
-
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`House / Plot Number`, leftColumnX, y);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.houseNumber}`, leftColumnX, y + 7);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`City`, leftColumnX, y + 21);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.city}`, leftColumnX, y + 28);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Province`, leftColumnX, y + 42);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.province}`, leftColumnX, y + 49);
 
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Street Name`, rightColumnX, y);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.streetName}`, rightColumnX, y + 7);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Country`, rightColumnX, y + 21);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.country}`, rightColumnX, y + 28);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`District`, rightColumnX, y + 42);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.district}`, rightColumnX, y + 49);
 
     y += 70;
 
+    // Bank Details Section
+    pdf.setFillColor(colors.border);
+    pdf.rect(margin, y - 5, pageWidth - 2 * margin, 45, 'F');
     pdf.setFontSize(12);
-    pdf.text('Bank Details', margin, y);
+    pdf.setTextColor(colors.textPrimary);
+    pdf.text('Bank Details', margin + 2, y);
     y += 10;
 
     pdf.setFontSize(10);
-
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Account Holder's Name`, leftColumnX, y);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.accHolderName}`, leftColumnX, y + 7);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Bank Name`, leftColumnX, y + 21);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.bankName}`, leftColumnX, y + 28);
 
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Account Number`, rightColumnX, y);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.accNumber}`, rightColumnX, y + 7);
+    pdf.setTextColor(colors.textSecondary);
     pdf.text(`Branch Name`, rightColumnX, y + 21);
+    pdf.setTextColor(colors.textPrimary);
     pdf.text(`${this.officerObj.branchName}`, rightColumnX, y + 28);
 
     y += 42;
 
+    // Footer
     pdf.setFontSize(10);
-    pdf.setTextColor(100);
+    pdf.setTextColor(colors.footerText);
     pdf.text(
       `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
       margin,
-      pdf.internal.pageSize.getHeight() - margin
+      pageHeight - margin
     );
 
     const fileName = `${this.officerObj.firstNameEnglish} ${

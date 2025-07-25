@@ -60,6 +60,8 @@ export class CustomersComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchText: string = '';
+  copiedField: string | null = null;
+  copyTimeout: any = null;
 
   private searchSubject = new Subject<string>();
 
@@ -87,31 +89,39 @@ export class CustomersComponent implements OnInit {
     this.selectedCustomer = null;
   }
 
-  copyToClipboard(value: string | undefined) {
+  copyToClipboard(value: string | undefined, field: string) {
     if (!value) return;
+
+    // Clear any existing timeout
+    if (this.copyTimeout) {
+      clearTimeout(this.copyTimeout);
+    }
 
     navigator.clipboard
       .writeText(value)
       .then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Copied!',
-          text: `${value} has been copied to clipboard.`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        this.copiedField = field;
+
+        // Reset the copied field after 2 seconds
+        this.copyTimeout = setTimeout(() => {
+          this.copiedField = null;
+        }, 2000);
       })
       .catch((err) => {
+        console.error('Failed to copy:', err);
+        // Optional: You can still show an error if you want
         Swal.fire({
           icon: 'error',
           title: 'Oops!',
           text: 'Failed to copy. Please try again.',
         });
-        console.error('Failed to copy:', err);
       });
   }
 
-  fetchAllCustomers(page: number = this.page, limit: number = this.itemsPerPage) {
+  fetchAllCustomers(
+    page: number = this.page,
+    limit: number = this.itemsPerPage
+  ) {
     this.isLoading = true;
     this.customerService.getCustomers(page, limit, '').subscribe(
       (response: any) => {
@@ -151,7 +161,8 @@ export class CustomersComponent implements OnInit {
 
   private searchInCustomer(customer: Customers, searchText: string): boolean {
     const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-    const agentName = `${customer.salesAgentFirstName} ${customer.salesAgentLastName}`.toLowerCase();
+    const agentName =
+      `${customer.salesAgentFirstName} ${customer.salesAgentLastName}`.toLowerCase();
     const address =
       customer.buildingType === 'House'
         ? `${customer.houseHouseNo} ${customer.houseStreetName} ${customer.houseCity}`

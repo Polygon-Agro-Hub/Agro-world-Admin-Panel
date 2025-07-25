@@ -7,6 +7,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -38,6 +39,8 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    
+    
   ],
   templateUrl: './create-company.component.html',
   styleUrl: './create-company.component.css',
@@ -64,9 +67,28 @@ export class CreateCompanyComponent implements OnInit {
   selectedFaviconFile: File | null = null;
   companyNameError: string = '';
   isCheckingCompanyName: boolean = false;
+  englishInputError: boolean = false;
+ sinhalaInputError: boolean = false;
+ tamilInputError: boolean = false;
+ invalidCharError: boolean = false;
+accountNumberError: boolean = false;
+invalidFoName: boolean = false;
+contactNumberError1: boolean = false;
+contactNumberError2: boolean = false;
 
   companyType: string = '';
-
+  countries = [
+    { code: '+94', name: 'Sri Lanka', flag: 'https://flagcdn.com/w20/lk.png' },
+    { code: '+84', name: 'Vietnam', flag: 'https://flagcdn.com/w20/vn.png' },
+    { code: '+855', name: 'Cambodia', flag: 'https://flagcdn.com/w20/kh.png' },
+    { code: '+880', name: 'Bangladesh', flag: 'https://flagcdn.com/w20/bd.png' },
+    { code: '+91', name: 'India', flag: 'https://flagcdn.com/w20/in.png' },
+    { code: '+31', name: 'Netherlands', flag: 'https://flagcdn.com/w20/nl.png' },
+    { code: '+1', name: 'United States', flag: 'https://flagcdn.com/w20/us.png' },
+    { code: '+44', name: 'United Kingdom', flag: 'https://flagcdn.com/w20/gb.png' },
+    { code: '+81', name: 'Japan', flag: 'https://flagcdn.com/w20/jp.png' },
+    { code: '+86', name: 'China', flag: 'https://flagcdn.com/w20/cn.png' },
+  ];
   constructor(
     private fb: FormBuilder,
     private collectionCenterSrv: CollectionCenterService,
@@ -575,6 +597,26 @@ export class CreateCompanyComponent implements OnInit {
 
     this.selectedPage = page;
   }
+allowOnlyEnglishLetterss(event: KeyboardEvent): void {
+  const key = event.key;
+  const pattern = /^[a-zA-Z\s]$/;
+
+  // Allow essential control keys
+  if (
+    key === 'Backspace' ||
+    key === 'Delete' ||
+    key === 'Tab' ||
+    key === 'ArrowLeft' ||
+    key === 'ArrowRight'
+  ) {
+    return;
+  }
+
+  if (!pattern.test(key)) {
+    event.preventDefault();
+  }
+}
+
 
   updateCompanyData() {
     if (this.itemId) {
@@ -626,14 +668,30 @@ export class CreateCompanyComponent implements OnInit {
       Swal.fire('Error', 'No company ID found for update', 'error');
     }
   }
+onBlur(fieldName: keyof Company): void {
+  this.touchedFields[fieldName] = true;
 
-  onBlur(fieldName: keyof Company): void {
-    this.touchedFields[fieldName] = true;
+  if (fieldName === 'confirmAccNumber') {
+    this.validateConfirmAccNumber();
+  }
 
-    if (fieldName === 'confirmAccNumber') {
-      this.validateConfirmAccNumber();
+  if (fieldName === 'foName') {
+    const value = this.companyData.foName || '';
+    const isValid = /^[a-zA-Z\s]+$/.test(value.trim());
+
+    this.invalidFoName = !isValid;
+
+    if (isValid) {
+      this.companyData.foName = this.capitalizeFirstLetters(value);
     }
   }
+}
+capitalizeFirstLetters(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 
   isFieldInvalid(fieldName: keyof Company): boolean {
     return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
@@ -712,22 +770,158 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  validateContactNumbers(): void {
-    if (
-      this.companyData.oicConNum1 &&
-      this.companyData.oicConNum2 &&
-      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-      this.companyData.oicConCode1 === this.companyData.oicConCode2
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Duplicate Numbers',
-        text: 'Company Contact Number 1 and 2 cannot be the same',
-      });
-      // Clear the second number
-      this.companyData.oicConNum2 = '';
-    }
+allowOnlyEnglish(event: KeyboardEvent) {
+  const char = event.key;
+  if (!/^[A-Za-z\s]*$/.test(char)) {
+    event.preventDefault();
   }
+}
+
+allowOnlySinhala(event: KeyboardEvent) {
+  const char = event.key;
+  const code = char.charCodeAt(0);
+  if (code < 0x0D80 || code > 0x0DFF) {
+    event.preventDefault();
+  }
+}
+
+allowOnlyTamil(event: KeyboardEvent) {
+  const char = event.key;
+  const code = char.charCodeAt(0);
+  if (code < 0x0B80 || code > 0x0BFF) {
+    event.preventDefault();
+  }
+}
+allowOnlyEnglishLetters(event: KeyboardEvent): void {
+  const regex = /^[A-Za-z\s'-]$/;
+  const key = event.key;
+
+   if (!regex.test(key) && key.length === 1) {
+    event.preventDefault();
+    this.englishInputError = true;
+
+    // Automatically hide the error after 2 seconds
+    setTimeout(() => {
+      this.englishInputError = false;
+    }, 2000);
+  }
+}
+
+capitalizeFirstLetter(field: 'companyNameEnglish' | 'foName') {
+  const currentValue = this.companyData[field];
+  if (currentValue && currentValue.length > 0) {
+    this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+  }
+}
+
+allowOnlyValidNameCharacters(event: KeyboardEvent): void {
+  const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+  const key = event.key;
+
+  // Allow control keys like Backspace, Delete, Arrow keys, etc.
+  if (
+    key === 'Backspace' ||
+    key === 'Delete' ||
+    key === 'ArrowLeft' ||
+    key === 'ArrowRight' ||
+    key === 'Tab'
+  ) {
+    this.invalidCharError = false;
+    return;
+  }
+
+  // If not matching allowed pattern
+  if (!allowedPattern.test(key)) {
+    event.preventDefault();
+    this.invalidCharError = true;
+  } else {
+    this.invalidCharError = false;
+  }
+}
+
+allowOnlyDigits(event: KeyboardEvent): void {
+  const key = event.key;
+  const isDigit = /^[0-9]$/.test(key);
+
+  if (!isDigit && key.length === 1) {
+    event.preventDefault();
+    this.accountNumberError = true;
+
+    // Hide error after 2 seconds
+    setTimeout(() => {
+      this.accountNumberError = false;
+    }, 2000);
+  }
+}
+
+
+
+allowOnlySinhalaLetters(event: KeyboardEvent): void {
+  const charCode = event.key.charCodeAt(0);
+  // Sinhala Unicode range: U+0D80 - U+0DFF
+  if ((charCode < 0x0D80 || charCode > 0x0DFF) && event.key.length === 1) {
+    event.preventDefault();
+    this.sinhalaInputError = true;
+
+    setTimeout(() => {
+      this.sinhalaInputError = false;
+    }, 2000);
+  }
+}
+
+allowOnlyTamilLetters(event: KeyboardEvent): void {
+  const charCode = event.key.charCodeAt(0);
+  // Tamil Unicode range: U+0B80 - U+0BFF
+  if ((charCode < 0x0B80 || charCode > 0x0BFF) && event.key.length === 1) {
+    event.preventDefault();
+    this.tamilInputError = true;
+
+    setTimeout(() => {
+      this.tamilInputError = false;
+    }, 2000);
+  }
+}
+
+
+
+validateContactNumbers(): void {
+  const num1 = this.companyData.oicConNum1?.toString() || '';
+  const num2 = this.companyData.oicConNum2?.toString() || '';
+ 
+  // Length validation errors (for UI messages)
+  this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
+  this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
+
+  // Duplicate number check with country codes
+  if (
+    num1.length === 9 && 
+    num2.length === 9 &&
+    this.companyData.oicConNum1 &&
+    this.companyData.oicConNum2 &&
+    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate Numbers',
+      text: 'Company Contact Number 1 and 2 cannot be the same',
+    });
+    // Clear the second number
+    this.companyData.oicConNum2 = '';
+    this.contactNumberError2 = false; // reset error for second input after clearing
+  }
+}
+
+
+  validateContactNumberss() {
+    const num1 = this.companyData.oicConNum1?.toString() || '';
+  const num2 = this.companyData.oicConNum2?.toString() || '';
+
+  this.contactNumberError1 = num1.length !== 9 && num1.length > 0;
+  this.contactNumberError2 = num2.length !== 9 && num2.length > 0;
+  }
+
 
   checkCompanyName(): void {
     const companyName = this.companyData.companyNameEnglish;

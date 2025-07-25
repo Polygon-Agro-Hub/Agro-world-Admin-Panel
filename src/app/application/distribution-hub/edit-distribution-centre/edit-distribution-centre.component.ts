@@ -145,7 +145,7 @@ export class EditDistributionCentreComponent implements OnInit {
 
       if (!pattern.test(phoneNumber)) {
         return {
-          invalidPhone: `Phone  Number must be exactly 9 digits`,
+          invalidPhone: `Please enter a valid mobile number (format: +947XXXXXXXX)`,
         };
       }
 

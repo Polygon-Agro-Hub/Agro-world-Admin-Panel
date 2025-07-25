@@ -567,7 +567,8 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel"
           required
-          pattern="^[a-zA-Z0-9]+$"
+          pattern="^[0-9]+$"
+          (keypress)="allowOnlyNumbers($event)"
         />
         <div
           *ngIf="accNumberInput.touched && !personalData.accNumber"
@@ -596,7 +597,8 @@
           name="confirmAccNumber"
           [(ngModel)]="confirmAccNumber"
           (ngModelChange)="validateConfirmAccNumber()"
-          pattern="^[a-zA-Z0-9]+$"
+          pattern="^[0-9]+$"
+          (keypress)="allowOnlyNumbers($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
 

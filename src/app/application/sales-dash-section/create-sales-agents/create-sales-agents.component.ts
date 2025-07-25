@@ -340,12 +340,14 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   checkSubmitValidity(): boolean {
-    console.log('Checking submit validity');
-    const phonePattern = /^7\d{8}$/;
-    const accountPattern = /^[a-zA-Z0-9]+$/;
-    const englishNamePattern = /^[A-Z][a-z]*$/;
-    const namePattern = /^[A-Za-z\s'-]+$/; // For account holder's name
+    // Regular expressions for validation
+    const phonePattern = /^7\d{8}$/; // 9 digits starting with 7
+    const accountPattern = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters
+    const englishNamePattern = /^[A-Z][a-z]*$/; // First letter capitalized, rest lowercase
+    const namePattern = /^[A-Za-z\s'-]+$/; // For names with spaces, hyphens, apostrophes
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email pattern
 
+    // Destructure personalData for easier access
     const {
       firstName,
       lastName,
@@ -374,14 +376,14 @@ export class CreateSalesAgentsComponent implements OnInit {
     // Contact validations
     const isPhoneNumber1Valid =
       !!phoneNumber1 && phonePattern.test(phoneNumber1);
-    const isEmailValid = this.isValidEmail(email);
+    const isEmailValid = !!email && emailPattern.test(email);
     const isEmpTypeSelected = !!empType;
-    const isNicSelected = !!nic && this.isValidNIC(nic);
+    const isNicValid = !!nic && this.isValidNIC(nic);
 
     // Phone number 2 validation (optional)
-    let isPhoneValid = true;
+    let isPhoneNumber2Valid = true;
     if (phoneNumber2) {
-      isPhoneValid =
+      isPhoneNumber2Valid =
         phoneNumber2 !== phoneNumber1 && phonePattern.test(phoneNumber2);
     }
 
@@ -390,43 +392,31 @@ export class CreateSalesAgentsComponent implements OnInit {
       !!houseNumber && !!streetName && !!city && !!district;
 
     // Bank details validations
-    const isAccNumberPatternValid = accountPattern.test(accNumber);
-    const isConfirmAccNumberPatternValid =
-      accountPattern.test(confirmAccNumber);
+    const isAccNumberValid = !!accNumber && accountPattern.test(accNumber);
+
+    const isConfirmAccNumberValid =
+      !!confirmAccNumber &&
+      accountPattern.test(confirmAccNumber) &&
+      accNumber === confirmAccNumber;
 
     const isBankDetailsValid =
       isAccHolderNameValid &&
-      !!accNumber &&
-      isAccNumberPatternValid &&
+      isAccNumberValid &&
       !!bankName &&
       !!branchName &&
-      !!confirmAccNumber &&
-      isConfirmAccNumberPatternValid &&
-      accNumber === confirmAccNumber;
+      isConfirmAccNumberValid;
 
-    console.log('Validation results:', {
-      isBankDetailsValid,
-      isAddressValid,
-      isFirstNameValid,
-      isLastNameValid,
-      isAccHolderNameValid,
-      isPhoneNumber1Valid,
-      isEmailValid,
-      isEmpTypeSelected,
-      isNicSelected,
-      isPhoneValid,
-    });
-
+    // Final validation combining all checks
     return (
-      isBankDetailsValid &&
-      isAddressValid &&
       isFirstNameValid &&
       isLastNameValid &&
       isPhoneNumber1Valid &&
       isEmailValid &&
       isEmpTypeSelected &&
-      isNicSelected &&
-      isPhoneValid
+      isNicValid &&
+      isPhoneNumber2Valid &&
+      isAddressValid &&
+      isBankDetailsValid
     );
   }
 
@@ -598,6 +588,35 @@ export class CreateSalesAgentsComponent implements OnInit {
     // Allows letters, spaces, hyphens, and apostrophes
     const namePattern = /^[A-Za-z\s'-]+$/;
     return namePattern.test(name);
+  }
+
+  allowOnlyAlphanumeric(event: KeyboardEvent): void {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only alphanumeric characters (A-Z, a-z, 0-9)
+    const alphanumericPattern = /^[0-9]$/;
+
+    if (!alphanumericPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  isValidAccountNumber(accountNumber: string): boolean {
+    const accountPattern = /^[a-zA-Z0-9]+$/;
+    return accountPattern.test(accountNumber);
   }
 }
 

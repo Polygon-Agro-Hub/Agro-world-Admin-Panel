@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-dashbord-table',
@@ -8,21 +8,22 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './dashbord-table.component.html',
   styleUrl: './dashbord-table.component.css'
 })
-export class DashbordTableComponent implements OnInit{
-  orderObj:Order[] = []
-  ngOnInit(): void {
-    this.orderObj = sampleOrder
-  }
+export class DashbordTableComponent{
+  @Input() orders!: Order[];
+  
+  
 
 }
 
-class Order{
-  invoiceNo!:string
-  time!:string
-  cname!:string
-  method!:string
-  amount!:string
-  status!:string
+interface Order {
+  id:number
+  invNo:string
+  createdAt:string 
+  paymentMethod:string 
+  status:string 
+  fullTotal:number 
+  firstName:string 
+  lastName:string 
 }
 
 

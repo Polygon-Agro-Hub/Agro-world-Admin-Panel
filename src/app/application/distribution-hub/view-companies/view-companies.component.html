@@ -227,10 +227,14 @@
               {{ item.centerOfficerName }}
             </td> -->
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.code1 + item.contact01 }}
+              <!-- {{ item.code1 + item.contact01 }} -->
+              <span *ngIf="item.contact01 === null">-</span>
+              <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.code2 + item.contact02 }}
+              <!-- {{ item.code2 + item.contact02 }} -->
+              <span *ngIf="item.contact02 === null">-</span>
+              <span *ngIf="item.contact02 != null">{{ item.code2 }}{{ ' ' + item.contact02 }}</span>
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <img

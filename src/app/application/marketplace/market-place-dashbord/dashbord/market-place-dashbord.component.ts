@@ -39,6 +39,17 @@ export class MarketPlaceDashbordComponent implements OnInit {
 
 interface Responce {
   firstRow: FirstRow;
+  secondRow: secondRow;
+  areaData: {
+    months: string[];
+    salesCount: number[];
+    total: any[]
+  };
+  pieData: {
+    category: string[];
+    count: number[];
+  };
+  orders:Order[];
 }
 
 
@@ -49,6 +60,12 @@ interface FirstRow {
   newUserCount: UserCount;
 }
 
+interface secondRow {
+  salsesAnalize: AnalyzeReport;
+  totalSales: SalesDayCount;
+  totUsers: UserCount;
+}
+
 interface SalesDayCount {
   count: number;
   total: number;
@@ -56,4 +73,20 @@ interface SalesDayCount {
 
 interface UserCount {
   userCount: number;
+}
+
+interface AnalyzeReport {
+  amount: number;
+  precentage: number;
+}
+
+interface Order {
+  id:number
+  invNo:string
+  createdAt:string 
+  paymentMethod:string 
+  status:string 
+  fullTotal:number 
+  firstName:string 
+  lastName:string 
 }

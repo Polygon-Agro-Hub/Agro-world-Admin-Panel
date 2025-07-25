@@ -17,6 +17,7 @@ import { environment } from '../../../environment/environment';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface PlantCareUser {
   id: number;
@@ -58,6 +59,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './edit-plantcare-users.component.html',
   styleUrl: './edit-plantcare-users.component.css',
@@ -79,6 +81,9 @@ export class EditPlantcareUsersComponent implements OnInit {
   allBranches: BranchesData = {};
   selectedBranchId: number | null = null;
   invalidFields: Set<string> = new Set();
+  bankOptions: any[] = [];
+  branchOptions: any[] = [];
+  districtOptions: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -92,7 +97,7 @@ export class EditPlantcareUsersComponent implements OnInit {
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(/^\+94\d{9}$/)],
+        [Validators.required, Validators.pattern(/^\+947\d{8}$/)],
       ],
       NICnumber: [
         '',
@@ -107,8 +112,8 @@ export class EditPlantcareUsersComponent implements OnInit {
       profileImage: [''],
       accHolderName: [''],
       accNumber: ['', [Validators.pattern(/^[0-9]+$/)]],
-      bankName: [''],
-      branchName: [''],
+      bankName: ['', Validators.required],
+      branchName: ['', Validators.required],
     });
   }
 
@@ -141,9 +146,8 @@ export class EditPlantcareUsersComponent implements OnInit {
   ];
 
   membership = [
-    { membershipName: 'Silver' },
-    { membershipName: 'Gold' },
-    { membershipName: 'Diamond' },
+    { membershipName: 'Basic' },
+    { membershipName: 'Pro' },
   ];
 
   language = [
@@ -167,6 +171,7 @@ export class EditPlantcareUsersComponent implements OnInit {
   ngOnInit() {
     this.loadBanks();
     this.loadBranches();
+    this.setupDistrictOptions(); // Add this line
     this.route.queryParams.subscribe((params) => {
       this.itemId = params['id'] ? +params['id'] : null;
       this.isView = params['isView'] === 'true';
@@ -174,6 +179,18 @@ export class EditPlantcareUsersComponent implements OnInit {
     if (this.itemId) {
       this.loadUserData(this.itemId);
     }
+  }
+
+  setupDistrictOptions() {
+
+    this.district = this.district.sort((a, b) =>
+      a.districtName.localeCompare(b.districtName)
+    );
+
+    this.districtOptions = this.district.map(district => ({
+      label: district.districtName,
+      value: district.districtName
+    }));
   }
 
   loadUserData(id: number) {
@@ -225,6 +242,80 @@ export class EditPlantcareUsersComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  onNameInput(event: any, fieldName: string): void {
+    let value = event.target.value;
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      this.userForm.get(fieldName)?.setValue(value, { emitEvent: false });
+      event.target.value = value;
+    }
+  }
+
+  onNameKeyPress(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Allow only letters (a-z, A-Z) and backspace, delete, tab, etc.
+    if (
+      (charCode < 65 || charCode > 90) && // A-Z
+      (charCode < 97 || charCode > 122) && // a-z
+      charCode !== 8 &&
+      charCode !== 9 &&
+      charCode !== 46 &&
+      charCode !== 37 &&
+      charCode !== 39
+    ) {
+      event.preventDefault();
+    }
+  }
+
+
+  onAccountHolderNameKeyPress(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (
+      (charCode < 65 || charCode > 90) &&
+      (charCode < 97 || charCode > 122) &&
+      charCode !== 32 &&
+      charCode !== 8 &&
+      charCode !== 9 &&
+      charCode !== 46 &&
+      charCode !== 37 &&
+      charCode !== 39
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  onAccountHolderNameInput(event: any): void {
+    let value = event.target.value;
+
+    value = value.replace(/[^a-zA-Z\s]/g, '');
+    value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
+    this.userForm.get('accHolderName')?.setValue(value, { emitEvent: false });
+    event.target.value = value;
+  }
+
+
+  onAccountNumberKeyPress(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (
+      (charCode < 48 || charCode > 57) && // 0-9
+      charCode !== 8 && // backspace
+      charCode !== 9 && // tab
+      charCode !== 46 && // delete
+      charCode !== 37 && // left arrow
+      charCode !== 39 // right arrow
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  onAccountNumberInput(event: any): void {
+    let value = event.target.value;
+
+    value = value.replace(/[^0-9]/g, '');
+    this.userForm.get('accNumber')?.setValue(value, { emitEvent: false });
+    event.target.value = value;
   }
 
   onSubmit() {
@@ -539,21 +630,84 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
   }
 
+  onPhoneNumberInput(event: any): void {
+    let value = event.target.value;
+
+
+    value = value.replace(/[^\+\d]/g, '');
+
+    // Ensure it starts with +947
+    if (!value.startsWith('+947')) {
+      if (value.startsWith('+94')) {
+        value = '+947';
+      } else if (value.startsWith('+9')) {
+        value = '+947';
+      } else if (value.startsWith('+')) {
+        value = '+947';
+      } else {
+        value = '+947';
+      }
+    }
+
+
+    if (value.length > 12) {
+      value = value.substring(0, 12);
+    }
+
+    this.userForm.get('phoneNumber')?.setValue(value, { emitEvent: false });
+    event.target.value = value;
+  }
+
+  onPhoneNumberKeyPress(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    const currentValue = (event.target as HTMLInputElement).value;
+
+
+    if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1) {
+      return;
+    }
+
+    if (charCode === 43 && currentValue.length === 0) {
+      return;
+    }
+
+
+    if (currentValue.length >= 12) {
+      event.preventDefault();
+      return;
+    }
+
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort banks alphabetically by name
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+
+        // Convert to dropdown options format
+        this.bankOptions = this.banks.map(bank => ({
+          label: bank.name,
+          value: bank.name
+        }));
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
-        this.allBranches = data;
+        // Sort branches alphabetically by name for each bank
+        this.allBranches = {};
+        Object.keys(data).forEach(bankId => {
+          this.allBranches[bankId] = data[bankId].sort((a, b) => a.name.localeCompare(b.name));
+        });
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -565,11 +719,21 @@ export class EditPlantcareUsersComponent implements OnInit {
       );
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
-        this.branches = this.allBranches[selectedBank.ID.toString()] || [];
+        // Sort branches alphabetically when assigning
+        this.branches = (this.allBranches[selectedBank.ID.toString()] || [])
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        // Convert to dropdown options format
+        this.branchOptions = this.branches.map(branch => ({
+          label: branch.name,
+          value: branch.name
+        }));
+
         this.userForm.get('branchName')?.setValue('');
       }
     } else {
       this.branches = [];
+      this.branchOptions = [];
       this.selectedBankId = null;
     }
   }
@@ -580,3 +744,5 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
   }
 }
+
+

@@ -24,14 +24,18 @@
       <span class="text-xs sm:text-sm md:text-sm xl:text-sm dark:text-white">Filter by</span>
 
       <p-dropdown
-        class="border-2 rounded-xl h-auto bg-[#F1F1F1] dark:bg-[#061E2C]"
-        [checkmark]="true"
-        [options]="district"
-        optionLabel="districtName"
-        [showClear]="showClearButton"
-        [(ngModel)]="selectedDistrict"
-        (onChange)="onDistrictChange($event)"
-      />
+      styleClass="border-2 rounded-xl h-auto 
+  border-gray-300 dark:border-gray-600
+  text-gray-800 dark:text-red-900 "
+  [checkmark]="true"
+  [options]="district"
+  optionLabel="districtName"
+  [showClear]="showClearButton"
+  [(ngModel)]="selectedDistrict"
+  (onChange)="onDistrictChange($event)"
+
+/>
+
     </div>
   </div>
 

@@ -162,6 +162,7 @@ import { CustomerOrdersComponent } from './application/sales-dash-section/custom
 import {ViewHeadPortalComponent} from './application/distribution-hub/view-head-portal/view-head-portal.component';
 import { ViewCurrentCenterTargetComponent } from './application/collection-hub-section/view-current-center-target/view-current-center-target.component';
 import { ViewCenterHeadComponent } from './application/collection-hub-section/view-center-head/view-center-head.component';
+import {ViewPackageHistoryComponent} from './application/marketplace/view-package-history/view-package-history.component';
 export const routes: Routes = [
   {
     path: '',
@@ -801,6 +802,10 @@ export const routes: Routes = [
                 component: MarketEditProductComponent,
               },
               {
+                path: 'view-packages-history',
+                component:ViewPackageHistoryComponent,
+              },
+               {
                 path: 'view-packages-list',
                 component: ViewPackageListComponent,
               },
@@ -853,6 +858,10 @@ export const routes: Routes = [
               {
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
+              },
+               {
+                path: 'view-package-history',
+                component: ViewPackageHistoryComponent,
               },
               {
                 path: 'view-wholesale-customers',

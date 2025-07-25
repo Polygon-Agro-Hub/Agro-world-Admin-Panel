@@ -70,28 +70,17 @@ export class DestributionService {
     province: string = '',
     company: string = '',
     searchItem: string = '',
-    centerType: string = ''
+    centerType: string = '',
+    city: string = '' // Add city parameter
   ): Observable<any> {
-    console.log(
-      'district',
+    console.log('Parameters:', {
       district,
-      'province',
       province,
-      'company',
       company,
-      'searchItem',
       searchItem,
-      'centerType',
-      centerType
-    );
-    // console.log('Request params:', {
-    //   page,
-    //   limit,
-    //   district,
-    //   province,
-    //   company,
-    //   searchItem,
-    // });
+      centerType,
+      city,
+    });
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -103,7 +92,7 @@ export class DestributionService {
     // Add optional params with proper encoding
     if (searchItem) {
       console.log('has search');
-      url += `&searchItem=${encodeURIComponent(searchItem)}`; // Changed to 'search' to match API
+      url += `&searchItem=${encodeURIComponent(searchItem)}`;
     }
 
     if (district) {
@@ -115,15 +104,17 @@ export class DestributionService {
     }
 
     if (company) {
-      // Fixed: separate condition for company
       url += `&company=${encodeURIComponent(company)}`;
     }
+
     if (centerType) {
       url += `&centerType=${centerType}`;
     }
-    // if (centerType) {
-    //   url += `&centerType=${centerType}`;
-    // }
+
+    if (city) {
+      // Add city parameter to URL
+      url += `&city=${encodeURIComponent(city)}`;
+    }
 
     console.log('Final URL:', url);
     return this.http.get<any>(url, { headers: headers });

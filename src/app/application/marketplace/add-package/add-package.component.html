@@ -9,23 +9,15 @@
   <div class="flex flex-row justify-between items-center mb-6">
     <p class="text-xl text-[#292929] font-normal dark:text-textDark">Add Package</p>
     <div>
-      <button
-        type="button"
-        class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
-        (click)="onCancel()"
-      >
+      <button type="button" class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        type="button"
-        class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2"
-        (click)="onSubmit()"
+      <button type="button" class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" (click)="onSubmit()"
         [disabled]="
           this.packageObj.productPrice < 0.0 ||
           this.packageObj.packageFee < 0.0 ||
           this.packageObj.serviceFee < 0.0
-        "
-      >
+        ">
         Save
       </button>
     </div>
@@ -37,29 +29,15 @@
       <div class="flex flex-row justify-between items-center mb-6">
         <div class="w-[70%]">
           <label class="text-[#534E4E] dark:text-textDark">Display Package Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            [(ngModel)]="packageObj.displayName"
-            placeholder="Fruit Pack"
-            class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500"
-          />
+          <input type="text" id="name" name="name" [(ngModel)]="packageObj.displayName" placeholder="Fruit Pack"
+            class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500" />
         </div>
 
         <div class="flex flex-row items-center gap-3 mt-6">
-          <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            class="hidden"
-            (change)="onFileSelected($event)"
-          />
+          <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
           <label class="text-[#534E4E] font-semibold dark:text-textDark">Add Image</label>
-          <div
-            class="py-1 px-2 rounded-lg shadow-lg border border-[#3980C0] cursor-pointer"
-            (click)="triggerFileInput($event)"
-          >
+          <div class="py-1 px-2 rounded-lg shadow-lg border border-[#3980C0] cursor-pointer"
+            (click)="triggerFileInput($event)">
             <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
           </div>
         </div>
@@ -68,13 +46,8 @@
       <!-- Description -->
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Description</label>
-        <textarea
-          rows="4"
-          name="description"
-          [(ngModel)]="packageObj.description"
-          placeholder="Enter Description"
-          class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500"
-        ></textarea>
+        <textarea rows="4" name="description" [(ngModel)]="packageObj.description" placeholder="Enter Description"
+          class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500"></textarea>
       </div>
 
       <hr class="my-8 border border-[#D9D9D9] dark:border-gray-700" />
@@ -83,69 +56,43 @@
       <div class="grid grid-cols-3 gap-8 mb-6">
         <div>
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
-            Price of Products (Rs.)
+            Total Package Price (Rs.)
           </label>
-          <input
-            type="number"
-            [(ngModel)]="packageObj.productPrice"
-            (change)="calculateApproximatedPrice()"
-            (keypress)="allowDecimalNumbers($event)"
-            placeholder="Enter Amount"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div *ngIf="packageObj.productPrice < 0.0" class="text-red-500 text-sm mt-1">
-            Please enter a positive value.
-          </div>
+          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.productPrice"
+            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Service Fee (Rs.)
           </label>
-          <input
-            type="number"
-            [(ngModel)]="packageObj.serviceFee"
-            (change)="calculateApproximatedPrice()"
-            (keypress)="allowDecimalNumbers($event)"
-            step="any"
-            placeholder="Enter Amount"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div *ngIf="packageObj.serviceFee < 0.0" class="text-red-500 text-sm mt-1">
-            Please enter a positive value.
-          </div>
+          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.serviceFee"
+            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
             Packaging Fee (Rs.)
           </label>
-          <input
-            type="number"
-            [(ngModel)]="packageObj.packageFee"
-            (change)="calculateApproximatedPrice()"
-            (keypress)="allowDecimalNumbers($event)"
-            placeholder="Enter Amount"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div *ngIf="packageObj.packageFee < 0.0" class="text-red-500 text-sm mt-1">
-            Please enter a positive value.
-          </div>
+          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.packageFee"
+            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
       </div>
+
 
       <!-- Approximated Price -->
       <div>
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
           Approximated Package Price (Rs.)
         </label>
-        <input
-          disabled
-          type="text"
-          [value]="packageObj.approximatedPrice | number: '1.2-2'"
-          placeholder="--"
-          class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 bg-gray-100 dark:bg-gray-700 text-black dark:text-textDark"
-        />
+        <input disabled type="text" [value]="packageObj.approximatedPrice | number: '1.2-2'" placeholder="--"
+          class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 bg-gray-100 dark:bg-gray-700 text-black dark:text-textDark" />
       </div>
 
       <hr class="my-8 border border-[#D9D9D9] dark:border-gray-700" />
@@ -163,15 +110,11 @@
             <tr *ngFor="let item of productTypeObj" class="border-b dark:border-gray-700">
               <td class="px-4 py-3 text-[#534E4E] dark:text-textDark">{{ item.typeName }}</td>
               <td class="px-4 py-2 text-right">
-                <input
-                  type="number"
-                  min="0"
-                  [value]="packageObj.quantities[item.id]"
-                  (input)="onInputChange(item.id, $event)"
+                <input type="number" min="0" [value]="packageObj.quantities[item.id]"
+                  (input)="onInputChange(item.id, $event); preventNegative($event)"
                   (keypress)="allowOnlyNumbers($event)"
                   class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-tileBlack text-black dark:text-textDark"
-                  placeholder="--"
-                />
+                  placeholder="--" />
               </td>
             </tr>
           </tbody>
@@ -186,9 +129,11 @@
 
         <p class="text-lg text-[#000000] dark:text-textDark font-normal">Preview</p>
 
-        <div class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-5 py-3 h-auto rounded-xl shadow-md">
+        <div
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-5 py-3 h-auto rounded-xl shadow-md">
 
-          <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage" class="w-full h-auto object-cover px-4 py-2 mt-8" />
+          <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage"
+            class="w-full h-auto object-cover px-4 py-2 mt-8" />
           <ng-template #defaultIcon>
             <div class="flex items-center justify-center w-full h-32 px-4 py-2 mt-8 text-gray-400">
               <i class="fa-solid fa-image text-9xl"></i>
@@ -196,7 +141,8 @@
           </ng-template>
 
           <div class="flex flex-col items-center justify-center gap-y-2">
-            <p class="text-xl text-[#393939] dark:text-textDark font-medium text-center" *ngIf="packageObj.displayName; else noDisplayName">
+            <p class="text-xl text-[#393939] dark:text-textDark font-medium text-center"
+              *ngIf="packageObj.displayName; else noDisplayName">
               {{ packageObj.displayName }}
             </p>
             <ng-template #noDisplayName>
@@ -218,28 +164,16 @@
         <label class="text-[#000000] dark:text-textDark font-normal">Status</label>
 
         <div class="flex items-center space-x-2 my-5">
-          <input
-            class="w-5 h-5 text-[#534E4E]"
-            type="radio"
-            id="statusEnabled"
-            name="status"
-            [value]="'Enabled'"
-            [(ngModel)]="packageObj.status"
-          />
+          <input class="w-5 h-5 text-[#534E4E]" type="radio" id="statusEnabled" name="status" [value]="'Enabled'"
+            [(ngModel)]="packageObj.status" />
           <label for="statusEnabled" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Enabled
           </label>
         </div>
 
         <div class="flex items-center space-x-2 my-5">
-          <input
-            class="w-5 h-5 text-[#534E4E]"
-            type="radio"
-            id="statusDisabled"
-            name="status"
-            [value]="'Disabled'"
-            [(ngModel)]="packageObj.status"
-          />
+          <input class="w-5 h-5 text-[#534E4E]" type="radio" id="statusDisabled" name="status" [value]="'Disabled'"
+            [(ngModel)]="packageObj.status" />
           <label for="statusDisabled" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Disabled
           </label>

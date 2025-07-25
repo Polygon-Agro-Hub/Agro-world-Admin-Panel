@@ -242,7 +242,9 @@
             </td>
 
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.code1 }} {{ item.contact01 }}
+              <!-- {{ item.code1 }} {{ item.contact01 }} -->
+              <span *ngIf="item.contact01 === null">-</span>
+              <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
             </td>
 
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">

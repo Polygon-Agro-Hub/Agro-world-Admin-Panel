@@ -146,11 +146,20 @@
             [(ngModel)]="personalData.firstName"
             name="firstNameEnglish"
             (blur)="onBlur('firstName')"
+            (keydown)="validateNameInput($event)"
+            (input)="capitalizeFirstLetter('firstName')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm"
             >First Name is required.</span
           >
+          <span
+            *ngIf="isFieldInvalid('firstName')"
+            class="text-red-600 text-sm"
+          >
+            First Name is required and must contain only English letters (first
+            letter capitalized).
+          </span>
         </div>
 
         <div>
@@ -164,11 +173,17 @@
             name="lastName"
             [(ngModel)]="personalData.lastName"
             (blur)="onBlur('lastName')"
+            (keydown)="validateNameInput($event)"
+            (input)="capitalizeFirstLetter('lastName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm"
             >Last Name is required.</span
           >
+          <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm">
+            Last Name is required and must contain only English letters (first
+            letter capitalized).
+          </span>
         </div>
 
         <div>
@@ -312,6 +327,8 @@
             name="nic"
             [(ngModel)]="personalData.nic"
             (blur)="onBlur('nic')"
+            (keydown)="validateNICInput($event)"
+            (input)="formatNIC()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -322,7 +339,8 @@
             "
             class="text-red-600 text-sm"
           >
-            Invalid NIC number.
+            Please enter a valid NIC number (12 digits or 10 digits followed by
+            'V').
           </span>
 
           <span
@@ -506,6 +524,7 @@
             id="country"
             name="country"
             [(ngModel)]="personalData.country"
+            disabled="true"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
         </div>
@@ -519,13 +538,15 @@
         <label
           for="accHolderName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder’s Name</label
+          >Account Holder's Name</label
         >
         <input
           id="accHolderName"
           name="accHolderName"
           [(ngModel)]="personalData.accHolderName"
-          (blur)="onBlur('accHolderName')"
+          (blur)="onBlur('accHolderName'); capitalizeName('accHolderName')"
+          (keydown)="validateNameInput($event)"
+          (input)="capitalizeName('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <span
@@ -533,6 +554,17 @@
           class="text-red-600 text-sm"
           >Account Holder's Name is required.</span
         >
+        <span
+          *ngIf="
+            touchedFields.accHolderName &&
+            personalData.accHolderName &&
+            !isValidName(personalData.accHolderName)
+          "
+          class="text-red-600 text-sm"
+        >
+          Please enter a valid name (only letters, spaces, hyphens, and
+          apostrophes)
+        </span>
       </div>
 
       <div class="pb-6">
@@ -547,11 +579,12 @@
           name="accNumber"
           [(ngModel)]="personalData.accNumber"
           (blur)="onBlur('accNumber')"
+          (keypress)="allowOnlyAlphanumeric($event)"
           #accNumberInput="ngModel"
           required
-          pattern="^[a-zA-Z0-9]+$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+
         <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
           Account Number is required.
         </span> -->
@@ -580,9 +613,10 @@
           id="confirmAccNumber"
           name="confirmAccNumber"
           [(ngModel)]="personalData.confirmAccNumber"
-          #confirmAccNumberInput="ngModel"
           (blur)="onBlur('confirmAccNumber')"
-          pattern="^[a-zA-Z0-9]+$"
+          (keypress)="allowOnlyAlphanumeric($event)"
+          #confirmAccNumberInput="ngModel"
+          required
           (ngModelChange)="validateConfirmAccNumber()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -611,22 +645,27 @@
       <div class="pb-6">
         <label
           for="bankDropdown"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
         >
           Bank Name
         </label>
-        <select
+        <p-dropdown
           id="bankDropdown"
-          name="bankDropdown"
           [(ngModel)]="selectedBankId"
-          (change)="onBankChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          (onChange)="onBankChange()"
+          [options]="banks"
+          optionLabel="name"
+          optionValue="ID"
+          [filter]="true"
+          filterBy="name"
+          placeholder="Select a bank"
+          [showClear]="false"
+          class="w-full"
+          [ngClass]="{
+            'p-invalid': isFieldInvalid('bankName')
+          }"
         >
-          <option [ngValue]="null" disabled>Select a bank</option>
-          <option *ngFor="let bank of banks" [ngValue]="bank.ID">
-            {{ bank.name }}
-          </option>
-        </select>
+        </p-dropdown>
         <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
           Bank Name is required.
         </span>
@@ -635,23 +674,28 @@
       <div class="pb-6">
         <label
           for="branchDropdown"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
         >
           Branch Name
         </label>
-        <select
+        <p-dropdown
           id="branchDropdown"
-          name="branchDropdown"
           [(ngModel)]="selectedBranchId"
-          (change)="onBranchChange()"
+          (onChange)="onBranchChange()"
+          [options]="branches"
+          optionLabel="name"
+          optionValue="ID"
+          [filter]="true"
+          filterBy="name"
+          placeholder="Select a branch"
+          [showClear]="false"
           [disabled]="!selectedBankId"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          class="w-full"
+          [ngClass]="{
+            'p-invalid': isFieldInvalid('branchName')
+          }"
         >
-          <option [ngValue]="null" disabled>Select a branch</option>
-          <option *ngFor="let branch of branches" [ngValue]="branch.ID">
-            {{ branch.name }}
-          </option>
-        </select>
+        </p-dropdown>
         <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
           Branch Name is required.
         </span>

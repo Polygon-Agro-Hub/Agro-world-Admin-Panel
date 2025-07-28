@@ -1,6 +1,6 @@
 <div class="flex h-screen">
   <!-- Main Content -->
-  <div class="flex-1 flex flex-col min-w-0">
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
     <!-- Header -->
     <div class="p-1">
       <button (click)="back()" class="mb-10 text-gray-600 dark:text-gray-300">
@@ -8,43 +8,37 @@
       </button>
     </div>
 
-    <div class="flex-1  mt-1">
-      <div class="max-w-6xl mx-auto rounded-xl shadow-lg overflow-hidden bg-white dark:bg-gray-800">
+    <div class="flex-1 mt-1 overflow-y-auto">
+      <div class="max-w-6xl mx-auto rounded-xl shadow-lg bg-white dark:bg-gray-800">
         <!-- Tabs -->
         <div class="flex gap-3 p-4 border-b border-gray-300 dark:border-gray-700">
-<button
-  class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200
-         bg-gray-100 dark:bg-gray-700
-         border-gray-300 dark:border-gray-600
-         text-blue-400"
-  [class.bg-blue-600]="activeTab === 'retail'"
-  [class.text-blue-400]="activeTab === 'retail'"
-  [class.border-blue-600]="activeTab === 'retail'"
-  [class.dark:text-blue-400]="activeTab === 'retail'"
-  [class.dark:border-blue-600]="activeTab === 'retail'"
-  [class.dark:text-gray-300]="activeTab !== 'retail'"
-  (click)="switchTab('retail')"
->
-  <span *ngIf="activeTab === 'retail'">✓</span>
-  Retail Buyer Subscriptions
-</button>
-
-
-
-
-
           <button
             class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200
-              bg-gray-100 dark:bg-gray-700
-              border-gray-300 dark:border-gray-600
-               text-blue-400 dark:text-gray-300
-             "
-           [class.bg-blue-600]="activeTab === 'wholesale'"
-  [class.text-blue-400]="activeTab === 'wholesale'"
-  [class.border-blue-600]="activeTab === 'wholesale'"
-  [class.dark:text-blue-400]="activeTab === 'wholesale'"
-  [class.dark:border-blue-600]="activeTab === 'wholesale'"
-  [class.dark:text-gray-300]="activeTab !== 'wholesale'"
+                   bg-gray-100 dark:bg-gray-700
+                   border-gray-300 dark:border-gray-600
+                   text-blue-400"
+            [class.bg-blue-600]="activeTab === 'retail'"
+            [class.text-blue-400]="activeTab === 'retail'"
+            [class.border-blue-600]="activeTab === 'retail'"
+            [class.dark:text-blue-400]="activeTab === 'retail'"
+            [class.dark:border-blue-600]="activeTab === 'retail'"
+            [class.dark:text-gray-300]="activeTab !== 'retail'"
+            (click)="switchTab('retail')"
+          >
+            <span *ngIf="activeTab === 'retail'">✓</span>
+            Retail Buyer Subscriptions
+          </button>
+          <button
+            class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200
+                   bg-gray-100 dark:bg-gray-700
+                   border-gray-300 dark:border-gray-600
+                   text-blue-400 dark:text-gray-300"
+            [class.bg-blue-600]="activeTab === 'wholesale'"
+            [class.text-blue-400]="activeTab === 'wholesale'"
+            [class.border-blue-600]="activeTab === 'wholesale'"
+            [class.dark:text-blue-400]="activeTab === 'wholesale'"
+            [class.dark:border-blue-600]="activeTab === 'wholesale'"
+            [class.dark:text-gray-300]="activeTab !== 'wholesale'"
             (click)="switchTab('wholesale')"
           >
             <span *ngIf="activeTab === 'wholesale'">✓</span>
@@ -67,77 +61,78 @@
             <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
               <img class="w-5 h-5" src="./assets/icons/search.png" alt="Search icon" />
             </span>
-          <button
-  *ngIf="searchText"
-  type="button"
-  class="text-gray-500 hover:text-gray-700 focus:outline-none absolute right-10 top-1/2 transform -translate-y-1/2 transition-colors duration-200"
-  (click)="clearSearch()"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    class="h-5 w-5"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-</button>
-
+            <button
+              *ngIf="searchText"
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none absolute right-10 top-1/2 transform -translate-y-1/2 transition-colors duration-200"
+              (click)="clearSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
         </div>
 
         <!-- Download Section -->
         <div class="p-4">
           <button
-    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-    (click)="downloadExcel()"
-  >
-    <i class="fa-solid fa-download pr-4"></i>
-    Download
-  </button>
+            class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+            (click)="downloadExcel()"
+          >
+            <i class="fa-solid fa-download pr-4"></i>
+            Download
+          </button>
+        </div>
+
         <!-- Table -->
-   <ng-container *ngIf="!isLoading; else loading">
-  <div class="h-[400px] overflow-y-auto">
-    <table *ngIf="hasData; else noData" class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-      <thead>
-        <tr>
-          <th class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left">Customer Name</th>
-          <th class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left">Email</th>
-          <th class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left">Time</th>
-          <th class="p-3"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let user of filteredSubscriptions | paginate: { itemsPerPage: itemsPerPage, currentPage: page }"
-          class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-        >
-          <td class="p-3 text-gray-800 dark:text-gray-200">{{ user.customerName }}</td>
-          <td class="p-3 text-gray-800 dark:text-gray-200">{{ user.email }}</td>
-          <td class="p-3 text-gray-800 dark:text-gray-200">{{ user.time }}</td>
-          <td class="p-3">
-            <img
-              class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
-              src="./assets/icons/dlt.png"
-              alt="Delete user"
-              aria-label="Delete user"
-              (click)="deleteUser(user.id)"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ng-template #noData>
-      <p class="p-4 text-gray-600 dark:text-gray-400">No subscriptions found.</p>
-    </ng-template>
-  </div>
-</ng-container>
+        <ng-container *ngIf="!isLoading; else loading">
+          <div class="h-[calc(100vh-200px)] overflow-y-auto">
+            <table *ngIf="hasData; else noData" class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+              <thead>
+                <tr>
+                  <th class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left">Customer Name</th>
+                  <th class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left">Email</th>
+                  <th class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left">Time</th>
+                  <th class="p-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let user of filteredSubscriptions | paginate: { itemsPerPage: itemsPerPage, currentPage: page }"
+                  class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
+                  <td class="p-3 text-gray-800 dark:text-gray-200">{{ user.customerName }}</td>
+                  <td class="p-3 text-gray-800 dark:text-gray-200">{{ user.email }}</td>
+                  <td class="p-3 text-gray-800 dark:text-gray-200">{{ user.time }}</td>
+                  <td class="p-3">
+                    <img
+                      class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                      src="./assets/icons/dlt.png"
+                      alt="Delete user"
+                      aria-label="Delete user"
+                      (click)="deleteUser(user.id)"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #noData>
+              <p class="p-4 text-gray-600 dark:text-gray-400">No subscriptions found.</p>
+            </ng-template>
+          </div>
+        </ng-container>
 
         <ng-template #loading>
           <app-loading-spinner></app-loading-spinner>

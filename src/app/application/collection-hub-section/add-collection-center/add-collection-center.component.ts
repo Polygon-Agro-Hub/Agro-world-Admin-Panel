@@ -191,7 +191,7 @@ export class AddCollectionCenterComponent implements OnInit {
           if (res.status) {
             Swal.fire(
               'Success',
-              'Collection Center Created Successfully',
+              'Collection centre Created Successfully',
               'success'
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -200,7 +200,7 @@ export class AddCollectionCenterComponent implements OnInit {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Something went wrong while creating the Collection Center.',
+                text: 'Something went wrong while creating the Collection centre.',
               });
             }
           }

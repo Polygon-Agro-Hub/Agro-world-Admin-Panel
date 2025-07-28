@@ -14,6 +14,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -40,7 +41,7 @@ interface BranchesData {
     FormsModule,
     LoadingSpinnerComponent,
     
-    
+     DropdownModule,
   ],
   templateUrl: './create-company.component.html',
   styleUrl: './create-company.component.css',

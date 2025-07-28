@@ -45,17 +45,20 @@
           <label
             for="taskEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task</label
+            >Task<span style="color: #2E2E2E">*</span>
+</label
           >
         
-          <input
-            formControlName="taskEnglish"
-            id="taskEnglish"
-            name="taskEnglish"
-            [(ngModel)]="cropTaskObj.taskEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          />
-      
+       <input
+  formControlName="taskEnglish"
+  id="taskEnglish"
+  name="taskEnglish"
+  [(ngModel)]="cropTaskObj.taskEnglish"
+  (keydown)="allowOnlyEnglishLetters($event)"
+    (input)="capitalizeFirstLetter($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+/>
+
           <div
             *ngIf="taskForm.get('taskEnglish')?.touched && taskForm.get('taskEnglish')?.hasError('required')"
             class="text-red-500 text-sm mt-1"
@@ -68,13 +71,16 @@
           <label
             for="taskTypeEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task Type
+            >Task Type<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskTypeEnglish"
             id="taskTypeEnglish"
             name="taskTypeEnglish"
             [(ngModel)]="cropTaskObj.taskTypeEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
+              (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
           <div
@@ -89,13 +95,16 @@
           <label
             for="taskCategoryEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task Category</label
+            >Task Category<span style="color: #2E2E2E">*</span>
+</label
           >
           <input
             formControlName="taskCategoryEnglish"
             id="taskCategoryEnglish"
             [(ngModel)]="cropTaskObj.taskCategoryEnglish"
             name="taskCategoryEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
+              (input)="capitalizeFirstLetter($event)"
             rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -111,7 +120,8 @@
           <label
             for="taskDescriptionEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task Discription</label
+            >Task Discription<span style="color: #2E2E2E">*</span>
+</label
           >
           <textarea
             rows="5"
@@ -119,6 +129,8 @@
             id="taskDescriptionEnglish"
             [(ngModel)]="cropTaskObj.taskDescriptionEnglish"
             name="taskDescriptionEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
+              (input)="capitalizeFirstLetter($event)"
             rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           ></textarea>
@@ -135,12 +147,14 @@
         <!-- Task in Sinhala -->
         <div class="my-2">
           <label for="taskSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task in Sinhala
+            Task in Sinhala<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskSinhala"
             id="taskSinhala"
             [(ngModel)]="cropTaskObj.taskSinhala"
+             (keydown)="allowOnlySinhalaLetters($event)"
             name="taskSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -152,12 +166,14 @@
         <!-- Task Type in Sinhala -->
         <div class="my-2">
           <label for="taskTypeSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task Type in Sinhala
+            Task Type in Sinhala<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskTypeSinhala"
             id="taskTypeSinhala"
             [(ngModel)]="cropTaskObj.taskTypeSinhala"
+             (keydown)="allowOnlySinhalaLetters($event)"
             name="taskTypeSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -169,12 +185,14 @@
         <!-- Task Category in Sinhala -->
         <div class="md:col-span-2 my-3">
           <label for="taskCategorySinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task Category in Sinhala
+            Task Category in Sinhala<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskCategorySinhala"
             id="taskCategorySinhala"
             [(ngModel)]="cropTaskObj.taskCategorySinhala"
+             (keydown)="allowOnlySinhalaLetters($event)"
             name="taskCategorySinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -186,12 +204,14 @@
         <!-- Task Description in Sinhala -->
         <div class="md:col-span-2 my-3">
           <label for="taskDescriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task Description in Sinhala
+            Task Description in Sinhala<span style="color: #2E2E2E">*</span>
+
           </label>
           <textarea
             formControlName="taskDescriptionSinhala"
             id="taskDescriptionSinhala"
             [(ngModel)]="cropTaskObj.taskDescriptionSinhala"
+             (keydown)="allowOnlySinhalaLetters($event)"
             name="taskDescriptionSinhala"
             rows="5"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -207,12 +227,14 @@
         <!-- Task in Tamil -->
         <div class="my-2">
           <label for="taskTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task in Tamil
+            Task in Tamil<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskTamil"
             id="taskTamil"
             [(ngModel)]="cropTaskObj.taskTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
             name="taskTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -224,12 +246,14 @@
         <!-- Task Type in Tamil -->
         <div class="my-2">
           <label for="taskTypeTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task Type in Tamil
+            Task Type in Tamil<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskTypeTamil"
             id="taskTypeTamil"
             [(ngModel)]="cropTaskObj.taskTypeTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
             name="taskTypeTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -241,12 +265,14 @@
         <!-- Task Category in Tamil -->
         <div class="md:col-span-2 my-2">
           <label for="taskCategoryTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task Category in Tamil
+            Task Category in Tamil<span style="color: #2E2E2E">*</span>
+
           </label>
           <input
             formControlName="taskCategoryTamil"
             id="taskCategoryTamil"
             [(ngModel)]="cropTaskObj.taskCategoryTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
             name="taskCategoryTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -258,11 +284,13 @@
         <!-- Task Description in Tamil -->
         <div class="md:col-span-2 my-3">
           <label for="taskDescriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
-            Task Description in Tamil
+            Task Description in Tamil<span style="color: #2E2E2E">*</span>
+
           </label>
           <textarea
             formControlName="taskDescriptionTamil"
             id="taskDescriptionTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
             [(ngModel)]="cropTaskObj.taskDescriptionTamil"
             name="taskDescriptionTamil"
             rows="5"
@@ -283,7 +311,8 @@
               for="startingDate"
               class="whitespace-nowrap mr-6 text-sm font-medium text-textLight dark:text-textDark"
             >
-              Add Days
+              Add Days<span style="color: #2E2E2E">*</span>
+
             </label>
         
             <input
@@ -334,29 +363,40 @@
               for="image"
               class="whitespace-nowrap mr-4 text-sm font-medium text-textLight dark:text-textDark"
             >
-              Add No. of Images Required
+              Add No. of Images Required<span style="color: #2E2E2E">*</span>
+
             </label>
         
-            <input
-              type="number"
-              formControlName="images"
-              id="image"
-              name="images"
-              [(ngModel)]="cropTaskObj.reqImages"
-              step="1"
-              min="0"
-              inputmode="numeric"
-              class="flex-1 p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-              (keypress)="onlyAllowIntegers($event)"
-            />
+           <input
+  type="number"
+  formControlName="images"
+  id="image"
+  name="images"
+  [(ngModel)]="cropTaskObj.reqImages"
+  step="1"
+  min="1"
+  inputmode="numeric"
+  class="flex-1 p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+  (keypress)="onlyAllowIntegers($event)"
+  (blur)="blockZeroValue($event)"
+/>
+
           </div>
         
-          <div
-            *ngIf="taskForm.get('images')?.touched && taskForm.get('images')?.hasError('required')"
-            class="text-red-500 text-sm mt-1"
-          >
-            Number of images are required.
-          </div>
+        <div
+  *ngIf="taskForm.get('images')?.touched && taskForm.get('images')?.hasError('required')"
+  class="text-red-500 text-sm mt-1"
+>
+  Number of images is required.
+</div>
+
+<div
+  *ngIf="taskForm.get('images')?.touched && taskForm.get('images')?.hasError('min')"
+  class="text-red-500 text-sm mt-1"
+>
+  Number of images must be at least 1.
+</div>
+
         </div>
         
       </div>
@@ -364,7 +404,8 @@
       <div class="flex items-center md:col-span-2 my-3 px-12">
         <label
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Want to Add Images?</label
+          >Want to Add Images?<span style="color: #2E2E2E">*</span>
+</label
         >
         <div class="mt-1 ml-6">
           <label class="inline-flex items-center">
@@ -395,7 +436,8 @@
         <label
           for="imageLink"
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Image Link</label
+          >Image Link<span style="color: #2E2E2E">*</span>
+</label
         >
         <input
           min="0"
@@ -407,71 +449,64 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         />
         <div *ngIf="taskForm.get('imageLink')?.touched && !this.cropTaskObj.imageLink " class="text-red-500 text-sm mt-1">
-          Image link is required.
+          Image Link is required.
         </div>
         
       </div>
 
       <div class="md:col-span-2 my-3 px-12">
-        <label
-          for="videoLinkEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Video Link English</label
-        >
-        <input
-          min="0"
-          formControlName="videoLinkEnglish"
-          id="videoLinkEnglish"
-          [(ngModel)]="cropTaskObj.videoLinkEnglish"
-          name="videoLinkEnglish"
-          rows="3"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-
-        <div *ngIf="taskForm.get('videoLinkEnglish')?.touched && taskForm.get('videoLinkEnglish')?.hasError('required')" class="text-red-500 text-sm mt-1">
-          Vedio Link in English is required.
-        </div>
-      </div>
+  <label
+    for="videoLinkEnglish"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+  >
+    Video Link English
+  </label>
+  <input
+    min="0"
+    formControlName="videoLinkEnglish"
+    id="videoLinkEnglish"
+    [(ngModel)]="cropTaskObj.videoLinkEnglish"
+    name="videoLinkEnglish"
+    rows="3"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+  />
+</div>
 
       <div class="md:col-span-2 my-3 px-12">
-        <label
-          for="videoLinkSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Video Link Sinahala</label
-        >
-        <input
-          min="0"
-          formControlName="videoLinkSinhala"
-          id="videoLinkSinhala"
-          [(ngModel)]="cropTaskObj.videoLinkSinhala"
-          name="videoLinkSinhala"
-          rows="3"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-        <div *ngIf="taskForm.get('videoLinkSinhala')?.touched && taskForm.get('videoLinkSinhala')?.hasError('required')" class="text-red-500 text-sm mt-1">
-          Vedio Link in Sinhala is required.
-        </div>
-      </div>
+  <label
+    for="videoLinkSinhala"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+  >
+    Video Link Sinhala
+  </label>
+  <input
+    min="0"
+    formControlName="videoLinkSinhala"
+    id="videoLinkSinhala"
+    [(ngModel)]="cropTaskObj.videoLinkSinhala"
+    name="videoLinkSinhala"
+    rows="3"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+  />
+</div>
 
-      <div class="md:col-span-2 my-3 px-12">
-        <label
-          for="videoLinkTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Video Link Tamil</label
-        >
-        <input
-          min="0"
-          formControlName="videoLinkTamil"
-          id="videoLinkTamil"
-          [(ngModel)]="cropTaskObj.videoLinkTamil"
-          name="videoLinkTamil"
-          rows="3"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-        <div *ngIf="taskForm.get('videoLinkTamil')?.touched && taskForm.get('videoLinkTamil')?.hasError('required')" class="text-red-500 text-sm mt-1">
-          Vedio Link in Tamil is required.
-        </div>
-      </div>
+<div class="md:col-span-2 my-3 px-12">
+  <label
+    for="videoLinkTamil"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+  >
+    Video Link Tamil
+  </label>
+  <input
+    min="0"
+    formControlName="videoLinkTamil"
+    id="videoLinkTamil"
+    [(ngModel)]="cropTaskObj.videoLinkTamil"
+    name="videoLinkTamil"
+    rows="3"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+  />
+</div>
 
       <div class="flex justify-end mt-6 px-12">
         <button

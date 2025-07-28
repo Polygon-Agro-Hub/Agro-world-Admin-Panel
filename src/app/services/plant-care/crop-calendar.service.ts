@@ -5,6 +5,8 @@ import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
 
 export interface NewCropCalender {
+  varietyId: any;
+  groupId: any;
   id: number;
   cropNameEnglish: string;
   varietyNameEnglish: string;
@@ -13,17 +15,10 @@ export interface NewCropCalender {
   natOfCul: string;
   cropDuration: string;
   createdAt: string;
+  suitableAreas: string; // Added to match component usage
 }
 
-export interface NewCropGroup {
-  id: number;
-  cropNameEnglish: string;
-  category: string;
-  varietyCount: number;
-  varietyList: string[];
-}
-
-interface NewVarietyGroup {
+export interface NewVarietyGroup {
   id: number;
   cropGroupId: string;
   varietyNameEnglish: string;
@@ -36,6 +31,15 @@ interface NewVarietyGroup {
   bgColor: string;
   createdAt: string;
 }
+
+export interface NewCropGroup {
+  id: number;
+  cropNameEnglish: string;
+  category: string;
+  varietyCount: number;
+  varietyList: string[];
+}
+
 
 @Injectable({
   providedIn: 'root',

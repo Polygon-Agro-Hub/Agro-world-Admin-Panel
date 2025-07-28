@@ -67,9 +67,9 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       taskDescriptionTamil: ['', [Validators.required]],
       reqImages: ['', [Validators.required]],
       imageLink: ['',],
-      videoLinkEnglish: ['', [Validators.required]],
-      videoLinkSinhala: ['', [Validators.required]],
-      videoLinkTamil: ['', [Validators.required]],
+      videoLinkEnglish: [''],
+  videoLinkSinhala: [''],
+  videoLinkTamil: [''],
       images: ['', [Validators.required]],
     });
   }
@@ -93,81 +93,126 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
-  onSubmit() {
-    console.log('onsubmit:', this.cropId, this.indexId, this.userId);
-
-    if (
-      !this.cropTaskObj.startingDate ||
-      !this.cropTaskObj.taskTypeEnglish ||
-      !this.cropTaskObj.taskTypeSinhala ||
-      !this.cropTaskObj.taskTypeTamil ||
-      !this.cropTaskObj.taskCategoryEnglish ||
-      !this.cropTaskObj.taskCategorySinhala ||
-      !this.cropTaskObj.taskCategoryTamil ||
-      !this.cropTaskObj.taskEnglish ||
-      !this.cropTaskObj.taskSinhala ||
-      !this.cropTaskObj.taskTamil ||
-      !this.cropTaskObj.taskDescriptionEnglish ||
-      !this.cropTaskObj.taskDescriptionSinhala ||
-      !this.cropTaskObj.taskDescriptionTamil ||
-      !this.cropTaskObj.reqImages ||
-      !this.cropTaskObj.videoLinkEnglish ||
-      !this.cropTaskObj.videoLinkSinhala || 
-      !this.cropTaskObj.videoLinkTamil ||
-      (this.requireImageLink === 'yes' && !this.cropTaskObj.imageLink) // ✅ condition fixed here
-    ) {
-      this.taskForm.markAllAsTouched();
-      console.log('failed')
-      Swal.fire({
-        icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please fill in all required fields before submitting.',
-      });
-      return;
-    }
-    
-    if (this.userId == 'null') {
-      this.isLoading = true;
-      console.log('no user', this.userId)
-      this.cropCalendarService
-        .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
-        .subscribe((res) => {
-          this.isLoading = false;
-          if (res) {
-            Swal.fire('Success', 'New Crop Calander Task Added !', 'success');
-
-            this.router.navigate(['/view-crop-task-by-user/user-task-list']);
-          } else {
-            Swal.fire('Error', 'Error occor in adding task !', 'error');
-          }
-        });
-    } else {
-      this.isLoading = true;
-      console.log('has user', this.userId)
-      this.cropCalendarService
-        .createNewCropTaskU(
-          this.cropId,
-          this.indexId,
-          this.userId,
-          this.cropTaskObj,
-          this.onCulscropID
-        )
-        .subscribe((res) => {
-          this.isLoading = false;
-          if (res) {
-            Swal.fire('Success', 'New Crop Calander Task Added !', 'success');
-
-            // this.back(this.cropId, this.userId);
-            this.router.navigate(
-              ['/plant-care/action/view-crop-task-by-user'],
-              { queryParams: { cultivationId: this.cultivationId, userId: this.userId, userName: this.userName } }
-            );
-          } else {
-            Swal.fire('Error', 'Error occor in adding task !', 'error');
-          }
-        });
-    }
+  allowOnlyEnglishLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  if (allowedControlKeys.includes(event.key)) return;
+  const isLetter = /^[a-zA-Z]$/.test(event.key);
+  if (!isLetter) {
+    event.preventDefault();
   }
+}
+allowOnlySinhalaLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  if (allowedControlKeys.includes(event.key)) return;
+  const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
+  if (!isSinhala) {
+    event.preventDefault();
+  }
+}
+
+allowOnlyTamilLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  if (allowedControlKeys.includes(event.key)) return;
+
+  const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
+  if (!isTamil) {
+    event.preventDefault();
+  }
+}
+
+capitalizeFirstLetter(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  if (value.length > 0) {
+    input.value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+}
+
+blockZeroValue(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.value === '0') {
+    input.value = '';
+  this.cropTaskObj.reqImages = '';
+
+  }
+}
+
+
+  onSubmit() {
+  console.log('onsubmit:', this.cropId, this.indexId, this.userId);
+
+  if (
+    !this.cropTaskObj.startingDate ||
+    !this.cropTaskObj.taskTypeEnglish ||
+    !this.cropTaskObj.taskTypeSinhala ||
+    !this.cropTaskObj.taskTypeTamil ||
+    !this.cropTaskObj.taskCategoryEnglish ||
+    !this.cropTaskObj.taskCategorySinhala ||
+    !this.cropTaskObj.taskCategoryTamil ||
+    !this.cropTaskObj.taskEnglish ||
+    !this.cropTaskObj.taskSinhala ||
+    !this.cropTaskObj.taskTamil ||
+    !this.cropTaskObj.taskDescriptionEnglish ||
+    !this.cropTaskObj.taskDescriptionSinhala ||
+    !this.cropTaskObj.taskDescriptionTamil ||
+    !this.cropTaskObj.reqImages ||
+    (this.requireImageLink === 'yes' && !this.cropTaskObj.imageLink)
+  ) {
+    this.taskForm.markAllAsTouched();
+    console.log('failed');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Validation Error',
+      text: 'Please fill in all required fields before submitting.',
+    });
+    return;
+  }
+
+  if (this.userId == 'null') {
+    this.isLoading = true;
+    console.log('no user', this.userId);
+    this.cropCalendarService
+      .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
+      .subscribe((res) => {
+        this.isLoading = false;
+        if (res) {
+          Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
+          this.router.navigate(['/view-crop-task-by-user/user-task-list']);
+        } else {
+          Swal.fire('Error', 'Error occurred in adding task!', 'error');
+        }
+      });
+  } else {
+    this.isLoading = true;
+    console.log('has user', this.userId);
+    this.cropCalendarService
+      .createNewCropTaskU(
+        this.cropId,
+        this.indexId,
+        this.userId,
+        this.cropTaskObj,
+        this.onCulscropID
+      )
+      .subscribe((res) => {
+        this.isLoading = false;
+        if (res) {
+          Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
+          this.router.navigate(
+            ['/plant-care/action/view-crop-task-by-user'],
+            {
+              queryParams: {
+                cultivationId: this.cultivationId,
+                userId: this.userId,
+                userName: this.userName,
+              },
+            }
+          );
+        } else {
+          Swal.fire('Error', 'Error occurred in adding task!', 'error');
+        }
+      });
+  }
+}
 
   back(cropCalendarId: string, userId: string) {
     this.router.navigate(
@@ -190,7 +235,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     }
   }
 }
-
+  
 class Croptask {
   'cropId': string;
   'startingDate': string;

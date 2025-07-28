@@ -51,26 +51,29 @@
         <div>
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="category"
-            [checkmark]="true"
-            optionLabel="name"
-            optionValue="value"
-            [showClear]="true"
-            placeholder="Category"
-            [(ngModel)]="selectedCategory"
-            (onChange)="regStatusFil()"
+             [options]="category"
+  optionLabel="name"
+  optionValue="value"
+  placeholder="Category"
+  [(ngModel)]="selectedCategory"
+  [showClear]="true"
+  [checkmark]="true"
+  (onChange)="regStatusFil()"
           />
         </div>
 
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
         >
-          <input
-            type="text"
-            placeholder="Search by Crop / Variety name / Method ..."
-            [(ngModel)]="searchText"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          />
+         <input
+  type="text"
+  placeholder="Search by Crop / Variety name / Method ..."
+  [(ngModel)]="searchText"
+  (keyup.enter)="onSearch()"
+  (keyup.esc)="offSearch()"
+  class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+/>
+
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -128,12 +131,12 @@
         <thead>
           <tr>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-textLight dark:text-textDark text-left "
             >
               No
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="py-3 font-normal text-textLight dark:text-textDark text-left px-4"
             >
               Crop
             </th>
@@ -181,7 +184,7 @@
             <td class="py-3 text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="py-3 text-textLight dark:text-textDark">
+            <td class="py-3 text-textLight dark:text-textDark px-4">
               {{ item.cropNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">

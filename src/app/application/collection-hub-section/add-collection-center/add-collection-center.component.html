@@ -135,7 +135,7 @@
             (collectionCenterForm.get('buildingNumber')?.dirty ||
               collectionCenterForm.get('buildingNumber')?.touched)
           " class="text-red-500 text-sm mt-1">
-          Building number is required
+          Building Number is required
         </div>
       </div>
 
@@ -150,7 +150,7 @@
               collectionCenterForm.get('street')?.touched)
           " class="text-red-500 text-sm mt-1">
           <span *ngIf="collectionCenterForm.get('street')?.errors?.['required']">
-            Street name is required
+            Street Name is required
           </span>
         </div>
       </div>
@@ -209,18 +209,15 @@
 
       <div>
         <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
-        <select formControlName="country" id="country" name="country"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-          <option selected disabled>Sri Lanka</option>
-        </select>
-        <div *ngIf="
-            collectionCenterForm.get('country')?.invalid &&
-            (collectionCenterForm.get('country')?.dirty ||
-              collectionCenterForm.get('country')?.touched)
-          " class="text-red-500 text-sm mt-1">
-          Country is required
-        </div>
+        <input
+          id="country"
+          type="text"
+          formControlName="country"
+          readonly
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
       </div>
+      
 
       <!-- <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>

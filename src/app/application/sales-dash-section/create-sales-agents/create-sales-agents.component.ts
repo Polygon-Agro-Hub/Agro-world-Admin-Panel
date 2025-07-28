@@ -294,6 +294,11 @@ export class CreateSalesAgentsComponent implements OnInit {
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
+
+    // Add this to mark empType as touched when interacting with radio buttons
+    if (fieldName === 'firstName' || fieldName === 'lastName') {
+      this.touchedFields['empType'] = true;
+    }
   }
 
   validateConfirmAccNumber(): void {
@@ -421,8 +426,27 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.personalData, this.selectedImage); // Logs the personal data with updated languages
-    console.log('hii', this.personalData.empType);
+    // Check if employee type is selected
+    if (!this.personalData.empType) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Staff Employee Type is a required field',
+      });
+      return; // Exit the function if not selected
+    }
+
+    // Only proceed with the rest of the validation if employee type is selected
+    if (!this.checkSubmitValidity()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please fill all required fields correctly',
+      });
+      return;
+    }
+
+    console.log(this.personalData, this.selectedImage);
 
     Swal.fire({
       title: 'Are you sure?',
@@ -435,7 +459,6 @@ export class CreateSalesAgentsComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        // Proceed with submission if user clicks 'Yes'
         this.salesAgentService
           .createSalesAgent(this.personalData, this.selectedImage)
           .subscribe(
@@ -454,12 +477,11 @@ export class CreateSalesAgentsComponent implements OnInit {
             (error: any) => {
               this.isLoading = false;
               this.errorMessage =
-                error.error.error || 'An unexpected error occurred'; // Update the error message
+                error.error.error || 'An unexpected error occurred';
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
       } else {
-        // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });

@@ -24,25 +24,26 @@
                 <th scope="col" class="px-6 py-3 text-center">
                     INVOICE
                 </th>
-                
+
             </tr>
         </thead>
         <tbody>
-            <tr class="bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" *ngFor="let item of orderObj">
+            <tr class="bg-white border-b-2 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                *ngFor="let item of orders">
                 <th scope="row" class="font-normal text-gray-900 dark:text-white text-center">
-                   {{item.invoiceNo}}
+                    {{item.invNo}}
                 </th>
                 <td class="px-6 py-4 text-left">
-                    {{item.time}}
+                    {{ item.createdAt | date:'d MMM, y h:mm a' }}
                 </td>
                 <td class="px-6 py-4 text-left">
-                    {{item.cname}}
+                    {{item.firstName}} {{item.lastName}}
                 </td>
                 <td class="px-6 py-4 text-left">
-                    {{item.method}}
+                    {{item.paymentMethod}}
                 </td>
                 <td class="px-6 py-4 text-left">
-                    {{item.amount}}
+                    {{item.fullTotal}}
                 </td>
                 <td class="px-6 py-4 text-center">
                     <div *ngIf="item.status ==='Delivered'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">
@@ -51,14 +52,14 @@
                     <div *ngIf="item.status ==='Processing'" class="bg-[#CFE1FF] px-3 py-2 text-[#3B82F6] rounded-xl">
                         {{item.status}}
                     </div>
-                    <div *ngIf="item.status ==='Assigned'" class="bg-[#F8FFA6] px-3 py-2 text-[#A8A100] rounded-xl">
-                        {{item.status}}
+                    <div *ngIf="item.status ==='Ordered'" class="bg-[#F8FFA6] px-3 py-2 text-[#A8A100] rounded-xl">
+                        Assigned
                     </div>
                 </td>
                 <td class="px-6 py-4 text-center">
                     <i class="fa-solid fa-file-invoice-dollar text-3xl text-center"></i>
                 </td>
-                
+
             </tr>
         </tbody>
     </table>

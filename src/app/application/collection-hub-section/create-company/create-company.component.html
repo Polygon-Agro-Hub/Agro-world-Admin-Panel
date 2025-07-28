@@ -15,97 +15,49 @@
       <!-- Logo and Favicon Upload Section -->
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
-          >
-            Add Logo
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            Add Logo <span class="text-red-600">*</span>
           </label>
           <div class="relative ml-5">
-            <input
-              type="file"
-              id="logoUpload"
-              name="logoUpload"
-              accept="image/*"
-              (change)="onLogoChange($event)"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
+            <input type="file" id="logoUpload" name="logoUpload" accept="image/*" (change)="onLogoChange($event)"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <div
-              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-            >
+              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
               <div *ngIf="!companyData.logo" class="text-center">
-                <svg
-                  class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  ></path>
+                <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                  </path>
                 </svg>
               </div>
-              <img
-                *ngIf="companyData.logo"
-                [src]="companyData.logo"
-                alt="Logo preview"
-                class="w-full h-full object-cover rounded-lg"
-              />
+              <img *ngIf="companyData.logo" [src]="companyData.logo" alt="Logo preview"
+                class="w-full h-full object-cover rounded-lg" />
             </div>
           </div>
-          <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm mt-1"
-            >Logo is required.</span
-          >
+          <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm mt-1">Logo is required.</span>
         </div>
 
         <div class="flex items-center">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
-          >
-            Add Favicon
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            Add Favicon <span class="text-red-600">*</span>
           </label>
           <div class="relative ml-5">
-            <input
-              type="file"
-              id="faviconUpload"
-              name="faviconUpload"
-              accept="image/*,.ico"
-              (change)="onFaviconChange($event)"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
+            <input type="file" id="faviconUpload" name="faviconUpload" accept="image/*,.ico"
+              (change)="onFaviconChange($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
             <div
-              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-            >
+              class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
               <div *ngIf="!companyData.favicon" class="text-center">
-                <svg
-                  class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  ></path>
+                <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                  </path>
                 </svg>
               </div>
-              <img
-                *ngIf="companyData.favicon"
-                [src]="companyData.favicon"
-                alt="Favicon preview"
-                class="w-full h-full object-cover rounded-lg"
-              />
+              <img *ngIf="companyData.favicon" [src]="companyData.favicon" alt="Favicon preview"
+                class="w-full h-full object-cover rounded-lg" />
             </div>
           </div>
-          <span
-            *ngIf="isFieldInvalid('favicon')"
-            class="text-red-600 text-sm mt-1"
-            >Favicon is required.</span
-          >
+          <span *ngIf="isFieldInvalid('favicon')" class="text-red-600 text-sm mt-1">Favicon is required.</span>
         </div>
       </div>
 
@@ -113,122 +65,71 @@
 
       <div>
         <div class="pb-6">
-          <label
-            for="regNumber"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Registration Number of the Company</label
-          >
-          <input
-            id="regNumber"
-            name="regNumber"
-            [(ngModel)]="companyData.regNumber"
-            (blur)="onBlur('regNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm"
-            >Register Number is required.</span
-          >
+          <label for="regNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Registration Number
+            of the Company <span class="text-red-600">*</span></label>
+          <input id="regNumber" name="regNumber" [(ngModel)]="companyData.regNumber" (blur)="onBlur('regNumber')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyNameEnglish"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Name (in English)</label
-          >
-          <input
-            id="companyNameEnglish"
-            name="companyNameEnglish"
-            [(ngModel)]="companyData.companyNameEnglish"
+          <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
+            Name (in English) <span class="text-red-600">*</span></label>
+          <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter('companyNameEnglish')"
             (blur)="onBlur('companyNameEnglish')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('companyNameEnglish')"
-            class="text-red-600 text-sm"
-            >Company Name in English required.</span
-          >
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+            Only English letters are allowed.
+          </div>
+          <span *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-600 text-sm">Company Name in English
+            required.</span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyNameSinhala"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Name (in Sinhala)</label
-          >
-          <input
-            id="companyNameSinhala"
-            name="companyNameSinhala"
-            [(ngModel)]="companyData.companyNameSinhala"
-            (blur)="onBlur('companyNameSinhala')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('companyNameSinhala')"
-            class="text-red-600 text-sm"
-            >Company Name in Sinhala required.</span
-          >
+          <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
+            Name (in Sinhala) <span class="text-red-600">*</span></label>
+          <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
+            (keydown)="allowOnlySinhalaLetters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
+            Only Sinhala letters are allowed.
+          </div>
+          <span *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-600 text-sm">Company Name in Sinhala
+            required.</span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyNameTamil"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Name (in Tamil)</label
-          >
-          <input
-            id="companyNameTamil"
-            name="companyNameTamil"
-            [(ngModel)]="companyData.companyNameTamil"
-            (blur)="onBlur('companyNameTamil')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('companyNameTamil')"
-            class="text-red-600 text-sm"
-            >Company Name in Tamil required.</span
-          >
+          <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
+            (in Tamil) <span class="text-red-600">*</span></label>
+          <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
+            Only Tamil letters are allowed.
+          </div>
+          <span *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-600 text-sm">Company Name in Tamil
+            required.</span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="email"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Email Address</label
-          >
-          <input
-            id="email"
-            name="email"
-            [(ngModel)]="companyData.email"
-            (blur)="onBlur('email')"
-            type="email"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm"
-            >Email is required.</span
-          >
-          <span
-            *ngIf="companyData.email && !isValidEmail(companyData.email)"
-            class="text-red-600 text-sm"
-          >
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
+            Address <span class="text-red-600">*</span></label>
+          <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
+          <span *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm">
             Enter a valid email address.
           </span>
         </div>
       </div>
 
       <div class="flex justify-end m-10">
-        <button
-          type="submit"
-          class="px-4 py-2 w-20 bg-[#74788D] text-white rounded-md mr-5"
-          onclick="history.back()"
-        >
+        <button type="submit" class="px-4 py-2 w-20 bg-[#74788D] text-white rounded-md mr-5" onclick="history.back()">
           Cancel
         </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-          (click)="nextFormCreate('pageTwo')"
-        >
+        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageTwo')">
           Next
         </button>
       </div>
@@ -242,98 +143,57 @@
       </h2>
       <div>
         <div class="pb-6">
-          <label
-            for="accHolderName"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Account Holder’s Name</label
-          >
-          <input
-            id="accHolderName"
-            name="accHolderName"
-            [(ngModel)]="companyData.accHolderName"
-            (blur)="onBlur('accHolderName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('accHolderName')"
-            class="text-red-600 text-sm"
-            >Account Holder Name is required.</span
-          >
+          <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s
+            Name <span class="text-red-600">*</span></label>
+          <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.accHolderName"
+            (keydown)="allowOnlyValidNameCharacters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
+            Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
+          </div>
+          <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder Name is
+            required.</span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="accNumber"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
-            Account Number
+          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Account Number <span class="text-red-600">*</span>
           </label>
-          <input
-            id="accNumber"
-            name="accNumber"
-            [(ngModel)]="companyData.accNumber"
-            (blur)="onBlur('accNumber')"
-            (keypress)="numberOnly($event)"
-            (paste)="onPaste($event, 'accNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('accNumber')"
-            class="text-red-600 text-sm"
-          >
+          <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
+            (keypress)="numberOnly($event)" (paste)="onPaste($event, 'accNumber')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
             Account Number is required.
           </span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="confirmAccNumber"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
-            Confirm Account Number
+          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Confirm Account Number <span class="text-red-600">*</span>
           </label>
-          <input
-            id="confirmAccNumber"
-            name="confirmAccNumber"
-            [(ngModel)]="companyData.confirmAccNumber"
-            (blur)="onBlur('confirmAccNumber')"
-            (keypress)="numberOnly($event)"
+          <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
+            (blur)="onBlur('confirmAccNumber')" (keypress)="numberOnly($event)"
             (paste)="onPaste($event, 'confirmAccNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Required validation message -->
-          <span
-            *ngIf="confirmAccountNumberRequired"
-            class="text-red-600 text-sm"
-          >
+          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
             Confirm Account Number is required.
           </span>
 
           <!-- Mismatch validation message -->
-          <span
-            *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
-            class="text-red-600 text-sm"
-          >
+          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
             Account Numbers do not match.
           </span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="bankDropdown"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
-            Bank Name
+          <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Bank Name <span class="text-red-600">*</span>
           </label>
-          <select
-            id="bankDropdown"
-            name="bankDropdown"
-            [(ngModel)]="selectedBankId"
-            (change)="onBankChange()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
-            <option [ngValue]="null" disabled>Select a bank</option>
+          <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+            <option [ngValue]="null" disabled>Select a bank <span class="text-red-600">*</span></option>
             <option *ngFor="let bank of banks" [ngValue]="bank.ID">
               {{ bank.name }}
             </option>
@@ -344,114 +204,113 @@
         </div>
 
         <div class="pb-6">
-          <label
-            for="branchDropdown"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
-            Branch Name
+          <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Branch Name <span class="text-red-600">*</span>
           </label>
-          <select
-            id="branchDropdown"
-            name="branchDropdown"
-            [(ngModel)]="selectedBranchId"
-            (change)="onBranchChange()"
+          <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
             [disabled]="!selectedBankId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
             <option [ngValue]="null" disabled>Select a branch</option>
             <option *ngFor="let branch of branches" [ngValue]="branch.ID">
               {{ branch.name }}
             </option>
           </select>
-          <span
-            *ngIf="isFieldInvalid('branchName')"
-            class="text-red-600 text-sm"
-          >
+          <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
             Branch Name is required.
           </span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyEmail"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Finance Officer’s Name</label
-          >
-          <input
-            id="foName"
-            name="foName"
-            [(ngModel)]="companyData.foName"
-            (blur)="onBlur('foName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm"
-            >Register Number is required.</span
-          >
+          <label for="companyEmail" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
+            Name <span class="text-red-600">*</span></label>
+          <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
+            (input)="capitalizeFirstLetter('foName')" (blur)="onBlur('foName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <!-- Error message -->
+          <div *ngIf="invalidFoName" class="text-red-500 text-sm mt-1">
+            Only English letters and spaces are allowed in Finance Officer’s Name.
+          </div>
+
+          <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
 
         <div class="flex gap-5">
           <div class="w-1/2">
-            <label
-              for="phoneNumber01"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
-              Company Contact Number - 1
+            <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              Company Contact Number - 1 <span class="text-red-600">*</span>
             </label>
             <div class="mt-1 flex">
-              <select
-                id="phoneNumber01Code"
-                name="oicConCode1"
-                [(ngModel)]="companyData.oicConCode1"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-              >
-                <option value="+94">+94 (LK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+91">+91 (India)</option>
+              <select id="phoneNumber01Code" name="oicConCode1" [(ngModel)]="companyData.oicConCode1"
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                <option value="+94">
+                  🇱🇰 +94
+                </option>
+                <option value="+84">
+                  🇻🇳 +84
+                </option>
+                <option value="+855">
+                  🇰🇭 +855
+                </option>
+                <option value="+880">
+                  🇧🇩 +880
+                </option>
+                <option value="+91">
+                  🇮🇳 +91
+                </option>
+                <option value="+31">
+                  🇳🇱 +31
+                </option>
               </select>
               <div class="w-full flex flex-col">
-                <input
-                  id="phoneNumber01"
-                  name="oicConNum1"
-                  type="number"
+                <input id="phoneNumber01" name="oicConNum1" type="text" inputmode="numeric" pattern="[0-9]*"
+                  maxlength="9" required
                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                  placeholder="7XXXXXXXX"
-                  [(ngModel)]="companyData.oicConNum1"
-                />
+                  placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1" #oicConNum1Ref="ngModel"
+                  (blur)="validateContactNumbers()" />
+                <div *ngIf="oicConNum1Ref.invalid && oicConNum1Ref.touched && oicConNum1Ref.errors?.['required']"
+                  class="text-red-500 text-sm mt-1">
+                  Company Contact Number - 1 is required.
+                </div>
+                <div *ngIf="contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm mt-1">
+                  Contact number must be exactly 9 digits.
+                </div>
               </div>
             </div>
           </div>
 
           <div class="w-1/2">
-            <label
-              for="phoNumTwo"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Company Contact Number - 2
             </label>
             <div class="mt-1 flex">
-              <select
-                id="phoneNumber02Code"
-                name="oicConCode2"
-                [(ngModel)]="companyData.oicConCode2"
+              <select id="phoneNumber02Code" name="oicConCode2" [(ngModel)]="companyData.oicConCode2"
                 (blur)="validateContactNumbers()"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-              >
-                <option value="+94">+94 (LK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+91">+91 (India)</option>
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                <option value="+94">
+                  🇱🇰 +94
+                </option>
+                <option value="+84">
+                  🇻🇳 +84
+                </option>
+                <option value="+855">
+                  🇰🇭 +855
+                </option>
+                <option value="+880">
+                  🇧🇩 +880
+                </option>
+                <option value="+91">
+                  🇮🇳 +91
+                </option>
+                <option value="+31">
+                  🇳🇱 +31
+                </option>
               </select>
-              <div class="w-full flex flex-col">
-                <input
-                  id="phoneNumber02"
-                  name="oicConNum2"
-                  type="number"
-                  (blur)="validateContactNumbers()"
-                  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                  placeholder="7XXXXXXXX"
-                  [(ngModel)]="companyData.oicConNum2"
-                />
+              <input id="phoneNumber02" name="oicConNum2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="9"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
+              <div *ngIf="contactNumberError2" class="text-red-500 text-sm mt-1">
+                Contact number must be exactly 9 digits.
               </div>
             </div>
           </div>
@@ -459,17 +318,11 @@
       </div>
 
       <div class="flex justify-end m-10">
-        <button
-          (click)="nextFormCreate('pageOne')"
-          type="button"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-        >
+        <button (click)="nextFormCreate('pageOne')" type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
         </button>
-        <button
-          type="button"
-          (click)="saveCompanyData()"
-          [disabled]="
+        <button type="button" (click)="saveCompanyData()" [disabled]="
             !companyData.confirmAccNumber ||
             !companyData.accNumber ||
             !companyData.accHolderName ||
@@ -477,9 +330,7 @@
             !companyData.branchName ||
             !companyData.foName ||
             companyData.accNumber != companyData.confirmAccNumber
-          "
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        >
+          " class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
           Submit
         </button>
       </div>
@@ -495,124 +346,68 @@
       <div class="flex justify-between items-center mb-8">
         <!-- Logo Section -->
         <div class="flex items-center">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
-          >
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
             Add Logo
           </label>
           <div class="relative ml-5">
             <!-- Changed structure to make the label the clickable area -->
             <label for="logoUpload" class="cursor-pointer">
               <div
-                class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-              >
+                class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
                 <div *ngIf="!companyData.logo" class="text-center">
-                  <svg
-                    class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    ></path>
+                  <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
                 </div>
-                <img
-                  *ngIf="companyData.logo"
-                  [src]="companyData.logo"
-                  alt="Logo preview"
-                  class="w-full h-full object-cover rounded-lg"
-                />
+                <img *ngIf="companyData.logo" [src]="companyData.logo" alt="Logo preview"
+                  class="w-full h-full object-cover rounded-lg" />
                 <!-- Remove button for logo -->
-                <button
-                  *ngIf="companyData.logo"
-                  (click)="removeLogo($event)"
-                  type="button"
-                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-                >
+                <button *ngIf="companyData.logo" (click)="removeLogo($event)" type="button"
+                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
                   ×
                 </button>
               </div>
             </label>
-            <input
-              type="file"
-              id="logoUpload"
-              name="logoUpload"
-              accept="image/*"
-              (change)="onLogoChange($event)"
-              class="hidden"
-            />
+            <input type="file" id="logoUpload" name="logoUpload" accept="image/*" (change)="onLogoChange($event)"
+              class="hidden" />
           </div>
-          <span
-            *ngIf="isFieldInvalid('logo')"
-            class="text-red-600 text-sm mt-1"
-          >
+          <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm mt-1">
             Logo is required.
           </span>
         </div>
 
         <!-- Favicon Section -->
         <div class="flex items-center">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
-          >
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
             Add Favicon
           </label>
           <div class="relative ml-5">
             <!-- Changed structure to make the label the clickable area -->
             <label for="faviconUpload" class="cursor-pointer">
               <div
-                class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-              >
+                class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
                 <div *ngIf="!companyData.favicon" class="text-center">
-                  <svg
-                    class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    ></path>
+                  <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
                 </div>
-                <img
-                  *ngIf="companyData.favicon"
-                  [src]="companyData.favicon"
-                  alt="Favicon preview"
-                  class="w-full h-full object-cover rounded-lg"
-                />
+                <img *ngIf="companyData.favicon" [src]="companyData.favicon" alt="Favicon preview"
+                  class="w-full h-full object-cover rounded-lg" />
                 <!-- Remove button for favicon -->
-                <button
-                  *ngIf="companyData.favicon"
-                  (click)="removeFavicon($event)"
-                  type="button"
-                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-                >
+                <button *ngIf="companyData.favicon" (click)="removeFavicon($event)" type="button"
+                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
                   ×
                 </button>
               </div>
             </label>
-            <input
-              type="file"
-              id="faviconUpload"
-              name="faviconUpload"
-              accept="image/*,.ico"
-              (change)="onFaviconChange($event)"
-              class="hidden"
-            />
+            <input type="file" id="faviconUpload" name="faviconUpload" accept="image/*,.ico"
+              (change)="onFaviconChange($event)" class="hidden" />
           </div>
-          <span
-            *ngIf="isFieldInvalid('favicon')"
-            class="text-red-600 text-sm mt-1"
-          >
+          <span *ngIf="isFieldInvalid('favicon')" class="text-red-600 text-sm mt-1">
             Favicon is required.
           </span>
         </div>
@@ -622,25 +417,15 @@
 
       <div>
         <div class="pb-6">
-          <label
-            for="regNumber"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Registration Number of the Company</label
-          >
-          <input
-            [(ngModel)]="companyData.regNumber"
-            id="regNumber"
-            name="regNumber"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
+          <label for="regNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Registration Number
+            of the Company</label>
+          <input [(ngModel)]="companyData.regNumber" id="regNumber" name="regNumber"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="
               userForm.get('regNumber')!.invalid &&
               (userForm.get('regNumber')!.dirty ||
                 userForm.get('regNumber')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            " class="text-red-500 text-sm mt-1">
             <div *ngIf="userForm.get('regNumber')!.errors?.['required']">
               Phone number is required.
             </div>
@@ -652,81 +437,67 @@
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyNameEnglish"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Name (in English)</label
-          >
-          <input
-            id="companyNameEnglish"
-            name="companyNameEnglish"
-            [(ngModel)]="companyData.companyNameEnglish"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
+          <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
+            Name (in English)</label>
+          <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter('companyNameEnglish')"
+            (blur)="onBlur('companyNameEnglish')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+            Only English letters are allowed.
+          </div>
+
+
+          <div *ngIf="
               userForm.get('companyNameEnglish')!.invalid &&
               (userForm.get('companyNameEnglish')!.dirty ||
                 userForm.get('companyNameEnglish')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            <div
-              *ngIf="userForm.get('companyNameEnglish')!.errors?.['required']"
-            >
+            " class="text-red-500 text-sm mt-1">
+            <div *ngIf="userForm.get('companyNameEnglish')!.errors?.['required']">
               Company Name is required.
             </div>
           </div>
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyNameSinhala"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Name (in Sinhala)</label
-          >
-          <input
-            id="companyNameSinhala"
-            name="companyNameSinhala"
-            [(ngModel)]="companyData.companyNameSinhala"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
+          <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
+            Name (in Sinhala)</label>
+          <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
+            (keydown)="allowOnlySinhalaLetters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
+            Only Sinhala letters are allowed.
+          </div>
+          <div *ngIf="
               userForm.get('companyNameSinhala')!.invalid &&
               (userForm.get('companyNameSinhala')!.dirty ||
                 userForm.get('companyNameSinhala')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            <div
-              *ngIf="userForm.get('companyNameSinhala')!.errors?.['required']"
-            >
+            " class="text-red-500 text-sm mt-1">
+            <div *ngIf="userForm.get('companyNameSinhala')!.errors?.['required']">
               Company Name is required.
             </div>
           </div>
         </div>
 
         <div class="pb-6">
-          <label
-            for="companyNameTamil"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Name (in Tamil)</label
-          >
-          <input
-            id="companyNameTamil"
-            name="companyNameTamil"
-            [(ngModel)]="companyData.companyNameTamil"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
+          <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
+            (in Tamil)</label>
+          <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
+            Only Tamil letters are allowed.
+          </div>
+
+
+
+
+          <div *ngIf="
               userForm.get('companyNameTamil')!.invalid &&
               (userForm.get('companyNameTamil')!.dirty ||
                 userForm.get('companyNameTamil')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            " class="text-red-500 text-sm mt-1">
             <div *ngIf="userForm.get('companyNameTamil')!.errors?.['required']">
               Company Name is required.
             </div>
@@ -734,45 +505,67 @@
         </div>
 
         <div class="pb-6">
-          <label
-            for="email"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Company Email Address</label
-          >
-          <input
-            id="email"
-            name="email"
-            [(ngModel)]="companyData.email"
-            type="email"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
+            Address</label>
+          <input id="email" name="email" [(ngModel)]="companyData.email" type="email"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="
               userForm.get('email')!.invalid &&
               (userForm.get('email')!.dirty || userForm.get('email')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            " class="text-red-500 text-sm mt-1">
             <div *ngIf="userForm.get('email')!.errors?.['required']">
               Email is required.
             </div>
           </div>
         </div>
+        <!-- Contact Number 1 -->
+        <div class="pb-6">
+          <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Company Contact Number - 1
+          </label>
+          <div class="flex space-x-2">
+            <input id="oicConCode1" name="oicConCode1" [(ngModel)]="companyData.oicConCode1" type="text" maxlength="4"
+              placeholder="+94"
+              class="w-20 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <input id="oicConNum1" name="oicConNum1" [(ngModel)]="companyData.oicConNum1" type="text"
+              pattern="^[0-9]{10}$" required #oicConNum1="ngModel"
+              class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+          <div *ngIf="oicConNum1.invalid && (oicConNum1.dirty || oicConNum1.touched)" class="text-red-500 text-sm mt-1">
+            <div *ngIf="oicConNum1.errors?.['required']">Contact Number 1 is required.</div>
+            <div *ngIf="oicConNum1.errors?.['pattern']">Please enter a valid 10-digit phone number.</div>
+          </div>
+        </div>
+
+        <!-- Contact Number 2 (conditionally shown) -->
+        <div class="pb-6" *ngIf="companyData.oicConNum2">
+          <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Company Contact Number - 2
+          </label>
+          <div class="flex space-x-2">
+            <input id="oicConCode2" name="oicConCode2" [(ngModel)]="companyData.oicConCode2" type="text" maxlength="4"
+              placeholder="+94"
+              class="w-20 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="text"
+              pattern="^[0-9]{10}$" #oicConNum2="ngModel"
+              class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+          <div *ngIf="oicConNum2.invalid && (oicConNum2.dirty || oicConNum2.touched)" class="text-red-500 text-sm mt-1">
+            <div *ngIf="oicConNum2.errors?.['pattern']">Please enter a valid 10-digit phone number.</div>
+          </div>
+        </div>
+
+
+
+
+
       </div>
 
       <div class="flex justify-end m-10">
-        <button
-          type="button"
-          (click)="onCancel()"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-        >
+        <button type="button" (click)="onCancel()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-          (click)="nextFormCreate('pageTwo')"
-        >
+        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageTwo')">
           Next
         </button>
       </div>
@@ -786,86 +579,58 @@
       </h2>
       <div>
         <div class="pb-6">
-          <label
-            for="companyNameEnglish"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Account Holder’s Name</label
-          >
-          <input
-            id="companyNameEnglish"
-            name="companyNameEnglish"
-            [(ngModel)]="companyData.accHolderName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
+            Holder’s Name</label>
+
+          <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.accHolderName"
+            (keydown)="allowOnlyValidNameCharacters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
+            Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
+          </div>
         </div>
 
         <div class="pb-6">
-          <label
-            for="accNumber"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
+          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Account Number
           </label>
-          <input
-            type="number"
-            id="accNumber"
-            name="accNumber"
-            [(ngModel)]="companyData.accNumber"
-            (blur)="validateConfirmAccNumber()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('accNumber')"
-            class="text-red-600 text-sm"
-          >
+          <input type="text" id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
+            (keydown)="allowOnlyDigits($event)" (blur)="validateConfirmAccNumber()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <!-- Show error message -->
+          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
+            Only digits are allowed in account number.
+          </div>
+
+
+          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
             Account Number is required.
           </span>
         </div>
 
         <div class="pb-6">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
+          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Confirm Account Number
           </label>
-          <input
-            type="number"
-            [(ngModel)]="companyData.confirmAccNumber"
-            (blur)="validateConfirmAccNumber()"
-            (input)="validateConfirmAccNumber()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-          />
-
+          <input type="text" id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
+            (keydown)="allowOnlyDigits($event)" (blur)="validateConfirmAccNumber()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Show required error only when field is empty -->
-          <span
-            *ngIf="confirmAccountNumberRequired"
-            class="text-red-600 text-sm"
-          >
+          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
             Confirm Account Number is required.
           </span>
 
           <!-- Show mismatch error only when numbers don't match and field isn't empty -->
-          <span
-            *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
-            class="text-red-600 text-sm"
-          >
+          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
             Account Numbers do not match.
           </span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="bankDropdown"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Bank Name</label
-          >
-          <select
-            id="bankDropdown"
-            name="bankDropdown"
-            [(ngModel)]="selectedBankId"
-            (change)="onBankChange()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
+          <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
+          <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
             <option [ngValue]="null" disabled>Select a bank</option>
             <option *ngFor="let bank of banks" [ngValue]="bank.ID">
               {{ bank.name }}
@@ -874,19 +639,11 @@
         </div>
 
         <div class="pb-6">
-          <label
-            for="branchDropdown"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Branch Name</label
-          >
-          <select
-            id="branchDropdown"
-            name="branchDropdown"
-            [(ngModel)]="selectedBranchId"
-            (change)="onBranchChange()"
+          <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
+            Name</label>
+          <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
             [disabled]="!selectedBankId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
             <option [ngValue]="null" disabled>Select a branch</option>
             <option *ngFor="let branch of branches" [ngValue]="branch.ID">
               {{ branch.name }}
@@ -896,26 +653,18 @@
       </div>
 
       <div class="flex justify-end m-10">
-        <button
-          (click)="nextFormCreate('pageOne')"
-          type="button"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-        >
+        <button (click)="nextFormCreate('pageOne')" type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
         </button>
-        <button
-          type="button"
-          (click)="updateCompanyData()"
-          [disabled]="
+        <button type="button" (click)="updateCompanyData()" [disabled]="
             !companyData.confirmAccNumber ||
             !companyData.accNumber ||
             !companyData.accHolderName ||
             !companyData.bankName ||
             !companyData.branchName ||
             companyData.accNumber != companyData.confirmAccNumber
-          "
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        >
+          " class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
           Save
         </button>
       </div>
@@ -928,33 +677,18 @@
     </h2>
     <div>
       <div class="pb-6">
-        <label
-          for="regNumber"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Registration Number of the Company</label
-        >
-        <input
-          id="regNumber"
-          name="regNumber"
-          [(ngModel)]="companyData.regNumber"
-          [disabled]="true"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <label for="regNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Registration Number of
+          the Company</label>
+        <input id="regNumber" name="regNumber" [(ngModel)]="companyData.regNumber" [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <div class="pb-6">
-        <label
-          for="companyNameEnglish"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Company Name (in English)</label
-        >
-        <input
-          id="companyNameEnglish"
-          name="companyNameEnglish"
-          [(ngModel)]="companyData.companyNameEnglish"
+        <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
+          (in English)</label>
+        <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
           (blur)="onBlur('companyNameEnglish')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div class="flex items-center mt-1">
           <span *ngIf="isCheckingCompanyName" class="text-blue-600 text-sm">
             Checking company name...
@@ -962,127 +696,93 @@
           <span *ngIf="companyNameError" class="text-red-600 text-sm">
             {{ companyNameError }}
           </span>
-          <span
-            *ngIf="isFieldInvalid('companyNameEnglish') && !companyNameError"
-            class="text-red-600 text-sm"
-            >Company Name in English required.</span
-          >
+          <span *ngIf="isFieldInvalid('companyNameEnglish') && !companyNameError" class="text-red-600 text-sm">Company
+            Name in English required.</span>
         </div>
       </div>
 
       <div class="pb-6">
-        <label
-          for="companyNameSinhala"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Company Name (in Sinhala)</label
-        >
-        <input
-          id="companyNameSinhala"
-          name="companyNameSinhala"
-          [(ngModel)]="companyData.companyNameSinhala"
+        <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
+          (in Sinhala)</label>
+        <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
           [disabled]="true"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <div class="pb-6">
-        <label
-          for="companyNameTamil"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Company Name (in Tamil)</label
-        >
-        <input
-          id="companyNameTamil"
-          name="companyNameTamil"
-          [(ngModel)]="companyData.companyNameTamil"
+        <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
+          (in Tamil)</label>
+        <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
           [disabled]="true"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <div class="pb-6">
-        <label
-          for="email"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Company Email Address</label
-        >
-        <input
-          id="email"
-          name="email"
-          [(ngModel)]="companyData.email"
-          [disabled]="true"
-          type="email"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
+          Address</label>
+        <input id="email" name="email" [(ngModel)]="companyData.email" [disabled]="true" type="email"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
+
+      <div class="pb-6">
+        <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Company Contact Number - 1
+        </label>
+        <input id="oicConNum1" name="oicConNum1" [value]="companyData.oicConCode1 + ' ' + companyData.oicConNum1"
+          [disabled]="true" type="text"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+
+      <div class="pb-6" *ngIf="companyData.oicConNum2">
+        <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Company Contact Number - 2
+        </label>
+        <input id="oicConNum2" name="oicConNum2" [value]="companyData.oicConCode2 + ' ' + companyData.oicConNum2"
+          [disabled]="true" type="text"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+
+
     </div>
+
+
 
     <h2 class="text-2xl mt-5 mb-10 text-textLight dark:text-textDark">
       Billing Information
     </h2>
     <div>
       <div class="pb-6">
-        <label
-          for="companyNameEnglish"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder’s Name</label
-        >
-        <input
-          id="companyNameEnglish"
-          name="companyNameEnglish"
-          [(ngModel)]="companyData.accHolderName"
-          [disabled]="true"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
+          Holder’s Name</label>
+        <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.accHolderName"
+          (keydown)="allowOnlyValidNameCharacters($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
+          Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
+        </div>
       </div>
 
       <div class="pb-6">
-        <label
-          for="accNumber"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Account Number
         </label>
-        <input
-          id="accNumber"
-          name="accNumber"
-          [(ngModel)]="companyData.accNumber"
-          [disabled]="true"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <div>
         <div class="pb-6">
-          <label
-            for="bankName"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Bank Name</label
-          >
-          <input
-            id="bankName"
-            name="bankName"
-            [(ngModel)]="companyData.bankName"
-            [disabled]="true"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <label for="bankName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
+          <input id="bankName" name="bankName" [(ngModel)]="companyData.bankName" [disabled]="true"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
       </div>
 
       <div>
         <div class="pb-6">
-          <label
-            for="branchName"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Branch Name</label
-          >
-          <input
-            id="branchName"
-            name="branchName"
-            [(ngModel)]="companyData.branchName"
-            [disabled]="true"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch Name</label>
+          <input id="branchName" name="branchName" [(ngModel)]="companyData.branchName" [disabled]="true"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
       </div>
     </div>

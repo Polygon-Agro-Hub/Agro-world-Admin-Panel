@@ -1,74 +1,69 @@
 <div class="flex flex-row justify-between items-center">
-  <div
-    class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 mr-5"
-  >
-    <div
-      class="flex justify-center items-center bg-[#CCFBF1] py-3 px-5 rounded-full"
-    >
+  <div class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 mr-5">
+    <div class="flex justify-center items-center bg-[#CCFBF1] py-3 px-5 rounded-full">
       <i class="fa-solid fa-bookmark text-2xl text-[#0D9488]"></i>
     </div>
 
     <div class="flex flex-col items-center py-5 px-4 rounded-full">
       <div>
         <p class="text-[#4B5563] text-lg">Total Sales</p>
-        <p class="text-black text-xl">5,55,63,255</p>
+        <p class="text-black text-xl">Rs.{{secondRow.salsesAnalize.amount | number:'1.2-2'}}</p>
       </div>
     </div>
 
     <div class="flex flex-1 flex-col items-end justify-center py-5 px-2">
-      <div class="flex flex-row items-center justify-end">
+      <div *ngIf="secondRow.salsesAnalize.precentage >= 0" class="flex flex-row items-center justify-end">
         <i class="fa-solid fa-arrow-trend-up text-[#0D9488]"></i>
-        <p class="text-[#0D9488] text-lg text-end font-semibold ml-3">34.7%</p>
+        <p class="text-[#0D9488] text-lg text-end font-semibold ml-3">{{secondRow.salsesAnalize.precentage}}%</p>
       </div>
-      <p class="text-[#ABB0B8] text-end">Compared to May 2024</p>
+
+      <div *ngIf="secondRow.salsesAnalize.precentage < 0" class="flex flex-row items-center justify-end">
+        <i class="fa-solid fa-arrow-trend-down text-[#D70000]"></i>
+        <p class="text-[#D70000] text-lg text-end font-semibold ml-3">{{secondRow.salsesAnalize.precentage * -1}}%</p>
+      </div>
+      <p class="text-[#ABB0B8] text-end text-sm whitespace-nowrap">
+        Compared to {{ getPreviousMonth() }}
+      </p>
     </div>
   </div>
 
-  <div
-    class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3"
-  >
-    <div
-      class="flex justify-center items-center bg-[#CCFBF1] py-4 px-5 rounded-full"
-    >
+  <div class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3">
+    <div class="flex justify-center items-center bg-[#CCFBF1] py-4 px-5 rounded-full">
       <i class="fa-solid fa-bag-shopping text-3xl text-[#0D9488]"></i>
     </div>
 
     <div class="flex flex-col items-center py-5 px-3">
       <div>
         <p class="text-[#4B5563] text-lg">Total Orders</p>
-        <p class="text-black text-xl">25,000</p>
+        <p class="text-black text-xl">{{secondRow.totalSales.count | number:'1.0'}}</p>
       </div>
     </div>
 
     <div class="flex flex-1 flex-col items-end py-5 px-7">
       <div class="flex flex-row items-center justify-end">
-        <i class="fa-solid fa-arrow-trend-down text-[#D70000]"></i>
-        <p class="text-[#D70000] text-lg text-end font-semibold ml-3">1.5%</p>
+        <!-- <i class="fa-solid fa-arrow-trend-down text-[#D70000]"></i>
+        <p class="text-[#D70000] text-lg text-end font-semibold ml-3">1.5%</p> -->
       </div>
       <div class="h-6"></div>
     </div>
   </div>
 
-  <div
-    class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 ml-5"
-  >
-    <div
-      class="flex justify-center items-center bg-[#FFEDD5] py-3 px-4 rounded-full"
-    >
+  <div class="flex flex-row justify-between items-center bg-white px-4 rounded-lg shadow-lg w-1/3 ml-5">
+    <div class="flex justify-center items-center bg-[#FFEDD5] py-3 px-4 rounded-full">
       <i class="fa-regular fa-user text-3xl text-[#FB923C]"></i>
     </div>
 
     <div class="flex flex-col items-center py-5 px-3">
       <div>
-        <p class="text-[#4B5563] text-lg">Total Orders</p>
-        <p class="text-black text-xl">25,000</p>
+        <p class="text-[#4B5563] text-lg">Total Customers</p>
+        <p class="text-black text-xl">{{secondRow.totUsers.userCount | number:'1.0'}}</p>
       </div>
     </div>
 
     <div class="flex flex-1 flex-col items-end py-4 px-4">
       <div class="flex flex-row items-center justify-end">
-        <i class="fa-solid fa-arrow-trend-down text-[#D70000]"></i>
-        <p class="text-[#D70000] text-lg text-end font-semibold ml-3">0.5%</p>
+        <!-- <i class="fa-solid fa-arrow-trend-down text-[#D70000]"></i>
+        <p class="text-[#D70000] text-lg text-end font-semibold ml-3">0.5%</p> -->
       </div>
       <div class="h-6"></div>
     </div>

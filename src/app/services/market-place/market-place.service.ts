@@ -38,6 +38,16 @@ deleteUser(id: number): Observable<{ status: boolean; message: string }> {
   return this.http.delete<{ status: boolean; message: string }>(url, { headers });
 }
 
+
+  getPackageHistory(packageId: number, date: string): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    const url = `${this.apiUrl}market-place/get-marketplace-package-before-date/${packageId}?date=${date}`;
+    return this.http.get<any>(url, { headers });
+  }
+
 getProductTypes(): Observable<any> {
   const headers = new HttpHeaders({
     Authorization: `Bearer ${this.token}`,
@@ -115,6 +125,8 @@ getProductTypes(): Observable<any> {
     let url = `${this.apiUrl}market-place/delete-all-coupen`;
     return this.http.delete(url, { headers });
   }
+
+  
 
   getProuctCropVerity(): Observable<any> {
     const headers = new HttpHeaders({

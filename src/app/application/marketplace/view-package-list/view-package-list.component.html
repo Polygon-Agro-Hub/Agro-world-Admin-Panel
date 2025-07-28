@@ -22,15 +22,18 @@
           this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }}) </h2>
       </div>
 
-      <div class="flex items-center h-8">
-        <input id="toDate" type="date"
-          class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64 h-8"
-          placeholder="Delivery Date" [(ngModel)]="date" (change)="dateFilter()" />
-        <button *ngIf="date" (click)="clearDateFilter()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+      <div class="flex items-center gap-2 h-8">
+        <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
+          placeholder="Delivery Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true" iconDisplay="input"
+          [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                      [&_.p-datepicker-header]:dark:bg-[#2d354d]
+                      [&_.p-datepicker-header]:dark:text-white
+                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                      [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+          [appendTo]="'body'" />
       </div>
 
       <div class="flex flex-row items-center">
@@ -65,7 +68,7 @@
         </div>
       </div>
     </div>
-
+    
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-textLight dark:text-textDark text-lg">
         No data to display
@@ -94,7 +97,14 @@
             <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Define
             </th>
-            <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
+                <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
+            >
+              History
+            </th>
+            <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
+            >
               Last Modified By
             </th>
             <th></th>
@@ -126,9 +136,19 @@
                 </ng-container>
                 <ng-template #notDefined> Not Defined Yet </ng-template>
               </td>
-              <td class="py-4 text-[#000000] dark:text-textDark text-2xl text-center">
-                <i class="fa-solid fa-square-arrow-up-right cursor-pointer" (click)="viewDefinePackage(pkg.id)"></i>
+             
+              <td
+                class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"
+              >
+                <i
+                  class="fa-solid fa-square-arrow-up-right cursor-pointer"
+                  (click)="viewDefinePackage(pkg.id)"
+                ></i>
               </td>
+               <td class="py-4 text-[#000000] dark:text-textDark text-2xl text-center"><i
+                  class="fa-solid fa-history cursor-pointer"
+                  (click)="viewDefinePackageDate(pkg.id)"
+                ></i></td>
               <td class="py-4 text-[#000000] dark:text-textDark text-center">
                 {{ pkg.adminUser ? pkg.adminUser : "No One" }}
               </td>

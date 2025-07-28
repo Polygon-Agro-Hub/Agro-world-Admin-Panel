@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './steckholders.component.css'
 })
 export class SteckholdersComponent implements OnInit, OnDestroy {
+
   isDropdownOpen = false;
   private clickListener: any;
   isButton2Clicked = false;
@@ -106,4 +107,8 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   navigateToViewSalesAgents(): void {
     this.router.navigate(['/steckholders/action/sales-agents']);
   }
+
+  navigateToViewCompaniesAgents() {
+ this.router.navigate(['/collection-hub/manage-company']);
+}
 }

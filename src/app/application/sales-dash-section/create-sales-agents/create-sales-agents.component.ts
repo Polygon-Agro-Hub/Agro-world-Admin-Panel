@@ -12,6 +12,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
+import { DropdownModule } from 'primeng/dropdown';
 interface Bank {
   ID: number;
   name: string;
@@ -36,6 +37,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './create-sales-agents.component.html',
   styleUrl: './create-sales-agents.component.css',
@@ -114,7 +116,8 @@ export class CreateSalesAgentsComponent implements OnInit {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort banks alphabetically by name
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => {
         console.error('Error loading banks:', error);
@@ -125,6 +128,10 @@ export class CreateSalesAgentsComponent implements OnInit {
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
+        // If data is { bank1: Branch[], bank2: Branch[], ... }
+        Object.keys(data).forEach((key) => {
+          data[key] = data[key].sort((a, b) => a.name.localeCompare(b.name));
+        });
         this.allBranches = data;
       },
       (error) => {
@@ -316,8 +323,13 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   isValidNIC(nic: string): boolean {
-    const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
-    return nicRegex.test(nic);
+    // 12 digits only (new format)
+    const newFormat = /^\d{12}$/;
+
+    // 9 digits + V (old format)
+    const oldFormat = /^\d{9}[V]$/;
+
+    return newFormat.test(nic) || oldFormat.test(nic);
   }
 
   allowOnlyNumbers(event: KeyboardEvent): void {
@@ -328,10 +340,14 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   checkSubmitValidity(): boolean {
-    console.log('cehcking submit');
-    const phonePattern = /^7\d{8}$/;
-    const accountPattern = /^[a-zA-Z0-9]+$/;
+    // Regular expressions for validation
+    const phonePattern = /^7\d{8}$/; // 9 digits starting with 7
+    const accountPattern = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters
+    const englishNamePattern = /^[A-Z][a-z]*$/; // First letter capitalized, rest lowercase
+    const namePattern = /^[A-Za-z\s'-]+$/; // For names with spaces, hyphens, apostrophes
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email pattern
 
+    // Destructure personalData for easier access
     const {
       firstName,
       lastName,
@@ -351,64 +367,56 @@ export class CreateSalesAgentsComponent implements OnInit {
       district,
     } = this.personalData;
 
-    const isFirstNameValid = !!firstName;
+    // Name validations
+    const isFirstNameValid = !!firstName && englishNamePattern.test(firstName);
+    const isLastNameValid = !!lastName && englishNamePattern.test(lastName);
+    const isAccHolderNameValid =
+      !!accHolderName && namePattern.test(accHolderName);
 
+    // Contact validations
     const isPhoneNumber1Valid =
       !!phoneNumber1 && phonePattern.test(phoneNumber1);
-    const isEmailValid = this.isValidEmail(email);
+    const isEmailValid = !!email && emailPattern.test(email);
     const isEmpTypeSelected = !!empType;
-    const isNicSelected = !!nic;
+    const isNicValid = !!nic && this.isValidNIC(nic);
 
-    const isAccNumberPatternValid = accountPattern.test(accNumber);
-    const isConfirmAccNumberPatternValid =
-      accountPattern.test(confirmAccNumber);
-
-    let isPhoneValid = true;
-
+    // Phone number 2 validation (optional)
+    let isPhoneNumber2Valid = true;
     if (phoneNumber2) {
-      isPhoneValid =
+      isPhoneNumber2Valid =
         phoneNumber2 !== phoneNumber1 && phonePattern.test(phoneNumber2);
     }
 
+    // Address validations
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
 
+    // Bank details validations
+    const isAccNumberValid = !!accNumber && accountPattern.test(accNumber);
+
+    const isConfirmAccNumberValid =
+      !!confirmAccNumber &&
+      accountPattern.test(confirmAccNumber) &&
+      accNumber === confirmAccNumber;
+
     const isBankDetailsValid =
-      !!accHolderName &&
-      !!accNumber &&
+      isAccHolderNameValid &&
+      isAccNumberValid &&
       !!bankName &&
       !!branchName &&
-      !!confirmAccNumber &&
-      accNumber === confirmAccNumber &&
-      isAccNumberPatternValid &&
-      isConfirmAccNumberPatternValid;
-    console.log(
-      'isBankDetailsValid',
-      isBankDetailsValid,
-      'isAddressValid',
-      isAddressValid,
-      'isFirstNameValid',
-      isFirstNameValid,
-      'isPhoneNumber1Valid',
-      isPhoneNumber1Valid,
-      'isEmailValid',
-      isEmailValid,
-      'isEmpTypeSelected',
-      isEmpTypeSelected,
-      'isNicSelected',
-      isNicSelected,
-      'isPhoneValid',
-      isPhoneValid
-    );
+      isConfirmAccNumberValid;
+
+    // Final validation combining all checks
     return (
-      isBankDetailsValid &&
-      isAddressValid &&
       isFirstNameValid &&
+      isLastNameValid &&
       isPhoneNumber1Valid &&
       isEmailValid &&
       isEmpTypeSelected &&
-      isNicSelected &&
-      isPhoneValid
+      isNicValid &&
+      isPhoneNumber2Valid &&
+      isAddressValid &&
+      isBankDetailsValid
     );
   }
 
@@ -474,6 +482,141 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  validateNameInput(event: KeyboardEvent): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+      ' ',
+      'Spacebar',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+    const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+    if (!allowedPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
+    if (this.personalData[fieldName]) {
+      // Capitalize first letter and make the rest lowercase
+      this.personalData[fieldName] =
+        this.personalData[fieldName].charAt(0).toUpperCase() +
+        this.personalData[fieldName].slice(1).toLowerCase();
+    }
+  }
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
+
+  formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
+      }
+    }
+  }
+
+  capitalizeName(fieldName: keyof Personal): void {
+    if (!this.personalData[fieldName]) return;
+
+    // Convert to lowercase first
+    let name = this.personalData[fieldName].toLowerCase();
+    let result = '';
+    let capitalizeNext = true;
+
+    for (let i = 0; i < name.length; i++) {
+      const char = name[i];
+
+      if (capitalizeNext && /[a-z]/.test(char)) {
+        result += char.toUpperCase();
+        capitalizeNext = false;
+      } else {
+        result += char;
+      }
+
+      // Set flag to capitalize next letter if current character is a separator
+      if ([' ', '-', "'"].includes(char)) {
+        capitalizeNext = true;
+      }
+    }
+
+    this.personalData[fieldName] = result;
+  }
+
+  isValidName(name: string): boolean {
+    // Allows letters, spaces, hyphens, and apostrophes
+    const namePattern = /^[A-Za-z\s'-]+$/;
+    return namePattern.test(name);
+  }
+
+  allowOnlyAlphanumeric(event: KeyboardEvent): void {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only alphanumeric characters (A-Z, a-z, 0-9)
+    const alphanumericPattern = /^[0-9]$/;
+
+    if (!alphanumericPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  isValidAccountNumber(accountNumber: string): boolean {
+    const accountPattern = /^[a-zA-Z0-9]+$/;
+    return accountPattern.test(accountNumber);
   }
 }
 

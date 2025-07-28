@@ -77,6 +77,14 @@ export class MarketEditPackagesComponent {
     });
   }
 
+preventNegative(event: any): void {
+  const value = parseFloat(event.target.value);
+  if (value < 0) {
+    event.target.value = 0;
+    event.target.dispatchEvent(new Event('input'));
+  }
+}
+
   async onSubmit() {
     console.log('selected image', this.selectedImage);
     console.log('submit', this.packageObj);

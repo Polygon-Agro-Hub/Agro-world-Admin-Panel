@@ -1,24 +1,39 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { ViewPackageListService } from '../../../services/market-place/view-package-list.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../../services/token/services/token.service';
-import { response } from 'express';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { CalendarModule } from 'primeng/calendar';
+
+interface PackageList {
+  id: number;
+  adminUser: string;
+  displayName: string;
+  image: string;
+  description: string;
+  total: number;
+  status: string;
+  discount: number;
+  subtotal: number;
+  defineDate: string;
+  createdAt: string;
+  groupStatus: any;
+}
 
 @Component({
   selector: 'app-view-package-list',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, DropdownModule, FormsModule],
+  imports: [CommonModule, LoadingSpinnerComponent, DropdownModule, FormsModule,CalendarModule],
   templateUrl: './view-package-list.component.html',
   styleUrl: './view-package-list.component.css',
 })
-export class ViewPackageListComponent {
+export class ViewPackageListComponent implements OnInit {
   date: string = '';
   viewPackageList: PackageList[] = [];
   isLoading = false;
@@ -38,6 +53,10 @@ export class ViewPackageListComponent {
     private http: HttpClient,
     private tokenService: TokenService
   ) {}
+
+  ngOnInit() {
+    this.fetchAllPackages();
+  }
 
   back(): void {
     this.router.navigate(['/market/action']);
@@ -65,10 +84,6 @@ export class ViewPackageListComponent {
         }
       }
     );
-  }
-
-  ngOnInit() {
-    this.fetchAllPackages(); // Removed pagination parameters
   }
 
   navigatePath(path: string) {
@@ -142,7 +157,7 @@ export class ViewPackageListComponent {
 
   offSearch() {
     this.searchtext = '';
-    this.fetchAllPackages('', this.date); // Keep date filter when clearing search
+    this.fetchAllPackages('', this.date);
   }
 
   clearDateFilter() {
@@ -152,6 +167,13 @@ export class ViewPackageListComponent {
 
   viewDefinePackage(id: number) {
     this.router.navigate([`/market/action/define-package-view`], {
+      queryParams: { id },
+    });
+  }
+
+  viewDefinePackageDate(id: number) {
+    console.log('Navigating to history with package ID:', id); // Debugging
+    this.router.navigate([`/market/action/view-package-history`], {
       queryParams: { id },
     });
   }
@@ -182,23 +204,7 @@ export class ViewPackageListComponent {
           }
         );
     } else {
-      // If date is cleared, fetch all packages without date filter
       this.fetchAllPackages();
     }
   }
-}
-
-class PackageList {
-  id!: number;
-  adminUser!: string;
-  displayName!: string;
-  image!: string;
-  description!: string;
-  total!: number;
-  status!: string;
-  discount!: number;
-  subtotal!: number;
-  defineDate!: string;
-  createdAt!: string;
-  groupStatus: any;
 }

@@ -63,9 +63,6 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isEnglishValid }"
         />
-        <!-- <div *ngIf="!isEnglishValid" class="text-red-500">
-          Title must contain English and not only numbers.
-        </div> -->
       </div>
 
       <div class="mb-4">
@@ -76,13 +73,6 @@
           <span class="text-[#2E2E2E]">*</span></label
         >
         <div class="custom-editor">
-          <!-- <angular-editor
-            [placeholder]="'Enter text here...'"
-            [(ngModel)]="createNewsObj.descriptionEnglish"
-            class="w-full h-full text-textLight dark:text-textDark"
-            [config]="editorConfig"
-          ></angular-editor> -->
-
           <quill-editor
             [(ngModel)]="createNewsObj.descriptionEnglish"
             [styles]="{ height: '300px' }"
@@ -114,9 +104,6 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isSinhalaValid }"
         />
-        <!-- <div *ngIf="!isSinhalaValid" class="text-red-500">
-          Title must be in Sinhala and not only numbers.
-        </div> -->
       </div>
 
       <div class="mb-4">
@@ -127,12 +114,6 @@
           <span class="text-[#2E2E2E]">*</span></label
         >
         <div class="custom-editor">
-          <!-- <angular-editor
-            [placeholder]="'Enter text here...'"
-            [(ngModel)]="createNewsObj.descriptionSinhala"
-            class="w-full h-full text-textLight dark:text-textDark"
-            [config]="editorConfig"
-          ></angular-editor> -->
           <quill-editor
             [(ngModel)]="createNewsObj.descriptionSinhala"
             [styles]="{ height: '300px', fontSize: '16px' }"
@@ -164,9 +145,6 @@
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isTamilValid }"
         />
-        <!-- <div *ngIf="!isTamilValid" class="text-red-500">
-          Title must be in Tamil and not only numbers.
-        </div> -->
       </div>
 
       <div class="mb-4">
@@ -177,12 +155,6 @@
           <span class="text-[#2E2E2E]">*</span></label
         >
         <div class="custom-editor">
-          <!-- <angular-editor
-            [placeholder]="'Enter text here...'"
-            [(ngModel)]="createNewsObj.descriptionTamil"
-            class="w-full h-full text-textLight dark:text-textDark"
-            [config]="editorConfig"
-          ></angular-editor> -->
           <quill-editor
             [(ngModel)]="createNewsObj.descriptionTamil"
             [styles]="{ height: '300px', fontSize: '16px' }"
@@ -329,9 +301,6 @@
         >
           English title is required.
         </div>
-        <!-- <div *ngIf="!isEnglishValid" class="text-red-500">
-          Title must contain English and not only numbers.
-        </div> -->
         <div
           *ngIf="titleEnglish.errors?.['pattern'] && titleEnglish.touched"
           class="text-red-500"
@@ -348,14 +317,6 @@
           <span class="text-[#2E2E2E]">*</span></label
         >
         <div class="custom-editor">
-          <!-- <angular-editor
-            [placeholder]="'Enter text here...'"
-            [(ngModel)]="newsItems[0].descriptionEnglish"
-            class="w-full h-full text-textLight dark:text-textDark"
-            [config]="editorConfig"
-            #descriptionEnglishField="ngModel"
-            required
-          ></angular-editor> -->
           <quill-editor
             [(ngModel)]="newsItems[0].descriptionEnglish"
             [styles]="{ height: '300px' }"
@@ -404,9 +365,6 @@
         >
           Sinhala title is required.
         </div>
-        <!-- <div *ngIf="!isSinhalaValid" class="text-red-500">
-          Title must be in Sinhala and not only numbers.
-        </div> -->
         <div
           *ngIf="titleSinhala.errors?.['pattern'] && titleSinhala.touched"
           class="text-red-500"
@@ -422,15 +380,6 @@
           >Add Description (In Sinhala)</label
         >
         <div class="custom-editor">
-          <!-- <angular-editor
-            [placeholder]="'Enter text here...'"
-            [(ngModel)]="newsItems[0].descriptionSinhala"
-            (ngModelChange)="validateTitleEnglish($event)"
-            class="w-full h-full text-textLight dark:text-textDark"
-            [config]="editorConfig"
-            #descriptionSinhalaField="ngModel"
-            required
-          ></angular-editor> -->
           <quill-editor
             [(ngModel)]="newsItems[0].descriptionSinhala"
             [styles]="{ height: '300px' }"
@@ -479,9 +428,6 @@
         >
           Title must contain Tamil letters and not be only numbers.
         </p>
-        <!-- <div *ngIf="!isTamilValid" class="text-red-500">
-          Title must be in Tamil and not only numbers.
-        </div> -->
         <div
           *ngIf="titleTamil.errors?.['pattern'] && titleTamil.touched"
           class="text-red-500"
@@ -598,5 +544,3 @@
     </div>
   </div>
 </div>
-<!-- !this.newsItems[0].titleEnglish && !this.newsItems[0].descriptionEnglish && !this.newsItems[0].titleSinhala && !this.newsItems[0].descriptionSinhala && !this.newsItems[0].titleTamil && !this.newsItems[0].descriptionTamil && this.newsItems[0].publishDate && this.newsItems[0].expireDate
-[disabled]="isAnyFieldMissing" -->

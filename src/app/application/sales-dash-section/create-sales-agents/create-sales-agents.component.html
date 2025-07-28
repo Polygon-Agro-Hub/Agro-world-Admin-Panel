@@ -84,7 +84,12 @@
           </div>
         </div>
 
-        <div>
+        <div
+          [class.border-red-500]="
+            !personalData.empType && touchedFields.empType
+          "
+          class="p-2 rounded-md"
+        >
           <label
             for="enpType"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -128,8 +133,11 @@
               </label>
             </div>
           </div>
-          <p *ngIf="isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
-            Please select an employee type.
+          <p
+            *ngIf="!personalData.empType && touchedFields.empType"
+            class="text-red-600 text-sm mt-2"
+          >
+            Staff Employee Type is a required field.
           </p>
         </div>
       </div>

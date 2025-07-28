@@ -89,48 +89,33 @@
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name
+            Company Name*
           </label>
-          <div class="relative">
-            <select (blur)="onBlur('companyId')" id="centerId" [(ngModel)]="personalData.companyId" name="centerId"
-              (change)="getAllCollectionCetnter(personalData.companyId)"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10">
-              <option *ngFor="let center of CompanyData" [value]="center.id"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                {{ center.companyNameEnglish }}
-              </option>
-            </select>
-            <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
-          </div>
+          <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
+            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
+            (onChange)="getAllCollectionCetnter(personalData.companyId)" (onBlur)="onBlur('companyId')"
+            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
           <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm">Company Name is a required field</span>
         </div>
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Collection Centre Name
+            Collection Centre Name*
           </label>
-          <div class="relative">
-            <select (blur)="onBlur('centerId')" id="centerId" [(ngModel)]="personalData.centerId" name="centerId"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
-              [disabled]="!loaded">
-              <option *ngIf="!loaded" disabled selected>Loading...</option>
-              <option *ngFor="let center of collectionCenterData" [value]="center.id"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                {{ center.centerName }}
-              </option>
-            </select>
-
-            <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
-          </div>
+          <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
+            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!loaded"
+            placeholder="Select a collection centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
+            panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
           <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm">Collection Centre Name is a required
             field</span>
         </div>
 
         <div>
           <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Job Role
+            Job Role*
           </label>
           <div class="relative">
             <select (blur)="onBlur('jobRole')" id="jobRole" [(ngModel)]="personalData.jobRole"
@@ -143,11 +128,11 @@
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 Collection Center Manager
               </option>
-              <option *ngIf="personalData.companyId === '1'" value="Collection Officer"
+              <option value="Collection Officer"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 Collection Officer
               </option>
-              <option *ngIf="personalData.companyId === '1'" value="Customer Officer"
+              <option value="Customer Officer"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 Customer Officer
               </option>
@@ -180,24 +165,18 @@
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Manager Name
+            Manager Name*
           </label>
-          <div class="relative">
-            <select id="centerId" [(ngModel)]="personalData.irmId" name="centerId"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10">
-              <option *ngFor="let center of collectionManagerData" [value]="center.id"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
-              </option>
-            </select>
-            <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
-          </div>
+          <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
+            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
+            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
         </div>
 
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
-            (in English)</label>
+            (in English)*</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
@@ -225,7 +204,7 @@
         <!-- Updated First Name (Sinhala) input -->
         <div>
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
-            (in Sinhala)</label>
+            (in Sinhala)*</label>
           <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             (blur)="onBlur('firstNameSinhala')" (input)="formatSinhalaName('firstNameSinhala')"
             (keypress)="preventNonSinhalaCharacters($event)"
@@ -253,7 +232,7 @@
         <!-- Updated First Name (Tamil) input -->
         <div>
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Tamil)</label>
+            Tamil)*</label>
           <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
             (blur)="onBlur('firstNameTamil')" (input)="formatTamilName('firstNameTamil')"
             (keypress)="preventNonTamilCharacters($event)"
@@ -281,7 +260,7 @@
 
         <div>
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Mobile Number - 01
+            Mobile Number - 01*
           </label>
           <div class="mt-1 flex">
             <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
@@ -316,7 +295,7 @@
         <!-- Updated Mobile Number - 02 input -->
         <div>
           <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Mobile Number - 02
+            Mobile Number - 02*
           </label>
           <div class="mt-1 flex">
             <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
@@ -346,7 +325,7 @@
         </div>
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number</label>
+          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
@@ -355,7 +334,7 @@
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
@@ -384,7 +363,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="pb-6">
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
-            Number</label>
+            Number*</label>
           <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
             [(ngModel)]="personalData.houseNumber"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -393,14 +372,14 @@
         </div>
 
         <div class="pb-6">
-          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
+          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
           <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is a required field</span>
         </div>
 
         <div class="pb-6">
-          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City*</label>
           <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData.city"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is a required field</span>
@@ -408,7 +387,7 @@
 
         <div class="pb-6">
           <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            District
+            District*
           </label>
           <select (blur)="onBlur('district')" id="district" name="district" [(ngModel)]="personalData.district"
             (change)="updateProvince($event)"
@@ -423,7 +402,7 @@
 
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Province
+            Province*
           </label>
           <input id="province" name="province" [(ngModel)]="personalData.province"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -431,7 +410,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country*</label>
           <input id="country" name="country" [(ngModel)]="personalData.country"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             readonly value="Sri Lanka" />
@@ -444,7 +423,7 @@
       </h2>
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-          Name</label>
+          Name*</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           (blur)="onBlur('accHolderName')" (input)="formatAccountHolderName()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -456,7 +435,7 @@
 
       <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Account Number
+          Account Number*
         </label>
         <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"
           (blur)="onBlur('accNumber')"
@@ -468,7 +447,7 @@
 
       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number
+          Confirm Account Number*
         </label>
         <input id="confirmAccNumber" name="confirmAccNumber" type="number" [(ngModel)]="personalData.confirmAccNumber"
           (blur)="onBlur('confirmAccNumber')"
@@ -485,16 +464,13 @@
 
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Bank Name
+          Bank Name*
         </label>
-        <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
-          (blur)="onBlur('bankName')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-          <option [ngValue]="null" disabled>Select a bank</option>
-          <option *ngFor="let bank of banks" [ngValue]="bank.ID">
-            {{ bank.name }}
-          </option>
-        </select>
+        <p-dropdown [(ngModel)]="selectedBankId" [options]="bankOptions" optionLabel="label" optionValue="value"
+          [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank" (onChange)="onBankChange()"
+          (onBlur)="onBlur('bankName')" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+          class="mt-1 block w-full p-dropdown-custom">
+        </p-dropdown>
         <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
           Bank Name is a required field
         </span>
@@ -502,31 +478,27 @@
 
       <div class="pb-6">
         <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Branch Name
+          Branch Name*
         </label>
-        <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
-          (blur)="onBlur('branchName')" [disabled]="!selectedBankId"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-          <option [ngValue]="null" disabled>Select a branch</option>
-          <option *ngFor="let branch of branches" [ngValue]="branch.ID">
-            {{ branch.name }}
-          </option>
-        </select>
+        <p-dropdown [(ngModel)]="selectedBranchId" [options]="branchOptions" optionLabel="label" optionValue="value"
+          [filter]="true" filterBy="label" [showClear]="false" [disabled]="!selectedBankId"
+          placeholder="Select a branch" (onChange)="onBranchChange()" (onBlur)="onBlur('branchName')"
+          styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+        </p-dropdown>
         <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
           Branch Name is a required field
         </span>
       </div>
-    </div>
 
-    <div class="flex justify-end">
-      <button (click)="nextFormCreate('pageOne')" type="button"
-        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-        Back
-      </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()"
-        [disabled]="!checkSubmitValidity()">
-        Submit
-      </button>
+      <div class="flex justify-end">
+        <button (click)="nextFormCreate('pageOne')" type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+          Back
+        </button>
+        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()"
+          [disabled]="!checkSubmitValidity()">
+          Submit
+        </button>
+      </div>
     </div>
   </div>
-</div>

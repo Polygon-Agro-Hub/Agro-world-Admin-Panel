@@ -11,6 +11,7 @@ import { CollectionOfficerService } from '../../../services/collection-officer/c
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -36,6 +37,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule 
   ],
   templateUrl: './collectiveofficers-personal.component.html',
   styleUrls: ['./collectiveofficers-personal.component.css'],
@@ -70,6 +72,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
+  companyOptions: any[] = [];
+  centerOptions: any[] = [];
+  managerOptions: any[] = [];
+  bankOptions: any[] = [];
+  branchOptions: any[] = [];
 
   invalidFields: Set<string> = new Set();
 
@@ -140,45 +147,68 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to create the collection officer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.collectionOfficerService
-          .createCollectiveOfficer(this.personalData, this.selectedImage)
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.officerId = res.officerId;
-              this.errorMessage = '';
+onSubmit() {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create the collection officer?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.collectionOfficerService
+        .createCollectiveOfficer(this.personalData, this.selectedImage)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.officerId = res.officerId;
+            this.errorMessage = '';
 
-              Swal.fire(
-                'Success',
-                'Collection Officer Created Successfully',
-                'success'
-              );
-              this.navigatePath('/steckholders/action/collective-officer');
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
-              Swal.fire('Error', this.errorMessage, 'error');
+            Swal.fire(
+              'Success',
+              'Collection Officer Created Successfully',
+              'success'
+            );
+            this.navigatePath('/steckholders/action/collective-officer');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+
+            if (error.error && error.error.error) {
+              switch (error.error.error) {
+                case 'NIC already exists':
+                  errorMessage = 'The NIC number is already registered.';
+                  break;
+                case 'Email already exists':
+                  errorMessage = 'The email address is already in use.';
+                  break;
+                case 'Primary phone number already exists':
+                  errorMessage = 'The primary phone number is already registered.';
+                  break;
+                case 'Secondary phone number already exists':
+                  errorMessage = 'The secondary phone number is already registered.';
+                  break;
+                case 'Invalid file format or file upload error':
+                  errorMessage = 'Invalid file format or error uploading the file.';
+                  break;
+                default:
+                  errorMessage = error.error.error || 'An unexpected error occurred';
+              }
             }
-          );
-      } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-      }
-    });
-  }
+
+            this.errorMessage = errorMessage;
+            Swal.fire('Error', this.errorMessage, 'error');
+          }
+        );
+    } else {
+      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+    }
+  });
+}
 
   onCancel() {
     Swal.fire({
@@ -401,9 +431,65 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
+  // Format Sinhala names
+  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Allow only Sinhala unicode characters and spaces
+      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Format Tamil names
+  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Allow only Tamil unicode characters and spaces
+      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Format Account Holder's Name
+  formatAccountHolderName(): void {
+    let value = this.personalData.accHolderName;
+    if (value) {
+      // Remove special characters and numbers, keep only letters and spaces
+      value = value.replace(/[^a-zA-Z\s]/g, '');
+      // Capitalize first letter and make rest lowercase
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      this.personalData.accHolderName = value;
+    }
+  }
+
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains numbers or special characters
+    return /[^a-zA-Z\s]/.test(value);
+  }
+
+  // Check if Sinhala name has invalid characters
+  hasInvalidSinhalaCharacters(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): boolean {
+    const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains non-Sinhala characters
+    return /[^\u0D80-\u0DFF\s]/.test(value);
+  }
+
+  // Check if Tamil name has invalid characters
+  hasInvalidTamilCharacters(fieldName: 'firstNameTamil' | 'lastNameTamil'): boolean {
+    const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains non-Tamil characters
+    return /[^\u0B80-\u0BFF\s]/.test(value);
+  }
+
+  // Check if account holder name has invalid characters
+  hasInvalidAccountHolderCharacters(): boolean {
+    const value = this.personalData.accHolderName;
     if (!value) return false;
     // Check if contains numbers or special characters
     return /[^a-zA-Z\s]/.test(value);
@@ -440,9 +526,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     return emailRegex.test(email);
   }
 
+  // Updated NIC validation
   isValidNIC(nic: string): boolean {
     if (!nic) return false;
-    const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
+    // Allow 12 digits or 9 digits followed by 'V' (case insensitive)
+    const nicRegex = /^(?:\d{12}|\d{9}[vV])$/;
     return nicRegex.test(nic);
   }
 
@@ -456,6 +544,16 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     if (!phone) return false;
     const phoneRegex = /^[0-9]{9}$/;
     return phoneRegex.test(phone);
+  }
+
+  // Check if phone numbers are duplicate
+  areDuplicatePhoneNumbers(): boolean {
+    const phone1 = this.personalData.phoneNumber01;
+    const phone2 = this.personalData.phoneNumber02;
+    
+    if (!phone1 || !phone2) return false;
+    
+    return phone1 === phone2;
   }
 
   onBlur(fieldName: keyof Personal): void {
@@ -508,18 +606,23 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     return true;
   }
 
+
   checkFormValidity(): boolean {
     const isFirstNameValid =
       !!this.personalData.firstNameEnglish &&
       !!this.personalData.firstNameSinhala &&
       !!this.personalData.firstNameTamil &&
-      !this.hasInvalidNameCharacters('firstNameEnglish');
+      !this.hasInvalidNameCharacters('firstNameEnglish') &&
+      !this.hasInvalidSinhalaCharacters('firstNameSinhala') &&
+      !this.hasInvalidTamilCharacters('firstNameTamil');
     
     const isLastNameValid =
       !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
       !!this.personalData.lastNameTamil &&
-      !this.hasInvalidNameCharacters('lastNameEnglish');
+      !this.hasInvalidNameCharacters('lastNameEnglish') &&
+      !this.hasInvalidSinhalaCharacters('lastNameSinhala') &&
+      !this.hasInvalidTamilCharacters('lastNameTamil');
     
     const isPhoneNumberValid = this.isValidPhoneNumber(
       this.personalData.phoneNumber01
@@ -531,6 +634,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     const isCenterSelected = !!this.personalData.centerId;
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicValid = this.isValidNIC(this.personalData.nic);
+    const arePhoneNumbersNotDuplicate = !this.areDuplicatePhoneNumbers();
 
     return (
       isFirstNameValid &&
@@ -542,10 +646,12 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       isCompanySelected &&
       isCenterSelected &&
       isJobRoleSelected &&
-      isNicValid
+      isNicValid &&
+      arePhoneNumbersNotDuplicate
     );
   }
 
+  // Updated submit validity check
   checkSubmitValidity(): boolean {
     const {
       accHolderName,
@@ -570,10 +676,11 @@ export class CollectiveofficersPersonalComponent implements OnInit {
         !!bankName &&
         !!branchName &&
         !!confirmAccNumber &&
-        accNumber === confirmAccNumber;
-      return isBankDetailsValid && isAddressValid;
+        accNumber === confirmAccNumber &&
+        !this.hasInvalidAccountHolderCharacters();
+      return isBankDetailsValid && isAddressValid && !this.areDuplicatePhoneNumbers();
     } else {
-      return isAddressValid;
+      return isAddressValid && !this.areDuplicatePhoneNumbers();
     }
   }
 
@@ -608,6 +715,54 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.languagesRequired =
       !this.personalData.languages || this.personalData.languages.trim() === '';
   }
+
+  preventSpecialCharacters(event: KeyboardEvent): void {
+  const char = String.fromCharCode(event.which);
+  // Allow only letters (a-z, A-Z) and space
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Prevent non-Sinhala characters
+preventNonSinhalaCharacters(event: KeyboardEvent): void {
+  const char = String.fromCharCode(event.which);
+  // Allow Sinhala unicode characters and space
+  if (!/[\u0D80-\u0DFF\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Prevent non-Tamil characters
+preventNonTamilCharacters(event: KeyboardEvent): void {
+  const char = String.fromCharCode(event.which);
+  // Allow Tamil unicode characters and space
+  if (!/[\u0B80-\u0BFF\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Prevent non-numeric characters for phone numbers
+preventNonNumeric(event: KeyboardEvent): void {
+  const char = String.fromCharCode(event.which);
+  // Allow only numbers (0-9)
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    this.personalData[fieldName] = value;
+  }
+}
 }
 
 class Personal {

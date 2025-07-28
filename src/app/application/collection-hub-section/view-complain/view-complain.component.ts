@@ -46,7 +46,7 @@ export class ViewComplainComponent implements OnInit {
 
   filterStatus: any = "";
   filterCategory: any = {};
-  filterComCategory: any = {};
+  filterComCategory: any = '';
   status!: Status[];
   category!: Category[];
   isPopUpVisible: boolean = false;

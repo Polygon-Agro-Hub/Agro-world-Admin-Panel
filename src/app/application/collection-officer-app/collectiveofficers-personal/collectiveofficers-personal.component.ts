@@ -204,12 +204,15 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.loadBranches();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
+    // Pre-fill country with Sri Lanka
+    this.personalData.country = 'Sri Lanka';
   }
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort banks alphabetically
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => {}
     );
@@ -226,7 +229,10 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   onBankChange() {
     if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
+      // Sort branches alphabetically
+      this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
+      
       const selectedBank = this.banks.find(
         (bank) => bank.ID === this.selectedBankId
       );
@@ -383,6 +389,26 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     this.personalData.empType = selectedType;
   }
 
+  // Format name to capitalize first letter and block special characters/numbers
+  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove special characters and numbers, keep only letters and spaces
+      value = value.replace(/[^a-zA-Z\s]/g, '');
+      // Capitalize first letter and make rest lowercase
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Check if name has invalid characters (numbers or special characters)
+  hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
+    const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains numbers or special characters
+    return /[^a-zA-Z\s]/.test(value);
+  }
+
   isFormValid(): boolean {
     if (
       !this.personalData.firstNameEnglish ||
@@ -409,11 +435,13 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   isValidEmail(email: string): boolean {
+    if (!email) return false;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
 
   isValidNIC(nic: string): boolean {
+    if (!nic) return false;
     const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
     return nicRegex.test(nic);
   }
@@ -425,6 +453,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
+    if (!phone) return false;
     const phoneRegex = /^[0-9]{9}$/;
     return phoneRegex.test(phone);
   }
@@ -483,11 +512,15 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     const isFirstNameValid =
       !!this.personalData.firstNameEnglish &&
       !!this.personalData.firstNameSinhala &&
-      !!this.personalData.firstNameTamil;
+      !!this.personalData.firstNameTamil &&
+      !this.hasInvalidNameCharacters('firstNameEnglish');
+    
     const isLastNameValid =
       !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
-      !!this.personalData.lastNameTamil;
+      !!this.personalData.lastNameTamil &&
+      !this.hasInvalidNameCharacters('lastNameEnglish');
+    
     const isPhoneNumberValid = this.isValidPhoneNumber(
       this.personalData.phoneNumber01
     );
@@ -497,7 +530,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     const isCompanySelected = !!this.personalData.companyId;
     const isCenterSelected = !!this.personalData.centerId;
     const isJobRoleSelected = !!this.personalData.jobRole;
-    const isNicSelected = !!this.personalData.nic;
+    const isNicValid = this.isValidNIC(this.personalData.nic);
 
     return (
       isFirstNameValid &&
@@ -509,7 +542,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
       isCompanySelected &&
       isCenterSelected &&
       isJobRoleSelected &&
-      isNicSelected
+      isNicValid
     );
   }
 

@@ -6,11 +6,8 @@
   Back
 </button>
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -19,56 +16,22 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <div
-          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
-        >
-          <input
-            type="text"
-            placeholder="Search.."
-            [(ngModel)]="searchText"
-            name="searchText"
-            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
-          />
+        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+          <input type="text" placeholder="Search" [(ngModel)]="searchText" name="searchText"
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" (keydown.enter)="onSearch()" />
 
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
 
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -82,51 +45,34 @@
     </div>
 
     <div *ngIf="hasData" class="w-full py-4">
-      <table
-        class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
-      >
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
         <thead>
           <tr>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               Customer ID
             </th>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               Customer Name
             </th>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Created At
             </th>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Contact
             </th>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               No. of Orders
             </th>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Customer Details
             </th>
-            <th
-              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Orders Details
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
+          <tr *ngFor="
               let item of customerObj
                 | paginate
                   : {
@@ -135,9 +81,7 @@
                       totalItems: totalItems
                     };
               let i = index
-            "
-            class="border-b border-gray-200 dark:border-[#4B555A]"
-          >
+            " class="border-b border-gray-200 dark:border-[#4B555A]">
             <td class="px-3 py-3 text-textLight dark:text-textDark">
               {{ item.cusId }}
             </td>
@@ -154,50 +98,26 @@
               {{ item.totalOrders }}
             </td>
             <td class="px-3 py-3 text-center">
-              <button
-                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="detailsPop(item)"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="detailsPop(item)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
             </td>
             <td class="px-3 py-3 text-center">
-              <button
-                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="viewOrderDetails(item.id)"
-              >
-                <img
-                  src="assets/icons/orderdetails.png"
-                  alt="Order Details"
-                  class="w-full h-full object-contain"
-                />
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewOrderDetails(item.id)">
+                <img src="assets/icons/orderdetails.png" alt="Order Details" class="w-full h-full object-contain" />
               </button>
             </td>
           </tr>
         </tbody>
       </table>
       <div class="dark:bg-[#262f45]">
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>
     </div>
@@ -206,10 +126,8 @@
 
 <!-- Popup -->
 <div *ngIf="isPopupOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-  <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto"
-    (click)="$event.stopPropagation()"
-  >
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[500px] max-w-[90vw] max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()">
     <div class="p-10">
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-10">
         CUSTOMER INFO
@@ -238,8 +156,7 @@
       <div class="mb-5 flex items-center text-textLight dark:text-textDark">
         <div class="mr-5"><i class="fa-solid fa-envelope"></i></div>
         <span>Email: {{ cusObjDetails.email }}</span>
-        <div class="ml-3 text-[#367bfa] hover:cursor-pointer"
-          (click)="copyToClipboard(cusObjDetails.email, 'email')">
+        <div class="ml-3 text-[#367bfa] hover:cursor-pointer" (click)="copyToClipboard(cusObjDetails.email, 'email')">
           <i *ngIf="!copiedEmail" class="fa-regular fa-copy"></i>
           <i *ngIf="copiedEmail" class="fas fa-check text-[#367bfa]"></i>
         </div>
@@ -279,25 +196,19 @@
     </div>
 
     <div class="pb-10 flex items-center justify-center">
-      <button
-  (click)="isPopupOpen = false"
-  class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded"
->
-  Close
-</button>
+      <button (click)="isPopupOpen = false" class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded">
+        Close
+      </button>
 
-     
+
     </div>
   </div>
 </div>
 
 
 <!-- Toast message -->
-<div
-  *ngIf="showToast"
+<div *ngIf="showToast"
   class="fixed bottom-4 right-4 bg-white text-black px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 z-50"
-  role="alert"
-  aria-live="polite"
->
+  role="alert" aria-live="polite">
   Copied!
 </div>

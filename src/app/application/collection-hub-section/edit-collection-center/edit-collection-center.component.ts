@@ -132,7 +132,7 @@ export class EditCollectionCenterComponent implements OnInit {
           if (res?.status) {
             Swal.fire(
               'Success',
-              'Collection Center updated Successfully',
+              'Collection Centre updated Successfully',
               'success'
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -148,7 +148,7 @@ export class EditCollectionCenterComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Server Error',
-            text: 'Failed to update the collection center. Please try again later.',
+            text: 'Failed to update the collection Centre. Please try again later.',
           });
         }
       );
@@ -183,7 +183,7 @@ export class EditCollectionCenterComponent implements OnInit {
             this.isLoading = false;
           } else {
             this.isLoading = false;
-            Swal.fire('Sorry', 'Center Data not available', 'warning');
+            Swal.fire('Sorry', 'Centre Data not available', 'warning');
             this.router.navigate(['/collection-hub/view-collection-centers']);
           }
         },

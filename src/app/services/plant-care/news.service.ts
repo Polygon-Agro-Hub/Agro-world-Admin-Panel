@@ -65,7 +65,7 @@ export class NewsService {
     page: number,
     limit: number,
     statusFilter: string,
-    createdDateFilter: string,
+    createdDateFilter: any,
   ): Observable<{ items: NewsItem[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -77,6 +77,8 @@ export class NewsService {
     }
 
     if (createdDateFilter) {
+      console.log(createdDateFilter);
+      
       url += `&createdAt=${createdDateFilter}`;
     }
     return this.http.get<{ items: NewsItem[]; total: number }>(url, {

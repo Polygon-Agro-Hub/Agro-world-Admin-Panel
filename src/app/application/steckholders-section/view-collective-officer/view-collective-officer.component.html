@@ -169,118 +169,133 @@
         </h2>
       </div>
 
-      <div class="flex items-center mr-5"
-        *ngIf="
-          (permissionService.hasPermission('Filter CO / CCM / DO') ||
-          tokenService.getUserDetails().role === '1') && this.centerId == null
-        ">
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="statusOptions"
-            [checkmark]="true"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="true"
-            placeholder="Status"
-            [(ngModel)]="selectStatus"
-            (onChange)="applyStatusFilters()"
-          ></p-dropdown>
-        </div>
+      <div
+  class="flex items-center mr-5"
+  *ngIf="
+    (permissionService.hasPermission('Filter CO / CCM / DO') ||
+      tokenService.getUserDetails().role === '1') &&
+    this.centerId == null
+  "
+>
+  <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+            />
+          </svg>
+      
+        </i>
+            <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
+  <div class="mr-5">
+    <p-dropdown
+      styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+      [options]="statusOptions"
+      [checkmark]="true"
+      optionLabel="label"
+      optionValue="value"
+      [showClear]="selectStatus != null && selectStatus !== ''"
+      placeholder="Status"
+      [(ngModel)]="selectStatus"
+      (onChange)="applyStatusFilters()"
+    ></p-dropdown>
+  </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="centerStatusOptions"
-            [checkmark]="true"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="true"
-            placeholder="Center Status"
-            [(ngModel)]="selectCenterStatus"
-            (onChange)="applyCenterStatusFilters()"
-          ></p-dropdown>
-        </div>
+  <div class="mr-5">
+    <p-dropdown
+      styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+      [options]="centerStatusOptions"
+      [checkmark]="true"
+      optionLabel="label"
+      optionValue="value"
+      [showClear]="selectCenterStatus != null && selectCenterStatus !== ''"
+      placeholder="Center Status"
+      [(ngModel)]="selectCenterStatus"
+      (onChange)="applyCenterStatusFilters()"
+    ></p-dropdown>
+  </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="jobRole"
-            [checkmark]="true"
-            optionLabel="jobRole"
-            [showClear]="true"
-            placeholder="Role"
-            [(ngModel)]="role"
-            (onChange)="applyFilters()"
-          />
-        </div>
+  <div class="mr-5">
+    <p-dropdown
+      styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+      [options]="jobRole"
+      [checkmark]="true"
+      optionLabel="jobRole"
+      [showClear]="role != null && role !== ''"
+      placeholder="Role"
+      [(ngModel)]="role"
+      (onChange)="applyFilters()"
+    ></p-dropdown>
+  </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="companyArr"
-            [checkmark]="true"
-            optionLabel="companyNameEnglish"
-            [showClear]="true"
-            placeholder="Company"
-            [(ngModel)]="statusFilter"
-            (onChange)="applyFilters()"
-          />
-        </div>
+  <div class="mr-5">
+    <p-dropdown
+      styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+      [options]="companyArr"
+      [checkmark]="true"
+      optionLabel="companyNameEnglish"
+      [showClear]="statusFilter != null && statusFilter !== ''"
+      placeholder="Company"
+      [(ngModel)]="statusFilter"
+      (onChange)="applyFilters()"
+    ></p-dropdown>
+  </div>
 
-        <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-        >
-          <input
-            type="text"
-            placeholder="Search By First Name, Center"
-            [(ngModel)]="searchNIC"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-            (keyup.enter)="onSearch()"
-            (keyup.esc)="offSearch()"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
-            </svg>
-          </button>
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
+  <div
+  class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+>
+  <input
+    type="text"
+    placeholder="Search By First Name, Center"
+    [(ngModel)]="searchNIC"
+    class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+    (keyup.enter)="onSearch()"
+    (keyup.esc)="offSearch()"
+  />
+  <button
+    type="button"
+    class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+    (click)="onSearch()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+      />
+    </svg>
+  </button>
+  <button
+    *ngIf="searchNIC && searchNIC.trim() !== ''"
+    type="button"
+    class="text-gray-500 hover:text-gray-700 focus:outline-none"
+    (click)="offSearch()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+</div>
+
+</div>
+
     </div>
 
     <div *ngIf="!hasData"
@@ -336,7 +351,7 @@
                 tokenService.getUserDetails().role === '1'
               "
             >
-              Center Status
+            Centre Status
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"

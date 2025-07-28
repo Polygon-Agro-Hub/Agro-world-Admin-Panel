@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
@@ -174,24 +174,35 @@ export class CropCalendarService {
   fetchAllCropGroups(
     page: number = 1,
     limit: number = 10,
-    cropNameEnglish: string = ''
+    cropNameEnglish: string = '',
+    category: string = ''
   ): Observable<{ items: NewCropGroup[]; total: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    let url = `${this.apiUrl}crop-calendar/get-all-crop-groups?page=${page}&limit=${limit}`;
+    // Create URL with base parameters
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
 
     // Add search parameter if cropNameEnglish is provided
     if (cropNameEnglish) {
-      console.log(cropNameEnglish);
-      
-      url += `&searchText=${cropNameEnglish}`;
+      params = params.set('searchText', cropNameEnglish);
     }
 
-    return this.http.get<{ items: NewCropGroup[]; total: number }>(url, {
-      headers,
-    });
+    // Add category filter if provided
+    if (category) {
+      params = params.set('category', category);
+    }
+
+    return this.http.get<{ items: NewCropGroup[]; total: number }>(
+      `${this.apiUrl}crop-calendar/get-all-crop-groups`,
+      {
+        headers,
+        params,
+      }
+    );
   }
 
   deleteCropCalender(id: any): Observable<any> {

@@ -287,7 +287,7 @@ export class ViewCollectiveOfficerComponent {
       <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
         <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
         <div>
-          <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection?</p>
+          <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection officer?</p>
         </div>
         <div class="flex justify-center mt-4">
           <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
@@ -319,7 +319,7 @@ export class ViewCollectiveOfficerComponent {
                   Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: 'The collection was approved successfully.',
+                    text: 'The Collection officer was approved successfully.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
@@ -360,7 +360,7 @@ export class ViewCollectiveOfficerComponent {
                   Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: 'The collection was rejected successfully.',
+                    text: 'The Collection officer was rejected successfully.',
                     showConfirmButton: false,
                     timer: 3000,
                   });

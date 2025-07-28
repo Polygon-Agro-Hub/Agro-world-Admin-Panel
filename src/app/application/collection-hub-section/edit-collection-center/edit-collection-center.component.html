@@ -7,7 +7,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-    Update Collection Center
+    Edit Collection Centre
   </h2>
 
   <form (ngSubmit)="onSubmit()">
@@ -19,21 +19,27 @@
         <label
           for="centerName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Center Name</label
+          >Collection Centre Name</label
         >
         <input
           id="centerName"
           name="centerName"
           [(ngModel)]="centerFetchData.centerName"
           #centerNameInput="ngModel"
-          [value]="centerFetchData.centerName"
+          required
+          (input)="onCenterNameInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <div
-          *ngIf="centerNameInput.touched && !centerFetchData.centerName"
-          class="text-red-500 text-sm mt-1"
-        >
-          <div>Center Name is required</div>
+      
+        <!-- Specific error messages -->
+        <div *ngIf="centerNameInput.touched && leadingSpaceError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+          Leading spaces are not allowed
+        </div>
+        <div *ngIf="centerNameInput.touched && specialCharOrNumberError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+          Only English letters are allowed (no numbers or special characters)
+        </div>
+        <div *ngIf="centerNameInput.touched && centerNameInput.errors?.['required'] "  class="text-red-500 text-sm mt-1">
+          Center Name is required
         </div>
       </div>
 
@@ -197,7 +203,7 @@
           *ngIf="buildingNumberInput.touched && !centerFetchData.buildingNumber"
           class="text-red-500 text-sm mt-1"
         >
-          <div>Buliding number is required</div>
+          <div>Building Number is required</div>
         </div>
       </div>
 
@@ -221,7 +227,7 @@
           *ngIf="streetInput.touched && !centerFetchData.street"
           class="text-red-500 text-sm mt-1"
         >
-          <div>Street is required</div>
+          <div>Street Name is required</div>
         </div>
       </div>
 
@@ -242,7 +248,12 @@
           #cityInput="ngModel"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <!-- ... validation ... -->
+        <div
+          *ngIf="cityInput.touched && !centerFetchData.city"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>City is required</div>
+        </div>
       </div>
 
       <!-- Province -->
@@ -300,16 +311,17 @@
         <label
           for="country"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Country</label
         >
-        <select
+          Country
+        </label>
+        <input
           id="country"
           name="country"
-          [(ngModel)]="centerFetchData.country"
+          type="text"
+          [ngModel]="centerFetchData.country"
+          readonly
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        >
-          <option selected disabled>Sri Lanka</option>
-        </select>
+        />
       </div>
 
       <!-- <div>
@@ -327,7 +339,7 @@
         <label
           for="regCode"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Center Reg Code</label
+          >Collection Centre Reg Code</label
         >
         <input
           id="regCode"

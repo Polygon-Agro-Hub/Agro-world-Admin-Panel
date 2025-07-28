@@ -344,6 +344,13 @@ export class EditSalesAgentComponent implements OnInit {
   onSubmit() {
     const phonePattern = /^[0-9]{9}$/;
     const accountPattern = /^[a-zA-Z0-9]+$/;
+
+    // Check if employee type is selected
+    if (!this.empType) {
+      Swal.fire('Error', 'Staff Employee Type is a required field', 'error');
+      return;
+    }
+
     if (
       !this.personalData.firstName ||
       !this.personalData.lastName ||
@@ -352,7 +359,6 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.nic ||
       !this.validateNIC() ||
       !this.personalData.email ||
-      !this.personalData.empType ||
       !this.personalData.houseNumber ||
       !this.personalData.streetName ||
       !this.personalData.city ||
@@ -381,7 +387,6 @@ export class EditSalesAgentComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.isLoading = false;
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to edit the Sales Agent?',

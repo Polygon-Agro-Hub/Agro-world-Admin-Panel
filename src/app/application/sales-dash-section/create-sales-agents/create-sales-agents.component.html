@@ -84,12 +84,17 @@
           </div>
         </div>
 
-        <div>
+        <div
+          [class.border-red-500]="
+            !personalData.empType && touchedFields.empType
+          "
+          class="p-2 rounded-md"
+        >
           <label
             for="enpType"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Staff Employee Type
+            Staff Employee Type <span class="text-red-500">*</span>
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -128,8 +133,11 @@
               </label>
             </div>
           </div>
-          <p *ngIf="isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
-            Please select an employee type.
+          <p
+            *ngIf="!personalData.empType && touchedFields.empType"
+            class="text-red-600 text-sm mt-2"
+          >
+            Staff Employee Type is a required field.
           </p>
         </div>
       </div>
@@ -139,8 +147,9 @@
           <label
             for="firstNameEnglish"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >First Name</label
           >
+            First Name <span class="text-red-500">*</span>
+          </label>
           <input
             id="firstName"
             [(ngModel)]="personalData.firstName"
@@ -166,7 +175,7 @@
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name</label
+            >Last Name <span class="text-red-500">*</span></label
           >
           <input
             id="lastName"
@@ -191,7 +200,7 @@
             for="phoneNumber1"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Mobile Number - 1
+            Mobile Number - 1 <span class="text-red-500">*</span>
           </label>
 
           <!-- Input Row: Country code + Phone input -->
@@ -202,10 +211,11 @@
               [(ngModel)]="personalData.phoneCode1"
               class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack mr-5"
             >
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
+              <option value="+94">🇱🇰 +94</option>
+              <option value="+855">🇰🇭 +855</option>
+              <option value="+880">🇧🇩 +880</option>
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+31">🇳🇱 +31</option>
             </select>
 
             <input
@@ -264,10 +274,11 @@
               [(ngModel)]="personalData.phoneCode2"
               class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack mr-5"
             >
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
+              <option value="+94">🇱🇰 +94</option>
+              <option value="+855">🇰🇭 +855</option>
+              <option value="+880">🇧🇩 +880</option>
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+31">🇳🇱 +31</option>
             </select>
 
             <input
@@ -320,7 +331,7 @@
           <label
             for="nic"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >NIC Number</label
+            >NIC Number <span class="text-red-500">*</span></label
           >
           <input
             id="nic"
@@ -355,7 +366,7 @@
           <label
             for="email"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Email</label
+            >Email <span class="text-red-500">*</span></label
           >
           <input
             type="email"
@@ -416,7 +427,7 @@
           <label
             for="house"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >House / Plot Number</label
+            >House / Plot Number <span class="text-red-500">*</span></label
           >
           <input
             (blur)="onBlur('houseNumber')"
@@ -436,7 +447,7 @@
           <label
             for="street"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Street Name</label
+            >Street Name <span class="text-red-500">*</span></label
           >
           <input
             (blur)="onBlur('streetName')"
@@ -456,7 +467,7 @@
           <label
             for="city"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >City</label
+            >City <span class="text-red-500">*</span></label
           >
           <input
             (blur)="onBlur('city')"
@@ -475,7 +486,7 @@
             for="district"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            District
+            District <span class="text-red-500">*</span>
           </label>
           <select
             (blur)="onBlur('district')"
@@ -538,7 +549,7 @@
         <label
           for="accHolderName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder's Name</label
+          >Account Holder's Name <span class="text-red-500">*</span></label
         >
         <input
           id="accHolderName"
@@ -572,7 +583,7 @@
           for="accNumber"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Account Number
+          Account Number <span class="text-red-500">*</span>
         </label>
         <input
           id="accNumber"
@@ -607,7 +618,7 @@
           for="confirmAccNumber"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Confirm Account Number
+          Confirm Account Number <span class="text-red-500">*</span>
         </label>
         <input
           id="confirmAccNumber"
@@ -647,7 +658,7 @@
           for="bankDropdown"
           class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
         >
-          Bank Name
+          Bank Name <span class="text-red-500">*</span>
         </label>
         <p-dropdown
           id="bankDropdown"
@@ -676,7 +687,7 @@
           for="branchDropdown"
           class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
         >
-          Branch Name
+          Branch Name <span class="text-red-500">*</span>
         </label>
         <p-dropdown
           id="branchDropdown"

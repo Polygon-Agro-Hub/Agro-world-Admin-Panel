@@ -191,7 +191,7 @@ export class AddCollectionCenterComponent implements OnInit {
           if (res.status) {
             Swal.fire(
               'Success',
-              'Collection Center Created Successfully',
+              'Collection centre Created Successfully',
               'success'
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -200,7 +200,7 @@ export class AddCollectionCenterComponent implements OnInit {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Something went wrong while creating the Collection Center.',
+                text: 'Something went wrong while creating the Collection centre.',
               });
             }
           }
@@ -239,20 +239,13 @@ export class AddCollectionCenterComponent implements OnInit {
     }
     return null;
   }
+  
 
   back(): void {
     this.router.navigate(['/collection-hub']);
   }
 
   ProvinceData = [
-    {
-      province: 'Western',
-      district: [
-        { districtName: 'Colombo' },
-        { districtName: 'Kalutara' },
-        { districtName: 'Gampaha' },
-      ],
-    },
     {
       province: 'Central',
       district: [
@@ -262,38 +255,12 @@ export class AddCollectionCenterComponent implements OnInit {
       ],
     },
     {
-      province: 'Southern',
-      district: [
-        { districtName: 'Galle' },
-        { districtName: 'Matara' },
-        { districtName: 'Hambantota' },
-      ],
-    },
-    {
-      province: 'Northern',
-      district: [
-        { districtName: 'Jaffna' },
-        { districtName: 'Mannar' },
-        { districtName: 'Vavuniya' },
-        { districtName: 'Kilinochchi' },
-        { districtName: 'Mulaitivu' },
-      ],
-    },
-    {
       province: 'Eastern',
       district: [
-        { districtName: 'Batticaloa' },
         { districtName: 'Ampara' },
+        { districtName: 'Batticaloa' },
         { districtName: 'Trincomalee' },
       ],
-    },
-    {
-      province: 'Uva',
-      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
-    },
-    {
-      province: 'North Western',
-      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
     },
     {
       province: 'North Central',
@@ -303,10 +270,55 @@ export class AddCollectionCenterComponent implements OnInit {
       ],
     },
     {
+      province: 'North Western',
+      district: [
+        { districtName: 'Kurunegala' },
+        { districtName: 'Puttalam' },
+      ],
+    },
+    {
+      province: 'Northern',
+      district: [
+        { districtName: 'Jaffna' },
+        { districtName: 'Kilinochchi' },
+        { districtName: 'Mannar' },
+        { districtName: 'Mulaitivu' },
+        { districtName: 'Vavuniya' },
+      ],
+    },
+    {
       province: 'Sabaragamuwa',
-      district: [{ districtName: 'Rathnapura' }, { districtName: 'Kegalle' }],
+      district: [
+        { districtName: 'Kegalle' },
+        { districtName: 'Rathnapura' },
+      ],
+    },
+    {
+      province: 'Southern',
+      district: [
+        { districtName: 'Galle' },
+        { districtName: 'Hambantota' },
+        { districtName: 'Matara' },
+
+      ],
+    },
+    {
+      province: 'Uva',
+      district: [
+        { districtName: 'Badulla' },
+        { districtName: 'Moneragala' },
+      ],
+    },
+    {
+      province: 'Western',
+      district: [
+        { districtName: 'Colombo' },
+        { districtName: 'Gampaha' },
+        { districtName: 'Kalutara' },
+      ],
     },
   ];
+  
 }
 
 class CollectionCenter {

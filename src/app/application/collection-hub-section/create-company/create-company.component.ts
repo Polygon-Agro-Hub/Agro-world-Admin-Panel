@@ -76,6 +76,8 @@ accountNumberError: boolean = false;
 invalidFoName: boolean = false;
 contactNumberError1: boolean = false;
 contactNumberError2: boolean = false;
+logoSizeError: boolean = false;
+faviconSizeError: boolean = false;
 
   companyType: string = '';
   countries = [
@@ -193,58 +195,95 @@ contactNumberError2: boolean = false;
     });
   }
 
-  async onLogoChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      try {
-        this.isLoading = true;
-        const compressedFile = await this.compressImage(
-          input.files[0],
-          800,
-          800,
-          0.7
-        );
-        this.selectedLogoFile = compressedFile;
-        this.companyData.logoFile = compressedFile;
+ async onLogoChange(event: Event): Promise<void> {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    // Check file size (1MB = 1024 * 1024 bytes)
+    const maxSize = 1024 * 1024; // 1MB
+    if (file.size > maxSize) {
+      this.logoSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Size Too Large',
+        text: 'Image size is too large. Please upload an image less than 1MB',
+      });
+      // Clear the file input
+      input.value = '';
+      return;
+    }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.logo = e.target?.result as string;
-          this.isLoading = false;
-        };
-        reader.readAsDataURL(this.selectedLogoFile);
-      } catch (error) {
+    try {
+      this.isLoading = true;
+      this.logoSizeError = false; // Reset error state
+      
+      const compressedFile = await this.compressImage(
+        file,
+        800,
+        800,
+        0.7
+      );
+      this.selectedLogoFile = compressedFile;
+      this.companyData.logoFile = compressedFile;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.logo = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing image:', error);
-      }
+      };
+      reader.readAsDataURL(this.selectedLogoFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing image:', error);
     }
   }
+}
 
-  async onFaviconChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      try {
-        this.isLoading = true;
-        const compressedFile = await this.compressImage(
-          input.files[0],
-          800,
-          800,
-          0.7
-        );
-        this.selectedFaviconFile = compressedFile;
-        this.companyData.faviconFile = compressedFile;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.favicon = e.target?.result as string;
-          this.isLoading = false;
-        };
-        reader.readAsDataURL(this.selectedFaviconFile);
-      } catch (error) {
+// Updated onFaviconChange method
+async onFaviconChange(event: Event): Promise<void> {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    // Check file size (1MB = 1024 * 1024 bytes)
+    const maxSize = 1024 * 1024; // 1MB
+    if (file.size > maxSize) {
+      this.faviconSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Size Too Large',
+        text: 'Image size is too large. Please upload an image less than 1MB',
+      });
+      // Clear the file input
+      input.value = '';
+      return;
+    }
+
+    try {
+      this.isLoading = true;
+      this.faviconSizeError = false; // Reset error state
+      
+      const compressedFile = await this.compressImage(
+        file,
+        800,
+        800,
+        0.7
+      );
+      this.selectedFaviconFile = compressedFile;
+      this.companyData.faviconFile = compressedFile;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.favicon = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing image:', error);
-      }
+      };
+      reader.readAsDataURL(this.selectedFaviconFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing image:', error);
     }
   }
+}
 
   removeLogo(event: Event): void {
     event.stopPropagation();

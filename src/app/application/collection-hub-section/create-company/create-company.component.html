@@ -34,9 +34,13 @@
                 class="w-full h-full object-cover rounded-lg" />
             </div>
           </div>
-          <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm mt-1">Logo is required.</span>
+          <div class="ml-3">
+            <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm block">Logo is required.</span>
+            <span class="text-gray-500 text-xs block">Upload an image less than 1MB</span>
+          </div>
         </div>
 
+        <!-- Update the Favicon Upload Section -->
         <div class="flex items-center">
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
             Add Favicon <span class="text-red-600">*</span>
@@ -57,7 +61,10 @@
                 class="w-full h-full object-cover rounded-lg" />
             </div>
           </div>
-          <span *ngIf="isFieldInvalid('favicon')" class="text-red-600 text-sm mt-1">Favicon is required.</span>
+          <div class="ml-3">
+            <span *ngIf="isFieldInvalid('favicon')" class="text-red-600 text-sm block">Favicon is required.</span>
+            <span class="text-gray-500 text-xs block">Upload an image less than 1MB</span>
+          </div>
         </div>
       </div>
 

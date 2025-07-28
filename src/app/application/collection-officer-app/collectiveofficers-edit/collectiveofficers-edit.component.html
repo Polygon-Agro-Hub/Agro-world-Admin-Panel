@@ -107,34 +107,29 @@
 
 
         <div>
-          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name
+          <label for="companyId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Company Name*
           </label>
-          <select id="centerId" [(ngModel)]="personalData.companyId" name="centerId"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-            #companyIdInput="ngModel" required>
-            <option *ngFor="let center of CompanyData" [value]="center.id"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              {{ center.companyNameEnglish }}
-            </option>
-          </select>
-          <div *ngIf="companyIdInput.touched && !personalData.companyId" class="text-red-500 text-sm mt-1">
+          <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
+            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
+            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
+          <div *ngIf="!personalData.companyId" class="text-red-500 text-sm mt-1">
             <div>Company Name is required</div>
           </div>
         </div>
 
-
+        <!-- Replace Collection Centre Name dropdown -->
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Collection Centre Name
+            Collection Centre Name*
           </label>
-          <select id="centerId" [(ngModel)]="personalData.centerId" name="centerId"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500">
-            <option *ngFor="let center of collectionCenterData" [value]="center.id"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              {{ center.centerName }}
-            </option>
-          </select>
+          <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
+            optionValue="value" [filter]="true" filterBy="label" [showClear]="false"
+            placeholder="Select a collection center" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
         </div>
 
         <div>
@@ -198,16 +193,14 @@
 
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'">
-          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Manager Name
+          <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Manager Name*
           </label>
-          <select id="centerId" [(ngModel)]="personalData.irmId" name="centerId"
-            class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500">
-            <option *ngFor="let center of collectionManagerData" [value]="center.id"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              {{ center.firstNameEnglish }}
-            </option>
-          </select>
+          <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
+            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
+            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom">
+          </p-dropdown>
         </div>
 
 
@@ -218,7 +211,7 @@
 
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            First Name (in English)
+            First Name (in English)*
           </label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -250,7 +243,7 @@
         <!-- First Name (in Sinhala) - Updated -->
         <div>
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Sinhala)</label>
+            Sinhala)*</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameSinhalaInput="ngModel" (input)="formatSinhalaName('firstNameSinhala')" required />
@@ -281,7 +274,7 @@
         <!-- First Name (in Tamil) - Updated -->
         <div>
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Tamil)</label>
+            Tamil)*</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameTamilInput="ngModel" (input)="formatTamilName('firstNameTamil')" required />
@@ -311,7 +304,7 @@
 
         <div>
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Mobile Number - 01
+            Mobile Number - 01*
           </label>
           <div class="mt-1 flex">
             <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
@@ -374,7 +367,7 @@
 
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number</label>
+          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('nic')" />
@@ -385,7 +378,7 @@
 
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('email')" />
@@ -394,6 +387,48 @@
           </span>
         </div>
       </div>
+
+      <!-- Add this after the email field in the first page
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          New Password (Leave blank to keep current password)
+        </label>
+        <div class="relative mt-1">
+          <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
+            [(ngModel)]="personalData.password"
+            class="block w-full p-2 pr-10 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="Enter new password (optional)" (blur)="onBlur('password')" />
+          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            (click)="togglePasswordVisibility()">
+            <i [class]="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
+              class="text-gray-400 hover:text-gray-600"></i>
+          </button>
+        </div>
+        <span *ngIf="personalData.password && !isValidPassword(personalData.password)" class="text-red-600 text-sm">
+          Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter,
+          one number, and one special character
+        </span>
+      </div>
+
+      <div *ngIf="personalData.password">
+        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm New Password
+        </label>
+        <div class="relative mt-1">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword"
+            [(ngModel)]="personalData.confirmPassword"
+            class="block w-full p-2 pr-10 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="Confirm new password" (blur)="onBlur('confirmPassword')" />
+          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            (click)="toggleConfirmPasswordVisibility()">
+            <i [class]="showConfirmPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
+              class="text-gray-400 hover:text-gray-600"></i>
+          </button>
+        </div>
+        <span *ngIf="personalData.confirmPassword && !doPasswordsMatch()" class="text-red-600 text-sm">
+          Passwords do not match
+        </span>
+      </div> -->
 
       <div class="flex justify-end m-10">
         <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
@@ -417,7 +452,7 @@
 
         <div class="pb-6">
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
-            Number</label>
+            Number*</label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #houseNumberInput="ngModel" required />
@@ -428,7 +463,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
+          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
           <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #streetNameInput="ngModel" required />
@@ -440,7 +475,7 @@
 
 
         <div class="pb-6">
-          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City*</label>
           <input id="city" name="city" [(ngModel)]="personalData.city"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #cityInput="ngModel" required />
@@ -451,7 +486,7 @@
 
         <div class="pb-6">
           <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            District
+            District*
           </label>
           <select id="district" name="district" [(ngModel)]="personalData.district" (change)="updateProvince($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -468,7 +503,7 @@
 
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Province
+            Province*
           </label>
           <input id="province" name="province" [(ngModel)]="personalData.province"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -476,7 +511,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country*</label>
           <input id="country" name="country" [(ngModel)]="personalData.country"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             readonly />
@@ -494,7 +529,7 @@
       </h2>
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-          Name</label>
+          Name*</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accHolderNameInput="ngModel" (input)="formatAccountHolderName()" required />
@@ -506,7 +541,7 @@
         </span>
       </div>
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number</label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number*</label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required />
@@ -548,49 +583,36 @@
         </div> -->
 
       <div class="pb-6">
-        <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
-        <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-          <option [ngValue]="null" disabled>Select a bank</option>
-          <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
-        </select>
+        <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Bank Name*
+        </label>
+        <p-dropdown [(ngModel)]="personalData.bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
+          [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank" (onChange)="onBankChange()"
+          styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+        </p-dropdown>
       </div>
 
-      <!-- <div class="pb-6">
-          <label
-            for="branchName"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Branch Name</label
-          >
-          <input
-            id="branchName"
-            name="branchName"
-           
-            [(ngModel)]="personalData.branchName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-        </div> -->
+      <!-- Replace Branch Name dropdown in pageTwo -->
       <div class="pb-6">
-        <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
-          Name</label>
-        <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
-          [disabled]="!selectedBankId"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-          <option [ngValue]="null" disabled>Select a branch</option>
-          <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
-        </select>
+        <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Branch Name*
+        </label>
+        <p-dropdown [(ngModel)]="personalData.branchName" [options]="branchOptions" optionLabel="label"
+          optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!personalData.bankName"
+          placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+          class="mt-1 block w-full p-dropdown-custom">
+        </p-dropdown>
       </div>
-    </div>
 
-    <div class="flex justify-end m-10">
-      <button (click)="nextFormCreate('pageOne')" type="button"
-        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-        Back
-      </button>
-      <button type="submit" (click)="onSubmit()" [disabled]="!checkSubmitValidity()"
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
-        Submit
-      </button>
+      <div class="flex justify-end m-10">
+        <button (click)="nextFormCreate('pageOne')" type="button"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+          Back
+        </button>
+        <button type="submit" (click)="onSubmit()" [disabled]="!checkSubmitValidity()"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+          Submit
+        </button>
+      </div>
     </div>
   </div>
-</div>

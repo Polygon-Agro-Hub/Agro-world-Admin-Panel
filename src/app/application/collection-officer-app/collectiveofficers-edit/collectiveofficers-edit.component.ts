@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -32,6 +33,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './collectiveofficers-edit.component.html',
   styleUrl: './collectiveofficers-edit.component.css',
@@ -66,6 +68,13 @@ export class CollectiveofficersEditComponent {
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  companyOptions: any[] = [];
+  centerOptions: any[] = [];
+  managerOptions: any[] = [];
+  bankOptions: any[] = [];
+  branchOptions: any[] = [];
 
   invalidFields: Set<string> = new Set();
 
@@ -178,7 +187,39 @@ export class CollectiveofficersEditComponent {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe((data) => {
       this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Convert to dropdown options format
+      this.bankOptions = this.banks.map(bank => ({
+        label: bank.name,
+        value: bank.name
+      }));
     });
+  }
+
+  // Update the onBankChange method
+  onBankChange() {
+    const selectedBankName = this.personalData.bankName;
+    if (selectedBankName) {
+      const selectedBank = this.banks.find(
+        (bank) => bank.name === selectedBankName
+      );
+      if (selectedBank) {
+        this.selectedBankId = selectedBank.ID;
+        this.branches = this.allBranches[selectedBank.ID.toString()] || [];
+
+        // Convert to dropdown options format
+        this.branchOptions = this.branches.map(branch => ({
+          label: branch.name,
+          value: branch.name
+        }));
+
+        this.personalData.branchName = '';
+      }
+    } else {
+      this.branches = [];
+      this.branchOptions = [];
+      this.selectedBankId = null;
+    }
   }
 
   loadBranches() {
@@ -219,28 +260,6 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  onBankChange() {
-    if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-      }
-
-      const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (!currentBranch) {
-        this.selectedBranchId = null;
-        this.personalData.branchName = '';
-      }
-    } else {
-      this.branches = [];
-      this.personalData.bankName = '';
-    }
-  }
 
   onBranchChange() {
     if (this.selectedBranchId) {
@@ -376,6 +395,29 @@ export class CollectiveofficersEditComponent {
     return this.selectedLanguages && this.selectedLanguages.length > 0;
   }
 
+  // Add these methods to the component class
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  isValidPassword(password: string): boolean {
+    if (!password) return true; // Optional field
+    // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  }
+
+  doPasswordsMatch(): boolean {
+    if (!this.personalData.password || !this.personalData.confirmPassword) return true;
+    return this.personalData.password === this.personalData.confirmPassword;
+  }
+
+  // Update the checkFormValidity method to include password validation
   checkFormValidity(): boolean {
     const isFirstNameValid =
       !!this.personalData.firstNameEnglish &&
@@ -402,6 +444,10 @@ export class CollectiveofficersEditComponent {
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicValid = this.isValidNIC(this.personalData.nic);
 
+    // Password validation - only validate if password is provided
+    const isPasswordValid = !this.personalData.password ||
+      (this.isValidPassword(this.personalData.password) && this.doPasswordsMatch());
+
     return (
       isFirstNameValid &&
       isLastNameValid &&
@@ -413,6 +459,7 @@ export class CollectiveofficersEditComponent {
       isCenterSelected &&
       isJobRoleSelected &&
       isNicValid &&
+      isPasswordValid &&
       !this.arePhoneNumbersSame()
     );
   }
@@ -530,17 +577,6 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  getAllCollectionManagers() {
-    this.collectionCenterSrv
-      .getAllManagerList(
-        this.personalData.companyId,
-        this.personalData.centerId
-      )
-      .subscribe((res) => {
-        this.collectionManagerData = res;
-      });
-  }
-
   getLastID(role: string): Promise<string> {
     return new Promise((resolve) => {
       this.collectionCenterSrv.getForCreateId(role).subscribe((res) => {
@@ -594,18 +630,48 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  getAllCollectionCetnter() {
-    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
-      this.collectionCenterData = res;
-    });
-  }
-
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
+
+      // Convert to dropdown options format
+      this.companyOptions = this.CompanyData.map(company => ({
+        label: company.companyNameEnglish,
+        value: company.id
+      }));
     });
   }
 
+  // Update getAllCollectionCetnter method
+  getAllCollectionCetnter() {
+    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
+      this.collectionCenterData = res;
+
+      // Convert to dropdown options format
+      this.centerOptions = this.collectionCenterData.map(center => ({
+        label: center.centerName,
+        value: center.id
+      }));
+    });
+  }
+
+  // Update getAllCollectionManagers method
+  getAllCollectionManagers() {
+    this.collectionCenterSrv
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.collectionManagerData = res;
+
+        // Convert to dropdown options format
+        this.managerOptions = this.collectionManagerData.map(manager => ({
+          label: manager.firstNameEnglish,
+          value: manager.id
+        }));
+      });
+  }
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
@@ -625,75 +691,75 @@ export class CollectiveofficersEditComponent {
   }
 
   onSubmit() {
-  if (!this.checkSubmitValidity()) {
-    this.isLoading = false;
-    return;
-  }
-
-  this.isLoading = true;
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to update the collection officer?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Save it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.collectionOfficerService
-        .editCollectiveOfficer(
-          this.personalData,
-          this.itemId,
-          this.selectedImage
-        )
-        .subscribe(
-          (res: any) => {
-            this.isLoading = false;
-            Swal.fire(
-              'Success',
-              'Collection Officer Updated Successfully',
-              'success'
-            );
-            this.navigatePath('/steckholders/action/collective-officer');
-          },
-          (error: any) => {
-            this.isLoading = false;
-            let errorMessage = 'An unexpected error occurred';
-
-            // Handle specific error messages from the backend
-            if (error.error && error.error.error) {
-              switch (error.error.error) {
-                case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
-                  break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
-                  break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
-                  break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
-                  break;
-                case 'Invalid file format or file upload error':
-                  errorMessage = 'Invalid file format or error uploading the file.';
-                  break;
-                default:
-                  errorMessage = error.error.error || 'An unexpected error occurred';
-              }
-            }
-
-            this.errorMessage = errorMessage;
-            Swal.fire('Error', this.errorMessage, 'error');
-          }
-        );
-    } else {
+    if (!this.checkSubmitValidity()) {
       this.isLoading = false;
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+      return;
     }
-  });
-}
+
+    this.isLoading = true;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to update the collection officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Save it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.collectionOfficerService
+          .editCollectiveOfficer(
+            this.personalData,
+            this.itemId,
+            this.selectedImage
+          )
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
+              Swal.fire(
+                'Success',
+                'Collection Officer Updated Successfully',
+                'success'
+              );
+              this.navigatePath('/steckholders/action/collective-officer');
+            },
+            (error: any) => {
+              this.isLoading = false;
+              let errorMessage = 'An unexpected error occurred';
+
+              // Handle specific error messages from the backend
+              if (error.error && error.error.error) {
+                switch (error.error.error) {
+                  case 'NIC already exists':
+                    errorMessage = 'The NIC number is already registered.';
+                    break;
+                  case 'Email already exists':
+                    errorMessage = 'The email address is already in use.';
+                    break;
+                  case 'Primary phone number already exists':
+                    errorMessage = 'The primary phone number is already registered.';
+                    break;
+                  case 'Secondary phone number already exists':
+                    errorMessage = 'The secondary phone number is already registered.';
+                    break;
+                  case 'Invalid file format or file upload error':
+                    errorMessage = 'Invalid file format or error uploading the file.';
+                    break;
+                  default:
+                    errorMessage = error.error.error || 'An unexpected error occurred';
+                }
+              }
+
+              this.errorMessage = errorMessage;
+              Swal.fire('Error', this.errorMessage, 'error');
+            }
+          );
+      } else {
+        this.isLoading = false;
+        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+      }
+    });
+  }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -735,6 +801,7 @@ class Personal {
   confirmAccNumber!: any;
   bankName!: string;
   branchName!: string;
+  confirmPassword!: string; // Confirm password field
 }
 
 class CollectionCenter {

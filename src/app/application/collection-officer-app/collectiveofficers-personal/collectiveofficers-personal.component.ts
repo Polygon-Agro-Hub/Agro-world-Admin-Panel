@@ -37,7 +37,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
-    DropdownModule 
+    DropdownModule
   ],
   templateUrl: './collectiveofficers-personal.component.html',
   styleUrls: ['./collectiveofficers-personal.component.css'],
@@ -122,7 +122,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   selectedLanguages: string[] = [];
 
@@ -147,68 +147,68 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     }
   }
 
-onSubmit() {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to create the collection officer?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, create it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.collectionOfficerService
-        .createCollectiveOfficer(this.personalData, this.selectedImage)
-        .subscribe(
-          (res: any) => {
-            this.isLoading = false;
-            this.officerId = res.officerId;
-            this.errorMessage = '';
+  onSubmit() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to create the collection officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionOfficerService
+          .createCollectiveOfficer(this.personalData, this.selectedImage)
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
+              this.officerId = res.officerId;
+              this.errorMessage = '';
 
-            Swal.fire(
-              'Success',
-              'Collection Officer Created Successfully',
-              'success'
-            );
-            this.navigatePath('/steckholders/action/collective-officer');
-          },
-          (error: any) => {
-            this.isLoading = false;
-            let errorMessage = 'An unexpected error occurred';
+              Swal.fire(
+                'Success',
+                'Collection Officer Created Successfully',
+                'success'
+              );
+              this.navigatePath('/steckholders/action/collective-officer');
+            },
+            (error: any) => {
+              this.isLoading = false;
+              let errorMessage = 'An unexpected error occurred';
 
-            if (error.error && error.error.error) {
-              switch (error.error.error) {
-                case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
-                  break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
-                  break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
-                  break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
-                  break;
-                case 'Invalid file format or file upload error':
-                  errorMessage = 'Invalid file format or error uploading the file.';
-                  break;
-                default:
-                  errorMessage = error.error.error || 'An unexpected error occurred';
+              if (error.error && error.error.error) {
+                switch (error.error.error) {
+                  case 'NIC already exists':
+                    errorMessage = 'The NIC number is already registered.';
+                    break;
+                  case 'Email already exists':
+                    errorMessage = 'The email address is already in use.';
+                    break;
+                  case 'Primary phone number already exists':
+                    errorMessage = 'The primary phone number is already registered.';
+                    break;
+                  case 'Secondary phone number already exists':
+                    errorMessage = 'The secondary phone number is already registered.';
+                    break;
+                  case 'Invalid file format or file upload error':
+                    errorMessage = 'Invalid file format or error uploading the file.';
+                    break;
+                  default:
+                    errorMessage = error.error.error || 'An unexpected error occurred';
+                }
               }
-            }
 
-            this.errorMessage = errorMessage;
-            Swal.fire('Error', this.errorMessage, 'error');
-          }
-        );
-    } else {
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-    }
-  });
-}
+              this.errorMessage = errorMessage;
+              Swal.fire('Error', this.errorMessage, 'error');
+            }
+          );
+      } else {
+        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+      }
+    });
+  }
 
   onCancel() {
     Swal.fire({
@@ -237,91 +237,119 @@ onSubmit() {
     // Pre-fill country with Sri Lanka
     this.personalData.country = 'Sri Lanka';
   }
-
-  loadBanks() {
-    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-      (data) => {
-        // Sort banks alphabetically
-        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
-      },
-      (error) => {}
-    );
-  }
-
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
         this.allBranches = data;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
-  onBankChange() {
-    if (this.selectedBankId) {
-      const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
-      // Sort branches alphabetically
-      this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
-      
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-        this.invalidFields.delete('bankName');
-      }
-      this.selectedBranchId = null;
-      this.personalData.branchName = '';
-    } else {
-      this.branches = [];
-      this.personalData.bankName = '';
-    }
-  }
+loadBanks() {
+  this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+    (data) => {
+      // Sort banks alphabetically by name
+      this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
 
-  onBranchChange() {
-    if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (selectedBranch) {
-        this.personalData.branchName = selectedBranch.name;
-        this.invalidFields.delete('branchName');
-      }
-    } else {
-      this.personalData.branchName = '';
+      // Convert to dropdown options format
+      this.bankOptions = this.banks.map(bank => ({
+        label: bank.name,
+        value: bank.ID
+      }));
+    },
+    (error) => { }
+  );
+}
+
+onBankChange() {
+  if (this.selectedBankId) {
+    const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
+    // Sort branches alphabetically
+    this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
+    
+    // Convert to dropdown options format
+    this.branchOptions = this.branches.map(branch => ({
+      label: branch.name,
+      value: branch.ID
+    }));
+    
+    const selectedBank = this.banks.find(
+      (bank) => bank.ID === this.selectedBankId
+    );
+    if (selectedBank) {
+      this.personalData.bankName = selectedBank.name;
+      this.invalidFields.delete('bankName');
     }
+    this.selectedBranchId = null;
+    this.personalData.branchName = '';
+  } else {
+    this.branches = [];
+    this.branchOptions = [];
+    this.personalData.bankName = '';
   }
+}
+
+onBranchChange() {
+  if (this.selectedBranchId) {
+    const selectedBranch = this.branches.find(
+      (branch) => branch.ID === this.selectedBranchId
+    );
+    if (selectedBranch) {
+      this.personalData.branchName = selectedBranch.name;
+      this.invalidFields.delete('branchName');
+    }
+  } else {
+    this.personalData.branchName = '';
+  }
+}
 
   getAllCollectionCetnter(id: number) {
     this.loaded = false;
     this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
       (res) => {
         this.collectionCenterData = res;
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map(center => ({
+          label: center.centerName,
+          value: center.id
+        }));
         this.loaded = true;
       },
       (error) => {
         this.collectionCenterData = [];
+        this.centerOptions = [];
         this.loaded = true;
       }
     );
   }
 
-  getAllCompanies() {
-    this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
-    });
-  }
+ getAllCompanies() {
+  this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
+    this.CompanyData = res;
+    // Convert to dropdown options format
+    this.companyOptions = this.CompanyData.map(company => ({
+      label: company.companyNameEnglish,
+      value: company.id
+    }));
+  });
+}
 
-  getAllCollectionManagers() {
-    this.collectionCenterSrv
-      .getAllManagerList(
-        this.personalData.companyId,
-        this.personalData.centerId
-      )
-      .subscribe((res) => {
-        this.collectionManagerData = res;
-      });
-  }
+getAllCollectionManagers() {
+  this.collectionCenterSrv
+    .getAllManagerList(
+      this.personalData.companyId,
+      this.personalData.centerId
+    )
+    .subscribe((res) => {
+      this.collectionManagerData = res;
+      // Convert to dropdown options format
+      this.managerOptions = this.collectionManagerData.map(manager => ({
+        label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
+        value: manager.id
+      }));
+    });
+}
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -379,7 +407,7 @@ onSubmit() {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -550,9 +578,9 @@ onSubmit() {
   areDuplicatePhoneNumbers(): boolean {
     const phone1 = this.personalData.phoneNumber01;
     const phone2 = this.personalData.phoneNumber02;
-    
+
     if (!phone1 || !phone2) return false;
-    
+
     return phone1 === phone2;
   }
 
@@ -615,7 +643,7 @@ onSubmit() {
       !this.hasInvalidNameCharacters('firstNameEnglish') &&
       !this.hasInvalidSinhalaCharacters('firstNameSinhala') &&
       !this.hasInvalidTamilCharacters('firstNameTamil');
-    
+
     const isLastNameValid =
       !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
@@ -623,7 +651,7 @@ onSubmit() {
       !this.hasInvalidNameCharacters('lastNameEnglish') &&
       !this.hasInvalidSinhalaCharacters('lastNameSinhala') &&
       !this.hasInvalidTamilCharacters('lastNameTamil');
-    
+
     const isPhoneNumberValid = this.isValidPhoneNumber(
       this.personalData.phoneNumber01
     );
@@ -717,52 +745,52 @@ onSubmit() {
   }
 
   preventSpecialCharacters(event: KeyboardEvent): void {
-  const char = String.fromCharCode(event.which);
-  // Allow only letters (a-z, A-Z) and space
-  if (!/[a-zA-Z\s]/.test(char)) {
-    event.preventDefault();
-  }
-}
-
-// Prevent non-Sinhala characters
-preventNonSinhalaCharacters(event: KeyboardEvent): void {
-  const char = String.fromCharCode(event.which);
-  // Allow Sinhala unicode characters and space
-  if (!/[\u0D80-\u0DFF\s]/.test(char)) {
-    event.preventDefault();
-  }
-}
-
-// Prevent non-Tamil characters
-preventNonTamilCharacters(event: KeyboardEvent): void {
-  const char = String.fromCharCode(event.which);
-  // Allow Tamil unicode characters and space
-  if (!/[\u0B80-\u0BFF\s]/.test(char)) {
-    event.preventDefault();
-  }
-}
-
-// Prevent non-numeric characters for phone numbers
-preventNonNumeric(event: KeyboardEvent): void {
-  const char = String.fromCharCode(event.which);
-  // Allow only numbers (0-9)
-  if (!/[0-9]/.test(char)) {
-    event.preventDefault();
-  }
-}
-
-formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-  let value = this.personalData[fieldName];
-  if (value) {
-    // Remove non-numeric characters
-    value = value.replace(/[^0-9]/g, '');
-    // Limit to 9 digits
-    if (value.length > 9) {
-      value = value.substring(0, 9);
+    const char = String.fromCharCode(event.which);
+    // Allow only letters (a-z, A-Z) and space
+    if (!/[a-zA-Z\s]/.test(char)) {
+      event.preventDefault();
     }
-    this.personalData[fieldName] = value;
   }
-}
+
+  // Prevent non-Sinhala characters
+  preventNonSinhalaCharacters(event: KeyboardEvent): void {
+    const char = String.fromCharCode(event.which);
+    // Allow Sinhala unicode characters and space
+    if (!/[\u0D80-\u0DFF\s]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Prevent non-Tamil characters
+  preventNonTamilCharacters(event: KeyboardEvent): void {
+    const char = String.fromCharCode(event.which);
+    // Allow Tamil unicode characters and space
+    if (!/[\u0B80-\u0BFF\s]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Prevent non-numeric characters for phone numbers
+  preventNonNumeric(event: KeyboardEvent): void {
+    const char = String.fromCharCode(event.which);
+    // Allow only numbers (0-9)
+    if (!/[0-9]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove non-numeric characters
+      value = value.replace(/[^0-9]/g, '');
+      // Limit to 9 digits
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+      this.personalData[fieldName] = value;
+    }
+  }
 }
 
 class Personal {

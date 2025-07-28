@@ -72,7 +72,7 @@ export class ManageContentComponent implements OnInit {
   selectedStatus: Status | undefined;
   statusFilter: any = '';
   createdDateFilter: string = '';
-  hasData: boolean = true;
+  hasData: boolean = false;
 
   safeHtmlDescriptionEnglish: SafeHtml = '';
   safeHtmlDescriptionSinhala: SafeHtml = '';
@@ -97,27 +97,45 @@ export class ManageContentComponent implements OnInit {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
+    
+    // First convert the string to a Date object if it exists
+    let dateObj = this.createdDateFilter ? new Date(this.createdDateFilter) : undefined;
+    
+    // Then format it (using Solution 1 approach - date only)
+    let formattedDate = dateObj 
+        ? this.formatLocalDate(dateObj) 
+        : undefined;
+
+    console.log("createdDateFilter", this.createdDateFilter);
+    console.log('Formatted Date:', formattedDate);
+    
     this.newsService
       .fetchAllNews(
         page,
         limit,
         this.statusFilter?.code,
-        this.createdDateFilter
+        formattedDate
       )
       .subscribe(
         (response: any) => {
           this.newsItems = response.items;
           this.totalItems = response.total;
           this.isLoading = false;
-          if (response.length > 0) {
-            this.hasData = false;
-          }
+          this.hasData = response.total > 0;
         },
         (error) => {
           this.isLoading = false;
         }
       );
-  }
+}
+
+// Helper function to format date as YYYY-MM-DD
+private formatLocalDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
   deleteNews(id: any) {
     const token = this.tokenService.getToken();
@@ -228,5 +246,11 @@ export class ManageContentComponent implements OnInit {
 
   back(): void {
     this.router.navigate(['/plant-care/action']);
+  }
+
+  onDateClear(){
+    this.createdDateFilter = '';
+    this.fetchAllNews(1, this.itemsPerPage);
+
   }
 }

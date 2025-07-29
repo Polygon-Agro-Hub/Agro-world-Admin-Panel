@@ -844,7 +844,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     return true;
   }
 
-  // Add these new functions to handle NIC and Email input restrictions
 
 // Handle NIC input restrictions
 preventNICInvalidCharacters(event: KeyboardEvent): void {
@@ -893,6 +892,32 @@ formatNIC(): void {
     }
     
     this.personalData.nic = value;
+  }
+}
+
+// Add these new functions for account number handling
+preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+  
+  // Block spaces entirely for account numbers
+  if (charCode === 32) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow only numbers
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
+// Format account number input
+formatAccountNumber(fieldName: 'accNumber' | 'confirmAccNumber'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove all spaces and non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    this.personalData[fieldName] = value;
   }
 }
 

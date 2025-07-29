@@ -170,6 +170,23 @@ export class CreateAdminUserComponent implements OnInit {
     };
   }
 
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
+
+  formatTextInput(fieldName: string): void {
+    const control = this.userForm.get(fieldName);
+    if (control && control.value) {
+      const cleanedValue = control.value.replace(/^\s+/, '');
+      control.setValue(cleanedValue);
+    }
+  }
+
 
 
 

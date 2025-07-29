@@ -246,63 +246,63 @@ export class CollectiveofficersPersonalComponent implements OnInit {
     );
   }
 
-loadBanks() {
-  this.http.get<Bank[]>('assets/json/banks.json').subscribe(
-    (data) => {
-      // Sort banks alphabetically by name
-      this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      (data) => {
+        // Sort banks alphabetically by name
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+
+        // Convert to dropdown options format
+        this.bankOptions = this.banks.map(bank => ({
+          label: bank.name,
+          value: bank.ID
+        }));
+      },
+      (error) => { }
+    );
+  }
+
+  onBankChange() {
+    if (this.selectedBankId) {
+      const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
+      // Sort branches alphabetically
+      this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
 
       // Convert to dropdown options format
-      this.bankOptions = this.banks.map(bank => ({
-        label: bank.name,
-        value: bank.ID
+      this.branchOptions = this.branches.map(branch => ({
+        label: branch.name,
+        value: branch.ID
       }));
-    },
-    (error) => { }
-  );
-}
 
-onBankChange() {
-  if (this.selectedBankId) {
-    const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
-    // Sort branches alphabetically
-    this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
-    
-    // Convert to dropdown options format
-    this.branchOptions = this.branches.map(branch => ({
-      label: branch.name,
-      value: branch.ID
-    }));
-    
-    const selectedBank = this.banks.find(
-      (bank) => bank.ID === this.selectedBankId
-    );
-    if (selectedBank) {
-      this.personalData.bankName = selectedBank.name;
-      this.invalidFields.delete('bankName');
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
+      if (selectedBank) {
+        this.personalData.bankName = selectedBank.name;
+        this.invalidFields.delete('bankName');
+      }
+      this.selectedBranchId = null;
+      this.personalData.branchName = '';
+    } else {
+      this.branches = [];
+      this.branchOptions = [];
+      this.personalData.bankName = '';
     }
-    this.selectedBranchId = null;
-    this.personalData.branchName = '';
-  } else {
-    this.branches = [];
-    this.branchOptions = [];
-    this.personalData.bankName = '';
   }
-}
 
-onBranchChange() {
-  if (this.selectedBranchId) {
-    const selectedBranch = this.branches.find(
-      (branch) => branch.ID === this.selectedBranchId
-    );
-    if (selectedBranch) {
-      this.personalData.branchName = selectedBranch.name;
-      this.invalidFields.delete('branchName');
+  onBranchChange() {
+    if (this.selectedBranchId) {
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
+      if (selectedBranch) {
+        this.personalData.branchName = selectedBranch.name;
+        this.invalidFields.delete('branchName');
+      }
+    } else {
+      this.personalData.branchName = '';
     }
-  } else {
-    this.personalData.branchName = '';
   }
-}
 
   getAllCollectionCetnter(id: number) {
     this.loaded = false;
@@ -324,32 +324,32 @@ onBranchChange() {
     );
   }
 
- getAllCompanies() {
-  this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
-    this.CompanyData = res;
-    // Convert to dropdown options format
-    this.companyOptions = this.CompanyData.map(company => ({
-      label: company.companyNameEnglish,
-      value: company.id
-    }));
-  });
-}
-
-getAllCollectionManagers() {
-  this.collectionCenterSrv
-    .getAllManagerList(
-      this.personalData.companyId,
-      this.personalData.centerId
-    )
-    .subscribe((res) => {
-      this.collectionManagerData = res;
+  getAllCompanies() {
+    this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
+      this.CompanyData = res;
       // Convert to dropdown options format
-      this.managerOptions = this.collectionManagerData.map(manager => ({
-        label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
-        value: manager.id
+      this.companyOptions = this.CompanyData.map(company => ({
+        label: company.companyNameEnglish,
+        value: company.id
       }));
     });
-}
+  }
+
+  getAllCollectionManagers() {
+    this.collectionCenterSrv
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.collectionManagerData = res;
+        // Convert to dropdown options format
+        this.managerOptions = this.collectionManagerData.map(manager => ({
+          label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
+          value: manager.id
+        }));
+      });
+  }
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -447,50 +447,127 @@ getAllCollectionManagers() {
     this.personalData.empType = selectedType;
   }
 
-  // Format name to capitalize first letter and block special characters/numbers
   formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
     let value = this.personalData[fieldName];
     if (value) {
       // Remove special characters and numbers, keep only letters and spaces
       value = value.replace(/[^a-zA-Z\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
       // Capitalize first letter and make rest lowercase
-      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      if (value.length > 0) {
+        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      }
+
       this.personalData[fieldName] = value;
     }
   }
 
-  // Format Sinhala names
+  // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
     let value = this.personalData[fieldName];
     if (value) {
       // Allow only Sinhala unicode characters and spaces
       value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
       this.personalData[fieldName] = value;
     }
   }
 
-  // Format Tamil names
+  // Updated formatTamilName function
   formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
     let value = this.personalData[fieldName];
     if (value) {
       // Allow only Tamil unicode characters and spaces
       value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
       this.personalData[fieldName] = value;
     }
   }
 
-  // Format Account Holder's Name
+  // Updated formatAccountHolderName function
   formatAccountHolderName(): void {
     let value = this.personalData.accHolderName;
     if (value) {
       // Remove special characters and numbers, keep only letters and spaces
       value = value.replace(/[^a-zA-Z\s]/g, '');
-      // Capitalize first letter and make rest lowercase
-      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      // Capitalize first letter of each word
+      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
+
       this.personalData.accHolderName = value;
     }
   }
 
+  // Add new keypress handler for account holder name input
+  preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
+    // Handle space restrictions first
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
+
+    const char = String.fromCharCode(event.which);
+    // Allow only letters (a-z, A-Z) and space
+    if (!/[a-zA-Z\s]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Add new keypress handlers for address fields
+  preventAddressSpecialCharacters(event: KeyboardEvent): void {
+    // Handle space restrictions first
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
+
+    const char = String.fromCharCode(event.which);
+    // Allow letters, numbers, and space for address fields
+    if (!/[a-zA-Z0-9\s]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Format address fields to handle spaces
+  formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      // Capitalize first letter of each word for streetName and city
+      if (fieldName === 'streetName' || fieldName === 'city') {
+        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
+      }
+
+      this.personalData[fieldName] = value;
+    }
+  }
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
@@ -744,7 +821,118 @@ getAllCollectionManagers() {
       !this.personalData.languages || this.personalData.languages.trim() === '';
   }
 
+  handleSpaceRestrictions(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (charCode === 32) {
+      if (currentValue.length === 0) {
+        event.preventDefault();
+        return false;
+      }
+
+      if (!/[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue)) {
+        event.preventDefault();
+        return false;
+      }
+      if (currentValue.charAt(currentValue.length - 1) === ' ') {
+        event.preventDefault();
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // Add these new functions to handle NIC and Email input restrictions
+
+// Handle NIC input restrictions
+preventNICInvalidCharacters(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+  const char = String.fromCharCode(charCode);
+  const currentValue = (event.target as HTMLInputElement).value;
+  
+  // Block spaces entirely for NIC
+  if (charCode === 32) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow only numbers and 'V' or 'v'
+  if (!/[0-9Vv]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Format NIC input
+formatNIC(): void {
+  let value = this.personalData.nic;
+  if (value) {
+    // Remove all spaces and invalid characters
+    value = value.replace(/[^0-9Vv]/g, '');
+    
+    // Convert 'v' to 'V' and ensure only one V at the end
+    if (value.includes('v') || value.includes('V')) {
+      // Remove all V's first
+      value = value.replace(/[Vv]/g, '');
+      // Add single V at the end if original had V/v
+      value = value + 'V';
+    }
+    
+    // Limit length based on format
+    if (value.includes('V')) {
+      // 9 digits + V format
+      if (value.length > 10) {
+        value = value.substring(0, 9) + 'V';
+      }
+    } else {
+      // 12 digits format
+      if (value.length > 12) {
+        value = value.substring(0, 12);
+      }
+    }
+    
+    this.personalData.nic = value;
+  }
+}
+
+// Handle Email input restrictions
+preventEmailInvalidCharacters(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+  const char = String.fromCharCode(charCode);
+  
+  // Block spaces entirely for email
+  if (charCode === 32) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow alphanumeric, @, ., -, _
+  if (!/[a-zA-Z0-9@.\-_]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Format Email input
+formatEmail(): void {
+  let value = this.personalData.email;
+  if (value) {
+    // Remove all spaces and invalid characters
+    value = value.replace(/[^a-zA-Z0-9@.\-_]/g, '');
+    
+    // Convert to lowercase for consistency
+    value = value.toLowerCase();
+    
+    this.personalData.email = value;
+  }
+}
+
   preventSpecialCharacters(event: KeyboardEvent): void {
+    // Handle space restrictions first
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
+
     const char = String.fromCharCode(event.which);
     // Allow only letters (a-z, A-Z) and space
     if (!/[a-zA-Z\s]/.test(char)) {
@@ -752,8 +940,12 @@ getAllCollectionManagers() {
     }
   }
 
-  // Prevent non-Sinhala characters
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
+    // Handle space restrictions first
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
+
     const char = String.fromCharCode(event.which);
     // Allow Sinhala unicode characters and space
     if (!/[\u0D80-\u0DFF\s]/.test(char)) {
@@ -761,15 +953,15 @@ getAllCollectionManagers() {
     }
   }
 
-  // Prevent non-Tamil characters
   preventNonTamilCharacters(event: KeyboardEvent): void {
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
     const char = String.fromCharCode(event.which);
-    // Allow Tamil unicode characters and space
     if (!/[\u0B80-\u0BFF\s]/.test(char)) {
       event.preventDefault();
     }
   }
-
   // Prevent non-numeric characters for phone numbers
   preventNonNumeric(event: KeyboardEvent): void {
     const char = String.fromCharCode(event.which);

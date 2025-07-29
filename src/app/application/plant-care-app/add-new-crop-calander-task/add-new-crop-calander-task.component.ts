@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import Swal from 'sweetalert2';
 import { RadioButtonModule } from 'primeng/radiobutton';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-add-new-crop-calander-task',
   standalone: true,
@@ -48,7 +48,8 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private cropCalendarService: CropCalendarService
+    private cropCalendarService: CropCalendarService,
+    private location: Location
   ) {
     this.taskForm = this.fb.group({
       cropId: ['', [Validators.required]],
@@ -93,32 +94,78 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
-  allowOnlyEnglishLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+allowOnlyEnglishLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
   if (allowedControlKeys.includes(event.key)) return;
+
+  const input = event.currentTarget as HTMLInputElement;
+  const currentValue = input.value;
+
+  // Prevent space at beginning during typing or editing
+  if (event.key === ' ' && (currentValue === '' || input.selectionStart === 0 || currentValue.startsWith(' '))) {
+    event.preventDefault();
+    return;
+  }
+
   const isLetter = /^[a-zA-Z]$/.test(event.key);
-  if (!isLetter) {
+  if (!isLetter && event.key !== ' ') {
     event.preventDefault();
   }
 }
+
 allowOnlySinhalaLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
   if (allowedControlKeys.includes(event.key)) return;
+
+  const input = event.currentTarget as HTMLInputElement;
+  const currentValue = input.value;
+
+  if (event.key === ' ' && (currentValue === '' || input.selectionStart === 0 || currentValue.startsWith(' '))) {
+    event.preventDefault();
+    return;
+  }
+
   const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
-  if (!isSinhala) {
+  if (!isSinhala && event.key !== ' ') {
     event.preventDefault();
   }
 }
 
 allowOnlyTamilLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
   if (allowedControlKeys.includes(event.key)) return;
 
+  const input = event.currentTarget as HTMLInputElement;
+  const currentValue = input.value;
+
+  if (event.key === ' ' && (currentValue === '' || input.selectionStart === 0 || currentValue.startsWith(' '))) {
+    event.preventDefault();
+    return;
+  }
+
   const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
-  if (!isTamil) {
+  if (!isTamil && event.key !== ' ') {
     event.preventDefault();
   }
 }
+// This handles space trimming while typing or editing
+autoTrimStart(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const original = input.value;
+  const trimmed = original.replace(/^\s+/, ''); // Trim leading spaces
+  if (original !== trimmed) {
+    input.value = trimmed;
+  }
+}
+
+// This handles pasting with leading space
+removeLeadingSpace(event: ClipboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  setTimeout(() => {
+    input.value = input.value.trimStart();
+  }, 0); // Wait for paste to complete
+}
+
 
 capitalizeFirstLetter(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -138,81 +185,74 @@ blockZeroValue(event: Event) {
 }
 
 
-  onSubmit() {
-  console.log('onsubmit:', this.cropId, this.indexId, this.userId);
+onSubmit() {
+    console.log('onsubmit:', this.cropId, this.indexId, this.userId);
 
-  if (
-    !this.cropTaskObj.startingDate ||
-    !this.cropTaskObj.taskTypeEnglish ||
-    !this.cropTaskObj.taskTypeSinhala ||
-    !this.cropTaskObj.taskTypeTamil ||
-    !this.cropTaskObj.taskCategoryEnglish ||
-    !this.cropTaskObj.taskCategorySinhala ||
-    !this.cropTaskObj.taskCategoryTamil ||
-    !this.cropTaskObj.taskEnglish ||
-    !this.cropTaskObj.taskSinhala ||
-    !this.cropTaskObj.taskTamil ||
-    !this.cropTaskObj.taskDescriptionEnglish ||
-    !this.cropTaskObj.taskDescriptionSinhala ||
-    !this.cropTaskObj.taskDescriptionTamil ||
-    !this.cropTaskObj.reqImages ||
-    (this.requireImageLink === 'yes' && !this.cropTaskObj.imageLink)
-  ) {
-    this.taskForm.markAllAsTouched();
-    console.log('failed');
-    Swal.fire({
-      icon: 'warning',
-      title: 'Validation Error',
-      text: 'Please fill in all required fields before submitting.',
-    });
-    return;
-  }
+    if (
+      !this.cropTaskObj.startingDate ||
+      !this.cropTaskObj.taskTypeEnglish ||
+      !this.cropTaskObj.taskTypeSinhala ||
+      !this.cropTaskObj.taskTypeTamil ||
+      !this.cropTaskObj.taskCategoryEnglish ||
+      !this.cropTaskObj.taskCategorySinhala ||
+      !this.cropTaskObj.taskCategoryTamil ||
+      !this.cropTaskObj.taskEnglish ||
+      !this.cropTaskObj.taskSinhala ||
+      !this.cropTaskObj.taskTamil ||
+      !this.cropTaskObj.taskDescriptionEnglish ||
+      !this.cropTaskObj.taskDescriptionSinhala ||
+      !this.cropTaskObj.taskDescriptionTamil ||
+      !this.cropTaskObj.reqImages ||
+      (this.requireImageLink === 'yes' && !this.cropTaskObj.imageLink)
+    ) {
+      this.taskForm.markAllAsTouched();
+      console.log('failed');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Error',
+        text: 'Please fill in all required fields before submitting.',
+      });
+      return;
+    }
 
-  if (this.userId == 'null') {
-    this.isLoading = true;
-    console.log('no user', this.userId);
-    this.cropCalendarService
-      .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
-      .subscribe((res) => {
-        this.isLoading = false;
-        if (res) {
-          Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
-          this.router.navigate(['/view-crop-task-by-user/user-task-list']);
-        } else {
-          Swal.fire('Error', 'Error occurred in adding task!', 'error');
-        }
-      });
-  } else {
-    this.isLoading = true;
-    console.log('has user', this.userId);
-    this.cropCalendarService
-      .createNewCropTaskU(
-        this.cropId,
-        this.indexId,
-        this.userId,
-        this.cropTaskObj,
-        this.onCulscropID
-      )
-      .subscribe((res) => {
-        this.isLoading = false;
-        if (res) {
-          Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
-          this.router.navigate(
-            ['/plant-care/action/view-crop-task-by-user'],
-            {
-              queryParams: {
-                cultivationId: this.cultivationId,
-                userId: this.userId,
-                userName: this.userName,
-              },
-            }
-          );
-        } else {
-          Swal.fire('Error', 'Error occurred in adding task!', 'error');
-        }
-      });
+    if (this.userId == 'null') {
+      this.isLoading = true;
+      console.log('no user', this.userId);
+      this.cropCalendarService
+        .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
+        .subscribe((res) => {
+          this.isLoading = false;
+          if (res) {
+            Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
+            // Navigate to the previous page
+            this.location.back();
+          } else {
+            Swal.fire('Error', 'Error occurred in adding task!', 'error');
+          }
+        });
+    } else {
+      this.isLoading = true;
+      console.log('has user', this.userId);
+      this.cropCalendarService
+        .createNewCropTaskU(
+          this.cropId,
+          this.indexId,
+          this.userId,
+          this.cropTaskObj,
+          this.onCulscropID
+        )
+        .subscribe((res) => {
+          this.isLoading = false;
+          if (res) {
+            Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
+            // Navigate to the previous page
+            this.location.back();
+          } else {
+            Swal.fire('Error', 'Error occurred in adding task!', 'error');
+          }
+        });
+    }
   }
-}
 
   back(cropCalendarId: string, userId: string) {
     this.router.navigate(

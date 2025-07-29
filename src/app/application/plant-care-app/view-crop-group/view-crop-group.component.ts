@@ -75,7 +75,7 @@ export class ViewCropGroupComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeCategories();
@@ -171,6 +171,20 @@ export class ViewCropGroupComponent {
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCropGroups(this.page);
+  }
+
+
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
+  formatSearchInput(): void {
+    if (this.searchTerm) {
+      this.searchTerm = this.searchTerm.replace(/^\s+/, '');
+    }
   }
 
   deleteCropCalender(id: any) {

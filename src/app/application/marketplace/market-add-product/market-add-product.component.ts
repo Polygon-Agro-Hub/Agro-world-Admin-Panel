@@ -45,7 +45,7 @@ export class MarketAddProductComponent implements OnInit {
     private marketSrv: MarketPlaceService,
     private router: Router,
     public themeService: ThemeService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllCropVerity();
@@ -57,7 +57,7 @@ export class MarketAddProductComponent implements OnInit {
       (res) => {
         this.cropsObj = res;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -163,7 +163,7 @@ export class MarketAddProductComponent implements OnInit {
     });
   }
 
-  seeCategory() {}
+  seeCategory() { }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -297,23 +297,58 @@ export class MarketAddProductComponent implements OnInit {
     this.router.navigate(['/market/action']);
   }
 
+  trimDisplayName() {
+    if (this.productObj.cropName) {
+      this.productObj.cropName = this.productObj.cropName.trimStart();
+    }
+  }
+
+  validateDiscountPercentage() {
+    if (this.productObj.discountedPrice < 0) {
+      this.productObj.discountedPrice = 0;
+    }
+    if (this.productObj.discountedPrice > 100) {
+      this.productObj.discountedPrice = 100;
+    }
+  }
+
+  validateNormalPrice() {
+    if (this.productObj.normalPrice < 0) {
+      this.productObj.normalPrice = 0;
+    }
+  }
+
+  validateSalePrice() {
+    if (this.productObj.salePrice < 0) {
+      this.productObj.salePrice = 0;
+    }
+  }
+
   validateChangeBy() {
-    if (this.productObj.changeby <= 0.0) {
-      this.productObj.changeby = 0.0;
+    if (this.productObj.changeby < 0) {
+      this.productObj.changeby = 0;
     }
   }
 
   validateMaxQuantity() {
-    if (this.productObj.maxQuantity <= 0.0) {
-      this.productObj.maxQuantity = 0.0;
+    if (this.productObj.maxQuantity < 0) {
+      this.productObj.maxQuantity = 0;
     }
   }
 
   validateMinQuantity() {
-    if (this.productObj.startValue <= 0.0) {
-      this.productObj.startValue = 0.0;
+    if (this.productObj.startValue < 0) {
+      this.productObj.startValue = 0;
     }
   }
+
+   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
 }
 
 class Crop {

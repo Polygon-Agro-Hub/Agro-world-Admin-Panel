@@ -1,0 +1,77 @@
+.dark-mode .mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: #061E2C;
+    /* Background color */
+    --mdc-filled-text-field-input-text-color: #C4C4C4;
+    /* Text color */
+    --mdc-filled-text-field-label-text-color: #C4C4C4;
+    /* Label color */
+    --mdc-filled-text-field-caret-color: #C4C4C4;
+    /* Cursor color */
+    --mdc-filled-text-field-focus-label-text-color: #C4C4C4;
+    /* Focused label color */
+    --mdc-filled-text-field-active-indicator-color: #14557C;
+    /* Underline color */
+    --mdc-filled-text-field-focus-active-indicator-color: #C4C4C4;
+    /* Focused underline */
+}
+
+.dark-mode .filled-container-color {
+    background-color: #061E2C !important;
+    color: #C4C4C4 !important;
+}
+
+.dark-mode .mat-form-field-label {
+    color: #C4C4C4 !important;
+}
+
+.dark-mode .mat-form-field-underline {
+    background-color: #14557C !important;
+}
+
+.dark-mode .mat-form-field-ripple {
+    background-color: #C4C4C4 !important;
+}
+
+/* Dark mode styles for chips */
+.chip-style.dark-bg-tileHoverDark {
+    background-color: #14557C;
+    color: #C4C4C4;
+}
+
+.chip-style.dark-bg-tileHoverDark .mat-chip-remove {
+    color: #C4C4C4;
+    opacity: 0.8;
+}
+
+.chip-style.dark-bg-tileHoverDark .mat-chip-remove:hover {
+    opacity: 1;
+}
+
+/* Dark mode styles for input */
+.input-style.dark-bg-tileBlack {
+    background-color: #061E2C;
+    color: #C4C4C4;
+}
+
+.input-style.dark-bg-tileBlack::placeholder {
+    color: #C4C4C4;
+    opacity: 0.7;
+}
+
+/* Additional dark mode styles for Angular Material */
+.dark-mode .mat-form-field-appearance-legacy .mat-form-field-label {
+    color: #C4C4C4;
+}
+
+.dark-mode .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: #14557C;
+}
+
+.dark-mode .mat-input-element {
+    caret-color: #C4C4C4;
+    color: #C4C4C4;
+}
+
+.dark-mode .mat-form-field-appearance-legacy .mat-form-field-ripple {
+    background-color: #C4C4C4;
+}

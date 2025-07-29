@@ -75,3 +75,18 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+/* Dark mode for Angular Material */
+/* Helper classes for dark mode */
+.dark-text {
+  color: #C4C4C4;
+}
+
+.dark-bg {
+  background-color: #061E2C;
+}
+
+.dark-placeholder::placeholder {
+  color: #C4C4C4;
+  opacity: 0.7;
+}
+

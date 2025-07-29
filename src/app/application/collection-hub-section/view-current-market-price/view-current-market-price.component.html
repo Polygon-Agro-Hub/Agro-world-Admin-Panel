@@ -119,49 +119,42 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+     <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
       <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div *ngIf="hasData" class="overflow-x-auto ">
       <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
-      <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
-      >
+      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-lg">
+              No
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-lg">
               Crop Name
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-lg">
               Variety
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
-            >
-              Qulity
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
+              Quality
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
-            >
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
               Price ( per 1 Kg )
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            class="border-b border-gray-200 dark:border-[#4B555A]"
-            *ngFor="let item of market"
-          >
-            <td class="py-3 text-textLight dark:text-textDark">
+          <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="let item of market; let i = index">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ i + 1 }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.cropName }}
             </td>
-            <td class="px-8 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyName }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">

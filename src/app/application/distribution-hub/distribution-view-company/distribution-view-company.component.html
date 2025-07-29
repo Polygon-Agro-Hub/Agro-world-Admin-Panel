@@ -196,13 +196,15 @@
               </div>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.phoneCode01 + "" + item.phoneNumber01 }}
+              <!-- {{ item.phoneCode01 + "" + item.phoneNumber01 }} -->
+              <span *ngIf="item.phoneNumber01 === null">-</span>
+              <span *ngIf="item.phoneNumber01 != null">{{ item.phoneCode01 }}{{ ' ' + item.phoneNumber01 }}</span>
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <span
                 *ngIf="item.phoneNumber02 === null"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark"
-                >Phone number 2 not provided</span
+                >-</span
               >
               <span
                 *ngIf="item.phoneNumber02 != null"

@@ -32,6 +32,22 @@ export class AddPackageComponent implements OnInit {
     this.getProductTypes();
   }
 
+  preventNegative(event: any): void {
+  const value = parseFloat(event.target.value);
+  if (value < 0) {
+    event.target.value = 0;
+    // Update the model value as well
+    if (event.target === document.querySelector('input[ng-reflect-name="productPrice"]')) {
+      this.packageObj.productPrice = 0;
+    } else if (event.target === document.querySelector('input[ng-reflect-name="serviceFee"]')) {
+      this.packageObj.serviceFee = 0;
+    } else if (event.target === document.querySelector('input[ng-reflect-name="packageFee"]')) {
+      this.packageObj.packageFee = 0;
+    }
+    this.calculateApproximatedPrice();
+  }
+}
+
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
       this.productTypeObj = res.data;
@@ -351,6 +367,8 @@ export class AddPackageComponent implements OnInit {
     return false;
   }
 }
+
+
 
 class Package {
   displayName!: string;

@@ -145,7 +145,7 @@ export class EditDistributionCentreComponent implements OnInit {
 
       if (!pattern.test(phoneNumber)) {
         return {
-          invalidPhone: `Invalid format. Use only numbers.`,
+          invalidPhone: `Please enter a valid mobile number (format: +947XXXXXXXX)`,
         };
       }
 

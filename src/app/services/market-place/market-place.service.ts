@@ -22,6 +22,40 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
+getSubscriptions(buyerType: 'retail' | 'wholesale'): Observable<any[]> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+  const url = `${this.apiUrl}market-place/marketplace-users?buyerType=${buyerType}`;
+  return this.http.get<any[]>(url, { headers });
+}
+
+deleteUser(id: number): Observable<{ status: boolean; message: string }> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+  const url = `${this.apiUrl}market-place/marketplace-dltusers/${id}`;
+  return this.http.delete<{ status: boolean; message: string }>(url, { headers });
+}
+
+
+  getPackageHistory(packageId: number, date: string): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    const url = `${this.apiUrl}market-place/get-marketplace-package-before-date/${packageId}?date=${date}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+getProductTypes(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+  const url = `${this.apiUrl}market-place/get-product-type`;
+  return this.http.get<any>(url, { headers });
+}
+
   createProduct(Data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -91,6 +125,8 @@ export class MarketPlaceService {
     let url = `${this.apiUrl}market-place/delete-all-coupen`;
     return this.http.delete(url, { headers });
   }
+
+  
 
   getProuctCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -726,6 +762,15 @@ export class MarketPlaceService {
     return this.http.post(`${this.apiUrl}market-place/update-coupen`, Data, {
       headers,
     });
+  }
+
+   getMarketPlaceDashbordDetails(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}market-place/market-dashbord-details`;
+    return this.http.get<any>(url, { headers });
   }
 }
 

@@ -8,6 +8,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -33,6 +34,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './edit-sales-agent.component.html',
   styleUrl: './edit-sales-agent.component.css',
@@ -61,7 +63,7 @@ export class EditSalesAgentComponent implements OnInit {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
-
+  touchedFields: { [key in keyof Personal]?: boolean } = {};
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
@@ -306,24 +308,23 @@ export class EditSalesAgentComponent implements OnInit {
 
   validateNIC(): boolean {
     const nic = this.personalData.nic;
-  
+
     if (!nic) {
       this.nicError = true;
       return false;
     }
-  
+
     // Single pattern: matches either 9 digits + V/v OR 12 digits
     const pattern = /^(\d{9}[Vv]|\d{12})$/;
-  
+
     if (!pattern.test(nic)) {
       this.nicError = true;
       return false;
     }
-  
+
     this.nicError = false;
     return true;
   }
-  
 
   onCancel() {
     Swal.fire({
@@ -342,12 +343,12 @@ export class EditSalesAgentComponent implements OnInit {
 
   onSubmit() {
     const phonePattern = /^[0-9]{9}$/;
-    const accountPattern = /^[a-zA-Z0-9]+$/
+    const accountPattern = /^[a-zA-Z0-9]+$/;
     if (
       !this.personalData.firstName ||
       !this.personalData.lastName ||
       !this.personalData.phoneNumber1 ||
-      !phonePattern.test(this.personalData.phoneNumber1) || 
+      !phonePattern.test(this.personalData.phoneNumber1) ||
       !this.personalData.nic ||
       !this.validateNIC() ||
       !this.personalData.email ||
@@ -359,22 +360,21 @@ export class EditSalesAgentComponent implements OnInit {
       !this.personalData.district ||
       !this.personalData.accHolderName ||
       !this.personalData.accNumber ||
-      !accountPattern.test(this.personalData.accNumber) || 
+      !accountPattern.test(this.personalData.accNumber) ||
       !this.personalData.bankName ||
       !this.personalData.branchName ||
       this.personalData.accNumber !== this.confirmAccNumber ||
-      !accountPattern.test(this.confirmAccNumber) || 
-
-      (
-        this.personalData.phoneNumber2 &&
-        (
-          !phonePattern.test(this.personalData.phoneNumber2) || 
-          this.personalData.phoneNumber2 === this.personalData.phoneNumber1
-        )
-      )
+      !accountPattern.test(this.confirmAccNumber) ||
+      (this.personalData.phoneNumber2 &&
+        (!phonePattern.test(this.personalData.phoneNumber2) ||
+          this.personalData.phoneNumber2 === this.personalData.phoneNumber1))
     ) {
       if (this.nicError) {
-        Swal.fire('Error', 'Invalid NIC format (e.g., 123456789V or 200012345678)', 'error');
+        Swal.fire(
+          'Error',
+          'Invalid NIC format (e.g., 123456789V or 200012345678)',
+          'error'
+        );
       }
       return;
     }
@@ -421,6 +421,101 @@ export class EditSalesAgentComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  validateNameInput(event: KeyboardEvent): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+      ' ',
+      'Spacebar',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+    const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+    if (!allowedPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
+    if (this.personalData[fieldName]) {
+      // Capitalize first letter and make the rest lowercase
+      this.personalData[fieldName] =
+        this.personalData[fieldName].charAt(0).toUpperCase() +
+        this.personalData[fieldName].slice(1).toLowerCase();
+    }
+  }
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
+
+  formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
+      }
+    }
+  }
+
+  isFieldInvalid(fieldName: keyof Personal): boolean {
+    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+  }
+
+  capitalizeName(fieldName: keyof Personal): void {
+    if (this.personalData[fieldName]) {
+      // Convert to lowercase first
+      let value = (this.personalData[fieldName] as string).toLowerCase();
+
+      // Capitalize first letter of each word
+      value = value.replace(/(^|\s|-|')[a-z]/g, (char) => char.toUpperCase());
+
+      (this.personalData[fieldName] as string) = value;
+    }
+  }
+
+  isValidName(name: string): boolean {
+    // Allows letters, spaces, hyphens, and apostrophes
+    const namePattern = /^[A-Za-z\s'-]+$/;
+    return namePattern.test(name);
   }
 }
 

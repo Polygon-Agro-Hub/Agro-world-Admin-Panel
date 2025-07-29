@@ -1,0 +1,89 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()" aria-label="Go back to market action page">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<p style="color: #292929;" class="text-xl font-medium mb-4">History Log</p>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div
+    class="mx-auto w-[100%] py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg flex flex-wrap gap-4 justify-between px-4 sm:px-16">
+    <!-- Package Name -->
+    <div class="flex items-center gap-2">
+      <p style="color: #393939;" class="font-normal">
+        Package Name: <strong>{{ packageName }}</strong>
+      </p>
+    </div>
+
+
+
+
+
+    <!-- To Date Input -->
+    <div class="ml-auto">
+  <input
+    id="toDate"
+    type="date"
+    class="p-2 w-[350px] border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
+    placeholder="----/--/--"
+    [(ngModel)]="toDate"
+    [max]="maxDate"
+    aria-label="Select date to view package history"
+  />
+</div>
+
+    <!-- Go Button -->
+    <div class="flex items-center">
+      <button (click)="getPackageHistory()" class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600"
+        aria-label="Fetch package history for selected date">
+        Go
+      </button>
+    </div>
+  </div>
+
+  <div class="h-[20px] w-full"></div>
+
+  <!-- Data Table -->
+  <div class="mx-auto w-[100%]  p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    *ngIf="hasData && !isLoading">
+    <div class="text-center">
+      <p class="text-black">
+        <ng-container *ngIf="toDate; else noDate">
+          Defined Items on <strong>{{ toDate | date: 'MMMM d, yyyy' }}</strong>
+        </ng-container>
+        <ng-template #noDate><strong> --Please select a date first--</strong>
+
+        </ng-template>
+      </p>
+
+      <hr class="border-t-2 border-black w-full mx-auto my-2 mb-8" />
+    </div>
+
+    <div #contentToConvert>
+      <div class="flex justify-center">
+        <table class="w-full max-w-[800px] text-sm text-left text-gray-900 dark:text-white"
+          aria-label="Package history table">
+          <thead class="text-gray-700 dark:bg-gray-700" style="color: #8492A3; font-size: 16px;">
+            <tr>
+              <th scope="col" class="px-6 py-4">Product Type</th>
+              <th scope="col" class="px-6 py-4">Product</th>
+              <th scope="col" class="px-6 py-4">Qty (kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of packageData" class="bg-white dark:bg-gray-800 dark:border-gray-700">
+              <td class="px-10 py-4">{{ item.productType }}</td>
+              <td class="px-8 py-4">{{ item.product }}</td>
+              <td class="px-8 py-4">{{ item.quantity !== undefined ? (item.quantity | number: '1.3-3') : '---' }}</td>
+            </tr>
+            <tr *ngIf="!packageData.length" class="bg-white dark:bg-gray-800 dark:border-gray-700">
+              <td colspan="3" class="px-6 py-4 text-center">No data available for the selected date</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

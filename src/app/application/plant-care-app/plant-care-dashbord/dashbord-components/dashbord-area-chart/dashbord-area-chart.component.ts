@@ -5,12 +5,16 @@ import {
   Output,
   SimpleChanges,
   EventEmitter,
+  OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { DropdownModule } from 'primeng/dropdown';
 import { PlantcareDashbordService } from '../../../../../services/plant-care/plantcare-dashbord.service';
+import { ThemeService } from '../../../../../services/theme.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashbord-area-chart',
@@ -19,7 +23,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './dashbord-area-chart.component.html',
   styleUrls: ['./dashbord-area-chart.component.css'],
 })
-export class DashbordAreaChartComponent implements OnChanges {
+export class DashbordAreaChartComponent implements OnChanges, OnInit, OnDestroy {
   @Output() districtSelected = new EventEmitter<string>();
 
   data: any;
@@ -27,6 +31,8 @@ export class DashbordAreaChartComponent implements OnChanges {
   qrUsers: number = 0;
   allusers: number = 0;
   showClearButton: boolean = false;
+  loading: boolean = true;
+  private themeSubscription?: Subscription;
 
   district = [
     { districtName: 'All' },
@@ -58,9 +64,11 @@ export class DashbordAreaChartComponent implements OnChanges {
   ];
 
   selectedDistrict: any = { districtName: 'All' };
-  loading: boolean = true;
 
-  constructor(private dashbordService: PlantcareDashbordService) {}
+  constructor(
+    private dashbordService: PlantcareDashbordService,
+    private themeService: ThemeService
+  ) {}
 
   ngOnInit() {
     // Sort districts alphabetically, keeping "All" at the top
@@ -70,7 +78,53 @@ export class DashbordAreaChartComponent implements OnChanges {
       .sort((a, b) => a.districtName.localeCompare(b.districtName));
     this.district = [allDistrict!, ...otherDistricts];
 
+    // Initialize chart with current theme
+    this.updateChartTheme();
+    
+    // Subscribe to theme changes
+    this.subscribeToThemeChanges();
+
     this.fetchDashboardData();
+  }
+
+  ngOnDestroy(): void {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
+
+  private subscribeToThemeChanges(): void {
+    // Subscribe to theme changes using the ThemeService
+    this.themeSubscription = this.themeService.themeChanged$.subscribe(() => {
+      this.updateChartTheme();
+    });
+  }
+
+  private updateChartTheme(): void {
+    const isDark = this.themeService.isDarkTheme();
+    
+    if (this.options) {
+      // Update chart colors based on theme
+      const textColor = isDark ? '#ffffff' : '#333333';
+      const gridColor = isDark ? '#374151' : '#e5e7eb';
+      const tooltipBgColor = isDark ? '#1f2937' : '#ffffff';
+      const tooltipTextColor = isDark ? '#ffffff' : '#333333';
+
+      this.options.scales.x.ticks.color = textColor;
+      this.options.scales.y.ticks.color = textColor;
+      this.options.scales.x.grid.color = gridColor;
+      this.options.scales.y.grid.color = gridColor;
+      
+      // Update tooltip colors
+      this.options.plugins.tooltip.backgroundColor = tooltipBgColor;
+      this.options.plugins.tooltip.titleColor = tooltipTextColor;
+      this.options.plugins.tooltip.bodyColor = tooltipTextColor;
+      this.options.plugins.tooltip.borderColor = gridColor;
+      this.options.plugins.tooltip.borderWidth = 1;
+
+      // Force chart to re-render
+      this.options = { ...this.options };
+    }
   }
 
   fetchDashboardData(district?: string): void {
@@ -138,6 +192,13 @@ export class DashbordAreaChartComponent implements OnChanges {
       Math.max(registeredCount, unregisteredCount) * 1.2
     );
 
+    // Get current theme colors
+    const isDark = this.themeService.isDarkTheme();
+    const textColor = isDark ? '#ffffff' : '#333333';
+    const gridColor = isDark ? '#374151' : '#e5e7eb';
+    const tooltipBgColor = isDark ? '#1f2937' : '#ffffff';
+    const tooltipTextColor = isDark ? '#ffffff' : '#333333';
+
     this.data = {
       labels: isDistrictSelected
         ? ['Registered', 'Unregistered']
@@ -160,9 +221,23 @@ export class DashbordAreaChartComponent implements OnChanges {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
+        x: {
+          ticks: {
+            color: textColor,
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
         y: {
           beginAtZero: true,
           max: maxYValue,
+          ticks: {
+            color: textColor,
+          },
+          grid: {
+            color: gridColor,
+          },
         },
       },
       plugins: {
@@ -171,6 +246,11 @@ export class DashbordAreaChartComponent implements OnChanges {
         },
         tooltip: {
           enabled: true,
+          backgroundColor: tooltipBgColor,
+          titleColor: tooltipTextColor,
+          bodyColor: tooltipTextColor,
+          borderColor: gridColor,
+          borderWidth: 1,
           callbacks: {
             label: function (context: { dataset: { label: any }; raw: any }) {
               return `${context.dataset.label}: ${context.raw}`;

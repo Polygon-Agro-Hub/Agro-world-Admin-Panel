@@ -25,16 +25,19 @@
             />
           </svg>
         </i>
-        <!-- <div class="mr-5">
-                <label for="filter-by" class="mr-8 border-gray-500 text-gray-500">Filter By</label>
-                <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Company" (onChange)="applyFilters()" />
-            </div>
-            <div class="mr-5">
-                <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="District" (onChange)="applyFilters()" />
-            </div>
-            <div class="mr-5">
-                <p-dropdown styleClass="border border-2 rounded-xl w-auto h-8 items-center" [options]="status" [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="NIC" (onChange)="applyFilters()" />
-            </div> -->
+        <p class="text-gray-500 mr-5">Filter By</p>
+        <div class="mr-5">
+     <p-dropdown
+  styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
+  [options]="centers"
+  [(ngModel)]="selectedCenter"
+  optionLabel="id"
+  [showClear]="true"
+  placeholder=" Center"
+  (onChange)="applyFilters()"
+/>
+
+        </div>
         <div
           class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
         >
@@ -89,179 +92,211 @@
       </div>
     </div>
     <div>
-      <table class="min-w-full divide-y divide-gray-200 table-auto">
-        <thead>
-          <tr>
-            <th
-              class="py-3 pr-4 font-normal text-gray-500 dark:text-textDark text-left"
-            >
-              Emp ID
-            </th>
-            <th
-              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left w-32"
-            >
-              Officer Name
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
-            >
-              Company
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start w-32"
-            >
-              Center Name
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-              Phone
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-              NIC
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-              District
-            </th>
-            <th
-              *ngIf="
-                permissionService.hasPermission(
-                  'Collection Officer Monthly Report'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-              <span class="block">Monthly</span>
-              <span class="block">Report</span>
-            </th>
-            <th
-              *ngIf="
-                permissionService.hasPermission(
-                  'Collection Officer Daily Report'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-              <span class="block">Daily</span>
-              <span class="block">Report</span>
-            </th>
-            <th
-              *ngIf="
-                permissionService.hasPermission(
-                  'Collection Officer Farmer Report'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-              Farmers
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="
-              let item of ongoingCultivation
-                | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    }
-            "
-          >
-            <td class="py-3 text-gray-500 dark:text-textDark text-left">
-              {{ item.empId }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">
-              {{ item.firstNameEnglish }}
-            </td>
-            <td class="py-3 px-4 text-gray-500 dark:text-textDark text-start">
-              {{ item.companyNameEnglish }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start">
-              {{ item.centerName }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.phoneCode01 }} {{ item.phoneNumber01 }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.nic }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.district }}
-            </td>
-            <td
-              *ngIf="
-                permissionService.hasPermission(
-                  'Collection Officer Monthly Report'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="px-4 py-3 text-center"
-            >
-              <button
-                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="navigateToMonthlyReport(item.id)"
+      <!-- Conditional rendering for table or no data message -->
+      <div *ngIf="ongoingCultivation && ongoingCultivation.length > 0; else noData">
+        <table class="min-w-full divide-y divide-gray-200 table-auto">
+          <thead>
+            <tr>
+              <th
+                class="py-3 pr-4 font-normal text-gray-500 dark:text-textDark text-left"
               >
-                <i class="fa-regular fa-file"></i>
-              </button>
-            </td>
-            <td
-              *ngIf="
-                permissionService.hasPermission(
-                  'Collection Officer Daily Report'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="px-4 py-3 text-center"
-            >
-              <button
-                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="navigateToReport(item.id, item.firstNameEnglish)"
+              EMP ID
+              </th>
+              <th
+                class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left w-32 whitespace-nowrap"
               >
-                <i class="fa-regular fa-file"></i>
-              </button>
-            </td>
-            <td
-              *ngIf="
-                permissionService.hasPermission(
-                  'Collection Officer Farmer Report'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="px-4 py-3 text-center"
-            >
-              <button
-                class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-                (click)="
-                  navigateToPaymentSlipReport(
-                    item.id,
-                    item.firstNameEnglish,
-                    item.lastNameEnglish,
-                    item.QRcode,
-                    item.empId
-                  )
+                Officer Name
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
+              >
+                Company
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start w-32 whitespace-nowrap"
+              >  Centre Name
+              </th>
+              
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                Phone
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                NIC
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                District
+              </th>
+              <th
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Collection Officer Monthly Report'
+                  ) || tokenService.getUserDetails().role === '1'
                 "
+                class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
               >
-                <i class="fa-regular fa-file"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="dark:bg-[#262f45]">
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
-        </pagination-controls>
+                <span class="block">Monthly</span>
+                <span class="block">Report</span>
+              </th>
+              <th
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Collection Officer Daily Report'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+                class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                <span class="block">Daily</span>
+                <span class="block">Report</span>
+              </th>
+              <th
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Collection Officer Farmer Report'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+                class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                Farmers
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let item of ongoingCultivation
+                  | paginate
+                    : {
+                        itemsPerPage: itemsPerPage,
+                        currentPage: page,
+                        totalItems: totalItems
+                      }
+              "
+            >
+              <td class="py-3 text-gray-500 dark:text-textDark text-left">
+                {{ item.empId }}
+              </td>
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">
+                {{ item.firstNameEnglish }}
+              </td>
+              <td
+                class="py-3 px-4 text-gray-500 dark:text-textDark text-start whitespace-nowrap overflow-hidden text-ellipsis"
+              >
+                {{ item.companyNameEnglish }}
+              </td>
+              <td
+                class="px-4 py-3 text-gray-500 dark:text-textDark text-start  whitespace-nowrap"
+              >
+                {{ item.centerName }}
+              </td>
+              <td
+                class="px-4 py-3 text-gray-500 dark:text-textDark text-center whitespace-nowrap"
+              >
+                {{ item.phoneCode01 }} {{ item.phoneNumber01 }}
+              </td>
+              <td
+                class="px-4 py-3 text-gray-500 dark:text-textDark text-center"
+              >
+                {{ item.nic }}
+              </td>
+              <td
+                class="px-4 py-3 text-gray-500 dark:text-textDark text-center"
+              >
+                {{ item.district }}
+              </td>
+            <!-- Monthly Report -->
+<td
+  *ngIf="
+    permissionService.hasPermission('Collection Officer Monthly Report') ||
+    tokenService.getUserDetails().role === '1'
+  "
+  class="px-4 py-3 text-center"
+>
+  <button
+    class="w-6 h-6 mr-3 hover:opacity-80"
+    (click)="navigateToMonthlyReport(item.id)"
+  >
+    <img
+      src="assets/icons/orderdetails.png"
+      alt="Monthly Report"
+      class="w-5 h-5 mx-auto"
+    />
+  </button>
+</td>
+
+<!-- Daily Report -->
+<td
+  *ngIf="
+    permissionService.hasPermission('Collection Officer Daily Report') ||
+    tokenService.getUserDetails().role === '1'
+  "
+  class="px-4 py-3 text-center"
+>
+  <button
+    class="w-6 h-6 mr-3 hover:opacity-80"
+    (click)="navigateToReport(item.id, item.firstNameEnglish)"
+  >
+    <img
+      src="assets/icons/orderdetails.png"
+      alt="Daily Report"
+      class="w-5 h-5 mx-auto"
+    />
+  </button>
+</td>
+
+<!-- Farmer Report -->
+<td
+  *ngIf="
+    permissionService.hasPermission('Collection Officer Farmer Report') ||
+    tokenService.getUserDetails().role === '1'
+  "
+  class="px-4 py-3 text-center"
+>
+  <button
+    class="w-6 h-6 mr-3 hover:opacity-80"
+    (click)="navigateToPaymentSlipReport(
+      item.id,
+      item.firstNameEnglish,
+      item.lastNameEnglish,
+      item.QRcode,
+      item.empId
+    )"
+  >
+    <img
+      src="assets/icons/orderdetails.png"
+      alt="Farmer Report"
+      class="w-5 h-5 mx-auto"
+    />
+  </button>
+</td>
+
+            </tr>
+          </tbody>
+        </table>
+        <div class="dark:bg-[#262f45]">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            [responsive]="true"
+            [previousLabel]="'Previous'"
+            [nextLabel]="'Next'"
+            [screenReaderPaginationLabel]="'Pagination'"
+            [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'"
+          >
+          </pagination-controls>
+        </div>
       </div>
+      <!-- No Data Message -->
+      <ng-template #noData>
+        <div class="text-center py-10">
+          <p class="text-gray-500 dark:text-textDark text-lg">No Data Available</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

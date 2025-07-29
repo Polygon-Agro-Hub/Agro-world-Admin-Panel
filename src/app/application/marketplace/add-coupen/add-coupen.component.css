@@ -1,0 +1,10 @@
+input[type="date"]::before {
+    content: attr(placeholder);
+    width: 100%;
+    color: #999;
+}
+
+input[type="date"]:focus::before,
+input[type="date"]:valid::before {
+    display: none;
+}

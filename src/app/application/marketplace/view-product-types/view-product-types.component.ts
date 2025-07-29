@@ -98,11 +98,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
   selector: 'app-view-product-types',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-product-types.component.html',
   styleUrl: './view-product-types.component.css',
 })
@@ -112,6 +113,7 @@ export class ViewProductTypesComponent implements OnInit {
   hasData: boolean = false;
   productCount: number = 0;
   searchText: string = '';
+  isLoading = false;
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -123,8 +125,10 @@ export class ViewProductTypesComponent implements OnInit {
   }
 
   fetchProductType() {
+    this.isLoading = true;
     this.marketSrv.getAllProductType().subscribe(
       (res) => {
+        this.isLoading = false;
         this.productArr = res.data;
         this.filteredProductArr = res.data;
         this.productCount = res.data.length;

@@ -28,7 +28,7 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
 export class ViewComplainComponent implements OnInit {
 
   showReplyModal: boolean = false;
-  selectedLanguage: string = '';
+  selectedLanguage: string = 'English';
   selectedFarmerName: string = '';
   selectedReply: string = '';
   selectedComplainId: any;
@@ -46,9 +46,10 @@ export class ViewComplainComponent implements OnInit {
 
   filterStatus: any = "";
   filterCategory: any = {};
-  filterComCategory: any = {};
+  filterComCategory: any = '';
   status!: Status[];
   category!: Category[];
+  isPopUpVisible: boolean = false;
 
 
   searchText: string = "";
@@ -166,7 +167,7 @@ export class ViewComplainComponent implements OnInit {
     ]);
   }
 
-  fetchComplain(id: any, farmerName: string, language: string) {
+  fetchComplain(id: any, farmerName: string, lastName: string, language: string) {
     this.isLoading = true;
     this.complainSrv.getComplainById(id).subscribe((res) => {
       let formattedDate = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm a');
@@ -177,113 +178,11 @@ export class ViewComplainComponent implements OnInit {
       this.complain = res;
       console.log(res);
       this.isLoading = false;
-      this.showReplyDialog(id, farmerName, language);
+      // this.showReplyDialog(id, farmerName, language);
+      this.showReplyPopUp(id, farmerName, lastName, language)
     });
   }
 
-
-
-
-
-
-  // showReplyDialog(id: any, farmerName: string, language: string) {
-  //   let closingMessage = '';
-
-  //   if (language === 'Sinhala') {
-  //     closingMessage = `
-  //       <p>හිතවත් <strong>${farmerName}</strong>,</p>
-  //       <p></p>
-  //       <textarea 
-  //         id="messageContent" 
-  //         class="w-full p-2 border rounded mt-3 mb-3" 
-  //         rows="5" 
-  //         readonly
-  //         placeholder="ඔබගේ පණිවුඩය මෙතැනට ඇතුලත් කරන්න..."
-  //       >${this.complain.reply || ""}</textarea>
-  //       <p>ඔබට තවත් ගැටළු හෝ ප්‍රශ්න තිබේ නම්, කරුණාකර අප හා සම්බන්ධ වන්න. ඔබේ ඉවසීම සහ අවබෝධය වෙනුවෙන් ස්තූතියි.</p>
-  //       <p class="mt-3">
-  //         මෙයට,<br/>
-  //         AgroWorld පාරිභෝගික සහාය කණ්ඩායම
-  //       </p>
-  //     `;
-  //   } else if (language === 'Tamil') {
-  //     closingMessage = `
-  //       <p>அன்புள்ள <strong>${farmerName}</strong>,</p>
-  //       <p></p>
-  //       <textarea 
-  //         id="messageContent" 
-  //         class="w-full p-2 border rounded mt-3 mb-3" 
-  //         rows="5" 
-  //         readonly
-  //         placeholder="உங்கள் செய்தியை இங்கே சேர்க்கவும்..."
-  //       >${this.complain.reply || ""}</textarea>
-  //       <p>உங்களுக்கு மேலும் ஏதேனும் சிக்கல்கள் அல்லது கேள்விகள் இருந்தால், தயவுசெய்து எங்களைத் தொடர்பு கொள்ளவும். உங்கள் பொறுமைக்கும் புரிதலுக்கும் நன்றி.</p>
-  //       <p class="mt-3">
-  //         இதற்கு,<br/>
-  //         அக்ரோவேர்ல்ட் வாடிக்கையாளர் ஆதரவு குழு
-  //       </p>
-  //     `;
-  //   } else {
-  //     // Default English
-  //     closingMessage = `
-  //       <p>Dear <strong>${farmerName}</strong>,</p>
-  //       <p></p>
-  //       <textarea 
-  //         id="messageContent" 
-  //         class="w-full p-2 border rounded mt-3 mb-3" 
-  //         rows="5"
-  //         readonly
-  //         placeholder="Add your message here..."
-  //       >${this.complain.reply || ""}</textarea>
-  //       <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-  //       <p class="mt-3">
-  //         Sincerely,<br/>
-  //         AgroWorld Customer Support Team
-  //       </p>
-  //     `;
-  //   }
-
-  //   Swal.fire({
-  //     title: "Reply as AgroWorld",
-  //     html: `<div class="text-left">${closingMessage}</div>`,
-  //     showCancelButton: true,
-  //     showConfirmButton: false,
-  //     confirmButtonText: "Send",
-  //     cancelButtonText: "Cancel",
-  //     confirmButtonColor: "#3980C0",
-  //     cancelButtonColor: "#74788D",
-  //     width: "600px",
-  //     reverseButtons: true,
-  //     preConfirm: () => {
-  //       const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
-  //       return textarea.value;
-  //     },
-  //     didOpen: () => {
-  //       setTimeout(() => {
-  //         const actionsElement = document.querySelector('.swal2-actions');
-  //         if (actionsElement) {
-  //           actionsElement.setAttribute(
-  //             'style',
-  //             'display: flex; justify-content: flex-end !important; width: 100%;'
-  //           );
-
-  //           const cancelButton = document.querySelector('.swal2-cancel') as HTMLElement;
-  //           const confirmButton = document.querySelector('.swal2-confirm');
-
-  //           if (cancelButton && confirmButton) {
-  //             cancelButton.style.marginRight = '8px'; // <-- Add right margin here
-  //             actionsElement.insertBefore(cancelButton, confirmButton);
-  //           }
-  //         }
-  //       }, 0);
-  //     }
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       this.messageContent = result.value;
-  //       this.submitComplaint(id);
-  //     }
-  //   });
-  // }
 
   showReplyDialog(id: any, farmerName: string, language: string) {
     this.selectedComplainId = id;
@@ -409,6 +308,20 @@ export class ViewComplainComponent implements OnInit {
     // Example: Navigate to the previous page, like a menu or dashboard
     this.router.navigate(['/complaints']);
   }
+
+  showReplyPopUp(id: number, fname: string, lname: string, language: string) {
+    this.selectedComplainId = id;
+    this.selectedFarmerName = fname + ' ' + lname;
+    this.selectedLanguage = language;
+    this.isPopUpVisible = true;
+  }
+
+  closeReplyPopUp() {
+    this.isPopUpVisible = false;
+    this.selectedFarmerName = 'English';
+    this.selectedLanguage = '';
+  }
+
 }
 
 // Define interfaces for response data

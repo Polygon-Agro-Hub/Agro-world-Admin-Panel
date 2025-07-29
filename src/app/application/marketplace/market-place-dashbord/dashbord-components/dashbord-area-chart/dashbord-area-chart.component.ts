@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 
 @Component({
@@ -8,7 +8,10 @@ import { Chart } from 'chart.js/auto';
   styleUrls: ['./dashbord-area-chart.component.css']
 })
 export class DashbordAreaChartComponent implements AfterViewInit {
+  @Input() areaData!: AreaData
   chart: any;
+  // isDark:boolean = 
+
 
   ngAfterViewInit() {
     this.createChart();
@@ -18,11 +21,11 @@ export class DashbordAreaChartComponent implements AfterViewInit {
     this.chart = new Chart("MyChart", {
       type: 'line',
       data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        labels: this.areaData.months,
         datasets: [
           {
             label: "Sales",
-            data: [4000, 3000, 2000, 5000, 6000, 8000, 7000, 5000, 4000, 3000, 2000, 1000],
+            data: this.areaData.salesCount,
             borderColor: "#4E97FD",
             backgroundColor: "rgba(78, 151, 253, 0.3)",
             fill: true,
@@ -30,7 +33,7 @@ export class DashbordAreaChartComponent implements AfterViewInit {
           },
           {
             label: "Orders",
-            data: [2000, 4000, 1000, 6000, 7000, 5000, 6000, 8000, 7000, 3000, 4000, 2000],
+            data: this.areaData.total,
             borderColor: "#3DE188",
             backgroundColor: "rgba(61, 225, 136, 0.3)",
             fill: true,
@@ -77,4 +80,11 @@ export class DashbordAreaChartComponent implements AfterViewInit {
       }
     });
   }
+}
+
+
+interface AreaData {
+  months: string[];
+  salesCount: number[];
+  total: any[]
 }

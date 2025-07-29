@@ -7,220 +7,127 @@
   </button>
   <div class="h-[20px]"></div>
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-    <h2
-      class="text-2xl text-center mb-6 text-textLight dark:text-textDark font-bold"
-    >
+    <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark font-bold">
       ADD CROP CALENDAR
     </h2>
 
     <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
       <div>
         <div class="mb-5">
-          <!-- Role Input -->
-          <label
-            for="cropName"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Crop Name</label
-          >
-          <select
-            id="cropName"
-            name="cropName"
-            formControlName="groupId"
-            (change)="getAllVarities($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
-            <option *ngFor="let group of groupList" [value]="group.id">
-              {{ group.cropNameEnglish }}
-            </option>
-          </select>
+          <label for="cropName" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Crop Name<span style="color: #2E2E2E">*</span>
+          </label>
+          <p-dropdown id="cropName" name="cropName" formControlName="groupId" (onChange)="getAllVarities($event)"
+            [options]="groupList" optionLabel="cropNameEnglish" optionValue="id" [filter]="true"
+            filterBy="cropNameEnglish" placeholder="Select a crop" [showClear]="false"
+            class="mt-1 block w-full  border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{'border-red-500': cropForm.get('groupId')?.invalid && (cropForm.get('groupId')?.dirty || cropForm.get('groupId')?.touched)}">
+          </p-dropdown>
+
           <div
-            *ngIf="
-              cropForm.get('groupId')!.invalid &&
-              (cropForm.get('groupId')!.dirty ||
-                cropForm.get('groupId')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            <div *ngIf="cropForm.get('groupId')!.errors?.['required']">
-              Crop name is required
-            </div>
+            *ngIf="cropForm.get('groupId')?.invalid && (cropForm.get('groupId')?.dirty || cropForm.get('groupId')?.touched)"
+            class="text-red-500 text-sm mt-1">
+            Crop name is required
           </div>
         </div>
 
         <div>
-          <label
-            for="varietyId"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Variety Name</label
-          >
-          <select
-            id="varietyId"
-            name="varietyId"
-            formControlName="varietyId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
-            <option *ngFor="let variety of varietyList" [value]="variety.id">
-              {{ variety.varietyNameEnglish }}
-            </option>
-          </select>
+          <label for="varietyId" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Variety Name<span style="color: #2E2E2E">*</span>
+          </label>
+          <p-dropdown id="varietyId" name="varietyId" formControlName="varietyId" [options]="varietyList"
+            optionLabel="varietyNameEnglish" optionValue="id" [filter]="true" filterBy="varietyNameEnglish"
+            placeholder="Select a variety" [showClear]="false"
+            class="mt-1 block w-full  border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{'border-red-500': cropForm.get('varietyId')?.invalid && (cropForm.get('varietyId')?.dirty || cropForm.get('varietyId')?.touched)}">
+          </p-dropdown>
           <div
-            *ngIf="
-              cropForm.get('varietyId')!.invalid &&
-              (cropForm.get('varietyId')!.dirty ||
-                cropForm.get('varietyId')!.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            <div *ngIf="cropForm.get('varietyId')!.errors?.['required']">
-              Varity name is required
-            </div>
+            *ngIf="cropForm.get('varietyId')?.invalid && (cropForm.get('varietyId')?.dirty || cropForm.get('varietyId')?.touched)"
+            class="text-red-500 text-sm mt-1">
+            Variety name is required
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-6">
           <div class="my-3">
-            <label
-              for="cultivationMethod"
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Cultivation Method</label
-            >
-            <select
-              formControlName="cultivationMethod"
-              id="cultivationMethod"
-              [(ngModel)]="createNewObj.cultivationMethod"
-              name="cultivationMethod"
+            <label for="cultivationMethod" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Cultivation Method<span style="color: #2E2E2E">*</span>
+            </label>
+            <select formControlName="cultivationMethod" id="cultivationMethod" name="cultivationMethod"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            >
+              [ngClass]="{'border-red-500': cropForm.get('cultivationMethod')?.invalid && (cropForm.get('cultivationMethod')?.dirty || cropForm.get('cultivationMethod')?.touched)}">
               <option value="" disabled selected>Select method</option>
               <option value="Open Field">Open Field</option>
               <option value="Protected Field">Protected Field</option>
             </select>
             <div
-              *ngIf="
-                cropForm.get('cultivationMethod')!.invalid &&
-                (cropForm.get('cultivationMethod')!.dirty ||
-                  cropForm.get('cultivationMethod')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div
-                *ngIf="cropForm.get('cultivationMethod')!.errors?.['required']"
-              >
-                Cultivation method is required
-              </div>
+              *ngIf="cropForm.get('cultivationMethod')?.invalid && (cropForm.get('cultivationMethod')?.dirty || cropForm.get('cultivationMethod')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Cultivation method is required
             </div>
           </div>
 
           <div class="my-3">
-            <label
-              for="natureOfCultivation"
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Nature of Cultivation</label
-            >
-            <select
-              formControlName="natureOfCultivation"
-              id="natureOfCultivation"
-              [(ngModel)]="createNewObj.natureOfCultivation"
-              name="natureOfCultivation"
+            <label for="natureOfCultivation" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Nature of Cultivation<span style="color: #2E2E2E">*</span>
+            </label>
+            <select formControlName="natureOfCultivation" id="natureOfCultivation" name="natureOfCultivation"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            >
+              [ngClass]="{'border-red-500': cropForm.get('natureOfCultivation')?.invalid && (cropForm.get('natureOfCultivation')?.dirty || cropForm.get('natureOfCultivation')?.touched)}">
               <option value="" disabled selected>Select nature</option>
               <option value="Conventional Farming">Conventional Farming</option>
               <option value="GAP Farming">GAP Farming</option>
               <option value="Organic Farming">Organic Farming</option>
             </select>
             <div
-              *ngIf="
-                cropForm.get('natureOfCultivation')!.invalid &&
-                (cropForm.get('natureOfCultivation')!.dirty ||
-                  cropForm.get('natureOfCultivation')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div
-                *ngIf="cropForm.get('cultivationMethod')!.errors?.['required']"
-              >
-                Nature of cultivation is required
-              </div>
+              *ngIf="cropForm.get('natureOfCultivation')?.invalid && (cropForm.get('natureOfCultivation')?.dirty || cropForm.get('natureOfCultivation')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Nature of cultivation is required
             </div>
           </div>
 
           <div class="my-3">
-            <label
-              for="cropDuration"
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Crop duration in days.</label
-            >
-            <input
-              type="number"
-              min="0"
-              step="1"
-              formControlName="cropDuration"
-              id="cropDuration"
-              name="cropDuration"
-              (keydown)="preventNegativeNumbers($event)"
+            <label for="cropDuration" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Crop duration in days<span style="color: #2E2E2E">*</span>
+            </label>
+            <input type="number" formControlName="cropDuration" id="cropDuration" name="cropDuration"
+              (keydown)="blockFloatAndZero($event)" (input)="validateCropDuration($event)"
+              (paste)="blockPasteInvalid($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            />
+              [ngClass]="{'border-red-500': cropForm.get('cropDuration')?.invalid && (cropForm.get('cropDuration')?.dirty || cropForm.get('cropDuration')?.touched)}" />
             <div
-              *ngIf="
-                cropForm.get('cropDuration')!.invalid &&
-                (cropForm.get('cropDuration')!.dirty ||
-                  cropForm.get('cropDuration')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div *ngIf="cropForm.get('cropDuration')!.errors?.['required']">
-                Crop duration is required
-              </div>
-              <div *ngIf="cropForm.get('cropDuration')!.errors?.['pattern']">
-                Enter Valid day
-              </div>
-              <div *ngIf="cropForm.get('cropDuration')!.errors?.['min']">
-                Crop duration must be greater than 0
-              </div>
+              *ngIf="cropForm.get('cropDuration')?.invalid && (cropForm.get('cropDuration')?.dirty || cropForm.get('cropDuration')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['required']">Crop duration is required</div>
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['pattern']">Enter valid day</div>
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['min']">Crop duration must be greater than 0</div>
             </div>
           </div>
 
-          <div class="md:col-span-2 mt-3">
-            <label
-              for="suitableAreas"
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Suitable Areas</label
-            >
-            <!-- <textarea formControlName="suitableAreas" id="suitableAreas" name="suitableAreas" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea> -->
-            <mat-form-field>
-              <mat-select formControlName="suitableAreas" multiple>
-                @for (topping of toppingList; track topping) {
-                <mat-option [value]="topping">{{ topping }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
+          <div class="md:col-span-2 mt-3" style="width: 100%;">
+            <label for="suitableAreas" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Suitable Areas<span style="color: #2E2E2E">*</span>
+            </label>
+            <p-multiSelect id="suitableAreas" formControlName="suitableAreas" [options]="toppingList" optionLabel="name"
+          
+              optionValue="name" [filter]="true" filterBy="name" placeholder="Select suitable areas" [showClear]="false"
+              class="mt-1 block w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              [ngClass]="{'border-red-500': cropForm.get('suitableAreas')?.invalid && (cropForm.get('suitableAreas')?.dirty || cropForm.get('suitableAreas')?.touched)}">
+            </p-multiSelect>
             <div
-              *ngIf="
-                cropForm.get('suitableAreas')!.invalid &&
-                (cropForm.get('suitableAreas')!.dirty ||
-                  cropForm.get('suitableAreas')!.touched)
-              "
-              class="text-red-500 text-sm mt-1"
-            >
-              <div *ngIf="cropForm.get('suitableAreas')!.errors?.['required']">
-                Suitable areas is required
-              </div>
+              *ngIf="cropForm.get('suitableAreas')?.invalid && (cropForm.get('suitableAreas')?.dirty || cropForm.get('suitableAreas')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Suitable areas is required
             </div>
           </div>
+
         </div>
 
         <div class="flex justify-end mt-6">
-          <div
-            class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md cursor-pointer"
-            (click)="onCancel()"
-          >
+          <div class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md cursor-pointer" (click)="onCancel()">
             Cancel
           </div>
-          <button
-            type="submit"
-            class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
-          >
+          <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md" [disabled]="isLoading">
             Next
           </button>
         </div>
@@ -230,118 +137,126 @@
 </div>
 
 <div *ngIf="cropId != null">
-  <div>
-    <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
-      <i class="fa-solid fa-arrow-left"></i>
-      Back
-    </button>
-    <div class="h-[20px]"></div>
-    <div
-      class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md"
-    >
-      <h2
-        class="text-2xl font-bold text-center mb-6 text-textLight dark:text-textDark"
-      >
-        EDIT CROP CALENDAR
-      </h2>
+  <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
+  <div class="h-[20px]"></div>
+  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center mb-6 text-textLight dark:text-textDark">
+      EDIT CROP CALENDAR
+    </h2>
 
-      <form [formGroup]="cropForm" (ngSubmit)="updateCropCalender()">
-        <div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-6">
-            <div class="my-3">
-              <label
-                for="cultivationMethod"
-                class="block text-sm font-medium text-textLight dark:text-textDark"
-                >Cultivation Method</label
-              >
-              <select
-                formControlName="cultivationMethod"
-                id="cultivationMethod"
-                [(ngModel)]="cropCalender[0].method"
-                name="cultivationMethod"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              >
-                <option value="" disabled selected>Select method</option>
-                <option value="Open Field">Open Field</option>
-                <option value="Protected Field">Protected Field</option>
-              </select>
-            </div>
-
-            <div class="my-3">
-              <label
-                for="natureOfCultivation"
-                class="block text-sm font-medium text-textLight dark:text-textDark"
-                >Nature of Cultivation</label
-              >
-              <select
-                formControlName="natureOfCultivation"
-                id="natureOfCultivation"
-                [(ngModel)]="cropCalender[0].natOfCul"
-                name="natureOfCultivation"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              >
-                <option value="" disabled selected>Select nature</option>
-                <option value="Conventional Farming">
-                  Conventional Farming
-                </option>
-                <option value="GAP Farming">GAP Farming</option>
-                <option value="Organic Farming">Organic Farming</option>
-              </select>
-            </div>
-
-            <div class="md:col-span-2 my-3">
-              <label
-                for="cropDuration"
-                class="block text-sm font-medium text-textLight dark:text-textDark"
-                >Crop Duration</label
-              >
-              <input
-                formControlName="cropDuration"
-                id="cropDuration"
-                [(ngModel)]="cropCalender[0].cropDuration"
-                name="cropDuration"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              />
-            </div>
-
-            <div class="md:col-span-2 my-3">
-              <label
-                for="suitableAreas"
-                class="block text-sm font-medium text-textLight dark:text-textDark"
-              >
-                Suitable Areas
-              </label>
-              <mat-form-field>
-                <mat-select
-                  id="suitableAreas"
-                  formControlName="suitableAreas"
-                  multiple
-                  placeholder="Select Suitable Areas"
-                >
-                  <mat-option
-                    *ngFor="let topping of toppingList"
-                    [value]="topping"
-                  >
-                    {{ topping }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+    <form [formGroup]="cropForm" (ngSubmit)="updateCropCalendar()">
+      <div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-6">
+          <div class="my-3">
+            <label for="cultivationMethod" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Cultivation Method<span style="color: #2E2E2E">*</span>
+            </label>
+            <select formControlName="cultivationMethod" id="cultivationMethod" name="cultivationMethod"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [ngClass]="{'border-red-500': cropForm.get('cultivationMethod')?.invalid && (cropForm.get('cultivationMethod')?.dirty || cropForm.get('cultivationMethod')?.touched)}">
+              <option value="" disabled selected>Select method</option>
+              <option value="Open Field">Open Field</option>
+              <option value="Protected Field">Protected Field</option>
+            </select>
+            <div
+              *ngIf="cropForm.get('cultivationMethod')?.invalid && (cropForm.get('cultivationMethod')?.dirty || cropForm.get('cultivationMethod')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Cultivation method is required
             </div>
           </div>
 
-          <div class="flex justify-end mt-6">
-            <!-- <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md" (click)="onCancelEdit()">
-              Cancel
-            </button> -->
-            <button
-              type="submit"
-              class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md"
-            >
-              Save
-            </button>
+          <div class="my-3">
+            <label for="natureOfCultivation" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Nature of Cultivation<span style="color: #2E2E2E">*</span>
+            </label>
+            <select formControlName="natureOfCultivation" id="natureOfCultivation" name="natureOfCultivation"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [ngClass]="{'border-red-500': cropForm.get('natureOfCultivation')?.invalid && (cropForm.get('natureOfCultivation')?.dirty || cropForm.get('natureOfCultivation')?.touched)}">
+              <option value="" disabled selected>Select nature</option>
+              <option value="Conventional Farming">Conventional Farming</option>
+              <option value="GAP Farming">GAP Farming</option>
+              <option value="Organic Farming">Organic Farming</option>
+            </select>
+            <div
+              *ngIf="cropForm.get('natureOfCultivation')?.invalid && (cropForm.get('natureOfCultivation')?.dirty || cropForm.get('natureOfCultivation')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Nature of cultivation is required
+            </div>
           </div>
+
+          <div class="md:col-span-2 my-3">
+            <label for="cropDuration" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Crop Duration<span style="color: #2E2E2E">*</span>
+            </label>
+            <input type="number" formControlName="cropDuration" id="cropDuration" name="cropDuration"
+              (keydown)="blockFloatAndZero($event)" (input)="validateCropDuration($event)"
+              (paste)="blockPasteInvalid($event)"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [ngClass]="{'border-red-500': cropForm.get('cropDuration')?.invalid && (cropForm.get('cropDuration')?.dirty || cropForm.get('cropDuration')?.touched)}" />
+            <div
+              *ngIf="cropForm.get('cropDuration')?.invalid && (cropForm.get('cropDuration')?.dirty || cropForm.get('cropDuration')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['required']">Crop duration is required</div>
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['pattern']">Enter valid day</div>
+              <div *ngIf="cropForm.get('cropDuration')?.errors?.['min']">Crop duration must be greater than 0</div>
+            </div>
+          </div>
+
+          <div class="md:col-span-2 my-3 w-full">
+           <label
+    for="suitableAreas"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+  >
+    Suitable Areas<span style="color: #2E2E2E">*</span>
+  </label>
+
+  <p-multiSelect
+    id="suitableAreas"
+    formControlName="suitableAreas"
+    [options]="toppingList"
+    optionLabel="name"
+    optionValue="name"
+    [filter]="true"
+    filterBy="name"
+    placeholder="Select Suitable Areas"
+    [showClear]="false"
+    defaultLabel="Select Suitable Areas"
+    class="mt-1 block w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    [ngClass]="{
+      'border-red-500':
+        cropForm.get('suitableAreas')?.invalid &&
+        (cropForm.get('suitableAreas')?.dirty ||
+          cropForm.get('suitableAreas')?.touched)
+    }"
+  >
+  </p-multiSelect>
+
+  <div
+    *ngIf="
+      cropForm.get('suitableAreas')?.invalid &&
+      (cropForm.get('suitableAreas')?.dirty || cropForm.get('suitableAreas')?.touched)
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Suitable areas is required
+  </div>
+           
+          </div>
+
         </div>
-      </form>
-    </div>
+
+        <div class="flex justify-end mt-6">
+          <div class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md cursor-pointer" (click)="onCancelEdit()">
+            Cancel
+          </div>
+          <button type="submit" class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md" [disabled]="isLoading">
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

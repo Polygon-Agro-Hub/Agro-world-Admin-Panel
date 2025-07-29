@@ -291,8 +291,20 @@ export class CreateSalesAgentsComponent implements OnInit {
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
 
+    // Trim leading spaces
+    if (this.personalData[fieldName]) {
+      this.personalData[fieldName] = (
+        this.personalData[fieldName] as string
+      ).trimStart();
+    }
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
+    }
+
+    // Add this to mark empType as touched when interacting with radio buttons
+    if (fieldName === 'firstName' || fieldName === 'lastName') {
+      this.touchedFields['empType'] = true;
     }
   }
 
@@ -421,8 +433,27 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.personalData, this.selectedImage); // Logs the personal data with updated languages
-    console.log('hii', this.personalData.empType);
+    // Check if employee type is selected
+    if (!this.personalData.empType) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Staff Employee Type is a required field',
+      });
+      return; // Exit the function if not selected
+    }
+
+    // Only proceed with the rest of the validation if employee type is selected
+    if (!this.checkSubmitValidity()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please fill all required fields correctly',
+      });
+      return;
+    }
+
+    console.log(this.personalData, this.selectedImage);
 
     Swal.fire({
       title: 'Are you sure?',
@@ -435,7 +466,6 @@ export class CreateSalesAgentsComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        // Proceed with submission if user clicks 'Yes'
         this.salesAgentService
           .createSalesAgent(this.personalData, this.selectedImage)
           .subscribe(
@@ -454,12 +484,11 @@ export class CreateSalesAgentsComponent implements OnInit {
             (error: any) => {
               this.isLoading = false;
               this.errorMessage =
-                error.error.error || 'An unexpected error occurred'; // Update the error message
+                error.error.error || 'An unexpected error occurred';
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
       } else {
-        // If user clicks 'No', do nothing or show a cancellation message
         Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
@@ -484,7 +513,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  validateNameInput(event: KeyboardEvent): void {
+  validateNameInput(event: KeyboardEvent, fieldName?: string): void {
     // Allow navigation and control keys
     const allowedKeys = [
       'Backspace',
@@ -494,12 +523,22 @@ export class CreateSalesAgentsComponent implements OnInit {
       'Tab',
       'Home',
       'End',
-      ' ',
       'Spacebar',
     ];
 
     // Allow these special keys
     if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get the current input value (if fieldName is provided)
+    const currentValue = fieldName
+      ? (this.personalData[fieldName as keyof Personal] as string) || ''
+      : '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
       return;
     }
 
@@ -617,6 +656,83 @@ export class CreateSalesAgentsComponent implements OnInit {
   isValidAccountNumber(accountNumber: string): boolean {
     const accountPattern = /^[a-zA-Z0-9]+$/;
     return accountPattern.test(accountNumber);
+  }
+
+  validateGeneralInput(
+    event: KeyboardEvent,
+    fieldName: string,
+    allowSpace: boolean = false
+  ): void {
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  validateEmailInput(event: KeyboardEvent, fieldName: string): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // For email fields, we might want to prevent spaces altogether
+    if (event.key === ' ') {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  validateAddressInput(event: KeyboardEvent, fieldName: string): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
   }
 }
 

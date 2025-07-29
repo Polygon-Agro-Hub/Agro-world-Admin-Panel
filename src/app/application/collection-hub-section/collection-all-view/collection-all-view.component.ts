@@ -182,7 +182,7 @@ export class CollectionAllViewComponent implements OnInit {
   deleteCollectionCenter(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this Collection Center? This action cannot be undone.',
+      text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -196,7 +196,7 @@ export class CollectionAllViewComponent implements OnInit {
             if (res) {
               Swal.fire(
                 'Deleted!',
-                'The Collection Center has been deleted.',
+                'The Collection Centre has been deleted.',
                 'success'
               );
               this.fetchAllCollectionCenter();
@@ -205,7 +205,7 @@ export class CollectionAllViewComponent implements OnInit {
           (error) => {
             Swal.fire(
               'Error!',
-              'There was an error deleting the Collection Center',
+              'There was an error deleting the Collection Centre',
               'error'
             );
           }

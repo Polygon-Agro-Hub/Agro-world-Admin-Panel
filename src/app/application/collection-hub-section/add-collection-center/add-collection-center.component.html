@@ -6,7 +6,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-    Add Collection Center
+    Add Collection Centre
   </h2>
 
   <form [formGroup]="collectionCenterForm" (ngSubmit)="onSubmit()">
@@ -15,26 +15,26 @@
 
       <!-- Collection Center Name -->
       <div>
-        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center
+        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre
           Name</label>
-        <input formControlName="centerName" id="centerName" name="centerName"
+        <input formControlName="centerName" id="centerName" name="centerName" (input)="onCenterNameInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('centerName')?.invalid &&
             (collectionCenterForm.get('centerName')?.dirty ||
               collectionCenterForm.get('centerName')?.touched)
           " class="text-red-500 text-sm mt-1">
-          Center Name is required
+          Centre Name is required
         </div>
-        <div *ngIf="
+        <!-- <div *ngIf="
             collectionCenterForm
               .get('centerName')
               ?.hasError('containsNumbers') &&
             (collectionCenterForm.get('centerName')?.dirty ||
               collectionCenterForm.get('centerName')?.touched)
           " class="text-red-500 text-sm mt-1">
-          Center name cannot contain numbers.
-        </div>
+          Centre name cannot contain numbers.
+        </div> -->
       </div>
 
       <div class="relative">
@@ -56,48 +56,79 @@
             {{ company.companyNameEnglish }}
           </div>
         </div>
+
+        
       </div>
 
       <!-- Contact Number 01 -->
       <div>
-        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
-          01</label>
+        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Contact Number 01
+        </label>
+      
         <div class="mt-1 flex">
-          <select formControlName="contact01Code" id="contact01Code"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+          <!-- Country Code Dropdown -->
+          <select
+            formControlName="contact01Code"
+            id="contact01Code"
+            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
+          >
             <option value="+94">+94 (LK)</option>
             <option value="+1">+1 (US)</option>
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
+      
+          <!-- Phone Input -->
           <div class="flex flex-col flex-1">
-            <input type="number" formControlName="contact01" id="contact01" name="contact01"
+            <input
+              type="tel"
+              formControlName="contact01"
+              id="contact01"
+              pattern="^[0-9]{9}$"
+              minlength="9"
+              maxlength="9"
+              (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone01')"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number " />
-
-            <!-- <div *ngIf="collectionCenterForm.get('contact01')?.hasError('pattern')">
-              Enter valid phone number
-            </div> -->
+              placeholder="Enter your phone number"
+            />
           </div>
         </div>
-
-        <div *ngIf="collectionCenterForm.get('contact01')?.touched && collectionCenterForm.get('contact01')?.invalid"
-          class="text-red-500 text-sm mt-1">
-          <div *ngIf="collectionCenterForm.get('contact01')?.errors?.['required']">
-            Contact Number 01 is required
+      
+        <!-- Validation Errors -->
+        <div *ngIf="collectionCenterForm.get('contact01')?.touched">
+          <div
+            *ngIf="collectionCenterForm.get('contact01')?.errors?.['required']"
+            class="text-red-500 text-sm mt-1"
+          >
+            Phone Number - 1 is required.
           </div>
-          <div *ngIf="collectionCenterForm.get('contact01')?.errors?.['pattern']">
-            Required a valid Contact Number
+      
+          <div
+            *ngIf="collectionCenterForm.get('contact01')?.errors?.['pattern'] && !isPhoneInvalidMap['phone01']"
+            class="text-red-500 text-sm mt-1"
+          >
+            Phone Number must be exactly 9 digits.
+          </div>
+      
+          <div
+            *ngIf="isPhoneInvalidMap['phone01'] && collectionCenterForm.get('contact01')?.value"
+            class="text-red-500 text-sm mt-1"
+          >
+            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc.)
           </div>
         </div>
-
       </div>
+      
 
       <!-- Contact Number 02 -->
       <div>
-        <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
-          02</label>
+        <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Contact Number 02
+        </label>
+      
         <div class="mt-1 flex">
+          <!-- Country Code Select -->
           <select formControlName="contact02Code" id="contact02Code"
             class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
             <option value="+94">+94 (LK)</option>
@@ -105,23 +136,47 @@
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
           </select>
+      
+          <!-- Phone Input -->
           <div class="flex flex-col flex-1">
-            <input type="number" formControlName="contact02" id="contact02" name="contact02"
+            <input type="tel"
+              formControlName="contact02"
+              id="contact02"
+              name="contact02"
+              placeholder="Enter your phone number"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number" />
-
-            <!-- <div *ngIf="collectionCenterForm.get('contact02')?.hasError('pattern')" class="text-red-500 text-sm mt-1">
-              Enter valid phone number
-            </div> -->
+              (keypress)="allowOnlyNumbers($event)" 
+            pattern="^[0-9]{9}$" minlength="9" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"/>
           </div>
         </div>
-        <div *ngIf="
-        collectionCenterForm.get('contact02')?.invalid &&
-        (collectionCenterForm.get('contact02')?.dirty ||
-          collectionCenterForm.get('contact02')?.touched)
-      " class="text-red-500 text-sm mt-1">
-      Required a valid Contact Number
-    </div>
+      
+        <div *ngIf="collectionCenterForm.get('contact02')?.touched">
+
+          <div *ngIf="
+      collectionCenterForm.get('contact01')?.value &&
+      collectionCenterForm.get('contact02')?.value &&
+      collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value &&
+      !isPhoneInvalidMap['phone02'] && !isPhoneInvalidMap['phone02']"
+
+    class="text-red-500 text-sm mt-1">
+  Phone Number - 2 should be different from Phone Number - 1.
+</div>
+      
+          <div
+            *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern'] && !isPhoneInvalidMap['phone02']"
+            class="text-red-500 text-sm mt-1"
+          >
+            Phone Number must be exactly 9 digits.
+          </div>
+      
+          <div
+            *ngIf="isPhoneInvalidMap['phone02'] && collectionCenterForm.get('contact02')?.value"
+            class="text-red-500 text-sm mt-1"
+          >
+            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc.)
+          </div>
+        </div>
+
       </div>
 
       <!-- Building Number -->
@@ -135,7 +190,7 @@
             (collectionCenterForm.get('buildingNumber')?.dirty ||
               collectionCenterForm.get('buildingNumber')?.touched)
           " class="text-red-500 text-sm mt-1">
-          Building number is required
+          Building Number is required
         </div>
       </div>
 
@@ -150,7 +205,7 @@
               collectionCenterForm.get('street')?.touched)
           " class="text-red-500 text-sm mt-1">
           <span *ngIf="collectionCenterForm.get('street')?.errors?.['required']">
-            Street name is required
+            Street Name is required
           </span>
         </div>
       </div>
@@ -209,18 +264,15 @@
 
       <div>
         <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
-        <select formControlName="country" id="country" name="country"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-          <option selected disabled>Sri Lanka</option>
-        </select>
-        <div *ngIf="
-            collectionCenterForm.get('country')?.invalid &&
-            (collectionCenterForm.get('country')?.dirty ||
-              collectionCenterForm.get('country')?.touched)
-          " class="text-red-500 text-sm mt-1">
-          Country is required
-        </div>
+        <input
+          id="country"
+          type="text"
+          formControlName="country"
+          readonly
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
       </div>
+      
 
       <!-- <div>
         <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
@@ -245,7 +297,7 @@
       </div> -->
 
       <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Center Reg Code</label>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Reg Code</label>
         <div class="relative">
           <input formControlName="regCode" id="regCode" name="regCode" [value]="isLoadingregcode ? 'Loading...' : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -257,9 +309,33 @@
       <div class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md cursor-pointer" (click)="onCancel()">
         Cancel
       </div>
-      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">
-        Save
-      </button>
+      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
+  [disabled]="
+    collectionCenterForm.get('contact01')?.invalid ||
+    isPhoneInvalidMap['phone01'] ||
+    collectionCenterForm.get('contact02')?.value && 
+      ((collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value) ||
+      collectionCenterForm.get('contact02')?.invalid ||
+      isPhoneInvalidMap['phone02'])
+
+  "
+    
+>
+  Save
+</button>
     </div>
   </form>
 </div>
+
+
+<!-- isPhoneInvalidMap['phone01'] ||
+      (collectionCenterForm.get('contact02').value && 
+        (collectionCenterForm.get('contact01').value === collectionCenterForm.get('contact02').value ||
+         isPhoneInvalidMap['phone02'] ||
+         collectionCenterForm.get('contact02').invalid) -->
+
+
+         <!-- (collectionCenterForm.get('contact02')?.value &&
+      (collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value ||
+       isPhoneInvalidMap['phone02'])
+    )" -->

@@ -26,6 +26,15 @@ export class AddCollectionCenterComponent implements OnInit {
   city: string = '';
   isLoadingregcode = false;
 
+  allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
+  isPhoneInvalidMap: { [key: string]: boolean } = {
+  phone01: false,
+  phone02: false,
+};
+
+  leadingSpaceError: boolean = false;
+  specialCharOrNumberError: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private collectionCenterService: CollectionCenterService,
@@ -51,6 +60,48 @@ export class AddCollectionCenterComponent implements OnInit {
       country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required],
     });
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Only allow 0-9
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  
+
+
+  validateSriLankanPhone(input: string, key: string): void {
+    if (!input) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
+  
+    const firstDigit = input.charAt(0);
+    const prefix = input.substring(0, 2);
+    const isValidPrefix = this.allowedPrefixes.includes(prefix);
+    const isValidLength = input.length === 9;
+  
+    if (firstDigit !== '7') {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
+  
+    if (!isValidPrefix && input.length >= 2) {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
+  
+    if (input.length === 9 && isValidPrefix) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
+  
+    this.isPhoneInvalidMap[key] = false;
   }
 
   ngOnInit() {
@@ -147,6 +198,47 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   onSubmit() {
+
+  // const contact01 = this.collectionCenterForm.get('contact01')?.value;
+  // const contact02 = this.collectionCenterForm.get('contact02')?.value;
+
+  // const isSameNumber = contact01 === contact02;
+  // const isInvalidPhone = this.isPhoneInvalidMap['phone02'];
+  // const isContact02Invalid = this.collectionCenterForm.get('contact02')?.invalid;
+
+  // if (contact02 && (isSameNumber || isInvalidPhone || isContact02Invalid)) {
+  //   if (isSameNumber) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Duplicate Phone Number',
+  //       text: 'Phone Number - 2 should be different from Phone Number - 1.'
+  //     });
+  //   } else if (isInvalidPhone) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Invalid Phone Format',
+  //       text: 'Please enter a valid phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc).'
+  //     });
+  //   } else if (isContact02Invalid) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Invalid Phone Number',
+  //       text: 'Phone Number must be exactly 9 digits.'
+  //     });
+  //   }
+  //   return; // prevent form submission
+  // }
+
+  // Proceed if no errors
+  if (this.collectionCenterForm.valid) {
+    // your form submit logic here
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Form submitted successfully!'
+    });
+  }
+
     const requiredFields = [
       { key: 'buildingNumber', label: 'Building Number' },
       { key: 'street', label: 'Street' },
@@ -191,7 +283,7 @@ export class AddCollectionCenterComponent implements OnInit {
           if (res.status) {
             Swal.fire(
               'Success',
-              'Collection Center Created Successfully',
+              'Collection centre Created Successfully',
               'success'
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -200,7 +292,7 @@ export class AddCollectionCenterComponent implements OnInit {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Something went wrong while creating the Collection Center.',
+                text: 'Something went wrong while creating the Collection centre.',
               });
             }
           }
@@ -239,20 +331,13 @@ export class AddCollectionCenterComponent implements OnInit {
     }
     return null;
   }
+  
 
   back(): void {
     this.router.navigate(['/collection-hub']);
   }
 
   ProvinceData = [
-    {
-      province: 'Western',
-      district: [
-        { districtName: 'Colombo' },
-        { districtName: 'Kalutara' },
-        { districtName: 'Gampaha' },
-      ],
-    },
     {
       province: 'Central',
       district: [
@@ -262,38 +347,12 @@ export class AddCollectionCenterComponent implements OnInit {
       ],
     },
     {
-      province: 'Southern',
-      district: [
-        { districtName: 'Galle' },
-        { districtName: 'Matara' },
-        { districtName: 'Hambantota' },
-      ],
-    },
-    {
-      province: 'Northern',
-      district: [
-        { districtName: 'Jaffna' },
-        { districtName: 'Mannar' },
-        { districtName: 'Vavuniya' },
-        { districtName: 'Kilinochchi' },
-        { districtName: 'Mulaitivu' },
-      ],
-    },
-    {
       province: 'Eastern',
       district: [
-        { districtName: 'Batticaloa' },
         { districtName: 'Ampara' },
+        { districtName: 'Batticaloa' },
         { districtName: 'Trincomalee' },
       ],
-    },
-    {
-      province: 'Uva',
-      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
-    },
-    {
-      province: 'North Western',
-      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
     },
     {
       province: 'North Central',
@@ -303,10 +362,89 @@ export class AddCollectionCenterComponent implements OnInit {
       ],
     },
     {
+      province: 'North Western',
+      district: [
+        { districtName: 'Kurunegala' },
+        { districtName: 'Puttalam' },
+      ],
+    },
+    {
+      province: 'Northern',
+      district: [
+        { districtName: 'Jaffna' },
+        { districtName: 'Kilinochchi' },
+        { districtName: 'Mannar' },
+        { districtName: 'Mulaitivu' },
+        { districtName: 'Vavuniya' },
+      ],
+    },
+    {
       province: 'Sabaragamuwa',
-      district: [{ districtName: 'Rathnapura' }, { districtName: 'Kegalle' }],
+      district: [
+        { districtName: 'Kegalle' },
+        { districtName: 'Rathnapura' },
+      ],
+    },
+    {
+      province: 'Southern',
+      district: [
+        { districtName: 'Galle' },
+        { districtName: 'Hambantota' },
+        { districtName: 'Matara' },
+
+      ],
+    },
+    {
+      province: 'Uva',
+      district: [
+        { districtName: 'Badulla' },
+        { districtName: 'Moneragala' },
+      ],
+    },
+    {
+      province: 'Western',
+      district: [
+        { districtName: 'Colombo' },
+        { districtName: 'Gampaha' },
+        { districtName: 'Kalutara' },
+      ],
     },
   ];
+
+  onCenterNameInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    let input = inputElement.value;
+  
+    // Reset errors
+    this.leadingSpaceError = false;
+    this.specialCharOrNumberError = false;
+  
+    // Remove leading spaces and flag if they existed
+    if (input.startsWith(' ')) {
+      this.leadingSpaceError = true;
+      input = input.trimStart();
+    }
+  
+    // Remove invalid characters (only allow A-Z, a-z, and space)
+    const filteredInput = input.replace(/[^A-Za-z ]/g, '');
+    if (filteredInput !== input) {
+      this.specialCharOrNumberError = true;
+    }
+  
+    // Capitalize the first letter (if input is not empty)
+    const capitalizedInput =
+      filteredInput.length > 0
+        ? filteredInput.charAt(0).toUpperCase() + filteredInput.slice(1)
+        : '';
+  
+    // Update form control value without emitting a new event to avoid infinite loop
+    this.collectionCenterForm.get('centerName')?.setValue(capitalizedInput, { emitEvent: false });
+  
+    // If you're storing it separately too
+    this.centerData.centerName = capitalizedInput;
+  }
+  
+  
 }
 
 class CollectionCenter {

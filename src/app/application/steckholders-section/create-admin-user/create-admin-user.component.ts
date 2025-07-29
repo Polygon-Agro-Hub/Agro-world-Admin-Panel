@@ -170,6 +170,26 @@ export class CreateAdminUserComponent implements OnInit {
     };
   }
 
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
+
+  formatTextInput(fieldName: string): void {
+    const control = this.userForm.get(fieldName);
+    if (control && control.value) {
+      const cleanedValue = control.value.replace(/^\s+/, '');
+      control.setValue(cleanedValue);
+    }
+  }
+
+
+
+
   getErrorMessage(controlName: string): string {
     const control = this.userForm.get(controlName);
 
@@ -234,14 +254,89 @@ export class CreateAdminUserComponent implements OnInit {
       );
   }
 
+  // Updated getValidationErrors method
+  getValidationErrors(): string {
+    const requiredFields: string[] = [];
+    const otherErrors: string[] = [];
+
+    Object.keys(this.userForm.controls).forEach(key => {
+      const control = this.userForm.get(key);
+      if (control && control.invalid && (control.dirty || control.touched)) {
+        if (control.hasError('required')) {
+          // Group required field errors
+          switch (key) {
+            case 'userName':
+              requiredFields.push('Username');
+              break;
+            case 'mail':
+              requiredFields.push('Email');
+              break;
+            case 'password':
+              requiredFields.push('Password');
+              break;
+            case 'role':
+              requiredFields.push('Department');
+              break;
+            case 'position':
+              requiredFields.push('Position');
+              break;
+          }
+        } else {
+          // Get specific error messages for non-required errors
+          const errorMessage = this.getErrorMessage(key);
+          if (errorMessage && !errorMessage.includes('required')) {
+            otherErrors.push(errorMessage);
+          }
+        }
+      }
+    });
+
+    let errorMessage = '';
+
+    // Format required fields message
+    if (requiredFields.length > 0) {
+      if (requiredFields.length === 1) {
+        errorMessage += `${requiredFields[0]} is required`;
+      } else if (requiredFields.length === 2) {
+        errorMessage += `${requiredFields[0]} & ${requiredFields[1]} are required`;
+      } else {
+        const lastField = requiredFields.pop();
+        errorMessage += `${requiredFields.join(', ')} & ${lastField} are required`;
+      }
+    }
+
+    // Add other validation errors
+    if (otherErrors.length > 0) {
+      if (errorMessage) {
+        errorMessage += '\n\nAdditional errors:\n';
+      }
+      errorMessage += otherErrors.join('\n');
+    }
+
+    return errorMessage;
+  }
+
+  // Updated updateAdmin method
   updateAdmin(id: any) {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Please fill out all required fields correctly.',
-      });
+
+      const validationErrors = this.getValidationErrors();
+
+      if (validationErrors) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Errors',
+          text: validationErrors,
+          confirmButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          text: 'Please fill out all required fields correctly.',
+        });
+      }
       return;
     }
 
@@ -288,14 +383,27 @@ export class CreateAdminUserComponent implements OnInit {
       );
   }
 
+  // Updated createAdmin method
   createAdmin() {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Please fill out all required fields correctly.',
-      });
+
+      const validationErrors = this.getValidationErrors();
+
+      if (validationErrors) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Errors',
+          text: validationErrors,
+          confirmButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          text: 'Please fill out all required fields correctly.',
+        });
+      }
       return;
     }
 
@@ -330,6 +438,7 @@ export class CreateAdminUserComponent implements OnInit {
         }
       );
   }
+
 
   openPopup() {
     this.isPopupVisible = true;

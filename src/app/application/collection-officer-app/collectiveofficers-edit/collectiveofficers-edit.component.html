@@ -214,6 +214,7 @@
             First Name (in English)*
           </label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
+            (keydown)="preventLeadingSpace($event, 'firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')" />
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">
@@ -230,6 +231,7 @@
             Last Name (in English)
           </label>
           <input id="lastName" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
+            (keydown)="preventLeadingSpace($event, 'lastNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')" />
           <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">
@@ -245,6 +247,7 @@
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Sinhala)*</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
+            (keydown)="preventLeadingSpace($event, 'firstNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameSinhalaInput="ngModel" (input)="formatSinhalaName('firstNameSinhala')" required />
           <div *ngIf="firstNameSinhalaInput.touched && !personalData.firstNameSinhala"
@@ -261,6 +264,7 @@
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Sinhala)</label>
           <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
+            (keydown)="preventLeadingSpace($event, 'lastNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameSinhalaInput="ngModel" (input)="formatSinhalaName('lastNameSinhala')" required />
           <div *ngIf="lastNameSinhalaInput.touched && !personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
@@ -276,6 +280,7 @@
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil)*</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
+            (keydown)="preventLeadingSpace($event, 'firstNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameTamilInput="ngModel" (input)="formatTamilName('firstNameTamil')" required />
           <div *ngIf="firstNameTamilInput.touched && !personalData.firstNameTamil" class="text-red-500 text-sm mt-1">
@@ -291,6 +296,7 @@
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil)</label>
           <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
+            (keydown)="preventLeadingSpace($event, 'lastNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameTamilInput="ngModel" (input)="formatTamilName('lastNameTamil')" required />
           <div *ngIf="lastNameTamilInput.touched && !personalData.lastNameTamil" class="text-red-500 text-sm mt-1">
@@ -320,6 +326,7 @@
             </select>
             <div class="w-full flex flex-col">
               <input id="phoneNumber01" name="phoneNumber01" type="tel" [(ngModel)]="personalData.phoneNumber01"
+              (keydown)="preventLeadingSpace($event, 'phoneNumber01')"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="Enter your phone number" (blur)="onBlur('phoneNumber01')" />
               <span *ngIf="touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
@@ -352,6 +359,7 @@
             </select>
             <div class="w-full flex flex-col">
               <input id="phoneNumber02" name="phoneNumber02" type="tel" [(ngModel)]="personalData.phoneNumber02"
+               (keydown)="preventLeadingSpace($event, 'phoneNumber02')"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="Enter your phone number" (blur)="onBlur('phoneNumber02')" />
               <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
@@ -369,6 +377,7 @@
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic"
+            (keydown)="preventLeadingSpace($event, 'nic')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('nic')" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
@@ -380,6 +389,7 @@
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+            (keydown)="preventLeadingSpace($event, 'email')" 
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('email')" />
           <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
@@ -454,6 +464,7 @@
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
             Number*</label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
+            (keydown)="preventLeadingSpace($event, 'houseNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #houseNumberInput="ngModel" required />
           <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
@@ -465,6 +476,7 @@
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
           <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
+            (keydown)="preventLeadingSpace($event, 'streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #streetNameInput="ngModel" required />
           <div *ngIf="streetNameInput.touched && !personalData.streetName" class="text-red-500 text-sm mt-1">
@@ -477,6 +489,7 @@
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City*</label>
           <input id="city" name="city" [(ngModel)]="personalData.city"
+            (keydown)="preventLeadingSpace($event, 'city')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #cityInput="ngModel" required />
           <div *ngIf="cityInput.touched && !personalData.city" class="text-red-500 text-sm mt-1">
@@ -489,6 +502,7 @@
             District*
           </label>
           <select id="district" name="district" [(ngModel)]="personalData.district" (change)="updateProvince($event)"
+          
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #districtInput="ngModel" required>
             <option value="" disabled selected>Select a district</option>
@@ -531,6 +545,7 @@
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
           Name*</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
+         (keydown)="preventLeadingSpace($event, 'accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accHolderNameInput="ngModel" (input)="formatAccountHolderName()" required />
         <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">
@@ -541,8 +556,10 @@
         </span>
       </div>
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number*</label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
+          Number*</label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
+        (keydown)="preventLeadingSpace($event, 'accNumber')" 
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required />
         <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
@@ -554,6 +571,7 @@
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Confirm Account
           Number</label>
         <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
+        (keydown)="preventLeadingSpace($event, 'confirmAccNumber')" 
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #confirmAccNumberInput="ngModel" required />
         <div *ngIf="confirmAccNumberInput.touched && !personalData.confirmAccNumber" class="text-red-500 text-sm mt-1">

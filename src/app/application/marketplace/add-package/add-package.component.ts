@@ -22,6 +22,19 @@ export class AddPackageComponent implements OnInit {
   selectedFileName!: string;
   isLoading: boolean = false;
 
+  // Form state tracking properties
+  fieldTouched = {
+    displayName: false,
+    description: false,
+    productPrice: false,
+    packageFee: false,
+    serviceFee: false,
+    image: false,
+    quantities: false
+  };
+  
+  submitAttempted = false;
+
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
   back(): void {
@@ -32,21 +45,94 @@ export class AddPackageComponent implements OnInit {
     this.getProductTypes();
   }
 
-  preventNegative(event: any): void {
-  const value = parseFloat(event.target.value);
-  if (value < 0) {
-    event.target.value = 0;
-    // Update the model value as well
-    if (event.target === document.querySelector('input[ng-reflect-name="productPrice"]')) {
-      this.packageObj.productPrice = 0;
-    } else if (event.target === document.querySelector('input[ng-reflect-name="serviceFee"]')) {
-      this.packageObj.serviceFee = 0;
-    } else if (event.target === document.querySelector('input[ng-reflect-name="packageFee"]')) {
-      this.packageObj.packageFee = 0;
-    }
-    this.calculateApproximatedPrice();
+  // Field touch tracking methods
+  onDisplayNameBlur(): void {
+    this.fieldTouched.displayName = true;
   }
-}
+
+  onDescriptionBlur(): void {
+    this.fieldTouched.description = true;
+  }
+
+  onProductPriceBlur(): void {
+    this.fieldTouched.productPrice = true;
+  }
+
+  onPackageFeeBlur(): void {
+    this.fieldTouched.packageFee = true;
+  }
+
+  onServiceFeeBlur(): void {
+    this.fieldTouched.serviceFee = true;
+  }
+
+  onQuantityBlur(): void {
+    this.fieldTouched.quantities = true;
+  }
+
+  // Validation getter methods
+  get shouldShowDisplayNameError(): boolean {
+    return (this.fieldTouched.displayName || this.submitAttempted) && 
+           !this.packageObj.displayName?.trim();
+  }
+
+  get shouldShowDescriptionError(): boolean {
+    return (this.fieldTouched.description || this.submitAttempted) && 
+           !this.packageObj.description?.trim();
+  }
+
+  get shouldShowProductPriceError(): boolean {
+    return (this.fieldTouched.productPrice || this.submitAttempted) && 
+           (!this.packageObj.productPrice || this.packageObj.productPrice <= 0);
+  }
+
+  get shouldShowPackageFeeError(): boolean {
+    return (this.fieldTouched.packageFee || this.submitAttempted) && 
+           (this.packageObj.packageFee < 0);
+  }
+
+  get shouldShowServiceFeeError(): boolean {
+    return (this.fieldTouched.serviceFee || this.submitAttempted) && 
+           (this.packageObj.serviceFee < 0);
+  }
+
+  get shouldShowImageError(): boolean {
+    return (this.fieldTouched.image || this.submitAttempted) && 
+           !this.selectedImage;
+  }
+
+  get shouldShowQuantityError(): boolean {
+    return (this.fieldTouched.quantities || this.submitAttempted) && 
+           this.productTypeObj.length > 0 && 
+           !Object.values(this.packageObj.quantities).some(qty => qty > 0);
+  }
+
+  onDisplayNameChange(event: any): void {
+    let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    this.packageObj.displayName = value;
+    event.target.value = value;
+  }
+
+  preventNegative(event: any): void {
+    const value = parseFloat(event.target.value);
+    if (value < 0) {
+      event.target.value = 0;
+      // Update the model value based on the input field
+      const inputName = event.target.name;
+      if (inputName === 'productPrice') {
+        this.packageObj.productPrice = 0;
+      } else if (inputName === 'serviceFee') {
+        this.packageObj.serviceFee = 0;
+      } else if (inputName === 'packageFee') {
+        this.packageObj.packageFee = 0;
+      }
+      this.calculateApproximatedPrice();
+    }
+  }
 
   getProductTypes() {
     this.marketSrv.fetchProductTypes().subscribe((res) => {
@@ -70,145 +156,58 @@ export class AddPackageComponent implements OnInit {
     console.log(`Product ${id} quantity: ${this.packageObj.quantities[id]}`);
   }
 
-  // onSubmit() {
-  //   console.log('submit', this.packageObj);
-  //   console.log('Final quantities:', this.packageObj.quantities);
-  //   this.isLoading = true;
-
-  //   if (
-  //     !this.packageObj.displayName ||
-  //     !this.packageObj.description ||
-  //     !this.packageObj.productPrice ||
-  //     !this.packageObj.packageFee ||
-  //     !this.packageObj.serviceFee ||
-  //     !this.selectedImage
-  //   ) {
-  //     let errorMessage = '';
-
-  //     if (!this.packageObj.displayName)
-  //       errorMessage += 'Display Package Name is required.<br>';
-  //     if (!this.packageObj.description)
-  //       errorMessage += 'Description is required.<br>';
-  //     if (!this.packageObj.productPrice)
-  //       errorMessage += 'Product price is required.<br>';
-  //     if (!this.packageObj.packageFee)
-  //       errorMessage += 'Package fee is required.<br>';
-  //     if (!this.packageObj.serviceFee)
-  //       errorMessage += 'Service fee is required.<br>';
-  //     if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
-
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Missing Required Fields',
-  //       html: errorMessage,
-  //       confirmButtonText: 'OK',
-  //     });
-  //     this.isLoading = false;
-  //     return;
-  //   }
-
-  //   // ✅ New validation: Ensure at least one quantity is > 0
-  //   const hasAtLeastOneQuantity = Object.values(
-  //     this.packageObj.quantities
-  //   ).some((qty) => qty > 0);
-
-  //   if (!hasAtLeastOneQuantity) {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'No product type selected',
-  //       text: 'You should select at least on product type.',
-  //       confirmButtonText: 'OK',
-  //     });
-  //     this.isLoading = false;
-  //     return;
-  //   }
-
-  //   // All quantities are already stored in kg, no conversion needed before submit
-  //   this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
-  //     (res) => {
-  //       if (res.status) {
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Package Created',
-  //           text: 'The package was created successfully!',
-  //           confirmButtonText: 'OK',
-  //         }).then(() => {
-  //           this.packageObj = new Package();
-  //           this.router.navigate(['/market/action/view-packages-list']);
-  //         });
-  //       } else {
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Package Not Created',
-  //           text: 'The package could not be created. Please try again.',
-  //           confirmButtonText: 'OK',
-  //         });
-  //       }
-  //       this.isLoading = false;
-  //     },
-  //     (error) => {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'An Error Occurred',
-  //         text: 'There was an error while creating the package. Please try again later.',
-  //         confirmButtonText: 'OK',
-  //       });
-  //       this.isLoading = false;
-  //     }
-  //   );
-  // }
-
-  // In your add-package.component.ts
   async onSubmit() {
+    this.submitAttempted = true;
+    // Mark all fields as touched when submit is attempted
+    Object.keys(this.fieldTouched).forEach(key => {
+      this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
+    });
+
     console.log('submit', this.packageObj);
     console.log('Final quantities:', this.packageObj.quantities);
 
-    // First validate all required fields
-    if (
-      !this.packageObj.displayName ||
-      !this.packageObj.description ||
-      !this.packageObj.productPrice ||
-      !this.packageObj.packageFee ||
-      !this.packageObj.serviceFee ||
-      !this.selectedImage
-    ) {
-      let errorMessage = '';
+    // Validation with specific error messages
+    let errorMessages: string[] = [];
 
-      if (!this.packageObj.displayName)
-        errorMessage += 'Display Package Name is required.<br>';
-      if (!this.packageObj.description)
-        errorMessage += 'Description is required.<br>';
-      if (!this.packageObj.productPrice)
-        errorMessage += 'Product price is required.<br>';
-      if (!this.packageObj.packageFee)
-        errorMessage += 'Package fee is required.<br>';
-      if (!this.packageObj.serviceFee)
-        errorMessage += 'Service fee is required.<br>';
-      if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
+    if (!this.packageObj.displayName?.trim()) {
+      errorMessages.push('Display Package Name is required');
+    }
+    if (!this.packageObj.description?.trim()) {
+      errorMessages.push('Description is required');
+    }
+    if (!this.packageObj.productPrice || this.packageObj.productPrice <= 0) {
+      errorMessages.push('Total Package Price must be greater than 0');
+    }
+    if (!this.packageObj.packageFee || this.packageObj.packageFee < 0) {
+      errorMessages.push('Packaging Fee cannot be negative');
+    }
+    if (!this.packageObj.serviceFee || this.packageObj.serviceFee < 0) {
+      errorMessages.push('Service Fee cannot be negative');
+    }
+    if (!this.selectedImage) {
+      errorMessages.push('Package Image is required');
+    }
 
+    if (errorMessages.length > 0) {
       Swal.fire({
         icon: 'error',
-        title: 'Missing Required Fields',
-        html: errorMessage,
+        title: 'Validation Error',
+        html: errorMessages.join('<br>'),
         confirmButtonText: 'OK',
       });
-      this.isLoading = false;
       return;
     }
 
     // Check if at least one quantity is > 0
-    const hasAtLeastOneQuantity = Object.values(
-      this.packageObj.quantities
-    ).some((qty) => qty > 0);
+    const hasAtLeastOneQuantity = Object.values(this.packageObj.quantities).some((qty) => qty > 0);
 
     if (!hasAtLeastOneQuantity) {
       Swal.fire({
         icon: 'error',
         title: 'No product type selected',
-        text: 'You should select at least on product type.',
+        text: 'You must select at least one product type with quantity greater than 0.',
         confirmButtonText: 'OK',
       });
-      this.isLoading = false;
       return;
     }
 
@@ -232,40 +231,38 @@ export class AddPackageComponent implements OnInit {
       }
 
       // If name doesn't exist, proceed with creation
-      this.marketSrv
-        .createPackage(this.packageObj, this.selectedImage)
-        .subscribe(
-          (res) => {
-            if (res.status) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Package Created',
-                text: 'The package was created successfully!',
-                confirmButtonText: 'OK',
-              }).then(() => {
-                this.packageObj = new Package();
-                this.router.navigate(['/market/action/view-packages-list']);
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Package Not Created',
-                text: 'The package could not be created. Please try again.',
-                confirmButtonText: 'OK',
-              });
-            }
-            this.isLoading = false;
-          },
-          (error) => {
+      this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
+        (res) => {
+          if (res.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Package Created',
+              text: 'The package was created successfully!',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.packageObj = new Package();
+              this.router.navigate(['/market/action/view-packages-list']);
+            });
+          } else {
             Swal.fire({
               icon: 'error',
-              title: 'An Error Occurred',
-              text: 'There was an error while creating the package. Please try again later.',
+              title: 'Package Not Created',
+              text: 'The package could not be created. Please try again.',
               confirmButtonText: 'OK',
             });
-            this.isLoading = false;
           }
-        );
+          this.isLoading = false;
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'An Error Occurred',
+            text: 'There was an error while creating the package. Please try again later.',
+            confirmButtonText: 'OK',
+          });
+          this.isLoading = false;
+        }
+      );
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -294,6 +291,8 @@ export class AddPackageComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
+    this.fieldTouched.image = true; // Mark image as touched when file is selected
+    
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
@@ -368,8 +367,6 @@ export class AddPackageComponent implements OnInit {
   }
 }
 
-
-
 class Package {
   displayName!: string;
   status: string = 'Enabled';
@@ -378,10 +375,6 @@ class Package {
   description!: string;
   image!: any;
   selectedFileName!: string;
-  // productPrice: number = 0.00;
-  // packageFee: number = 0.00;
-  // serviceFee: number = 0.00;
-  // approximatedPrice: number = 0.00;
   productPrice!: number;
   packageFee!: number;
   serviceFee!: number;

@@ -326,7 +326,8 @@
 
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
-          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
+          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
+            (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
             Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
@@ -335,7 +336,9 @@
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
-          <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
+          <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+            (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" (blur)="onBlur('email')"
+            placeholder="example@domain.com"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
             Please enter a valid email in the format: example{{ '@' }}domain.com
@@ -417,7 +420,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="personalData.companyId === '1'">
+    <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
@@ -425,7 +428,8 @@
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
           Name*</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          (blur)="onBlur('accHolderName')" (input)="formatAccountHolderName()"
+          (keypress)="preventAccountHolderSpecialCharacters($event)" (blur)="onBlur('accHolderName')"
+          (input)="formatAccountHolderName()"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder's Name is a required
           field</span>
@@ -437,7 +441,8 @@
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Account Number*
         </label>
-        <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"
+        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
+          (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('accNumber')"
           (blur)="onBlur('accNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
@@ -449,7 +454,8 @@
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Confirm Account Number*
         </label>
-        <input id="confirmAccNumber" name="confirmAccNumber" type="number" [(ngModel)]="personalData.confirmAccNumber"
+        <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
+          (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('confirmAccNumber')"
           (blur)="onBlur('confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 

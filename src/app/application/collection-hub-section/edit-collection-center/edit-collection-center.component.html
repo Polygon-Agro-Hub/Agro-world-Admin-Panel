@@ -32,12 +32,12 @@
         />
       
         <!-- Specific error messages -->
-        <div *ngIf="centerNameInput.touched && leadingSpaceError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+        <!-- <div *ngIf="centerNameInput.touched && leadingSpaceError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Leading spaces are not allowed
         </div>
         <div *ngIf="centerNameInput.touched && specialCharOrNumberError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Only English letters are allowed (no numbers or special characters)
-        </div>
+        </div> -->
         <div *ngIf="centerNameInput.touched && centerNameInput.errors?.['required'] "  class="text-red-500 text-sm mt-1">
           Center Name is required
         </div>
@@ -52,6 +52,7 @@
           Companies
         </label>
         <input
+          #companiesInput="ngModel"
           type="text"
           id="companies"
           name="companies"
@@ -81,6 +82,13 @@
             />
             {{ company.companyNameEnglish }}
           </div>
+          
+        </div>
+        <div
+          *ngIf="companiesInput.touched && !centerFetchData.companies"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Company Name is required</div>
         </div>
       </div>
 
@@ -109,31 +117,34 @@
           <!-- Contact Number Input -->
           <div class="flex-1">
             <input
-              type="text"
+              type="tel"
               [(ngModel)]="centerFetchData.contact01"
               id="contact01"
               name="contact01"
               #contact01="ngModel"
               required
-              pattern="^[7][0-9]{8}$"
+              pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone01')" maxlength="9"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
             />
           </div>
+          
         </div>
         
         <!-- ✅ Validation Messages Below Full Row -->
-        <div
-          *ngIf="contact01.invalid && contact01.touched"
-          class="text-red-500 text-sm mt-1"
-        >
-          <span *ngIf="contact01.errors?.['required']">
-            Contact number-01 is required
-          </span>
-          <span *ngIf="contact01.errors?.['pattern']">
-            Please enter a valid contact number
-          </span>
-        </div>
+        <div *ngIf="contact01.touched">
+          <div *ngIf="!centerFetchData.contact01" class="text-red-500 text-sm mt-1">
+              Phone Number - 1 is required.
+          </div>
+          <div *ngIf="centerFetchData.contact01 && contact01.invalid && !isPhoneInvalidMap['phone01']" 
+              class="text-red-500 text-sm mt-1">
+              Phone Number must be exactly 9 digits.
+          </div>
+
+          <div *ngIf="isPhoneInvalidMap['phone01'] && centerFetchData.contact01" class="text-red-500 text-sm mt-1">
+              Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+            </div>
+      </div>
         
       </div>
 
@@ -162,24 +173,33 @@
       
           <!-- Contact Input -->
           <input
-            type="number"
+            type="tel"
             [(ngModel)]="centerFetchData.contact02"
             id="contact02"
             name="contact02"
             #contact02="ngModel"
-            pattern="^[7][0-9]{8}$"
+            required
+            pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"
             class="flex-1 block p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             placeholder="Enter your phone number"
           />
         </div>
-      
-        <!-- Validation Message Below the Row -->
-        <div
-          *ngIf="contact02.invalid && contact02.touched && contact02.errors?.['pattern']"
-          class="text-red-500 text-sm mt-1"
-        >
-          Please enter a valid contact number
-        </div>
+
+        <div *ngIf="contact02.touched">
+          <div *ngIf="centerFetchData.contact02 && centerFetchData.contact01 === centerFetchData.contact02 && !isPhoneInvalidMap['phone02']" class="text-red-500 text-sm mt-1">
+            Phone Number - 2 should be different from Phone Number - 1.
+          </div>
+          
+          <div *ngIf="centerFetchData.contact02 && contact02.invalid && !isPhoneInvalidMap['phone02']"
+              class="text-red-500 text-sm mt-1">
+              Phone Number must be exactly 9 digits.
+          </div>
+
+          <div *ngIf="isPhoneInvalidMap['phone02'] && centerFetchData.contact02 " class="text-red-500 text-sm mt-1">
+              Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+            </div>
+      </div>
+       
       </div>
       
 
@@ -364,16 +384,24 @@
         type="submit"
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
         [disabled]="
-          !centerFetchData.centerName ||
-          !centerFetchData.buildingNumber ||
-          !centerFetchData.city ||
-          !centerFetchData.companies ||
-          !centerFetchData.contact01 ||
-          !centerFetchData.country ||
-          !centerFetchData.district ||
-          !centerFetchData.province ||
-          !centerFetchData.street
-        "
+  !centerFetchData.centerName ||
+  !centerFetchData.buildingNumber ||
+  !centerFetchData.city ||
+  !centerFetchData.companies ||
+  !centerFetchData.contact01 ||
+  !centerFetchData.country ||
+  !centerFetchData.district ||
+  !centerFetchData.province ||
+  !centerFetchData.street ||
+  contact01.invalid ||
+  isPhoneInvalidMap['phone01'] ||
+
+  (centerFetchData.contact02 &&
+    (centerFetchData.contact01 === centerFetchData.contact02 ||
+     isPhoneInvalidMap['phone02'] ||
+     contact02.invalid)) 
+"
+
       >
         Save
       </button>

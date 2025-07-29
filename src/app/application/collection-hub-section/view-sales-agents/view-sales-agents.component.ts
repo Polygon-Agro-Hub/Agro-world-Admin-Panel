@@ -97,6 +97,8 @@ export class ViewSalesAgentsComponent implements OnInit {
   }
 
   onSearch() {
+    // Trim the search text before making the API call
+    this.searchText = this.searchText.trimStart();
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -285,6 +287,19 @@ export class ViewSalesAgentsComponent implements OnInit {
     this.navigatePath(
       `/steckholders/action/sales-agents/preview-sales-agents/${id}`
     );
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    // Prevent space as the first character
+    if (event.key === ' ' && this.searchText.length === 0) {
+      event.preventDefault();
+    }
+  }
+
+  onInputChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    // Trim leading spaces from the input value
+    this.searchText = target.value.trimStart();
   }
 }
 

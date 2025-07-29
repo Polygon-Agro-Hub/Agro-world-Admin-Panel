@@ -1,28 +1,51 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="!isLoading">
-  <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40" *ngIf="isPopupVisible">
+  <div
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40"
+    *ngIf="isPopupVisible"
+  >
     <div
-      class="bg-tileLight dark:bg-tileBlack w-full max-w-7xl mx-auto rounded-lg shadow-lg p-4 max-h-screen overflow-hidden">
+      class="bg-tileLight dark:bg-tileBlack w-full max-w-4xl mx-auto rounded-lg shadow-lg p-14 max-h-screen overflow-hidden"
+    >
       <div class="flex justify-between items-center border-b pb-3">
         <h2 class="text-lg font-semibold text-textLight dark:text-textDark">
           Selected News
         </h2>
-        <button class="text-textLight dark:text-textDark hover:text-gray-700" (click)="closePopup()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <button
+          class="text-textLight dark:text-textDark hover:text-gray-700"
+          (click)="closePopup()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
 
       <!-- Scrollable content area -->
-      <div class="flex flex-col h-screen bg-tileLight dark:bg-tileBlack">
+      <div class="flex flex-col h-screen pb-20 bg-tileLight dark:bg-tileBlack">
         <!-- Scrollable content container -->
         <div
-          class="flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-thin scrollbar-[#8AC440] scrollbar-track-gray-200 dark:scrollbar-thumb-[#8AC440] dark:scrollbar-track-gray-900">
+          class="flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-thin scrollbar-[#8AC440] scrollbar-track-gray-200 dark:scrollbar-thumb-[#8AC440] dark:scrollbar-track-gray-900"
+        >
           <!-- Image section -->
           <div class="flex justify-center my-4">
-            <img [src]="newsItems[0].image" alt="Market Price Image" class="w-2/3 h-auto rounded-lg shadow-lg" />
+            <img
+              [src]="newsItems[0].image"
+              alt="Market Price Image"
+              class="w-2/3 h-auto rounded-lg shadow-lg"
+            />
           </div>
 
           <!-- English news section -->
@@ -32,11 +55,15 @@
             </div>
             <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
             <div class="text-sm mt-2">
-              <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2">
+              <h3
+                class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
+              >
                 {{ newsItems[0].titleEnglish }}
               </h3>
-              <div [innerHTML]="safeHtmlDescriptionEnglish"
-                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
+              <div
+                [innerHTML]="safeHtmlDescriptionEnglish"
+                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"
+              ></div>
             </div>
           </div>
 
@@ -47,11 +74,15 @@
             </div>
             <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
             <div class="text-sm mt-2">
-              <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2">
+              <h3
+                class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2"
+              >
                 {{ newsItems[0].titleSinhala }}
               </h3>
-              <div [innerHTML]="safeHtmlDescriptionSinhala"
-                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
+              <div
+                [innerHTML]="safeHtmlDescriptionSinhala"
+                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"
+              ></div>
             </div>
           </div>
 
@@ -62,18 +93,19 @@
             </div>
             <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
             <div class="text-sm mt-2">
-              <h3 class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2">
+              <h3
+                class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2"
+              >
                 {{ newsItems[0].titleTamil }}
               </h3>
-              <div [innerHTML]="safeHtmlDescriptionTamil"
-                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
+              <div
+                [innerHTML]="safeHtmlDescriptionTamil"
+                class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"
+              ></div>
             </div>
           </div>
         </div>
       </div>
-
-
-
     </div>
   </div>
 
@@ -83,31 +115,51 @@
   </button>
 
   <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  >
     <div
-      class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All News ({{ totalItems === 0 ? 0 : (totalItems < 10 ? '0' + totalItems : totalItems) }}) </h2>
+            All News ({{
+              totalItems === 0
+                ? 0
+                : totalItems < 10
+                ? "0" + totalItems
+                : totalItems
+            }})
+          </h2>
         </div>
-        <div *ngIf="permissionService.hasPermission('Filter by status') ||
-                  tokenService.getUserDetails().role === '1'" class="flex flex-row items-center gap-4">
+        <div
+          *ngIf="
+            permissionService.hasPermission('Filter by status') ||
+            tokenService.getUserDetails().role === '1'
+          "
+          class="flex flex-row items-center gap-4"
+        >
           <i class="w-6 h-6 fill-current text-textLight dark:text-textDark">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path
-                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+              />
             </svg>
           </i>
-          
+
           <p class="text-lg text-textLight dark:text-textDark">Filter By</p>
 
           <div class="">
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="status" [(ngModel)]="statusFilter" [checkmark]="true" optionLabel="name"
-              [showClear]="statusFilter === '' ? false : true" placeholder="Status"
-              (onChange)="applyFilters()" />
+              [options]="status"
+              [(ngModel)]="statusFilter"
+              [checkmark]="true"
+              optionLabel="name"
+              [showClear]="statusFilter === '' ? false : true"
+              placeholder="Status"
+              (onChange)="applyFilters()"
+            />
           </div>
 
           <!-- <div>
@@ -118,17 +170,17 @@
 
           <div class="flex items-center gap-2 h-8 ml-2">
             <p-calendar
-            id="toDate"
-            [(ngModel)]="createdDateFilter"
-            (onSelect)="applyFilters()"
-            (onClear)="onDateClear()"       
-            placeholder="Schedule Date"
-            [showIcon]="true"
-            [showClear]="createdDateFilter === '' ? false : true"              
-            [showButtonBar]="true"
-            iconDisplay="input"
-            [style]="{ width: '16rem', height: '2rem' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+              id="toDate"
+              [(ngModel)]="createdDateFilter"
+              (onSelect)="applyFilters()"
+              (onClear)="onDateClear()"
+              placeholder="Schedule Date"
+              [showIcon]="true"
+              [showClear]="createdDateFilter === '' ? false : true"
+              [showButtonBar]="true"
+              iconDisplay="input"
+              [style]="{ width: '16rem', height: '2rem' }"
+              panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -136,44 +188,64 @@
                              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                              
                              [&_.p-button:hover]:dark:bg-[#6b7280]"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-36 h-8 pr-12"
-            [appendTo]="'body'"
-          />
+              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-36 h-8 pr-12"
+              [appendTo]="'body'"
+            />
           </div>
-
         </div>
       </div>
 
       <div *ngIf="hasData">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
+        <table
+          class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
+        >
           <thead>
             <tr>
-              <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              <th
+                class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
                 No
               </th>
-              <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+              <th
+                class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              >
                 Title
               </th>
-              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser" *ngIf="permissionService.hasPermission('View each news individually') ||
-                  tokenService.getUserDetails().role === '1'">
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+                *ngIf="
+                  permissionService.hasPermission(
+                    'View each news individually'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+              >
                 View
               </th>
-              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              >
                 Status
               </th>
-              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              >
                 Publish Date
               </th>
-              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              >
                 Expire Date
               </th>
-              <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser">
+              <th
+                class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              >
                 Created Date
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
+            <tr
+              *ngFor="
                 let item of newsItems
                   | paginate
                     : {
@@ -182,42 +254,83 @@
                         totalItems: totalItems
                       };
                 let i = index
-              " class="border-b border-gray-200 dark:border-[#4B555A]">
+              "
+              class="border-b border-gray-200 dark:border-[#4B555A]"
+            >
               <td class="px-3 py-3 text-left dark:text-textDark text-centser">
                 {{ (page - 1) * itemsPerPage + i + 1 }}
               </td>
               <td class="py-3 dark:text-textDark text-centser">
                 {{
-                item.titleEnglish.length > 15
-                ? (item.titleEnglish | slice : 0 : 35) + "......."
-                : item.titleEnglish
+                  item.titleEnglish.length > 15
+                    ? (item.titleEnglish | slice : 0 : 35) + "......."
+                    : item.titleEnglish
                 }}
               </td>
 
-              <td *ngIf="permissionService.hasPermission('View each news individually') ||
-                  tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="openPopup(item.id)">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <td
+                *ngIf="
+                  permissionService.hasPermission(
+                    'View each news individually'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+                class="px-4 py-3 text-center"
+              >
+                <button
+                  class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                  (click)="openPopup(item.id)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 </button>
               </td>
               <td class="px-4 py-3 text-green-500 text-center">
                 <div *ngIf="item.status == 'Published'">
                   <span
-                    [class.cursor-pointer]="permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1'"
+                    [class.cursor-pointer]="
+                      permissionService.hasPermission(
+                        'Change status of the news'
+                      ) || tokenService.getUserDetails().role === '1'
+                    "
                     class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="(permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1') ? updateStatus(item.id) : null">
+                    (click)="
+                      permissionService.hasPermission(
+                        'Change status of the news'
+                      ) || tokenService.getUserDetails().role === '1'
+                        ? updateStatus(item.id)
+                        : null
+                    "
+                  >
                     {{ item.status }}
                   </span>
                 </div>
                 <div *ngIf="item.status != 'Published'">
                   <span
-                    [class.cursor-pointer]="permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1'"
+                    [class.cursor-pointer]="
+                      permissionService.hasPermission(
+                        'Change status of the news'
+                      ) || tokenService.getUserDetails().role === '1'
+                    "
                     class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="(permissionService.hasPermission('Change status of the news') || tokenService.getUserDetails().role === '1') ? updateStatus(item.id) : null">
+                    (click)="
+                      permissionService.hasPermission(
+                        'Change status of the news'
+                      ) || tokenService.getUserDetails().role === '1'
+                        ? updateStatus(item.id)
+                        : null
+                    "
+                  >
                     {{ item.status }}
                   </span>
                 </div>
@@ -232,23 +345,49 @@
                 {{ item.createdAt | date : "yyyy-MM-dd" }}
               </td>
               <td class="px-4 py-3 text-center">
-                <button *ngIf="permissionService.hasPermission('Manage content') ||
-                  tokenService.getUserDetails().role === '1'" class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
-                  (click)="editNews(item.id)">
-                  <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <button
+                  *ngIf="
+                    permissionService.hasPermission('Manage content') ||
+                    tokenService.getUserDetails().role === '1'
+                  "
+                  class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
+                  (click)="editNews(item.id)"
+                >
+                  <svg
+                    fill="currentColor"
+                    viewBox="0 0 32 32"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <title>pen-to-square</title>
                     <path
-                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                    </path>
+                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
+                    ></path>
                   </svg>
                 </button>
-                <button *ngIf="permissionService.hasPermission('Delete each news') ||
-                  tokenService.getUserDetails().role === '1'" class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
-                  (click)="deleteNews(item.id)">
-                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                    viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                <button
+                  *ngIf="
+                    permissionService.hasPermission('Delete each news') ||
+                    tokenService.getUserDetails().role === '1'
+                  "
+                  class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]"
+                  (click)="deleteNews(item.id)"
+                >
+                  <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                    />
                   </svg>
                 </button>
               </td>
@@ -279,13 +418,24 @@
           </tbody>
         </table>
         <div class="dark:bg-[#262f45]">
-          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-            [nextLabel]="'Next'" screenReaderPaginationLabel="'Pagination'" screenReaderPageLabel="'page"
-            [screenReaderCurrentLabel]="'Youre on page'"></pagination-controls>
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            [responsive]="true"
+            [previousLabel]="'Previous'"
+            [nextLabel]="'Next'"
+            screenReaderPaginationLabel="'Pagination'"
+            screenReaderPageLabel="'page"
+            [screenReaderCurrentLabel]="'Youre on page'"
+          ></pagination-controls>
         </div>
       </div>
-      <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
-        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <div
+        *ngIf="!hasData"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
+        </p>
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
     </div>

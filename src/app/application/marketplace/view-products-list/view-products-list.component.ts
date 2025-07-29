@@ -53,26 +53,23 @@ export class ViewProductsListComponent {
     private tokenService: TokenService
   ) {}
 
-  fetchAllProducts(page: number = 1, limit: number = this.itemsPerPage) {
+fetchAllProducts(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchVariety,
+    displayType: string = this.selectedDisplayType?.value,
+    category: string = this.selectedCategoryOption?.value
+  ) {
     this.isLoading = true;
-    const displayTypeValue = this.selectedDisplayType
-      ? this.selectedDisplayType.value
-      : '';
-    const categoryValue = this.selectedCategoryOption
-      ? this.selectedCategoryOption.value
-      : '';
+    // Trim the search string to remove leading/trailing spaces
+    const trimmedSearch = search.trim();
+    const displayTypeValue = displayType || '';
+    const categoryValue = category || '';
     this.viewProductsList
-      .getProductList(
-        page,
-        limit,
-        this.searchVariety,
-        displayTypeValue,
-        categoryValue
-      )
+      .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue)
       .subscribe(
         (response) => {
-          console.log('this is the responce', response);
-
+          console.log('this is the response', response);
           this.viewProductList = response.items;
           this.hasData = this.viewProductList.length > 0;
           this.totalItems = response.total;
@@ -80,9 +77,12 @@ export class ViewProductsListComponent {
         },
         (error) => {
           console.error('Error fetching all Products', error);
-          if (error.status === 401) {
-          }
           this.isLoading = false;
+          if (error.status === 401) {
+            Swal.fire('Unauthorized', 'Please log in again.', 'error');
+          } else {
+            Swal.fire('Error', 'Failed to fetch products.', 'error');
+          }
         }
       );
   }
@@ -101,7 +101,12 @@ export class ViewProductsListComponent {
     this.fetchAllProducts(this.page, this.itemsPerPage);
   }
 
-  searchProduct() {
+searchProduct() {
+    this.searchVariety = this.searchVariety.trim(); // Trim leading/trailing spaces
+    if (!this.searchVariety) {
+      Swal.fire('Info', 'Please enter a valid search term.', 'info');
+      return;
+    }
     this.page = 1;
     this.fetchAllProducts(this.page, this.itemsPerPage);
   }

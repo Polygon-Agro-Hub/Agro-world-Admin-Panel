@@ -91,32 +91,57 @@ export class EditTaskComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
-  allowOnlyEnglishLetters(event: KeyboardEvent): void {
-    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-    if (allowedControlKeys.includes(event.key)) return;
-    const isLetter = /^[a-zA-Z\s]$/.test(event.key);
-    if (!isLetter) {
-      event.preventDefault();
-    }
+allowOnlyEnglishLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+  if (allowedControlKeys.includes(event.key)) return;
+
+  const input = event.currentTarget as HTMLInputElement;
+
+  // Prevent space at the beginning
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
   }
 
-  allowOnlySinhalaLetters(event: KeyboardEvent): void {
-    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-    if (allowedControlKeys.includes(event.key)) return;
-    const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
-    if (!isSinhala) {
-      event.preventDefault();
-    }
+  const isLetter = /^[a-zA-Z]$/.test(event.key);
+  if (!isLetter && event.key !== ' ') {
+    event.preventDefault();
+  }
+}
+
+allowOnlySinhalaLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+  if (allowedControlKeys.includes(event.key)) return;
+
+  const input = event.currentTarget as HTMLInputElement;
+
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
   }
 
-  allowOnlyTamilLetters(event: KeyboardEvent): void {
-    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
-    if (allowedControlKeys.includes(event.key)) return;
-    const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
-    if (!isTamil) {
-      event.preventDefault();
-    }
+  const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
+  if (!isSinhala && event.key !== ' ') {
+    event.preventDefault();
   }
+}
+
+allowOnlyTamilLetters(event: KeyboardEvent): void {
+  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+  if (allowedControlKeys.includes(event.key)) return;
+
+  const input = event.currentTarget as HTMLInputElement;
+
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
+  if (!isTamil && event.key !== ' ') {
+    event.preventDefault();
+  }
+}
 
   capitalizeFirstLetter(event: Event) {
     const input = event.target as HTMLInputElement;

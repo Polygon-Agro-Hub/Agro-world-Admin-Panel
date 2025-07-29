@@ -133,16 +133,18 @@ export class ViewPlantcareUsersComponent implements OnInit {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
-  fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
+ fetchAllPlantCareUsers(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchNIC,
+    regStatus: string = this.regStatus,
+    district: string = this.district
+  ) {
     this.isLoading = true;
+    // Trim the search string to remove leading/trailing spaces
+    const trimmedSearch = search.trim();
     this.plantcareService
-      .getAllPlantCareUsers(
-        page,
-        limit,
-        this.searchNIC,
-        this.regStatus,
-        this.district
-      )
+      .getAllPlantCareUsers(page, limit, trimmedSearch, regStatus, district)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -151,8 +153,11 @@ export class ViewPlantcareUsersComponent implements OnInit {
           this.totalItems = response.total;
         },
         (error) => {
+          this.isLoading = false;
           if (error.status === 401) {
-            this.isLoading = false;
+            Swal.fire('Unauthorized', 'Please log in again.', 'error');
+          } else {
+            Swal.fire('Error', 'Failed to fetch plant care users.', 'error');
           }
         }
       );
@@ -167,7 +172,12 @@ export class ViewPlantcareUsersComponent implements OnInit {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
-  searchPlantCareUsers() {
+searchPlantCareUsers() {
+    this.searchNIC = this.searchNIC.trim(); // Trim leading/trailing spaces
+    if (!this.searchNIC) {
+      Swal.fire('Info', 'Please enter a valid NIC number.', 'info');
+      return;
+    }
     this.page = 1;
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }

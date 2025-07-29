@@ -1,4 +1,4 @@
-<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
   <i class="fa-solid fa-arrow-left"></i>
@@ -12,72 +12,43 @@
     <div class="p-4 md:p-5">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Wholesale Customer ({{ totalItems }})
-        </h2>
+          Wholesale Customer ({{ totalItems === 0 ? '0': totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
 
-        <div class="w-full md:w-96 relative group">
-          <div class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            Search by name, nic and telphone
-          </div>
+            <div class="w-full md:w-96 relative group">
+              <div
+                class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                Search by Customer ID, Name, Phone Number
+              </div>
 
-          <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
-            <input
-              type="text"
-              placeholder="Search.."
-              [(ngModel)]="searchText"
-              name="searchText"
-              class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
-            />
+              <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full">
+                <input type="text" placeholder="Search.." [(ngModel)]="searchText" name="searchText"
+                  class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" (keyup.enter)="onSearch()"
+                  (keyup.esc)="offSearch()" (input)="trimLeadingSpaces()"
+                  />
 
-            <button
-              type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-              (click)="onSearch()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-                />
-              </svg>
-            </button>
+                <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                  (click)="onSearch()">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                  </svg>
+                </button>
 
-            <button
-              type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none"
-              (click)="offSearch()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+                <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  (click)="offSearch()">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
       </div>
 
-      <div *ngIf="!hasData" class="text-center py-8">
-        <p class="text-textLight dark:text-textDark text-lg">
-          No data to display
-        </p>
+      <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
 
       <div *ngIf="hasData" class="w-full overflow-x-auto">
@@ -112,8 +83,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                *ngFor="
+              <tr *ngFor="
                   let item of customerObj
                     | paginate
                       : {
@@ -122,65 +92,44 @@
                           totalItems: totalItems
                         };
                   let i = index
-                "
-                class="border-b border-gray-200 dark:border-[#4B555A]"
-              >
-                <td class="px-3 py-3 text-sm">
+                " class="border-b border-gray-200 dark:border-[#4B555A]">
+                <td class="px-3 py-3 dark:text-textDark">
                   {{ item.cusId }}
                 </td>
-                <td class="px-3 py-3 text-sm text-left dark:text-textDark whitespace-nowrap">
+                <td class="px-3 py-3  text-left dark:text-textDark whitespace-nowrap">
                   {{ item.firstName }} {{ item.lastName }}
                 </td>
-                <td class="px-3 py-3 text-sm text-left dark:text-textDark whitespace-nowrap">
-                  {{ item.companyName || "No Company" }}
+                <td class="px-3 py-3  text-left dark:text-textDark whitespace-nowrap">
+                  {{ item.companyName || " - " }}
                 </td>
-                <td class="px-3 py-3 text-sm text-center dark:text-textDark whitespace-nowrap">
-                  {{ item.created_at | date : "dd/MM/yyyy hh:mm a" }}
+                <td class="px-3 py-3  text-center dark:text-textDark whitespace-nowrap">
+                  {{ item.created_at | date : "d MMM, y h:mm a" }}
                 </td>
-                <td class="px-3 py-3 text-sm text-center dark:text-textDark whitespace-nowrap">
+                <td class="px-3 py-3  text-center dark:text-textDark whitespace-nowrap">
                   {{ item.phoneCode }} - {{ item.phoneNumber }}
                 </td>
-                <td class="px-3 py-3 text-sm text-center dark:text-textDark">
-                  {{ item.totalOrders }}
-                </td>
+                <td class="px-3 py-3  text-center dark:text-textDark">
+                  {{ item.totalOrders === 0 ? '0' : item.totalOrders < 10 ? '0' +item.totalOrders : item.totalOrders }}
+                    </td>
                 <td class="px-3 py-3 text-center">
-                  <button
-                    class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                    (click)="detailsPop(item)"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-5 h-5"
-                    >
+                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] mt-2" (click)="detailsPop(item)">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                       <path
                         d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                   </button>
                 </td>
                 <td class="px-3 py-3 text-center">
-                  <button
-                    class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                    (click)="viewOrderDetails(item.id)"
-                  >
-                    <svg
-                      fill="currentColor"
-                      viewBox="0 0 32 32"
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-5 h-5"
-                    >
+                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewOrderDetails(item.id)">
+                    <!-- <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                      class="w-5 h-5">
                       <title>Edit</title>
                       <path
-                        d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
-                      ></path>
-                    </svg>
+                        d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                      </path>
+                    </svg> -->
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xl"></i>
                   </button>
                 </td>
               </tr>
@@ -188,15 +137,9 @@
           </table>
         </div>
         <div class="dark:bg-[#262f45] mt-4">
-          <pagination-controls
-            (pageChange)="onPageChange($event)"
-            [responsive]="true"
-            [previousLabel]="'Previous'"
-            [nextLabel]="'Next'"
-            [screenReaderPaginationLabel]="'Pagination'"
-            [screenReaderPageLabel]="'page'"
-            [screenReaderCurrentLabel]="'Youre on page'"
-          >
+          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'">
           </pagination-controls>
         </div>
       </div>
@@ -204,15 +147,9 @@
   </div>
 </div>
 
-<div
-  *ngIf="isPopupOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="isPopupOpen = false"
->
-  <div
-    class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto"
-    (click)="$event.stopPropagation()"
-  >
+<div *ngIf="isPopupOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="isPopupOpen = false">
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 h-auto" (click)="$event.stopPropagation()">
     <h2 class="[font-size:16px] text-[#545454] mb-4">CUSTOMER INFO</h2>
     <div class="my-5 flex flex-col gap-4">
       <div class="flex flex-row items-center gap-4">
@@ -231,31 +168,23 @@
           <p class="[font-size:14px] text-[#727272]">Phone:</p>
         </div>
         <div class="flex items-center gap-2">
-          <p
-            class="text-lg [font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
-            (click)="
+          <p class="text-lg [font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline" (click)="
               copyToClipboard(
                 cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
                 'phone'
               )
-            "
-          >
+            ">
             {{ cusObjDetails.phoneCode + " " + cusObjDetails.phoneNumber }}
           </p>
-          <i
-            *ngIf="!copiedPhone"
+          <i *ngIf="!copiedPhone"
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
             (click)="
               copyToClipboard(
                 cusObjDetails.phoneCode + ' ' + cusObjDetails.phoneNumber,
                 'phone'
               )
-            "
-          ></i>
-          <i
-            *ngIf="copiedPhone"
-            class="fas fa-check text-green-500 [font-size:14px]"
-          ></i>
+            "></i>
+          <i *ngIf="copiedPhone" class="fas fa-check text-[#007bff]  [font-size:14px]"></i>
         </div>
       </div>
 
@@ -275,28 +204,45 @@
           <p class="[font-size:14px] text-[#727272]">Email:</p>
         </div>
         <div class="flex items-center gap-2">
-          <p
-            class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
-            (click)="copyToClipboard(cusObjDetails.email, 'email')"
-          >
+          <p class="[font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline"
+            (click)="copyToClipboard(cusObjDetails.email, 'email')">
             {{ cusObjDetails.email }}
           </p>
-          <i
-            *ngIf="!copiedEmail"
+          <i *ngIf="!copiedEmail"
             class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
-            (click)="copyToClipboard(cusObjDetails.email, 'email')"
-          ></i>
-          <i
-            *ngIf="copiedEmail"
-            class="fas fa-check text-green-500 [font-size:14px]"
-          ></i>
+            (click)="copyToClipboard(cusObjDetails.email, 'email')"></i>
+          <i *ngIf="copiedEmail" class="fas fa-check text-[#007bff] [font-size:14px]"></i>
         </div>
       </div>
 
-      <div
-        *ngIf="cusObjDetails.buildingType === 'House'"
-        class="flex flex-row items-center gap-4"
-      >
+      <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center justify-center gap-3">
+          <i class="fa-regular fa-envelope text-[#727272] text-lg"></i>
+          <p class="[font-size:14px] text-[#727272]">C.Phone:</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <p class="text-lg [font-size:14px] text-[#000000] dark:text-white cursor-pointer hover:underline" (click)="
+              copyToClipboard(
+                cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone,
+                'phone'
+              )
+            ">
+            {{ cusObjDetails.companyPhoneCode + " " + cusObjDetails.companyPhone }}
+          </p>
+          <i *ngIf="!copiedPhone1"
+            class="fa-regular fa-copy text-[#007bff] [font-size:14px] cursor-pointer hover:text-[#000000] dark:hover:text-white"
+            (click)="
+              copyToClipboard(
+                cusObjDetails.companyPhoneCode + ' ' + cusObjDetails.companyPhone,
+                'phone1'
+              )
+            "></i>
+          <i *ngIf="copiedPhone1" class="fas fa-check text-[#007bff] [font-size:14px]"></i>
+        </div>
+      </div>
+
+
+      <div *ngIf="cusObjDetails.buildingType === 'House'" class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
           <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
           <p class="[font-size:14px] text-[#727272]">Address:</p>
@@ -307,10 +253,7 @@
         </p>
       </div>
 
-      <div
-        *ngIf="cusObjDetails.buildingType === 'Apartment'"
-        class="flex flex-row items-center gap-4"
-      >
+      <div *ngIf="cusObjDetails.buildingType === 'Apartment'" class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center justify-center gap-3">
           <i class="fa-solid fa-location-dot text-[#727272] text-lg"></i>
           <p class="[font-size:14px] text-[#727272]">Address:</p>
@@ -334,10 +277,7 @@
           {{ cusObjDetails.totalOrders }}
         </p>
       </div>
-      <div
-        *ngIf="cusObjDetails.buildingType === 'House'"
-        class="flex flex-row items-center gap-4"
-      >
+      <!-- <div *ngIf="cusObjDetails.buildingType === 'House'" class="flex flex-row items-center gap-4">
         <div class="flex flex-row items-center gap-4">
           <div class="flex flex-row items-center justify-center gap-3">
             <i class="fa-solid fa-house text-[#727272] text-lg"></i>
@@ -348,7 +288,7 @@
             {{ cusObjDetails.city }}
           </p>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <hr class="my-4 border-gray-300 dark:border-gray-600" />

@@ -435,6 +435,7 @@
             id="houseNumber"
             name="houseNumber"
             [(ngModel)]="personalData.houseNumber"
+            (keydown)="validateAddressInput($event, 'houseNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -455,6 +456,7 @@
             id="streetName"
             name="streetName"
             [(ngModel)]="personalData.streetName"
+            (keydown)="validateAddressInput($event, 'streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -475,6 +477,7 @@
             id="city"
             name="city"
             [(ngModel)]="personalData.city"
+            (keydown)="validateAddressInput($event, 'city')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm"

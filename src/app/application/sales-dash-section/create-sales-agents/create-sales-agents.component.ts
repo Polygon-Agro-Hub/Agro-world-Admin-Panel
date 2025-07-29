@@ -706,6 +706,34 @@ export class CreateSalesAgentsComponent implements OnInit {
       return;
     }
   }
+
+  validateAddressInput(event: KeyboardEvent, fieldName: string): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
+  }
 }
 
 class Personal {

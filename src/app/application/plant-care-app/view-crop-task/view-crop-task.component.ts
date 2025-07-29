@@ -76,7 +76,7 @@ export class ViewCropTaskComponent implements OnInit {
   deleteCroptask(id: string, cropId: string, indexId: string): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
+      text: 'Do you really want to delete this crop task item? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

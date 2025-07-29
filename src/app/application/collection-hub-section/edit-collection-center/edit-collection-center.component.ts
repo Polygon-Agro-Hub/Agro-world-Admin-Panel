@@ -39,6 +39,16 @@ export class EditCollectionCenterComponent implements OnInit {
   isLoading = false;
   isView: boolean = false;
 
+  leadingSpaceError: boolean = false;
+specialCharOrNumberError: boolean = false;
+
+allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
+  isPhoneInvalidMap: { [key: string]: boolean } = {
+  phone01: false,
+  phone02: false,
+};
+
+
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
@@ -56,15 +66,17 @@ export class EditCollectionCenterComponent implements OnInit {
     this.getAllCompanies();
   }
 
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Only allow 0-9
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
   ProvinceData = [
-    {
-      province: 'Western',
-      district: [
-        { districtName: 'Colombo' },
-        { districtName: 'Kalutara' },
-        { districtName: 'Gampaha' },
-      ],
-    },
     {
       province: 'Central',
       district: [
@@ -74,38 +86,12 @@ export class EditCollectionCenterComponent implements OnInit {
       ],
     },
     {
-      province: 'Southern',
-      district: [
-        { districtName: 'Galle' },
-        { districtName: 'Matara' },
-        { districtName: 'Hambantota' },
-      ],
-    },
-    {
-      province: 'Northern',
-      district: [
-        { districtName: 'Jaffna' },
-        { districtName: 'Mannar' },
-        { districtName: 'Vavuniya' },
-        { districtName: 'Kilinochchi' },
-        { districtName: 'Mulaitivu' },
-      ],
-    },
-    {
       province: 'Eastern',
       district: [
-        { districtName: 'Batticaloa' },
         { districtName: 'Ampara' },
+        { districtName: 'Batticaloa' },
         { districtName: 'Trincomalee' },
       ],
-    },
-    {
-      province: 'Uva',
-      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
-    },
-    {
-      province: 'North Western',
-      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
     },
     {
       province: 'North Central',
@@ -115,10 +101,116 @@ export class EditCollectionCenterComponent implements OnInit {
       ],
     },
     {
+      province: 'North Western',
+      district: [
+        { districtName: 'Kurunegala' },
+        { districtName: 'Puttalam' },
+      ],
+    },
+    {
+      province: 'Northern',
+      district: [
+        { districtName: 'Jaffna' },
+        { districtName: 'Kilinochchi' },
+        { districtName: 'Mannar' },
+        { districtName: 'Mulaitivu' },
+        { districtName: 'Vavuniya' },
+      ],
+    },
+    {
       province: 'Sabaragamuwa',
-      district: [{ districtName: 'Ratnapura' }, { districtName: 'Kegalle' }],
+      district: [
+        { districtName: 'Kegalle' },
+        { districtName: 'Rathnapura' },
+      ],
+    },
+    {
+      province: 'Southern',
+      district: [
+        { districtName: 'Galle' },
+        { districtName: 'Hambantota' },
+        { districtName: 'Matara' },
+
+      ],
+    },
+    {
+      province: 'Uva',
+      district: [
+        { districtName: 'Badulla' },
+        { districtName: 'Moneragala' },
+      ],
+    },
+    {
+      province: 'Western',
+      district: [
+        { districtName: 'Colombo' },
+        { districtName: 'Gampaha' },
+        { districtName: 'Kalutara' },
+      ],
     },
   ];
+
+  validateSriLankanPhone(input: string, key: string): void {
+    if (!input) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
+  
+    const firstDigit = input.charAt(0);
+    const prefix = input.substring(0, 2);
+    const isValidPrefix = this.allowedPrefixes.includes(prefix);
+    const isValidLength = input.length === 9;
+  
+    if (firstDigit !== '7') {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
+  
+    if (!isValidPrefix && input.length >= 2) {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
+  
+    if (input.length === 9 && isValidPrefix) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
+  
+    this.isPhoneInvalidMap[key] = false;
+  }
+
+  onCenterNameInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    let input = inputElement.value;
+  
+    // Reset errors
+    this.leadingSpaceError = false;
+    this.specialCharOrNumberError = false;
+  
+    // Check for leading space
+    if (input.startsWith(' ')) {
+      this.leadingSpaceError = true;
+      input = input.trimStart(); // remove leading space
+    }
+  
+    // Only allow English letters and spaces
+    const validInput = input.replace(/[^A-Za-z ]/g, '');
+    if (input !== validInput) {
+      this.specialCharOrNumberError = true;
+    }
+  
+    // Capitalize the first letter
+    if (validInput.length > 0) {
+      validInput.trimStart(); // ensure no leading space
+      this.centerFetchData.centerName =
+        validInput.charAt(0).toUpperCase() + validInput.slice(1);
+    } else {
+      this.centerFetchData.centerName = '';
+    }
+  
+    // Update input element value to reflect filtered result
+    inputElement.value = this.centerFetchData.centerName;
+  }
 
   onSubmit() {
     this.collectionCenterService
@@ -132,7 +224,7 @@ export class EditCollectionCenterComponent implements OnInit {
           if (res?.status) {
             Swal.fire(
               'Success',
-              'Collection Center updated Successfully',
+              'Collection Centre updated Successfully',
               'success'
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -148,7 +240,7 @@ export class EditCollectionCenterComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Server Error',
-            text: 'Failed to update the collection center. Please try again later.',
+            text: 'Failed to update the collection Centre. Please try again later.',
           });
         }
       );
@@ -183,7 +275,7 @@ export class EditCollectionCenterComponent implements OnInit {
             this.isLoading = false;
           } else {
             this.isLoading = false;
-            Swal.fire('Sorry', 'Center Data not available', 'warning');
+            Swal.fire('Sorry', 'Centre Data not available', 'warning');
             this.router.navigate(['/collection-hub/view-collection-centers']);
           }
         },
@@ -315,7 +407,7 @@ class CollectionCenter {
   city!: string;
   district!: string;
   province!: string;
-  country!: string;
+  country: string = 'Sri Lanka';
   companies!: string;
 }
 

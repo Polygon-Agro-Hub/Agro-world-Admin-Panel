@@ -1,7 +1,4 @@
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  (click)="navigatePath('/steckholders/action/admin')"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="navigatePath('/steckholders/action/admin')">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -10,9 +7,7 @@
 
 <div *ngIf="itemId == null">
   <!-- Admin Users Form -->
-  <div
-    class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  <div class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">
       Create Admin User
     </h2>
@@ -20,148 +15,91 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <!-- User Name Input -->
-          <label
-            for="userName"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >User Name</label
-          >
-          <input
-            id="userName"
-            name="userName"
-            formControlName="userName"
+          <label for="userName" class="block text-sm font-medium text-textLight dark:text-textDark">User Name <span
+              class="text-[#2E2E2E]">*</span></label>
+          <input id="userName" name="userName" formControlName="userName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          />
-          <div
-            *ngIf="
-              userForm.get('userName')?.invalid &&
-              (userForm.get('userName')?.dirty ||
-                userForm.get('userName')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            (keydown)="preventLeadingSpace($event, 'userName')" (input)="formatTextInput('userName')" />
+          <div *ngIf="
+      userForm.get('userName')?.invalid &&
+      (userForm.get('userName')?.dirty ||
+        userForm.get('userName')?.touched)
+    " class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("userName") }}
           </div>
         </div>
 
         <div>
           <!-- Email Input -->
-          <label
-            for="mail"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Email</label
-          >
-          <input
-            id="mail"
-            name="mail"
-            formControlName="mail"
+          <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">Email <span
+              class="text-[#2E2E2E]">*</span></label>
+          <input id="mail" name="mail" formControlName="mail"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          />
-          <div
-            *ngIf="
-              userForm.get('mail')?.invalid &&
-              (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
+          <div *ngIf="
+      userForm.get('mail')?.invalid &&
+      (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)
+    " class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("mail") }}
           </div>
         </div>
 
         <div>
           <!-- Role Input -->
-          <label
-            for="role"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Department</label
-          >
-          <select
-            id="role"
-            name="role"
-            formControlName="role"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
+          <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Department <span
+              class="text-[#2E2E2E]">*</span></label>
+          <select id="role" name="role" formControlName="role"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option *ngFor="let role of rolesList" [value]="role.id">
               {{ role.role }}
             </option>
           </select>
-          <div
-            *ngIf="
+          <div *ngIf="
               userForm.get('role')?.invalid &&
               (userForm.get('role')?.dirty || userForm.get('role')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            " class="text-red-500 text-sm mt-1">
             Department is required
           </div>
         </div>
 
         <div *ngIf="!isSuperAdminSelected" class="form-group">
           <!-- Role Input -->
-          <label
-            for="position"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Position</label
-          >
-          <select
-            id="position"
-            name="position"
-            formControlName="position"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
+          <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position <span
+              class="text-[#2E2E2E]">*</span></label>
+          <select id="position" name="position" formControlName="position"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option *ngFor="let position of positionList" [value]="position.id">
               {{ position.positions }}
             </option>
           </select>
-          <div
-            *ngIf="
+          <div *ngIf="
               userForm.get('position')?.invalid &&
               (userForm.get('position')?.dirty ||
                 userForm.get('position')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            " class="text-red-500 text-sm mt-1">
             User position are required
           </div>
         </div>
 
         <div>
           <!-- Password Input -->
-          <label
-            for="password"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Password</label
-          >
+          <label for="password" class="block text-sm font-medium text-textLight dark:text-textDark">Password <span
+              class="text-[#2E2E2E]">*</span></label>
           <div
-            class="mt-1 w-full p-2 border border-gray-300 rounded-md flex items-center bg-tileLight dark:bg-tileBlack"
-          >
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              id="password"
-              formControlName="password"
-              name="password"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-md flex items-center bg-tileLight dark:bg-tileBlack">
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" name="password"
               class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-            />
-            <i
-              *ngIf="!showPassword"
-              class="fa-solid fa-eye cursor-pointer ml-2"
-              (click)="togglePasswordVisibility()"
-              style="color: #4a90e2"
-            ></i>
-            <i
-              *ngIf="showPassword"
-              class="fa-solid fa-eye-slash cursor-pointer ml-2"
-              (click)="togglePasswordVisibility()"
-              style="color: #4a90e2"
-            ></i>
+              (keydown)="preventLeadingSpace($event, 'password')" (input)="formatTextInput('password')" />
+            <i *ngIf="!showPassword" class="fa-solid fa-eye cursor-pointer ml-2" (click)="togglePasswordVisibility()"
+              style="color: #4a90e2"></i>
+            <i *ngIf="showPassword" class="fa-solid fa-eye-slash cursor-pointer ml-2"
+              (click)="togglePasswordVisibility()" style="color: #4a90e2"></i>
           </div>
-          <div
-            *ngIf="
-              userForm.get('password')?.invalid &&
-              (userForm.get('password')?.dirty ||
-                userForm.get('password')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+          <div *ngIf="
+      userForm.get('password')?.invalid &&
+      (userForm.get('password')?.dirty ||
+        userForm.get('password')?.touched)
+    " class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("password") }}
           </div>
         </div>
@@ -170,18 +108,10 @@
 
     <!-- Cancel and Save Buttons -->
     <div class="flex justify-end mt-6">
-      <button
-        type="button"
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
-        (click)="onCancel()"
-      >
+      <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        type="submit"
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        (click)="createAdmin()"
-      >
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()">
         Save
         <!-- [disabled]="userForm.invalid" -->
       </button>
@@ -192,9 +122,7 @@
 </div>
 <!-- Admin Users Form without Change Password Button when itemId is not null -->
 <div *ngIf="itemId != null">
-  <div
-    class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white shadow-md dark:bg-tileBlack rounded-lg"
-  >
+  <div class="mx-auto pr-16 pt-10 pb-52 pl-16 bg-white shadow-md dark:bg-tileBlack rounded-lg">
     <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">
       Edit Admin User
     </h2>
@@ -202,66 +130,41 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <!-- User Name Input -->
-          <label
-            for="userName"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >User Name</label
-          >
-          <input
-            id="userName"
-            name="userName"
-            formControlName="userName"
+          <label for="userName" class="block text-sm font-medium text-textLight dark:text-textDark">User Name <span
+              class="text-[#2E2E2E]">*</span></label>
+          <input id="userName" name="userName" formControlName="userName"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
-              userForm.get('userName')?.invalid &&
-              (userForm.get('userName')?.dirty ||
-                userForm.get('userName')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            (keydown)="preventLeadingSpace($event, 'userName')" (input)="formatTextInput('userName')" />
+          <div *ngIf="
+      userForm.get('userName')?.invalid &&
+      (userForm.get('userName')?.dirty ||
+        userForm.get('userName')?.touched)
+    " class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("userName") }}
           </div>
         </div>
 
         <div>
           <!-- Email Input -->
-          <label
-            for="mail"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Email</label
-          >
-          <input
-            id="mail"
-            name="mail"
-            formControlName="mail"
+          <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">Email <span
+              class="text-[#2E2E2E]">*</span></label>
+          <input id="mail" name="mail" formControlName="mail"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <div
-            *ngIf="
-              userForm.get('mail')?.invalid &&
-              (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
+          <div *ngIf="
+      userForm.get('mail')?.invalid &&
+      (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)
+    " class="text-red-500 text-sm mt-1">
             {{ getErrorMessage("mail") }}
           </div>
         </div>
         <div>
           <!-- Role Input -->
-          <label
-            for="role"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-          >
-            Role
+          <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">
+            Role <span class="text-[#2E2E2E]">*</span>
           </label>
-          <select
-            id="role"
-            name="role"
-            formControlName="role"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
+          <select id="role" name="role" formControlName="role"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
             <option *ngFor="let role of rolesList" [value]="role.id">
               {{ role.role }}
             </option>
@@ -270,29 +173,19 @@
 
         <div>
           <!-- Role Input -->
-          <label
-            for="position"
-            class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Position</label
-          >
-          <select
-            id="position"
-            name="position"
-            formControlName="position"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
+          <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position <span
+              class="text-[#2E2E2E]">*</span></label>
+          <select id="position" name="position" formControlName="position"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option *ngFor="let position of positionList" [value]="position.id">
               {{ position.positions }}
             </option>
           </select>
-          <div
-            *ngIf="
+          <div *ngIf="
               userForm.get('position')?.invalid &&
               (userForm.get('position')?.dirty ||
                 userForm.get('position')?.touched)
-            "
-            class="text-red-500 text-sm mt-1"
-          >
+            " class="text-red-500 text-sm mt-1">
             User position are required
           </div>
         </div>
@@ -301,18 +194,10 @@
 
     <!-- Cancel and Save Buttons -->
     <div class="flex justify-end mt-6">
-      <button
-        type="button"
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
-        (click)="onCancel()"
-      >
+      <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        type="submit"
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        (click)="updateAdmin(this.itemId)"
-      >
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)">
         Save
       </button>
     </div>

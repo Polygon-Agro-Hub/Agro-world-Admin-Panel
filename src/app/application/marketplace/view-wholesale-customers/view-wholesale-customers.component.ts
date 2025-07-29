@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-view-wholesale-customers',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
   templateUrl: './view-wholesale-customers.component.html',
   styleUrl: './view-wholesale-customers.component.css',
 })
@@ -18,13 +19,13 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   isPopupOpen: boolean = false;
   cusObjDetails: Customers = new Customers();
 
-  hasData: boolean = true;
+  hasData: boolean = false;
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
   isLoading = true;
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchWholesaleCustomers();
@@ -39,12 +40,15 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     limit: number = this.itemsPerPage,
     searchText: string = this.searchText
   ) {
+    this.isLoading = true;
     this.marketSrv
       .fetchAllWholesaleCustomers(page, limit, searchText)
       .subscribe((res) => {
         console.log(res);
         this.customerObj = res.items;
         this.totalItems = res.total;
+        this.isLoading = false;
+        this.hasData = res.total > 0 ? true : false;
       });
   }
 
@@ -72,17 +76,21 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   // In your component class
   copiedEmail: string = '';
   copiedPhone: string = '';
+  copiedPhone1: string = '';
 
-  copyToClipboard(text: string, type: 'email' | 'phone') {
+  copyToClipboard(text: string, type: 'email' | 'phone' | 'phone1') {
     navigator.clipboard
       .writeText(text)
       .then(() => {
         if (type === 'email') {
           this.copiedEmail = text;
           setTimeout(() => (this.copiedEmail = ''), 2000);
-        } else {
+        } else if (type === 'phone') {
           this.copiedPhone = text;
           setTimeout(() => (this.copiedPhone = ''), 2000);
+        } else {
+          this.copiedPhone1 = text;
+          setTimeout(() => (this.copiedPhone1 = ''), 2000);
         }
       })
       .catch((err) => {
@@ -92,6 +100,12 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   viewOrderDetails(id: string) {
     this.router.navigate(['/market/action/view-order-details', id]);
   }
+
+  trimLeadingSpaces() {
+    if (this.searchText && this.searchText.startsWith(' ')) {
+      this.searchText = this.searchText.trimStart();
+    }
+  }
 }
 
 class Customers {
@@ -100,7 +114,7 @@ class Customers {
   lastName!: string;
   phoneCode!: string;
   phoneNumber!: string;
-  totalOrders!: string;
+  totalOrders!: number;
   cusId!: string;
   created_at!: string;
   email!: string;
@@ -116,4 +130,6 @@ class Customers {
   ApartstreetName!: string;
   Apartcity!: string;
   companyName!: string;
+  companyPhoneCode!: string;
+  companyPhone!: string;
 }

@@ -73,7 +73,7 @@
         >
           <input
             type="text"
-            placeholder="Search.."
+            placeholder="Search by Display Name, Crop / Variety"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             [(ngModel)]="searchVariety"
             (keydown.enter)="searchProduct()"
@@ -210,7 +210,7 @@
               {{ item.varietyNameEnglish }}
             </td>
             <td
-              class="px-4 py-3 text-textLight dark:text-textDark text-left whitespace-nowrap"
+              class="px-4 py-3 text-textLight dark:text-textDark text-center whitespace-nowrap"
             >
               <span *ngIf="!item.displayType">No</span>
               <span *ngIf="item.displayType === 'D&AP'">%, Actual</span>
@@ -228,9 +228,13 @@
                 >{{ item.displayType }}</span
               >
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ ((item.discount / item.normalPrice) * 100).toFixed(2) }}%
-            </td>
+         <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+  <ng-container *ngIf="item.discount > 0; else noDiscount">
+    {{ ((item.discount / item.normalPrice) * 100).toFixed(2) }}
+  </ng-container>
+  <ng-template #noDiscount>No</ng-template>
+</td>
+
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.normalPrice }}
             </td>

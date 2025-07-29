@@ -5,6 +5,8 @@ import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
 
 export interface NewCropCalender {
+  varietyId: any;
+  groupId: any;
   id: number;
   cropNameEnglish: string;
   varietyNameEnglish: string;
@@ -13,17 +15,10 @@ export interface NewCropCalender {
   natOfCul: string;
   cropDuration: string;
   createdAt: string;
+  suitableAreas: string; // Added to match component usage
 }
 
-export interface NewCropGroup {
-  id: number;
-  cropNameEnglish: string;
-  category: string;
-  varietyCount: number;
-  varietyList: string[];
-}
-
-interface NewVarietyGroup {
+export interface NewVarietyGroup {
   id: number;
   cropGroupId: string;
   varietyNameEnglish: string;
@@ -36,6 +31,15 @@ interface NewVarietyGroup {
   bgColor: string;
   createdAt: string;
 }
+
+export interface NewCropGroup {
+  id: number;
+  cropNameEnglish: string;
+  category: string;
+  varietyCount: number;
+  varietyList: string[];
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -73,16 +77,41 @@ export class CropCalendarService {
     );
   }
 
-  createCropCalendar(formData: FormData): Observable<any> {
+createCropCalendar(formData: FormData): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.post(
       `${this.apiUrl}crop-calendar/admin-add-crop-calender`,
       formData,
-      {
-        headers,
-      }
+      { headers }
+    );
+  }
+
+  // Method to check for duplicate crop calendars
+  checkDuplicateCropCalendar(
+    varietyId: string,
+    cultivationMethod: string,
+    natureOfCultivation: string,
+    excludeId?: number
+  ): Observable<{ exists: boolean }> {
+    if (!this.token) {
+      throw new Error('No authentication token available');
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    let params = new HttpParams()
+      .set('varietyId', varietyId)
+      .set('cultivationMethod', cultivationMethod)
+      .set('natureOfCultivation', natureOfCultivation);
+    if (excludeId) {
+      params = params.set('excludeId', excludeId.toString());
+    }
+    // Use GET for duplicate check (preferred for read operations)
+    return this.http.get<{ exists: boolean }>(
+      `${this.apiUrl}crop-calendar/admin-add-crop-calender`,
+      { headers, params }
     );
   }
 
@@ -99,18 +128,19 @@ export class CropCalendarService {
 
   // Update Crop Calendar
 
-  updateCropCalendar(cropId: number, formData: FormData) {
+updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
+    if (!this.token) {
+      throw new Error('No authentication token available');
+    }
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-
     return this.http.put(
       `${this.apiUrl}crop-calendar/edit-cropcalender/${cropId}`,
       formData,
       { headers }
     );
   }
-
   // Upload XLSX file
   uploadXlsxFile(cropId: number, file: File): Observable<any> {
     const headers = new HttpHeaders({

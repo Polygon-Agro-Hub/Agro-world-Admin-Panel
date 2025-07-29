@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -32,6 +33,7 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './collectiveofficers-edit.component.html',
   styleUrl: './collectiveofficers-edit.component.css',
@@ -63,6 +65,16 @@ export class CollectiveofficersEditComponent {
   selectedBankId: number | null = null;
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
+  touchedFields: { [key in keyof Personal]?: boolean } = {};
+  confirmAccountNumberError: boolean = false;
+  confirmAccountNumberRequired: boolean = false;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  companyOptions: any[] = [];
+  centerOptions: any[] = [];
+  managerOptions: any[] = [];
+  bankOptions: any[] = [];
+  branchOptions: any[] = [];
 
   invalidFields: Set<string> = new Set();
 
@@ -103,7 +115,7 @@ export class CollectiveofficersEditComponent {
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadBanks();
@@ -175,7 +187,39 @@ export class CollectiveofficersEditComponent {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe((data) => {
       this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Convert to dropdown options format
+      this.bankOptions = this.banks.map(bank => ({
+        label: bank.name,
+        value: bank.name
+      }));
     });
+  }
+
+  // Update the onBankChange method
+  onBankChange() {
+    const selectedBankName = this.personalData.bankName;
+    if (selectedBankName) {
+      const selectedBank = this.banks.find(
+        (bank) => bank.name === selectedBankName
+      );
+      if (selectedBank) {
+        this.selectedBankId = selectedBank.ID;
+        this.branches = this.allBranches[selectedBank.ID.toString()] || [];
+
+        // Convert to dropdown options format
+        this.branchOptions = this.branches.map(branch => ({
+          label: branch.name,
+          value: branch.name
+        }));
+
+        this.personalData.branchName = '';
+      }
+    } else {
+      this.branches = [];
+      this.branchOptions = [];
+      this.selectedBankId = null;
+    }
   }
 
   loadBranches() {
@@ -216,28 +260,6 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  onBankChange() {
-    if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-      }
-
-      const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (!currentBranch) {
-        this.selectedBranchId = null;
-        this.personalData.branchName = '';
-      }
-    } else {
-      this.branches = [];
-      this.personalData.bankName = '';
-    }
-  }
 
   onBranchChange() {
     if (this.selectedBranchId) {
@@ -249,6 +271,249 @@ export class CollectiveofficersEditComponent {
       }
     } else {
       this.personalData.branchName = '';
+    }
+  }
+
+  onBlur(fieldName: keyof Personal): void {
+    this.touchedFields[fieldName] = true;
+
+    if (fieldName === 'confirmAccNumber') {
+      this.validateConfirmAccNumber();
+    }
+  }
+
+  validateConfirmAccNumber(): void {
+    this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
+
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
+  isFieldInvalid(fieldName: keyof Personal): boolean {
+    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+  }
+
+  isValidEmail(email: string): boolean {
+    if (!email) return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  isValidNIC(nic: string): boolean {
+    if (!nic) return false;
+    // Updated regex to exclude simple 'v' and only allow 'V' at the end
+    const nicRegex = /^(?:\d{12}|\d{9}[V])$/;
+    return nicRegex.test(nic);
+  }
+
+  isValidPhoneNumber(phone: string): boolean {
+    if (!phone) return false;
+    const phoneRegex = /^[0-9]{9}$/;
+    return phoneRegex.test(phone);
+  }
+
+  formatTextInput(fieldName: keyof Personal): void {
+    const value = this.personalData[fieldName];
+    if (typeof value === 'string') {
+      // Remove leading spaces
+      const cleanedValue = value.replace(/^\s+/, '');
+      (this.personalData[fieldName] as string) = cleanedValue;
+    }
+  }
+
+  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
+    const input = event.target as HTMLInputElement;
+    const fieldValue = this.personalData[fieldName];
+    // Prevent space if it's the first character or if the field is empty
+    if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
+      event.preventDefault();
+    }
+  }
+
+  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove leading spaces and special characters/numbers, keep only letters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
+      // Capitalize first letter and make rest lowercase
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Update existing formatAccountHolderName method
+  formatAccountHolderName(): void {
+    let value = this.personalData.accHolderName;
+    if (value) {
+      // Remove leading spaces and special characters/numbers, keep only letters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
+      // Capitalize first letter and make rest lowercase
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      this.personalData.accHolderName = value;
+    }
+  }
+
+  // Update existing formatSinhalaName method
+  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove leading spaces and allow only Sinhala unicode characters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^\u0D80-\u0DFF\s]/g, '');
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Update existing formatTamilName method
+  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove leading spaces and allow only Tamil unicode characters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^\u0B80-\u0BFF\s]/g, '');
+      this.personalData[fieldName] = value;
+    }
+  }
+
+
+  hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
+    const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains numbers or special characters
+    return /[^a-zA-Z\s]/.test(value);
+  }
+
+  hasInvalidSinhalaCharacters(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): boolean {
+    const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains non-Sinhala characters
+    return /[^\u0D80-\u0DFF\s]/.test(value);
+  }
+
+  hasInvalidTamilCharacters(fieldName: 'firstNameTamil' | 'lastNameTamil'): boolean {
+    const value = this.personalData[fieldName];
+    if (!value) return false;
+    // Check if contains non-Tamil characters
+    return /[^\u0B80-\u0BFF\s]/.test(value);
+  }
+
+  hasInvalidAccountHolderName(): boolean {
+    const value = this.personalData.accHolderName;
+    if (!value) return false;
+    // Check if contains numbers or special characters
+    return /[^a-zA-Z\s]/.test(value);
+  }
+
+  arePhoneNumbersSame(): boolean {
+    if (!this.personalData.phoneNumber01 || !this.personalData.phoneNumber02) {
+      return false;
+    }
+    return this.personalData.phoneNumber01 === this.personalData.phoneNumber02;
+  }
+
+  isAtLeastOneLanguageSelected(): boolean {
+    return this.selectedLanguages && this.selectedLanguages.length > 0;
+  }
+
+  // Add these methods to the component class
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  isValidPassword(password: string): boolean {
+    if (!password) return true; // Optional field
+    // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  }
+
+  doPasswordsMatch(): boolean {
+    if (!this.personalData.password || !this.personalData.confirmPassword) return true;
+    return this.personalData.password === this.personalData.confirmPassword;
+  }
+
+  // Update the checkFormValidity method to include password validation
+  checkFormValidity(): boolean {
+    const isFirstNameValid =
+      !!this.personalData.firstNameEnglish &&
+      !!this.personalData.firstNameSinhala &&
+      !!this.personalData.firstNameTamil &&
+      !this.hasInvalidNameCharacters('firstNameEnglish') &&
+      !this.hasInvalidSinhalaCharacters('firstNameSinhala') &&
+      !this.hasInvalidTamilCharacters('firstNameTamil');
+
+    const isLastNameValid =
+      !!this.personalData.lastNameEnglish &&
+      !!this.personalData.lastNameSinhala &&
+      !!this.personalData.lastNameTamil &&
+      !this.hasInvalidNameCharacters('lastNameEnglish') &&
+      !this.hasInvalidSinhalaCharacters('lastNameSinhala') &&
+      !this.hasInvalidTamilCharacters('lastNameTamil');
+
+    const isPhoneNumberValid = this.isValidPhoneNumber(this.personalData.phoneNumber01);
+    const isEmailValid = this.isValidEmail(this.personalData.email);
+    const isEmpTypeSelected = !!this.empType;
+    const isLanguagesSelected = this.isAtLeastOneLanguageSelected();
+    const isCompanySelected = !!this.personalData.companyId;
+    const isCenterSelected = !!this.personalData.centerId;
+    const isJobRoleSelected = !!this.personalData.jobRole;
+    const isNicValid = this.isValidNIC(this.personalData.nic);
+
+    // Password validation - only validate if password is provided
+    const isPasswordValid = !this.personalData.password ||
+      (this.isValidPassword(this.personalData.password) && this.doPasswordsMatch());
+
+    return (
+      isFirstNameValid &&
+      isLastNameValid &&
+      isPhoneNumberValid &&
+      isEmailValid &&
+      isEmpTypeSelected &&
+      isLanguagesSelected &&
+      isCompanySelected &&
+      isCenterSelected &&
+      isJobRoleSelected &&
+      isNicValid &&
+      isPasswordValid &&
+      !this.arePhoneNumbersSame()
+    );
+  }
+
+  checkSubmitValidity(): boolean {
+    const {
+      accHolderName,
+      accNumber,
+      confirmAccNumber,
+      bankName,
+      branchName,
+      houseNumber,
+      streetName,
+      city,
+      district,
+      companyId,
+    } = this.personalData;
+
+    const isAddressValid = !!houseNumber && !!streetName && !!city && !!district;
+
+    if (companyId == 1) {
+      const isBankDetailsValid =
+        !!accHolderName &&
+        !!accNumber &&
+        !!bankName &&
+        !!branchName &&
+        !!confirmAccNumber &&
+        accNumber === confirmAccNumber &&
+        !this.hasInvalidAccountHolderName();
+      return isBankDetailsValid && isAddressValid && !this.arePhoneNumbersSame();
+    } else {
+      return isAddressValid && !this.arePhoneNumbersSame();
     }
   }
 
@@ -334,17 +599,6 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  getAllCollectionManagers() {
-    this.collectionCenterSrv
-      .getAllManagerList(
-        this.personalData.companyId,
-        this.personalData.centerId
-      )
-      .subscribe((res) => {
-        this.collectionManagerData = res;
-      });
-  }
-
   getLastID(role: string): Promise<string> {
     return new Promise((resolve) => {
       this.collectionCenterSrv.getForCreateId(role).subscribe((res) => {
@@ -371,19 +625,7 @@ export class CollectiveofficersEditComponent {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    if (
-      !this.personalData.firstNameEnglish ||
-      !this.personalData.firstNameSinhala ||
-      !this.personalData.firstNameTamil ||
-      !this.personalData.lastNameEnglish ||
-      !this.personalData.lastNameSinhala ||
-      !this.personalData.lastNameTamil ||
-      !this.personalData.phoneNumber01 ||
-      !this.personalData.nic ||
-      !this.personalData.email ||
-      !this.personalData.jobRole ||
-      !this.personalData.empType
-    ) {
+    if (page === 'pageTwo' && !this.checkFormValidity()) {
       return;
     }
     this.selectedPage = page;
@@ -410,18 +652,48 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  getAllCollectionCetnter() {
-    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
-      this.collectionCenterData = res;
-    });
-  }
-
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
+
+      // Convert to dropdown options format
+      this.companyOptions = this.CompanyData.map(company => ({
+        label: company.companyNameEnglish,
+        value: company.id
+      }));
     });
   }
 
+  // Update getAllCollectionCetnter method
+  getAllCollectionCetnter() {
+    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
+      this.collectionCenterData = res;
+
+      // Convert to dropdown options format
+      this.centerOptions = this.collectionCenterData.map(center => ({
+        label: center.centerName,
+        value: center.id
+      }));
+    });
+  }
+
+  // Update getAllCollectionManagers method
+  getAllCollectionManagers() {
+    this.collectionCenterSrv
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.collectionManagerData = res;
+
+        // Convert to dropdown options format
+        this.managerOptions = this.collectionManagerData.map(manager => ({
+          label: manager.firstNameEnglish,
+          value: manager.id
+        }));
+      });
+  }
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
@@ -435,22 +707,14 @@ export class CollectiveofficersEditComponent {
       );
     }
 
+    // Update personalData.languages string
+    this.personalData.languages = this.selectedLanguages.join(',');
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
   onSubmit() {
-    if (
-      !this.personalData.houseNumber ||
-      !this.personalData.streetName ||
-      !this.personalData.city ||
-      !this.personalData.province ||
-      !this.personalData.district ||
-      !this.personalData.accHolderName ||
-      !this.personalData.accNumber ||
-      !this.personalData.bankName ||
-      !this.personalData.branchName ||
-      this.personalData.accNumber !== this.personalData.confirmAccNumber
-    ) {
+    if (!this.checkSubmitValidity()) {
+      this.isLoading = false;
       return;
     }
 
@@ -483,8 +747,32 @@ export class CollectiveofficersEditComponent {
             },
             (error: any) => {
               this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
+              let errorMessage = 'An unexpected error occurred';
+
+              // Handle specific error messages from the backend
+              if (error.error && error.error.error) {
+                switch (error.error.error) {
+                  case 'NIC already exists':
+                    errorMessage = 'The NIC number is already registered.';
+                    break;
+                  case 'Email already exists':
+                    errorMessage = 'The email address is already in use.';
+                    break;
+                  case 'Primary phone number already exists':
+                    errorMessage = 'The primary phone number is already registered.';
+                    break;
+                  case 'Secondary phone number already exists':
+                    errorMessage = 'The secondary phone number is already registered.';
+                    break;
+                  case 'Invalid file format or file upload error':
+                    errorMessage = 'Invalid file format or error uploading the file.';
+                    break;
+                  default:
+                    errorMessage = error.error.error || 'An unexpected error occurred';
+                }
+              }
+
+              this.errorMessage = errorMessage;
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
@@ -535,6 +823,7 @@ class Personal {
   confirmAccNumber!: any;
   bankName!: string;
   branchName!: string;
+  confirmPassword!: string; // Confirm password field
 }
 
 class CollectionCenter {

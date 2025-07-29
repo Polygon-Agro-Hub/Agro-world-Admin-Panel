@@ -70,38 +70,39 @@ export class ViewCropCalanderComponent implements OnInit {
     this.fetchAllCropCalenders();
   }
 
-  fetchAllCropCalenders(
-    page: number = 1,
-    limit: number = this.itemsPerPage,
-    search: string = this.searchText,
-    category: string | null = this.selectedCategory // Accept string | null
-  ) {
-    console.log('Fetching crop calendars for page:', page, 'category:', category);
-    this.page = page;
-    this.isLoading = true;
-    // Convert null to undefined to match service's expected type
-    const categoryParam = category ?? undefined;
-    this.cropCalendarService
-      .fetchAllCropCalenders(page, limit, search, categoryParam)
-      .subscribe(
-        (data) => {
-          this.isLoading = false;
-          this.newCropCalender = data.items;
-          this.hasData = this.newCropCalender.length > 0;
-          this.totalItems = data.total;
-        },
-        (error) => {
-          console.error('Error fetching crop calendars:', error);
-          this.isLoading = false;
-          if (error.status === 401) {
-            Swal.fire('Unauthorized', 'Please log in again.', 'error');
-          } else {
-            Swal.fire('Error', 'Failed to fetch crop calendars.', 'error');
-          }
+ fetchAllCropCalenders(
+  page: number = 1,
+  limit: number = this.itemsPerPage,
+  search: string = this.searchText,
+  category: string | null = this.selectedCategory
+) {
+  console.log('Fetching crop calendars for page:', page, 'category:', category);
+  this.page = page;
+  this.isLoading = true;
+  // Trim the search string to remove leading/trailing spaces
+  const trimmedSearch = search.trim();
+  // Convert null to undefined to match service's expected type
+  const categoryParam = category ?? undefined;
+  this.cropCalendarService
+    .fetchAllCropCalenders(page, limit, trimmedSearch, categoryParam)
+    .subscribe(
+      (data) => {
+        this.isLoading = false;
+        this.newCropCalender = data.items;
+        this.hasData = this.newCropCalender.length > 0;
+        this.totalItems = data.total;
+      },
+      (error) => {
+        console.error('Error fetching crop calendars:', error);
+        this.isLoading = false;
+        if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
+        } else {
+          Swal.fire('Error', 'Failed to fetch crop calendars.', 'error');
         }
-      );
-  }
-
+      }
+    );
+}
   deleteCropCalender(id: any) {
     Swal.fire({
       title: 'Are you sure?',
@@ -148,11 +149,12 @@ export class ViewCropCalanderComponent implements OnInit {
     this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
   }
 
-  onSearch() {
-    console.log('Search triggered with text:', this.searchText);
-    this.page = 1; // Reset to first page on search
-    this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
-  }
+onSearch() {
+  console.log('Search triggered with text:', this.searchText);
+  this.searchText = this.searchText.trim(); // Trim leading and trailing spaces
+  this.page = 1; // Reset to first page on search
+  this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
+}
 
   offSearch() {
     this.searchText = '';

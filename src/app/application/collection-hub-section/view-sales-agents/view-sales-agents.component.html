@@ -68,6 +68,8 @@
               placeholder="Search by EMP ID, First / Last Name"
               [(ngModel)]="searchText"
               (keydown.enter)="onSearch()"
+              (keydown)="onKeyDown($event)"
+              (input)="onInputChange($event)"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
             <button

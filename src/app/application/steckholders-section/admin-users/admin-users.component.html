@@ -53,20 +53,20 @@
             />
           </svg>
         </i>
-         <p class="text-gray-500 dark:text-textDark text-lg mr-5">
-      Filter By
-      </p>
-        <div class="mr-5"
-        *ngIf="
+        <p class="text-gray-500 dark:text-textDark text-lg mr-5">Filter By</p>
+        <div
+          class="mr-5"
+          *ngIf="
             permissionService.hasPermission('Filter admin user by roles') ||
             tokenService.getUserDetails().role === '1'
-          ">
+          "
+        >
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="roleArr"
             [checkmark]="true"
             optionLabel="role"
-            [showClear]="true"
+            [showClear]="false"
             placeholder="Role"
             [(ngModel)]="statusFilter"
             (onChange)="applyFilter()"
@@ -74,7 +74,7 @@
           />
         </div>
         <div
-        *ngIf="
+          *ngIf="
             permissionService.hasPermission('Search admin users') ||
             tokenService.getUserDetails().role === '1'
           "
@@ -131,10 +131,12 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-textLight dark:text-textDark text-lg">
-        No data to display
-      </p>
+    <div
+      *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen mt-6"
+    >
+      <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div *ngIf="hasData">
@@ -225,8 +227,9 @@
               </td>
               <td
                 *ngIf="
-                  permissionService.hasPermission('Delete(remove) admin user') ||
-                  tokenService.getUserDetails().role === '1'
+                  permissionService.hasPermission(
+                    'Delete(remove) admin user'
+                  ) || tokenService.getUserDetails().role === '1'
                 "
                 class="py-3"
               >

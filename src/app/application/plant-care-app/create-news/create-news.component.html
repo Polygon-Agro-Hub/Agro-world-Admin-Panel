@@ -57,9 +57,10 @@
         </label>
         <input
           type="text"
-          id="titleSinhala"
+          id="titleEnglish"
           [(ngModel)]="createNewsObj.titleEnglish"
-          (ngModelChange)="validateTitleEnglish($event)"
+          (ngModelChange)="onEnglishTitleChange($event)"
+          (keydown)="preventLeadingSpace($event, 'titleEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isEnglishValid }"
         />
@@ -100,7 +101,8 @@
           type="text"
           id="titleSinhala"
           [(ngModel)]="createNewsObj.titleSinhala"
-          (ngModelChange)="validateTitleEnglish($event)"
+          (ngModelChange)="onSinhalaTitleChange($event)"
+          (keydown)="preventLeadingSpace($event, 'titleSinhala')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isSinhalaValid }"
         />
@@ -141,7 +143,8 @@
           type="text"
           id="titleTamil"
           [(ngModel)]="createNewsObj.titleTamil"
-          (ngModelChange)="validateTitleEnglish($event)"
+          (ngModelChange)="onTamilTitleChange($event)"
+          (keydown)="preventLeadingSpace($event, 'titleTamil')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isTamilValid }"
         />
@@ -286,9 +289,10 @@
         </label>
         <input
           type="text"
-          id="titleSinhala"
+          id="titleEnglishEdit"
           [(ngModel)]="newsItems[0].titleEnglish"
-          (ngModelChange)="validateTitleEnglish($event)"
+          (ngModelChange)="onEnglishTitleChange($event)"
+          (keydown)="preventLeadingSpace($event, 'titleEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isEnglishValid }"
           pattern=".*[a-zA-Z]+.*"
@@ -350,9 +354,10 @@
         </label>
         <input
           type="text"
-          id="titleSinhala"
+          id="titleSinhalaEdit"
           [(ngModel)]="newsItems[0].titleSinhala"
-          (ngModelChange)="isSinhalaAndNumberOnly($event)"
+          (ngModelChange)="onSinhalaTitleChange($event)"
+          (keydown)="preventLeadingSpace($event, 'titleSinhala')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isSinhalaValid }"
           pattern=".*[\u0D80-\u0DFF]+.*"
@@ -413,9 +418,10 @@
         </label>
         <input
           type="text"
-          id="titleTamil"
+          id="titleTamilEdit"
           [(ngModel)]="newsItems[0].titleTamil"
-          (ngModelChange)="isTamilAndNumberOnly($event)"
+          (ngModelChange)="onTamilTitleChange($event)"
+          (keydown)="preventLeadingSpace($event, 'titleTamil')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           [ngClass]="{ 'border-red-500': !isTamilValid }"
           pattern=".*[\u0B80-\u0BFF]+.*"

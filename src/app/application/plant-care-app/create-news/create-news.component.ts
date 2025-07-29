@@ -114,8 +114,19 @@ export class CreateNewsComponent {
   ) {}
 
   validateTitleEnglish(value: string): void {
+    // Trim leading spaces
+    const trimmedValue = value.trimStart();
+    if (trimmedValue !== value) {
+      // Update the model with trimmed value
+      if (this.itemId === null) {
+        this.createNewsObj.titleEnglish = trimmedValue;
+      } else {
+        this.newsItems[0].titleEnglish = trimmedValue;
+      }
+    }
+
     const regex = /[a-zA-Z!@#$%^&*(),.?":{}|<>]/;
-    this.isEnglishValid = regex.test(value.trim());
+    this.isEnglishValid = regex.test(trimmedValue);
   }
 
   isEnglishOnly(input: string): string {
@@ -125,10 +136,14 @@ export class CreateNewsComponent {
   }
 
   isSinhalaAndNumberOnly(input: string): string {
+    // Trim leading spaces
+    const trimmedInput = input.trimStart();
+
     const sinhalaAndNumberRegex =
       /^[\u0D80-\u0DFF0-9\s\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\'\"\,\<\>\.\?\/\\\|]+$/;
-    this.isSinhalaValid = sinhalaAndNumberRegex.test(input.trim());
-    return input;
+    this.isSinhalaValid = sinhalaAndNumberRegex.test(trimmedInput);
+
+    return trimmedInput;
   }
 
   isTamilAndNumberOnly(input: string): string {
@@ -601,6 +616,54 @@ export class CreateNewsComponent {
 
   backEdit(): void {
     this.router.navigate(['/plant-care/action/manage-content']);
+  }
+
+  // Add this method to your component class
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // If the field is empty and user tries to type a space, prevent it
+    if (currentValue.length === 0 && event.key === ' ') {
+      event.preventDefault();
+      return;
+    }
+
+    // If the field only contains spaces and user tries to add another space, prevent it
+    if (currentValue.trim().length === 0 && event.key === ' ') {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  onEnglishTitleChange(value: string): void {
+    const trimmedValue = value.trimStart();
+    if (this.itemId === null) {
+      this.createNewsObj.titleEnglish = trimmedValue;
+    } else {
+      this.newsItems[0].titleEnglish = trimmedValue;
+    }
+    this.validateTitleEnglish(trimmedValue);
+  }
+
+  onSinhalaTitleChange(value: string): void {
+    const trimmedValue = value.trimStart();
+    if (this.itemId === null) {
+      this.createNewsObj.titleSinhala = trimmedValue;
+    } else {
+      this.newsItems[0].titleSinhala = trimmedValue;
+    }
+    this.isSinhalaAndNumberOnly(trimmedValue);
+  }
+
+  onTamilTitleChange(value: string): void {
+    const trimmedValue = value.trimStart();
+    if (this.itemId === null) {
+      this.createNewsObj.titleTamil = trimmedValue;
+    } else {
+      this.newsItems[0].titleTamil = trimmedValue;
+    }
+    this.isTamilAndNumberOnly(trimmedValue);
   }
 }
 

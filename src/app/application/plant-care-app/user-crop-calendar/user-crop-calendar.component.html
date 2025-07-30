@@ -256,7 +256,7 @@
                       : null
                   "
                 >
-                  {{ task.status }}
+                  {{ task.status | titlecase }}
                 </span>
               </div>
               <div *ngIf="task.status != 'completed'">
@@ -275,7 +275,7 @@
                       : null
                   "
                 >
-                  {{ task.status }}
+                  {{ task.status | titlecase }}
                 </span>
               </div>
             </td>

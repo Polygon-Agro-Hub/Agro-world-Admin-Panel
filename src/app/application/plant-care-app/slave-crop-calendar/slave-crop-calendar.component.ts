@@ -32,6 +32,8 @@ interface NewsItem {
   latitude: any;
   totalTasks: number;
   completedTasks: number;
+  extentac: number;
+  startedAt: Date;
 }
 
 @Component({
@@ -111,6 +113,8 @@ export class SlaveCropCalendarComponent {
     this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
       (data) => {
+        console.log('Fetched data:', data);
+
         this.newsItems = data;
         this.isLoading = false;
       },

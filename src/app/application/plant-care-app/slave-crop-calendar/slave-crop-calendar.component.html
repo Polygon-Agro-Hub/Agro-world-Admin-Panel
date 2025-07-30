@@ -58,6 +58,16 @@
                 Nature Of Cultivation
               </th>
               <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                Extent(ac)
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                Start Date
+              </th>
+              <th
                 class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
               >
                 Progress
@@ -96,6 +106,12 @@
               </td>
               <td class="px-4 py-3 dark:text-textDark text-left">
                 {{ item.natureOfCultivation }}
+              </td>
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                {{ item.extentac }}
+              </td>
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                {{ item.startedAt | date : "yyyy/MM/dd" }}
               </td>
               <td class="px-4 py-3 dark:text-textDark text-left">
                 <div class="flex items-center space-x-2 justify-center">

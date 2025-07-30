@@ -46,11 +46,20 @@ export class OngoingCultivationService {
     userId: number,
     page: number = 1,
     limit: number = 10
-  ): Observable<{ items: any[]; total: number }> {
+  ): Observable<{
+    items: any[];
+    total: number;
+    firstStartingDate: string | null;
+  }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<{ items: any[]; total: number }>(
+
+    return this.http.get<{
+      items: any[];
+      total: number;
+      firstStartingDate: string | null;
+    }>(
       `${this.apiUrl}auth/get-all-users-crop-task/${cropId}/${userId}?page=${page}&limit=${limit}`,
       { headers }
     );

@@ -38,7 +38,7 @@
         <div *ngIf="centerNameInput.touched && specialCharOrNumberError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Only English letters are allowed (no numbers or special characters)
         </div> -->
-        <div *ngIf="centerNameInput.touched && centerNameInput.errors?.['required'] "  class="text-red-500 text-sm mt-1">
+        <div *ngIf="(centerNameInput.touched && centerNameInput.errors?.['required']) || leadingSpaceError || specialCharOrNumberError"  class="text-red-500 text-sm mt-1">
           Center Name is required
         </div>
       </div>

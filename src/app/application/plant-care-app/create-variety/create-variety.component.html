@@ -42,13 +42,14 @@
             Name By English*</label>
           <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
             (input)="onVarietyNameInput($event, 'english')"
+            (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
-              cropForm.get('varietyNameEnglish')!.invalid &&
-              (cropForm.get('varietyNameEnglish')!.dirty ||
-                cropForm.get('varietyNameEnglish')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      cropForm.get('varietyNameEnglish')!.invalid &&
+      (cropForm.get('varietyNameEnglish')!.dirty ||
+        cropForm.get('varietyNameEnglish')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['required']">
               English Variety name is required
             </div>
@@ -62,13 +63,15 @@
           <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
             English)*</label>
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish"
-            (input)="onDescriptionInput($event, 'english')" name="descriptionEnglish" rows="3"
+            (input)="onDescriptionInput($event, 'english')"
+            (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)"
+            name="descriptionEnglish" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
-              cropForm.get('descriptionEnglish')!.invalid &&
-              (cropForm.get('descriptionEnglish')!.dirty ||
-                cropForm.get('descriptionEnglish')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      cropForm.get('descriptionEnglish')!.invalid &&
+      (cropForm.get('descriptionEnglish')!.dirty ||
+        cropForm.get('descriptionEnglish')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('descriptionEnglish')!.errors?.['required']">
               English Description is required
             </div>
@@ -82,13 +85,14 @@
             Name By Sinhala*</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             (input)="onVarietyNameInput($event, 'sinhala')"
+            (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
-              cropForm.get('varietyNameSinhala')!.invalid &&
-              (cropForm.get('varietyNameSinhala')!.dirty ||
-                cropForm.get('varietyNameEnglish')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      cropForm.get('varietyNameSinhala')!.invalid &&
+      (cropForm.get('varietyNameSinhala')!.dirty ||
+        cropForm.get('varietyNameEnglish')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']">
               Sinhala Variety name is required
             </div>
@@ -102,18 +106,21 @@
           <label for="descriptionSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala)*</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
-            (input)="onDescriptionInput($event, 'sinhala')" name="descriptionSinhala" rows="3"
+            (input)="onDescriptionInput($event, 'sinhala')"
+            (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
+            name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
-              cropForm.get('descriptionSinhala')!.invalid &&
-              (cropForm.get('descriptionSinhala')!.dirty ||
-                cropForm.get('descriptionSinhala')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      cropForm.get('descriptionSinhala')!.invalid &&
+      (cropForm.get('descriptionSinhala')!.dirty ||
+        cropForm.get('descriptionSinhala')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('descriptionSinhala')!.errors?.['required']">
               Sinhala Description is required
             </div>
           </div>
         </div>
+
 
         <hr class="border-[2px] border-gray-400 my-10" />
 
@@ -121,14 +128,15 @@
           <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
             By Tamil*</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
-            (input)="onVarietyNameInput($event, 'tamil')"
+            (input)="onVarietyNameInput($event, 'tamil')" (paste)="validateTamilPaste($event)"
+            (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
-              cropForm.get('varietyNameTamil')!.invalid &&
-              (cropForm.get('varietyNameTamil')!.dirty ||
-                cropForm.get('varietyNameTamil')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      cropForm.get('varietyNameTamil')!.invalid &&
+      (cropForm.get('varietyNameTamil')!.dirty ||
+        cropForm.get('varietyNameTamil')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['required']">
               Tamil Variety name is required
             </div>
@@ -142,13 +150,14 @@
           <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
             (in Tamil)*</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
-            (input)="onDescriptionInput($event, 'tamil')" name="descriptionTamil" rows="3"
+            (input)="onDescriptionInput($event, 'tamil')" (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
+            (paste)="validateTamilPaste($event)" name="descriptionTamil" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
-              cropForm.get('descriptionTamil')!.invalid &&
-              (cropForm.get('descriptionTamil')!.dirty ||
-                cropForm.get('descriptionTamil')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      cropForm.get('descriptionTamil')!.invalid &&
+      (cropForm.get('descriptionTamil')!.dirty ||
+        cropForm.get('descriptionTamil')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('descriptionTamil')!.errors?.['required']">
               Tamil Description is required
             </div>

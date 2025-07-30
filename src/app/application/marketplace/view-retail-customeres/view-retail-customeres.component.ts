@@ -32,7 +32,7 @@ export class ViewRetailCustomeresComponent implements OnInit {
   copiedEmail = false;
   showToast: boolean = false; // New property for toast visibility
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchRetailCustomers();
@@ -104,10 +104,10 @@ export class ViewRetailCustomeresComponent implements OnInit {
   }
 
   trimLeadingSpaces() {
-  if (this.searchText && this.searchText.startsWith(' ')) {
-    this.searchText = this.searchText.trimStart();
+    if (this.searchText && this.searchText.startsWith(' ')) {
+      this.searchText = this.searchText.trimStart();
+    }
   }
-}
 }
 
 class Customers {

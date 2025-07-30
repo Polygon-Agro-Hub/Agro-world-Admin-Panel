@@ -19,7 +19,7 @@
           <input type="text" placeholder="Search" [(ngModel)]="searchText" name="searchText"
             title="Search by Customer ID, Name, Phone Number"
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" (keydown.enter)="onSearch()"
-            (input)="trimLeadingSpaces()" />
+            (input)="trimLeadingSpaces()" (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">

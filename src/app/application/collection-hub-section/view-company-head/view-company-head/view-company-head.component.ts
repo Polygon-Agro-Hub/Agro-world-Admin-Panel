@@ -217,7 +217,7 @@ export class ViewCompanyHeadComponent implements OnInit {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'The Collection officer was approved successfully.',
+                        text: 'The Collection Centre Head was approved successfully.',
                         showConfirmButton: false,
                         timer: 3000,
                       });
@@ -260,7 +260,7 @@ export class ViewCompanyHeadComponent implements OnInit {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'The Collection officer was rejected successfully.',
+                        text: 'The Collection Centre Head was rejected successfully.',
                         showConfirmButton: false,
                         timer: 3000,
                       });

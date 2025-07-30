@@ -51,18 +51,19 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
     ];
   }
 
-  fetchAllMarketPrices() {
+ fetchAllMarketPrices() {
     this.isLoading = true;
-  
+
     const cropId = this.selectedCrop?.id || '';
     const grade = this.selectedGrade?.Vgrade || '';
-  
-    this.marketSrv.getAllMarketPrice(cropId, grade, this.searchNIC).subscribe(
+    const trimmedSearchNIC = this.searchNIC.trim(); // Trim the search input
+
+    this.marketSrv.getAllMarketPrice(cropId, grade, trimmedSearchNIC).subscribe(
       (res) => {
         this.isLoading = false;
         this.market = res.results;
         this.totalItems = res.total;
-        this.hasData = this.market && this.market.length > 0;  // <-- here
+        this.hasData = this.market && this.market.length > 0;
       },
       () => {
         this.isLoading = false;
@@ -71,7 +72,7 @@ export class ViewCurrentMarketPriceComponent implements OnInit {
           'There was an error fetching market prices.',
           'error'
         );
-        this.hasData = false;  // <-- also reset on error
+        this.hasData = false;
       }
     );
   }

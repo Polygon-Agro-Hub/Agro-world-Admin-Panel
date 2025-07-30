@@ -8,7 +8,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
-
+import { CalendarModule } from 'primeng/calendar';
 interface PackageData {
   productType: string;
   product?: string;
@@ -69,7 +69,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-view-package-history',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent,CalendarModule],
   templateUrl: './view-package-history.component.html',
   styleUrls: ['./view-package-history.component.css'],
 })
@@ -77,10 +77,12 @@ export class ViewPackageHistoryComponent implements OnInit {
   packageId: number | null = null;
   packageName: string = 'Unknown Package';
   packageData: PackageData[] = [];
-  toDate: string = '';
+  // toDate: string = '';
   isLoading: boolean = false;
   hasData: boolean = false;
-  maxDate: string = '';
+toDate: Date | null = null;
+maxDate: Date = new Date();
+
   productTypeMap = new Map<number, string>();
   shortCodeMap = new Map<number, string>();
 
@@ -103,7 +105,8 @@ export class ViewPackageHistoryComponent implements OnInit {
     }
 
     const today = new Date();
-    this.maxDate = today.toISOString().split('T')[0];
+    this.maxDate = new Date(); // This is a Date object
+
     this.getPackageHistory();
   }
 
@@ -144,7 +147,8 @@ export class ViewPackageHistoryComponent implements OnInit {
     this.isLoading = true;
     this.hasData = false;
 
-    const effectiveDate = this.toDate || this.maxDate;
+   const effectiveDate = (this.toDate || this.maxDate).toISOString().split('T')[0];
+
 
     this.marketplaceService.getPackageHistory(this.packageId, effectiveDate).pipe(
       tap((response) => {

@@ -19,19 +19,19 @@
       </div>
       <div class="flex items-center">
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions"
-            [checkmark]="true"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="true"
-            placeholder="District"
-            [(ngModel)]="selectDistrict"
-            (onChange)="applyDistrictFilters()"
-          ></p-dropdown>
-        </div>
+      <div class="mr-5">
+  <p-dropdown
+    styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+    [options]="districtOptions"
+    [checkmark]="true"
+    optionLabel="label"
+    optionValue="value"
+    [showClear]="!!selectDistrict"
+    placeholder="District"
+    [(ngModel)]="selectDistrict"
+    (onChange)="applyDistrictFilters()"
+  ></p-dropdown>
+</div>
         
 
         <div class="mr-5">
@@ -41,7 +41,7 @@
             [checkmark]="true"
             optionLabel="label"
             optionValue="value"
-            [showClear]="true"
+            [showClear]="!!selectProvince"
             placeholder="Province"
             [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"
@@ -53,54 +53,56 @@
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
-          <input
-            type="text"
-            placeholder="Search By Reg Code, Center Name, City"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-            [(ngModel)]="searchItem"
-            (keydown.enter)="searchPlantCareUsers()"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchPlantCareUsers()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
-            </svg>
-          </button>
-          <button
-            type="button"
-            (click)="clearSearch()"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
+     
+  <input
+    type="text"
+    placeholder="Search By Reg Code, Centre Name, City"
+    class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+    [(ngModel)]="searchItem"
+    (keydown.enter)="searchPlantCareUsers()"
+  />
+  <button
+    type="button"
+    class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+    (click)="searchPlantCareUsers()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+      />
+    </svg>
+  </button>
+  <button
+    *ngIf="searchItem"
+    type="button"
+    (click)="clearSearch()"
+    class="text-gray-500 hover:text-gray-700 focus:outline-none"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+</div>
       </div>
     </div>
     <div class="overflow-x-auto">
@@ -188,7 +190,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.street }}
             </td>
-                 <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                 <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                   <span *ngIf="item.contact01 === null">-</span>
                   <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
 </td>

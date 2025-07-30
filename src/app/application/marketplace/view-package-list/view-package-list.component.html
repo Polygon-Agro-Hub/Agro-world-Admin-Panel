@@ -22,18 +22,25 @@
           this.filteredPackages.length < 9 ? "0" + this.filteredPackages.length : this.filteredPackages.length }}) </h2>
       </div>
 
-      <div class="flex items-center gap-2 h-8">
+      <div class="flex items-center gap-2 h-8 relative">
         <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="clearDateFilter()"
           placeholder="Delivery Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true" iconDisplay="input"
-          [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
-                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
-                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                      [&_.p-datepicker-header]:dark:bg-[#2d354d]
-                      [&_.p-datepicker-header]:dark:text-white
-                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                      [&_.p-button:hover]:dark:bg-[#6b7280]"
+          [style]="{ width: '16rem', height: '2rem' }"
+          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
           inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-          [appendTo]="'body'" />
+          [appendTo]="'body'"
+        />
+        <button *ngIf="date" (click)="clearDateFilter()" class="absolute right-2 top-1/2 -translate-y-1/2  text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none z-10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <div class="flex flex-row items-center">

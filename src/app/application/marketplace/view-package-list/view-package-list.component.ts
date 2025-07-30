@@ -34,7 +34,7 @@ interface PackageList {
   styleUrl: './view-package-list.component.css',
 })
 export class ViewPackageListComponent implements OnInit {
-  date: string = '';
+  date: Date | null = null;
   viewPackageList: PackageList[] = [];
   isLoading = false;
   hasData: boolean = true;
@@ -63,11 +63,19 @@ export class ViewPackageListComponent implements OnInit {
     this.router.navigate(['/market/action']);
   }
 
-  fetchAllPackages(searchText: string = this.searchtext, date?: string) {
+  fetchAllPackages(searchText: string = this.searchtext, date?: Date | null) {
     this.isLoading = true;
     // Trim the search string to remove leading/trailing spaces
     const trimmedSearch = searchText.trim();
-    this.viewPackagesList.getAllMarketplacePackages(trimmedSearch, date).subscribe(
+    let dateString = '';
+    if (date instanceof Date && !isNaN(date.getTime())) {
+      // Format as yyyy-mm-dd in local time
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      dateString = `${year}-${month}-${day}`;
+    }
+    this.viewPackagesList.getAllMarketplacePackages(trimmedSearch, dateString).subscribe(
       (response) => {
         console.log('Package list response:', response);
         this.viewPackageList = response.data.flatMap((group: any) =>
@@ -171,7 +179,7 @@ onSearch() {
   }
 
   clearDateFilter() {
-    this.date = '';
+    this.date = null;
     this.fetchAllPackages(this.searchtext);
   }
 
@@ -189,10 +197,14 @@ onSearch() {
   }
 
   dateFilter() {
-    if (this.date) {
+    if (this.date instanceof Date && !isNaN(this.date.getTime())) {
       this.isLoading = true;
+      const year = this.date.getFullYear();
+      const month = (this.date.getMonth() + 1).toString().padStart(2, '0');
+      const day = this.date.getDate().toString().padStart(2, '0');
+      let dateString = `${year}-${month}-${day}`;
       this.viewPackagesList
-        .getAllMarketplacePackages(this.searchtext, this.date)
+        .getAllMarketplacePackages(this.searchtext, dateString)
         .subscribe(
           (response) => {
             console.log('Filtered package list response:', response);

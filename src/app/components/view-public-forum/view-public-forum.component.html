@@ -52,15 +52,15 @@
               class="flex flex-col"
             >
               <div
-                class="relative flex flex-col text-gray-500 hover:text-gray-700 group"
+                class="relative flex flex-col text-gray-500 hover:text-gray-700 group cursor-pointer"
               >
                 <i class="fa-solid fa-ellipsis-vertical dark:text-textDark"></i>
 
                 <div
-                  class="absolute hidden group-hover:flex justify-center items-center p-2 text-black shadow-xl rounded-lg transition-all duration-300 mt-2 -right-10 w-32 h-10"
+                  class="absolute hidden group-hover:flex justify-center items-center py-4 text-black border-2 border-[#fcfdff] shadow-xl rounded-lg transition-all duration-300 mt-4 -right-5 w-32 h-10"
                 >
                   <button
-                    class="dark:text-textDark"
+                    class="dark:text-textDark flex items-center justify-center align-middle"
                     (click)="deletePost(postRcord.id)"
                   >
                     Delete Post

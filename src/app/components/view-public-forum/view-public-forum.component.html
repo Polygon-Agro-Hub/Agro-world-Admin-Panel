@@ -82,13 +82,13 @@
       </div>
       <div class="flex flex-col justify-center mx-5 my-10">
         <p class="dark:text-textDark">{{ postRcord.message }}</p>
-        <div class="flex justify-end my-5 cursor-pointer text-cyan-700">
+        <div class="flex justify-end my-5 cursor-pointer">
           <span
             *ngIf="
               permissionService.hasPermission('View replies') ||
               tokenService.getUserDetails().role === '1'
             "
-            class="flex"
+            class="flex border-b-2 border-[#0075FF] text-[#0075FF]"
           >
             <div *ngFor="let i of countReply">
               <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }}</p>

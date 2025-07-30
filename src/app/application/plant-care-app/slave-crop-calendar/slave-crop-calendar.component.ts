@@ -9,6 +9,7 @@ import { OngoingCultivationService } from '../../../services/plant-care/ongoing-
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import Swal from 'sweetalert2';
 
 interface CultivationItems {
   id: any;
@@ -31,6 +32,8 @@ interface NewsItem {
   latitude: any;
   totalTasks: number;
   completedTasks: number;
+  extentac: number;
+  startedAt: Date;
 }
 
 @Component({
@@ -66,8 +69,8 @@ export class SlaveCropCalendarComponent {
     private newsService: NewsService,
     private ongoingCultivationService: OngoingCultivationService,
     private router: Router,
-    public permissionService: PermissionService, 
-        public tokenService: TokenService
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) {}
 
   ngOnInit() {
@@ -110,6 +113,8 @@ export class SlaveCropCalendarComponent {
     this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
       (data) => {
+        console.log('Fetched data:', data);
+
         this.newsItems = data;
         this.isLoading = false;
       },
@@ -121,16 +126,92 @@ export class SlaveCropCalendarComponent {
     );
   }
 
-  viewTaskByUser(cropCalendarId: any, userId: any, onCulscropID: any, cultivationId: any, userName: any) {
+  viewTaskByUser(
+    cropCalendarId: any,
+    userId: any,
+    onCulscropID: any,
+    cultivationId: any,
+    userName: any
+  ) {
     if (cropCalendarId) {
       this.router.navigate(
         ['/plant-care/action/view-crop-task-by-user/user-task-list'],
-        { queryParams: { cropCalendarId, userId, onCulscropID, cultivationId, userName } }
+        {
+          queryParams: {
+            cropCalendarId,
+            userId,
+            onCulscropID,
+            cultivationId,
+            userName,
+          },
+        }
       );
     }
   }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  async deleteCultivation(id: number, index: number) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.ongoingCultivationService.deleteOngoingCultivation(id).subscribe({
+        next: () => {
+          this.newsItems.splice(index, 1);
+          this.isLoading = false;
+          Swal.fire('Deleted!', 'Cultivation has been deleted.', 'success');
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Error deleting cultivation:', err);
+          Swal.fire('Error!', 'Failed to delete cultivation', 'error');
+        },
+      });
+    }
+  }
+
+  formatDuration(duration: string): string {
+    if (!duration) return '';
+
+    const days = parseInt(duration, 10);
+
+    if (days >= 365) {
+      const years = Math.floor(days / 365);
+      const remainingDays = days % 365;
+      return `${years} year${years > 1 ? 's' : ''}${
+        remainingDays > 0
+          ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
+          : ''
+      }`;
+    } else if (days >= 30) {
+      const months = Math.floor(days / 30);
+      const remainingDays = days % 30;
+      return `${months} month${months > 1 ? 's' : ''}${
+        remainingDays > 0
+          ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
+          : ''
+      }`;
+    } else if (days >= 7) {
+      const weeks = Math.floor(days / 7);
+      const remainingDays = days % 7;
+      return `${weeks} week${weeks > 1 ? 's' : ''}${
+        remainingDays > 0
+          ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
+          : ''
+      }`;
+    } else {
+      return `${days} day${days !== 1 ? 's' : ''}`;
+    }
   }
 }

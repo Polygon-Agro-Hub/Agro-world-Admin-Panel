@@ -109,7 +109,7 @@
             </label>
             <select id="centerId" [(ngModel)]="personalData.companyId" name="centerId"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-              #companyIdInput="ngModel" required>
+              #companyIdInput="ngModel" required disabled>
               <option *ngFor="let center of CompanyData" [value]="center.id"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 {{ center.companyNameEnglish }}
@@ -117,6 +117,18 @@
             </select>
             <div *ngIf="companyIdInput.touched && !personalData.companyId" class="text-red-500 text-sm mt-1">
               <div>Company Name is required</div>
+            </div>
+          </div>
+
+          <div>
+            <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
+              (in English)</label>
+            <input [disabled]="true" id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              #firstNameEnglishInput="ngModel" required />
+            <div *ngIf="firstNameEnglishInput.touched && !personalData.firstNameEnglish"
+              class="text-red-500 text-sm mt-1">
+              <div>First Name (in English) is required</div>
             </div>
           </div>
 
@@ -374,8 +386,18 @@
                   <div>City is required</div>
                 </div>
             </div>
-    
+
             <div class="pb-6">
+              <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+              <input [disabled]="true" id="district" name="district" [(ngModel)]="personalData.district"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+                #districtInput="ngModel" required />
+                <div *ngIf="districtInput.touched && !personalData.district" class="text-red-500 text-sm mt-1">
+                  <div>District is required</div>
+                </div>
+            </div>
+    
+            <!-- <div class="pb-6">
               <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                 District
               </label>
@@ -389,7 +411,7 @@
               <div *ngIf="districtInput.touched && !personalData.district" class="text-red-500 text-sm mt-1">
                 <div>DistrictInput is required</div>
               </div>
-            </div>
+            </div> -->
     
             <div class="pb-6">
               <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark" >
@@ -461,11 +483,21 @@
           </div>
     
           
+          <!-- <div class="pb-6">
+            <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+            <input [disabled]="true" id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+              #banckInput="ngModel" required />
+              <div *ngIf="banckInput.touched && !selectedBankId" class="text-red-500 text-sm mt-1">
+                <div>District is required</div>
+              </div>
+          </div> -->
     
           <div class="pb-6">
             <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name</label>
             <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-200 dark:bg-gray-700 cursor-not-allowed"
+              disabled>
               <option [ngValue]="null" disabled>Select a bank</option>
               <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
             </select>
@@ -473,11 +505,10 @@
     
           
           <div class="pb-6">
-            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
-              Name</label>
+            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch Name</label>
             <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
-              [disabled]="!selectedBankId"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-200 dark:bg-gray-700 cursor-not-allowed"
+              disabled>
               <option [ngValue]="null" disabled>Select a branch</option>
               <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
             </select>

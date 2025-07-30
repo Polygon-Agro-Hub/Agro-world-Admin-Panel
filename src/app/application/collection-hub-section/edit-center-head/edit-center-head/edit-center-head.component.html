@@ -13,7 +13,7 @@
     <div *ngIf="selectedPage === 'pageOne'">
       <!-- <div> -->
       <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-        Edit Center Head Details
+        Edit Centre Head Details
       </h2>
       <div>
         <div class="flex justify-center pt-3 pb-9">
@@ -293,7 +293,7 @@
             <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number</label>
             <input id="nic" name="nic" [(ngModel)]="personalData.nic"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              #nicInput="ngModel" required pattern="^(\d{9}[VX]|[0-9]{12})$" />
+              #nicInput="ngModel" required pattern="^(\d{9}V|\d{12})$" />
   
             <!-- Required Validation -->
             <div *ngIf="nicInput.touched && !personalData.nic" class="text-red-500 text-sm mt-1">
@@ -302,7 +302,7 @@
   
             <!-- Pattern Validation -->
             <div *ngIf="nicInput.touched && nicInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-              <div>NIC must be in the format of 9 digits</div>
+              <div>Invalid NIC format (e.g., 123456789V or 200012345678)</div>
             </div>
           </div>
   
@@ -349,7 +349,7 @@
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
                 #houseNumberInput="ngModel" required />
               <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
-                <div>House number is required</div>
+                <div>House Number is required</div>
               </div>
     
             </div>
@@ -491,7 +491,7 @@
           </button>
           <button type="submit" (click)="onSubmit()" [disabled]="!personalData.accNumber || !personalData.accHolderName"
             class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
-            Submit
+            Send to Approve
           </button>
         </div>
       </div>

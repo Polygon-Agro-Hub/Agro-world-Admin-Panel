@@ -98,6 +98,7 @@ onclick="history.back()"
               id="centerId"
               [(ngModel)]="personalData.companyId"
               name="centerId"
+              
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option
@@ -159,7 +160,7 @@ onclick="history.back()"
             </div>
           </div>
           <p *ngIf="!isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
-            Please select an employee type.
+            Please select an Employee Type.
           </p>
         </div>
 
@@ -216,11 +217,11 @@ onclick="history.back()"
             *ngIf="!isAtLeastOneLanguageSelected()"
             class="text-red-600 text-sm mt-2"
           >
-            Please select at least one preferred language.
+            Please select at least one Preferred Language.
           </p>
         </div>
 
-        <div>
+        <!-- <div>
           <label
             for="firstNameEnglish"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -230,17 +231,205 @@ onclick="history.back()"
             id="firstNameEnglish"
             [(ngModel)]="personalData.firstNameEnglish"
             name="firstNameEnglish"
-            (blur)="onBlur('firstNameEnglish')"
+            #firstNameEnglishInput="ngModel"
+            required
+            (input)="onCenterNameInputTamil($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
-          <span
-            *ngIf="isFieldInvalid('firstNameEnglish')"
-            class="text-red-600 text-sm"
-            >First Name is required.</span
-          >
-        </div>
+          <div *ngIf="(firstNameEnglishInput.touched && firstNameEnglishInput.errors?.['required']) || leadingSpaceError || specialCharOrNumberError"  class="text-red-500 text-sm mt-1">
+            First Name is required
+          </div>
+          
+        </div> -->
 
         <div>
+  <label
+    for="firstNameEnglish"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >First Name (in English)</label
+  >
+  <input
+    id="firstNameEnglish"
+    [(ngModel)]="personalData.firstNameEnglish"
+    name="firstNameEnglish"
+    #firstNameEnglishInput="ngModel"
+    required
+    (input)="onNameInput($event, 'firstNameEnglish')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  
+  <!-- Validation Messages - Similar to your phone validation approach -->
+  <div *ngIf="firstNameEnglishInput.touched">
+    <div *ngIf="!personalData.firstNameEnglish" class="text-red-500 text-sm mt-1">
+      First Name is required.
+    </div>
+    <!-- <div *ngIf="personalData.firstNameEnglish && isLeadingSpaceErrorMap['firstNameEnglish']" 
+         class="text-red-500 text-sm mt-1">
+      Leading spaces are not allowed.
+    </div>
+    <div *ngIf="personalData.firstNameEnglish && isSpecialCharErrorMap['firstNameEnglish']" 
+         class="text-red-500 text-sm mt-1">
+      Only English letters and spaces are allowed.
+    </div> -->
+  </div>
+</div>
+
+<div>
+  <label
+    for="lastNameEnglish"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >Last Name (in English)</label
+  >
+  <input
+    id="lastNameEnglish"
+    [(ngModel)]="personalData.lastNameEnglish"
+    name="lastNameEnglish"
+    #lastNameEnglishInput="ngModel"
+    required
+    (input)="onNameInput($event, 'lastNameEnglish')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  
+  <div *ngIf="lastNameEnglishInput.touched">
+    <div *ngIf="!personalData.lastNameEnglish" class="text-red-500 text-sm mt-1">
+      Last Name is required.
+    </div>
+    <!-- <div *ngIf="personalData.lastNameEnglish && isLeadingSpaceErrorMap['lastNameEnglish']" 
+         class="text-red-500 text-sm mt-1">
+      Leading spaces are not allowed.
+    </div>
+    <div *ngIf="personalData.lastNameEnglish && isSpecialCharErrorMap['lastNameEnglish']" 
+         class="text-red-500 text-sm mt-1">
+      Only English letters and spaces are allowed.
+    </div> -->
+  </div>
+</div>
+
+<div>
+  <label
+    for="firstNameSinhala"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >First Name (in Sinhala)</label
+  >
+  <input
+    id="firstNameSinhala"
+    [(ngModel)]="personalData.firstNameSinhala"
+    name="firstNameSinhala"
+    #firstNameSinhalaInput="ngModel"
+    required
+    (input)="onNameInput($event, 'firstNameSinhala')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  
+  <div *ngIf="firstNameSinhalaInput.touched">
+    <div *ngIf="!personalData.firstNameSinhala" class="text-red-500 text-sm mt-1">
+      First Name (Sinhala) is required.
+    </div>
+    <!-- <div *ngIf="personalData.firstNameSinhala && isLeadingSpaceErrorMap['firstNameSinhala']" 
+         class="text-red-500 text-sm mt-1">
+      Leading spaces are not allowed.
+    </div>
+    <div *ngIf="personalData.firstNameSinhala && isSpecialCharErrorMap['firstNameSinhala']" 
+         class="text-red-500 text-sm mt-1">
+      Only Sinhala letters and spaces are allowed.
+    </div> -->
+  </div>
+</div>
+
+<div>
+  <label
+    for="lastNameSinhala"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >Last Name (in Sinhala)</label
+  >
+  <input
+    id="lastNameSinhala"
+    [(ngModel)]="personalData.lastNameSinhala"
+    name="lastNameSinhala"
+    #lastNameSinhalaInput="ngModel"
+    required
+    (input)="onNameInput($event, 'lastNameSinhala')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  
+  <div *ngIf="lastNameSinhalaInput.touched">
+    <div *ngIf="!personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
+      Last Name (Sinhala) is required.
+    </div>
+    <!-- <div *ngIf="personalData.lastNameSinhala && isLeadingSpaceErrorMap['lastNameSinhala']" 
+         class="text-red-500 text-sm mt-1">
+      Leading spaces are not allowed.
+    </div>
+    <div *ngIf="personalData.lastNameSinhala && isSpecialCharErrorMap['lastNameSinhala']" 
+         class="text-red-500 text-sm mt-1">
+      Only Sinhala letters and spaces are allowed.
+    </div> -->
+  </div>
+</div>
+
+<div>
+  <label
+    for="firstNameTamil"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >First Name (in Tamil)</label
+  >
+  <input
+    id="firstNameTamil"
+    [(ngModel)]="personalData.firstNameTamil"
+    name="firstNameTamil"
+    #firstNameTamilInput="ngModel"
+    required
+    (input)="onNameInput($event, 'firstNameTamil')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  
+  <div *ngIf="firstNameTamilInput.touched">
+    <div *ngIf="!personalData.firstNameTamil" class="text-red-500 text-sm mt-1">
+      First Name (Tamil) is required.
+    </div>
+    <!-- <div *ngIf="personalData.firstNameTamil && isLeadingSpaceErrorMap['firstNameTamil']" 
+         class="text-red-500 text-sm mt-1">
+      Leading spaces are not allowed.
+    </div>
+    <div *ngIf="personalData.firstNameTamil && isSpecialCharErrorMap['firstNameTamil']" 
+         class="text-red-500 text-sm mt-1">
+      Only Tamil letters and spaces are allowed.
+    </div> -->
+  </div>
+</div>
+
+<div>
+  <label
+    for="lastNameTamil"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >Last Name (in Tamil)</label
+  >
+  <input
+    id="lastNameTamil"
+    [(ngModel)]="personalData.lastNameTamil"
+    name="lastNameTamil"
+    #lastNameTamilInput="ngModel"
+    required
+    (input)="onNameInput($event, 'lastNameTamil')"
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  
+  <div *ngIf="lastNameTamilInput.touched ">
+    <div *ngIf="!personalData.lastNameTamil" class="text-red-500 text-sm mt-1">
+      Last Name (Tamil) is required.
+    </div>
+    <!-- <div *ngIf="personalData.lastNameTamil && isLeadingSpaceErrorMap['lastNameTamil']" 
+         class="text-red-500 text-sm mt-1">
+      Leading spaces are not allowed.
+    </div>
+    <div *ngIf="personalData.lastNameTamil && isSpecialCharErrorMap['lastNameTamil']" 
+         class="text-red-500 text-sm mt-1">
+      Only Tamil letters and spaces are allowed.
+    </div> -->
+  </div>
+</div>
+
+        <!-- <div>
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -258,9 +447,9 @@ onclick="history.back()"
             class="text-red-600 text-sm"
             >Last Name is required.</span
           >
-        </div>
+        </div> -->
 
-        <div>
+        <!-- <div>
           <label
             for="crop"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -278,9 +467,9 @@ onclick="history.back()"
             class="text-red-600 text-sm"
             >First Name is required.</span
           >
-        </div>
+        </div> -->
 
-        <div>
+        <!-- <div>
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -318,9 +507,9 @@ onclick="history.back()"
             class="text-red-600 text-sm"
             >First Name is required.</span
           >
-        </div>
+        </div> -->
 
-        <div>
+        <!-- <div>
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -339,7 +528,7 @@ onclick="history.back()"
             class="text-red-600 text-sm"
             >Last Name is required.</span
           >
-        </div>
+        </div> -->
 
         <div>
           <label
@@ -442,7 +631,7 @@ onclick="history.back()"
             *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)"
             class="text-red-600 text-sm"
           >
-            Invalid nic number.
+            Invalid Nic number.
           </span>
         </div>
 
@@ -550,7 +739,7 @@ onclick="history.back()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm"
-            >city is required.</span
+            >City is required.</span
           >
         </div>
 
@@ -630,7 +819,7 @@ onclick="history.back()"
         <span
           *ngIf="isFieldInvalid('accHolderName')"
           class="text-red-600 text-sm"
-          >city is required.</span
+          >Account Holder’s Name is required.</span
         >
       </div>
 

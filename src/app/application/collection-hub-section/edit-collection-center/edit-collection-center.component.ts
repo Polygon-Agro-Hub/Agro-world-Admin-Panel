@@ -192,7 +192,7 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
       this.leadingSpaceError = true;
       input = input.trimStart(); // remove leading space
     }
-  
+   
     // Only allow English letters and spaces
     const validInput = input.replace(/[^A-Za-z ]/g, '');
     if (input !== validInput) {
@@ -211,6 +211,41 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
     // Update input element value to reflect filtered result
     inputElement.value = this.centerFetchData.centerName;
   }
+
+  onBuildingNumberInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const rawValue = inputElement.value;
+    const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+    if (rawValue !== trimmedValue) {
+      inputElement.value = trimmedValue; // Update input field
+    }
+  
+    this.centerFetchData.buildingNumber = trimmedValue;
+  
+    console.log('Building Number:', this.centerFetchData.buildingNumber);
+  }
+
+  onStreetNameInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const rawValue = inputElement.value;
+    const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+    if (rawValue !== trimmedValue) {
+      inputElement.value = trimmedValue; // Update input field
+    }
+  
+    this.centerFetchData.street = trimmedValue;
+  
+    console.log('Building Number:', this.centerFetchData.street);
+  }
+  
+  // onStreetNameChange(value: string): void {
+  //   this.centerFetchData.street = value.replace(/^\s+/, '');
+  // }
+  // onCityNameChange(value: string): void {
+  //   this.centerFetchData.city = value.replace(/^\s+/, '');
+  // }
 
   onSubmit() {
     this.collectionCenterService
@@ -376,6 +411,22 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
         );
     }
   }
+
+  onCityInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const rawValue = inputElement.value;
+    const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+    if (rawValue !== trimmedValue) {
+      inputElement.value = trimmedValue; // visually remove leading spaces
+    }
+  
+    this.centerFetchData.city = trimmedValue;
+  
+    // Now call your original logic
+    this.onCityChange();
+  }
+  
 
   onCityChange() {
     const selectedProvince = this.centerFetchData.province;

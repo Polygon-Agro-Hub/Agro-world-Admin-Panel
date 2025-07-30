@@ -132,7 +132,22 @@ export class AddCollectionCenterComponent implements OnInit {
     }
   }
 
+  // trimCity(): void {
+  //   const control = this.collectionCenterForm.get('buildingNumber');
+  //   if (control) {
+  //     const value = control.value || '';
+  //     control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+  //   }
+  // }
+
   onProvinceChange() {
+
+    const control = this.collectionCenterForm.get('city');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+
     const selectedProvince = this.collectionCenterForm.get('province')?.value;
     const selectedDistrict = this.collectionCenterForm.get('district')?.value;
     const selectedCity = this.collectionCenterForm.get('city')?.value;
@@ -410,6 +425,30 @@ export class AddCollectionCenterComponent implements OnInit {
       ],
     },
   ];
+
+  trimBuildingNumber(): void {
+    const control = this.collectionCenterForm.get('buildingNumber');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+  }
+
+  trimCity(): void {
+    const control = this.collectionCenterForm.get('buildingNumber');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+  }
+
+  trimStreetName(): void {
+    const control = this.collectionCenterForm.get('street');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+  }
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+
 import {
   HttpClient,
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
@@ -71,6 +72,11 @@ export class CreateCenterHeadComponent implements OnInit {
   confirmAccountNumberRequired: boolean = false;
   errorMessage: string = '';
 
+  allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
+  isPhoneInvalidMap: { [key: string]: boolean } = {
+  phone01: false,
+  phone02: false,
+};
   // leadingSpaceError: boolean = false;
   // specialCharOrNumberError: boolean = false;
 
@@ -130,7 +136,8 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     private collectionCenterSrv: CollectionCenterService,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -243,93 +250,96 @@ onNameInput(event: Event, fieldName: string): void {
   this.validateNameInput(input, fieldName);
 }
 
-  // onCenterNameInput(event: Event): void {
-  //   const inputElement = event.target as HTMLInputElement;
-  //   let input = inputElement.value;
-  
-  //   // Reset errors
-  //   this.leadingSpaceError = false;
-  //   this.specialCharOrNumberError = false;
-  
-  //   // Check for leading space
-  //   if (input.startsWith(' ')) {
-  //     this.leadingSpaceError = true;
-  //     input = input.trimStart(); // remove leading space
-  //   }
-  
-  //   // Only allow English letters and spaces
-  //   const validInput = input.replace(/[^A-Za-z ]/g, '');
-  //   if (input !== validInput) {
-  //     this.specialCharOrNumberError = true;
-  //   }
-  
-  //   // Capitalize the first letter
-  //   if (validInput.length > 0) {
-  //     validInput.trimStart(); // ensure no leading space
-  //     this.personalData.firstNameEnglish =
-  //       validInput.charAt(0).toUpperCase() + validInput.slice(1);
-  //   } else {
-  //     this.personalData.firstNameEnglish = '';
-  //   }
-  
-  //   // Update input element value to reflect filtered result
-  //   inputElement.value = this.personalData.firstNameEnglish;
-  // }
+capitalizeAccHolderName(): void {
+  let value = this.personalData.accHolderName || '';
 
-  // onCenterNameInputSinhala(event: Event): void {
-  //   const inputElement = event.target as HTMLInputElement;
-  //   let input = inputElement.value;
-  
-  //   // Reset errors
-  //   this.leadingSpaceError = false;
-  //   this.specialCharOrNumberError = false;
-  
-  //   // Check for leading space
-  //   if (input.startsWith(' ')) {
-  //     this.leadingSpaceError = true;
-  //     input = input.trimStart(); // remove leading space
-  //   }
-  
-  //   // Allow only Sinhala letters and spaces
-  //   const validInput = input.replace(/[^\u0D80-\u0DFF ]/g, '');
-  //   if (input !== validInput) {
-  //     this.specialCharOrNumberError = true;
-  //   }
-  
-  //   // No capitalization for Sinhala, just assign
-  //   this.personalData.firstNameSinhala = validInput.trimStart();
-  
-  //   // Update the input field to reflect the filtered value
-  //   inputElement.value = this.personalData.firstNameSinhala;
-  // }
+  // Trim leading and trailing spaces, and collapse multiple spaces inside
+  value = value.replace(/\s+/g, ' ').trim();
+
+  // Capitalize the first letter if value is not empty
+  if (value.length > 0) {
+    this.personalData.accHolderName = value.charAt(0).toUpperCase() + value.slice(1);
+  } else {
+    this.personalData.accHolderName = '';
+  }
+  console.log('sd', this.personalData.accHolderName)
+}
 
 
-  // onCenterNameInputTamil(event: Event): void {
-  //   const inputElement = event.target as HTMLInputElement;
-  //   let input = inputElement.value;
+validateSriLankanPhone(input: string, key: string): void {
+    if (!input) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
   
-  //   // Reset errors
-  //   this.leadingSpaceError = false;
-  //   this.specialCharOrNumberError = false;
+    const firstDigit = input.charAt(0);
+    const prefix = input.substring(0, 2);
+    const isValidPrefix = this.allowedPrefixes.includes(prefix);
+    const isValidLength = input.length === 9;
   
-  //   // Check for leading space
-  //   if (input.startsWith(' ')) {
-  //     this.leadingSpaceError = true;
-  //     input = input.trimStart(); // remove leading space
-  //   }
+    if (firstDigit !== '7') {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
   
-  //   // Allow only Tamil letters and spaces
-  //   const validInput = input.replace(/[^\u0B80-\u0BFF ]/g, '');
-  //   if (input !== validInput) {
-  //     this.specialCharOrNumberError = true;
-  //   }
+    if (!isValidPrefix && input.length >= 2) {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
   
-  //   // Just assign trimmed result (no uppercase in Tamil)
-  //   this.personalData.firstNameTamil = validInput.trimStart();
+    if (input.length === 9 && isValidPrefix) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
   
-  //   // Update the input field to reflect the filtered value
-  //   inputElement.value = this.personalData.firstNameTamil;
-  // }
+    this.isPhoneInvalidMap[key] = false;
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Only allow 0-9
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  const trimmedValue = inputElement.value.trimStart();
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
+}
+
+blockSpecialChars(event: KeyboardEvent) {
+  // Allow letters (A-Z, a-z), space, backspace, delete, arrow keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
+  ];
+
+  // Regex: Only allow alphabets and spaces
+  const regex = /^[a-zA-Z\s]*$/;
+
+  // Block if key is not allowed
+  if (!allowedKeys.includes(event.key) && !regex.test(event.key)) {
+    event.preventDefault();
+  }
+}
+
+blockNonNumbers(event: KeyboardEvent) {
+  // Allow: numbers (0-9), backspace, delete, arrow keys, tab
+  const allowedKeys = [
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'
+  ];
+
+  // Block if key is not allowed
+  if (!allowedKeys.includes(event.key)) {
+    event.preventDefault();
+  }
+}
+
   
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
@@ -340,20 +350,36 @@ onNameInput(event: Event, fieldName: string): void {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort by bank name (A-Z)
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => {}
+      (error) => {
+        console.error('Failed to load banks:', error);
+      }
     );
   }
+  
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
+        // Loop through each bank ID and sort its branch array
+        for (const bankId in data) {
+          if (data.hasOwnProperty(bankId)) {
+            data[bankId] = data[bankId].sort((a, b) =>
+              a.name.localeCompare(b.name)
+            );
+          }
+        }
+  
         this.allBranches = data;
       },
-      (error) => {}
+      (error) => {
+        console.error('Failed to load branches:', error);
+      }
     );
   }
+  
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -494,7 +520,7 @@ onNameInput(event: Event, fieldName: string): void {
   onSubmit() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to create the collection center head?',
+      text: 'Do you want to create the collection centre head?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, create it!',
@@ -513,10 +539,10 @@ onNameInput(event: Event, fieldName: string): void {
 
               Swal.fire(
                 'Success',
-                'Collection Center Head Profile Created Successfully',
+                'Collection centre Head Profile Created Successfully',
                 'success'
               );
-              this.navigatePath('/collection-hub/manage-company');
+              this.location.back();
             },
             (error: any) => {
               this.isLoading = false;
@@ -541,7 +567,7 @@ onNameInput(event: Event, fieldName: string): void {
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/collection-hub/manage-company');
+        this.location.back();
       }
     });
   }
@@ -600,44 +626,130 @@ onNameInput(event: Event, fieldName: string): void {
   }
 
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
 
   isValidNIC(nic: string): boolean {
-    const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
+    const nicRegex = /^(\d{9}V|\d{12})$/;
     return nicRegex.test(nic);
   }
 
-  checkFormValidity(): boolean {
-    console.log('personalData', this.personalData)
-    const isFirstNameValid =
-      !!this.personalData.firstNameEnglish &&
-      !!this.personalData.firstNameSinhala &&
-      !!this.personalData.firstNameTamil;
-    const isLastNameValid =
-      !!this.personalData.lastNameEnglish &&
-      !!this.personalData.lastNameSinhala &&
-      !!this.personalData.lastNameTamil;
-    const isPhoneNumber01Valid = !!this.personalData.phoneNumber01;
-    const isEmailValid = this.isValidEmail(this.personalData.email);
-    const isEmpTypeSelected = !!this.empType;
-    const isLanguagesSelected = !!this.personalData.languages;
-    const isCompanySelected = !!this.personalData.companyId;
-    const isNicSelected = !!this.personalData.nic;
-
-    return (
-      isFirstNameValid &&
-      isLastNameValid &&
-      isPhoneNumber01Valid &&
-      isEmailValid &&
-      isEmpTypeSelected &&
-      isLanguagesSelected &&
-      isCompanySelected &&
-      isNicSelected
-    );
+  // checkFormValidity(): boolean {
+  //   console.log('personalData', this.personalData)
+  //   const isFirstNameValid =
+  //     !!this.personalData.firstNameEnglish &&
+  //     !!this.personalData.firstNameSinhala &&
+  //     !!this.personalData.firstNameTamil;
+  //   const isLastNameValid =
+  //     !!this.personalData.lastNameEnglish &&
+  //     !!this.personalData.lastNameSinhala &&
+  //     !!this.personalData.lastNameTamil;
+  //   const isPhoneNumber01Valid = !!this.personalData.phoneNumber01;
+  //   const isEmailValid = this.isValidEmail(this.personalData.email);
+  //   const isNicValid = this.isValidNIC(this.personalData.nic);
+  //   const isEmpTypeSelected = !!this.empType;
+  //   const isLanguagesSelected = !!this.personalData.languages;
+  //   const isCompanySelected = !!this.personalData.companyId;
+  //   const isNicSelected = !!this.personalData.nic;
+  //   const isEmailSelected = !!this.personalData.email;
+  //   const isLanguageSelected = !!this.personalData.languages;
     
+
+  //   return (
+  //     isFirstNameValid &&
+  //     isLastNameValid &&
+  //     isPhoneNumber01Valid &&
+  //     isEmailValid &&
+  //     isEmpTypeSelected &&
+  //     isLanguagesSelected &&
+  //     isCompanySelected &&
+  //     isNicSelected &&
+  //     isNicValid &&
+  //     isEmailSelected &&
+  //     isLanguageSelected
+  //   );
+    
+  // }
+
+  handleNextClick(): void {
+    if (this.checkFormValidity()) {
+      this.nextFormCreate('pageTwo');
+    }
   }
+
+  checkFormValidity(): boolean {
+    console.log('personalData', this.personalData);
+  
+    const missingFields: string[] = [];
+
+    const phonePattern = /^[0-9]{9}$/;
+  
+    // Name validations
+    if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English) is Required');
+    if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala) is Required');
+    if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil) is Required');
+    if (!this.personalData.lastNameEnglish) missingFields.push('Last Name (English) is Required');
+    if (!this.personalData.lastNameSinhala) missingFields.push('Last Name (Sinhala) is Required');
+    if (!this.personalData.lastNameTamil) missingFields.push('Last Name (Tamil) is Required');
+  
+    // Phone validations using isPhoneInvalidMap
+    if (!this.personalData.phoneNumber01) {
+      missingFields.push('Phone Number 01 is Required');
+    } else if (this.isPhoneInvalidMap['phone01']) {
+      missingFields.push('Phone Number 01  (e.g., 77XXXXXXX, 72XXXXXXX, etc )');
+    } else if (!phonePattern.test(this.personalData.phoneNumber01)) {
+      missingFields.push('Phone Number (Must be 9 digits)');
+    }
+  
+    if (this.personalData.phoneNumber02) {
+      if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+        missingFields.push('Phone Number 02 (Phone Number 2 Must Not Equal to Phone Number 01)');
+      } else if (this.isPhoneInvalidMap['phone02']) {
+        missingFields.push('Phone Number 02  (e.g., 77XXXXXXX, 72XXXXXXX, etc )');
+      } else if (!phonePattern.test(this.personalData.phoneNumber02)) {
+        missingFields.push('Phone Number (Must be 9 digits)');
+      }
+    }
+  
+    // Email validations
+    if (!this.personalData.email) {
+      missingFields.push('Email is Required');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push('Email (Please Enter a Valid Email Address)');
+    }
+  
+    // NIC validations
+    if (!this.personalData.nic) {
+      missingFields.push('NIC is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC (Please Enter a Valid NIC Number)');
+    }
+  
+    // Other required fields
+    if (!this.empType) missingFields.push('Employment Type is Required');
+    if (!this.personalData.languages) missingFields.push('Language is Required');
+    if (!this.personalData.companyId) missingFields.push('Company is Required');
+  
+    // Show SweetAlert if any issues
+    if (missingFields.length > 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing or Invalid Fields',
+        html: `
+          <ul style="text-align: center;">
+            ${missingFields.map(field => `<li>• ${field}</li>`).join('')}
+          </ul>
+        `,
+      });
+      return false;
+    }
+  
+    return true;
+  }
+  
+  
+
 
   
 

@@ -244,8 +244,39 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
   }
 
+  handleSpaceRestrictions(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    // If space key is pressed (charCode 32)
+    if (charCode === 32) {
+      // Block space at the beginning
+      if (currentValue.length === 0) {
+        event.preventDefault();
+        return false;
+      }
+
+      // Block space if no letters exist yet (only spaces)
+      if (!/[a-zA-Z]/.test(currentValue)) {
+        event.preventDefault();
+        return false;
+      }
+
+      // Block consecutive spaces
+      if (currentValue.charAt(currentValue.length - 1) === ' ') {
+        event.preventDefault();
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   onNameInput(event: any, fieldName: string): void {
     let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+    value = value.replace(/\s{2,}/g, ' ');
+
     if (value.length > 0) {
       value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       this.userForm.get(fieldName)?.setValue(value, { emitEvent: false });
@@ -255,15 +286,20 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onNameKeyPress(event: KeyboardEvent): void {
     const charCode = event.which ? event.which : event.keyCode;
-    // Allow only letters (a-z, A-Z) and backspace, delete, tab, etc.
+
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
+
     if (
       (charCode < 65 || charCode > 90) && // A-Z
       (charCode < 97 || charCode > 122) && // a-z
-      charCode !== 8 &&
-      charCode !== 9 &&
-      charCode !== 46 &&
-      charCode !== 37 &&
-      charCode !== 39
+      charCode !== 8 &&  // backspace
+      charCode !== 9 &&  // tab
+      charCode !== 46 && // delete
+      charCode !== 37 && // left arrow
+      charCode !== 39 && // right arrow
+      charCode !== 32    // space (now handled by handleSpaceRestrictions)
     ) {
       event.preventDefault();
     }
@@ -272,25 +308,37 @@ export class EditPlantcareUsersComponent implements OnInit {
 
   onAccountHolderNameKeyPress(event: KeyboardEvent): void {
     const charCode = event.which ? event.which : event.keyCode;
+
+    if (!this.handleSpaceRestrictions(event)) {
+      return;
+    }
+
     if (
-      (charCode < 65 || charCode > 90) &&
-      (charCode < 97 || charCode > 122) &&
-      charCode !== 32 &&
-      charCode !== 8 &&
-      charCode !== 9 &&
-      charCode !== 46 &&
-      charCode !== 37 &&
-      charCode !== 39
+      (charCode < 65 || charCode > 90) && 
+      (charCode < 97 || charCode > 122) && 
+      charCode !== 32 && 
+      charCode !== 8 &&  
+      charCode !== 9 && 
+      charCode !== 46 && 
+      charCode !== 37 && 
+      charCode !== 39 
     ) {
       event.preventDefault();
     }
   }
 
+
   onAccountHolderNameInput(event: any): void {
     let value = event.target.value;
-
     value = value.replace(/[^a-zA-Z\s]/g, '');
+
+    value = value.replace(/^\s+/, '');
+
+
+    value = value.replace(/\s{2,}/g, ' ');
+
     value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
+
     this.userForm.get('accHolderName')?.setValue(value, { emitEvent: false });
     event.target.value = value;
   }

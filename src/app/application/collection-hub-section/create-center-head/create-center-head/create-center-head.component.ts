@@ -27,6 +27,13 @@ interface BranchesData {
   [key: string]: Branch[];
 }
 
+// Field configuration type
+interface FieldConfig {
+  regex: RegExp;
+  shouldCapitalize: boolean;
+  dataProperty: keyof InstanceType<typeof Personal>;
+}
+
 @Component({
   selector: 'app-create-center-head',
   standalone: true,
@@ -63,6 +70,31 @@ export class CreateCenterHeadComponent implements OnInit {
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   errorMessage: string = '';
+
+  // leadingSpaceError: boolean = false;
+  // specialCharOrNumberError: boolean = false;
+
+  // Component class properties - Similar to your phone validation approach
+isLeadingSpaceErrorMap: { [key: string]: boolean } = {
+  firstNameEnglish: false,
+  lastNameEnglish: false,
+  firstNameSinhala: false,
+  lastNameSinhala: false,
+  firstNameTamil: false,
+  lastNameTamil: false
+};
+
+isSpecialCharErrorMap: { [key: string]: boolean } = {
+  firstNameEnglish: false,
+  lastNameEnglish: false,
+  firstNameSinhala: false,
+  lastNameSinhala: false,
+  firstNameTamil: false,
+  lastNameTamil: false
+};
+
+
+
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -108,6 +140,197 @@ export class CreateCenterHeadComponent implements OnInit {
     this.loadBranches();
   }
 
+  // Field configurations
+private fieldConfigs: { [key: string]: FieldConfig } = {
+  'firstNameEnglish': {
+    regex: /[^A-Za-z ]/g,
+    shouldCapitalize: true,
+    dataProperty: 'firstNameEnglish'
+  },
+  'lastNameEnglish': {
+    regex: /[^A-Za-z ]/g,
+    shouldCapitalize: true,
+    dataProperty: 'lastNameEnglish'
+  },
+  'firstNameSinhala': {
+    regex: /[^\u0D80-\u0DFF ]/g,
+    shouldCapitalize: false,
+    dataProperty: 'firstNameSinhala'
+  },
+  'lastNameSinhala': {
+    regex: /[^\u0D80-\u0DFF ]/g,
+    shouldCapitalize: false,
+    dataProperty: 'lastNameSinhala'
+  },
+  'firstNameTamil': {
+    regex: /[^\u0B80-\u0BFF ]/g,
+    shouldCapitalize: false,
+    dataProperty: 'firstNameTamil'
+  },
+  'lastNameTamil': {
+    regex: /[^\u0B80-\u0BFF ]/g,
+    shouldCapitalize: false,
+    dataProperty: 'lastNameTamil'
+  }
+};
+
+// Single reusable method - similar to your validateSriLankanPhone approach
+validateNameInput(input: string, fieldName: string): void {
+  if (!input) {
+    this.isLeadingSpaceErrorMap[fieldName] = false;
+    this.isSpecialCharErrorMap[fieldName] = false;
+    return;
+  }
+
+  const config = this.fieldConfigs[fieldName];
+  if (!config) {
+    console.error(`Field configuration not found for: ${fieldName}`);
+    return;
+  }
+
+  // Reset errors
+  this.isLeadingSpaceErrorMap[fieldName] = false;
+  this.isSpecialCharErrorMap[fieldName] = false;
+
+  // Check for leading space
+  if (input.startsWith(' ')) {
+    this.isLeadingSpaceErrorMap[fieldName] = true;
+    return;
+  }
+
+  // Check for invalid characters
+  const validInput = input.replace(config.regex, '');
+  if (input !== validInput) {
+    this.isSpecialCharErrorMap[fieldName] = true;
+    return;
+  }
+
+  // If we reach here, input is valid
+  this.isLeadingSpaceErrorMap[fieldName] = false;
+  this.isSpecialCharErrorMap[fieldName] = false;
+}
+
+// Input handler method - similar to your phone input approach
+onNameInput(event: Event, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  let input = inputElement.value;
+  
+  const config = this.fieldConfigs[fieldName];
+  if (!config) {
+    console.error(`Field configuration not found for: ${fieldName}`);
+    return;
+  }
+
+  // Remove leading spaces and filter invalid characters
+  const trimmedInput = input.trimStart();
+  const validInput = trimmedInput.replace(config.regex, '');
+  
+  // Process the valid input
+  let processedInput = validInput;
+  
+  // Apply capitalization if needed (for English fields)
+  if (config.shouldCapitalize && processedInput.length > 0) {
+    processedInput = processedInput.charAt(0).toUpperCase() + processedInput.slice(1);
+  }
+
+  // Update the data model
+  (this.personalData as any)[config.dataProperty] = processedInput;
+
+  // Update input element value to reflect filtered result
+  inputElement.value = processedInput;
+
+  // Validate the original input to set error flags
+  this.validateNameInput(input, fieldName);
+}
+
+  // onCenterNameInput(event: Event): void {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   let input = inputElement.value;
+  
+  //   // Reset errors
+  //   this.leadingSpaceError = false;
+  //   this.specialCharOrNumberError = false;
+  
+  //   // Check for leading space
+  //   if (input.startsWith(' ')) {
+  //     this.leadingSpaceError = true;
+  //     input = input.trimStart(); // remove leading space
+  //   }
+  
+  //   // Only allow English letters and spaces
+  //   const validInput = input.replace(/[^A-Za-z ]/g, '');
+  //   if (input !== validInput) {
+  //     this.specialCharOrNumberError = true;
+  //   }
+  
+  //   // Capitalize the first letter
+  //   if (validInput.length > 0) {
+  //     validInput.trimStart(); // ensure no leading space
+  //     this.personalData.firstNameEnglish =
+  //       validInput.charAt(0).toUpperCase() + validInput.slice(1);
+  //   } else {
+  //     this.personalData.firstNameEnglish = '';
+  //   }
+  
+  //   // Update input element value to reflect filtered result
+  //   inputElement.value = this.personalData.firstNameEnglish;
+  // }
+
+  // onCenterNameInputSinhala(event: Event): void {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   let input = inputElement.value;
+  
+  //   // Reset errors
+  //   this.leadingSpaceError = false;
+  //   this.specialCharOrNumberError = false;
+  
+  //   // Check for leading space
+  //   if (input.startsWith(' ')) {
+  //     this.leadingSpaceError = true;
+  //     input = input.trimStart(); // remove leading space
+  //   }
+  
+  //   // Allow only Sinhala letters and spaces
+  //   const validInput = input.replace(/[^\u0D80-\u0DFF ]/g, '');
+  //   if (input !== validInput) {
+  //     this.specialCharOrNumberError = true;
+  //   }
+  
+  //   // No capitalization for Sinhala, just assign
+  //   this.personalData.firstNameSinhala = validInput.trimStart();
+  
+  //   // Update the input field to reflect the filtered value
+  //   inputElement.value = this.personalData.firstNameSinhala;
+  // }
+
+
+  // onCenterNameInputTamil(event: Event): void {
+  //   const inputElement = event.target as HTMLInputElement;
+  //   let input = inputElement.value;
+  
+  //   // Reset errors
+  //   this.leadingSpaceError = false;
+  //   this.specialCharOrNumberError = false;
+  
+  //   // Check for leading space
+  //   if (input.startsWith(' ')) {
+  //     this.leadingSpaceError = true;
+  //     input = input.trimStart(); // remove leading space
+  //   }
+  
+  //   // Allow only Tamil letters and spaces
+  //   const validInput = input.replace(/[^\u0B80-\u0BFF ]/g, '');
+  //   if (input !== validInput) {
+  //     this.specialCharOrNumberError = true;
+  //   }
+  
+  //   // Just assign trimmed result (no uppercase in Tamil)
+  //   this.personalData.firstNameTamil = validInput.trimStart();
+  
+  //   // Update the input field to reflect the filtered value
+  //   inputElement.value = this.personalData.firstNameTamil;
+  // }
+  
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
@@ -387,6 +610,7 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   checkFormValidity(): boolean {
+    console.log('personalData', this.personalData)
     const isFirstNameValid =
       !!this.personalData.firstNameEnglish &&
       !!this.personalData.firstNameSinhala &&
@@ -412,7 +636,10 @@ export class CreateCenterHeadComponent implements OnInit {
       isCompanySelected &&
       isNicSelected
     );
+    
   }
+
+  
 
   checkSubmitValidity(): boolean {
     const {

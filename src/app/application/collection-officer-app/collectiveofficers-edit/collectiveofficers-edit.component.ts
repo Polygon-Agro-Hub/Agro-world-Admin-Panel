@@ -316,45 +316,67 @@ export class CollectiveofficersEditComponent {
     return phoneRegex.test(phone);
   }
 
+  formatTextInput(fieldName: keyof Personal): void {
+    const value = this.personalData[fieldName];
+    if (typeof value === 'string') {
+      // Remove leading spaces
+      const cleanedValue = value.replace(/^\s+/, '');
+      (this.personalData[fieldName] as string) = cleanedValue;
+    }
+  }
+
+  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
+    const input = event.target as HTMLInputElement;
+    const fieldValue = this.personalData[fieldName];
+    // Prevent space if it's the first character or if the field is empty
+    if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
+      event.preventDefault();
+    }
+  }
+
   formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+      // Remove leading spaces and special characters/numbers, keep only letters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
       // Capitalize first letter and make rest lowercase
       value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       this.personalData[fieldName] = value;
     }
   }
 
+  // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
     let value = this.personalData.accHolderName;
     if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+      // Remove leading spaces and special characters/numbers, keep only letters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
       // Capitalize first letter and make rest lowercase
       value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       this.personalData.accHolderName = value;
     }
   }
 
+  // Update existing formatSinhalaName method
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Allow only Sinhala unicode characters and spaces
-      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
+      // Remove leading spaces and allow only Sinhala unicode characters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^\u0D80-\u0DFF\s]/g, '');
       this.personalData[fieldName] = value;
     }
   }
 
+  // Update existing formatTamilName method
   formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Allow only Tamil unicode characters and spaces
-      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
+      // Remove leading spaces and allow only Tamil unicode characters and spaces
+      value = value.replace(/^\s+/, '').replace(/[^\u0B80-\u0BFF\s]/g, '');
       this.personalData[fieldName] = value;
     }
   }
+
 
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];

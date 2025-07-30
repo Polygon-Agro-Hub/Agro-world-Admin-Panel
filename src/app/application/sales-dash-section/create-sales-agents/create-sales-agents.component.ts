@@ -291,6 +291,13 @@ export class CreateSalesAgentsComponent implements OnInit {
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
 
+    // Trim leading spaces
+    if (this.personalData[fieldName]) {
+      this.personalData[fieldName] = (
+        this.personalData[fieldName] as string
+      ).trimStart();
+    }
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
@@ -506,7 +513,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  validateNameInput(event: KeyboardEvent): void {
+  validateNameInput(event: KeyboardEvent, fieldName?: string): void {
     // Allow navigation and control keys
     const allowedKeys = [
       'Backspace',
@@ -516,12 +523,22 @@ export class CreateSalesAgentsComponent implements OnInit {
       'Tab',
       'Home',
       'End',
-      ' ',
       'Spacebar',
     ];
 
     // Allow these special keys
     if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get the current input value (if fieldName is provided)
+    const currentValue = fieldName
+      ? (this.personalData[fieldName as keyof Personal] as string) || ''
+      : '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
       return;
     }
 
@@ -639,6 +656,83 @@ export class CreateSalesAgentsComponent implements OnInit {
   isValidAccountNumber(accountNumber: string): boolean {
     const accountPattern = /^[a-zA-Z0-9]+$/;
     return accountPattern.test(accountNumber);
+  }
+
+  validateGeneralInput(
+    event: KeyboardEvent,
+    fieldName: string,
+    allowSpace: boolean = false
+  ): void {
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  validateEmailInput(event: KeyboardEvent, fieldName: string): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // For email fields, we might want to prevent spaces altogether
+    if (event.key === ' ') {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  validateAddressInput(event: KeyboardEvent, fieldName: string): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space if it's the first character
+    if (event.key === ' ' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
   }
 }
 

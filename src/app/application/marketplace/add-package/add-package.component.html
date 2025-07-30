@@ -27,15 +27,24 @@
     <!-- Left Panel -->
     <div class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-14 shadow-md rounded-md w-[70%]">
       <div class="flex flex-row justify-between items-center mb-6">
+        <!-- Display Package Name with validation -->
         <div class="w-[70%]">
-          <label class="text-[#534E4E] dark:text-textDark">Display Package Name</label>
-          <input type="text" id="name" name="name" [(ngModel)]="packageObj.displayName" placeholder="Fruit Pack"
+          <label class="text-[#534E4E] dark:text-textDark">Display Package Name <span class="text-red-500">*</span></label>
+          <input type="text" id="name" name="name" 
+            [(ngModel)]="packageObj.displayName" 
+            (input)="onDisplayNameChange($event)"
+            (blur)="onDisplayNameBlur()"
+            placeholder="Fruit Pack"
             class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500" />
+          <div *ngIf="shouldShowDisplayNameError" class="text-red-500 text-sm mt-1">
+            Display Package Name is required
+          </div>
         </div>
 
+        <!-- Image upload section with validation -->
         <div class="flex flex-row items-center gap-3 mt-6">
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
-          <label class="text-[#534E4E] font-semibold dark:text-textDark">Add Image</label>
+          <label class="text-[#534E4E] font-semibold dark:text-textDark">Add Image <span class="text-red-500">*</span></label>
           <div class="py-1 px-2 rounded-lg shadow-lg border border-[#3980C0] cursor-pointer"
             (click)="triggerFileInput($event)">
             <i class="fa-solid fa-plus text-3xl text-[#A3A3A3]"></i>
@@ -43,48 +52,79 @@
         </div>
       </div>
 
-      <!-- Description -->
+      <!-- Image validation error message -->
+      <div *ngIf="shouldShowImageError" class="text-red-500 text-sm mb-4">
+        Package Image is required
+      </div>
+
+      <!-- Description with validation -->
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Description</label>
-        <textarea rows="4" name="description" [(ngModel)]="packageObj.description" placeholder="Enter Description"
+        <label class="text-[#534E4E] dark:text-textDark">Description <span class="text-red-500">*</span></label>
+        <textarea rows="4" name="description" 
+          [(ngModel)]="packageObj.description" 
+          (blur)="onDescriptionBlur()"
+          placeholder="Enter Description"
           class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500"></textarea>
+        <div *ngIf="shouldShowDescriptionError" class="text-red-500 text-sm mt-1">
+          Description is required
+        </div>
       </div>
 
       <hr class="my-8 border border-[#D9D9D9] dark:border-gray-700" />
 
-      <!-- Pricing Inputs -->
+      <!-- Pricing Inputs with validation -->
       <div class="grid grid-cols-3 gap-8 mb-6">
         <div>
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
-            Total Package Price (Rs.)
+            Total Package Price (Rs.) <span class="text-red-500">*</span>
           </label>
-          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.productPrice"
-            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+          <input type="number" min="0" step="0.01" name="productPrice" 
+            [(ngModel)]="packageObj.productPrice"
+            (change)="calculateApproximatedPrice()" 
+            (blur)="onProductPriceBlur()"
+            (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" 
+            placeholder="Enter Amount"
             class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="shouldShowProductPriceError" class="text-red-500 text-sm mt-1">
+            Total Package Price must be greater than 0
+          </div>
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
-            Service Fee (Rs.)
+            Packaging Fee (Rs.) <span class="text-red-500">*</span>
           </label>
-          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.serviceFee"
-            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+          <input type="number" min="0" step="0.01" name="packageFee" 
+            [(ngModel)]="packageObj.packageFee"
+            (change)="calculateApproximatedPrice()" 
+            (blur)="onPackageFeeBlur()"
+            (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" 
+            placeholder="Enter Amount"
             class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="shouldShowPackageFeeError" class="text-red-500 text-sm mt-1">
+            Packaging Fee cannot be negative
+          </div>
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] font-medium mb-2 dark:text-textDark">
-            Packaging Fee (Rs.)
+            Service Fee (Rs.) <span class="text-red-500">*</span>
           </label>
-          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.packageFee"
-            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)" placeholder="Enter Amount"
+          <input type="number" min="0" step="0.01" name="serviceFee" 
+            [(ngModel)]="packageObj.serviceFee"
+            (change)="calculateApproximatedPrice()" 
+            (blur)="onServiceFeeBlur()"
+            (input)="preventNegative($event)"
+            (keypress)="allowDecimalNumbers($event)" 
+            placeholder="Enter Amount"
             class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="shouldShowServiceFeeError" class="text-red-500 text-sm mt-1">
+            Service Fee cannot be negative
+          </div>
         </div>
       </div>
-
 
       <!-- Approximated Price -->
       <div>
@@ -112,6 +152,7 @@
               <td class="px-4 py-2 text-right">
                 <input type="number" min="0" [value]="packageObj.quantities[item.id]"
                   (input)="onInputChange(item.id, $event); preventNegative($event)"
+                  (blur)="onQuantityBlur()"
                   (keypress)="allowOnlyNumbers($event)"
                   class="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-md py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-tileBlack text-black dark:text-textDark"
                   placeholder="--" />
@@ -120,13 +161,17 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Product type validation message -->
+      <div *ngIf="shouldShowQuantityError" class="text-red-500 text-sm mt-2">
+        You must select at least one product type with quantity greater than 0
+      </div>
     </div>
 
     <!-- Right Panel: Preview & Status -->
     <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
       <!-- Preview -->
       <div class="rounded-lg px-12 py-6 border border-[#CFCFCF] dark:bg-tileBlack">
-
         <p class="text-lg text-[#000000] dark:text-textDark font-normal">Preview</p>
 
         <div

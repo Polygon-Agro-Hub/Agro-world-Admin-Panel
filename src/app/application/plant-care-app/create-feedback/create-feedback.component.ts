@@ -59,7 +59,7 @@ export class CreateFeedbackComponent {
     private router: Router,
     private plantcareUsersService: PlantcareUsersService,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadNextNumber();
@@ -142,6 +142,13 @@ export class CreateFeedbackComponent {
       );
   }
 
+  preventLeadingSpace(event: KeyboardEvent, currentValue: string | number): void {
+    const value = String(currentValue || '').trim();
+    if (value.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+
   getAllFeedbacks() {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -158,7 +165,7 @@ export class CreateFeedbackComponent {
         (response) => {
           this.feebackList = response.feedbacks;
         },
-        () => {}
+        () => { }
       );
   }
 

@@ -42,6 +42,13 @@ export class EditCollectionCenterComponent implements OnInit {
   leadingSpaceError: boolean = false;
 specialCharOrNumberError: boolean = false;
 
+allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
+  isPhoneInvalidMap: { [key: string]: boolean } = {
+  phone01: false,
+  phone02: false,
+};
+
+
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
@@ -57,6 +64,16 @@ specialCharOrNumberError: boolean = false;
   ngOnInit(): void {
     this.fetchCollectionCenter();
     this.getAllCompanies();
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Only allow 0-9
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   ProvinceData = [
@@ -132,6 +149,35 @@ specialCharOrNumberError: boolean = false;
       ],
     },
   ];
+
+  validateSriLankanPhone(input: string, key: string): void {
+    if (!input) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
+  
+    const firstDigit = input.charAt(0);
+    const prefix = input.substring(0, 2);
+    const isValidPrefix = this.allowedPrefixes.includes(prefix);
+    const isValidLength = input.length === 9;
+  
+    if (firstDigit !== '7') {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
+  
+    if (!isValidPrefix && input.length >= 2) {
+      this.isPhoneInvalidMap[key] = true;
+      return;
+    }
+  
+    if (input.length === 9 && isValidPrefix) {
+      this.isPhoneInvalidMap[key] = false;
+      return;
+    }
+  
+    this.isPhoneInvalidMap[key] = false;
+  }
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;

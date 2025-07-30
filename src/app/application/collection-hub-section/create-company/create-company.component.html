@@ -75,6 +75,7 @@
           <label for="regNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Registration Number
             of the Company <span style="color: #2E2E2E">*</span></label>
           <input id="regNumber" name="regNumber" [(ngModel)]="companyData.regNumber" (blur)="onBlur('regNumber')"
+            (keydown)="handleInputWithSpaceTrimming($event, 'regNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span> -->
         </div>
@@ -83,8 +84,8 @@
           <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
             Name (in English) <span style="color: #2E2E2E">*</span></label>
           <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter('companyNameEnglish')"
-            (blur)="onBlur('companyNameEnglish')"
+            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+            (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
             Only English letters are allowed.
@@ -97,7 +98,7 @@
           <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
             Name (in Sinhala) <span style="color: #2E2E2E">*</span></label>
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
+            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
             Only Sinhala letters are allowed.
@@ -110,7 +111,7 @@
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
             (in Tamil) <span style="color: #2E2E2E">*</span></label>
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
+            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
             Only Tamil letters are allowed.
@@ -123,6 +124,7 @@
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
             Address <span style="color: #2E2E2E">*</span></label>
           <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
+            (keydown)="handleInputWithSpaceTrimming($event, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
           <span *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm">
@@ -152,7 +154,7 @@
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s
             Name <span style="color: #2E2E2E">*</span></label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-            (keydown)="allowOnlyValidNameCharacters($event)"
+            (keydown)="handleInputWithSpaceTrimming($event, 'accHolderName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
             Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
@@ -167,6 +169,7 @@
           </label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
             (keypress)="numberOnly($event)" (paste)="onPaste($event, 'accNumber')"
+            (keydown)="handleInputWithSpaceTrimming($event, 'accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
             Account Number is required.
@@ -179,6 +182,7 @@
           </label>
           <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
             (blur)="onBlur('confirmAccNumber')" (keypress)="numberOnly($event)"
+            (keydown)="handleInputWithSpaceTrimming($event, 'confirmAccNumber')"
             (paste)="onPaste($event, 'confirmAccNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
@@ -246,7 +250,8 @@
           <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
             Name <span style="color: #2E2E2E">*</span></label>
           <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
-            (input)="capitalizeFirstLetter('foName')" (blur)="onBlur('foName')"
+            (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
+            (blur)="onBlur('foName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="invalidFoName" class="text-red-500 text-sm mt-1">
             Only English letters and spaces are allowed in Finance Officer’s Name.
@@ -302,6 +307,7 @@
                 <option value="+31">🇳🇱 +31</option>
               </select>
               <input id="phoneNumber02" name="oicConNum2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="9"
+                (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum2')"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
               <div *ngIf="contactNumberError2" class="text-red-500 text-sm mt-1">

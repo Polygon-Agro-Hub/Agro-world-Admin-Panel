@@ -7,7 +7,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  
+
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -69,15 +69,15 @@ export class CreateCompanyComponent implements OnInit {
   companyNameError: string = '';
   isCheckingCompanyName: boolean = false;
   englishInputError: boolean = false;
- sinhalaInputError: boolean = false;
- tamilInputError: boolean = false;
- invalidCharError: boolean = false;
-accountNumberError: boolean = false;
-invalidFoName: boolean = false;
-contactNumberError1: boolean = false;
-contactNumberError2: boolean = false;
-logoSizeError: boolean = false;
-faviconSizeError: boolean = false;
+  sinhalaInputError: boolean = false;
+  tamilInputError: boolean = false;
+  invalidCharError: boolean = false;
+  accountNumberError: boolean = false;
+  invalidFoName: boolean = false;
+  contactNumberError1: boolean = false;
+  contactNumberError2: boolean = false;
+  logoSizeError: boolean = false;
+  faviconSizeError: boolean = false;
 
   companyType: string = '';
   countries = [
@@ -195,95 +195,198 @@ faviconSizeError: boolean = false;
     });
   }
 
- async onLogoChange(event: Event): Promise<void> {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    
-    // Check file size (1MB = 1024 * 1024 bytes)
-    const maxSize = 1024 * 1024; // 1MB
-    if (file.size > maxSize) {
-      this.logoSizeError = true;
-      Swal.fire({
-        icon: 'error',
-        title: 'File Size Too Large',
-        text: 'Image size is too large. Please upload an image less than 1MB',
-      });
-      // Clear the file input
-      input.value = '';
+
+  handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
+    const input = event.target as HTMLInputElement;
+    const key = event.key;
+    const currentValue = input.value;
+    const cursorPosition = input.selectionStart || 0;
+
+    const controlKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    if (controlKeys.includes(key)) {
       return;
     }
 
-    try {
-      this.isLoading = true;
-      this.logoSizeError = false; // Reset error state
-      
-      const compressedFile = await this.compressImage(
-        file,
-        800,
-        800,
-        0.7
-      );
-      this.selectedLogoFile = compressedFile;
-      this.companyData.logoFile = compressedFile;
+    const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
+    const englishOnlyFields = ['companyNameEnglish', 'accHolderName', 'foName'];
+    const emailFields = ['email'];
+    const sinhalaFields = [''];
+    const tamilFields = [''];
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.companyData.logo = e.target?.result as string;
-        this.isLoading = false;
-      };
-      reader.readAsDataURL(this.selectedLogoFile);
-    } catch (error) {
-      this.isLoading = false;
-      console.error('Error compressing image:', error);
+    if (numericFields.includes(fieldName)) {
+
+      if (!/^[0-9]$/.test(key)) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (englishOnlyFields.includes(fieldName)) {
+     
+      if (!/^[A-Za-z\s'-]$/.test(key)) {
+        event.preventDefault();
+        this.englishInputError = true;
+        setTimeout(() => {
+          this.englishInputError = false;
+        }, 2000);
+        return;
+      }
+    }
+
+    if (sinhalaFields.includes(fieldName)) {
+      const charCode = key.charCodeAt(0);
+      if ((charCode < 0x0D80 || charCode > 0x0DFF) && key !== ' ') {
+        event.preventDefault();
+        this.sinhalaInputError = true;
+        setTimeout(() => {
+          this.sinhalaInputError = false;
+        }, 2000);
+        return;
+      }
+    }
+
+
+    if (tamilFields.includes(fieldName)) {
+      const charCode = key.charCodeAt(0);
+      if ((charCode < 0x0B80 || charCode > 0x0BFF) && key !== ' ') {
+        event.preventDefault();
+        this.tamilInputError = true;
+        setTimeout(() => {
+          this.tamilInputError = false;
+        }, 2000);
+        return;
+      }
+    }
+
+    if (emailFields.includes(fieldName)) {
+
+      if (!/^[A-Za-z0-9@.\-_]$/.test(key)) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (!numericFields.includes(fieldName) && key === ' ') {
+
+      const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue);
+      const charBeforeCursor = currentValue.charAt(cursorPosition - 1);
+
+      if (cursorPosition === 0 || charBeforeCursor === ' ' || !hasLetters) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (!numericFields.includes(fieldName)) {
+      setTimeout(() => {
+        let trimmedValue = input.value;
+
+
+        trimmedValue = trimmedValue.replace(/^\s+/, '');
+
+        trimmedValue = trimmedValue.replace(/\s{2,}/g, ' ');
+
+
+        if (input.value !== trimmedValue) {
+          input.value = trimmedValue;
+          (this.companyData as any)[fieldName] = trimmedValue;
+
+          const newCursorPosition = Math.min(cursorPosition, trimmedValue.length);
+          input.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+      }, 0);
     }
   }
-}
 
-// Updated onFaviconChange method
-async onFaviconChange(event: Event): Promise<void> {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    
-    // Check file size (1MB = 1024 * 1024 bytes)
-    const maxSize = 1024 * 1024; // 1MB
-    if (file.size > maxSize) {
-      this.faviconSizeError = true;
-      Swal.fire({
-        icon: 'error',
-        title: 'File Size Too Large',
-        text: 'Image size is too large. Please upload an image less than 1MB',
-      });
-      // Clear the file input
-      input.value = '';
-      return;
-    }
+  async onLogoChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
 
-    try {
-      this.isLoading = true;
-      this.faviconSizeError = false; // Reset error state
-      
-      const compressedFile = await this.compressImage(
-        file,
-        800,
-        800,
-        0.7
-      );
-      this.selectedFaviconFile = compressedFile;
-      this.companyData.faviconFile = compressedFile;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.companyData.favicon = e.target?.result as string;
+      // Check file size (1MB = 1024 * 1024 bytes)
+      const maxSize = 1024 * 1024; // 1MB
+      if (file.size > maxSize) {
+        this.logoSizeError = true;
+        Swal.fire({
+          icon: 'error',
+          title: 'File Size Too Large',
+          text: 'Image size is too large. Please upload an image less than 1MB',
+        });
+        // Clear the file input
+        input.value = '';
+        return;
+      }
+
+      try {
+        this.isLoading = true;
+        this.logoSizeError = false; // Reset error state
+
+        const compressedFile = await this.compressImage(
+          file,
+          800,
+          800,
+          0.7
+        );
+        this.selectedLogoFile = compressedFile;
+        this.companyData.logoFile = compressedFile;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.companyData.logo = e.target?.result as string;
+          this.isLoading = false;
+        };
+        reader.readAsDataURL(this.selectedLogoFile);
+      } catch (error) {
         this.isLoading = false;
-      };
-      reader.readAsDataURL(this.selectedFaviconFile);
-    } catch (error) {
-      this.isLoading = false;
-      console.error('Error compressing image:', error);
+        console.error('Error compressing image:', error);
+      }
     }
   }
-}
+
+  // Updated onFaviconChange method
+  async onFaviconChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Check file size (1MB = 1024 * 1024 bytes)
+      const maxSize = 1024 * 1024; // 1MB
+      if (file.size > maxSize) {
+        this.faviconSizeError = true;
+        Swal.fire({
+          icon: 'error',
+          title: 'File Size Too Large',
+          text: 'Image size is too large. Please upload an image less than 1MB',
+        });
+        // Clear the file input
+        input.value = '';
+        return;
+      }
+
+      try {
+        this.isLoading = true;
+        this.faviconSizeError = false; // Reset error state
+
+        const compressedFile = await this.compressImage(
+          file,
+          800,
+          800,
+          0.7
+        );
+        this.selectedFaviconFile = compressedFile;
+        this.companyData.faviconFile = compressedFile;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.companyData.favicon = e.target?.result as string;
+          this.isLoading = false;
+        };
+        reader.readAsDataURL(this.selectedFaviconFile);
+      } catch (error) {
+        this.isLoading = false;
+        console.error('Error compressing image:', error);
+      }
+    }
+  }
 
   removeLogo(event: Event): void {
     event.stopPropagation();
@@ -321,7 +424,7 @@ async onFaviconChange(event: Event): Promise<void> {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -331,7 +434,7 @@ async onFaviconChange(event: Event): Promise<void> {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -637,25 +740,25 @@ async onFaviconChange(event: Event): Promise<void> {
 
     this.selectedPage = page;
   }
-allowOnlyEnglishLetterss(event: KeyboardEvent): void {
-  const key = event.key;
-  const pattern = /^[a-zA-Z\s]$/;
+  allowOnlyEnglishLetterss(event: KeyboardEvent): void {
+    const key = event.key;
+    const pattern = /^[a-zA-Z\s]$/;
 
-  // Allow essential control keys
-  if (
-    key === 'Backspace' ||
-    key === 'Delete' ||
-    key === 'Tab' ||
-    key === 'ArrowLeft' ||
-    key === 'ArrowRight'
-  ) {
-    return;
-  }
+    // Allow essential control keys
+    if (
+      key === 'Backspace' ||
+      key === 'Delete' ||
+      key === 'Tab' ||
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight'
+    ) {
+      return;
+    }
 
-  if (!pattern.test(key)) {
-    event.preventDefault();
+    if (!pattern.test(key)) {
+      event.preventDefault();
+    }
   }
-}
 
 
   updateCompanyData() {
@@ -708,29 +811,29 @@ allowOnlyEnglishLetterss(event: KeyboardEvent): void {
       Swal.fire('Error', 'No company ID found for update', 'error');
     }
   }
-onBlur(fieldName: keyof Company): void {
-  this.touchedFields[fieldName] = true;
+  onBlur(fieldName: keyof Company): void {
+    this.touchedFields[fieldName] = true;
 
-  if (fieldName === 'confirmAccNumber') {
-    this.validateConfirmAccNumber();
-  }
+    if (fieldName === 'confirmAccNumber') {
+      this.validateConfirmAccNumber();
+    }
 
-  if (fieldName === 'foName') {
-    const value = this.companyData.foName || '';
-    const isValid = /^[a-zA-Z\s]+$/.test(value.trim());
+    if (fieldName === 'foName') {
+      const value = this.companyData.foName || '';
+      const isValid = /^[a-zA-Z\s]+$/.test(value.trim());
 
-    this.invalidFoName = !isValid;
+      this.invalidFoName = !isValid;
 
-    if (isValid) {
-      this.companyData.foName = this.capitalizeFirstLetters(value);
+      if (isValid) {
+        this.companyData.foName = this.capitalizeFirstLetters(value);
+      }
     }
   }
-}
-capitalizeFirstLetters(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-}
+  capitalizeFirstLetters(value: string): string {
+    return value
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
 
 
   isFieldInvalid(fieldName: keyof Company): boolean {
@@ -905,130 +1008,130 @@ allowOnlyEnglishLetters(event: KeyboardEvent): void {
 
   const key = event.key;
 
-   if (!regex.test(key) && key.length === 1) {
-    event.preventDefault();
-    this.englishInputError = true;
+    if (!regex.test(key) && key.length === 1) {
+      event.preventDefault();
+      this.englishInputError = true;
 
-    // Automatically hide the error after 2 seconds
-    setTimeout(() => {
-      this.englishInputError = false;
-    }, 2000);
+      // Automatically hide the error after 2 seconds
+      setTimeout(() => {
+        this.englishInputError = false;
+      }, 2000);
+    }
   }
-}
 
-capitalizeFirstLetter(field: 'companyNameEnglish' | 'foName') {
-  const currentValue = this.companyData[field];
-  if (currentValue && currentValue.length > 0) {
-    this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+  capitalizeFirstLetter(field: 'companyNameEnglish' | 'foName') {
+    const currentValue = this.companyData[field];
+    if (currentValue && currentValue.length > 0) {
+      this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+    }
   }
-}
 
 allowOnlyValidNameCharacters(event: KeyboardEvent): void {
   const allowedPattern = /^[a-zA-Z\s]$/;
 
-  const key = event.key;
+    const key = event.key;
 
-  // Allow control keys like Backspace, Delete, Arrow keys, etc.
-  if (
-    key === 'Backspace' ||
-    key === 'Delete' ||
-    key === 'ArrowLeft' ||
-    key === 'ArrowRight' ||
-    key === 'Tab'
-  ) {
-    this.invalidCharError = false;
-    return;
+    // Allow control keys like Backspace, Delete, Arrow keys, etc.
+    if (
+      key === 'Backspace' ||
+      key === 'Delete' ||
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight' ||
+      key === 'Tab'
+    ) {
+      this.invalidCharError = false;
+      return;
+    }
+
+    // If not matching allowed pattern
+    if (!allowedPattern.test(key)) {
+      event.preventDefault();
+      this.invalidCharError = true;
+    } else {
+      this.invalidCharError = false;
+    }
   }
 
-  // If not matching allowed pattern
-  if (!allowedPattern.test(key)) {
-    event.preventDefault();
-    this.invalidCharError = true;
-  } else {
-    this.invalidCharError = false;
+  allowOnlyDigits(event: KeyboardEvent): void {
+    const key = event.key;
+    const isDigit = /^[0-9]$/.test(key);
+
+    if (!isDigit && key.length === 1) {
+      event.preventDefault();
+      this.accountNumberError = true;
+
+      // Hide error after 2 seconds
+      setTimeout(() => {
+        this.accountNumberError = false;
+      }, 2000);
+    }
   }
-}
 
-allowOnlyDigits(event: KeyboardEvent): void {
-  const key = event.key;
-  const isDigit = /^[0-9]$/.test(key);
 
-  if (!isDigit && key.length === 1) {
-    event.preventDefault();
-    this.accountNumberError = true;
 
-    // Hide error after 2 seconds
-    setTimeout(() => {
-      this.accountNumberError = false;
-    }, 2000);
+  allowOnlySinhalaLetters(event: KeyboardEvent): void {
+    const charCode = event.key.charCodeAt(0);
+    // Sinhala Unicode range: U+0D80 - U+0DFF
+    if ((charCode < 0x0D80 || charCode > 0x0DFF) && event.key.length === 1) {
+      event.preventDefault();
+      this.sinhalaInputError = true;
+
+      setTimeout(() => {
+        this.sinhalaInputError = false;
+      }, 2000);
+    }
   }
-}
 
+  allowOnlyTamilLetters(event: KeyboardEvent): void {
+    const charCode = event.key.charCodeAt(0);
+    // Tamil Unicode range: U+0B80 - U+0BFF
+    if ((charCode < 0x0B80 || charCode > 0x0BFF) && event.key.length === 1) {
+      event.preventDefault();
+      this.tamilInputError = true;
 
-
-allowOnlySinhalaLetters(event: KeyboardEvent): void {
-  const charCode = event.key.charCodeAt(0);
-  // Sinhala Unicode range: U+0D80 - U+0DFF
-  if ((charCode < 0x0D80 || charCode > 0x0DFF) && event.key.length === 1) {
-    event.preventDefault();
-    this.sinhalaInputError = true;
-
-    setTimeout(() => {
-      this.sinhalaInputError = false;
-    }, 2000);
+      setTimeout(() => {
+        this.tamilInputError = false;
+      }, 2000);
+    }
   }
-}
 
-allowOnlyTamilLetters(event: KeyboardEvent): void {
-  const charCode = event.key.charCodeAt(0);
-  // Tamil Unicode range: U+0B80 - U+0BFF
-  if ((charCode < 0x0B80 || charCode > 0x0BFF) && event.key.length === 1) {
-    event.preventDefault();
-    this.tamilInputError = true;
 
-    setTimeout(() => {
-      this.tamilInputError = false;
-    }, 2000);
+
+  validateContactNumbers(): void {
+    const num1 = this.companyData.oicConNum1?.toString() || '';
+    const num2 = this.companyData.oicConNum2?.toString() || '';
+
+    // Length validation errors (for UI messages)
+    this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
+    this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
+
+    // Duplicate number check with country codes
+    if (
+      num1.length === 9 &&
+      num2.length === 9 &&
+      this.companyData.oicConNum1 &&
+      this.companyData.oicConNum2 &&
+      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+      this.companyData.oicConCode1 === this.companyData.oicConCode2
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate Numbers',
+        text: 'Company Contact Number 1 and 2 cannot be the same',
+      });
+      // Clear the second number
+      this.companyData.oicConNum2 = '';
+      this.contactNumberError2 = false; // reset error for second input after clearing
+    }
   }
-}
-
-
-
-validateContactNumbers(): void {
-  const num1 = this.companyData.oicConNum1?.toString() || '';
-  const num2 = this.companyData.oicConNum2?.toString() || '';
- 
-  // Length validation errors (for UI messages)
-  this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
-  this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
-
-  // Duplicate number check with country codes
-  if (
-    num1.length === 9 && 
-    num2.length === 9 &&
-    this.companyData.oicConNum1 &&
-    this.companyData.oicConNum2 &&
-    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-    this.companyData.oicConCode1 === this.companyData.oicConCode2
-  ) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Duplicate Numbers',
-      text: 'Company Contact Number 1 and 2 cannot be the same',
-    });
-    // Clear the second number
-    this.companyData.oicConNum2 = '';
-    this.contactNumberError2 = false; // reset error for second input after clearing
-  }
-}
 
 
   validateContactNumberss() {
     const num1 = this.companyData.oicConNum1?.toString() || '';
-  const num2 = this.companyData.oicConNum2?.toString() || '';
+    const num2 = this.companyData.oicConNum2?.toString() || '';
 
-  this.contactNumberError1 = num1.length !== 9 && num1.length > 0;
-  this.contactNumberError2 = num2.length !== 9 && num2.length > 0;
+    this.contactNumberError1 = num1.length !== 9 && num1.length > 0;
+    this.contactNumberError2 = num2.length !== 9 && num2.length > 0;
   }
 
 

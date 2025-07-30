@@ -231,14 +231,14 @@ export class AgroWorldCentersComponent {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  searchPlantCareUsers() {
-    console.log(this.searchItem);
-    // this.page = 1;
-    this.fetchAllCollectionCenter(
-      this.page,
-      this.itemsPerPage,
-    );
-  }
+  
+
+searchPlantCareUsers() {
+  this.searchItem = this.searchItem.trim(); // remove leading/trailing whitespace
+  this.page = 1; // optional: reset to page 1 on new search
+  this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+}
+
 
   clearSearch(): void {
     this.searchItem = '';

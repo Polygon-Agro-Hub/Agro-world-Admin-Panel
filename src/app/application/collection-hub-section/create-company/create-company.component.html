@@ -76,7 +76,7 @@
             of the Company <span style="color: #2E2E2E">*</span></label>
           <input id="regNumber" name="regNumber" [(ngModel)]="companyData.regNumber" (blur)="onBlur('regNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span>
+          <!-- <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span> -->
         </div>
 
         <div class="pb-6">
@@ -86,11 +86,11 @@
             (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter('companyNameEnglish')"
             (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
             Only English letters are allowed.
-          </div>
-          <span *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-600 text-sm">Company Name in English
-            required.</span>
+          </div> -->
+          <!-- <span *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-600 text-sm">Company Name in English
+            required.</span> -->
         </div>
 
         <div class="pb-6">
@@ -99,11 +99,11 @@
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
             (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
             Only Sinhala letters are allowed.
-          </div>
-          <span *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-600 text-sm">Company Name in Sinhala
-            required.</span>
+          </div> -->
+          <!-- <span *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-600 text-sm">Company Name in Sinhala
+            required.</span> -->
         </div>
 
         <div class="pb-6">
@@ -112,11 +112,11 @@
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
             (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
             Only Tamil letters are allowed.
-          </div>
-          <span *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-600 text-sm">Company Name in Tamil
-            required.</span>
+          </div> -->
+          <!-- <span *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-600 text-sm">Company Name in Tamil
+            required.</span> -->
         </div>
 
         <div class="pb-6">
@@ -157,8 +157,8 @@
           <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
             Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
           </div>
-          <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder Name is
-            required.</span>
+          <!-- <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder Name is
+            required.</span> -->
         </div>
 
         <div class="pb-6">
@@ -168,9 +168,9 @@
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
             (keypress)="numberOnly($event)" (paste)="onPaste($event, 'accNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
             Account Number is required.
-          </span>
+          </span> -->
         </div>
 
         <div class="pb-6">
@@ -181,9 +181,9 @@
             (blur)="onBlur('confirmAccNumber')" (keypress)="numberOnly($event)"
             (paste)="onPaste($event, 'confirmAccNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <!-- <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
             Confirm Account Number is required.
-          </span>
+          </span> -->
           <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
             Account Numbers do not match.
           </span>
@@ -210,9 +210,9 @@
             }"
           >
           </p-dropdown>
-          <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
+          <!-- <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
             Bank Name is required.
-          </span>
+          </span> -->
         </div>
 
         <div class="pb-6">
@@ -237,9 +237,9 @@
             }"
           >
           </p-dropdown>
-          <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+          <!-- <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
             Branch Name is required.
-          </span>
+          </span> -->
         </div>
 
         <div class="pb-6">
@@ -248,9 +248,9 @@
           <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
             (input)="capitalizeFirstLetter('foName')" (blur)="onBlur('foName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="invalidFoName" class="text-red-500 text-sm mt-1">
+          <!-- <div *ngIf="invalidFoName" class="text-red-500 text-sm mt-1">
             Only English letters and spaces are allowed in Finance Officer’s Name.
-          </div>
+          </div> -->
           <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
 
@@ -275,10 +275,10 @@
                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                   placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1" #oicConNum1Ref="ngModel"
                   (blur)="validateContactNumbers()" />
-                <div *ngIf="oicConNum1Ref.invalid && oicConNum1Ref.touched && oicConNum1Ref.errors?.['required']"
+                <!-- <div *ngIf="oicConNum1Ref.invalid && oicConNum1Ref.touched && oicConNum1Ref.errors?.['required']"
                   class="text-red-500 text-sm mt-1">
                   Company Contact Number - 1 is required.
-                </div>
+                </div> -->
                 <div *ngIf="contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm mt-1">
                   Contact number must be exactly 9 digits.
                 </div>

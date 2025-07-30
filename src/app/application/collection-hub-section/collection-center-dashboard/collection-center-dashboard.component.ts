@@ -46,23 +46,36 @@ export class CollectionCenterDashboardComponent {
     );
   }
 
-  fetchCenterDashbordDetails() {
-    this.isLoading = true;
-    this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
-      console.log(res);
-      this.isLoading = false;
+fetchCenterDashbordDetails() {
+  this.isLoading = true;
 
-      
-      this.resentCollectionArr = res.limitedResentCollection;
-      console.log('resentCollectionArr', this.resentCollectionArr)
-      this.totExpences = res.totExpences.totExpences;
-      this.expencePrecentage = res.difExpences;
-      // this.centerNameObj = res.officerCount;
-      // this.transCount = res.transCount.transactionCount;
-      // this.transAmount = res.transAmountCount.transAmountCount;
-      this.isLoading = false;
-    });
-  }
+  this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
+    this.isLoading = false;
+
+    console.log('📦 Full Dashboard Response:', res); // ✅ Shows everything
+
+    // If centerName, regCode, etc. are inside res.centerDetails or similar,
+    // update based on actual structure.
+    if (res.centerDetails) {
+      console.log('✅ centerDetails:', res.centerDetails);
+
+      this.centerNameObj.centerName = res.centerDetails.centerName;
+      this.centerNameObj.regCode = res.centerDetails.regCode;
+      this.centerNameObj.officerCount = res.centerDetails.officerCount;
+
+      console.log('🧾 Final centerNameObj:', this.centerNameObj);
+    } else {
+      console.warn('⚠️ centerDetails missing in response');
+    }
+
+    this.resentCollectionArr = res.limitedResentCollection;
+    console.log('🧾 resentCollectionArr:', this.resentCollectionArr);
+
+    this.totExpences = res.totExpences?.totExpences ?? 0;
+    this.expencePrecentage = res.difExpences ?? 0;
+  });
+}
+
 
   chooseTable(table: string) {
     this.selectTable = table;

@@ -46,6 +46,7 @@ export class ViewPackageListComponent implements OnInit {
   ];
   selectedStatus: any;
   searchtext: string = '';
+  
 
   constructor(
     private router: Router,
@@ -64,7 +65,9 @@ export class ViewPackageListComponent implements OnInit {
 
   fetchAllPackages(searchText: string = this.searchtext, date?: string) {
     this.isLoading = true;
-    this.viewPackagesList.getAllMarketplacePackages(searchText, date).subscribe(
+    // Trim the search string to remove leading/trailing spaces
+    const trimmedSearch = searchText.trim();
+    this.viewPackagesList.getAllMarketplacePackages(trimmedSearch, date).subscribe(
       (response) => {
         console.log('Package list response:', response);
         this.viewPackageList = response.data.flatMap((group: any) =>
@@ -80,12 +83,14 @@ export class ViewPackageListComponent implements OnInit {
         console.error('Error fetching all Packages', error);
         this.isLoading = false;
         if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
           this.router.navigate(['/login']);
+        } else {
+          Swal.fire('Error', 'Failed to fetch packages.', 'error');
         }
       }
     );
   }
-
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
@@ -151,7 +156,12 @@ export class ViewPackageListComponent implements OnInit {
     );
   }
 
-  onSearch() {
+onSearch() {
+    this.searchtext = this.searchtext.trim(); // Trim leading/trailing spaces
+    if (!this.searchtext) {
+      Swal.fire('Info', 'Please enter a valid search term.', 'info');
+      return;
+    }
     this.fetchAllPackages(this.searchtext, this.date);
   }
 

@@ -23,7 +23,7 @@ export class ViewRetailCustomeresComponent implements OnInit {
   searchText: string = '';
   isPopupOpen: boolean = false;
   cusObjDetails: Customers = new Customers();
-  hasData: boolean = true;
+  hasData: boolean = false;
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
@@ -54,7 +54,7 @@ export class ViewRetailCustomeresComponent implements OnInit {
         console.log(res);
         this.customerObj = res.items;
         this.totalItems = res.total;
-        this.hasData = res.items.length > 0;
+        this.hasData = res.items.length === 0 ? false : true;
         this.isLoading = false;
       },
       (err) => {
@@ -102,6 +102,12 @@ export class ViewRetailCustomeresComponent implements OnInit {
   viewOrderDetails(id: string) {
     this.router.navigate(['/market/action/view-order-details', id]);
   }
+
+  trimLeadingSpaces() {
+  if (this.searchText && this.searchText.startsWith(' ')) {
+    this.searchText = this.searchText.trimStart();
+  }
+}
 }
 
 class Customers {
@@ -110,7 +116,7 @@ class Customers {
   lastName!: string;
   phoneCode!: string;
   phoneNumber!: string;
-  totalOrders!: string;
+  totalOrders!: number;
   cusId!: string;
   created_at!: string;
   email!: string;

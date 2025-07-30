@@ -11,15 +11,15 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Retail Customers ({{ totalItems }})
-        </h2>
+          Retail Customers ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' +totalItems : totalItems }}) </h2>
       </div>
 
       <div class="flex items-center gap-3">
         <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
           <input type="text" placeholder="Search" [(ngModel)]="searchText" name="searchText"
-            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" (keydown.enter)="onSearch()" />
-
+            title="Search by Customer ID, Name, Phone Number"
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" (keydown.enter)="onSearch()"
+            (input)="trimLeadingSpaces()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
@@ -38,10 +38,9 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-textLight dark:text-textDark text-lg">
-        No data to display
-      </p>
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div *ngIf="hasData" class="w-full py-4">
@@ -82,21 +81,21 @@
                     };
               let i = index
             " class="border-b border-gray-200 dark:border-[#4B555A]">
-            <td class="px-3 py-3 text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-[#000000] dark:text-textDark">
               {{ item.cusId }}
             </td>
-            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.firstName }} {{ item.lastName }}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.created_at | date : "dd/MM/yyyy hh:mm a" }}
+            <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark">
+              {{ item.created_at | date : "d MMM, y h:mm a" }}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.phoneCode }} - {{ item.phoneNumber }}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.totalOrders }}
-            </td>
+            <td class="px-3 py-3 text-center text-[#000000] dark:text-textDark">
+              {{ item.totalOrders === 0 ? '0' : item.totalOrders < 10 ? '0' + item.totalOrders : item.totalOrders }}
+                </td>
             <td class="px-3 py-3 text-center">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="detailsPop(item)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

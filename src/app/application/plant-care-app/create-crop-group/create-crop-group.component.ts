@@ -33,6 +33,44 @@ interface NewsItem {
   styleUrl: './create-crop-group.component.css',
 })
 export class CreateCropGroupComponent {
+  // Allow only English letters and spaces (no leading space)
+  allowOnlyEnglish(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[a-zA-Z ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+  // Allow only Tamil letters (Unicode range: 0B80–0BFF) and spaces (no leading space)
+  allowOnlyTamil(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[\u0B80-\u0BFF ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+  // Allow only Sinhala letters (Unicode range: 0D80–0DFF) and spaces (no leading space)
+  allowOnlySinhala(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[\u0D80-\u0DFF ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
   cropGroup = {
     cropNameEnglish: '',
     cropNameSinahala: '',

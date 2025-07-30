@@ -1,3 +1,4 @@
+
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <button class="mb-5 text-textLight dark:text-textDark" (click)="backCreate()">
@@ -111,7 +112,7 @@
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="py-3 px-4 text-textLight dark:text-textDark text-start">
-              {{ item.cropNameEnglish }}
+              {{ item.cropNameEnglish ? (item.cropNameEnglish.charAt(0).toUpperCase() + item.cropNameEnglish.slice(1)) : '' }}
             </td>
             <td class="px-4 py-3 text-center">
               <div class="flex justify-center">

@@ -57,6 +57,7 @@
           type="text"
           id="taskEnglish"
           [(ngModel)]="taskItems.taskEnglish"
+          (keydown)="onKeyDown($event, taskItems.taskEnglish)"
           (input)="validateEnglishInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -72,6 +73,7 @@
           type="text"
           id="taskTypeEnglish"
           [(ngModel)]="taskItems.taskTypeEnglish"
+          (keydown)="onKeyDown($event, taskItems.taskTypeEnglish)"
           (input)="validateEnglishInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -87,6 +89,7 @@
           type="text"
           id="taskCategoryEnglish"
           [(ngModel)]="taskItems.taskCategoryEnglish"
+          (keydown)="onKeyDown($event, taskItems.taskCategoryEnglish)"
           (input)="validateEnglishInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -102,6 +105,7 @@
           type="text"
           id="taskDescriptionEnglish"
           [(ngModel)]="taskItems.taskDescriptionEnglish"
+          (keydown)="onKeyDown($event, taskItems.taskDescriptionEnglish)"
           (input)="validateEnglishInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -120,6 +124,7 @@
           type="text"
           id="taskSinhala"
           [(ngModel)]="taskItems.taskSinhala"
+          (keydown)="onKeyDown($event, taskItems.taskSinhala)"
           (input)="validateSinhalaInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -135,6 +140,7 @@
           type="text"
           id="taskTypeSinhala"
           [(ngModel)]="taskItems.taskTypeSinhala"
+          (keydown)="onKeyDown($event, taskItems.taskTypeSinhala)"
           (input)="validateSinhalaInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -150,6 +156,7 @@
           type="text"
           id="taskCategorySinhala"
           [(ngModel)]="taskItems.taskCategorySinhala"
+          (keydown)="onKeyDown($event, taskItems.taskCategorySinhala)"
           (input)="validateSinhalaInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -165,6 +172,7 @@
           type="text"
           id="taskDescriptionSinhala"
           [(ngModel)]="taskItems.taskDescriptionSinhala"
+          (keydown)="onKeyDown($event, taskItems.taskDescriptionSinhala)"
           (input)="validateSinhalaInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -183,6 +191,7 @@
           type="text"
           id="taskTamil"
           [(ngModel)]="taskItems.taskTamil"
+          (keydown)="onKeyDown($event, taskItems.taskTamil)"
           (input)="validateTamilInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -198,6 +207,7 @@
           type="text"
           id="taskTypeTamil"
           [(ngModel)]="taskItems.taskTypeTamil"
+          (keydown)="onKeyDown($event, taskItems.taskTypeTamil)"
           (input)="validateTamilInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -213,6 +223,7 @@
           type="text"
           id="taskCategoryTamil"
           [(ngModel)]="taskItems.taskCategoryTamil"
+          (keydown)="onKeyDown($event, taskItems.taskCategoryTamil)"
           (input)="validateTamilInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -228,6 +239,7 @@
           type="text"
           id="taskDescriptionTamil"
           [(ngModel)]="taskItems.taskDescriptionTamil"
+          (keydown)="onKeyDown($event, taskItems.taskDescriptionTamil)"
           (input)="validateTamilInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />

@@ -216,7 +216,7 @@ this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'The Collection officer was approved successfully.',
+                        text: 'The Collection Center Head was approved successfully.',
                         showConfirmButton: false,
                         timer: 3000,
                       });
@@ -259,7 +259,7 @@ this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'The Collection officer was rejected successfully.',
+                        text: 'The Collection Center Head was rejected successfully.',
                         showConfirmButton: false,
                         timer: 3000,
                       });

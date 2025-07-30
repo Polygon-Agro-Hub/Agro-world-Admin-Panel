@@ -19,7 +19,7 @@
         <label
           for="centerName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centre Name</label
+          >Collection Centre Name *</label
         >
         <input
           id="centerName"
@@ -49,7 +49,7 @@
           for="companies"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Companies
+          Companies *
         </label>
         <input
           #companiesInput="ngModel"
@@ -97,7 +97,7 @@
           for="contact01Code"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Contact Number 01
+          Contact Number 01 *
         </label>
 
         <div class="mt-1 flex">
@@ -186,7 +186,7 @@
         </div>
 
         <div *ngIf="contact02.touched">
-          <div *ngIf="centerFetchData.contact02 && centerFetchData.contact01 === centerFetchData.contact02 && !isPhoneInvalidMap['phone02']" class="text-red-500 text-sm mt-1">
+          <div *ngIf="centerFetchData.contact02 && centerFetchData.contact01 === centerFetchData.contact02 && !isPhoneInvalidMap['phone02'] && !contact02.invalid" class="text-red-500 text-sm mt-1">
             Phone Number - 2 should be different from Phone Number - 1.
           </div>
           
@@ -208,7 +208,7 @@
         <label
           for="buildingNumber"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Building Number</label
+          >Building Number *</label
         >
         <input
           type="text"
@@ -217,6 +217,7 @@
           [value]="centerFetchData.buildingNumber"
           [(ngModel)]="centerFetchData.buildingNumber"
           #buildingNumberInput="ngModel"
+          (input)="onBuildingNumberInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <div
@@ -232,13 +233,14 @@
         <label
           for="street"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Street Name</label
+          >Street Name *</label
         >
         <input
           id="street"
           name="street"
           [value]="centerFetchData.street"
           [(ngModel)]="centerFetchData.street"
+          (input)="onStreetNameInput($event)"
           #streetInput="ngModel"
           pattern="^[a-zA-Z]*$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -255,7 +257,7 @@
         <label
           for="city"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >City</label
+          >City *</label
         >
         <input
           type="text"
@@ -263,7 +265,7 @@
           name="city"
           [value]="centerFetchData.city"
           [(ngModel)]="centerFetchData.city"
-          (input)="onCityChange()"
+          (input)="onCityInput($event)"
           (change)="onCityChange()"
           #cityInput="ngModel"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -281,7 +283,7 @@
         <label
           for="province"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Province</label
+          >Province *</label
         >
         <select
           id="province"
@@ -298,6 +300,12 @@
           </option>
         </select>
         <!-- ... validation ... -->
+        <div
+          *ngIf="!centerFetchData.province && districtInput.touched"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Province is required</div>
+        </div>
       </div>
 
       <!-- District -->
@@ -305,7 +313,7 @@
         <label
           for="district"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >District</label
+          >District *</label
         >
         <select
           id="district"
@@ -325,6 +333,12 @@
           </option>
         </select>
         <!-- ... validation ... -->
+        <div
+          *ngIf="!centerFetchData.district && districtInput.touched"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Province is required</div>
+        </div>
       </div>
 
       <div>
@@ -332,7 +346,7 @@
           for="country"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Country
+          Country *
         </label>
         <input
           id="country"
@@ -359,7 +373,7 @@
         <label
           for="regCode"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centre Reg Code</label
+          >Collection Centre Reg Code *</label
         >
         <input
           id="regCode"

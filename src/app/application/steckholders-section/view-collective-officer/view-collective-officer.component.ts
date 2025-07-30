@@ -99,7 +99,7 @@ export class ViewCollectiveOfficerComponent {
     public permissionService: PermissionService,
     private collectionOfficerService: CollectionOfficerService,
     private route: ActivatedRoute,
-  ) {}
+  ) { }
 
   fetchAllCollectionOfficer(
     page: number = 1,
@@ -108,75 +108,75 @@ export class ViewCollectiveOfficerComponent {
     status: string = this.selectStatus
   ) {
     this.isLoading = true;
-        this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe((params) => {
       this.centerId = params['id'] ? +params['id'] : null;
     });
 
 
-    if(this.centerId === null){
+    if (this.centerId === null) {
 
-          this.collectionService
-      .fetchAllCollectionOfficer(
-        page,
-        limit,
-        centerStatus,
-        status,
-        this.searchNIC,
-        this.statusFilter?.id,
-        this.role?.jobRole,
-       
-      )
-      .subscribe(
-        (response) => {
-          this.isLoading = false;
-          if (response.total > 0) {
-            this.hasData = true
-          }else {
-            this.hasData = false
+      this.collectionService
+        .fetchAllCollectionOfficer(
+          page,
+          limit,
+          centerStatus,
+          status,
+          this.searchNIC,
+          this.statusFilter?.id,
+          this.role?.jobRole,
+
+        )
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            if (response.total > 0) {
+              this.hasData = true
+            } else {
+              this.hasData = false
+            }
+            this.collectionOfficers = response.items;
+            this.totalItems = response.total;
+          },
+          (error) => {
+            this.isLoading = false;
           }
-          this.collectionOfficers = response.items;
-          this.totalItems = response.total;
-        },
-        (error) => {
-          this.isLoading = false;
-        }
-      );
+        );
 
-    }else{
+    } else {
 
-          this.collectionService
-      .fetchAllCollectionOfficercenter(
-        page,
-        limit,
-        centerStatus,
-        status,
-        this.searchNIC,
-        this.statusFilter?.id,
-        this.role?.jobRole,
-        this.centerId ? this.centerId : 0
-      )
-      .subscribe(
-        (response) => {
-          this.isLoading = false;
-          this.collectionOfficers = response.items;
-          this.totalItems = response.total;
-        },
-        (error) => {
-          this.isLoading = false;
-        }
-      );
+      this.collectionService
+        .fetchAllCollectionOfficercenter(
+          page,
+          limit,
+          centerStatus,
+          status,
+          this.searchNIC,
+          this.statusFilter?.id,
+          this.role?.jobRole,
+          this.centerId ? this.centerId : 0
+        )
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            this.collectionOfficers = response.items;
+            this.totalItems = response.total;
+          },
+          (error) => {
+            this.isLoading = false;
+          }
+        );
 
     }
 
   }
 
   back(): void {
-    if(this.centerId != null){
+    if (this.centerId != null) {
       history.back()
-    }else{
+    } else {
       this.router.navigate(['steckholders/action']);
     }
-    
+
   }
 
   fetchCenterNames() {
@@ -184,7 +184,7 @@ export class ViewCollectiveOfficerComponent {
       (response) => {
         this.centerNames = response;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -193,7 +193,7 @@ export class ViewCollectiveOfficerComponent {
       (response) => {
         this.collectionCenterManagerNames = response;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -283,6 +283,9 @@ export class ViewCollectiveOfficerComponent {
   }
 
   openPopup(item: any) {
+    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
+
     const tableHtml = `
       <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
         <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
@@ -290,8 +293,8 @@ export class ViewCollectiveOfficerComponent {
           <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection officer?</p>
         </div>
         <div class="flex justify-center mt-4">
-          <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
-          <button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>
+          ${showRejectButton ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>' : ''}
+          ${showApproveButton ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>' : ''}
         </div>
       </div>
     `;
@@ -306,87 +309,91 @@ export class ViewCollectiveOfficerComponent {
       showClass: { popup: 'animate__animated animate__fadeIn' },
       hideClass: { popup: 'animate__animated animate__fadeOut' },
       didOpen: () => {
-        document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The Collection officer was approved successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                } else {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection officer was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
+              );
+            });
+        }
 
-        document
-          .getElementById('rejectButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The Collection officer was rejected successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                } else {
+        if (showRejectButton) {
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection officer was rejected successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while rejecting. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
+              );
+            });
+        }
       },
     });
   }

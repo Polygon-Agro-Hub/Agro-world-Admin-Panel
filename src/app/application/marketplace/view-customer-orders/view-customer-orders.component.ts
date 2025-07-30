@@ -62,9 +62,10 @@ interface Order {
   sheduleType: string;
   sheduleDate: string;
   paymentMethod: string;
-  isPaid: boolean;
+  isPaid: number;
   fullTotal: number;
   status: string;
+  createdAt:string;
 }
 
 interface ApiResponse {
@@ -90,6 +91,7 @@ export class ViewCustomerOrdersComponent implements OnInit {
   userId: string = '';
   orders: Order[] = [];
   totalItems: number = 0;
+  hasData:boolean = false;
 
   // Status mapping for UI buttons to API values
   private statusMap: { [key: string]: string } = {
@@ -153,6 +155,7 @@ export class ViewCustomerOrdersComponent implements OnInit {
           if (response.success) {
             this.orders = response.data.orders;
             this.totalItems = response.data.totalCount;
+            this.hasData = response.data.orders.length === 0 ? false : true;
           } else {
             this.errorMessage = response.message || 'Failed to load orders';
           }

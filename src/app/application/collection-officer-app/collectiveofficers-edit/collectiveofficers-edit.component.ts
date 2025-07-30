@@ -334,16 +334,6 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove leading spaces and special characters/numbers, keep only letters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
-      // Capitalize first letter and make rest lowercase
-      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      this.personalData[fieldName] = value;
-    }
-  }
 
   // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
@@ -357,25 +347,122 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  // Update existing formatSinhalaName method
-  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
+  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove leading spaces and allow only Sinhala unicode characters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^\u0D80-\u0DFF\s]/g, '');
+      // Remove special characters and numbers, keep only letters and spaces
+      value = value.replace(/[^a-zA-Z\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      // Capitalize first letter and make rest lowercase
+      if (value.length > 0) {
+        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      }
+
       this.personalData[fieldName] = value;
     }
   }
 
-  // Update existing formatTamilName method
-  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+  // Updated formatSinhalaName function
+  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove leading spaces and allow only Tamil unicode characters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^\u0B80-\u0BFF\s]/g, '');
+      // Allow only Sinhala unicode characters and spaces
+      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
       this.personalData[fieldName] = value;
     }
   }
+
+  // Updated formatTamilName function
+  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Allow only Tamil unicode characters and spaces
+      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Add these methods to your component class
+
+// Prevent invalid English characters (only allow letters and spaces)
+preventInvalidEnglishCharacters(event: KeyboardEvent): void {
+  const char = event.key;
+  
+  // Allow control keys (backspace, delete, tab, escape, enter, etc.)
+  if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' || 
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' || 
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+    return;
+  }
+  
+  // Allow English letters (a-z, A-Z) and space
+  const englishLetterRegex = /^[a-zA-Z\s]$/;
+  if (!englishLetterRegex.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Prevent invalid Sinhala characters (only allow Sinhala unicode range and spaces)
+preventInvalidSinhalaCharacters(event: KeyboardEvent): void {
+  const char = event.key;
+  
+  // Allow control keys
+  if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' || 
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' || 
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+    return;
+  }
+  
+  // Allow Sinhala characters (U+0D80-U+0DFF) and space
+  const sinhalaRegex = /^[\u0D80-\u0DFF\s]$/;
+  if (!sinhalaRegex.test(char)) {
+    event.preventDefault();
+  }
+}
+
+// Prevent invalid Tamil characters (only allow Tamil unicode range and spaces)
+preventInvalidTamilCharacters(event: KeyboardEvent): void {
+  const char = event.key;
+  
+  // Allow control keys
+  if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' || 
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' || 
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+    return;
+  }
+  
+  // Allow Tamil characters (U+0B80-U+0BFF) and space
+  const tamilRegex = /^[\u0B80-\u0BFF\s]$/;
+  if (!tamilRegex.test(char)) {
+    event.preventDefault();
+  }
+}
 
 
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {

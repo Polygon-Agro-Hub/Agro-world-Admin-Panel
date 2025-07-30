@@ -67,7 +67,7 @@ export class OngoingCultivationComponent {
     private ongoingCultivationService: OngoingCultivationService,
     private http: HttpClient,
     private router: Router,
-    public permissionService: PermissionService, 
+    public permissionService: PermissionService,
     public tokenService: TokenService
   ) {}
 
@@ -81,7 +81,7 @@ export class OngoingCultivationComponent {
       .fetchAllOngoingCultivations(page, limit, this.searchNIC)
       .subscribe(
         (response) => {
-          console.log('response', response)
+          console.log('response', response);
           this.ongoingCultivation = response.items;
           this.hasData = this.ongoingCultivation.length > 0;
           this.totalItems = response.total;
@@ -173,5 +173,15 @@ export class OngoingCultivationComponent {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    // Block space key only at the beginning of input
+    if (
+      (event.code === 'Space' || event.key === ' ') &&
+      this.searchNIC.length === 0
+    ) {
+      event.preventDefault();
+    }
   }
 }

@@ -45,7 +45,8 @@
         <textarea id="feedbackEnglish" [(ngModel)]="feedback.feedbackEnglish" name="feedbackEnglish"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #feedbackEnglishInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required
-          (keydown)="preventLeadingSpace($event, feedback.feedbackEnglish)">
+          (keypress)="preventLeadingSpace($event, feedback.feedbackEnglish)"
+          (keydown)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)">
          </textarea>
         <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
           <div>English Feedback is required</div>
@@ -61,7 +62,8 @@
         <textarea id="feedbackSinahala" [(ngModel)]="feedback.feedbackSinahala" name="feedbackSinahala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #feedbackSinahalaInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required
-          (keydown)="preventLeadingSpace($event, feedback.feedbackSinahala)">
+          (keypress)="preventLeadingSpace($event, feedback.feedbackSinahala)"
+          (keydown)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)">
         </textarea>
         <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
           <div>Sinhala Feedback is required</div>
@@ -77,7 +79,8 @@
         <textarea id="feedbackTamil" [(ngModel)]="feedback.feedbackTamil" name="feedbackTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #feedbackTamilInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required
-          (keydown)="preventLeadingSpace($event, feedback.feedbackTamil)">
+          (keypress)="preventLeadingSpace($event, feedback.feedbackTamil)"
+          (keydown)="preventInvalidTamilAlphanumericCharacters($event)" (paste)="validateTamilPaste($event)">
 </textarea>
         <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
           <div>Tamil Feedback is required</div>

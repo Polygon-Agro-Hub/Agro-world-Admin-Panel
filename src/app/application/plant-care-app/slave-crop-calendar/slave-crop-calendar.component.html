@@ -1,18 +1,25 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div>
-  <button class="text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/ongoing-cultivation')">
+  <button
+    class="text-textLight dark:text-textDark"
+    (click)="navigatePath('/plant-care/action/ongoing-cultivation')"
+  >
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
 
   <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  >
     <div
-      class="pt-5 pr-12 pl-12 pb-5 min-w-[1300px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <h2 class="text-2xl font-bold mb-6 text-left text-textLight dark:text-textDark">
-        {{this.userName}} Ongoing cultivation ({{ this.newsItems.length }})
+      class="pt-5 pr-12 pl-12 pb-5 min-w-[1300px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
+      <h2
+        class="text-2xl font-bold mb-6 text-left text-textLight dark:text-textDark"
+      >
+        {{ this.userName }} Ongoing cultivation ({{ this.newsItems.length }})
       </h2>
 
       <div *ngIf="!hasData" class="text-center py-8">
@@ -20,37 +27,69 @@
       </div>
 
       <div *ngIf="hasData">
-        <table class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
+        <table
+          class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
+        >
           <thead>
             <tr>
-              <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left">
+              <th
+                class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left"
+              >
                 No
               </th>
-              <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">
+              <th
+                class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              >
                 Crop Name
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              >
                 Variety
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              >
                 Cultivation Method
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              >
                 Nature Of Cultivation
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                Extent(ac)
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+              >
+                Start Date
+              </th>
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              >
                 Progress
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              >
                 Geo Location
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
+              <th
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              >
                 Crop Duration
               </th>
               <th
-              *ngIf="permissionService.hasPermission('View each farmer’s crop calendar task list') ||
-                  tokenService.getUserDetails().role === '1'"
-                   class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
+                *ngIf="
+                  permissionService.hasPermission(
+                    'View each farmer’s crop calendar task list'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              >
                 Calendar
               </th>
             </tr>
@@ -67,6 +106,12 @@
               </td>
               <td class="px-4 py-3 dark:text-textDark text-left">
                 {{ item.natureOfCultivation }}
+              </td>
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                {{ item.extentac }}
+              </td>
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                {{ item.startedAt | date : "yyyy/MM/dd" }}
               </td>
               <td class="px-4 py-3 dark:text-textDark text-left">
                 <div class="flex items-center space-x-2 justify-center">
@@ -93,10 +138,17 @@
                     ></div>
                   </div> -->
 
-                  <mat-progress-bar class="rounded-full" mode="determinate"
-                    [value]="calculateProgressPercentage(item.totalTasks, item.completedTasks)"
-                    color="primary"></mat-progress-bar>
-
+                  <mat-progress-bar
+                    class="rounded-full"
+                    mode="determinate"
+                    [value]="
+                      calculateProgressPercentage(
+                        item.totalTasks,
+                        item.completedTasks
+                      )
+                    "
+                    color="primary"
+                  ></mat-progress-bar>
 
                   <!-- <div
                     class="w-[100%] bg-gray-200 rounded-full h-2.5 flex-grow"
@@ -114,8 +166,8 @@
                   <!-- Percentage text -->
                   <span class="text-sm">
                     {{
-                    (item.completedTasks / item.totalTasks) * 100
-                    | number : "1.0-0"
+                      (item.completedTasks / item.totalTasks) * 100
+                        | number : "1.0-0"
                     }}
                     %
                   </span>
@@ -123,22 +175,32 @@
               </td>
 
               <td class="px-4 py-3 dark:text-textDark text-center">
-                <a *ngIf="item.longitude" href="https://www.google.com/maps?q={{ item.latitude }},{{
+                <a
+                  *ngIf="item.longitude"
+                  href="https://www.google.com/maps?q={{ item.latitude }},{{
                     item.longitude
-                  }}" target="_blank">
+                  }}"
+                  target="_blank"
+                >
                   <i class="fa-solid fa-map-location-dot"></i>
                 </a>
                 <span *ngIf="!item.longitude">No Data Yet</span>
               </td>
 
               <td class="px-4 py-3 dark:text-textDark text-center">
-                {{ item.cropDuration }}
+                {{ formatDuration(item.cropDuration) }}
               </td>
               <td
-              *ngIf="permissionService.hasPermission('View each farmer’s crop calendar task list') ||
-                  tokenService.getUserDetails().role === '1'"
-                   class="px-4 py-3 dark:text-textDark text-center">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="
+                *ngIf="
+                  permissionService.hasPermission(
+                    'View each farmer’s crop calendar task list'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+                class="px-4 py-3 dark:text-textDark text-center"
+              >
+                <button
+                  class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                  (click)="
                     viewTaskByUser(
                       item.cropCalendar,
                       this.userId,
@@ -146,11 +208,47 @@
                       this.cultivationId,
                       this.userName
                     )
-                  ">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  "
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+              <td>
+                <button
+                  *ngIf="
+                    permissionService.hasPermission('Delete crop group') ||
+                    tokenService.getUserDetails().role === '1'
+                  "
+                  class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
+                  (click)="deleteCultivation(item.ongoingCultivationId, i)"
+                >
+                  <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                    />
                   </svg>
                 </button>
               </td>

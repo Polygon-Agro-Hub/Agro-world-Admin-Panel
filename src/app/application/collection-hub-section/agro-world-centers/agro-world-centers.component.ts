@@ -68,77 +68,67 @@ export class AgroWorldCentersComponent {
 
   ProvinceData = [
     {
-      province: "Western",
+      province: 'Western',
       district: [
-        { districtName: "Colombo" },
-        { districtName: "Kalutara" },
-        { districtName: "Gampaha" }
-      ]
+        { districtName: 'Colombo' },
+        { districtName: 'Kalutara' },
+        { districtName: 'Gampaha' },
+      ],
     },
     {
-      province: "Central",
+      province: 'Central',
       district: [
-        { districtName: "Kandy" },
-        { districtName: "Matale" },
-        { districtName: "Nuwara Eliya" }
-      ]
+        { districtName: 'Kandy' },
+        { districtName: 'Matale' },
+        { districtName: 'Nuwara Eliya' },
+      ],
     },
     {
-      province: "Southern",
+      province: 'Southern',
       district: [
-        { districtName: "Galle" },
-        { districtName: "Matara" },
-        { districtName: "Hambantota" }
-      ]
+        { districtName: 'Galle' },
+        { districtName: 'Matara' },
+        { districtName: 'Hambantota' },
+      ],
     },
     {
-      province: "Northern",
+      province: 'Northern',
       district: [
-        { districtName: "Jaffna" },
-        { districtName: "Mannar" },
-        { districtName: "Vavuniya" },
-        { districtName: "Kilinochchi" },
-        { districtName: "Mulaitivu" }
-      ]
+        { districtName: 'Jaffna' },
+        { districtName: 'Mannar' },
+        { districtName: 'Vavuniya' },
+        { districtName: 'Kilinochchi' },
+        { districtName: 'Mulaitivu' },
+      ],
     },
     {
-      province: "Eastern",
+      province: 'Eastern',
       district: [
-        { districtName: "Batticaloa" },
-        { districtName: "Ampara" },
-        { districtName: "Trincomalee" }
-      ]
+        { districtName: 'Batticaloa' },
+        { districtName: 'Ampara' },
+        { districtName: 'Trincomalee' },
+      ],
     },
     {
-      province: "Uva",
-      district: [
-        { districtName: "Badulla" },
-        { districtName: "Moneragala" }
-      ]
+      province: 'Uva',
+      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
     },
     {
-      province: "North Western",
-      district: [
-        { districtName: "Kurunegala" },
-        { districtName: "Puttalam" }
-      ]
+      province: 'North Western',
+      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
     },
     {
-      province: "North Central",
+      province: 'North Central',
       district: [
-        { districtName: "Anuradhapura" },
-        { districtName: "Polonnaruwa" }
-      ]
+        { districtName: 'Anuradhapura' },
+        { districtName: 'Polonnaruwa' },
+      ],
     },
     {
-      province: "Sabaragamuwa",
-      district: [
-        { districtName: "Rathnapura" },
-        { districtName: "Kegalle" }
-      ]
+      province: 'Sabaragamuwa',
+      district: [{ districtName: 'Rathnapura' }, { districtName: 'Kegalle' }],
     },
-
-  ]
+  ];
 
   constructor(
     private router: Router,
@@ -150,21 +140,18 @@ export class AgroWorldCentersComponent {
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
 
-    this.provinceOptions = this.ProvinceData
-    .map(p => ({
+    this.provinceOptions = this.ProvinceData.map((p) => ({
       label: p.province,
-      value: p.province
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+      value: p.province,
+    })).sort((a, b) => a.label.localeCompare(b.label));
 
-  // District dropdown (all districts initially, sorted alphabetically)
-  this.districtOptions = this.ProvinceData
-    .flatMap(p => p.district)
-    .map(d => ({
-      label: d.districtName,
-      value: d.districtName
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+    // District dropdown (all districts initially, sorted alphabetically)
+    this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
+      .map((d) => ({
+        label: d.districtName,
+        value: d.districtName,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   }
 
   fetchAllCollectionCenter(
@@ -172,7 +159,7 @@ export class AgroWorldCentersComponent {
     limit: number = this.itemsPerPage,
     district: string = this.selectDistrict,
     province: string = this.selectProvince,
-    searchItem: string = this.searchItem,
+    searchItem: string = this.searchItem
   ) {
     this.isLoading = true;
     this.collectionService
@@ -194,7 +181,7 @@ export class AgroWorldCentersComponent {
   deleteCollectionCenter(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this Collection Center? This action cannot be undone.',
+      text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -231,14 +218,11 @@ export class AgroWorldCentersComponent {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  
-
-searchPlantCareUsers() {
-  this.searchItem = this.searchItem.trim(); // remove leading/trailing whitespace
-  this.page = 1; // optional: reset to page 1 on new search
-  this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-}
-
+  searchPlantCareUsers() {
+    this.searchItem = this.searchItem.trim(); // remove leading/trailing whitespace
+    this.page = 1; // optional: reset to page 1 on new search
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+  }
 
   clearSearch(): void {
     this.searchItem = '';
@@ -247,53 +231,54 @@ searchPlantCareUsers() {
 
   applyProvinceFilters() {
     if (this.selectProvince) {
-      const selected = this.ProvinceData.find(p => p.province === this.selectProvince);
-  
+      const selected = this.ProvinceData.find(
+        (p) => p.province === this.selectProvince
+      );
+
       // Filter and sort districts for selected province
-      this.districtOptions = selected?.district
-        .map(d => ({
-          label: d.districtName,
-          value: d.districtName
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [];
-  
+      this.districtOptions =
+        selected?.district
+          .map((d) => ({
+            label: d.districtName,
+            value: d.districtName,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label)) || [];
+
       // Reset district selection
       this.selectDistrict = '';
     } else {
       // Province cleared → show all districts, sorted
-      this.districtOptions = this.ProvinceData
-        .flatMap(p => p.district)
-        .map(d => ({
+      this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
+        .map((d) => ({
           label: d.districtName,
-          value: d.districtName
+          value: d.districtName,
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
     console.log(this.selectProvince);
-  
+
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
-  
 
   applyDistrictFilters() {
     if (this.selectDistrict) {
-      const matchingProvince = this.ProvinceData.find(p =>
-        p.district.some(d => d.districtName === this.selectDistrict)
+      const matchingProvince = this.ProvinceData.find((p) =>
+        p.district.some((d) => d.districtName === this.selectDistrict)
       );
-  
+
       if (matchingProvince) {
         this.selectProvince = matchingProvince.province;
-  
+
         // Filter district list for this province
-        this.districtOptions = matchingProvince.district.map(d => ({
+        this.districtOptions = matchingProvince.district.map((d) => ({
           label: d.districtName,
-          value: d.districtName
+          value: d.districtName,
         }));
       }
     }
     console.log(this.selectDistrict);
-  
+
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
@@ -301,16 +286,16 @@ searchPlantCareUsers() {
     this.selectDistrict = '';
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
-  
+
   clearProvinceFilter() {
     this.selectProvince = '';
     this.selectDistrict = '';
-    this.districtOptions = this.ProvinceData
-      .flatMap(p => p.district)
-      .map(d => ({
+    this.districtOptions = this.ProvinceData.flatMap((p) => p.district).map(
+      (d) => ({
         label: d.districtName,
-        value: d.districtName
-      }));
+        value: d.districtName,
+      })
+    );
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 

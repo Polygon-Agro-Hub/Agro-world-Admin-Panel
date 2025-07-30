@@ -165,6 +165,7 @@ export class AdminUsersComponent implements OnInit {
   }
 
   onSearch() {
+    this.searchText = this.searchText.trim();
     this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
 

@@ -140,6 +140,27 @@ export class UserTaskEditComponent {
     const d = new Date(date);
     return d.toISOString().split('T')[0];
   }
+
+  validateEnglishInput(event: any) {
+    const englishRegex = /^[a-zA-Z\s.,!?'"-]*$/;
+    if (!englishRegex.test(event.target.value)) {
+      event.target.value = event.target.value.slice(0, -1);
+    }
+  }
+
+  validateSinhalaInput(event: any) {
+    const sinhalaRegex = /^[\u0D80-\u0DFF\s.,!?'"-]*$/; // Sinhala Unicode range
+    if (!sinhalaRegex.test(event.target.value)) {
+      event.target.value = event.target.value.slice(0, -1);
+    }
+  }
+
+  validateTamilInput(event: any) {
+    const tamilRegex = /^[\u0B80-\u0BFF\s.,!?'"-]*$/; // Tamil Unicode range
+    if (!tamilRegex.test(event.target.value)) {
+      event.target.value = event.target.value.slice(0, -1);
+    }
+  }
 }
 
 export class CreateTask {

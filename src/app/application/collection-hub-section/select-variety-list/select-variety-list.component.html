@@ -6,7 +6,7 @@
       {{ centerDetails.regCode }} {{ centerDetails.centerName }}
     </p>
     <div
-      class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]"
+      class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
     >
       <input
         [(ngModel)]="searchText"
@@ -63,23 +63,23 @@
     *ngIf="hasData"
     class="min-w-max mt-8 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]"
   >
-    <table class="w-full min-w-max divide-y-2 overflow-hidden">
+    <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap ">
       <thead
-        class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021]"
+        class="pl-5 font-normal text-textLight dark:text-textDark text-center border-gray-200 dark:border-[#4B555A]"
       >
         <tr>
-          <th class="px-6 py-3 text-left font-medium">
+          <th class="px-6 py-3 text-left text-textLight dark:text-textDark">
             ITEM ({{ cropCount < 10 ? "0" + cropCount : cropCount }})
           </th>
-          <th class="px-6 py-3 text-left font-medium">Crop</th>
-          <th class="px-6 py-3 text-left font-medium">Variety</th>
-          <th class="px-6 py-3 text-left font-medium">Status</th>
+          <th class="px-6 py-3 text-left text-textLight dark:text-textDark">Crop</th>
+          <th class="px-6 py-3 text-left text-textLight dark:text-textDark">Variety</th>
+          <th class="px-6 py-3 text-left text-textLight dark:text-textDark">Status</th>
         </tr>
       </thead>
-      <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
+      <tbody class="bg-white dark:bg-[#061E2C] dark:border-[#1E293B]">
         <!-- <tr
                     *ngFor="let item of priceListArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"> -->
-        <tr
+        <tr class="border-b border-gray-200 dark:border-[#4B555A]"
           *ngFor="
             let item of cropsArr
               | paginate
@@ -91,7 +91,7 @@
             let i = index
           "
         >
-          <td class="px-6 py-4 text-gray-900 dark:text-[#C5C5C5]">
+          <td class="px-6 py-4 text-textLight dark:text-textDark">
             {{
               (page - 1) * itemsPerPage + i + 1 < 10
                 ? "0" + ((page - 1) * itemsPerPage + i + 1)

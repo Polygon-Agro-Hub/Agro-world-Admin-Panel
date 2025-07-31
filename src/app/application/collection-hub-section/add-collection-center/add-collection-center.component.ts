@@ -25,6 +25,8 @@ export class AddCollectionCenterComponent implements OnInit {
   selectDistrict: string = '';
   city: string = '';
   isLoadingregcode = false;
+  companyDisplayText: string = '';
+  companyTouched: boolean = false;
 
   allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
@@ -72,8 +74,10 @@ export class AddCollectionCenterComponent implements OnInit {
     return true;
   }
 
-  
-
+  onCompanyInputClick(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+    this.companyTouched = true;
+  }
 
   validateSriLankanPhone(input: string, key: string): void {
     if (!input) {
@@ -123,6 +127,7 @@ export class AddCollectionCenterComponent implements OnInit {
 
   toggleSelection(company: any) {
     const index = this.selectedCompaniesIds.indexOf(company.id);
+  
     if (index === -1) {
       this.selectedCompaniesIds.push(company.id);
       this.selectedCompaniesNames.push(company.companyNameEnglish);
@@ -130,7 +135,12 @@ export class AddCollectionCenterComponent implements OnInit {
       this.selectedCompaniesIds.splice(index, 1);
       this.selectedCompaniesNames.splice(index, 1);
     }
+  
+    // ✅ Always update display text after any change
+    this.companyDisplayText = this.selectedCompaniesNames.join(', ');
+    console.log('companyDisplayText', this.companyDisplayText);
   }
+  
 
   // trimCity(): void {
   //   const control = this.collectionCenterForm.get('buildingNumber');

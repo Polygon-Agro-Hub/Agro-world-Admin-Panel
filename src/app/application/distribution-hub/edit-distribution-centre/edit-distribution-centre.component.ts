@@ -13,6 +13,7 @@ import { DestributionService } from '../../../services/destribution-service/dest
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface PhoneCode {
   value: string;
@@ -42,7 +43,7 @@ interface DistributionCenter {
 @Component({
   selector: 'app-edit-distribution-centre',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent,DropdownModule],
   templateUrl: './edit-distribution-centre.component.html',
   styleUrl: './edit-distribution-centre.component.css',
 })

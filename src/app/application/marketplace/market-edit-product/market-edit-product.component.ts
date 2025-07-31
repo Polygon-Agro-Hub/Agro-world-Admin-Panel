@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../services/theme.service';
+import { ChipsModule } from 'primeng/chips';
 
 @Component({
   selector: 'app-market-edit-product',
@@ -21,6 +22,7 @@ import { ThemeService } from '../../../services/theme.service';
     FormsModule,
     MatIconModule,
     CommonModule,
+     ChipsModule,
   ],
   templateUrl: './market-edit-product.component.html',
   styleUrl: './market-edit-product.component.css',
@@ -81,6 +83,7 @@ export class MarketEditProductComponent implements OnInit {
     });
   }
 
+  
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
@@ -150,9 +153,9 @@ export class MarketEditProductComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  private updateTags() {
-    this.productObj.tags = this.templateKeywords().join(', ');
-  }
+  // private updateTags() {
+  //   this.productObj.tags = this.templateKeywords().join(', ');
+  // }
 
   onSubmit() {
     this.updateTags();
@@ -228,7 +231,9 @@ export class MarketEditProductComponent implements OnInit {
     );
     console.log('Form submitted:', this.productObj);
   }
-
+updateTags() {
+    this.productObj.tags = this.templateKeywords().join(', ');
+  }
   addTemplateKeyword(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
@@ -277,6 +282,14 @@ export class MarketEditProductComponent implements OnInit {
     console.log('store', this.storedDisplayType);
   }
 
+
+  announceTagAdded(event: any) {
+    this.announcer.announce(`Added tag: ${event.value}`);
+  }
+
+  announceTagRemoved(event: any) {
+    this.announcer.announce(`Removed tag: ${event.value}`);
+  }
   compaireDiscount() {
     this.storedDiscountPercentage = this.productObj.discountedPrice;
     this.productObj.displaytype = '';

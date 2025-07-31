@@ -120,6 +120,21 @@ preventNegative(event: any): void {
       this.isLoading = false;
       return;
     }
+     const hasValidQty = this.packageObj.packageItems.some(
+    (item) => item.qty !== null && item.qty > 0
+  );
+
+  if (!hasValidQty) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Input',
+      text: 'At least one quantity field must be greater than 0.',
+      confirmButtonText: 'OK',
+    });
+    this.isLoading = false;
+    return;
+  }
+
 
     try {
       this.marketSrv

@@ -256,13 +256,13 @@ export class ViewHeadPortalComponent implements OnInit {
       },
     });
   }
-back(): void {
-  this.router.navigate(['/distribution-hub/action/view-distribution-company'], {
-    queryParams: {
-      id: 2,
-      companyName: 'agroworld Distribution (Pvt) Ltd'
-    }
-  });
-}
+  back(): void {
+    this.router.navigate(['/distribution-hub/action/view-distribution-company'], {
+      queryParams: {
+        id: 2,
+        companyName: 'agroworld Distribution (Pvt) Ltd'
+      }
+    });
+  }
 
 }

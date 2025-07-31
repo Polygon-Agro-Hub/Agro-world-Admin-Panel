@@ -140,6 +140,65 @@ export class UserTaskEditComponent {
     const d = new Date(date);
     return d.toISOString().split('T')[0];
   }
+
+  onKeyDown(event: KeyboardEvent, fieldValue: string): void {
+    // Block space key only at the beginning of input
+    if (
+      (event.code === 'Space' || event.key === ' ') &&
+      fieldValue.length === 0
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  // Enhanced validation methods that also prevent leading spaces
+  validateEnglishInput(event: any) {
+    const englishRegex = /^[a-zA-Z\s.,!?'"-]*$/;
+    let value = event.target.value;
+
+    // Remove leading spaces
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+      event.target.value = value;
+    }
+
+    // Validate English characters
+    if (!englishRegex.test(value)) {
+      event.target.value = value.slice(0, -1);
+    }
+  }
+
+  validateSinhalaInput(event: any) {
+    const sinhalaRegex = /^[\u0D80-\u0DFF\s.,!?'"-]*$/; // Sinhala Unicode range
+    let value = event.target.value;
+
+    // Remove leading spaces
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+      event.target.value = value;
+    }
+
+    // Validate Sinhala characters
+    if (!sinhalaRegex.test(value)) {
+      event.target.value = value.slice(0, -1);
+    }
+  }
+
+  validateTamilInput(event: any) {
+    const tamilRegex = /^[\u0B80-\u0BFF\s.,!?'"-]*$/; // Tamil Unicode range
+    let value = event.target.value;
+
+    // Remove leading spaces
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+      event.target.value = value;
+    }
+
+    // Validate Tamil characters
+    if (!tamilRegex.test(value)) {
+      event.target.value = value.slice(0, -1);
+    }
+  }
 }
 
 export class CreateTask {

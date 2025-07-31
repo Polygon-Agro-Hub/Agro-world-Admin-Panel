@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { MarketPriceService } from '../../../services/market-price/market-price.service';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-view-center-price',
   standalone: true,
@@ -40,7 +40,8 @@ export class ViewCenterPriceComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private marketSrv: MarketPriceService
+    private marketSrv: MarketPriceService,
+    private location: Location 
   ) { this.currentDate = new Date().toLocaleDateString();}
 
   ngOnInit(): void {
@@ -123,10 +124,9 @@ export class ViewCenterPriceComponent {
       }
     
     
-    
-      back(): void {
-        this.router.navigate(['/collection-hub']);
-      }
+    back(): void {
+  this.location.back();
+}
 }
 
 

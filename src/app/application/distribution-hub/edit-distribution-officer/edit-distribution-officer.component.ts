@@ -163,6 +163,7 @@ export class EditDistributionOfficerComponent implements OnInit {
 
         // Set employee type
         this.empType = res.data.empType;
+        this.personalData.confirmAccNumber = res.data.accNumber;
 
         this.isLoading = false;
       },

@@ -24,7 +24,7 @@
         class="flex items-center rounded-full mr-56 px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
 
         <input type="text" placeholder="Search by EMP ID, First / Last Name" [(ngModel)]="searchText"
-          (keydown)="handleSearchKeydown($event)"
+          (keydown)="handleSearchKeydown($event)" 
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
 
         <!-- Search button with negative left margin -->
@@ -45,26 +45,25 @@
     </div>
 
 
-    <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-textLight dark:text-textDark text-lg">
-        No data to display
-      </p>
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div *ngIf="hasData">
       <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th class="pr-20 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               EMP ID
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               First Name
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Last Name
             </th>
-            <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-left">
               Email
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -95,10 +94,10 @@
                     };
               let i = index
             " class="border-b border-gray-200 dark:border-[#4B555A]">
-            <td class="py-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-4 text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
-            <td class="py-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-4 text-left text-textLight dark:text-textDark">
               {{ item.firstNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -126,8 +125,8 @@
               {{ item.phoneCode01 + "" + item.phoneNumber01 }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <span *ngIf="item.phoneNumber02 === null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"> - </span>
+              <span *ngIf="item.phoneNumber02 === null" class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                - </span>
               <span *ngIf="item.phoneNumber02 != null"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneCode02 + "" +
                 item.phoneNumber02 }}</span>

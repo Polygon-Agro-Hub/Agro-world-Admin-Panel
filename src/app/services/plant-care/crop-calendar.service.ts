@@ -89,31 +89,47 @@ createCropCalendar(formData: FormData): Observable<any> {
   }
 
   // Method to check for duplicate crop calendars
-  checkDuplicateCropCalendar(
-    varietyId: string,
-    cultivationMethod: string,
-    natureOfCultivation: string,
-    excludeId?: number
-  ): Observable<{ exists: boolean }> {
-    if (!this.token) {
-      throw new Error('No authentication token available');
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-    let params = new HttpParams()
-      .set('varietyId', varietyId)
-      .set('cultivationMethod', cultivationMethod)
-      .set('natureOfCultivation', natureOfCultivation);
-    if (excludeId) {
-      params = params.set('excludeId', excludeId.toString());
-    }
-    // Use GET for duplicate check (preferred for read operations)
-    return this.http.get<{ exists: boolean }>(
-      `${this.apiUrl}crop-calendar/admin-add-crop-calender`,
-      { headers, params }
-    );
+checkDuplicateCropCalendar(
+  varietyId: string,
+  cultivationMethod: string,
+  natureOfCultivation: string,
+  excludeId?: number
+): Observable<{ exists: boolean }> {
+  const token = localStorage.getItem('AdminLoginToken');
+  if (!token) {
+    console.error('No authentication token available');
+    throw new Error('No authentication token available');
   }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  let params = new HttpParams()
+    .set('varietyId', varietyId || '')
+    .set('cultivationMethod', cultivationMethod)
+    .set('natureOfCultivation', natureOfCultivation);
+
+  if (excludeId) {
+    params = params.set('excludeId', excludeId.toString());
+  }
+
+  console.log('Checking duplicate with params:', {
+    varietyId,
+    cultivationMethod,
+    natureOfCultivation,
+    excludeId,
+  });
+
+  // Proper usage: empty body + options (headers, params)
+  return this.http.post<{ exists: boolean }>(
+    `${this.apiUrl}crop-calendar/check-duplicate-crop-calendar`,
+    {}, // empty POST body
+    { headers, params } // these are options
+  );
+}
+
+
 
   // Get Crop Calendar by ID
   getCropCalendarById(id: number): Observable<any> {
@@ -169,19 +185,16 @@ updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
       Authorization: `Bearer ${this.token}`,
     });
 
-    console.log('going to fetch');
-
     let url = `${this.apiUrl}crop-calendar/get-all-crop-calender?page=${page}&limit=${limit}`;
 
     if (searchText) {
-      url += `&searchText=${searchText}`;
+      url += `&searchText=${encodeURIComponent(searchText)}`;
     }
 
-    if (category) {
-      url += `&category=${category}`;
+    // Only add category param if not empty string
+    if (category && category !== '') {
+      url += `&category=${encodeURIComponent(category)}`;
     }
-
-    console.log(url);
 
     return this.http.get<{ items: NewCropCalender[]; total: number }>(url, {
       headers,

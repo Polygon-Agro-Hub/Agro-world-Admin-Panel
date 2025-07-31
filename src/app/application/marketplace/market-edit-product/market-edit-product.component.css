@@ -1,3 +1,23 @@
+/* ---------- Mat Chip Grid and Chip Row Dark Mode ---------- */
+.dark-mode mat-chip-grid {
+  background-color: #061E2C !important;
+  border-radius: 4px;
+  color: #C4C4C4;
+}
+
+.dark-mode mat-chip-row {
+  background-color: #14557C !important;
+  color: #C4C4C4 !important;
+}
+
+.dark-mode mat-chip-row .mat-chip-remove {
+  color: #C4C4C4 !important;
+  opacity: 0.8;
+}
+
+.dark-mode mat-chip-row .mat-chip-remove:hover {
+  opacity: 1;
+}
 /* ---------- General Dark Mode Styles ---------- */
 .dark-mode .mat-mdc-form-field {
   --mdc-filled-text-field-container-color: #061E2C; /* Input background */
@@ -72,6 +92,18 @@
 .input-style::placeholder {
   color: #888;
   opacity: 0.7;
+}
+::ng-deep .custom-chip .p-chips-token {
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 16px;
+  padding: 4px 10px;
+  margin-right: 4px;
+}
+
+:host-context(.dark) ::ng-deep .custom-chip .p-chips-token {
+  background-color: #3a3a3a;
+  color: #ffffff;
 }
 
 /* Dark mode input */

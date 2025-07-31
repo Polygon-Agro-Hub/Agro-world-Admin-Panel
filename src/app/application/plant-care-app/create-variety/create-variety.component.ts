@@ -608,7 +608,7 @@ export class CreateVarietyComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Market Price updated successfully!',
+            text: 'Variety updated successfully!',
           });
           this.router.navigate(['/plant-care/action/view-crop-group']);
         },

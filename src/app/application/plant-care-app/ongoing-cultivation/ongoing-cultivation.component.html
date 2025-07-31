@@ -34,9 +34,10 @@
           >
             <input
               type="text"
-              placeholder="Search By nic / First Name / Last Name..."
+              placeholder="Search by Farmer Name, NIC.."
               class="bg-transparent outline-none w-full text-gray-600 dark:text-textDark"
               [(ngModel)]="searchNIC"
+              (keydown)="onKeyDown($event)"
               (keydown.enter)="searchCultivations()"
             />
             <button
@@ -84,15 +85,18 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <div
+      *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+    >
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Available--
+      </p>
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div *ngIf="hasData">
-      <table
-        class="min-w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
-      >
+      <table class="w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
             <th
@@ -111,7 +115,7 @@
               Last Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
             >
               NIC
             </th>
@@ -121,8 +125,11 @@
               Crop Count
             </th>
             <th
-            *ngIf="permissionService.hasPermission('View each farmer’s enrolled crop calendars') ||
-                  tokenService.getUserDetails().role === '1'"
+              *ngIf="
+                permissionService.hasPermission(
+                  'View each farmer’s enrolled crop calendars'
+                ) || tokenService.getUserDetails().role === '1'
+              "
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
             >
               Cultivations
@@ -141,15 +148,18 @@
                     };
               let i = index
             "
+            class="border-b border-gray-200 dark:border-[#4B555A]"
           >
             <td class="py-3 dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="py-3 dark:text-textDark text-left">{{ item.firstName }}</td>
+            <td class="py-3 dark:text-textDark text-left">
+              {{ item.firstName }}
+            </td>
             <td class="px-4 py-3 dark:text-textDark text-left">
               {{ item.lastName }}
             </td>
-            <td class="px-4 py-3 dark:text-textDark text-center">
+            <td class="px-4 py-3 dark:text-textDark text-left">
               {{ item.NICnumber }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
@@ -157,12 +167,18 @@
             </td>
 
             <td
-            *ngIf="permissionService.hasPermission('View each farmer’s enrolled crop calendars') ||
-                  tokenService.getUserDetails().role === '1'"
-                   class="px-4 py-3 text-center">
+              *ngIf="
+                permissionService.hasPermission(
+                  'View each farmer’s enrolled crop calendars'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 text-center"
+            >
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                (click)="viewTaskByUser(item.cultivationId, item.id,item.firstName)"
+                (click)="
+                  viewTaskByUser(item.cultivationId, item.id, item.firstName)
+                "
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -191,6 +207,7 @@
           [screenReaderPaginationLabel]="'Pagination'"
           [screenReaderPageLabel]="'page'"
           [screenReaderCurrentLabel]="'Youre on page'"
+          class="my-pagination"
         >
         </pagination-controls>
       </div>

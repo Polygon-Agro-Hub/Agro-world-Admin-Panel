@@ -17,7 +17,7 @@ export class CollectionCenterDashboardComponent {
   resentCollectionArr!: ResentCollection[];
   companyId!: number;
   centerName: string = '';
-
+  regCode!: string;
   selectTable: string = 'collection';
   centerId!: number;
   transCount: number = 0;
@@ -46,23 +46,33 @@ export class CollectionCenterDashboardComponent {
     );
   }
 
-  fetchCenterDashbordDetails() {
-    this.isLoading = true;
-    this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
-      console.log(res);
-      this.isLoading = false;
+fetchCenterDashbordDetails() {
+  this.isLoading = true;
+  this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
+    this.isLoading = false;
 
-      
-      this.resentCollectionArr = res.limitedResentCollection;
-      console.log('resentCollectionArr', this.resentCollectionArr)
-      this.totExpences = res.totExpences.totExpences;
-      this.expencePrecentage = res.difExpences;
-      // this.centerNameObj = res.officerCount;
-      // this.transCount = res.transCount.transactionCount;
-      // this.transAmount = res.transAmountCount.transAmountCount;
-      this.isLoading = false;
-    });
-  }
+    // Try to fetch regCode from the most reliable source, as in agro-world-centers.component.ts
+    if (res.centerDetails) {
+      this.centerNameObj.centerName = res.centerDetails.centerName;
+      this.centerNameObj.regCode = res.centerDetails.regCode;
+      this.centerNameObj.officerCount = res.centerDetails.officerCount;
+      console.log('regCode from centerDetails:', res.centerDetails.regCode);
+    } else if (res.regCode) {
+      // fallback if regCode is at the root
+      this.centerNameObj.regCode = res.regCode;
+      console.log('regCode from root:', res.regCode);
+    } else {
+      this.centerNameObj.regCode = '';
+      console.log('regCode not found.');
+    }
+
+    this.resentCollectionArr = res.limitedResentCollection;
+    this.totExpences = res.totExpences?.totExpences ?? 0;
+    this.expencePrecentage = res.difExpences ?? 0;
+  });
+}
+
+
 
   chooseTable(table: string) {
     this.selectTable = table;

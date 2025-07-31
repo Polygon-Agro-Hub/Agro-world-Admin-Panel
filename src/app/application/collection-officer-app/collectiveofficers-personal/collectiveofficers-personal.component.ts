@@ -1014,7 +1014,7 @@ formatEmail(): void {
     console.log('Center changed:', this.personalData.centerId);
     console.log('Center MAnager:', this.personalData.irmId);
     this.personalData.irmId = '';
-    this.centerOptions = [];
+    // this.centerOptions = [];
     this.getAllCollectionManagers();
   }
   

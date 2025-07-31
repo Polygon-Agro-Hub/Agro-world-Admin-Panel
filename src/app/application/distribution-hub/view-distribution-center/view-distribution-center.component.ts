@@ -368,6 +368,30 @@ export class ViewDistributionCenterComponent implements OnInit {
       }
     });
   }
+
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // If the input is empty or only contains spaces, and user presses space
+    if (
+      event.key === ' ' &&
+      (currentValue.length === 0 || currentValue.trim() === '')
+    ) {
+      event.preventDefault();
+    }
+  }
+
+  trimLeadingSpaces(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // If the value starts with spaces, remove them
+    if (value.startsWith(' ')) {
+      input.value = value.trimStart();
+      this.searchItem = input.value; // Update the model
+    }
+  }
 }
 
 class DistributionCentre {

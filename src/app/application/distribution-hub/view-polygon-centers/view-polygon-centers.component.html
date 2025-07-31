@@ -1,218 +1,365 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
 </button>
 
 <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-        <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center">
-                <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-3">
-                    Polygon Centers (02)
-                </h2>
-            </div>
-            <div class="flex items-center">
-                <div class="mr-5">
-                    <p-dropdown
-                        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                        [options]="companyOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-                        [showClear]="true" placeholder="Company" [(ngModel)]="selectCompany"
-                        (onChange)="applyCompanyFilter()"></p-dropdown>
-                </div>
-
-                <div class="mr-5">
-                    <p-dropdown
-                        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                        [options]="provinceOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-                        [showClear]="true" placeholder="Province" [(ngModel)]="selectProvince"
-                        (onChange)="applyProvinceFilters()"></p-dropdown>
-                </div>
-
-                <div class="mr-5">
-                    <p-dropdown
-                        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                        [options]="districtOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-                        [showClear]="true" placeholder="District" [(ngModel)]="selectDistrict"
-                        (onChange)="applyDistrictFilters()"></p-dropdown>
-                </div>
-
-                <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-                    <input type="text" placeholder="Search.."
-                        class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-                        [(ngModel)]="searchItem" (keydown.enter)="searchPlantCareUsers()" />
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-                        (click)="searchPlantCareUsers()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                        </svg>
-                    </button>
-                    <button type="button" (click)="clearSearch()"
-                        class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2
+          class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-3"
+        >
+          Polygon Centres ({{ totalItems }})
+        </h2>
+      </div>
+      <div class="flex items-center">
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="companyOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectCompany"
+            placeholder="Company"
+            [(ngModel)]="selectCompany"
+            (onChange)="applyCompanyFilter()"
+          ></p-dropdown>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            No
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            Reg Code
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            Centre Name
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap">
-                            Company
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            Province
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            District
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            City
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            Contact Number 01
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            Location
-                        </th>
-                        <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"></th>
-                        <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"></th>
-                        <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="
-                        let item of distributionCentreObj
-                          | paginate
-                            : {
-                                itemsPerPage: itemsPerPage,
-                                currentPage: page,
-                                totalItems: totalItems
-                              };
-                        let i = index
-                      ">
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ (page - 1) * itemsPerPage + i + 1 }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
-                            {{ item.regCode }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ item.centerName }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ item.companyName }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ item.province }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ item.district }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ item.city }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            <!-- {{ item.code1 }} {{ item.contact01 }} -->
-                            <span *ngIf="item.contact01 === null">-</span>
-                            <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
-                        </td>
-                        <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-                            <a *ngIf="item.longitude && item.latitude"
-                                href="https://www.google.com/maps?q={{ item.latitude }},{{ item.longitude }}"
-                                target="_blank" class="text-red-600 hover:text-blue-800 text-xl" title="View on map">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <!-- Font Awesome map pin icon -->
-                            </a>
-                            <span *ngIf="!item.longitude || !item.latitude" class="text-gray-400">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <!-- Disabled/grayed out icon when no coordinates -->
-                            </span>
-                        </td>
-                        <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-                            <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                                (click)="viewDistributionCenter(item.id)">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                        </td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                            <button *ngIf="
-                                permissionService.hasPermission('Edit Collection Center') ||
-                                tokenService.getUserDetails().role === '1'
-                              " class="text-blue-400 hover:text-blue-700" (click)="editCenter(item.id)">
-                                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <title>pen-to-square</title>
-                                    <path
-                                        d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                                    </path>
-                                </svg>
-                            </button>
-                            <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCenter(item.id)"
-                                *ngIf="
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="provinceOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectProvince"
+            placeholder="Province"
+            [(ngModel)]="selectProvince"
+            (onChange)="applyProvinceFilters()"
+          ></p-dropdown>
+        </div>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="districtOptions"
+            [checkmark]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectDistrict"
+            placeholder="District"
+            [(ngModel)]="selectDistrict"
+            (onChange)="applyDistrictFilters()"
+          ></p-dropdown>
+        </div>
+
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+        >
+          <input
+            type="text"
+            placeholder="Search.."
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [(ngModel)]="searchItem"
+            (keydown.enter)="searchPlantCareUsers()"
+            (keydown)="onSearchKeydown($event)"
+            title="Search by Company, Centre Name, City"
+          />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="searchPlantCareUsers()"
+            title="Search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            (click)="clearSearch()"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            title="Clear search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table
+        class="min-w-full divide-y divide-gray-200 table-auto"
+        *ngIf="hasData"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              Reg Code
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              Centre Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap"
+            >
+              Company
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              Province
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              District
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              City
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              Contact Number 01
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
+              Location
+            </th>
+            <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            ></th>
+            <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            ></th>
+            <th
+              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            ></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let item of distributionCentreObj
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            "
+          >
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ (page - 1) * itemsPerPage + i + 1 }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap"
+            >
+              {{ item.regCode }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.centerName }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.companyName }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.province }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.district }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.city }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              <!-- {{ item.code1 }} {{ item.contact01 }} -->
+              <span *ngIf="item.contact01 === null">-</span>
+              <span *ngIf="item.contact01 != null"
+                >{{ item.code1 }}{{ " " + item.contact01 }}</span
+              >
+            </td>
+            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+              <a
+                *ngIf="item.longitude && item.latitude"
+                href="https://www.google.com/maps?q={{ item.latitude }},{{
+                  item.longitude
+                }}"
+                target="_blank"
+                class="text-red-600 hover:text-blue-800 text-xl"
+                title="View on map"
+              >
+                <i class="fas fa-map-marker-alt"></i>
+                <!-- Font Awesome map pin icon -->
+              </a>
+              <span
+                *ngIf="!item.longitude || !item.latitude"
+                class="text-gray-400"
+              >
+                <i class="fas fa-map-marker-alt"></i>
+                <!-- Disabled/grayed out icon when no coordinates -->
+              </span>
+            </td>
+            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewDistributionCenter(item.id)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="
                   permissionService.hasPermission('Edit Collection Center') ||
                   tokenService.getUserDetails().role === '1'
-                ">
-                                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <title>Edit</title>
-                                    <path
-                                        d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </td>
-                        <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                            <button *ngIf="
-                                permissionService.hasPermission('Delete Collection Center') ||
-                                tokenService.getUserDetails().role === '1'
-                              " class="text-red-500 hover:text-red-700" (click)="deleteCenter(item.id)">
-                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="none" viewBox="0 0 24 24">
-                                    <title>Delete</title>
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div *ngIf="!hasData" class="flex justify-center items-center py-20 shadow-lg">
-                <p class="text-center text-2xl text-black font-normal dark:text-textDark">
-                    No data found
-                </p>
-            </div>
-        </div>
-        <div class="dark:bg-[#262f45]">
-            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-                [screenReaderCurrentLabel]="'Youre on page'">
-            </pagination-controls>
-        </div>
+                "
+                class="text-blue-400 hover:text-blue-700"
+                (click)="editCenter(item.id)"
+              >
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 32 32"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title>pen-to-square</title>
+                  <path
+                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="editCenter(item.id)"
+                *ngIf="
+                  permissionService.hasPermission('Edit Collection Center') ||
+                  tokenService.getUserDetails().role === '1'
+                "
+              >
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 32 32"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <title>Edit</title>
+                  <path
+                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
+                  ></path>
+                </svg>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="
+                  permissionService.hasPermission('Delete Collection Center') ||
+                  tokenService.getUserDetails().role === '1'
+                "
+                class="text-red-500 hover:text-red-700"
+                (click)="deleteCenter(item.id)"
+              >
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <title>Delete</title>
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        *ngIf="!hasData"
+        class="flex justify-center items-center py-20 shadow-lg"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
     </div>
+    <div class="dark:bg-[#262f45]">
+      <pagination-controls
+        (pageChange)="onPageChange($event)"
+        [responsive]="true"
+        [previousLabel]="'Previous'"
+        [nextLabel]="'Next'"
+        [screenReaderPaginationLabel]="'Pagination'"
+        [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'Youre on page'"
+      >
+      </pagination-controls>
+    </div>
+  </div>
 </div>

@@ -92,11 +92,13 @@
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             [(ngModel)]="searchItem"
             (keydown.enter)="searchPlantCareUsers()"
+            title="Search by Company, Centre Name, City"
           />
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchPlantCareUsers()"
+            title="Search"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +119,7 @@
             type="button"
             (click)="clearSearch()"
             class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            title="Clear search"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

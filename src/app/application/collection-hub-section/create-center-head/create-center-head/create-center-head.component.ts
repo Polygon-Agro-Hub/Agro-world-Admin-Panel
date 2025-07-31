@@ -55,7 +55,7 @@ export class CreateCenterHeadComponent implements OnInit {
   selectedLanguages: string[] = [];
   CompanyData: Company[] = [];
   lastID!: string;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   itemId: number | null = null;
   officerId: number | null = null;
   banks: Bank[] = [];

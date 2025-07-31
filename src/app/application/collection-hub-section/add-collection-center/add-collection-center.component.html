@@ -38,27 +38,52 @@
       </div>
 
       <div class="relative">
-        <!-- Input Field -->
+        <!-- Label -->
         <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Companies *
         </label>
-        <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
+      
+        <!-- Readonly display input -->
+        <input
+          type="text"
+          [value]="selectedCompaniesNames.join(', ')"
+          readonly
           class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          placeholder="Select companies" (click)="toggleDropdown()" />
-
-        <!-- Dropdown -->
-        <div *ngIf="dropdownOpen"
+          placeholder="Select companies"
+          (click)="onCompanyInputClick()"
+        />
+      
+        <!-- Dropdown list -->
+        <div
+          *ngIf="dropdownOpen"
           class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
-          style="top: 100%; position: absolute">
-          <div *ngFor="let company of CompanyData" class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-            (click)="toggleSelection(company)">
-            <input type="checkbox" [checked]="selectedCompaniesIds.includes(company.id)" class="mr-2" />
+          style="top: 100%; position: absolute"
+        >
+          <div
+            *ngFor="let company of CompanyData"
+            class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+            (click)="toggleSelection(company)"
+          >
+            <input
+              type="checkbox"
+              [checked]="selectedCompaniesIds.includes(company.id)"
+              class="mr-2"
+              (click)="$event.stopPropagation()"
+            />
             {{ company.companyNameEnglish }}
           </div>
         </div>
-
-        
+      
+        <!-- Validation message -->
+        <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
+          Company is required
+        </div>
       </div>
+      
+
+      <!-- <div *ngIf="accHolderNameInput.touched && (accHolderNameInput.errors?.['required'] || !personalData.accHolderName)"  class="text-red-500 text-sm mt-1">
+          Account Holder’s Name is required
+        </div> -->
 
       <!-- Contact Number 01 -->
       <div>

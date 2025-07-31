@@ -17,7 +17,7 @@ export class CollectionCenterDashboardComponent {
   resentCollectionArr!: ResentCollection[];
   companyId!: number;
   centerName: string = '';
-
+  regCode!: string;
   selectTable: string = 'collection';
   centerId!: number;
   transCount: number = 0;
@@ -48,33 +48,30 @@ export class CollectionCenterDashboardComponent {
 
 fetchCenterDashbordDetails() {
   this.isLoading = true;
-
   this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
     this.isLoading = false;
 
-    console.log('📦 Full Dashboard Response:', res); // ✅ Shows everything
-
-    // If centerName, regCode, etc. are inside res.centerDetails or similar,
-    // update based on actual structure.
+    // Try to fetch regCode from the most reliable source, as in agro-world-centers.component.ts
     if (res.centerDetails) {
-      console.log('✅ centerDetails:', res.centerDetails);
-
       this.centerNameObj.centerName = res.centerDetails.centerName;
       this.centerNameObj.regCode = res.centerDetails.regCode;
       this.centerNameObj.officerCount = res.centerDetails.officerCount;
-
-      console.log('🧾 Final centerNameObj:', this.centerNameObj);
+      console.log('regCode from centerDetails:', res.centerDetails.regCode);
+    } else if (res.regCode) {
+      // fallback if regCode is at the root
+      this.centerNameObj.regCode = res.regCode;
+      console.log('regCode from root:', res.regCode);
     } else {
-      console.warn('⚠️ centerDetails missing in response');
+      this.centerNameObj.regCode = '';
+      console.log('regCode not found.');
     }
 
     this.resentCollectionArr = res.limitedResentCollection;
-    console.log('🧾 resentCollectionArr:', this.resentCollectionArr);
-
     this.totExpences = res.totExpences?.totExpences ?? 0;
     this.expencePrecentage = res.difExpences ?? 0;
   });
 }
+
 
 
   chooseTable(table: string) {

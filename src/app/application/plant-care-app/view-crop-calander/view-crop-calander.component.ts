@@ -76,13 +76,11 @@ export class ViewCropCalanderComponent implements OnInit {
   search: string = this.searchText,
   category: string | null = this.selectedCategory
 ) {
-  console.log('Fetching crop calendars for page:', page, 'category:', category);
   this.page = page;
   this.isLoading = true;
-  // Trim the search string to remove leading/trailing spaces
   const trimmedSearch = search.trim();
-  // Convert null to undefined to match service's expected type
-  const categoryParam = category ?? undefined;
+  // If category is null or empty string, pass empty string to service
+  const categoryParam = category ? category : '';
   this.cropCalendarService
     .fetchAllCropCalenders(page, limit, trimmedSearch, categoryParam)
     .subscribe(

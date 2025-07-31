@@ -7,10 +7,10 @@
 
 <div
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center">
-                <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+                <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-3">
                     Polygon Centers (02)
                 </h2>
             </div>
@@ -70,6 +70,9 @@
                             No
                         </th>
                         <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+                            Reg Code
+                        </th>
+                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
                             Centre Name
                         </th>
                         <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap">
@@ -83,9 +86,6 @@
                         </th>
                         <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
                             City
-                        </th>
-                        <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
-                            Officer in charge
                         </th>
                         <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
                             Contact Number 01
@@ -112,6 +112,9 @@
                         <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                             {{ (page - 1) * itemsPerPage + i + 1 }}
                         </td>
+                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark whitespace-nowrap">
+                            {{ item.regCode }}
+                        </td>
                         <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                             {{ item.centerName }}
                         </td>
@@ -128,31 +131,32 @@
                             {{ item.city }}
                         </td>
                         <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                            {{ item.officerName }}
-                        </td>
-                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                             <!-- {{ item.code1 }} {{ item.contact01 }} -->
                             <span *ngIf="item.contact01 === null">-</span>
-                  <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
+                            <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
                         </td>
                         <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-                            <a
-                                *ngIf="item.longitude && item.latitude"
+                            <a *ngIf="item.longitude && item.latitude"
                                 href="https://www.google.com/maps?q={{ item.latitude }},{{ item.longitude }}"
-                                target="_blank"
-                                class="text-red-600 hover:text-blue-800 text-xl"
-                                title="View on map"
-                            >
+                                target="_blank" class="text-red-600 hover:text-blue-800 text-xl" title="View on map">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <!-- Font Awesome map pin icon -->
                             </a>
-                            <span
-                                *ngIf="!item.longitude || !item.latitude"
-                                class="text-gray-400"
-                            >
+                            <span *ngIf="!item.longitude || !item.latitude" class="text-gray-400">
                                 <i class="fas fa-map-marker-alt"></i>
                                 <!-- Disabled/grayed out icon when no coordinates -->
                             </span>
+                        </td>
+                        <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+                            <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                                (click)="viewDistributionCenter(item.id)">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </button>
                         </td>
                         <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
                             <button *ngIf="
@@ -167,7 +171,7 @@
                                     </path>
                                 </svg>
                             </button>
-                         <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCenter(item.id)"
+                            <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCenter(item.id)"
                                 *ngIf="
                   permissionService.hasPermission('Edit Collection Center') ||
                   tokenService.getUserDetails().role === '1'

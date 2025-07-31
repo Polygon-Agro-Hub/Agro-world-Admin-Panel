@@ -259,66 +259,69 @@
         </div>
 
 
+        <!-- Fixed Mobile Number - 01 input -->
         <div>
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 01*
           </label>
-          <div class="mt-1 flex">
-            <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
-              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-              <option value="+880">+880 (BD)</option>
-              <option value="+855">+855 (KH)</option>
-              <option value="+91">+91 (IN)</option>
-              <option value="+31">+31 (NL)</option>
-              <option value="+94">+94 (LK)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+84">+84 (VN)</option>
-            </select>
-            <div class="w-full flex flex-col">
+          <div class="mt-1">
+            <div class="flex">
+              <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-0 text-textLight dark:text-textDark dark:bg-tileBlack flex-shrink-0">
+                <option value="+880">+880 (BD)</option>
+                <option value="+855">+855 (KH)</option>
+                <option value="+91">+91 (IN)</option>
+                <option value="+31">+31 (NL)</option>
+                <option value="+94">+94 (LK)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+1">+1 (US)</option>
+                <option value="+84">+84 (VN)</option>
+              </select>
               <input id="phoneNumber01" name="phoneNumber01" type="tel" [(ngModel)]="personalData.phoneNumber01"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack border-l-0"
                 placeholder="Enter your phone number" (blur)="onBlur('phoneNumber01')"
                 (input)="formatPhoneNumber('phoneNumber01')" (keypress)="preventNonNumeric($event)" maxlength="9" />
-              <span *ngIf="
-        touchedFields.phoneNumber01 &&
-        !isValidPhoneNumber(personalData.phoneNumber01)
-      " class="text-red-600 text-sm">
+            </div>
+            <!-- Error messages outside the flex container -->
+            <div class="mt-1">
+              <span *ngIf="touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
+                class="text-red-600 text-sm block">
                 Please enter a valid mobile number (9 digits)
               </span>
-              <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm">
+              <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
                 Mobile Number - 01 and Mobile Number - 02 cannot be the same
               </span>
             </div>
           </div>
         </div>
 
-        <!-- Updated Mobile Number - 02 input -->
+        <!-- Fixed Mobile Number - 02 input -->
         <div>
           <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 02
           </label>
-          <div class="mt-1 flex">
-            <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
-              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-              <option value="+880">+880 (BD)</option>
-              <option value="+855">+855 (KH)</option>
-              <option value="+91">+91 (IN)</option>
-              <option value="+31">+31 (NL)</option>
-              <option value="+94">+94 (LK)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+84">+84 (VN)</option>
-            </select>
-            <div class="w-full flex flex-col">
+          <div class="mt-1">
+            <div class="flex">
+              <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-0 text-textLight dark:text-textDark dark:bg-tileBlack flex-shrink-0">
+                <option value="+880">+880 (BD)</option>
+                <option value="+855">+855 (KH)</option>
+                <option value="+91">+91 (IN)</option>
+                <option value="+31">+31 (NL)</option>
+                <option value="+94">+94 (LK)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+1">+1 (US)</option>
+                <option value="+84">+84 (VN)</option>
+              </select>
               <input id="phoneNumber02" name="phoneNumber02" type="tel" [(ngModel)]="personalData.phoneNumber02"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack border-l-0"
                 placeholder="Enter your phone number" (blur)="onBlur('phoneNumber02')"
                 (input)="formatPhoneNumber('phoneNumber02')" (keypress)="preventNonNumeric($event)" maxlength="9" />
-              <span *ngIf="
-        personalData.phoneNumber02 &&
-        !isValidPhoneNumber(personalData.phoneNumber02)
-      " class="text-red-600 text-sm">
+            </div>
+            <!-- Error messages outside the flex container -->
+            <div class="mt-1">
+              <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
+                class="text-red-600 text-sm block">
                 Please enter a valid mobile number (9 digits)
               </span>
             </div>

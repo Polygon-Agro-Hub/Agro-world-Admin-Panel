@@ -79,7 +79,8 @@ export class SlaveCropCalendarComponent {
         ? +params['cultivationId']
         : null;
       this.userId = params['userId'] ? +params['userId'] : null;
-      this.userName = params['userName'] ? params['userName'] : '';
+      // Remove this line
+      // this.userName = params['userName'] ? params['userName'] : '';
       console.log('This is the Id : ', this.cultivationId);
       console.log('This is the user Id : ', this.userId);
     });
@@ -131,7 +132,7 @@ export class SlaveCropCalendarComponent {
     userId: any,
     onCulscropID: any,
     cultivationId: any,
-    userName: any
+    cropName: any // Changed from userName to cropName
   ) {
     if (cropCalendarId) {
       this.router.navigate(
@@ -142,7 +143,7 @@ export class SlaveCropCalendarComponent {
             userId,
             onCulscropID,
             cultivationId,
-            userName,
+            cropName, // Changed from userName to cropName
           },
         }
       );

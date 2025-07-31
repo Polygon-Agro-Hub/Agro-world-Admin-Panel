@@ -59,8 +59,18 @@
           [(ngModel)]="taskItems.taskEnglish"
           (keydown)="onKeyDown($event, taskItems.taskEnglish)"
           (input)="validateEnglishInput($event)"
+          #taskEnglish="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskEnglish.invalid && (taskEnglish.dirty || taskEnglish.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task English is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -75,8 +85,19 @@
           [(ngModel)]="taskItems.taskTypeEnglish"
           (keydown)="onKeyDown($event, taskItems.taskTypeEnglish)"
           (input)="validateEnglishInput($event)"
+          #taskTypeEnglish="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskTypeEnglish.invalid &&
+            (taskTypeEnglish.dirty || taskTypeEnglish.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Type is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -91,8 +112,19 @@
           [(ngModel)]="taskItems.taskCategoryEnglish"
           (keydown)="onKeyDown($event, taskItems.taskCategoryEnglish)"
           (input)="validateEnglishInput($event)"
+          #taskCategoryEnglish="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskCategoryEnglish.invalid &&
+            (taskCategoryEnglish.dirty || taskCategoryEnglish.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Category is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -107,8 +139,19 @@
           [(ngModel)]="taskItems.taskDescriptionEnglish"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionEnglish)"
           (input)="validateEnglishInput($event)"
+          #taskDescriptionEnglish="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskDescriptionEnglish.invalid &&
+            (taskDescriptionEnglish.dirty || taskDescriptionEnglish.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Description is required
+        </div>
       </div>
     </div>
 
@@ -126,8 +169,18 @@
           [(ngModel)]="taskItems.taskSinhala"
           (keydown)="onKeyDown($event, taskItems.taskSinhala)"
           (input)="validateSinhalaInput($event)"
+          #taskSinhala="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskSinhala.invalid && (taskSinhala.dirty || taskSinhala.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Sinhala is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -142,8 +195,19 @@
           [(ngModel)]="taskItems.taskTypeSinhala"
           (keydown)="onKeyDown($event, taskItems.taskTypeSinhala)"
           (input)="validateSinhalaInput($event)"
+          #taskTypeSinhala="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskTypeSinhala.invalid &&
+            (taskTypeSinhala.dirty || taskTypeSinhala.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Type is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -158,8 +222,19 @@
           [(ngModel)]="taskItems.taskCategorySinhala"
           (keydown)="onKeyDown($event, taskItems.taskCategorySinhala)"
           (input)="validateSinhalaInput($event)"
+          #taskCategorySinhala="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskCategorySinhala.invalid &&
+            (taskCategorySinhala.dirty || taskCategorySinhala.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Category is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -174,8 +249,19 @@
           [(ngModel)]="taskItems.taskDescriptionSinhala"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionSinhala)"
           (input)="validateSinhalaInput($event)"
+          #taskDescriptionSinhala="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskDescriptionSinhala.invalid &&
+            (taskDescriptionSinhala.dirty || taskDescriptionSinhala.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Description is required
+        </div>
       </div>
     </div>
 
@@ -193,8 +279,16 @@
           [(ngModel)]="taskItems.taskTamil"
           (keydown)="onKeyDown($event, taskItems.taskTamil)"
           (input)="validateTamilInput($event)"
+          #taskTamil="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="taskTamil.invalid && (taskTamil.dirty || taskTamil.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Tamil is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -209,8 +303,19 @@
           [(ngModel)]="taskItems.taskTypeTamil"
           (keydown)="onKeyDown($event, taskItems.taskTypeTamil)"
           (input)="validateTamilInput($event)"
+          #taskTypeTamil="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskTypeTamil.invalid &&
+            (taskTypeTamil.dirty || taskTypeTamil.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Type is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -225,8 +330,19 @@
           [(ngModel)]="taskItems.taskCategoryTamil"
           (keydown)="onKeyDown($event, taskItems.taskCategoryTamil)"
           (input)="validateTamilInput($event)"
+          #taskCategoryTamil="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskCategoryTamil.invalid &&
+            (taskCategoryTamil.dirty || taskCategoryTamil.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Category is required
+        </div>
       </div>
       <div class="mb-4">
         <label
@@ -241,8 +357,19 @@
           [(ngModel)]="taskItems.taskDescriptionTamil"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionTamil)"
           (input)="validateTamilInput($event)"
+          #taskDescriptionTamil="ngModel"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+        <div
+          *ngIf="
+            taskDescriptionTamil.invalid &&
+            (taskDescriptionTamil.dirty || taskDescriptionTamil.touched)
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Task Description is required
+        </div>
       </div>
     </div>
 
@@ -259,9 +386,19 @@
         id="startingDate"
         [(ngModel)]="taskItems.startingDate"
         name="startingDate"
+        #startingDate="ngModel"
+        required
         [value]="taskItems.startingDate"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
       />
+      <div
+        *ngIf="
+          startingDate.invalid && (startingDate.dirty || startingDate.touched)
+        "
+        class="text-red-500 text-sm mt-1"
+      >
+        Starting Date is required
+      </div>
     </div>
 
     <div class="md:col-span-2 my-3">
@@ -276,9 +413,17 @@
         id="reqImages"
         [(ngModel)]="taskItems.reqImages"
         name="reqImages"
+        #reqImages="ngModel"
+        required
         rows="3"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
       />
+      <div
+        *ngIf="reqImages.invalid && (reqImages.dirty || reqImages.touched)"
+        class="text-red-500 text-sm mt-1"
+      >
+        Number of required images is required
+      </div>
     </div>
 
     <div class="md:col-span-2 my-3">
@@ -324,9 +469,17 @@
         id="imageLink"
         [(ngModel)]="taskItems.imageLink"
         name="imageLink"
+        #imageLink="ngModel"
+        [required]="hasImageLink"
         rows="3"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
       />
+      <div
+        *ngIf="imageLink.invalid && (imageLink.dirty || imageLink.touched)"
+        class="text-red-500 text-sm mt-1"
+      >
+        Image Link is required when "Want to Add Images?" is Yes
+      </div>
     </div>
 
     <div class="md:col-span-2 my-3">
@@ -379,7 +532,7 @@
       <div class="w-[20px]"></div>
       <button
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        type="button "
+        type="button"
         (click)="updateTask()"
       >
         Save

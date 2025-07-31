@@ -654,7 +654,7 @@ export class CreateCropCalenderComponent implements OnInit {
 
   getAllCropGroups() {
     this.isLoading = true;
-    this.cropCalendarService.fetchAllCropGroups().subscribe({
+    this.cropCalendarService.cropGropForFilter().subscribe({
       next: (response) => {
         this.groupList = response.items;
         this.isLoading = false;

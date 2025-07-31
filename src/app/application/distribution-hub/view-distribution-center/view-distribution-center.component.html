@@ -92,6 +92,8 @@
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             [(ngModel)]="searchItem"
             (keydown.enter)="searchPlantCareUsers()"
+            (keydown)="preventLeadingSpace($event)"
+            (input)="trimLeadingSpaces($event)"
             title="Search by Company, Centre Name, City"
           />
           <button

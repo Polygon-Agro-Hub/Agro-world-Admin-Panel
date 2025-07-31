@@ -110,3 +110,11 @@
   background-color: #4b5563;
   color: #f9fafb;
 }
+
+::ng-deep .custom-dropdown-panel {
+  max-height: none !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  max-height: none !important;
+}

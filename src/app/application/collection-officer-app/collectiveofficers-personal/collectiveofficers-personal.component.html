@@ -169,10 +169,11 @@
           </label>
           <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
+            styleClass="w-full h-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+             [autoDisplayFirst]="false">
           </p-dropdown>
         </div>
+
 
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name

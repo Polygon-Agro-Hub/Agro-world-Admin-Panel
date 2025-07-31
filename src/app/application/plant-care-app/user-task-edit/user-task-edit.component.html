@@ -283,6 +283,38 @@
 
     <div class="md:col-span-2 my-3">
       <label
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+      >
+        Want to Add Images?*
+      </label>
+      <div class="flex items-center space-x-4">
+        <label class="inline-flex items-center">
+          <input
+            type="radio"
+            name="hasImageLink"
+            [(ngModel)]="hasImageLink"
+            [value]="true"
+            (change)="onImageLinkChange(true)"
+            class="text-[#3980C0] focus:ring-[#3980C0]"
+          />
+          <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input
+            type="radio"
+            name="hasImageLink"
+            [(ngModel)]="hasImageLink"
+            [value]="false"
+            (change)="onImageLinkChange(false)"
+            class="text-[#3980C0] focus:ring-[#3980C0]"
+          />
+          <span class="ml-2 text-textLight dark:text-textDark">No</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="md:col-span-2 my-3" *ngIf="hasImageLink">
+      <label
         for="imageLink"
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >Image Link</label

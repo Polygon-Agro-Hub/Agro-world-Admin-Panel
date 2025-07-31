@@ -45,6 +45,7 @@ export class UserTaskEditComponent {
   id: any | null = null;
   taskItems: CropTask = new CropTask();
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
+  hasImageLink: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -76,12 +77,22 @@ export class UserTaskEditComponent {
         this.taskItems.startingDate = this.formatDate(
           this.taskItems.startingDate
         );
+        // Set the radio button based on whether imageLink exists
+        this.hasImageLink = !!this.taskItems.imageLink;
       },
       (error) => {
         if (error.status === 401) {
+          // Handle unauthorized error
         }
       }
     );
+  }
+
+  onImageLinkChange(hasImage: boolean) {
+    this.hasImageLink = hasImage;
+    if (!hasImage) {
+      this.taskItems.imageLink = null;
+    }
   }
 
   updateTask() {

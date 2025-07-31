@@ -1,5 +1,5 @@
 /* Custom pagination styles */
-.my-pagination /deep/ .ngx-pagination {
+.my-pagination .ngx-pagination {
     display: flex;
     justify-content: left;
     align-items: center;
@@ -9,12 +9,12 @@
     flex-wrap: wrap;
 }
 
-.my-pagination /deep/ .ngx-pagination li {
+.my-pagination .ngx-pagination li {
     margin: 0 4px;
 }
 
-.my-pagination /deep/ .ngx-pagination a,
-.my-pagination /deep/ .ngx-pagination button {
+.my-pagination .ngx-pagination a,
+.my-pagination .ngx-pagination button {
     color: #4a5568;
     text-decoration: none;
     padding: 6px 12px;
@@ -24,36 +24,36 @@
     transition: all 0.3s ease;
 }
 
-.my-pagination /deep/ .ngx-pagination a:hover,
-.my-pagination /deep/ .ngx-pagination button:hover {
+.my-pagination .ngx-pagination a:hover,
+.my-pagination .ngx-pagination button:hover {
     background: #edf2f7;
 }
 
 
 
-.my-pagination /deep/ .ngx-pagination .disabled {
+.my-pagination .ngx-pagination .disabled {
     color: #a0aec0;
     cursor: not-allowed;
 }
 
 /* Dark mode styles */
-.dark .my-pagination /deep/ .ngx-pagination a,
-.dark .my-pagination /deep/ .ngx-pagination button {
+.dark .my-pagination .ngx-pagination a,
+.dark .my-pagination .ngx-pagination button {
     color: #e2e8f0;
     background: #2d3748;
     border-color: #4a5568;
 }
 
-.dark .my-pagination /deep/ .ngx-pagination a:hover,
-.dark .my-pagination /deep/ .ngx-pagination button:hover {
+.dark .my-pagination .ngx-pagination a:hover,
+.dark .my-pagination .ngx-pagination button:hover {
     background: #4a5568;
 }
 
-.dark .my-pagination /deep/ .ngx-pagination .current {
+.dark .my-pagination .ngx-pagination .current {
     background: #8AC440;
     color: #1a202c;
 }
 
-.dark .my-pagination /deep/ .ngx-pagination .disabled {
+.dark .my-pagination .ngx-pagination .disabled {
     color: #718096;
 }

@@ -17,10 +17,13 @@ export class TargetService {
     id: number,
     date: string,
     searchText: string = ''
+    
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
+
+    console.log('date', date)
 
     let url = `${this.apiUrl}/get-saved-center-crops/${id}/${date}`;
     if (searchText) {

@@ -10,7 +10,7 @@
 
       <p class="font-normal dark:text-white">Filter By</p>
 
-      <div class="relative w-46">
+      <!-- <div class="relative w-46">
         <div
           class="border-2 rounded-xl dark:bg-[#292929] text-textLight dark:text-textDark flex flex-row justify-between items-center"
         >
@@ -22,10 +22,34 @@
             class="block w-auto appearance-none dark:bg-[#292929] text-textLight dark:text-textDark px-3 py-2 rounded-xl focus:outline-none cursor-pointer"
           />
         </div>
+      </div> -->
+
+      <div class="mr-5">
+        <p-calendar
+  id="toDate"
+  [(ngModel)]="selectDate"
+  (onSelect)="onDateChange($event)"
+  (onClear)="onDateChange($event)"       
+  [showIcon]="true"
+  [showClear]="true"              
+  [showButtonBar]="true"
+  iconDisplay="input"
+  [style]="{ width: '16rem', height: '2rem' }"
+  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+  [appendTo]="'body'"
+/>
       </div>
 
       <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]"
+        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
       >
         <input
           [(ngModel)]="searchText"
@@ -33,7 +57,7 @@
           (keyup.esc)="offSearch()"
           type="text"
           placeholder="Search by Variety Name"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          class="bg-transparent  outline-none w-full text-textLight dark:text-textDark"
         />
         <button
           (click)="onSearch()"
@@ -118,7 +142,7 @@
                 type="number"
                 name="targetA"
                 min="0"
-                class="border-[#3980C0] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingA"
                 (change)="validateForm()"
               />
@@ -144,7 +168,7 @@
                 type="number"
                 name="targetB"
                 min="0"
-                class="border-[#3980C0] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingB"
                 (change)="validateForm()"
               />
@@ -170,7 +194,7 @@
                 type="number"
                 name="targetC"
                 min="0"
-                class="border-[#3980C0] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
+                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingC"
                 (change)="validateForm()"
               />
@@ -198,7 +222,7 @@
       class="flex flex-row justify-center items-center my-7 gap-8"
     >
       <button
-        class="bg-[#FFFFFF] text-[#6B7D8C] border-[2px] border-[#95A1AC] rounded-lg px-5 py-2"
+        class="bg-[#FFFFFF] dark:bg-[#74788D] text-[#6B7D8C] dark:text-[#D3D3D3] border-[2px] border-[#95A1AC] rounded-lg px-5 py-2"
         (click)="onCancel()"
       >
         Cancel
@@ -208,7 +232,7 @@
         [ngClass]="
           isFormValid
             ? 'bg-[#3980C0] text-[#FFFFFF]'
-            : 'bg-[#95A1AC] text-[#6B7D8C]'
+            : 'bg-[#95A1AC] text-[#6B7D8C] dark:bg-[#74788D] dark:text-[#384957]'
         "
       >
         Save

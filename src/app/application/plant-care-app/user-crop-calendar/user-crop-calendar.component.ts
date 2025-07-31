@@ -55,6 +55,7 @@ export class UserCropCalendarComponent {
   isModalOpen = false;
   selectedImages: string[] = [];
   firstStartingDate: string | null = null;
+  cropName: string = '';
 
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
@@ -77,10 +78,10 @@ export class UserCropCalendarComponent {
       this.cultivationId = params['cultivationId']
         ? +params['cultivationId']
         : null;
-      this.userName = params['userName'] ? params['userName'] : '';
+      this.cropName = params['cropName'] ? params['cropName'] : ''; // Changed from userName to cropName
     });
 
-    console.log('onCulscropID', this.onCulscropID, 'userName', this.userName);
+    console.log('onCulscropID', this.onCulscropID, 'cropName', this.cropName); // Updated log
     this.getchUserTaskList(this.cropCalendarId, this.userId);
   }
 
@@ -192,7 +193,7 @@ export class UserCropCalendarComponent {
     indexId: string,
     userId: string,
     cultivationId: any,
-    userName: string
+    cropName: string // Changed from userName to cropName
   ) {
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
@@ -214,7 +215,7 @@ export class UserCropCalendarComponent {
           [
             `/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`,
           ],
-          { queryParams: { cultivationId, userName } }
+          { queryParams: { cultivationId, cropName } } // Changed from userName to cropName
         );
       }
     });

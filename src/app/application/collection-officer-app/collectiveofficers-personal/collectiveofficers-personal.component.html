@@ -93,7 +93,7 @@
           </label>
           <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
-            (onChange)="getAllCollectionCetnter(personalData.companyId)" (onBlur)="onBlur('companyId')"
+            (onChange)="getAllCollectionCetnter(personalData.companyId)" (onBlur)="onBlur('companyId')" 
             styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom">
           </p-dropdown>
@@ -107,7 +107,7 @@
           <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!loaded"
             placeholder="Select a collection centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
-            panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+            panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom" (onChange)="changeCenter($event)"> >
           </p-dropdown>
           <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm">Collection Centre Name is a required
             field</span>
@@ -169,10 +169,11 @@
           </label>
           <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
+            styleClass="w-full h-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+             [autoDisplayFirst]="false">
           </p-dropdown>
         </div>
+
 
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name

@@ -687,7 +687,7 @@ onclick="history.back()"
             Email Address is required
           </div>
           <div *ngIf="emailInput.touched && emailInput.errors?.['pattern'] && personalData.email" class="text-red-500 text-sm mt-1">
-            Please enter a valid Email Address.
+            Please enter a valid Email Address.({{ 'etc., example@gmail.com' }})
         </div>
          
           <!-- <span

@@ -438,4 +438,17 @@ updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
       { headers }
     );
   }
+
+  cropGropForFilter(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}crop-calendar/get-crop-groups-for-filters`,
+      {
+        headers,
+      }
+    );
+  }
 }

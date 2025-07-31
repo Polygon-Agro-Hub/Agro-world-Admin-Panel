@@ -306,6 +306,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
 
   getAllCollectionCetnter(id: number) {
     this.loaded = false;
+    this.personalData.centerId = '';
     this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
       (res) => {
         this.collectionCenterData = res;
@@ -1008,13 +1009,22 @@ formatEmail(): void {
       this.personalData[fieldName] = value;
     }
   }
+
+  changeCenter(event: any){
+    console.log('Center changed:', this.personalData.centerId);
+    console.log('Center MAnager:', this.personalData.irmId);
+    this.personalData.irmId = '';
+    // this.centerOptions = [];
+    this.getAllCollectionManagers();
+  }
+  
 }
 
 class Personal {
   jobRole: string = 'Collection Center Manager';
   empId!: string;
-  centerId!: number;
-  irmId!: number;
+  centerId!: number | string;
+  irmId!: number | string;
   empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;

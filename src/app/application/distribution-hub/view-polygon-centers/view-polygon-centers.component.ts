@@ -23,7 +23,7 @@ import Swal from 'sweetalert2';
     LoadingSpinnerComponent,
   ],
   templateUrl: './view-polygon-centers.component.html',
-  styleUrl: './view-polygon-centers.component.css'
+  styleUrl: './view-polygon-centers.component.css',
 })
 export class ViewPolygonCentersComponent implements OnInit {
   companyId!: number;
@@ -115,7 +115,7 @@ export class ViewPolygonCentersComponent implements OnInit {
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -165,10 +165,7 @@ export class ViewPolygonCentersComponent implements OnInit {
 
   applyCompanyFilter(): void {
     this.page = 1;
-    this.fetchAllCollectionCenter(
-      this.page,
-      this.itemsPerPage,
-    );
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   clearCompanyFilter(): void {
@@ -215,17 +212,14 @@ export class ViewPolygonCentersComponent implements OnInit {
   }
 
   searchPlantCareUsers() {
-    console.log()
+    console.log();
     this.page = 1;
-    this.fetchAllCollectionCenter(
-      this.page,
-      this.itemsPerPage,
-    );
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchAllCollectionCenter(this.page, this.itemsPerPage,);
+    this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
   applyProvinceFilters() {
@@ -340,11 +334,49 @@ export class ViewPolygonCentersComponent implements OnInit {
   }
 
   viewCenter(id: number) {
-    this.router.navigate([`/distribution-hub/action/view-distribution-centre/${id}`]);
+    this.router.navigate([
+      `/distribution-hub/action/view-distribution-centre/${id}`,
+    ]);
   }
 
   editCenter(id: number) {
-    this.router.navigate([`/distribution-hub/action/edit-distribution-centre/${id}`]);
+    this.router.navigate([
+      `/distribution-hub/action/edit-distribution-centre/${id}`,
+    ]);
+  }
+
+  viewDistributionCenter(id: number): void {
+    this.router.navigate([
+      `/distribution-hub/action/view-distribution-centre/${id}`,
+    ]);
+  }
+
+  onSearchKeydown(event: KeyboardEvent): void {
+    if (event.key === ' ' || event.keyCode === 32) {
+      const input = event.target as HTMLInputElement;
+      const currentValue = input.value;
+      const cursorPosition = input.selectionStart || 0;
+
+      if (
+        currentValue.length === 0 ||
+        cursorPosition === 0 ||
+        currentValue.substring(0, cursorPosition).trim() === ''
+      ) {
+        event.preventDefault();
+      }
+    }
+  }
+
+  onSearchKeydownSimple(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+
+    // Block space if input is empty or cursor is at position 0
+    if (
+      (event.key === ' ' || event.keyCode === 32) &&
+      (input.value.length === 0 || input.selectionStart === 0)
+    ) {
+      event.preventDefault();
+    }
   }
 }
 

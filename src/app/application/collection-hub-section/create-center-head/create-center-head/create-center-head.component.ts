@@ -58,7 +58,7 @@ export class CreateCenterHeadComponent implements OnInit {
   selectedLanguages: string[] = [];
   CompanyData: Company[] = [];
   lastID!: string;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   officerId: number | null = null;
   banks: Bank[] = [];
@@ -84,7 +84,6 @@ export class CreateCenterHeadComponent implements OnInit {
   countries: Country[] = COUNTRIES;
   selectedCountry1: Country | null = null;
   selectedCountry2: Country | null = null;
-  phoneNumber: string = '';
   // leadingSpaceError: boolean = false;
   // specialCharOrNumberError: boolean = false;
 

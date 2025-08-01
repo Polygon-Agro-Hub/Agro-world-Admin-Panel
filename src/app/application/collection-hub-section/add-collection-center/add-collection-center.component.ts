@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { Country, COUNTRIES } from '../../../../assets/country-data';
 @Component({
   selector: 'app-add-collection-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DropdownModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, DropdownModule, InputTextModule, FormsModule],
   templateUrl: './add-collection-center.component.html',
   styleUrls: ['./add-collection-center.component.css'],
 })
@@ -30,6 +30,9 @@ export class AddCollectionCenterComponent implements OnInit {
   isLoadingregcode = false;
   companyDisplayText: string = '';
   companyTouched: boolean = false;
+
+  searchQuery: string = '';
+  filteredCompanies: Company[] = [];
 
   allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
@@ -68,11 +71,36 @@ countries: Country[] = COUNTRIES;
       province: ['', Validators.required],
       country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required],
+      searchQuery: ['']
     });
     const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
   this.selectedCountry1 = defaultCountry;
   this.selectedCountry2 = defaultCountry;
+  this.filteredCompanies = [...this.CompanyData];
   }
+  //serachable company dropdown
+  filterCompanies(event: Event): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
+  
+    this.filteredCompanies = this.CompanyData.filter(company =>
+      company.companyNameEnglish.toLowerCase().includes(input)
+    );
+  }
+
+  onCompanyInputClick(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+    this.companyTouched = true;
+  
+    // Reset search input and filtered data
+    this.filteredCompanies = [...this.CompanyData];
+  
+    // Clear the actual input field (optional but recommended)
+    const inputElement = document.querySelector('#companySearchInput') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = '';
+    }
+  }
+  
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
@@ -82,11 +110,6 @@ countries: Country[] = COUNTRIES;
       return false;
     }
     return true;
-  }
-
-  onCompanyInputClick(): void {
-    this.dropdownOpen = !this.dropdownOpen;
-    this.companyTouched = true;
   }
 
   validateSriLankanPhone(input: string, key: string): void {
@@ -150,7 +173,6 @@ countries: Country[] = COUNTRIES;
       this.selectedCompaniesNames.splice(index, 1);
     }
   
-    // ✅ Always update display text after any change
     this.companyDisplayText = this.selectedCompaniesNames.join(', ');
     console.log('companyDisplayText', this.companyDisplayText);
   }

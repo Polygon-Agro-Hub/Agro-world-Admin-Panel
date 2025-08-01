@@ -93,6 +93,7 @@ export class WholesaleComplaintsComponent implements OnInit {
 
     this.complaintsService.fetchWholesaleComplaints().subscribe({
       next: (resp: ApiResponse) => {
+        console.log('res', resp)
         this.complaints = resp.data.map(item => {
           const complaint: Complaint = {
             id: item.id.toString(),

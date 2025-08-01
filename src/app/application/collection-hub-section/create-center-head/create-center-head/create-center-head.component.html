@@ -530,7 +530,136 @@ onclick="history.back()"
           >
         </div> -->
 
+        <!-- <div class="flex gap-2 items-center">
+          
+          <p-dropdown
+        [options]="countries"
+        [(ngModel)]="personalData.phoneCode01"
+        [optionLabel]="'dialCode'"
+        [optionValue]="'dialCode'"
+        [style]="{ width: '130px' }"
+      >
+
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img
+              [src]="getFlagUrl(country.code)"
+              width="24"
+              height="18"
+              alt="{{ country.name }}"
+            />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      
+
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img
+              [src]="getFlagUrl(country.code)"
+              width="24"
+              height="18"
+              alt="{{ country.name }}"
+            />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+        
+
+          <input
+            type="text"
+            pInputText
+            placeholder="Enter phone number"
+            [(ngModel)]="phoneNumber"
+            class="w-full"
+          />
+        </div> -->
+
         <div>
+          <label
+            for="phoneNumber01"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Phone Number - 1 *
+          </label>
+          <div class="mt-1 flex">
+            <p-dropdown
+  [options]="countries"
+  [(ngModel)]="personalData.phoneCode01"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
+
+            <div class="w-full flex flex-col">
+              <input
+                id="phoneNumber01"
+                name="phoneNumber01"
+                type="tel"
+                [(ngModel)]="personalData.phoneNumber01"
+                #contact01="ngModel"
+              required
+              pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone01')" maxlength="9"
+                class="block w-full p-2 border border-gray-300 h-12 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                placeholder="Enter your phone number"
+                (blur)="onBlur('phoneNumber01')"
+              />
+              
+              <!-- <span
+                *ngIf="
+                  touchedFields.phoneNumber01 &&
+                  !isValidPhoneNumber(personalData.phoneNumber01)
+                "
+                class="text-red-600 text-sm"
+              >
+                Invalid phone number.
+              </span> -->
+            </div>
+          </div>
+          <div *ngIf="contact01.touched">
+            <div *ngIf="!personalData.phoneNumber01" class="text-red-500 text-sm mt-1">
+                Phone Number - 1 is required.
+            </div>
+            <div *ngIf="personalData.phoneNumber01 && contact01.invalid && !isPhoneInvalidMap['phone01']" 
+                class="text-red-500 text-sm mt-1">
+                Phone Number must be exactly 9 digits.
+            </div>
+  
+            <div *ngIf="isPhoneInvalidMap['phone01'] && personalData.phoneNumber01 " class="text-red-500 text-sm mt-1">
+                Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+              </div>
+        </div>
+        </div>
+
+        <!-- <div>
           <label
             for="phoneNumber01"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -563,15 +692,6 @@ onclick="history.back()"
                 (blur)="onBlur('phoneNumber01')"
               />
               
-              <!-- <span
-                *ngIf="
-                  touchedFields.phoneNumber01 &&
-                  !isValidPhoneNumber(personalData.phoneNumber01)
-                "
-                class="text-red-600 text-sm"
-              >
-                Invalid phone number.
-              </span> -->
             </div>
           </div>
           <div *ngIf="contact01.touched">
@@ -587,7 +707,7 @@ onclick="history.back()"
                 Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
               </div>
         </div>
-        </div>
+        </div> -->
 
         <div>
           <label
@@ -597,17 +717,40 @@ onclick="history.back()"
             Phone Number - 2
           </label>
           <div class="mt-1 flex">
-            <select
-              id="phoneNumber02Code"
-              name="phoneNumber02Code"
-              [(ngModel)]="personalData.phoneCode02"
-              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-            >
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
-            </select>
+            <p-dropdown
+  [options]="countries"
+  [(ngModel)]="personalData.phoneCode02"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
             <div class="w-full flex flex-col">
               <input
                 id="phoneNumber02"
@@ -617,7 +760,7 @@ onclick="history.back()"
                 #contact02="ngModel"
             required
             pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                class="block w-full p-2 border border-gray-300 h-12 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="Enter your phone number"
                 (blur)="onBlur('phoneNumber02')"
               />
@@ -882,7 +1025,7 @@ onclick="history.back()"
           #accHolderNameInput="ngModel"
           required
           maxlength="50"
-          (input)="capitalizeAccHolderName()"
+          (input)="capitalizeAccHolderName($event)" 
           
           (keydown)="blockSpecialChars($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

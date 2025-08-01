@@ -97,8 +97,8 @@ export class SelectVarietyListComponent {
             title: 'Success!',
             text:
               isSelected === 1
-                ? 'Successfully added the variety to the center target'
-                : 'Successfully removed the variety from the center target',
+                ? 'Successfully added the variety to the centre target'
+                : 'Successfully removed the variety from the centre target',
             timer: 2000,
             showConfirmButton: false,
           });

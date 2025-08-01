@@ -5,11 +5,14 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { Country, COUNTRIES } from '../../../../assets/country-data';
 
 @Component({
   selector: 'app-add-collection-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DropdownModule, InputTextModule],
   templateUrl: './add-collection-center.component.html',
   styleUrls: ['./add-collection-center.component.css'],
 })
@@ -33,6 +36,10 @@ export class AddCollectionCenterComponent implements OnInit {
   phone01: false,
   phone02: false,
 };
+
+countries: Country[] = COUNTRIES;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
 
   leadingSpaceError: boolean = false;
   specialCharOrNumberError: boolean = false;
@@ -62,6 +69,9 @@ export class AddCollectionCenterComponent implements OnInit {
       country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required],
     });
+    const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
   }
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
@@ -119,6 +129,10 @@ export class AddCollectionCenterComponent implements OnInit {
     this.collectionCenterForm.get('city')?.valueChanges.subscribe(() => {
       this.onCityChange();
     });
+  }
+
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/24x18/${code}.png`;
   }
 
   toggleDropdown() {

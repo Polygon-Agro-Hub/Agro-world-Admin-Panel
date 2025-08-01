@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { Country, COUNTRIES } from '../../../../../assets/country-data';
 import {
   HttpClient,
   HttpClientModule,
@@ -44,6 +46,7 @@ interface FieldConfig {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule, InputTextModule
   ],
   templateUrl: './create-center-head.component.html',
   styleUrl: './create-center-head.component.css',
@@ -77,6 +80,11 @@ export class CreateCenterHeadComponent implements OnInit {
   phone01: false,
   phone02: false,
 };
+
+  countries: Country[] = COUNTRIES;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
+  phoneNumber: string = '';
   // leadingSpaceError: boolean = false;
   // specialCharOrNumberError: boolean = false;
 
@@ -137,14 +145,22 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private location: Location
-  ) {}
+    private location: Location,
+    
+  ) {const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
+  }
 
   ngOnInit(): void {
     this.getAllCompanies();
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
+  }
+
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/24x18/${code}.png`;
   }
 
   // Field configurations
@@ -250,21 +266,18 @@ onNameInput(event: Event, fieldName: string): void {
   this.validateNameInput(input, fieldName);
 }
 
-capitalizeAccHolderName(): void {
-  let value = this.personalData.accHolderName || '';
-
-  // Trim leading and trailing spaces, and collapse multiple spaces inside
-  value = value.replace(/\s+/g, ' ').trim();
-
-  // Capitalize the first letter if value is not empty
+capitalizeAccHolderName(event: Event): void {
+  const inputElement = event.target as HTMLInputElement;
+  let value = inputElement.value.trimStart().replace(/\s+/g, ' ');
+  
+  // Capitalize first letter
   if (value.length > 0) {
-    this.personalData.accHolderName = value.charAt(0).toUpperCase() + value.slice(1);
-  } else {
-    this.personalData.accHolderName = '';
+    value = value.charAt(0).toUpperCase() + value.slice(1);
   }
-  console.log('sd', this.personalData.accHolderName)
+  
+  this.personalData.accHolderName = value;
+  inputElement.value = value;
 }
-
 
 validateSriLankanPhone(input: string, key: string): void {
     if (!input) {
@@ -673,6 +686,7 @@ blockNonNumbers(event: KeyboardEvent) {
   // }
 
   handleNextClick(): void {
+    console.log('phone', this.personalData.phoneCode01, this.personalData.phoneCode02)
     if (this.checkFormValidity()) {
       this.nextFormCreate('pageTwo');
     }

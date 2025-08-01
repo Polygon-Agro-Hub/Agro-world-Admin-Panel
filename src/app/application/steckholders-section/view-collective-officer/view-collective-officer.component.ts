@@ -415,6 +415,8 @@ export class ViewCollectiveOfficerComponent {
   }
 
   onSearch() {
+    this.searchNIC = this.searchNIC?.trim() || ''
+    console.log('searchNIC', "'",this.searchNIC,"'")
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 

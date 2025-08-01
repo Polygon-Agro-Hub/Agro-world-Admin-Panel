@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -23,16 +23,16 @@ import {
   distinctUntilChanged,
   switchMap,
 } from 'rxjs/operators';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface PhoneCode {
   value: string;
   label: string;
 }
-
 @Component({
   selector: 'app-add-destribution-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './add-destribution-center.component.html',
   styleUrl: './add-destribution-center.component.css',
 })
@@ -45,15 +45,24 @@ export class AddDestributionCenterComponent implements OnInit {
   submitError: string | null = null;
   submitSuccess: string | null = null;
   isLoadingregcode = false;
+  showDropdown1 = false;
+  showDropdown2 = false;
+  companyOptions: { label: string; value: number }[] = [];
+  provinceOptions: { label: string; value: string }[] = [];
+  districtOptions: { label: string; value: string }[] = [];
+
 
   private updatingDropdowns = false;
 
   phoneCodes: PhoneCode[] = [
-    { value: '+94', label: '+94 (SL)' },
-    { value: '+91', label: '+91 (India)' },
-    { value: '+1', label: '+1 (USA)' },
-    { value: '+44', label: '+44 (UK)' },
+    { value: '+94', label: '🇱🇰 +94' },
+    { value: '+84', label: '🇻🇳 +84' },
+    { value: '+855', label: '🇰🇭 +855' },
+    { value: '+880', label: '🇧🇩 +880' },
+    { value: '+91', label: '🇮🇳 +91' },
+    { value: '+31', label: '🇳🇱 +31' },
   ];
+
 
   provinces: string[] = [
     'Central',
@@ -83,17 +92,18 @@ export class AddDestributionCenterComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private distributionService: DestributionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeForm();
     this.fetchAllCompanies();
+    this.initializeProvinceOptions();
   }
 
   private initializeForm() {
     this.distributionForm = this.fb.group(
       {
-        name: ['', [Validators.required], [this.nameExistsValidator()]],
+        name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
         company: ['', Validators.required],
         contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
         contact1Code: ['+94', Validators.required],
@@ -103,22 +113,22 @@ export class AddDestributionCenterComponent implements OnInit {
           '',
           [
             Validators.required,
-            Validators.pattern(/^-?([0-8]?[0-9]|90)(\.[0-9]+)?$/),
+            this.numericDecimalValidator
           ],
         ],
         longitude: [
           '',
           [
             Validators.required,
-            Validators.pattern(/^-?((1[0-7][0-9])|([0-9]?[0-9]))(\.[0-9]+)?$/),
+            this.numericDecimalValidator
           ],
         ],
         email: ['', [Validators.required, Validators.email]],
-        country: ['', Validators.required],
+        country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
         province: ['', Validators.required],
         district: ['', Validators.required],
         city: ['', Validators.required],
-        regCode: ['', Validators.required],
+        regCode: ['', Validators.required], // Remove disabled: true
       },
       { validator: this.contactNumbersMatchValidator }
     );
@@ -183,6 +193,19 @@ export class AddDestributionCenterComponent implements OnInit {
       .subscribe();
   }
 
+  private englishLettersOnlyValidator(control: AbstractControl) {
+    if (!control.value) return null;
+    const englishLettersOnly = /^[A-Za-z\s]+$/;
+    return englishLettersOnly.test(control.value) ? null : { englishLettersOnly: true };
+  }
+
+  private numericDecimalValidator(control: AbstractControl) {
+    if (!control.value) return null;
+    const numericDecimal = /^-?\d+(\.\d+)?$/;
+    return numericDecimal.test(control.value) ? null : { numericDecimal: true };
+  }
+
+
   private nameExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl) => {
       if (!control.value || control.value.length < 3) {
@@ -241,36 +264,7 @@ export class AddDestributionCenterComponent implements OnInit {
     }
   }
 
-  onProvinceChange() {
-    const selectedProvince = this.distributionForm.get('province')?.value;
-    const selectedDistrict = this.distributionForm.get('district')?.value;
-    const selectedCity = this.distributionForm.get('city')?.value;
 
-    this.updateRegCode();
-
-    if (selectedProvince && selectedDistrict && selectedCity) {
-      this.isLoadingregcode = true;
-      this.distributionService
-        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe((response) => {
-          this.distributionForm.patchValue({ regCode: response.regCode });
-          this.isLoadingregcode = false;
-        });
-    }
-  }
-
-  updateRegCode() {
-    const province = this.distributionForm.get('province')?.value;
-    const district = this.distributionForm.get('district')?.value;
-    const city = this.distributionForm.get('city')?.value;
-
-    if (province && district && city) {
-      const regCode = `${province.slice(0, 2).toUpperCase()}${district
-        .slice(0, 1)
-        .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
-      this.distributionForm.patchValue({ regCode });
-    }
-  }
 
   private findProvinceByDistrict(district: string): string | null {
     for (const province in this.districtsMap) {
@@ -284,19 +278,19 @@ export class AddDestributionCenterComponent implements OnInit {
   getDistricts(): string[] {
     const selectedProvince = this.distributionForm.get('province')?.value;
     if (selectedProvince) {
-      return this.districtsMap[selectedProvince] || [];
+      return (this.districtsMap[selectedProvince] || []).sort();
     } else {
-      return Object.values(this.districtsMap).flat();
+      return Object.values(this.districtsMap).flat().sort();
     }
   }
 
+
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);
-    return !!(
-      field &&
-      field.invalid &&
-      (field.dirty || field.touched || this.distributionForm.dirty)
-    );
+    if (!field) return false;
+
+    // Show validation errors if field is touched/dirty and invalid
+    return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   getFieldError(fieldName: string): string {
@@ -308,18 +302,18 @@ export class AddDestributionCenterComponent implements OnInit {
       return `${this.getFieldLabel(fieldName)} is required`;
     }
     if (field.errors['email']) {
-      return 'Please enter a valid email address';
+      return 'Please enter a valid email in the format: example@domain.com';
     }
     if (field.errors['pattern']) {
       if (fieldName.includes('contact')) {
-        return 'Phone number must be exactly 9 digits';
+        return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
       }
-      if (fieldName === 'latitude') {
-        return 'Please enter a valid latitude (-90 to 90)';
-      }
-      if (fieldName === 'longitude') {
-        return 'Please enter a valid longitude (-180 to 180)';
-      }
+    }
+    if (field.errors['numericDecimal']) {
+      return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
+    }
+    if (field.errors['englishLettersOnly']) {
+      return 'Centre Name should contain only English letters and spaces';
     }
     if (field.errors['sameContactNumbers']) {
       return 'Contact Number 02 must be different from Contact Number 01';
@@ -329,6 +323,164 @@ export class AddDestributionCenterComponent implements OnInit {
     }
 
     return '';
+  }
+
+  onInputChange(event: any, fieldType: string) {
+    const target = event.target as HTMLInputElement;
+    let value = target.value;
+    let shouldUpdate = true;
+
+    switch (fieldType) {
+      case 'text':
+        // For text fields, prevent leading spaces
+        if (value.length > 0 && value.startsWith(' ')) {
+          value = value.trimStart();
+          target.value = value;
+        }
+        break;
+      case 'email':
+        // For email fields, trim leading spaces
+        if (value.length > 0 && value.startsWith(' ')) {
+          value = value.trimStart();
+          target.value = value;
+        }
+        break;
+      case 'centreName':
+        // For centre name, prevent leading spaces and ensure first letter is capital
+        if (value.length > 0 && value.startsWith(' ')) {
+          value = value.trimStart();
+          target.value = value;
+        }
+        // Capitalize first letter in real-time
+        if (value.length > 0) {
+          const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+          if (capitalizedValue !== value) {
+            target.value = capitalizedValue;
+            value = capitalizedValue;
+          }
+        }
+        break;
+      case 'phone':
+        // For phone numbers, allow only digits
+        const originalValue = value;
+        value = value.replace(/[^0-9]/g, '');
+        if (originalValue !== value) {
+          target.value = value;
+        }
+        break;
+      case 'coordinates':
+        // For latitude/longitude, allow numbers, dots, and minus signs
+        const coordOriginalValue = value;
+        value = value.replace(/[^0-9.-]/g, '');
+        if (coordOriginalValue !== value) {
+          target.value = value;
+        }
+        break;
+    }
+
+    // Mark field as touched to trigger validation display
+    const fieldName = target.getAttribute('formControlName');
+    if (fieldName) {
+      this.distributionForm.get(fieldName)?.markAsTouched();
+    }
+
+    // Update reg code in real-time when city changes
+    if (fieldName === 'city') {
+      setTimeout(() => this.updateRegCode(), 0);
+    }
+  }
+
+
+
+
+  // Updated updateRegCode method to handle real-time updates
+  updateRegCode() {
+    const province = this.distributionForm.get('province')?.value;
+    const district = this.distributionForm.get('district')?.value;
+    const city = this.distributionForm.get('city')?.value;
+
+    if (province && district && city && city.trim().length > 0) {
+      // Use API call for reg code generation if available
+      this.isLoadingregcode = true;
+      this.distributionService
+        .generateRegCode(province, district, city.trim())
+        .subscribe({
+          next: (response) => {
+            this.distributionForm.patchValue({ regCode: response.regCode });
+            this.isLoadingregcode = false;
+          },
+          error: (error) => {
+            // Fallback to local generation if API fails
+            const regCode = `${province.slice(0, 2).toUpperCase()}${district
+              .slice(0, 1)
+              .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
+            this.distributionForm.patchValue({ regCode });
+            this.isLoadingregcode = false;
+          }
+        });
+    } else {
+      // Clear reg code if required fields are empty
+      this.distributionForm.patchValue({ regCode: '' });
+    }
+  }
+
+  // Updated onProvinceChange method
+  onProvinceChange() {
+    const selectedProvince = this.distributionForm.get('province')?.value;
+    if (selectedProvince) {
+      // Update district options based on selected province
+      const districts = this.districtsMap[selectedProvince] || [];
+      this.districtOptions = districts.sort().map(district => ({
+        label: district,
+        value: district
+      }));
+
+      // Clear district selection when province changes
+      if (!this.updatingDropdowns) {
+        this.distributionForm.get('district')?.setValue('');
+      }
+    } else {
+      // Show all districts if no province selected
+      const allDistricts = Object.values(this.districtsMap).flat().sort();
+      this.districtOptions = allDistricts.map(district => ({
+        label: district,
+        value: district
+      }));
+    }
+
+    // Update reg code in real-time
+    this.updateRegCode();
+  }
+
+  // Updated onDistrictChange method
+  onDistrictChange() {
+    const selectedDistrict = this.distributionForm.get('district')?.value;
+    if (selectedDistrict && !this.updatingDropdowns) {
+      const matchingProvince = this.findProvinceByDistrict(selectedDistrict);
+      if (matchingProvince) {
+        this.updatingDropdowns = true;
+        this.distributionForm.get('province')?.setValue(matchingProvince);
+        this.updatingDropdowns = false;
+      }
+    }
+    // Update reg code in real-time
+    this.updateRegCode();
+  }
+
+  // Add method to capitalize first letter and trim spaces
+  private formatCentreName(value: string): string {
+    if (!value) return value;
+    const trimmed = value.trim();
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+  }
+
+  // Add onBlur method for centre name formatting
+  onCentreNameBlur() {
+    const nameControl = this.distributionForm.get('name');
+    if (nameControl?.value) {
+      const formatted = this.formatCentreName(nameControl.value);
+      nameControl.setValue(formatted);
+    }
   }
 
   private getFieldLabel(fieldName: string): string {
@@ -353,102 +505,136 @@ export class AddDestributionCenterComponent implements OnInit {
     this.distributionService.getAllCompanies().subscribe(
       (res) => {
         this.companyList = res.data;
+        // Convert to dropdown options format
+        this.companyOptions = this.companyList.map(company => ({
+          label: company.companyNameEnglish,
+          value: company.id
+        }));
       },
       (error) => console.error('Error fetching companies:', error)
     );
   }
 
+  // Add method to initialize province options
+  initializeProvinceOptions() {
+    this.provinceOptions = this.provinces.map(province => ({
+      label: province,
+      value: province
+    }));
+  }
+
   onSubmit() {
-    if (this.distributionForm.valid) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to create this distribution centre?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Create it!',
-        cancelButtonText: 'No, Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.isLoading = true;
-          this.submitError = null;
-          this.submitSuccess = null;
+  if (this.distributionForm.valid) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to create this distribution centre?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Create it!',
+      cancelButtonText: 'No, Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.submitError = null;
+        this.submitSuccess = null;
 
-          const formData: DistributionCentreRequest = {
-            ...this.distributionForm.value,
-            latitude: parseFloat(
-              this.distributionForm.value.latitude
-            ).toString(),
-            longitude: parseFloat(
-              this.distributionForm.value.longitude
-            ).toString(),
-          };
+        // Get form values including disabled fields
+        const formValue = this.distributionForm.getRawValue();
 
-          this.distributionService
-            .createDistributionCentre(formData)
-            .subscribe({
-              next: (response) => {
-                this.isLoading = false;
+        const formData: DistributionCentreRequest = {
+          ...formValue,
+          latitude: parseFloat(formValue.latitude).toString(),
+          longitude: parseFloat(formValue.longitude).toString(),
+        };
 
-                if (response.success) {
-                  this.submitSuccess =
-                    response.message ||
-                    'Distribution centre created successfully!';
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: this.submitSuccess,
-                    timer: 2000,
-                    showConfirmButton: false,
-                  });
-                  this.navigatePath('/distribution-hub/action');
-                } else {
-                  this.submitError =
-                    response.error || 'Failed to create distribution centre';
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: this.submitError,
-                  });
-                }
-              },
-              error: (error) => {
-                this.isLoading = false;
-                console.error('Error creating distribution centre:', error);
+        this.distributionService
+          .createDistributionCentre(formData)
+          .subscribe({
+            next: (response) => {
+              this.isLoading = false;
 
-                if (error.status === 400) {
-                  this.submitError = 'Invalid data. Please check your inputs.';
-                } else if (error.status === 401) {
-                  this.submitError = 'Unauthorized. Please log in again.';
-                } else if (error.status === 409) {
-                  this.submitError =
-                    'A distribution center with this name already exists.';
-                } else if (error.status === 500) {
-                  this.submitError = 'Server error. Please try again later.';
-                } else {
-                  this.submitError =
-                    error.error?.message || 'An unexpected error occurred.';
-                }
-
+              if (response.success) {
+                this.submitSuccess =
+                  response.message ||
+                  'Distribution centre created successfully!';
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: this.submitSuccess,
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+                this.navigatePath('/distribution-hub/action');
+              } else {
+                this.submitError =
+                  response.error || 'Failed to create distribution centre';
                 Swal.fire({
                   icon: 'error',
-                  title: 'Submission Failed',
-                  text: this.submitError || 'An unexpected error occurred.',
+                  title: 'Oops...',
+                  text: this.submitError,
                 });
-              },
-            });
-        }
-      });
-    } else {
-      Object.keys(this.distributionForm.controls).forEach((key) => {
-        this.distributionForm.get(key)?.markAsTouched();
-      });
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Form',
-        text: 'Please correct the errors in the form before submitting.',
-      });
-    }
+              }
+            },
+            error: (error) => {
+              this.isLoading = false;
+              console.error('Error creating distribution centre:', error);
+
+              // Default error message
+              let errorMessage = 'An unexpected error occurred.';
+              
+              if (error.error && error.error.error) {
+                // Use the specific error message from the backend
+                errorMessage = error.error.error;
+              } else if (error.status === 400) {
+                errorMessage = 'Invalid data. Please check your inputs.';
+              } else if (error.status === 401) {
+                errorMessage = 'Unauthorized. Please log in again.';
+              } else if (error.status === 409) {
+                // Check if we have more specific conflict information
+                if (error.error && error.error.conflictingRecord) {
+                  const conflict = error.error.conflictingRecord;
+                  switch (conflict.conflictType) {
+                    case 'name':
+                      errorMessage = 'A distribution center with this name already exists.';
+                      break;
+                    case 'regCode':
+                      errorMessage = 'A distribution center with this registration code already exists.';
+                      break;
+                    case 'contact':
+                      errorMessage = 'A distribution center with this contact number already exists.';
+                      break;
+                    default:
+                      errorMessage = 'A distribution center with these details already exists.';
+                  }
+                } else {
+                  errorMessage = 'A distribution center with these details already exists.';
+                }
+              } else if (error.status === 500) {
+                errorMessage = 'Server error. Please try again later.';
+              }
+
+              this.submitError = errorMessage;
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: this.submitError,
+              });
+            },
+          });
+      }
+    });
+  } else {
+    Object.keys(this.distributionForm.controls).forEach((key) => {
+      this.distributionForm.get(key)?.markAsTouched();
+    });
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Form',
+      text: 'Please correct the errors in the form before submitting.',
+    });
   }
+}
 
   clearMessages() {
     this.submitError = null;

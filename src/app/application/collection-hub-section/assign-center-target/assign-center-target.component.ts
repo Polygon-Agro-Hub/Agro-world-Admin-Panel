@@ -169,51 +169,51 @@ export class AssignCenterTargetComponent {
     });
   }
 
-  // onSubmit() {
-  //   this.newTargetObj.companyCenterId = this.companyCenterId;
-  //   this.newTargetObj.date = this.selectDate;
-  //   this.newTargetObj.crop = this.assignCropsArr;
+  onSubmit() {
+    this.newTargetObj.companyCenterId = this.companyCenterId;
+    this.newTargetObj.date = this.formatDate(this.selectDate);
+    this.newTargetObj.crop = this.assignCropsArr;
 
-  //   Swal.fire({
-  //     title: 'Please wait...',
-  //     html: 'Processing your request',
-  //     allowOutsideClick: false,
-  //     didOpen: () => {
-  //       Swal.showLoading();
-  //     },
-  //   });
+    Swal.fire({
+      title: 'Please wait...',
+      html: 'Processing your request',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-  //   this.TargetSrv.addNewCenterTarget(this.newTargetObj).subscribe(
-  //     (res) => {
-  //       Swal.close();
-  //       if (res.status) {
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Success!',
-  //           text: 'Target assigned successfully',
-  //           timer: 2000,
-  //           showConfirmButton: false,
-  //         }).then(() => {
-  //           this.fetchSavedCenterCrops();
-  //         });
-  //       } else {
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Failed',
-  //           text: res.message || 'Failed to assign target',
-  //         });
-  //       }
-  //     },
-  //     (error) => {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Error',
-  //         text: error.message || 'An error occurred while assigning target',
-  //       });
-  //       console.error('Error assigning target:', error);
-  //     }
-  //   );
-  // }
+    this.TargetSrv.addNewCenterTarget(this.newTargetObj).subscribe(
+      (res) => {
+        Swal.close();
+        if (res.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Target assigned successfully',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            this.fetchSavedCenterCrops();
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed',
+            text: res.message || 'Failed to assign target',
+          });
+        }
+      },
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'An error occurred while assigning target',
+        });
+        console.error('Error assigning target:', error);
+      }
+    );
+  }
 }
 
 class CenterDetails {

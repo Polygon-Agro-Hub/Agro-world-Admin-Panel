@@ -23,8 +23,6 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
-import { DropdownModule } from 'primeng/dropdown';
-
 interface PhoneCode {
   value: string;
   label: string;

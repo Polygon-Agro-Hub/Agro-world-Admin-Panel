@@ -12,11 +12,17 @@
       <h2 class="text-[20px] md:text-[24px] font-normal text-gray-900 dark:text-gray-100">
         Complaint List ({{ totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
           <div class="flex items-center space-x-3">
-            <!-- Reply Status -->
-            <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-              [options]="replyStatus" [(ngModel)]="rpst" optionLabel="label" optionValue="value" [showClear]="true"
-              placeholder="Reply" (onChange)="regStatusFil()"></p-dropdown>
+
+            <i class="mr-4 w-6 h-6 fill-current text-textLight dark:text-textDark">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+                />
+              </svg>
+            </i>
+    
+            <p class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5">Filter By</p>
+            
 
             <!-- Category -->
             <p-dropdown
@@ -29,6 +35,11 @@
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="status" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value" [showClear]="true"
               placeholder="Status" (onChange)="applyFilters()"></p-dropdown>
+            <!-- Reply Status -->
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+              [options]="replyStatus" [(ngModel)]="rpst" optionLabel="label" optionValue="value" [showClear]="true"
+              placeholder="Reply" (onChange)="regStatusFil()"></p-dropdown>
 
             <!-- Search -->
             <div class="flex items-center rounded-full px-2 py-1 w-96 bg-gray-100 dark:bg-gray-800">
@@ -124,10 +135,10 @@
               {{ item.contactNumber }}
             </td>
             <td
-              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center text-gray-900 dark:text-gray-100 whitespace-nowrap">
-              {{ item.createdAt | date: 'yyyy/MM/dd' : 'UTC' }}<br>
-              {{ item.createdAt | date: 'hh.mm a' : 'UTC' }}
-            </td>
+            class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center text-gray-900 dark:text-gray-100 whitespace-nowrap">
+            {{ item.createdAt | date: 'yyyy/MM/dd' }} at
+            {{ item.createdAt | date: 'hh:mm a' }}
+          </td>
 
             <td class="flex px-4 py-3 text-center justify-center">
               <span class="w-32 h-8 flex items-center justify-center font-medium rounded-md text-sm" [ngClass]="{
@@ -179,41 +190,89 @@
   </div>
 </div>
 
-<p-dialog [(visible)]="display" [modal]="true" [closable]="false" [style]="{ width: '600px' }"
+<!-- <p-dialog [(visible)]="display" [modal]="true" [closable]="false" [style]="{ width: '600px' }"
   [contentStyle]="{ padding: '0' }">
-  <div class="dialog-header text-center">
-    <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
-    <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as Polygon</h3>
-
-
-  </div>
-  <div class="dialog-content text-[16px] md:text-[18px] border-t rounded-[20px]
- border-r border-b border-l border-gray-300 text-[#000000] mt-5 ml-8 mr-8 mb-5">
-    <div class=" p-5 ">
-      <div class="reply-header">
-        <span>Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
-        <p class="mt-3">We are pleased to inform you that your complaint has been resolved.</p>
+  <div class="dark:bg-tileBlack">
+    <div class="dialog-header text-center">
+      <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
+      <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as Polygon</h3>
+  
+  
+    </div>
+    <div class="dialog-content text-[16px] md:text-[18px] border-t rounded-[20px]
+   border-r border-b border-l border-gray-300 text-[#000000] mt-5 ml-8 mr-8 mb-5">
+      <div class=" p-5 ">
+        <div class="reply-header">
+          <span>Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
+          <p class="mt-3">We are pleased to inform you that your complaint has been resolved.</p>
+        </div>
+        <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap">
+          {{ selectedComplaint.reply }}
+        </p>
+  
+  
+        <p>
+          If you have any further concerns or questions, feel free to reach out. <br>
+          Thank you for your patience and understanding.
+        </p>
+  
+        <p class="mt-5">
+          Sincerely,<br />
+          Polygon Customer Support Team
+        </p>
       </div>
-      <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap">
-        {{ selectedComplaint.reply }}
-      </p>
+  
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton type="button" label="Cancel" class="p-button-secondary" style="margin-right: 8px; background-color: #74788D; color: #D3D3D3; border: none; width: 120px; height: 40px;border: none;
+  " (click)="hideDialog()"></button>
+  
+    </ng-template>
+  </div>
+</p-dialog> -->
 
-
-      <p>
-        If you have any further concerns or questions, feel free to reach out. <br>
-        Thank you for your patience and understanding.
-      </p>
-
-      <p class="mt-5">
-        Sincerely,<br />
-        Polygon Customer Support Team
-      </p>
+<div *ngIf="display" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white dark:bg-tileBlack rounded-[20px] w-[600px] p-4">
+    <div class="dialog-header text-center">
+      <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
+      <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000] dark:text-white">
+        Reply as Polygon
+      </h3>
     </div>
 
-  </div>
-  <ng-template pTemplate="footer">
-    <button pButton type="button" label="Cancel" class="p-button-secondary" style="margin-right: 8px; background-color: #74788D; color: #D3D3D3; border: none; width: 120px; height: 40px;border: none;
-" (click)="hideDialog()"></button>
+    <div class="dialog-content text-[16px] md:text-[18px] border rounded-[20px]
+      border-gray-300 text-[#000000] dark:text-white mt-5 ml-4 mr-4 mb-5">
+      <div class="p-5">
+        <div class="reply-header">
+          <span>Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
+          <p class="mt-3">We are pleased to inform you that your complaint has been resolved.</p>
+        </div>
 
-  </ng-template>
-</p-dialog>
+        <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap">
+          {{ selectedComplaint.reply }}
+        </p>
+
+        <p>
+          If you have any further concerns or questions, feel free to reach out. <br>
+          Thank you for your patience and understanding.
+        </p>
+
+        <p class="mt-5">
+          Sincerely,<br />
+          Polygon Customer Support Team
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-end px-5 pb-4">
+      <button
+        type="button"
+        class="bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-md"
+        style="width: 120px; height: 40px;"
+        (click)="hideDialog()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

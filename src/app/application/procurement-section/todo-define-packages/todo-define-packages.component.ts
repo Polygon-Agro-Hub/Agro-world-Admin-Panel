@@ -32,6 +32,7 @@ export class TodoDefinePackagesComponent implements OnInit {
   dateFilter1: string = '';
   deliveryDateFilter: string = '';
   searchTerm: string = '';
+  hasData: boolean = false;
 
   statusOptions = [
     { label: 'Paid', value: 'Paid' },
@@ -89,6 +90,7 @@ export class TodoDefinePackagesComponent implements OnInit {
             );
             console.log('orders', this.orders);
             this.totalItems = response.total || response.totalCount || 0;
+            this.hasData = response.total === 0 ? false : true
           } else {
             // Fallback client-side filtering if API doesn't support it
             const allOrders = Array.isArray(response) ? response : [];

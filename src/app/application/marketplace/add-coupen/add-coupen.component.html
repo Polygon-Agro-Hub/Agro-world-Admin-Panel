@@ -35,6 +35,7 @@
           id="code"
           name="code"
           [(ngModel)]="coupenObj.code"
+          (input)="onCodeInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>

@@ -168,6 +168,16 @@ export class AddCoupenComponent {
       }, 0);
     }
   }
+
+  onCodeInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const trimmedValue = input.value.trimStart();
+  
+  if (input.value !== trimmedValue) {
+    input.value = trimmedValue;
+    this.coupenObj.code = trimmedValue;
+  }
+}
 }
 
 class Coupen {

@@ -4,7 +4,7 @@
 
 <form (ngSubmit)="onSubmit()">
   <!-- save button -->
-  <div class="flex flex-row justify-between items-center mb-6">
+  <div class="flex flex-row justify-between items-center mb-6 pr-4">
     <p class="text-lg text-textLight dark:text-textDark font-semibold">
       Edit Coupon
     </p>
@@ -24,9 +24,9 @@
     </div>
   </div>
 
-  <div class="flex flex-row justify-between items-center">
+  <div class="flex flex-row justify-between">
     <div
-      class="bg-[#FFFFFF] dark:bg-tileBlack px-5 pt-9 pb-12 shadow-md rounded-md w-[60%] h-full"
+      class="bg-[#FFFFFF] dark:bg-tileBlack px-20 pt-12 pb-12 shadow-md rounded-md w-[60%] h-full"
     >
       <div class="mb-8">
         <label class="text-[#534E4E] dark:text-textDark">Code *</label>
@@ -47,7 +47,7 @@
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
             <input
-              class="w-5 h-5"
+              class="w-5 h-5 cursor-pointer accent-[#0021F5]"
               type="radio"
               id="type"
               name="type"
@@ -63,7 +63,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <input
-              class="w-5 h-5"
+              class="w-5 h-5 cursor-pointer accent-[#0021F5]"
               type="radio"
               id="type"
               name="type"
@@ -80,7 +80,7 @@
 
           <div class="flex items-center space-x-2">
             <input
-              class="w-5 h-5"
+              class="w-5 h-5 cursor-pointer accent-[#0021F5]"
               type="radio"
               id="type"
               name="type"
@@ -139,7 +139,7 @@
           name="checkLimit"
           [(ngModel)]="coupenObj.checkLimit"
           [value]="true"
-          class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150"
+          class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150 cursor-pointer accent-[#0021F5]"
         />
 
         <label for="chekLimit" class="text-[#534E4E] dark:text-textDark">
@@ -161,17 +161,17 @@
       </div>
     </div>
 
-    <div class="flex flex-col justify-start px-6 mx-6 w-[40%]">
+    <div class="flex flex-col justify-start px-6 w-[40%]">
       <div
-        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-3 mt-10"
+        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8"
       >
-        <label class="text-textLight dark:text-textDark font-semibold"
+        <label class="text-[#000000] dark:text-textDark font-normal text-1xl"
           >Status *</label
         >
         <div class="flex items-center space-x-2 my-5">
           <!-- With Discount Radio Button -->
           <input
-            class="w-5 h-5"
+            class="w-5 h-5 cursor-pointer accent-[#0021F5]"
             type="radio"
             id="status"
             name="status"
@@ -188,7 +188,7 @@
 
         <div class="flex items-center space-x-2 my-5">
           <input
-            class="w-5 h-5"
+            class="w-5 h-5 cursor-pointer accent-[#0021F5]"
             type="radio"
             id="status"
             name="status"
@@ -205,9 +205,9 @@
       </div>
 
       <div
-        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-3 mt-10"
+        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8 mt-4"
       >
-        <label class="text-[#838383] dark:text-textDark font-semibold"
+        <label class="text-[#000000] dark:text-textDark font-normal text-1xl"
           >Shedule</label
         >
         <p class="text-[#838383] dark:text-textDark text-sm mt-2 mb-5">

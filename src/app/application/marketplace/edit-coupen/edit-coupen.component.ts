@@ -11,10 +11,9 @@ import { CalendarModule } from 'primeng/calendar';
   standalone: true,
   imports: [CommonModule, FormsModule, CalendarModule],
   templateUrl: './edit-coupen.component.html',
-  styleUrl: './edit-coupen.component.css'
+  styleUrl: './edit-coupen.component.css',
 })
 export class EditCoupenComponent {
-
   coupenObj: Coupen = new Coupen();
   today: Date = new Date();
   isValid: boolean = true;
@@ -23,7 +22,11 @@ export class EditCoupenComponent {
   coupenId: number | null = null;
   isLoading: boolean = false;
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router, private route: ActivatedRoute) { 
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     // Set time to 00:00:00 for accurate date comparison
     this.today.setHours(0, 0, 0, 0);
   }
@@ -40,48 +43,51 @@ export class EditCoupenComponent {
 
   fetchCoupen(coupenId: number): void {
     this.isLoading = true;
-    this.marketSrv.getCoupen(coupenId).subscribe(
-      (res) => {
-        console.log(res);
-        if (res.status) {
-          const data = res.result[0];
-  
-          // Convert string dates to Date objects
-          if (data.startDate) {
-            data.startDate = new Date(data.startDate);
-            // Normalize time to midnight for comparison
-            data.startDate.setHours(0, 0, 0, 0);
+    this.marketSrv
+      .getCoupen(coupenId)
+      .subscribe(
+        (res) => {
+          console.log(res);
+          if (res.status) {
+            const data = res.result[0];
+
+            // Convert string dates to Date objects
+            if (data.startDate) {
+              data.startDate = new Date(data.startDate);
+              // Normalize time to midnight for comparison
+              data.startDate.setHours(0, 0, 0, 0);
+            }
+
+            if (data.endDate) {
+              data.endDate = new Date(data.endDate);
+              // Normalize time to midnight for comparison
+              data.endDate.setHours(0, 0, 0, 0);
+            }
+
+            this.coupenObj = data;
+            console.log('coupenObj', this.coupenObj);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: res.message || 'Failed to fetch coupon details.',
+            });
+            this.router.navigate(['/market/action/view-coupen']);
           }
-  
-          if (data.endDate) {
-            data.endDate = new Date(data.endDate);
-            // Normalize time to midnight for comparison
-            data.endDate.setHours(0, 0, 0, 0);
-          }
-  
-          this.coupenObj = data;
-          console.log('coupenObj', this.coupenObj);
-        } else {
+        },
+        (error) => {
+          console.error('Error fetching coupon:', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: res.message || 'Failed to fetch coupon details.',
+            text: 'Failed to fetch coupon details.',
           });
           this.router.navigate(['/market/action/view-coupen']);
         }
-      },
-      (error) => {
-        console.error('Error fetching coupon:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to fetch coupon details.',
-        });
-        this.router.navigate(['/market/action/view-coupen']);
-      }
-    ).add(() => {
-      this.isLoading = false;
-    });
+      )
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
   back(): void {
@@ -98,7 +104,10 @@ export class EditCoupenComponent {
       }).then(() => {
         this.coupenObj.endDate = null;
       });
-    } else if (this.coupenObj.endDate && this.coupenObj.endDate < this.coupenObj.startDate) {
+    } else if (
+      this.coupenObj.endDate &&
+      this.coupenObj.endDate < this.coupenObj.startDate
+    ) {
       Swal.fire({
         icon: 'error',
         title: 'Invalid Expire Date',
@@ -124,7 +133,7 @@ export class EditCoupenComponent {
   }
 
   onSubmit() {
-    if(this.isValid){
+    if (this.isValid) {
       this.checkPrecentageValueMessage = 'Precentage value is required';
       this.checkfixAmountValueMessage = 'Fix amount value is required';
       return;
@@ -158,40 +167,43 @@ export class EditCoupenComponent {
     const payload = {
       ...this.coupenObj,
       startDate: this.formatDateForAPI(this.coupenObj.startDate),
-      endDate: this.formatDateForAPI(this.coupenObj.endDate)
+      endDate: this.formatDateForAPI(this.coupenObj.endDate),
     };
 
     this.isLoading = true;
-    this.marketSrv.updateCoupen(payload).subscribe({
-      next: (res) => {
-        if (res.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Coupon Updated',
-            text: 'The coupon was updated successfully!',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            this.router.navigate(['market/action/view-coupen']);
-          });
-        } else {
+    this.marketSrv
+      .updateCoupen(payload)
+      .subscribe({
+        next: (res) => {
+          if (res.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Coupon Updated',
+              text: 'The coupon was updated successfully!',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              this.router.navigate(['market/action/view-coupen']);
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: res.message || 'Failed to update coupon.',
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error updating coupon:', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: res.message || 'Failed to update coupon.',
+            text: 'Failed to update coupon.',
           });
-        }
-      },
-      error: (error) => {
-        console.error('Error updating coupon:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update coupon.',
-        });
-      }
-    }).add(() => {
-      this.isLoading = false;
-    });
+        },
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
   }
 
   private formatDateForAPI(date: Date | null): string | null {
@@ -205,7 +217,7 @@ export class EditCoupenComponent {
 
   checkPrecentageValue(num: number) {
     console.log('percentage', this.coupenObj.percentage);
-  
+
     if (num == null || isNaN(num)) {
       this.isValid = true;
       this.checkPrecentageValueMessage = 'Percentage value is required';
@@ -216,7 +228,7 @@ export class EditCoupenComponent {
       this.isValid = true;
       this.checkPrecentageValueMessage = 'Cannot be greater than 100';
     } else {
-      this.isValid = false; 
+      this.isValid = false;
       this.checkPrecentageValueMessage = '';
     }
   }
@@ -231,6 +243,27 @@ export class EditCoupenComponent {
     } else {
       this.isValid = false;
       this.checkfixAmountValueMessage = '';
+    }
+  }
+
+  onCodeInput(event: any): void {
+    const input = event.target;
+    const originalValue = input.value;
+    const trimmedValue = originalValue.trimStart(); // Remove only leading spaces
+
+    if (originalValue !== trimmedValue) {
+      // Update the model and input field
+      this.coupenObj.code = trimmedValue;
+      input.value = trimmedValue;
+
+      // Maintain cursor position after trimming
+      const cursorPosition =
+        input.selectionStart - (originalValue.length - trimmedValue.length);
+      setTimeout(() => {
+        input.setSelectionRange(cursorPosition, cursorPosition);
+      }, 0);
+    } else {
+      this.coupenObj.code = trimmedValue;
     }
   }
 }

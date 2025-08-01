@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
   styleUrl: './todo-define-packages.component.css',
 })
 export class TodoDefinePackagesComponent implements OnInit {
-  isLoading = false;
+  isLoading = true;
   orders: any[] = [];
   page: number = 1;
   itemsPerPage: number = 10;
@@ -61,14 +61,6 @@ export class TodoDefinePackagesComponent implements OnInit {
     dateFilter1: string = this.dateFilter1
   ): void {
     this.isLoading = true;
-
-    // Add packingStatus filter to the request
-    // const filters = {
-    //   statusFilter: this.statusFilter,
-    //   dateFilter: this.dateFilter,
-    //   searchTerm: this.searchTerm,
-    //   packingStatus: 'Todo', // Add this filter
-    // };
 
     this.orderService
       .getAllOrdersWithProcessInfo(

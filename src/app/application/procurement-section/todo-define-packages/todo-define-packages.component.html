@@ -1,5 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<div class="overflow-x-auto">
+<div *ngIf="!isLoading" class="overflow-x-auto">
   <div>
     <div class="pt-5 px-12 pb-5 min-w-[1550px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
       <div class="flex justify-between items-center mb-8">

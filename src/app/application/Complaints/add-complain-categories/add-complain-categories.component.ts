@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
 import Swal from 'sweetalert2';
-
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-add-complain-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,DropdownModule],
   templateUrl: './add-complain-categories.component.html',
   styleUrl: './add-complain-categories.component.css'
 })
@@ -83,6 +83,50 @@ export class AddComplainCategoriesComponent implements OnInit {
         }
       });
     }
+
+blockLeadingSpace(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  // Block space key if cursor is at position 0 (start)
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+  }
+}
+
+validateEnglish(): void {
+  let value = this.complainObj.categoryEnglish || '';
+  
+  // Remove all characters except English letters and spaces
+  value = value.replace(/[^A-Za-z ]+/g, '');
+
+  // Also remove leading spaces just in case (e.g., from paste)
+  value = value.replace(/^\s+/, '');
+
+  this.complainObj.categoryEnglish = value;
+}
+
+  allowOnlySinhala(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[\u0D80-\u0DFF ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+allowOnlyTamil(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[\u0B80-\u0BFF ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
 
   navigationPath(path: string) {
     this.router.navigate([path])

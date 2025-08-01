@@ -29,7 +29,7 @@
       class="bg-[#FFFFFF] dark:bg-tileBlack px-20 pt-12 pb-12 shadow-md rounded-md w-[60%] h-full"
     >
       <div class="mb-8">
-        <label class="text-[#534E4E] dark:text-textDark">Code</label>
+        <label class="text-[#534E4E] dark:text-textDark">Code *</label>
         <input
           type="text"
           id="code"
@@ -99,7 +99,7 @@
 
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark"
-          >Discount Persentage</label
+          >Discount Persentage *</label
         >
         <input
           type="number"
@@ -118,7 +118,7 @@
       </div>
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Amount</label>
+        <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
         <input
           type="number"
           id="fixDiscount"

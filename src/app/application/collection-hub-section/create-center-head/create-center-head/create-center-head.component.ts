@@ -82,7 +82,8 @@ export class CreateCenterHeadComponent implements OnInit {
 };
 
   countries: Country[] = COUNTRIES;
-  selectedCountry: Country | null = null;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
   phoneNumber: string = '';
   // leadingSpaceError: boolean = false;
   // specialCharOrNumberError: boolean = false;
@@ -146,7 +147,10 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     private router: Router,
     private location: Location,
     
-  ) {this.selectedCountry = this.countries.find(c => c.code === 'lk') || null;}
+  ) {const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
+  }
 
   ngOnInit(): void {
     this.getAllCompanies();
@@ -685,6 +689,7 @@ blockNonNumbers(event: KeyboardEvent) {
   // }
 
   handleNextClick(): void {
+    console.log('phone', this.personalData.phoneCode01, this.personalData.phoneCode02)
     if (this.checkFormValidity()) {
       this.nextFormCreate('pageTwo');
     }

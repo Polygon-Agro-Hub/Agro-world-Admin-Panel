@@ -106,7 +106,7 @@
 
         <div class="mt-1 flex">
           <!-- Country Code Dropdown -->
-          <select
+          <!-- <select
             id="code1"
             [(ngModel)]="centerFetchData.code1"
             name="code1"
@@ -117,7 +117,42 @@
             <option value="+880">🇧🇩 +880</option>
             <option value="+91">🇮🇳 +91</option>
             <option value="+31">🇳🇱 +31</option>
-          </select>
+          </select> -->
+
+          <p-dropdown
+  [options]="countries"
+  [(ngModel)]="centerFetchData.code1"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
 
           <!-- Contact Number Input -->
           <div class="flex-1">
@@ -180,7 +215,7 @@
 
         <div class="mt-1 flex">
           <!-- Country Code Dropdown -->
-          <select
+          <!-- <select
             [(ngModel)]="centerFetchData.code2"
             id="code2"
             name="code2"
@@ -191,7 +226,42 @@
             <option value="+880">🇧🇩 +880</option>
             <option value="+91">🇮🇳 +91</option>
             <option value="+31">🇳🇱 +31</option>
-          </select>
+          </select> -->
+
+          <p-dropdown
+  [options]="countries"
+  [(ngModel)]="centerFetchData.code2"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
 
           <!-- Contact Input -->
           <input
@@ -206,7 +276,7 @@
             (keypress)="allowOnlyNumbers($event)"
             (ngModelChange)="validateSriLankanPhone($event, 'phone02')"
             maxlength="9"
-            class="flex-1 block p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            class="flex-1 block p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             placeholder="Enter your phone number"
           />
         </div>
@@ -259,7 +329,7 @@
           [(ngModel)]="centerFetchData.buildingNumber"
           #buildingNumberInput="ngModel"
           (input)="onBuildingNumberInput($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          class="mt-1 block w-full p-2 border h-12 border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <div
           *ngIf="buildingNumberInput.touched && !centerFetchData.buildingNumber"

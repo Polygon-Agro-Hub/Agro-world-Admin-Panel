@@ -685,14 +685,14 @@ export const routes: Routes = [
             path: 'edit-center-head/:id',
             component: EditCenterHeadComponent,
           },
-          {
-            path: 'agro-world-centers',
-            component: TestingComponent,
-          },
           // {
           //   path: 'agro-world-centers',
-          //   component: AgroWorldCentersComponent,
+          //   component: TestingComponent,
           // },
+          {
+            path: 'agro-world-centers',
+            component: AgroWorldCentersComponent,
+          },
           {
             path: 'agro-world-center-price/:centerId/:companyId/:centerName',
             component: ViewCenterPriceComponent,

@@ -589,7 +589,7 @@ onclick="history.back()"
   [(ngModel)]="personalData.phoneCode01"
   [optionLabel]="'dialCode'"
   [optionValue]="'dialCode'"
-  class="border border-gray-300 mr-2 rounded-md bg-white dark:bg-gray-500 text-gray-800 dark:text-white custom-dropdown"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
   [style]="{ width: '120px' }"
 >
   <!-- Dropdown items -->
@@ -717,17 +717,40 @@ onclick="history.back()"
             Phone Number - 2
           </label>
           <div class="mt-1 flex">
-            <select
-              id="phoneNumber02Code"
-              name="phoneNumber02Code"
-              [(ngModel)]="personalData.phoneCode02"
-              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-            >
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
-            </select>
+            <p-dropdown
+  [options]="countries"
+  [(ngModel)]="personalData.phoneCode02"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
             <div class="w-full flex flex-col">
               <input
                 id="phoneNumber02"
@@ -737,7 +760,7 @@ onclick="history.back()"
                 #contact02="ngModel"
             required
             pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+                class="block w-full p-2 border border-gray-300 h-12 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="Enter your phone number"
                 (blur)="onBlur('phoneNumber02')"
               />

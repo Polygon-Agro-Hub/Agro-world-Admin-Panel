@@ -1,0 +1,44 @@
+/* Dark mode dropdown panel styling */
+::ng-deep .dark .p-dropdown-panel {
+    background-color: #061E2C !important;
+    color: #B1B1B1 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+  }
+  
+  /* Dropdown items */
+  ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #061E2C !important;
+    color: #B1B1B1 !important;
+  }
+  
+  ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #ffffff !important;
+  }
+  
+  ::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+  }
+
+  ::ng-deep .dark .p-dropdown-label {
+    color: #B1B1B1 !important;
+    background-color: #061E2C !important;
+  }
+  
+  ::ng-deep .dark .p-dropdown-trigger {
+    color: #B1B1B1 !important;
+    background-color: #061E2C !important;
+  }
+
+  ::ng-deep .dark .p-dropdown {
+    color: #B1B1B1 !important;
+    background-color: #061E2C !important;
+  }
+
+  /* Styling the scrollbar track (background) */
+  ::ng-deep .dark .p-dropdown-panel .p-dropdown-items-wrapper::-webkit-scrollbar {
+    width: 2px; /* Adjust scrollbar width */
+    background: #061E2C; /* Track color */
+  }

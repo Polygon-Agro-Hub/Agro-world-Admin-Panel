@@ -115,6 +115,7 @@
           [(ngModel)]="replyMessage"
           type="text "
           placeholder="Write your message here... "
+          (input)="onReplyMassageInput($event)"
           class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark"
         ></textarea>
         <!-- <button
@@ -218,6 +219,7 @@
           <div class="flex relative w-full">
             <textarea
               [(ngModel)]="replyMessage"
+              (input)="onReplyMassageInput($event)"
               rows="4"
               cols="5"
               placeholder="Comment here..."

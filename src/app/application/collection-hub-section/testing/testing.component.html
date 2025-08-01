@@ -1,0 +1,51 @@
+<div class="flex gap-2 items-center">
+    <!-- Country Code Dropdown -->
+    <p-dropdown
+  [options]="countries"
+  [(ngModel)]="selectedDialCode"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  [style]="{ width: '130px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
+  
+    <!-- Phone Number Input -->
+    <input
+      type="text"
+      pInputText
+      placeholder="Enter phone number"
+      [(ngModel)]="phoneNumber"
+      class="w-full"
+    />
+  </div>
+  
+  <!-- Debug Output -->
+  <p class="mt-3 text-sm">
+  <strong>Full Number:</strong> {{ selectedDialCode }} {{ phoneNumber }}
+</p>
+  

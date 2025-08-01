@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { Country, COUNTRIES } from '../../../../../assets/country-data';
 import {
   HttpClient,
   HttpClientModule,
@@ -44,6 +46,7 @@ interface FieldConfig {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule, InputTextModule
   ],
   templateUrl: './create-center-head.component.html',
   styleUrl: './create-center-head.component.css',
@@ -55,7 +58,7 @@ export class CreateCenterHeadComponent implements OnInit {
   selectedLanguages: string[] = [];
   CompanyData: Company[] = [];
   lastID!: string;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   officerId: number | null = null;
   banks: Bank[] = [];
@@ -77,6 +80,11 @@ export class CreateCenterHeadComponent implements OnInit {
   phone01: false,
   phone02: false,
 };
+
+  countries: Country[] = COUNTRIES;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
+  phoneNumber: string = '';
   // leadingSpaceError: boolean = false;
   // specialCharOrNumberError: boolean = false;
 
@@ -137,14 +145,22 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private location: Location
-  ) {}
+    private location: Location,
+    
+  ) {const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
+  }
 
   ngOnInit(): void {
     this.getAllCompanies();
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
+  }
+
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/24x18/${code}.png`;
   }
 
   // Field configurations
@@ -673,6 +689,7 @@ blockNonNumbers(event: KeyboardEvent) {
   // }
 
   handleNextClick(): void {
+    console.log('phone', this.personalData.phoneCode01, this.personalData.phoneCode02)
     if (this.checkFormValidity()) {
       this.nextFormCreate('pageTwo');
     }

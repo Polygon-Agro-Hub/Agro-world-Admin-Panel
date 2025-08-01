@@ -218,13 +218,25 @@
           <label class="text-textLight dark:text-textDark font-medium"
             >Start Date</label
           >
-          <input
-            type="date"
+          <p-calendar
             id="startDate"
             name="startDate"
             [(ngModel)]="coupenObj.startDate"
-            (change)="checkStartDate()"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            (onSelect)="checkStartDate()"
+            placeholder="Start Date"
+            [showIcon]="true"
+            [showClear]="true"
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '100%' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
+            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [appendTo]="'body'"
           />
         </div>
 
@@ -232,13 +244,25 @@
           <label class="text-textLight dark:text-textDark font-medium"
             >Expire Date</label
           >
-          <input
-            type="date"
+          <p-calendar
             id="endDate"
             name="endDate"
             [(ngModel)]="coupenObj.endDate"
-            (change)="checkExpireDate()"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            (onSelect)="checkExpireDate()"
+            placeholder="End Date"
+            [showIcon]="true"
+            [showClear]="true"
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '100%' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
+            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [appendTo]="'body'"
           />
         </div>
       </div>

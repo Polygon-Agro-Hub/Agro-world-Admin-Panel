@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-add-coupen',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CalendarModule],
   templateUrl: './add-coupen.component.html',
   styleUrls: ['./add-coupen.component.css'],
 })

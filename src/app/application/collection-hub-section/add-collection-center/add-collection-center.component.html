@@ -37,13 +37,12 @@
         </div> -->
       </div>
 
-      <div class="relative">
-        <!-- Label -->
+      <!-- <div class="relative">
+
         <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Companies *
         </label>
-      
-        <!-- Readonly display input -->
+
         <input
           type="text"
           [value]="selectedCompaniesNames.join(', ')"
@@ -53,7 +52,7 @@
           (click)="onCompanyInputClick()"
         />
       
-        <!-- Dropdown list -->
+
         <div
           *ngIf="dropdownOpen"
           class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
@@ -74,6 +73,48 @@
           </div>
         </div>
       
+
+        <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
+          Company is required
+        </div>
+      </div> -->
+
+      <div class="relative">
+        <!-- Label -->
+        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Companies *
+        </label>
+  
+        <!-- Readonly display input -->
+        <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
+          class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
+          placeholder="Select companies" (click)="onCompanyInputClick()" />
+  
+        <!-- Dropdown list -->
+        <div *ngIf="dropdownOpen"
+          class="absolute z-10 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+          <!-- Search input inside dropdown -->
+          <input type="text" (input)="filterCompanies($event)"
+            placeholder="Search company..." id="companySearchInput"
+            class="w-full p-2 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300" />
+  
+          <!-- Filtered list -->
+          <div *ngFor="let company of filteredCompanies"
+            class="px-4 py-2 cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+            (click)="toggleSelection(company)">
+            <div class="flex flex-row gap-2">
+              <input
+              type="checkbox"
+              [checked]="selectedCompaniesIds.includes(company.id)"
+              class="mr-2"
+              (click)="$event.stopPropagation()"
+            />
+            <div class="dark:text-white">{{ company.companyNameEnglish }}</div>
+            </div>
+          </div>
+        </div>
+  
+  
         <!-- Validation message -->
         <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
           Company is required

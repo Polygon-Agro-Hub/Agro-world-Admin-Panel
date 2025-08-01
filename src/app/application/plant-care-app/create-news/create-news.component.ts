@@ -502,113 +502,51 @@ export class CreateNewsComponent {
   }
 
   checkPublishDate() {
-    if (this.createNewsObj.publishDate < this.today) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Publish Date',
-        text: 'Publish Date cannot be a past date!',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.createNewsObj.publishDate = '';
-      });
-    }
+  if (this.createNewsObj.publishDate < this.today) {
+    this.createNewsObj.publishDate = '';
   }
+}
 
   checkPublishDateEditNews() {
-    if (this.newsItems[0].publishDate < this.today) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Publish Date',
-        text: 'Publish Date cannot be a past date!',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.newsItems[0].publishDate = this.currentPublishDate;
-      });
-    }
+  if (this.newsItems[0].publishDate < this.today) {
+    this.newsItems[0].publishDate = this.currentPublishDate;
   }
+}
 
   checkExpireDate() {
-    if (!this.createNewsObj.publishDate) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'publish Date Required',
-        text: 'Please select a publish Date before setting an Expiration Date.',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.createNewsObj.expireDate = '';
-      });
-    } else {
-      if (this.createNewsObj.expireDate < this.createNewsObj.publishDate) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Invalid Expire Date',
-          text: 'Expire Date cannot be earlier than publish Date!',
-          confirmButtonText: 'OK',
-        }).then(() => {
-          this.createNewsObj.expireDate = '';
-        });
-      }
-    }
+  // Remove the Swal.fire popup and just update the validation flag
+  if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
+    this.checkPublishExpireDate();
   }
+}
+
 
   checkExpireDateEditNews() {
-    if (!this.newsItems[0].publishDate) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'publish Date Required',
-        text: 'Please select a publish Date before setting an Expiration Date.',
-        confirmButtonText: 'OK',
-      }).then(() => {
-        this.newsItems[0].expireDate = this.currentExpireDate;
-      });
-    } else {
-      if (this.newsItems[0].expireDate < this.newsItems[0].publishDate) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Invalid Expire Date',
-          text: 'Expire Date cannot be earlier than publish Date!',
-          confirmButtonText: 'OK',
-        }).then(() => {
-          this.newsItems[0].expireDate = this.currentExpireDate;
-        });
-      }
-    }
+  // Remove the Swal.fire popup and just update the validation flag
+  if (this.newsItems[0].publishDate && this.newsItems[0].expireDate) {
+    this.checkPublishExpireDateEditNews();
   }
+}
 
   checkPublishExpireDate() {
-    if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
-      const publishDate = new Date(this.createNewsObj.publishDate);
-      const expireDate = new Date(this.createNewsObj.expireDate);
-
-      if (publishDate > expireDate) {
-        this.isPublishAfterExpireValid = false;
-      } else {
-        this.isPublishAfterExpireValid = true;
-      }
-    }
+  if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
+    const publishDate = new Date(this.createNewsObj.publishDate);
+    const expireDate = new Date(this.createNewsObj.expireDate);
+    this.isPublishAfterExpireValid = publishDate <= expireDate;
+  } else {
+    this.isPublishAfterExpireValid = true;
   }
+}
 
   checkPublishExpireDateEditNews() {
-    if (this.newsItems[0].publishDate && this.newsItems[0].expireDate) {
-      const publishDate = new Date(this.newsItems[0].publishDate);
-      const expireDate = new Date(this.newsItems[0].expireDate);
-
-      if (publishDate > expireDate) {
-        this.isPublishAfterExpireValidEditNews = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Invalid publish Date',
-          text: 'Publish date can not be later than expire date',
-          confirmButtonText: 'OK',
-        }).then(() => {
-          this.newsItems[0].publishDate = this.currentPublishDate;
-          this.newsItems[0].expireDate = this.currentExpireDate;
-        });
-      } else {
-        this.isPublishAfterExpireValidEditNews = true;
-      }
-    }
+  if (this.newsItems[0].publishDate && this.newsItems[0].expireDate) {
+    const publishDate = new Date(this.newsItems[0].publishDate);
+    const expireDate = new Date(this.newsItems[0].expireDate);
+    this.isPublishAfterExpireValidEditNews = publishDate <= expireDate;
+  } else {
+    this.isPublishAfterExpireValidEditNews = true;
   }
+}
 
   back(): void {
     this.router.navigate(['/plant-care/action']);

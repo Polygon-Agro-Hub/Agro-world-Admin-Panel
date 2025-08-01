@@ -85,8 +85,9 @@
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.invNo || "N/A" }}
               </td>
-              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                {{ order.orderApp }}
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.orderApp === 'Dash' ? 'SalesDash' : (order.orderApp === 'MarketPlace' ? 'Marketplace' :
+                order.orderApp) }}
               </td>
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.total | number : "1.2-2" }}

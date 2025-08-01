@@ -64,9 +64,10 @@
       <div>
         <div class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl">
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            Package : {{ package.displayName }} (Rs.{{ package.productPrice }})
+            Package : {{ package.displayName }} (Rs.{{ package.productPrice | number: '1.2-2' }})
           </span>
-          <button (click)="OpenAddNewItemPopUp(package.packageId)" class="w-6 h-6 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
+          <button (click)="OpenAddNewItemPopUp(package.packageId)"
+            class="w-6 h-6 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
             <span class="text-sm font-bold">+</span>
           </button>
         </div>
@@ -77,12 +78,12 @@
               <div class="w-8 text-sm text-gray-700 dark:text-gray-300">
                 {{ item.productTypeShortCode }}
               </div>
-              <select class="rounded-xl flex-1 px-4 py-4 border text-sm" [class.border-red-500]="item.isExcluded"
-                [class.bg-red-50]="item.isExcluded" [class.text-red-600]="item.isExcluded" [(ngModel)]="item.productId"
-                (change)="calculatePrice(item)">
+              <select class="rounded-xl flex-1 px-4 py-4 border text-sm" [ngClass]="{
+          'border-red-500 bg-red-50 text-red-600': item.isExcluded,
+          'dark:text-white dark:border-gray-600 dark:bg-gray-800': !item.isExcluded
+        }" [(ngModel)]="item.productId" (change)="calculatePrice(item)">
 
                 <option [ngValue]="null">--Select Product--</option>
-
                 <option *ngFor="let product of marketplaceItems" [ngValue]="product.id" [disabled]="product.isExcluded">
                   {{ product.displayName }}
                 </option>
@@ -101,7 +102,7 @@
 
               <input type="number" step="0.01" min="0" placeholder="--Quantity in kg--"
                 class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 text-sm"
-                [(ngModel)]="item.qty" (change)="calculatePrice(item)" />
+                [(ngModel)]="item.qty" (change)="validateQuantity(item)" (keydown)="preventNegativeInput($event)" />
 
               <div class="w-16 text-right text-sm text-gray-900 dark:text-gray-100">
                 Rs.{{ item.price | number: '1.2-2' }}
@@ -134,13 +135,13 @@
           Grand Total :
           <span class="ml-2">Rs.{{ this.totalDefinePkgPrice | number: '1.2-2' }}</span>
         </div>
-        <div class="text-xs text-blue-600 dark:text-blue-400">
+        <div *ngIf="isWithinLimit" class="text-xs text-[#006C5A] italic">
           Allowed limit : {{ this.totalPackagePrice | number: '1.2-2'}} +
-          {{ this.totalPackagePrice * 0.08 | number: '1.2-2'}} = Rs.{{
+          {{ this.totalPackagePrice| number: '1.2-2'}} * 8% = Rs.{{
           this.totalPackagePrice * 1.08 | number: '1.2-2'
           }}
         </div>
-        <div *ngIf="!isWithinLimit" class="text-xs text-red-600 dark:text-red-400 mt-1">
+        <div *ngIf="!isWithinLimit" class="text-xs text-[#E11E21] dark:text-red-400 mt-1 italic">
           Calculated price exceeds the allowed limit ({{totalPackagePrice | number: '1.2-2'}} + {{totalPackagePrice |
           number: '1.2-2'}} x 8% = Rs.{{totalPackagePrice*1.08 | number: '1.2-2'}}) . To save the order, it must be
           within 8% of the target price.

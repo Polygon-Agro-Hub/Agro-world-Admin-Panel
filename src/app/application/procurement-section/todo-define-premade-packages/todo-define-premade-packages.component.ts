@@ -373,6 +373,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           item.productId === null ||
           item.productId === undefined ||
           item.productId === null ||
+          item.qty === 0 ||
           Number.isNaN(item.productId)
         );
       });
@@ -544,6 +545,21 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     selectedOrderDetail.items.sort((a, b) => a.productTypeId - b.productTypeId);
     this.isNewAddPopUp = false;
   }
+
+  validateQuantity(item: any) {
+  // Ensure quantity is not negative
+  if (item.qty < 0) {
+    item.qty = 0;
+  }
+  this.calculatePrice(item);
+}
+
+preventNegativeInput(event: KeyboardEvent) {
+  // Prevent minus key (-) from being entered
+  if (event.key === '-' || event.key === 'Subtract') {
+    event.preventDefault();
+  }
+}
 
 
 }

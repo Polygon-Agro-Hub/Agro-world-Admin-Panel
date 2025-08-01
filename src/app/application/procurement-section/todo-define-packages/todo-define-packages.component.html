@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="w-full overflow-x-auto">
-        <table *ngIf="hasData"  class="min-w-full divide-y divide-gray-200">
+        <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
               <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -115,7 +115,8 @@
                 {{ order.invNo || "N/A" }}
               </td>
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ order.orderApp }}
+                {{ order.orderApp === 'Dash' ? 'SalesDash' : (order.orderApp === 'MarketPlace' ? 'Marketplace' :
+                order.orderApp) }}
               </td>
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.total | number : "1.2-2" }}
@@ -157,7 +158,7 @@
             </tr>
           </tbody>
         </table>
-        <div *ngIf="hasData"  class="dark:bg-[#262f45]">
+        <div *ngIf="hasData" class="dark:bg-[#262f45]">
           <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
             [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
             [screenReaderCurrentLabel]="'Youre on page'">

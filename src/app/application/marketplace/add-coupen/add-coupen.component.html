@@ -40,6 +40,15 @@
         />
       </div>
 
+      <div
+        *ngIf="
+          checkPrecentageValueMessage === 'Coupon with this code already exists'
+        "
+        class="text-red-500 text-sm mt-1"
+      >
+        {{ checkPrecentageValueMessage }}
+      </div>
+
       <div class="mb-16">
         <label class="text-[#534E4E] dark:text-textDark">Type *</label>
         <div class="flex items-center space-x-4 mt-3">
@@ -101,7 +110,9 @@
       </div>
 
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Discount Percentage *</label
+        >
         <input
           type="number"
           id="percentage"
@@ -113,13 +124,18 @@
           (change)="checkPrecentageValue(coupenObj.percentage)"
           (keydown)="preventNegative($event)"
         />
-        <div *ngIf="coupenObj.type === 'Percentage'" class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="coupenObj.type === 'Percentage'"
+          class="text-red-500 text-sm mt-1"
+        >
           <div>{{ checkPrecentageValueMessage }}</div>
         </div>
       </div>
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Discount Amount *</label
+        >
         <input
           type="number"
           id="fixDiscount"
@@ -129,7 +145,10 @@
           (change)="checkFixAmountValue(coupenObj.fixDiscount)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <div *ngIf="coupenObj.type === 'Fixed Amount'" class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="coupenObj.type === 'Fixed Amount'"
+          class="text-red-500 text-sm mt-1"
+        >
           <div>{{ checkfixAmountValueMessage }}</div>
         </div>
       </div>
@@ -145,7 +164,8 @@
         />
 
         <label for="chekLimit" class="text-[#534E4E] dark:text-textDark">
-          Set Price Limit (ex : This Coupon valid only for more than Rs.5000 Orders)
+          Set Price Limit (ex : This Coupon valid only for more than Rs.5000
+          Orders)
         </label>
       </div>
 

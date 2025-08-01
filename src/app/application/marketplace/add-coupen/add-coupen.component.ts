@@ -76,43 +76,44 @@ export class AddCoupenComponent {
   }
 
   onSubmit() {
-    // Reset messages
-    this.clearValidationMessages();
+  // Reset messages
+  this.clearValidationMessages();
 
-    // Check required fields for all types
-    if (
-      !this.coupenObj.code ||
-      !this.coupenObj.endDate ||
-      !this.coupenObj.startDate ||
-      !this.coupenObj.type
-    ) {
-      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+  // Check required fields for all types
+  if (
+    !this.coupenObj.code ||
+    !this.coupenObj.endDate ||
+    !this.coupenObj.startDate ||
+    !this.coupenObj.type
+  ) {
+    Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+    return;
+  }
+
+  // Type-specific validations
+  if (this.coupenObj.type === 'Percentage') {
+    if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+      this.checkPrecentageValueMessage = 'Percentage value is required';
+      Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
       return;
     }
-
-    // Type-specific validations
-    if (this.coupenObj.type === 'Percentage') {
-      if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-        this.checkPrecentageValueMessage = 'Percentage value is required';
-        Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
-        return;
-      }
-    } else if (this.coupenObj.type === 'Fixed Amount') {
-      if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-        this.checkfixAmountValueMessage = 'Fix amount value is required';
-        Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
-        return;
-      }
-    }
-
-    // Price limit validation if checkbox is checked
-    if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-      Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
+  } else if (this.coupenObj.type === 'Fixed Amount') {
+    if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
+      this.checkfixAmountValueMessage = 'Fix amount value is required';
+      Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
       return;
     }
+  }
 
-    // If all validations pass, save the coupon
-    this.marketSrv.createCoupen(this.coupenObj).subscribe((res) => {
+  // Price limit validation if checkbox is checked
+  if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
+    Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
+    return;
+  }
+
+  // If all validations pass, save the coupon
+  this.marketSrv.createCoupen(this.coupenObj).subscribe({
+    next: (res) => {
       if (res.status) {
         Swal.fire({
           icon: 'success',
@@ -124,8 +125,19 @@ export class AddCoupenComponent {
           this.router.navigate(['market/action/view-coupen']);
         });
       }
-    });
-  }
+    },
+    error: (err) => {
+      if (err.error && err.error.error === 'Coupon with this code already exists') {
+        // Show validation message under the code input
+        this.checkPrecentageValueMessage = ''; // Clear other messages
+        this.checkfixAmountValueMessage = ''; // Clear other messages
+        Swal.fire('Error', 'Coupon with this code already exists', 'error');
+      } else {
+        Swal.fire('Error', err.error?.error || 'Coupon with this code already exists', 'error');
+      }
+    }
+  });
+}
 
   checkPrecentageValue(num: number) {
     if (num === null || isNaN(num)) {

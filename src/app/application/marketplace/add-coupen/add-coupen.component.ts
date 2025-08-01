@@ -143,14 +143,21 @@ export class AddCoupenComponent {
   }
 
   checkFixAmountValue(num: number) {
-    if (num < 0) {
-      this.isValid = true;
-      this.checkfixAmountValueMessage = 'Can not be negative number';
-    } else {
-      this.isValid = false;
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-    }
+  if (num === null || isNaN(num)) {
+    this.isValid = true;
+    this.checkfixAmountValueMessage = 'Fix amount value is required';
+    return;
   }
+
+  if (num < 0) {
+    this.coupenObj.fixDiscount = 0;
+    this.isValid = true;
+    this.checkfixAmountValueMessage = 'Cannot be negative number';
+  } else {
+    this.isValid = false;
+    this.checkfixAmountValueMessage = '';
+  }
+}
 
   preventNegative(e: KeyboardEvent) {
     // Prevent minus key, comma, and period (for negative numbers in some locales)

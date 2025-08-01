@@ -16,7 +16,6 @@ import { CalendarModule } from 'primeng/calendar';
 export class AddCoupenComponent {
   coupenObj: Coupen = new Coupen();
   today: string = this.getTodayDate();
-  isValid: boolean = true;
   checkPrecentageValueMessage: string = '';
   checkfixAmountValueMessage: string = '';
 
@@ -24,6 +23,11 @@ export class AddCoupenComponent {
 
   back(): void {
     this.router.navigate(['market/action']);
+  }
+
+  clearValidationMessages(): void {
+    this.checkPrecentageValueMessage = '';
+    this.checkfixAmountValueMessage = '';
   }
 
   getTodayDate(): string {
@@ -72,11 +76,10 @@ export class AddCoupenComponent {
   }
 
   onSubmit() {
-    if (this.isValid) {
-      this.checkPrecentageValueMessage = 'Precentage value is required';
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-      return;
-    }
+    // Reset messages
+    this.clearValidationMessages();
+
+    // Check required fields for all types
     if (
       !this.coupenObj.code ||
       !this.coupenObj.endDate ||
@@ -87,27 +90,34 @@ export class AddCoupenComponent {
       return;
     }
 
-    if (this.coupenObj.type === 'Percentage' && !this.coupenObj.percentage) {
-      Swal.fire('Warning', 'Please fill Discount Persentage fields', 'warning');
-      return;
+    // Type-specific validations
+    if (this.coupenObj.type === 'Percentage') {
+      if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+        this.checkPrecentageValueMessage = 'Percentage value is required';
+        Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
+        return;
+      }
+    } else if (this.coupenObj.type === 'Fixed Amount') {
+      if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
+        this.checkfixAmountValueMessage = 'Fix amount value is required';
+        Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
+        return;
+      }
     }
 
-    if (this.coupenObj.type === 'Fixed Amount' && !this.coupenObj.fixDiscount) {
-      Swal.fire('Warning', 'Please fill Discount Amount fields', 'warning');
-      return;
-    }
-
+    // Price limit validation if checkbox is checked
     if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-      Swal.fire('Warning', 'Please fill Price Limit fields', 'warning');
+      Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
       return;
     }
 
+    // If all validations pass, save the coupon
     this.marketSrv.createCoupen(this.coupenObj).subscribe((res) => {
       if (res.status) {
         Swal.fire({
           icon: 'success',
-          title: 'Coupen Created',
-          text: 'The coupen created successfull!',
+          title: 'Coupon Created',
+          text: 'The coupon was created successfully!',
           confirmButtonText: 'OK',
         }).then(() => {
           this.coupenObj = new Coupen();
@@ -117,47 +127,36 @@ export class AddCoupenComponent {
     });
   }
 
-  onCancel() {
-    this.coupenObj = new Coupen();
-  }
-
   checkPrecentageValue(num: number) {
     if (num === null || isNaN(num)) {
-      this.isValid = true;
-      this.checkPrecentageValueMessage = '"Percentage Value is required';
+      this.checkPrecentageValueMessage = 'Percentage value is required';
       return;
     }
 
     if (num < 0) {
       this.coupenObj.percentage = 0;
-      this.isValid = true;
       this.checkPrecentageValueMessage = 'Cannot be negative number';
     } else if (num > 100) {
       this.coupenObj.percentage = 100;
-      this.isValid = true;
       this.checkPrecentageValueMessage = 'Cannot be greater than 100';
     } else {
-      this.isValid = false;
       this.checkPrecentageValueMessage = '';
     }
   }
 
   checkFixAmountValue(num: number) {
-  if (num === null || isNaN(num)) {
-    this.isValid = true;
-    this.checkfixAmountValueMessage = 'Fix amount value is required';
-    return;
-  }
+    if (num === null || isNaN(num)) {
+      this.checkfixAmountValueMessage = 'Fix amount value is required';
+      return;
+    }
 
-  if (num < 0) {
-    this.coupenObj.fixDiscount = 0;
-    this.isValid = true;
-    this.checkfixAmountValueMessage = 'Cannot be negative number';
-  } else {
-    this.isValid = false;
-    this.checkfixAmountValueMessage = '';
+    if (num < 0) {
+      this.coupenObj.fixDiscount = 0;
+      this.checkfixAmountValueMessage = 'Cannot be negative number';
+    } else {
+      this.checkfixAmountValueMessage = '';
+    }
   }
-}
 
   preventNegative(e: KeyboardEvent) {
     // Prevent minus key, comma, and period (for negative numbers in some locales)
@@ -167,7 +166,6 @@ export class AddCoupenComponent {
 
     // Prevent pasting negative numbers
     if (e.ctrlKey && e.key === 'v') {
-      // This is a simple prevention, for complete solution you'd need to handle paste event
       setTimeout(() => {
         if (this.coupenObj.percentage < 0) {
           this.coupenObj.percentage = 0;
@@ -177,14 +175,14 @@ export class AddCoupenComponent {
   }
 
   onCodeInput(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const trimmedValue = input.value.trimStart();
-  
-  if (input.value !== trimmedValue) {
-    input.value = trimmedValue;
-    this.coupenObj.code = trimmedValue;
+    const input = event.target as HTMLInputElement;
+    const trimmedValue = input.value.trimStart();
+    
+    if (input.value !== trimmedValue) {
+      input.value = trimmedValue;
+      this.coupenObj.code = trimmedValue;
+    }
   }
-}
 }
 
 class Coupen {

@@ -52,6 +52,7 @@
               name="type"
               [value]="'Percentage'"
               [(ngModel)]="coupenObj.type"
+              (change)="clearValidationMessages()"
             />
             <label
               for="percentage"
@@ -69,6 +70,7 @@
               name="type"
               [value]="'Fixed Amount'"
               [(ngModel)]="coupenObj.type"
+              (change)="clearValidationMessages()"
             />
             <label
               for="fixedAmount"
@@ -86,6 +88,7 @@
               name="type"
               [(ngModel)]="coupenObj.type"
               [value]="'Free Delivary'"
+              (change)="clearValidationMessages()"
             />
             <label
               for="freeDelivery"
@@ -98,9 +101,7 @@
       </div>
 
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark"
-          >Discount Percentage *</label
-        >
+        <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
         <input
           type="number"
           id="percentage"
@@ -112,7 +113,7 @@
           (change)="checkPrecentageValue(coupenObj.percentage)"
           (keydown)="preventNegative($event)"
         />
-        <div class="text-red-500 text-sm mt-1">
+        <div *ngIf="coupenObj.type === 'Percentage'" class="text-red-500 text-sm mt-1">
           <div>{{ checkPrecentageValueMessage }}</div>
         </div>
       </div>
@@ -128,7 +129,7 @@
           (change)="checkFixAmountValue(coupenObj.fixDiscount)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <div class="text-red-500 text-sm mt-1">
+        <div *ngIf="coupenObj.type === 'Fixed Amount'" class="text-red-500 text-sm mt-1">
           <div>{{ checkfixAmountValueMessage }}</div>
         </div>
       </div>
@@ -144,8 +145,7 @@
         />
 
         <label for="chekLimit" class="text-[#534E4E] dark:text-textDark">
-          Set Price Limit (ex : This Coupon valid only for more than Rs.5000
-          Orders)
+          Set Price Limit (ex : This Coupon valid only for more than Rs.5000 Orders)
         </label>
       </div>
 

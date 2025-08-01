@@ -113,7 +113,7 @@ export class ViewCoupenComponent implements OnInit {
         this.marketSrv.deleteCoupenById(id).subscribe(
           (data: boolean) => {
             if (data) {
-              Swal.fire('Deleted!', 'The Coupen has been deleted.', 'success');
+              Swal.fire('Deleted!', 'The Coupon has been deleted.', 'success');
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(

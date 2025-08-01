@@ -23,6 +23,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
+import { DropdownModule } from 'primeng/dropdown';
 
 interface PhoneCode {
   value: string;
@@ -51,7 +52,7 @@ interface DistributionCenter {
 @Component({
   selector: 'app-edit-distribution-centre',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, DropdownModule],
+  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, DropdownModule,DropdownModule],
   templateUrl: './edit-distribution-centre.component.html',
   styleUrl: './edit-distribution-centre.component.css',
 })

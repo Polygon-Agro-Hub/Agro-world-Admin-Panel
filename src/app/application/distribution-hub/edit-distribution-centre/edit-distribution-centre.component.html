@@ -50,8 +50,11 @@
           Contact Number 01 *
         </label>
         <div class="flex">
-          <select formControlName="contact1Code"
-            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select
+            formControlName="contact1Code"
+            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }"
+          >
             <option *ngFor="let code of phoneCodes" [value]="code.value">
               {{ code.label }}
             </option>
@@ -72,8 +75,11 @@
           Contact Number 02
         </label>
         <div class="flex">
-          <select formControlName="contact2Code"
-            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select
+            formControlName="contact2Code"
+            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }"
+          >
             <option *ngFor="let code of phoneCodes" [value]="code.value">
               {{ code.label }}
             </option>
@@ -84,8 +90,15 @@
           (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
         " />
         </div>
-        <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
-          {{ getFieldError("contact2") }}
+        <div
+          *ngIf="isFieldInvalid('contact2')"
+          class="text-red-500 text-sm mt-1"
+        >
+          <span
+            *ngIf="distributionForm.get('contact2')?.errors?.['invalidPhone']"
+          >
+            {{ distributionForm.get('contact2')?.errors?.['invalidPhone'] }}
+          </span>
         </div>
       </div>
     </div>

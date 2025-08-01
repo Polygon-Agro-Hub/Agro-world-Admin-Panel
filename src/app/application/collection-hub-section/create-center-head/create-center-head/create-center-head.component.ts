@@ -58,7 +58,7 @@ export class CreateCenterHeadComponent implements OnInit {
   selectedLanguages: string[] = [];
   CompanyData: Company[] = [];
   lastID!: string;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   itemId: number | null = null;
   officerId: number | null = null;
   banks: Bank[] = [];
@@ -266,21 +266,18 @@ onNameInput(event: Event, fieldName: string): void {
   this.validateNameInput(input, fieldName);
 }
 
-capitalizeAccHolderName(): void {
-  let value = this.personalData.accHolderName || '';
-
-  // Trim leading and trailing spaces, and collapse multiple spaces inside
-  value = value.replace(/\s+/g, ' ').trim();
-
-  // Capitalize the first letter if value is not empty
+capitalizeAccHolderName(event: Event): void {
+  const inputElement = event.target as HTMLInputElement;
+  let value = inputElement.value.trimStart().replace(/\s+/g, ' ');
+  
+  // Capitalize first letter
   if (value.length > 0) {
-    this.personalData.accHolderName = value.charAt(0).toUpperCase() + value.slice(1);
-  } else {
-    this.personalData.accHolderName = '';
+    value = value.charAt(0).toUpperCase() + value.slice(1);
   }
-  console.log('sd', this.personalData.accHolderName)
+  
+  this.personalData.accHolderName = value;
+  inputElement.value = value;
 }
-
 
 validateSriLankanPhone(input: string, key: string): void {
     if (!input) {

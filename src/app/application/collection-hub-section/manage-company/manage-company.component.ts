@@ -178,6 +178,7 @@ export class ManageCompanyComponent {
   }
 
   searchPlantCareUsers(): void {
+    this.search = this.search?.trim() || ''
     this.fetchAllCompanys();
   }
 

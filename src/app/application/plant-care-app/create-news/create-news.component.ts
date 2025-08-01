@@ -575,15 +575,33 @@ export class CreateNewsComponent {
   }
 
   onEnglishTitleChange(value: string): void {
-    const trimmedValue = value.trimStart();
-    if (this.itemId === null) {
-      this.createNewsObj.titleEnglish = trimmedValue;
-    } else {
-      this.newsItems[0].titleEnglish = trimmedValue;
-    }
-    this.validateTitleEnglish(trimmedValue);
+  // Capitalize first letter
+  let capitalizedValue = value;
+  if (value.length > 0) {
+    capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
   }
+  
+  const trimmedValue = capitalizedValue.trimStart();
+  if (this.itemId === null) {
+    this.createNewsObj.titleEnglish = trimmedValue;
+  } else {
+    this.newsItems[0].titleEnglish = trimmedValue;
+  }
+  this.validateTitleEnglish(trimmedValue);
+}
 
+onEnglishTitleBlur(event: FocusEvent): void {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  if (value.length > 0) {
+    const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+    if (this.itemId === null) {
+      this.createNewsObj.titleEnglish = capitalizedValue;
+    } else {
+      this.newsItems[0].titleEnglish = capitalizedValue;
+    }
+  }
+}
   onSinhalaTitleChange(value: string): void {
     const trimmedValue = value.trimStart();
     if (this.itemId === null) {

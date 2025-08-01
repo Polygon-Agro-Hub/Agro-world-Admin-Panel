@@ -133,78 +133,93 @@ export class EditCoupenComponent {
   }
 
   onSubmit() {
-    if (this.isValid) {
-      this.checkPrecentageValueMessage = 'Percentage Value is required';
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-      return;
-    }
-    if (
-      !this.coupenObj.code ||
-      !this.coupenObj.endDate ||
-      !this.coupenObj.startDate ||
-      !this.coupenObj.type
-    ) {
-      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
-      return;
-    }
+  // Reset validation messages
+  this.checkPrecentageValueMessage = '';
+  this.checkfixAmountValueMessage = '';
 
-    if (this.coupenObj.type === 'Percentage' && !this.coupenObj.percentage) {
+  // Validate required fields
+  if (
+    !this.coupenObj.code ||
+    !this.coupenObj.endDate ||
+    !this.coupenObj.startDate ||
+    !this.coupenObj.type
+  ) {
+    Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+    return;
+  }
+
+  // Validate type-specific fields
+  if (this.coupenObj.type === 'Percentage') {
+    if (this.coupenObj.percentage == null || isNaN(this.coupenObj.percentage)) {
+      this.checkPrecentageValueMessage = 'Percentage value is required';
       Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
       return;
+    } else if (this.coupenObj.percentage < 0 || this.coupenObj.percentage > 100) {
+      this.checkPrecentageValue(this.coupenObj.percentage);
+      Swal.fire('Warning', 'Please enter a valid percentage (0-100)', 'warning');
+      return;
     }
+  }
 
-    if (this.coupenObj.type === 'Fixed Amount' && !this.coupenObj.fixDiscount) {
+  if (this.coupenObj.type === 'Fixed Amount') {
+    if (this.coupenObj.fixDiscount == null || isNaN(this.coupenObj.fixDiscount)) {
+      this.checkfixAmountValueMessage = 'Fix amount value is required';
       Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
       return;
-    }
-
-    if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-      Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
+    } else if (this.coupenObj.fixDiscount < 0) {
+      this.checkFixAmountValue(this.coupenObj.fixDiscount);
+      Swal.fire('Warning', 'Please enter a valid discount amount', 'warning');
       return;
     }
+  }
 
-    // Prepare the data for API call
-    const payload = {
-      ...this.coupenObj,
-      startDate: this.formatDateForAPI(this.coupenObj.startDate),
-      endDate: this.formatDateForAPI(this.coupenObj.endDate),
-    };
+  if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
+    Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
+    return;
+  }
 
-    this.isLoading = true;
-    this.marketSrv
-      .updateCoupen(payload)
-      .subscribe({
-        next: (res) => {
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Coupon Updated',
-              text: 'The coupon was updated successfully!',
-              confirmButtonText: 'OK',
-            }).then(() => {
-              this.router.navigate(['market/action/view-coupen']);
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: res.message || 'Failed to update coupon.',
-            });
-          }
-        },
-        error: (error) => {
-          console.error('Error updating coupon:', error);
+  // Prepare the data for API call
+  const payload = {
+    ...this.coupenObj,
+    startDate: this.formatDateForAPI(this.coupenObj.startDate),
+    endDate: this.formatDateForAPI(this.coupenObj.endDate),
+  };
+
+  this.isLoading = true;
+  this.marketSrv
+    .updateCoupen(payload)
+    .subscribe({
+      next: (res) => {
+        if (res.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Coupon Updated',
+            text: 'The coupon was updated successfully!',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            this.router.navigate(['market/action/view-coupen']);
+          });
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to update coupon.',
+            text: res.message || 'Failed to update coupon.',
           });
-        },
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
-  }
+        }
+      },
+      error: (error) => {
+        console.error('Error updating coupon:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update coupon.',
+        });
+      },
+    })
+    .add(() => {
+      this.isLoading = false;
+    });
+}
 
   private formatDateForAPI(date: Date | null): string | null {
     if (!date) return null;
@@ -216,35 +231,27 @@ export class EditCoupenComponent {
   }
 
   checkPrecentageValue(num: number) {
-    console.log('percentage', this.coupenObj.percentage);
-
-    if (num == null || isNaN(num)) {
-      this.isValid = true;
-      this.checkPrecentageValueMessage = 'Percentage value is required';
-    } else if (num < 0) {
-      this.isValid = true;
-      this.checkPrecentageValueMessage = 'Cannot be a negative number';
-    } else if (num > 100) {
-      this.isValid = true;
-      this.checkPrecentageValueMessage = 'Cannot be greater than 100';
-    } else {
-      this.isValid = false;
-      this.checkPrecentageValueMessage = '';
-    }
+  if (num == null || isNaN(num)) {
+    this.checkPrecentageValueMessage = 'Percentage value is required';
+  } else if (num < 0) {
+    this.checkPrecentageValueMessage = 'Cannot be a negative number';
+  } else if (num > 100) {
+    this.checkPrecentageValueMessage = 'Cannot be greater than 100';
+  } else {
+    this.checkPrecentageValueMessage = '';
   }
+}
+
 
   checkFixAmountValue(num: number) {
-    if (num == null || isNaN(num)) {
-      this.isValid = true;
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-    } else if (num < 0) {
-      this.isValid = true;
-      this.checkfixAmountValueMessage = 'Cannot be negative number';
-    } else {
-      this.isValid = false;
-      this.checkfixAmountValueMessage = '';
-    }
+  if (num == null || isNaN(num)) {
+    this.checkfixAmountValueMessage = 'Fix amount value is required';
+  } else if (num < 0) {
+    this.checkfixAmountValueMessage = 'Cannot be negative number';
+  } else {
+    this.checkfixAmountValueMessage = '';
   }
+}
 
   onCodeInput(event: any): void {
     const input = event.target;

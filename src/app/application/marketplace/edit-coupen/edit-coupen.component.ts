@@ -134,7 +134,7 @@ export class EditCoupenComponent {
 
   onSubmit() {
     if (this.isValid) {
-      this.checkPrecentageValueMessage = 'Precentage value is required';
+      this.checkPrecentageValueMessage = 'Percentage Value is required';
       this.checkfixAmountValueMessage = 'Fix amount value is required';
       return;
     }

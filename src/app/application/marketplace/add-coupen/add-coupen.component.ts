@@ -124,7 +124,7 @@ export class AddCoupenComponent {
   checkPrecentageValue(num: number) {
     if (num === null || isNaN(num)) {
       this.isValid = true;
-      this.checkPrecentageValueMessage = 'Percentage value is required';
+      this.checkPrecentageValueMessage = '"Percentage Value is required';
       return;
     }
 

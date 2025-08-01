@@ -163,6 +163,7 @@ import {ViewHeadPortalComponent} from './application/distribution-hub/view-head-
 import { ViewCurrentCenterTargetComponent } from './application/collection-hub-section/view-current-center-target/view-current-center-target.component';
 import { ViewCenterHeadComponent } from './application/collection-hub-section/view-center-head/view-center-head.component';
 import {ViewPackageHistoryComponent} from './application/marketplace/view-package-history/view-package-history.component';
+import { TestingComponent } from './application/collection-hub-section/testing/testing.component';
 export const routes: Routes = [
   {
     path: '',
@@ -686,8 +687,12 @@ export const routes: Routes = [
           },
           {
             path: 'agro-world-centers',
-            component: AgroWorldCentersComponent,
+            component: TestingComponent,
           },
+          // {
+          //   path: 'agro-world-centers',
+          //   component: AgroWorldCentersComponent,
+          // },
           {
             path: 'agro-world-center-price/:centerId/:companyId/:centerName',
             component: ViewCenterPriceComponent,

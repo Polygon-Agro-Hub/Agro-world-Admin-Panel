@@ -42,7 +42,8 @@
           id="createdDateFilter"
           type="date"
           class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
-          (change)="checkExpireDate(); checkPublishExpireDate()"
+          [min]="createNewsObj.publishDate || today"
+          (change)="checkExpireDate()"
         />
       </div>
     </div>
@@ -250,14 +251,12 @@
           >Publish Date <span class="text-[#2E2E2E]">*</span></label
         >
         <input
-          [(ngModel)]="newsItems[0].publishDate"
+          [(ngModel)]="newsItems[0].expireDate"
           id="createdDateFilter"
           type="date"
           class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
-          for="sinhalaCropName"
-          (change)="
-            checkPublishDateEditNews(); checkPublishExpireDateEditNews()
-          "
+          [min]="newsItems[0] && newsItems[0].publishDate || today"
+          (change)="checkExpireDateEditNews()"
         />
         <div *ngIf="!isPublishAfterExpireValidEditNews" class="text-red-500">
           Publish Date cannot be later than Expiry Date.

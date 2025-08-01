@@ -29,18 +29,28 @@
       class="bg-[#FFFFFF] dark:bg-tileBlack px-20 pt-12 pb-12 shadow-md rounded-md w-[60%] h-full"
     >
       <div class="mb-8">
-        <label class="text-[#534E4E] dark:text-textDark">Code</label>
+        <label class="text-[#534E4E] dark:text-textDark">Code *</label>
         <input
           type="text"
           id="code"
           name="code"
           [(ngModel)]="coupenObj.code"
+          (input)="onCodeInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>
 
+      <div
+        *ngIf="
+          checkPrecentageValueMessage === 'Coupon with this code already exists'
+        "
+        class="text-red-500 text-sm mt-1"
+      >
+        {{ checkPrecentageValueMessage }}
+      </div>
+
       <div class="mb-16">
-        <label class="text-[#534E4E] dark:text-textDark">Type</label>
+        <label class="text-[#534E4E] dark:text-textDark">Type *</label>
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- Percentage Radio Button -->
@@ -51,6 +61,7 @@
               name="type"
               [value]="'Percentage'"
               [(ngModel)]="coupenObj.type"
+              (change)="clearValidationMessages()"
             />
             <label
               for="percentage"
@@ -68,6 +79,7 @@
               name="type"
               [value]="'Fixed Amount'"
               [(ngModel)]="coupenObj.type"
+              (change)="clearValidationMessages()"
             />
             <label
               for="fixedAmount"
@@ -85,6 +97,7 @@
               name="type"
               [(ngModel)]="coupenObj.type"
               [value]="'Free Delivary'"
+              (change)="clearValidationMessages()"
             />
             <label
               for="freeDelivery"
@@ -98,7 +111,7 @@
 
       <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark"
-          >Discount Persentage</label
+          >Discount Percentage *</label
         >
         <input
           type="number"
@@ -111,13 +124,18 @@
           (change)="checkPrecentageValue(coupenObj.percentage)"
           (keydown)="preventNegative($event)"
         />
-        <div class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="coupenObj.type === 'Percentage'"
+          class="text-red-500 text-sm mt-1"
+        >
           <div>{{ checkPrecentageValueMessage }}</div>
         </div>
       </div>
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Amount</label>
+        <label class="text-[#534E4E] dark:text-textDark"
+          >Discount Amount *</label
+        >
         <input
           type="number"
           id="fixDiscount"
@@ -127,7 +145,10 @@
           (change)="checkFixAmountValue(coupenObj.fixDiscount)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <div class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="coupenObj.type === 'Fixed Amount'"
+          class="text-red-500 text-sm mt-1"
+        >
           <div>{{ checkfixAmountValueMessage }}</div>
         </div>
       </div>
@@ -149,7 +170,7 @@
       </div>
 
       <div *ngIf="coupenObj.checkLimit" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Price Limit</label>
+        <label class="text-[#534E4E] dark:text-textDark">Price Limit *</label>
         <input
           type="number"
           id="priceLimit"
@@ -163,10 +184,10 @@
 
     <div class="flex flex-col justify-start px-6 w-[40%]">
       <div
-        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-12"
+        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8"
       >
         <label class="text-[#000000] dark:text-textDark font-normal text-1xl"
-          >Status</label
+          >Status *</label
         >
         <div class="flex items-center space-x-2 my-5">
           <!-- With Discount Radio Button -->
@@ -205,7 +226,7 @@
       </div>
 
       <div
-        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-10 mt-4"
+        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8 mt-4"
       >
         <label class="text-[#000000] dark:text-textDark font-normal text-1xl"
           >Schedule</label
@@ -216,29 +237,53 @@
 
         <div class="mb-6">
           <label class="text-textLight dark:text-textDark font-medium"
-            >Start Date</label
+            >Start Date *</label
           >
-          <input
-            type="date"
+          <p-calendar
             id="startDate"
             name="startDate"
             [(ngModel)]="coupenObj.startDate"
-            (change)="checkStartDate()"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            (onSelect)="checkStartDate()"
+            placeholder="Start Date"
+            [showIcon]="true"
+            [showClear]="true"
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '100%' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
+            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [appendTo]="'body'"
           />
         </div>
 
         <div class="mb-6">
           <label class="text-textLight dark:text-textDark font-medium"
-            >Expire Date</label
+            >Expire Date *</label
           >
-          <input
-            type="date"
+          <p-calendar
             id="endDate"
             name="endDate"
             [(ngModel)]="coupenObj.endDate"
-            (change)="checkExpireDate()"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            (onSelect)="checkExpireDate()"
+            placeholder="End Date"
+            [showIcon]="true"
+            [showClear]="true"
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '100%' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
+            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [appendTo]="'body'"
           />
         </div>
       </div>

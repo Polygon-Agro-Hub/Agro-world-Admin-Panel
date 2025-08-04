@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../services/theme.service';
+import { ChipsModule } from 'primeng/chips';
 
 @Component({
   selector: 'app-market-edit-product',
@@ -21,6 +22,7 @@ import { ThemeService } from '../../../services/theme.service';
     FormsModule,
     MatIconModule,
     CommonModule,
+     ChipsModule,
   ],
   templateUrl: './market-edit-product.component.html',
   styleUrl: './market-edit-product.component.css',
@@ -59,6 +61,19 @@ export class MarketEditProductComponent implements OnInit {
     this.getProduct();
   }
 
+  trimDisplayName() {
+    if (this.productObj.cropName) {
+      this.productObj.cropName = this.productObj.cropName.trimStart();
+    }
+  }
+
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
       console.log('product:', res);
@@ -81,6 +96,7 @@ export class MarketEditProductComponent implements OnInit {
     });
   }
 
+  
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
@@ -127,32 +143,33 @@ export class MarketEditProductComponent implements OnInit {
   // }
 
   onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productObj = new MarketPrice();
-        this.selectedVarieties = [];
-        this.isVerityVisible = false;
-        this.templateKeywords.update(() => []);
-        this.updateTags();
-        this.navigatePath('/market/action/view-products-list');
-      }
-    });
+    console.log('pob', this.productObj)
+    // Swal.fire({
+    //   icon: 'warning',
+    //   title: 'Are you sure?',
+    //   text: 'You may lose the added data after canceling!',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Yes, Cancel',
+    //   cancelButtonText: 'No, Keep Editing',
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.productObj = new MarketPrice();
+    //     this.selectedVarieties = [];
+    //     this.isVerityVisible = false;
+    //     this.templateKeywords.update(() => []);
+    //     this.updateTags();
+    //     this.navigatePath('/market/action/view-products-list');
+    //   }
+    // });
   }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
 
-  private updateTags() {
-    this.productObj.tags = this.templateKeywords().join(', ');
-  }
+  // private updateTags() {
+  //   this.productObj.tags = this.templateKeywords().join(', ');
+  // }
 
   onSubmit() {
     this.updateTags();
@@ -228,7 +245,9 @@ export class MarketEditProductComponent implements OnInit {
     );
     console.log('Form submitted:', this.productObj);
   }
-
+updateTags() {
+    this.productObj.tags = this.templateKeywords().join(', ');
+  }
   addTemplateKeyword(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
@@ -277,6 +296,14 @@ export class MarketEditProductComponent implements OnInit {
     console.log('store', this.storedDisplayType);
   }
 
+
+  announceTagAdded(event: any) {
+    this.announcer.announce(`Added tag: ${event.value}`);
+  }
+
+  announceTagRemoved(event: any) {
+    this.announcer.announce(`Removed tag: ${event.value}`);
+  }
   compaireDiscount() {
     this.storedDiscountPercentage = this.productObj.discountedPrice;
     this.productObj.displaytype = '';

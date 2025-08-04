@@ -13,7 +13,7 @@
     >
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
         <div
-          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#292929] cursor-pointer transition-colors duration-200"
+          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#1E293B] cursor-pointer transition-colors duration-200"
           [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isAssignTarget }"
           (click)="selectAssignTarget()"
         >
@@ -21,7 +21,7 @@
           <p class="dark:text-white">Centre Target</p>
         </div>
         <div
-          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#292929] cursor-pointer transition-colors duration-200"
+          class="flex flex-row items-center gap-2 border-2 rounded-2xl px-4 py-2 dark:bg-[#1E293B] cursor-pointer transition-colors duration-200"
           [ngClass]="{ 'text-[#415CFF] border-[#415CFF]': isVariety }"
           (click)="selectVariety()"
         >
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <hr class="my-6 border border-[#7F7F7F] dark:border-[#292929]" />
+    <hr class="my-6 border border-[#7F7F7F] dark:bg-[#1E293B] dark:border-[#292929]" />
 
     <app-assign-center-target
       [centerDetails]="dailyTartgetObj"

@@ -7,7 +7,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-    Edit Collection Centre
+    Update Collection Centres
   </h2>
 
   <form (ngSubmit)="onSubmit()">
@@ -19,7 +19,7 @@
         <label
           for="centerName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centre Name</label
+          >Collection Centres Name *</label
         >
         <input
           id="centerName"
@@ -30,7 +30,7 @@
           (input)="onCenterNameInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-      
+
         <!-- Specific error messages -->
         <!-- <div *ngIf="centerNameInput.touched && leadingSpaceError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Leading spaces are not allowed
@@ -38,8 +38,11 @@
         <div *ngIf="centerNameInput.touched && specialCharOrNumberError && !centerNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Only English letters are allowed (no numbers or special characters)
         </div> -->
-        <div *ngIf="centerNameInput.touched && centerNameInput.errors?.['required'] "  class="text-red-500 text-sm mt-1">
-          Center Name is required
+        <div
+          *ngIf="(centerNameInput.touched && centerNameInput.errors?.['required']) || leadingSpaceError || specialCharOrNumberError"
+          class="text-red-500 text-sm mt-1"
+        >
+          Centres Name is required
         </div>
       </div>
 
@@ -49,7 +52,7 @@
           for="companies"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Companies
+          Companies *
         </label>
         <input
           #companiesInput="ngModel"
@@ -82,7 +85,6 @@
             />
             {{ company.companyNameEnglish }}
           </div>
-          
         </div>
         <div
           *ngIf="companiesInput.touched && !centerFetchData.companies"
@@ -92,28 +94,66 @@
         </div>
       </div>
 
+      
+
       <div>
         <label
           for="contact01Code"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Contact Number 01
+          Contact Number 01 *
         </label>
 
         <div class="mt-1 flex">
           <!-- Country Code Dropdown -->
-          <select
+          <!-- <select
             id="code1"
             [(ngModel)]="centerFetchData.code1"
             name="code1"
             class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
           >
-            <option value="+94">+94 (LK)</option>
-            <option value="+1">+1 (US)</option>
-            <option value="+44">+44 (UK)</option>
-            <option value="+91">+91 (India)</option>
-          </select>
-        
+            <option value="+94">🇱🇰 +94</option>
+            <option value="+855">🇰🇭 +855</option>
+            <option value="+880">🇧🇩 +880</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+31">🇳🇱 +31</option>
+          </select> -->
+
+          <p-dropdown
+  [options]="countries"
+  [(ngModel)]="centerFetchData.code1"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
+
           <!-- Contact Number Input -->
           <div class="flex-1">
             <input
@@ -123,29 +163,43 @@
               name="contact01"
               #contact01="ngModel"
               required
-              pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone01')" maxlength="9"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              pattern="^[0-9]{9}$"
+              minlength="9"
+              (keypress)="allowOnlyNumbers($event)"
+              (ngModelChange)="validateSriLankanPhone($event, 'phone01')"
+              maxlength="9"
+              class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
             />
           </div>
-          
         </div>
-        
+
         <!-- ✅ Validation Messages Below Full Row -->
         <div *ngIf="contact01.touched">
-          <div *ngIf="!centerFetchData.contact01" class="text-red-500 text-sm mt-1">
-              Phone Number - 1 is required.
+          <div
+            *ngIf="!centerFetchData.contact01"
+            class="text-red-500 text-sm mt-1"
+          >
+            Phone Number - 1 is required.
           </div>
-          <div *ngIf="centerFetchData.contact01 && contact01.invalid && !isPhoneInvalidMap['phone01']" 
-              class="text-red-500 text-sm mt-1">
-              Phone Number must be exactly 9 digits.
+          <div
+            *ngIf="
+              centerFetchData.contact01 &&
+              contact01.invalid &&
+              !isPhoneInvalidMap['phone01']
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            Phone Number must be exactly 9 digits.
           </div>
 
-          <div *ngIf="isPhoneInvalidMap['phone01'] && centerFetchData.contact01" class="text-red-500 text-sm mt-1">
-              Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
-            </div>
-      </div>
-        
+          <div
+            *ngIf="isPhoneInvalidMap['phone01'] && centerFetchData.contact01"
+            class="text-red-500 text-sm mt-1"
+          >
+            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+          </div>
+        </div>
       </div>
 
       <!-- Contact Number 02 -->
@@ -156,21 +210,59 @@
         >
           Contact Number 02
         </label>
-      
+
+        
+
         <div class="mt-1 flex">
           <!-- Country Code Dropdown -->
-          <select
+          <!-- <select
             [(ngModel)]="centerFetchData.code2"
             id="code2"
             name="code2"
             class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
           >
-            <option value="+94">+94 (LK)</option>
-            <option value="+1">+1 (US)</option>
-            <option value="+44">+44 (UK)</option>
-            <option value="+91">+91 (India)</option>
-          </select>
-      
+            <option value="+94">🇱🇰 +94</option>
+            <option value="+855">🇰🇭 +855</option>
+            <option value="+880">🇧🇩 +880</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+31">🇳🇱 +31</option>
+          </select> -->
+
+          <p-dropdown
+  [options]="countries"
+  [(ngModel)]="centerFetchData.code2"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
+
           <!-- Contact Input -->
           <input
             type="tel"
@@ -179,36 +271,55 @@
             name="contact02"
             #contact02="ngModel"
             required
-            pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"
-            class="flex-1 block p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            pattern="^[0-9]{9}$"
+            minlength="9"
+            (keypress)="allowOnlyNumbers($event)"
+            (ngModelChange)="validateSriLankanPhone($event, 'phone02')"
+            maxlength="9"
+            class="flex-1 block p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             placeholder="Enter your phone number"
           />
         </div>
 
         <div *ngIf="contact02.touched">
-          <div *ngIf="centerFetchData.contact02 && centerFetchData.contact01 === centerFetchData.contact02 && !isPhoneInvalidMap['phone02']" class="text-red-500 text-sm mt-1">
+          <div
+            *ngIf="
+              centerFetchData.contact02 &&
+              centerFetchData.contact01 === centerFetchData.contact02 &&
+              !isPhoneInvalidMap['phone02'] &&
+              !contact02.invalid
+            "
+            class="text-red-500 text-sm mt-1"
+          >
             Phone Number - 2 should be different from Phone Number - 1.
           </div>
-          
-          <div *ngIf="centerFetchData.contact02 && contact02.invalid && !isPhoneInvalidMap['phone02']"
-              class="text-red-500 text-sm mt-1">
-              Phone Number must be exactly 9 digits.
+
+          <div
+            *ngIf="
+              centerFetchData.contact02 &&
+              contact02.invalid &&
+              !isPhoneInvalidMap['phone02']
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            Phone Number must be exactly 9 digits.
           </div>
 
-          <div *ngIf="isPhoneInvalidMap['phone02'] && centerFetchData.contact02 " class="text-red-500 text-sm mt-1">
-              Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
-            </div>
+          <div
+            *ngIf="isPhoneInvalidMap['phone02'] && centerFetchData.contact02"
+            class="text-red-500 text-sm mt-1"
+          >
+            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+          </div>
+        </div>
       </div>
-       
-      </div>
-      
 
       <!-- Building Number -->
       <div>
         <label
           for="buildingNumber"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Building Number</label
+          >Building Number *</label
         >
         <input
           type="text"
@@ -217,13 +328,14 @@
           [value]="centerFetchData.buildingNumber"
           [(ngModel)]="centerFetchData.buildingNumber"
           #buildingNumberInput="ngModel"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          (input)="onBuildingNumberInput($event)"
+          class="mt-1 block w-full p-2 border h-12 border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
         <div
           *ngIf="buildingNumberInput.touched && !centerFetchData.buildingNumber"
           class="text-red-500 text-sm mt-1"
         >
-          <div>Building Number is required</div>
+          <div>Buliding Number is required</div>
         </div>
       </div>
 
@@ -232,13 +344,14 @@
         <label
           for="street"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Street Name</label
+          >Street Name *</label
         >
         <input
           id="street"
           name="street"
           [value]="centerFetchData.street"
           [(ngModel)]="centerFetchData.street"
+          (input)="onStreetNameInput($event)"
           #streetInput="ngModel"
           pattern="^[a-zA-Z]*$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -255,7 +368,7 @@
         <label
           for="city"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >City</label
+          >City *</label
         >
         <input
           type="text"
@@ -263,7 +376,7 @@
           name="city"
           [value]="centerFetchData.city"
           [(ngModel)]="centerFetchData.city"
-          (input)="onCityChange()"
+          (input)="onCityInput($event)"
           (change)="onCityChange()"
           #cityInput="ngModel"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -281,7 +394,7 @@
         <label
           for="province"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Province</label
+          >Province *</label
         >
         <select
           id="province"
@@ -298,6 +411,12 @@
           </option>
         </select>
         <!-- ... validation ... -->
+        <div
+          *ngIf="!centerFetchData.province && districtInput.touched"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Province is required</div>
+        </div>
       </div>
 
       <!-- District -->
@@ -305,7 +424,7 @@
         <label
           for="district"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >District</label
+          >District *</label
         >
         <select
           id="district"
@@ -325,6 +444,12 @@
           </option>
         </select>
         <!-- ... validation ... -->
+        <div
+          *ngIf="!centerFetchData.district && districtInput.touched"
+          class="text-red-500 text-sm mt-1"
+        >
+          <div>Province is required</div>
+        </div>
       </div>
 
       <div>
@@ -332,7 +457,7 @@
           for="country"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Country
+          Country *
         </label>
         <input
           id="country"
@@ -359,7 +484,7 @@
         <label
           for="regCode"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centre Reg Code</label
+          >Collection Centres Reg Code</label
         >
         <input
           id="regCode"
@@ -384,24 +509,22 @@
         type="submit"
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
         [disabled]="
-  !centerFetchData.centerName ||
-  !centerFetchData.buildingNumber ||
-  !centerFetchData.city ||
-  !centerFetchData.companies ||
-  !centerFetchData.contact01 ||
-  !centerFetchData.country ||
-  !centerFetchData.district ||
-  !centerFetchData.province ||
-  !centerFetchData.street ||
-  contact01.invalid ||
-  isPhoneInvalidMap['phone01'] ||
-
-  (centerFetchData.contact02 &&
-    (centerFetchData.contact01 === centerFetchData.contact02 ||
-     isPhoneInvalidMap['phone02'] ||
-     contact02.invalid)) 
-"
-
+          !centerFetchData.centerName ||
+          !centerFetchData.buildingNumber ||
+          !centerFetchData.city ||
+          !centerFetchData.companies ||
+          !centerFetchData.contact01 ||
+          !centerFetchData.country ||
+          !centerFetchData.district ||
+          !centerFetchData.province ||
+          !centerFetchData.street ||
+          contact01.invalid ||
+          isPhoneInvalidMap['phone01'] ||
+          (centerFetchData.contact02 &&
+            (centerFetchData.contact01 === centerFetchData.contact02 ||
+              isPhoneInvalidMap['phone02'] ||
+              contact02.invalid))
+        "
       >
         Save
       </button>

@@ -5,26 +5,8 @@
   Back
 </button>
 
-
-
-
-
-
-
-
-
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
-
-
-
-
-
-
-
-
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-end items-right mb-8">
 
@@ -35,28 +17,21 @@
               d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
           </svg>
         </i>
-
-
-
-
         <button *ngIf="!this.filterType"
-          class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center"
+          class="bg-[#818AA1] text-white font-medium py-1 px-5 rounded-md text-lg flex items-center"
           (click)="showFilterDialog()">
 
-          <i class="fa fa-filter px-2" aria-hidden="true"></i>
+          <i class="fa fa-filter px-2 text-sm" aria-hidden="true"></i>
 
           Filter By
           <!-- <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
           {{ isDownloading ? " Downloading..." : " Download" }} -->
         </button>
 
-
-
-
         <div *ngIf="this.filterType"
           class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center">
 
-          <i class="fa fa-filter px-2" aria-hidden="true"></i>
+          <i class="fa fa-filter text-sm px-2" aria-hidden="true"></i>
 
           {{this.filterType}} : {{this.date}}
           <div class="w-2"></div>
@@ -70,18 +45,10 @@
 
         </div>
 
-
-
         <div class="w-5"></div>
 
-
-
-
-
-
-
         <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
-          <input type="text" placeholder="Search..." class="bg-transparent outline-none w-full text-gray-600"
+          <input type="text" placeholder="Search..." class="bg-transparent outline-none w-full text-gray-600" title="Search by Crop & Variety"
             [(ngModel)]="search" (keydown.enter)="applysearch()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="applysearch()">
@@ -104,7 +71,7 @@
 
     <div class="flex justify-between items-center mb-5">
       <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-        All ({{this.totalItems}})
+        All ({{totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems}}) Orders
       </h4>
 
       <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
@@ -192,8 +159,10 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
-        <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
+      
+      <div *ngIf="purchaseReport.length === 0" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
       <div class="dark:bg-[#262f45]">
         <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"

@@ -13,7 +13,7 @@
             <label for="typeName" class="block text-[#534E4E] dark:text-textDark my-2">Type Name</label>
             <input id="typeName" name="typeName" [(ngModel)]="productObj.typeName"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                placeholder="Ex : Up County Fruits" #typeNameInput="ngModel" required />
+                placeholder="Ex : Up County Fruits" #typeNameInput="ngModel" required (input)="onTypeNameInput($event)"/>
 
             <!-- Error: Required Field -->
             <div *ngIf="typeNameInput.touched && !productObj.typeName" class="text-red-500 text-sm mt-1">
@@ -29,7 +29,7 @@
 
             <input id="shortCode" name="shortCode" [(ngModel)]="productObj.shortCode" #shortCodeInput="ngModel"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                placeholder="Ex : UCF" required maxlength="3" pattern="^[A-Za-z]{1,3}$" />
+                placeholder="Ex : UCF" required maxlength="3" pattern="^[A-Za-z]{1,3}$" (input)="onShortCodeInput($event)"/>
 
             <!-- Error: Required Field -->
             <div *ngIf="shortCodeInput.touched && shortCodeInput.errors" class="text-red-500 text-sm mt-1">

@@ -34,7 +34,7 @@ interface PackageList {
   styleUrl: './view-package-list.component.css',
 })
 export class ViewPackageListComponent implements OnInit {
-  date: string = '';
+  date: Date | null = null;
   viewPackageList: PackageList[] = [];
   isLoading = false;
   hasData: boolean = true;
@@ -46,6 +46,7 @@ export class ViewPackageListComponent implements OnInit {
   ];
   selectedStatus: any;
   searchtext: string = '';
+  
 
   constructor(
     private router: Router,
@@ -62,9 +63,19 @@ export class ViewPackageListComponent implements OnInit {
     this.router.navigate(['/market/action']);
   }
 
-  fetchAllPackages(searchText: string = this.searchtext, date?: string) {
+  fetchAllPackages(searchText: string = this.searchtext, date?: Date | null) {
     this.isLoading = true;
-    this.viewPackagesList.getAllMarketplacePackages(searchText, date).subscribe(
+    // Trim the search string to remove leading/trailing spaces
+    const trimmedSearch = searchText.trim();
+    let dateString = '';
+    if (date instanceof Date && !isNaN(date.getTime())) {
+      // Format as yyyy-mm-dd in local time
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      dateString = `${year}-${month}-${day}`;
+    }
+    this.viewPackagesList.getAllMarketplacePackages(trimmedSearch, dateString).subscribe(
       (response) => {
         console.log('Package list response:', response);
         this.viewPackageList = response.data.flatMap((group: any) =>
@@ -80,12 +91,14 @@ export class ViewPackageListComponent implements OnInit {
         console.error('Error fetching all Packages', error);
         this.isLoading = false;
         if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
           this.router.navigate(['/login']);
+        } else {
+          Swal.fire('Error', 'Failed to fetch packages.', 'error');
         }
       }
     );
   }
-
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
@@ -151,7 +164,12 @@ export class ViewPackageListComponent implements OnInit {
     );
   }
 
-  onSearch() {
+onSearch() {
+    this.searchtext = this.searchtext.trim(); // Trim leading/trailing spaces
+    if (!this.searchtext) {
+      Swal.fire('Info', 'Please enter a valid search term.', 'info');
+      return;
+    }
     this.fetchAllPackages(this.searchtext, this.date);
   }
 
@@ -161,7 +179,7 @@ export class ViewPackageListComponent implements OnInit {
   }
 
   clearDateFilter() {
-    this.date = '';
+    this.date = null;
     this.fetchAllPackages(this.searchtext);
   }
 
@@ -179,10 +197,14 @@ export class ViewPackageListComponent implements OnInit {
   }
 
   dateFilter() {
-    if (this.date) {
+    if (this.date instanceof Date && !isNaN(this.date.getTime())) {
       this.isLoading = true;
+      const year = this.date.getFullYear();
+      const month = (this.date.getMonth() + 1).toString().padStart(2, '0');
+      const day = this.date.getDate().toString().padStart(2, '0');
+      let dateString = `${year}-${month}-${day}`;
       this.viewPackagesList
-        .getAllMarketplacePackages(this.searchtext, this.date)
+        .getAllMarketplacePackages(this.searchtext, dateString)
         .subscribe(
           (response) => {
             console.log('Filtered package list response:', response);

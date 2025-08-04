@@ -152,6 +152,7 @@ export class ViewComplainComponent implements OnInit {
   }
 
   searchComplain() {
+    this.searchText = this.searchText?.trim() || '';
     this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }

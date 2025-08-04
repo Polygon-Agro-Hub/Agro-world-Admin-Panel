@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -55,6 +56,34 @@ interface CategoryOption {
   styleUrl: './view-crop-group.component.css',
 })
 export class ViewCropGroupComponent {
+  // Properties for input fields
+  cropNameEnglish: string = '';
+  cropNameTamil: string = '';
+  cropNameSinhala: string = '';
+
+  // Allow only English letters
+  allowOnlyEnglish(event: KeyboardEvent): void {
+    const char = event.key;
+    if (!/^[a-zA-Z\s]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+  // Allow only Tamil letters (Unicode range: 0B80–0BFF)
+  allowOnlyTamil(event: KeyboardEvent): void {
+    const char = event.key;
+    if (!/^[\u0B80-\u0BFF\s]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+  // Allow only Sinhala letters (Unicode range: 0D80–0DFF)
+  allowOnlySinhala(event: KeyboardEvent): void {
+    const char = event.key;
+    if (!/^[\u0D80-\u0DFF\s]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
   newCropCalender: NewCropCalender[] = [];
   newCropGroup: NewCropGroup[] = [];
   selectedCrop: any = null;
@@ -75,7 +104,7 @@ export class ViewCropGroupComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeCategories();
@@ -171,6 +200,20 @@ export class ViewCropGroupComponent {
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllCropGroups(this.page);
+  }
+
+
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
+  formatSearchInput(): void {
+    if (this.searchTerm) {
+      this.searchTerm = this.searchTerm.replace(/^\s+/, '');
+    }
   }
 
   deleteCropCalender(id: any) {

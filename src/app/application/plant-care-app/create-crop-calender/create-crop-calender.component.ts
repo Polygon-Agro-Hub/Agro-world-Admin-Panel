@@ -534,6 +534,7 @@
 // }
 
 
+// create-crop-calender.component.ts
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -582,7 +583,7 @@ export class CreateCrop {
     MatSelectModule,
   ],
   templateUrl: './create-crop-calender.component.html',
-  styleUrl: './create-crop-calender.component.css',
+  styleUrls: ['./create-crop-calender.component.css'],
 })
 export class CreateCropCalenderComponent implements OnInit {
   toppingList: District[] = [
@@ -633,8 +634,8 @@ export class CreateCropCalenderComponent implements OnInit {
     private cropCalendarService: CropCalendarService
   ) {
     this.cropForm = this.fb.group({
-      groupId: [''], // Optional
-      varietyId: [''], // Optional
+      groupId: [''],
+      varietyId: [''],
       cultivationMethod: ['', Validators.required],
       natureOfCultivation: ['', Validators.required],
       cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1)]],
@@ -654,7 +655,7 @@ export class CreateCropCalenderComponent implements OnInit {
 
   getAllCropGroups() {
     this.isLoading = true;
-    this.cropCalendarService.fetchAllCropGroups().subscribe({
+    this.cropCalendarService.cropGropForFilter().subscribe({
       next: (response) => {
         this.groupList = response.items;
         this.isLoading = false;
@@ -662,7 +663,7 @@ export class CreateCropCalenderComponent implements OnInit {
       error: () => {
         this.isLoading = false;
         Swal.fire('Error', 'Failed to fetch crop groups.', 'error');
-      }
+      },
     });
   }
 
@@ -680,7 +681,7 @@ export class CreateCropCalenderComponent implements OnInit {
           this.cropForm.get('varietyId')?.setValue('');
           this.isLoading = false;
           Swal.fire('Error', 'Failed to fetch varieties.', 'error');
-        }
+        },
       });
     } else {
       this.varietyList = [];
@@ -694,91 +695,96 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 
   checkDuplicateCropCalendar(formValue: any, excludeId?: number): Promise<boolean> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.isLoading = true;
       const { varietyId, cultivationMethod, natureOfCultivation } = formValue;
 
-      // Skip duplicate check if varietyId is not provided
-      if (!varietyId) {
+      if (!cultivationMethod || !natureOfCultivation) {
         this.isLoading = false;
-        resolve(false);
+        Swal.fire('Error', 'Cultivation Method and Nature of Cultivation are required for duplicate check.', 'error');
+        reject(new Error('Missing required fields for duplicate check'));
         return;
       }
 
       this.cropCalendarService
-        .checkDuplicateCropCalendar(varietyId, cultivationMethod, natureOfCultivation, excludeId)
+        .checkDuplicateCropCalendar(varietyId || '', cultivationMethod, natureOfCultivation, excludeId)
         .subscribe({
           next: (response) => {
             this.isLoading = false;
             resolve(response.exists);
           },
-          error: () => {
+          error: (err) => {
             this.isLoading = false;
             Swal.fire('Error', 'Failed to check for duplicates.', 'error');
-            resolve(false);
+            reject(err);
           },
         });
     });
   }
 
- async onSubmit(): Promise<void> {
-  this.cropForm.markAllAsTouched();
-  if (this.cropForm.invalid) {
-    this.showMissingFieldsAlert();
-    return;
-  }
-
-  const formValue = this.cropForm.value;
-  if (formValue.cropDuration === 0) {
-    Swal.fire('Warning', 'Crop duration in days cannot be 0', 'warning');
-    return;
-  }
-
-  // Check for duplicates
-  const isDuplicate = await this.checkDuplicateCropCalendar(formValue);
-  if (isDuplicate) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Duplicate Crop Calendar',
-      text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists. You cannot upload an XLSX file for a duplicate crop.',
-      confirmButtonText: 'OK',
-      allowOutsideClick: false,
-    });
-    return; // Exit early, no XLSX upload allowed
-  }
-
-  if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
-    formValue.suitableAreas = formValue.suitableAreas.join(', ');
-  }
-
-  const formData = new FormData();
-  Object.keys(formValue).forEach((key) => {
-    if (formValue[key]) {
-      formData.append(key, formValue[key]);
+  async onSubmit(): Promise<void> {
+    this.cropForm.markAllAsTouched();
+    if (this.cropForm.invalid) {
+      this.showMissingFieldsAlert();
+      return;
     }
-  });
 
-  if (this.selectedFile) {
-    formData.append('image', this.selectedFile);
+    const formValue = this.cropForm.value;
+    if (formValue.cropDuration === 0) {
+      Swal.fire('Warning', 'Crop duration in days cannot be 0', 'warning');
+      return;
+    }
+
+    try {
+      const isDuplicate = await this.checkDuplicateCropCalendar(formValue);
+      if (isDuplicate) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Already Exists',
+          text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists.',
+          confirmButtonText: 'OK',
+          allowOutsideClick: false,
+        });
+        return;
+      }
+
+      if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
+        formValue.suitableAreas = formValue.suitableAreas.join(', ');
+      }
+
+      const formData = new FormData();
+      Object.keys(formValue).forEach((key) => {
+        if (formValue[key]) {
+          formData.append(key, formValue[key]);
+        }
+      });
+
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+
+      this.isLoading = true;
+      this.cropCalendarService.createCropCalendar(formData).subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
+          this.cropIdNew = res.cropId;
+          if (this.cropIdNew !== null) {
+            this.openXlsxUploadDialog(this.cropIdNew);
+          } else {
+            Swal.fire('Error', 'Unable to process XLSX upload due to missing Crop ID', 'error');
+          }
+        },
+        error: () => {
+          this.isLoading = false;
+          Swal.fire('Error', 'Failed to create crop calendar.', 'error');
+        },
+      });
+    } catch (err) {
+      this.isLoading = false;
+      Swal.fire('Error', 'Failed to perform duplicate check.', 'error');
+    }
   }
 
-  this.isLoading = true;
-  this.cropCalendarService.createCropCalendar(formData).subscribe({
-    next: (res: any) => {
-      this.isLoading = false;
-      this.cropIdNew = res.cropId;
-      if (this.cropIdNew !== null) {
-        this.openXlsxUploadDialog(this.cropIdNew); // Only open dialog if no duplicate
-      } else {
-        Swal.fire('Error', 'Unable to process XLSX upload due to missing Crop ID', 'error');
-      }
-    },
-    error: () => {
-      this.isLoading = false;
-      Swal.fire('Error', 'Failed to create crop calendar.', 'error');
-    },
-  });
-}
   async updateCropCalendar(): Promise<void> {
     this.cropForm.markAllAsTouched();
     if (this.cropForm.invalid) {
@@ -787,47 +793,51 @@ export class CreateCropCalenderComponent implements OnInit {
     }
 
     const formValue = this.cropForm.value;
-    // Check for duplicates, excluding the current cropId
-    const isDuplicate = await this.checkDuplicateCropCalendar(formValue, this.cropId!);
-    if (isDuplicate) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Duplicate Crop Calendar',
-        text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists.',
-        confirmButtonText: 'OK',
-        allowOutsideClick: false,
+    try {
+      const isDuplicate = await this.checkDuplicateCropCalendar(formValue, this.cropId!);
+      if (isDuplicate) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Already Exists',
+          text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists.',
+          confirmButtonText: 'OK',
+          allowOutsideClick: false,
+        });
+        return;
+      }
+
+      if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
+        formValue.suitableAreas = formValue.suitableAreas.join(', ');
+      }
+
+      const formData = new FormData();
+      formData.append('method', formValue.cultivationMethod);
+      formData.append('natOfCul', formValue.natureOfCultivation);
+      formData.append('cropDuration', formValue.cropDuration);
+      formData.append('suitableAreas', formValue.suitableAreas);
+      if (formValue.groupId) formData.append('groupId', formValue.groupId);
+      if (formValue.varietyId) formData.append('varietyId', formValue.varietyId);
+
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+
+      this.isLoading = true;
+      this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe({
+        next: () => {
+          this.isLoading = false;
+          Swal.fire('Success', 'Crop Calendar updated successfully!', 'success');
+          this.router.navigate(['/plant-care/action/view-crop-calender']);
+        },
+        error: () => {
+          this.isLoading = false;
+          Swal.fire('Error', 'Failed to update crop calendar.', 'error');
+        },
       });
-      return;
+    } catch (err) {
+      this.isLoading = false;
+      Swal.fire('Error', 'Failed to perform duplicate check.', 'error');
     }
-
-    if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
-      formValue.suitableAreas = formValue.suitableAreas.join(', ');
-    }
-
-    const formData = new FormData();
-    formData.append('method', formValue.cultivationMethod);
-    formData.append('natOfCul', formValue.natureOfCultivation);
-    formData.append('cropDuration', formValue.cropDuration);
-    formData.append('suitableAreas', formValue.suitableAreas);
-    if (formValue.groupId) formData.append('groupId', formValue.groupId);
-    if (formValue.varietyId) formData.append('varietyId', formValue.varietyId);
-
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
-
-    this.isLoading = true;
-    this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe({
-      next: () => {
-        this.isLoading = false;
-        Swal.fire('Success', 'Crop Calendar updated successfully!', 'success');
-        this.router.navigate(['/plant-care/action/view-crop-calender']);
-      },
-      error: () => {
-        this.isLoading = false;
-        Swal.fire('Error', 'Failed to update crop calendar.', 'error');
-      },
-    });
   }
 
   private showMissingFieldsAlert(): void {

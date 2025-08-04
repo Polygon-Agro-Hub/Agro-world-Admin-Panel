@@ -10,6 +10,9 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { Country, COUNTRIES } from '../../../../assets/country-data';
 
 @Component({
   selector: 'app-edit-collection-center',
@@ -19,6 +22,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
     ReactiveFormsModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule, InputTextModule
   ],
   templateUrl: './edit-collection-center.component.html',
   styleUrl: './edit-collection-center.component.css',
@@ -40,14 +44,17 @@ export class EditCollectionCenterComponent implements OnInit {
   isView: boolean = false;
 
   leadingSpaceError: boolean = false;
-specialCharOrNumberError: boolean = false;
+  specialCharOrNumberError: boolean = false;
 
-allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
+  allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
-  phone01: false,
-  phone02: false,
-};
+    phone01: false,
+    phone02: false,
+  };
 
+  countries: Country[] = COUNTRIES;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
 
   constructor(
     private collectionCenterService: CollectionCenterService,
@@ -55,6 +62,9 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
     private route: ActivatedRoute
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
+    const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
   }
 
   back(): void {
@@ -64,6 +74,10 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   ngOnInit(): void {
     this.fetchCollectionCenter();
     this.getAllCompanies();
+  }
+
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/24x18/${code}.png`;
   }
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
@@ -102,10 +116,7 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
     },
     {
       province: 'North Western',
-      district: [
-        { districtName: 'Kurunegala' },
-        { districtName: 'Puttalam' },
-      ],
+      district: [{ districtName: 'Kurunegala' }, { districtName: 'Puttalam' }],
     },
     {
       province: 'Northern',
@@ -119,10 +130,7 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
     },
     {
       province: 'Sabaragamuwa',
-      district: [
-        { districtName: 'Kegalle' },
-        { districtName: 'Rathnapura' },
-      ],
+      district: [{ districtName: 'Kegalle' }, { districtName: 'Rathnapura' }],
     },
     {
       province: 'Southern',
@@ -130,15 +138,11 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
         { districtName: 'Galle' },
         { districtName: 'Hambantota' },
         { districtName: 'Matara' },
-
       ],
     },
     {
       province: 'Uva',
-      district: [
-        { districtName: 'Badulla' },
-        { districtName: 'Moneragala' },
-      ],
+      district: [{ districtName: 'Badulla' }, { districtName: 'Moneragala' }],
     },
     {
       province: 'Western',
@@ -155,50 +159,50 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
       this.isPhoneInvalidMap[key] = false;
       return;
     }
-  
+
     const firstDigit = input.charAt(0);
     const prefix = input.substring(0, 2);
     const isValidPrefix = this.allowedPrefixes.includes(prefix);
     const isValidLength = input.length === 9;
-  
+
     if (firstDigit !== '7') {
       this.isPhoneInvalidMap[key] = true;
       return;
     }
-  
+
     if (!isValidPrefix && input.length >= 2) {
       this.isPhoneInvalidMap[key] = true;
       return;
     }
-  
+
     if (input.length === 9 && isValidPrefix) {
       this.isPhoneInvalidMap[key] = false;
       return;
     }
-  
+
     this.isPhoneInvalidMap[key] = false;
   }
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     let input = inputElement.value;
-  
+
     // Reset errors
     this.leadingSpaceError = false;
     this.specialCharOrNumberError = false;
-  
+
     // Check for leading space
     if (input.startsWith(' ')) {
       this.leadingSpaceError = true;
       input = input.trimStart(); // remove leading space
     }
-  
+
     // Only allow English letters and spaces
     const validInput = input.replace(/[^A-Za-z ]/g, '');
     if (input !== validInput) {
       this.specialCharOrNumberError = true;
     }
-  
+
     // Capitalize the first letter
     if (validInput.length > 0) {
       validInput.trimStart(); // ensure no leading space
@@ -207,10 +211,45 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
     } else {
       this.centerFetchData.centerName = '';
     }
-  
+
     // Update input element value to reflect filtered result
     inputElement.value = this.centerFetchData.centerName;
   }
+
+  onBuildingNumberInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const rawValue = inputElement.value;
+    const trimmedValue = rawValue.replace(/^\s+/, '');
+
+    if (rawValue !== trimmedValue) {
+      inputElement.value = trimmedValue; // Update input field
+    }
+
+    this.centerFetchData.buildingNumber = trimmedValue;
+
+    console.log('Building Number:', this.centerFetchData.buildingNumber);
+  }
+
+  onStreetNameInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const rawValue = inputElement.value;
+    const trimmedValue = rawValue.replace(/^\s+/, '');
+
+    if (rawValue !== trimmedValue) {
+      inputElement.value = trimmedValue; // Update input field
+    }
+
+    this.centerFetchData.street = trimmedValue;
+
+    console.log('Building Number:', this.centerFetchData.street);
+  }
+
+  // onStreetNameChange(value: string): void {
+  //   this.centerFetchData.street = value.replace(/^\s+/, '');
+  // }
+  // onCityNameChange(value: string): void {
+  //   this.centerFetchData.city = value.replace(/^\s+/, '');
+  // }
 
   onSubmit() {
     this.collectionCenterService
@@ -319,7 +358,7 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
       showConfirmButton: false,
     });
     this.fetchCollectionCenter();
-    this.router.navigate(['/collection-hub/view-collection-centers']);
+    this.router.navigate(['/collection-hub/agro-world-centers']);
   }
 
   updateRegCode() {
@@ -375,6 +414,21 @@ allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
           () => {}
         );
     }
+  }
+
+  onCityInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const rawValue = inputElement.value;
+    const trimmedValue = rawValue.replace(/^\s+/, '');
+
+    if (rawValue !== trimmedValue) {
+      inputElement.value = trimmedValue; // visually remove leading spaces
+    }
+
+    this.centerFetchData.city = trimmedValue;
+
+    // Now call your original logic
+    this.onCityChange();
   }
 
   onCityChange() {

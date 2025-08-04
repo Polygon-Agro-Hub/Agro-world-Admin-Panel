@@ -59,7 +59,7 @@ export class CreateFeedbackComponent {
     private router: Router,
     private plantcareUsersService: PlantcareUsersService,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadNextNumber();
@@ -142,6 +142,152 @@ export class CreateFeedbackComponent {
       );
   }
 
+  preventLeadingSpace(event: KeyboardEvent, currentValue: string | number): void {
+    const value = String(currentValue || '').trim();
+    if (value.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+
+  preventInvalidEnglishAlphanumericCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys (backspace, delete, tab, escape, enter, etc.)
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow English letters, numbers, spaces, and common punctuation
+    const englishAlphanumericRegex = /^[a-zA-Z0-9\s.,!?()-]$/;
+    if (!englishAlphanumericRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Validate and filter pasted English content
+  validateEnglishPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const englishAlphanumericRegex = /[a-zA-Z0-9\s.,!?()-]/g;
+
+    // Filter out invalid characters, keeping only valid ones
+    const filteredText = pastedText.match(englishAlphanumericRegex)?.join('') || '';
+
+    // Insert the filtered text at cursor position
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
+    const currentValue = target.value;
+
+    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+
+    // Set cursor position after inserted text
+    const newPosition = start + filteredText.length;
+    target.setSelectionRange(newPosition, newPosition);
+
+    // Trigger input event for Angular form validation
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // Prevent invalid Sinhala characters (allow Sinhala unicode, numbers, spaces, and common punctuation)
+  preventInvalidSinhalaAlphanumericCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow Sinhala characters, numbers, spaces, and common punctuation
+    const sinhalaAlphanumericRegex = /^[\u0D80-\u0DFF0-9\s.,!?()-]$/;
+    if (!sinhalaAlphanumericRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Validate and filter pasted Sinhala content
+  validateSinhalaPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const sinhalaAlphanumericRegex = /[\u0D80-\u0DFF0-9\s.,!?()-]/g;
+
+    // Filter out invalid characters, keeping only valid ones
+    const filteredText = pastedText.match(sinhalaAlphanumericRegex)?.join('') || '';
+
+    // Insert the filtered text at cursor position
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
+    const currentValue = target.value;
+
+    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+
+    // Set cursor position after inserted text
+    const newPosition = start + filteredText.length;
+    target.setSelectionRange(newPosition, newPosition);
+
+    // Trigger input event for Angular form validation
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // Prevent invalid Tamil characters (allow Tamil unicode, numbers, spaces, and common punctuation)
+  preventInvalidTamilAlphanumericCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow Tamil characters, numbers, spaces, and common punctuation
+    const tamilAlphanumericRegex = /^[\u0B80-\u0BFF0-9\s.,!?()-]$/;
+    if (!tamilAlphanumericRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Validate and filter pasted Tamil content
+  validateTamilPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const tamilAlphanumericRegex = /[\u0B80-\u0BFF0-9\s.,!?()-]/g;
+
+    // Filter out invalid characters, keeping only valid ones
+    const filteredText = pastedText.match(tamilAlphanumericRegex)?.join('') || '';
+
+    // Insert the filtered text at cursor position
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
+    const currentValue = target.value;
+
+    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+
+    // Set cursor position after inserted text
+    const newPosition = start + filteredText.length;
+    target.setSelectionRange(newPosition, newPosition);
+
+    // Trigger input event for Angular form validation
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+
+
   getAllFeedbacks() {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -158,7 +304,7 @@ export class CreateFeedbackComponent {
         (response) => {
           this.feebackList = response.feedbacks;
         },
-        () => {}
+        () => { }
       );
   }
 

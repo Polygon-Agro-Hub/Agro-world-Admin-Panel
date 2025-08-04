@@ -1,3 +1,6 @@
+
+
+
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -8,7 +11,7 @@ import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
-
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 interface Bank {
   ID: number;
   name: string;
@@ -30,11 +33,25 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule,
   ],
   templateUrl: './edit-distribution-officer.component.html',
   styleUrl: './edit-distribution-officer.component.css',
 })
 export class EditDistributionOfficerComponent implements OnInit {
+saveNewPassword() {
+throw new Error('Method not implemented.');
+}
+newPassword: any;
+confirmPassword: any;
+openResetPasswordModal() {
+throw new Error('Method not implemented.');
+}
+resetPassword() {
+throw new Error('Method not implemented.');
+}
+
+  public duplicatePhoneError = false;
   officerId: number | null = null;
   isLoading = false;
   selectedFile: File | null = null;
@@ -96,6 +113,7 @@ export class EditDistributionOfficerComponent implements OnInit {
   selectedBranchId: number | null = null;
   allBranches: BranchesData = {};
   errorMessage: string = '';
+bankTouched: any;
 
   constructor(
     private router: Router,
@@ -118,6 +136,16 @@ export class EditDistributionOfficerComponent implements OnInit {
       }
     });
   }
+
+  
+blockLeadingSpace(event: KeyboardEvent, field: string) {
+  const value = this.personalData[field] || '';
+
+  // If the first character is empty and user presses space, block it
+  if (value.length === 0 && event.key === ' ') {
+    event.preventDefault();
+  }
+}
 
   loadDistributionHeadData(id: number): void {
     this.isLoading = true;
@@ -163,6 +191,11 @@ export class EditDistributionOfficerComponent implements OnInit {
 
         // Set employee type
         this.empType = res.data.empType;
+        // Always set confirmAccNumber to the fetched accNumber
+        this.personalData.confirmAccNumber = res.data.accNumber;
+
+        // Check for duplicate numbers on load
+        this.checkDuplicatePhoneNumbers();
 
         this.isLoading = false;
       },
@@ -172,6 +205,64 @@ export class EditDistributionOfficerComponent implements OnInit {
       }
     );
   }
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'): void {
+  let value = this.personalData[field] || '';
+
+  // Remove non-English letters/spaces
+  value = value.replace(/[^A-Za-z ]/g, '');
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // Capitalize first letter
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  this.personalData[field] = value;
+}
+blockPhoneLength(event: KeyboardEvent, value: string) {
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+
+  // Allow navigation keys
+  if (allowedKeys.includes(event.key)) return;
+
+  // Block non-numeric keys
+  if (!/^[0-9]$/.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Block input if already 9 digits
+  if (value && value.length >= 9) {
+    event.preventDefault();
+  }
+}
+
+// Trim input to 9 digits after input (for paste or autofill)
+enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
+  const value = event.target.value || '';
+  if (value.length > 9) {
+    this.personalData[field] = value.slice(0, 9);
+  }
+}
+
+
+
+
+blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
+  const key = event.key;
+  const allowed = /^[A-Za-z ]$/;
+
+  if (!allowed.test(key)) {
+    event.preventDefault();
+  }
+
+  // Block space if first character
+  if (key === ' ' && currentValue.length === 0) {
+    event.preventDefault();
+  }
+}
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -343,6 +434,17 @@ export class EditDistributionOfficerComponent implements OnInit {
     return phoneRegex.test(phone);
   }
 
+  checkDuplicatePhoneNumbers(): void {
+    const phone1 = this.personalData.phoneNumber01 || '';
+    const phone2 = this.personalData.phoneNumber02 || '';
+    // Show error if both numbers are filled and equal, regardless of codes
+    if (phone1 && phone2 && phone1 === phone2) {
+      this.duplicatePhoneError = true;
+    } else {
+      this.duplicatePhoneError = false;
+    }
+  }
+
   isValidNIC(nic: string): boolean {
     const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
     return nicRegex.test(nic);
@@ -369,6 +471,12 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    // Block navigation if duplicate phone numbers
+    this.checkDuplicatePhoneNumbers();
+    if (this.duplicatePhoneError) {
+      Swal.fire('Error', "Company Contact Number - 1 and 2 can't be the same", 'error');
+      return;
+    }
     this.selectedPage = page;
   }
 
@@ -405,9 +513,8 @@ export class EditDistributionOfficerComponent implements OnInit {
     );
   }
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
+ updateProvince(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
     );
@@ -420,7 +527,9 @@ export class EditDistributionOfficerComponent implements OnInit {
 
   onBankChange() {
     if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      const branches = this.allBranches[this.selectedBankId.toString()] || [];
+      // Sort branches alphabetically by name
+      this.branches = branches.slice().sort((a, b) => a.name.localeCompare(b.name));
       const selectedBank = this.banks.find(
         (bank) => bank.ID === this.selectedBankId
       );
@@ -451,6 +560,11 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   onSubmit() {
+    this.checkDuplicatePhoneNumbers();
+    if (this.duplicatePhoneError) {
+      Swal.fire('Error', "Company Contact Number - 1 and 2 can't be the same", 'error');
+      return;
+    }
     if (
       !this.personalData.confirmAccNumber ||
       this.personalData.confirmAccNumber.toString().trim() === '' ||
@@ -461,7 +575,7 @@ export class EditDistributionOfficerComponent implements OnInit {
     }
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to update the distribution center head?',
+      text: 'Do you want to update the Distribution Centre Head?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, update it!',
@@ -568,11 +682,18 @@ export class EditDistributionOfficerComponent implements OnInit {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+        // Sort banks alphabetically by name
+        this.banks = data.slice().sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => {}
     );
   }
+
+  capitalizeV(): void {
+  if (this.personalData.nic) {
+    this.personalData.nic = this.personalData.nic.replace(/v/g, 'V');
+  }
+}
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
@@ -585,6 +706,7 @@ export class EditDistributionOfficerComponent implements OnInit {
 }
 
 class Personal {
+  [key: string]: any;
   jobRole: string = 'Distribution Center Head';
   empId!: string;
   centerId!: number;
@@ -632,3 +754,4 @@ class DistributionHead {
   firstNameEnglish!: string;
   lastNameEnglish!: string;
 }
+

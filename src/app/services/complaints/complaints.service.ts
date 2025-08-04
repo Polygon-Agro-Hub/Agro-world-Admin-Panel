@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environment/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 import { TokenService } from "../token/services/token.service";
 import { catchError } from 'rxjs/operators';
@@ -170,34 +170,48 @@ fetchComplaintCategories(): Observable<any> {
     );
   }
 
-  addNewApplication(applicationName: string): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      "Content-Type": "application/json",
-    });
-    return this.http.post(
-      `${this.apiUrl}complain/add-new-application/${applicationName}`,
-      {
-        headers,
-      },
-    );
+addNewApplication(applicationName: string): Observable<any> {
+  const headers = this.getHeaders();
+  if (!headers) {
+    return throwError(() => new Error('No authentication token found'));
+  }
+  return this.http.post(
+    `${this.apiUrl}complain/add-new-application/${applicationName}`,
+    {},       // Empty body, or add body if needed
+    { headers }  // Pass headers here properly
+  );
+}
+getApplicationNameById(appId: number) {
+  const headers = this.getHeaders(); // Your method to get auth token headers
+  if (!headers) {
+    return throwError(() => new Error('No authentication token found'));
+  }
+  return this.http.get<{ appName: string }>(
+    `${this.apiUrl}complain/get-application-name/${appId}`,
+    { headers }
+  );
+}
+
+
+
+
+editApplication(systemAppId: number, applicationName: string): Observable<any> {
+  const headers = this.getHeaders();
+  if (!headers) {
+    return throwError(() => new Error('No authentication token found'));
   }
 
-  editApplication(
-    systemAppId: number,
-    applicationName: string,
-  ): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      "Content-Type": "application/json",
-    });
-    return this.http.post(
-      `${this.apiUrl}complain/edit-application/?systemAppId=${systemAppId}&applicationName=${applicationName}`,
-      {
-        headers,
-      },
-    );
-  }
+  const params = new HttpParams()
+    .set('systemAppId', systemAppId.toString())
+    .set('applicationName', applicationName);
+
+  return this.http.post(
+    `${this.apiUrl}complain/edit-application/`,
+    {}, // If your backend uses POST, keep empty body
+    { headers, params }
+  );
+}
+
 
   deleteApplicationById(systemAppId: number): Observable<any> {
     const headers = new HttpHeaders({

@@ -1,13 +1,11 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div class="overflow-x-auto">
-  <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div>
     <div class="pt-5 px-12 pb-5 min-w-[1550px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All Orders ({{ totalItems }})
-          </h2>
+            All Orders ({{ totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems }}) </h2>
         </div>
 
         <div class="flex items-center flex-wrap gap-4">
@@ -40,7 +38,7 @@
         </div>
       </div>
       <div class="w-full overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
+        <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
               <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
@@ -87,8 +85,9 @@
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.invNo || "N/A" }}
               </td>
-              <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                {{ order.orderApp }}
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.orderApp === 'Dash' ? 'SalesDash' : (order.orderApp === 'MarketPlace' ? 'Marketplace' :
+                order.orderApp) }}
               </td>
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ order.total | number : "1.2-2" }}
@@ -100,12 +99,14 @@
                 {{ order.sheduleDate | date : "mediumDate" }}
               </td>
               <td class="px-4 py-3 text-center">
-                <span class="inline-block bg-green-100 text-green-800 font-medium rounded-md px-4 py-2 text-xs text-center w-32">
+                <span
+                  class="inline-block bg-green-100 text-green-800 font-medium rounded-md px-4 py-2 text-xs text-center w-32">
                   {{ order.packingStatus || "N/A" }}
                 </span>
               </td>
               <td class="px-4 py-3 text-center">
-                <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewPremadePackages(order.processOrderId)">
+                <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                  (click)="viewPremadePackages(order.processOrderId)">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -114,18 +115,18 @@
                 </button>
               </td>
             </tr>
-            <tr *ngIf="orders.length === 0 && !isLoading">
-              <td colspan="8" class="px-4 py-6 text-center text-textLight dark:text-textDark">
-                No orders found
-              </td>
-            </tr>
           </tbody>
         </table>
-        <div class="dark:bg-[#262f45]">
+        <div *ngIf="hasData" class="dark:bg-[#262f45]">
           <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
             [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
             [screenReaderCurrentLabel]="'Youre on page'">
           </pagination-controls>
+        </div>
+
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+          <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+          <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
       </div>
     </div>

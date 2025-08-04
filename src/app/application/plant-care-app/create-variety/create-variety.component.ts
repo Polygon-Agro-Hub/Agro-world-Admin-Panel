@@ -173,6 +173,74 @@ export class CreateVarietyComponent implements OnInit {
     }
   }
 
+  onVarietyNameInput(event: any, field: string): void {
+    let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    if (field === 'english') {
+      this.cropForm.patchValue({ varietyNameEnglish: value });
+    } else if (field === 'sinhala') {
+      this.cropForm.patchValue({ varietyNameSinhala: value });
+    } else if (field === 'tamil') {
+      this.cropForm.patchValue({ varietyNameTamil: value });
+    }
+
+    event.target.value = value;
+  }
+
+  onDescriptionInput(event: any, field: string): void {
+    let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+
+    if (field === 'english') {
+      this.cropForm.patchValue({ descriptionEnglish: value });
+    } else if (field === 'sinhala') {
+      this.cropForm.patchValue({ descriptionSinhala: value });
+    } else if (field === 'tamil') {
+      this.cropForm.patchValue({ descriptionTamil: value });
+    }
+
+    event.target.value = value;
+  }
+
+  onEditVarietyNameInput(event: any, field: string): void {
+    let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    if (field === 'english') {
+      this.newsItems[0].varietyNameEnglish = value;
+    } else if (field === 'sinhala') {
+      this.newsItems[0].varietyNameSinhala = value;
+    } else if (field === 'tamil') {
+      this.newsItems[0].varietyNameTamil = value;
+    }
+
+    event.target.value = value;
+  }
+
+  onEditDescriptionInput(event: any, field: string): void {
+    let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+
+    if (field === 'english') {
+      this.newsItems[0].descriptionEnglish = value;
+    } else if (field === 'sinhala') {
+      this.newsItems[0].descriptionSinhala = value;
+    } else if (field === 'tamil') {
+      this.newsItems[0].descriptionTamil = value;
+    }
+
+    event.target.value = value;
+  }
+
   onSubmit() {
     const cropValues = this.cropForm.value;
     if (
@@ -243,10 +311,10 @@ export class CreateVarietyComponent implements OnInit {
           title: 'Validation Errors',
           html: `<ul style="text-align: center; padding: 0; list-style: none;">
                     ${errorMessages
-                      .map(
-                        (msg) => `<li style="margin-bottom: 5px;">${msg}</li>`
-                      )
-                      .join('')}
+              .map(
+                (msg) => `<li style="margin-bottom: 5px;">${msg}</li>`
+              )
+              .join('')}
                  </ul>`,
           icon: 'warning',
           confirmButtonText: 'OK',
@@ -287,7 +355,7 @@ export class CreateVarietyComponent implements OnInit {
         Swal.fire(
           'Error',
           error.error?.message ||
-            'An error occurred while creating the crop variety.',
+          'An error occurred while creating the crop variety.',
           'error'
         );
       },
@@ -310,6 +378,149 @@ export class CreateVarietyComponent implements OnInit {
       }
     });
   }
+
+
+  // Add these methods to your component class
+
+  // Prevent invalid English characters (allow letters, numbers, spaces, and common punctuation)
+  preventInvalidEnglishAlphanumericCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys (backspace, delete, tab, escape, enter, etc.)
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow English letters, numbers, spaces, and common punctuation
+    const englishAlphanumericRegex = /^[a-zA-Z0-9\s.,!?()-]$/;
+    if (!englishAlphanumericRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Validate and filter pasted English content
+  validateEnglishPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const englishAlphanumericRegex = /[a-zA-Z0-9\s.,!?()-]/g;
+
+    // Filter out invalid characters, keeping only valid ones
+    const filteredText = pastedText.match(englishAlphanumericRegex)?.join('') || '';
+
+    // Insert the filtered text at cursor position
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
+    const currentValue = target.value;
+
+    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+
+    // Set cursor position after inserted text
+    const newPosition = start + filteredText.length;
+    target.setSelectionRange(newPosition, newPosition);
+
+    // Trigger input event for Angular form validation
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // Prevent invalid Sinhala characters (allow Sinhala unicode, numbers, spaces, and common punctuation)
+  preventInvalidSinhalaAlphanumericCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow Sinhala characters, numbers, spaces, and common punctuation
+    const sinhalaAlphanumericRegex = /^[\u0D80-\u0DFF0-9\s.,!?()-]$/;
+    if (!sinhalaAlphanumericRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Validate and filter pasted Sinhala content
+  validateSinhalaPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const sinhalaAlphanumericRegex = /[\u0D80-\u0DFF0-9\s.,!?()-]/g;
+
+    // Filter out invalid characters, keeping only valid ones
+    const filteredText = pastedText.match(sinhalaAlphanumericRegex)?.join('') || '';
+
+    // Insert the filtered text at cursor position
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
+    const currentValue = target.value;
+
+    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+
+    // Set cursor position after inserted text
+    const newPosition = start + filteredText.length;
+    target.setSelectionRange(newPosition, newPosition);
+
+    // Trigger input event for Angular form validation
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // Prevent invalid Tamil characters (allow Tamil unicode, numbers, spaces, and common punctuation)
+  preventInvalidTamilAlphanumericCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow Tamil characters, numbers, spaces, and common punctuation
+    const tamilAlphanumericRegex = /^[\u0B80-\u0BFF0-9\s.,!?()-]$/;
+    if (!tamilAlphanumericRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Validate and filter pasted Tamil content
+  validateTamilPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const tamilAlphanumericRegex = /[\u0B80-\u0BFF0-9\s.,!?()-]/g;
+
+    // Filter out invalid characters, keeping only valid ones
+    const filteredText = pastedText.match(tamilAlphanumericRegex)?.join('') || '';
+
+    // Insert the filtered text at cursor position
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const start = target.selectionStart || 0;
+    const end = target.selectionEnd || 0;
+    const currentValue = target.value;
+
+    target.value = currentValue.substring(0, start) + filteredText + currentValue.substring(end);
+
+    // Set cursor position after inserted text
+    const newPosition = start + filteredText.length;
+    target.setSelectionRange(newPosition, newPosition);
+
+    // Trigger input event for Angular form validation
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -397,7 +608,7 @@ export class CreateVarietyComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Market Price updated successfully!',
+            text: 'Variety updated successfully!',
           });
           this.router.navigate(['/plant-care/action/view-crop-group']);
         },

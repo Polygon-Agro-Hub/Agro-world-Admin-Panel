@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { Calendar, CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-assign-center-target',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, CalendarModule],
   templateUrl: './assign-center-target.component.html',
   styleUrl: './assign-center-target.component.css',
 })
@@ -17,7 +18,7 @@ export class AssignCenterTargetComponent {
   assignCropsArr: AssignCrops[] = [];
   newTargetObj: NewTarget = new NewTarget();
   searchText: string = '';
-  selectDate: string = new Date().toISOString().split('T')[0];
+  // selectDate: string = new Date().toISOString().split('T')[0];
   isDateValid: boolean = true;
   countCrops: number = 0;
   isNew: boolean = true;
@@ -26,43 +27,73 @@ export class AssignCenterTargetComponent {
   hasData: boolean = false;
   isLoading = false;
 
+  selectDate: Date | null = new Date();
+
   constructor(private TargetSrv: TargetService) {}
 
   ngOnInit(): void {
     this.fetchSavedCenterCrops();
   }
 
+  onDateChange(date: Date | null) {
+    this.selectDate = date;
+    console.log('selectDate:', this.selectDate);
+    this.fetchSavedCenterCrops();
+  }
+
   fetchSavedCenterCrops() {
     this.isLoading = true;
-    this.validateSelectDate();
+  
+    if (!this.selectDate || !this.validateSelectDate(this.selectDate)) {
+      this.isDateValid = false;
+      console.log('isDateValid', this.isDateValid)
+      this.isLoading = false;
+      return;
+    }
+  
+    this.isDateValid = true;
+    const formattedDate = this.formatDate(this.selectDate);
+    console.log('formatDate', formattedDate)
+  
     this.TargetSrv.getSavedCenterCrops(
       this.centerDetails.centerId,
-      this.selectDate,
+      formattedDate,     // send string to service
       this.searchText
     ).subscribe((res) => {
       this.isLoading = false;
-
+  
       this.assignCropsArr = res.result.data;
       this.countCrops = res.result.data.length;
       this.isNew = res.result.isNew;
       this.companyCenterId = res.companyCenterId;
-      this.hasData = res.result.data.length > 0 ? true : false;
+      this.hasData = res.result.data.length > 0;
     });
   }
+  
 
-  validateSelectDate() {
-    const selectedDate = new Date(this.selectDate);
+  validateSelectDate(date: Date): boolean {
+    const selectedDate = new Date(date);
     const today = new Date();
-
+  
+    // Reset time portion for comparison
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
-
-    if (selectedDate < today) {
-      this.isDateValid = false;
-    } else {
-      this.isDateValid = true;
-    }
+  
+    return selectedDate >= today;
   }
+  
+
+  private formatDate(date: Date | null | undefined): string {
+    if (!date) {
+      return '';
+    }
+  
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // months are 0-based
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  
 
   onSearch() {
     this.fetchSavedCenterCrops();
@@ -140,7 +171,7 @@ export class AssignCenterTargetComponent {
 
   onSubmit() {
     this.newTargetObj.companyCenterId = this.companyCenterId;
-    this.newTargetObj.date = this.selectDate;
+    this.newTargetObj.date = this.formatDate(this.selectDate);
     this.newTargetObj.crop = this.assignCropsArr;
 
     Swal.fire({

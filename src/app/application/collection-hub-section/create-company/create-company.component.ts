@@ -913,31 +913,100 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  allowOnlyEnglish(event: KeyboardEvent) {
-    const char = event.key;
-    if (!/^[A-Za-z\s]*$/.test(char)) {
-      event.preventDefault();
-    }
+allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
+  const char = event.key;
+  const code = char.charCodeAt(0);
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  // Allow control keys
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits
+  if (!isNaN(Number(char))) {
+    event.preventDefault();
+    return;
   }
 
-  allowOnlySinhala(event: KeyboardEvent) {
-    const char = event.key;
-    const code = char.charCodeAt(0);
-    if (code < 0x0D80 || code > 0x0DFF) {
-      event.preventDefault();
-    }
+  // Block first space
+  if (char === ' ' && inputValue.length === 0) {
+    event.preventDefault();
+    return;
   }
 
-  allowOnlyTamil(event: KeyboardEvent) {
-    const char = event.key;
-    const code = char.charCodeAt(0);
-    if (code < 0x0B80 || code > 0x0BFF) {
-      event.preventDefault();
-    }
+  // Sinhala Unicode range: U+0D80 to U+0DFF
+  const isSinhala = code >= 0x0D80 && code <= 0x0DFF;
+
+  // Allow special characters (not letters/digits/space)
+  const isSpecialChar = /[^\w\s]/.test(char); // symbols like !@#$ etc.
+
+  if (!isSinhala && !isSpecialChar && char !== ' ') {
+    event.preventDefault();
   }
-  allowOnlyEnglishLetters(event: KeyboardEvent): void {
-    const regex = /^[A-Za-z\s'-]$/;
-    const key = event.key;
+}
+
+
+
+
+allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits
+  if (/^[0-9]$/.test(char)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Block first space
+  if (char === ' ' && inputValue.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow all letters, spaces, and special characters
+}
+
+
+
+allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
+  const char = event.key;
+  const code = char.charCodeAt(0);
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  // Allow control keys
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits
+  if (!isNaN(Number(char))) {
+    event.preventDefault();
+    return;
+  }
+
+  // Block first space
+  if (char === ' ' && inputValue.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  // Tamil Unicode Range: U+0B80–U+0BFF
+  const isTamil = code >= 0x0B80 && code <= 0x0BFF;
+
+  // Allow if Tamil character or special character (excluding digits)
+  const isSpecialChar = /[^\w\s]/.test(char); // matches punctuation & symbols
+
+  if (!isTamil && !isSpecialChar && char !== ' ') {
+    event.preventDefault();
+  }
+}
+
+
+
+allowOnlyEnglishLetters(event: KeyboardEvent): void {
+  const regex = /^[^\d]$/;
+
+  const key = event.key;
 
     if (!regex.test(key) && key.length === 1) {
       event.preventDefault();
@@ -957,8 +1026,8 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  allowOnlyValidNameCharacters(event: KeyboardEvent): void {
-    const allowedPattern = /^[a-zA-Z\s'-]$/;
+allowOnlyValidNameCharacters(event: KeyboardEvent): void {
+  const allowedPattern = /^[a-zA-Z\s]$/;
 
     const key = event.key;
 

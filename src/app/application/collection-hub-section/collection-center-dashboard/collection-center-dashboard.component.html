@@ -10,17 +10,19 @@
   <div
     class="flex justify-center items-center w-1/5 py-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg"
   >
-    <!-- <p class="font-bold text-black text-lg dark:text-white">
-      {{ centerNameObj.centerName }}
-    </p> -->
+    <p class="font-bold text-black text-lg dark:text-white">
+  ({{ centerNameObj.regCode }})
+    </p>
   </div>
 
   <div
-    class="flex flex-row items-center justify-between w-2/5 gap-14 px-10 py-4 bg-tileLight shadow-lg rounded-lg cursor-pointer"
+    class="flex flex-row items-center justify-between w-2/5 gap-14 px-10 py-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
     (click)="navigateToMarketPrice()"
   >
     <div class="w-3 h-3"></div>
-    <p class="font-bold text-black text-lg">View Market Price</p>
+    <div class="flex flex-col justify-center items-center">
+      <p class="font-bold text-black dark:text-white text-lg">View Market Price</p>
+    </div>
     <i
       class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] text-xl"
     ></i>
@@ -30,7 +32,7 @@
     class="flex flex-row items-center justify-center w-2/5 py-4 bg-[#415CFF] shadow-lg rounded-lg cursor-pointer"
     (click)="navigateAddTarget()"
   >
-    <p class="font-bold text-tileLight text-lg">Assign Center Target</p>
+    <p class="font-bold text-tileLight text-lg">Assign Centre Target</p>
   </div>
 </div>
 

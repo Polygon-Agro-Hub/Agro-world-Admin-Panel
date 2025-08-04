@@ -31,6 +31,7 @@ export class CompletedDefinePackageComponent {
   dateFilter: string = '';
   deliveryDateFilter: string = '';
   searchTerm: string = '';
+  hasData: boolean = false;
 
   statusOptions = [
     { label: 'Paid', value: 'Paid' },
@@ -74,6 +75,7 @@ export class CompletedDefinePackageComponent {
       .subscribe({
         next: (response) => {
           console.log('API Response:', response); // Debug log
+          this.hasData = response.total === 0 ? false : true;
 
           if (response && response.data) {
             // Optional: Filter on client side if needed (but better to do it server-side)

@@ -48,7 +48,7 @@ export class CompletedDefinePackageComponent {
   constructor(
     private orderService: ProcumentsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchOrders();
@@ -164,5 +164,11 @@ export class CompletedDefinePackageComponent {
     this.router.navigate(['/procurement/edit-completed-define-package'], {
       queryParams: { id },
     });
+  }
+
+  trimLeadingSpaces() {
+    if (this.searchTerm.startsWith(' ')) {
+      this.searchTerm = this.searchTerm.trimStart();
+    }
   }
 }

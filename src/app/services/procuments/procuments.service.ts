@@ -77,7 +77,8 @@ export class ProcumentsService {
     limit: number,
     statusFilter: string = '',
     dateFilter: string = '',
-    dateFilter1: string = ''
+    dateFilter1: string = '',
+    searchText: string = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -96,6 +97,10 @@ export class ProcumentsService {
 
     if (dateFilter1) {
       url += `&dateFilter1=${dateFilter1}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
     }
 
     // if (search) {

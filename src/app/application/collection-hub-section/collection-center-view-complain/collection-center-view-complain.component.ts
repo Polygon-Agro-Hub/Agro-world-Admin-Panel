@@ -41,31 +41,36 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   filterCompany: any = {};
   hasData: boolean = true;
 
+  isPopUpVisible: boolean = false;
+  selectedLanguage: string = 'English';
+  selectedOfficerName: string = '';
+
+
   rpst: string = '';
   replyStatus = [
     { status: 'Yes', value: 'Yes' },
     { status: 'No', value: 'No' },
   ];
 
-    @ViewChild("dropdown") dropdown!: Dropdown;
+  @ViewChild("dropdown") dropdown!: Dropdown;
 
 
 
 
-   constructor(
-      private complainSrv: CollectionCenterService,
-      private datePipe: DatePipe,
-      private router: Router,
-      // private tokenService: TokenService,
-      private http: HttpClient,
-      public tokenService: TokenService,
-    ) {}
-  
+  constructor(
+    private complainSrv: CollectionCenterService,
+    private datePipe: DatePipe,
+    private router: Router,
+    // private tokenService: TokenService,
+    private http: HttpClient,
+    public tokenService: TokenService,
+  ) { }
 
 
-    
+
+
   ngOnInit(): void {
-   
+
 
     this.status = [
       { id: 1, type: "Assigned" },
@@ -114,7 +119,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
           console.log('results', res.results);
 
           // Map response data to ensure createdAt is in a readable date format
-        
+
           this.complainsData = res.results;
           this.totalItems = res.total;
           this.isLoading = false;
@@ -160,7 +165,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   }
 
 
-  fetchComplain(id: any, farmerName: string) {
+  fetchComplain(id: any, farmerName: string, language: string) {
     this.isLoading = true;
     this.complainSrv.getCenterComplainById(id).subscribe((res) => {
       res.createdAt =
@@ -168,188 +173,136 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       this.complain = res;
       console.log(res);
       this.isLoading = false;
-      this.showReplyDialog(id, farmerName);
+      // this.showReplyDialog(id, farmerName);
+      this.showReplyPopUp(farmerName, language);
     });
   }
 
-  
+  showReplyPopUp(fname: string, language: string) {
+    this.selectedOfficerName = fname;
+    this.selectedLanguage = language;
+    this.isPopUpVisible = true;
+  }
 
 
 
 
 
 
-     showReplyDialog(id: any, farmerName: string) {
-        Swal.fire({
-          title: "Reply as AgroWorld",
-          html: `
-            <div class="text-left">
-              <p>Dear <strong>${farmerName}</strong>,</p>
-              <p></p>
-              <textarea 
-                id="messageContent" 
-                class="w-full p-2 border rounded mt-3 mb-3" 
-                rows="5" 
-                placeholder="Add your message here..."
-              >${this.complain.reply || ""}</textarea>
-              <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-              <p class="mt-3">
-                Sincerely,<br/>
-                AgroWorld Customer Support Team
-              </p>
-            </div>
-          `,
-          showCancelButton: true,
-          confirmButtonText: "Send",
-          cancelButtonText: "Cancel",
-          confirmButtonColor: "#3980C0", // Green color for Send button
-          cancelButtonColor: "#74788D", // Blue-gray for Cancel button
-          width: "600px",
-          reverseButtons: true, // Swap button positions
-          preConfirm: () => {
-            const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
-            return textarea.value;
-          },
-          didOpen: () => {
-            // Direct DOM manipulation for button alignment
-            setTimeout(() => {
-              const actionsElement = document.querySelector('.swal2-actions');
-              if (actionsElement) {
-                actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
-                
-                // Also swap buttons if needed (in addition to reverseButtons)
-                const cancelButton = document.querySelector('.swal2-cancel');
-                const confirmButton = document.querySelector('.swal2-confirm');
-                if (cancelButton && confirmButton && actionsElement) {
-                  actionsElement.insertBefore(cancelButton, confirmButton);
-                }
-              }
-            }, ); // Small delay to ensure DOM is ready
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.messageContent = result.value;
-            this.submitComplaint(id);
-          }
-        });
-      }
-
-  
 
 
+  // showReplyDialog(id: any, farmerName: string) {
+  //   Swal.fire({
+  //     title: "Reply as AgroWorld",
+  //     html: `
+  //           <div class="text-left">
+  //             <p>Dear <strong>${farmerName}</strong>,</p>
+  //             <p></p>
+  //             <textarea 
+  //               id="messageContent" 
+  //               class="w-full p-2 border rounded mt-3 mb-3" 
+  //               rows="5" 
+  //               placeholder="Add your message here..."
+  //             >${this.complain.reply || ""}</textarea>
+  //             <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
+  //             <p class="mt-3">
+  //               Sincerely,<br/>
+  //               AgroWorld Customer Support Team
+  //             </p>
+  //           </div>
+  //         `,
+  //     showCancelButton: true,
+  //     confirmButtonText: "Send",
+  //     cancelButtonText: "Cancel",
+  //     confirmButtonColor: "#3980C0", // Green color for Send button
+  //     cancelButtonColor: "#74788D", // Blue-gray for Cancel button
+  //     width: "600px",
+  //     reverseButtons: true, // Swap button positions
+  //     preConfirm: () => {
+  //       const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
+  //       return textarea.value;
+  //     },
+  //     didOpen: () => {
+  //       // Direct DOM manipulation for button alignment
+  //       setTimeout(() => {
+  //         const actionsElement = document.querySelector('.swal2-actions');
+  //         if (actionsElement) {
+  //           actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
+
+  //           // Also swap buttons if needed (in addition to reverseButtons)
+  //           const cancelButton = document.querySelector('.swal2-cancel');
+  //           const confirmButton = document.querySelector('.swal2-confirm');
+  //           if (cancelButton && confirmButton && actionsElement) {
+  //             actionsElement.insertBefore(cancelButton, confirmButton);
+  //           }
+  //         }
+  //       },); // Small delay to ensure DOM is ready
+  //     }
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       this.messageContent = result.value;
+  //       this.submitComplaint(id);
+  //     }
+  //   });
+  // }
 
 
-    submitComplaint(id: any) {
-      const token = this.tokenService.getToken();
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
-  
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      });
-  
-      console.log(id);
-      console.log(this.messageContent);
-  
-      const body = { reply: this.messageContent };
-  
-      this.http
-        .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
-        .subscribe(
-          (res: any) => {
-            console.log("Reply sent successfully", res);
-  
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: "Reply sent successfully!",
-            });
-            this.fetchAllComplain(this.page, this.itemsPerPage);
-          },
-          (error) => {
-            console.error("Error updating news", error);
-  
-            Swal.fire({
-              icon: "error",
-              title: "Unsuccessful",
-              text: "Error updating news",
-            });
-            this.fetchAllComplain(this.page, this.itemsPerPage);
-          },
-        );
+
+
+
+
+  submitComplaint(id: any) {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      console.error("No token found");
+      return;
     }
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
 
+    console.log(id);
+    console.log(this.messageContent);
 
+    const body = { reply: this.messageContent };
 
+    this.http
+      .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
+      .subscribe(
+        (res: any) => {
+          console.log("Reply sent successfully", res);
 
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Reply sent successfully!",
+          });
+          this.fetchAllComplain(this.page, this.itemsPerPage);
+        },
+        (error) => {
+          console.error("Error updating news", error);
 
-    getAllComplainCategories() {
-
-      if(this.tokenService.getUserDetails().role === "1"){
-        const token = this.tokenService.getToken();
-  
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-    
-        this.http
-          .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/2`, {
-            headers,
-          })
-          .subscribe(
-            (response) => {
-              this.comCategories = response;
-              console.log('Complain Categories:', this.comCategories);
-            },
-            (error) => {
-              console.error('Error fetching news:', error);
-            }
-          );
-      }else{
-        const token = this.tokenService.getToken();
-  
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-    
-        this.http
-          .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/2`, {
-            headers,
-          })
-          .subscribe(
-            (response) => {
-              this.comCategories = response;
-              console.log('Complain Categories:', this.comCategories);
-            },
-            (error) => {
-              console.error('Error fetching news:', error);
-            }
-          );
-      }
-   
-    }
+          Swal.fire({
+            icon: "error",
+            title: "Unsuccessful",
+            text: "Error updating news",
+          });
+          this.fetchAllComplain(this.page, this.itemsPerPage);
+        },
+      );
+  }
 
 
 
 
 
 
+  getAllComplainCategories() {
 
-    getAllCompanyForOfficerComplain() {
-
+    if (this.tokenService.getUserDetails().role === "1") {
       const token = this.tokenService.getToken();
-  
+
       if (!token) {
         console.error('No token found');
         return;
@@ -357,31 +310,91 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
       });
-  
+
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-comppany-for-officer-complain`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/2`, {
           headers,
         })
         .subscribe(
           (response) => {
-            this.company = response;
-            console.log('Complain Categories:', this.company);
+            this.comCategories = response;
+            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
           }
         );
-   
+    } else {
+      const token = this.tokenService.getToken();
+
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.http
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/2`, {
+          headers,
+        })
+        .subscribe(
+          (response) => {
+            this.comCategories = response;
+            console.log('Complain Categories:', this.comCategories);
+          },
+          (error) => {
+            console.error('Error fetching news:', error);
+          }
+        );
     }
 
-    back(): void {
-      this.router.navigate(['complaints']);
+  }
+
+  getAllCompanyForOfficerComplain() {
+
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      console.error('No token found');
+      return;
     }
-    
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http
+      .get<any>(`${environment.API_URL}auth/get-all-comppany-for-officer-complain`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          this.company = response;
+          console.log('Complain Categories:', this.company);
+        },
+        (error) => {
+          console.error('Error fetching news:', error);
+        }
+      );
+
+  }
+
+  back(): void {
+    this.router.navigate(['complaints']);
+  }
+
+  closeReplyPopUp() {
+    this.isPopUpVisible = false;
+    this.selectedOfficerName = 'English';
+    this.selectedLanguage = '';
+
+  }
 
 
 
-    
+
+
 }
 
 
@@ -399,8 +412,11 @@ class Complain {
   regCode!: string;
   CollectionContact!: string;
   officerName!: string;
+  officerNameSinhala!: string;
+  officerNameTamil!: string;
   officerPhone!: string;
   farmerName!: string;
+  language!: string;
 }
 
 class Status {

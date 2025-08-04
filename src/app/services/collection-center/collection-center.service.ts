@@ -23,6 +23,20 @@ export class CollectionCenterService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
   constructor(private http: HttpClient, private tokenService: TokenService) {}
+// distribution-hub.service.ts or similar
+resetPassword(id: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.put(`${this.apiUrl}/distribution-head/reset-password/${id}`, data, {
+    headers,
+  });
+}
+
+
+
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({

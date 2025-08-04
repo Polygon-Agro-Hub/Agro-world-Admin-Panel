@@ -140,10 +140,16 @@ export class CustomersComponent implements OnInit {
       }
     );
   }
-
-  onSearchChange(searchText: string) {
-    this.searchSubject.next(searchText);
+onSearchChange(searchText: string) {
+  if (searchText.startsWith(' ')) {
+    console.log('Input starts with a space');
+    // Optionally clean it
+    searchText = searchText.trimStart();
   }
+
+  this.searchSubject.next(searchText);
+}
+
 
   filterCustomers(searchText: string) {
     const loweredSearch = searchText.trim().toLowerCase();

@@ -39,6 +39,7 @@ interface BranchesData {
   styleUrl: './edit-distribution-officer.component.css',
 })
 export class EditDistributionOfficerComponent implements OnInit {
+isResetPasswordModalOpen: any;
 saveNewPassword() {
 throw new Error('Method not implemented.');
 }
@@ -434,16 +435,18 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
     return phoneRegex.test(phone);
   }
 
-  checkDuplicatePhoneNumbers(): void {
-    const phone1 = this.personalData.phoneNumber01 || '';
-    const phone2 = this.personalData.phoneNumber02 || '';
-    // Show error if both numbers are filled and equal, regardless of codes
-    if (phone1 && phone2 && phone1 === phone2) {
-      this.duplicatePhoneError = true;
-    } else {
-      this.duplicatePhoneError = false;
-    }
+checkDuplicatePhoneNumbers(): void {
+  const phone1 = `${this.personalData.phoneCode01 || ''}${this.personalData.phoneNumber01 || ''}`.trim();
+  const phone2 = `${this.personalData.phoneCode02 || ''}${this.personalData.phoneNumber02 || ''}`.trim();
+
+  // Only check if both have values
+  if (phone1 && phone2 && phone1 === phone2) {
+    this.duplicatePhoneError = true;
+  } else {
+    this.duplicatePhoneError = false;
   }
+}
+
 
   isValidNIC(nic: string): boolean {
     const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
@@ -474,7 +477,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
     // Block navigation if duplicate phone numbers
     this.checkDuplicatePhoneNumbers();
     if (this.duplicatePhoneError) {
-      Swal.fire('Error', "Company Contact Number - 1 and 2 can't be the same", 'error');
+      Swal.fire('Error', "Company Phone Number - 1 and 2 can't be the same", 'error');
       return;
     }
     this.selectedPage = page;
@@ -562,7 +565,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
   onSubmit() {
     this.checkDuplicatePhoneNumbers();
     if (this.duplicatePhoneError) {
-      Swal.fire('Error', "Company Contact Number - 1 and 2 can't be the same", 'error');
+      Swal.fire('Error', "Company Phone Number - 1 and 2 can't be the same", 'error');
       return;
     }
     if (

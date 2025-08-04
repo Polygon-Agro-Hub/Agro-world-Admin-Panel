@@ -158,7 +158,7 @@ export class RecievedOrdersComponent {
             <label class="block text-gray-700 mb-2">Filter By</label>
             <select id="filterTypeSelect" class="w-full p-2 border rounded">
               <option value="">--Filter By--</option>
-              <option value="OrderDate">Order Date</option>
+              
               <option value="scheduleDate">Scheduled Date</option>
               <option value="toCollectionCenter">To Collection Centre</option>
               <option value="toDispatchCenter">To Dispatch Centre</option>
@@ -170,6 +170,7 @@ export class RecievedOrdersComponent {
           </div>
         </div>
       `,
+      // <option value="OrderDate">Order Date</option>
       showCancelButton: true,
       confirmButtonText: 'Filter',
       cancelButtonText: 'Cancel',

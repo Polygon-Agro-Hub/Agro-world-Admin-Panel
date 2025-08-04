@@ -336,11 +336,18 @@ export class FinalinvoiceService {
     ) {
       // Add space before Pickup Center
       yPosition += 5;
-      
+
       doc.setFont('helvetica', 'bold');
-      doc.text('Pickup Center:', 15, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text(invoice.pickupInfo.centerName || '', 15, yPosition + 5);
+      const pickupLabel = 'Pickup Center:';
+      doc.text(pickupLabel, 15, yPosition);
+
+      // Calculate position for center name with small space
+      const centerName = invoice.pickupInfo.centerName || '';
+      const spaceWidth = 2; // Small space in mm
+      const centerNameX = 15 + doc.getTextWidth(pickupLabel) + spaceWidth;
+
+      doc.setFont('helvetica', 'bold');
+      doc.text(centerName, centerNameX, yPosition);
 
       // Format address like in your image
       const addressLines = [
@@ -353,7 +360,8 @@ export class FinalinvoiceService {
       // Join with comma and space, similar to your image
       const formattedAddress = addressLines.join(', ');
 
-      doc.text(formattedAddress, 15, yPosition + 10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(formattedAddress, 15, yPosition + 5);
       yPosition += 20;
     }
 

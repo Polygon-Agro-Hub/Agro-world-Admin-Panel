@@ -1,0 +1,8 @@
+/* Hide the native dropdown arrow in most browsers */
+.no-arrow {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none !important;
+  background-color: inherit;
+}

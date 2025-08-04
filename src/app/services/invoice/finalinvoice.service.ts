@@ -348,17 +348,18 @@ export class FinalinvoiceService {
     // Add extra space here between Delivery Method and Package Title
     yPosition += 10;
 
+    const grandTotalAll = parseNum(invoice.familyPackTotal) +
+                      parseNum(invoice.additionalItemsTotal) +
+                      parseNum(invoice.deliveryFee) -
+                      parseNum(invoice.discount);
+
     // Right side details
     const rightYStart = 55;
     doc.setFont('helvetica', 'bold');
     doc.text('Grand Total:', 140, rightYStart);
     doc.setFontSize(11);
     doc.text(
-      `Rs. ${formatNumberWithCommas(
-        parseNum(invoice.familyPackTotal) +
-          parseNum(invoice.additionalItemsTotal) +
-          parseNum(invoice.deliveryFee) -
-          parseNum(invoice.discount)
+      `Rs. ${formatNumberWithCommas(invoice.grandTotal
       )}`,
       140,
       rightYStart + 5

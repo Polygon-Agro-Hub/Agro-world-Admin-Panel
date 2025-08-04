@@ -52,17 +52,17 @@ interface InvoiceData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FinalinvoiceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.get(
@@ -71,13 +71,21 @@ export class FinalinvoiceService {
     );
   }
 
-  async generateAndDownloadInvoice(id: number, tableInvoiceNo: string): Promise<void> {
+  async generateAndDownloadInvoice(
+    id: number,
+    tableInvoiceNo: string
+  ): Promise<void> {
     try {
       const response = await this.getInvoiceDetails(id).toPromise();
       console.log('Full API Response:', response);
 
       const apiInvoiceNo = response.data?.invoice?.invoiceNumber;
-      console.log('API InvoiceNo:', apiInvoiceNo, 'Table InvoiceNo:', tableInvoiceNo);
+      console.log(
+        'API InvoiceNo:',
+        apiInvoiceNo,
+        'Table InvoiceNo:',
+        tableInvoiceNo
+      );
 
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
       console.log('Using InvoiceNo:', finalInvoiceNo);
@@ -96,7 +104,10 @@ export class FinalinvoiceService {
       const invoiceDetails = response.data?.invoice || {};
       const billingDetails = response.data?.billing || {};
 
-      const deliveryFee = response.data?.deliveryCharge?.charge || invoiceDetails.deliveryFee || '0.00';
+      const deliveryFee =
+        response.data?.deliveryCharge?.charge ||
+        invoiceDetails.deliveryFee ||
+        '0.00';
 
       const invoiceData: InvoiceData = {
         invoiceNumber: finalInvoiceNo,
@@ -124,7 +135,7 @@ export class FinalinvoiceService {
         },
         pickupInfo: response.data?.pickupCenter
           ? {
-              centerName: response.data.pickupCenter.name || '',
+              centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
               address: {
                 city: response.data.pickupCenter.city || '',
                 district: response.data.pickupCenter.district || '',
@@ -133,18 +144,20 @@ export class FinalinvoiceService {
               },
             }
           : undefined,
-        familyPackTotal: response.data?.items?.familyPacks
-          ?.reduce(
-            (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
-            0
-          )
-          .toFixed(2) || '0.00',
-        additionalItemsTotal: response.data?.items?.additionalItems
-          ?.reduce(
-            (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
-            0
-          )
-          .toFixed(2) || '0.00',
+        familyPackTotal:
+          response.data?.items?.familyPacks
+            ?.reduce(
+              (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
+              0
+            )
+            .toFixed(2) || '0.00',
+        additionalItemsTotal:
+          response.data?.items?.additionalItems
+            ?.reduce(
+              (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
+              0
+            )
+            .toFixed(2) || '0.00',
         deliveryFee: deliveryFee,
         deliveryCharge: response.data?.deliveryCharge || null,
         discount: invoiceDetails.orderDiscount || '0.00',
@@ -322,36 +335,33 @@ export class FinalinvoiceService {
       invoice.pickupInfo
     ) {
       doc.setFont('helvetica', 'bold');
-      doc.text(
-        `Center: ${invoice.pickupInfo.centerName || 'N/A'}`,
-        15,
-        yPosition
-      );
+      doc.text('Pickup Center:', 15, yPosition);
       doc.setFont('helvetica', 'normal');
-      doc.text(
-        `${invoice.pickupInfo.address?.city || 'N/A'}, ${
-          invoice.pickupInfo.address?.district || 'N/A'
-        }`,
-        15,
-        yPosition + 5
-      );
-      doc.text(
-        `${invoice.pickupInfo.address?.province || 'N/A'}, ${
-          invoice.pickupInfo.address?.country || 'N/A'
-        }`,
-        15,
-        yPosition + 10
-      );
+      doc.text(invoice.pickupInfo.centerName || '', 15, yPosition + 5);
+
+      // Format address like in your image
+      const addressLines = [
+        invoice.pickupInfo.address?.city || '',
+        invoice.pickupInfo.address?.district || '',
+        invoice.pickupInfo.address?.province || '',
+        invoice.pickupInfo.address?.country || '',
+      ].filter((line) => line); // Remove empty lines
+
+      // Join with comma and space, similar to your image
+      const formattedAddress = addressLines.join(', ');
+
+      doc.text(formattedAddress, 15, yPosition + 10);
       yPosition += 20;
     }
 
     // Add extra space here between Delivery Method and Package Title
     yPosition += 10;
 
-    const grandTotalAll = parseNum(invoice.familyPackTotal) +
-                      parseNum(invoice.additionalItemsTotal) +
-                      parseNum(invoice.deliveryFee) -
-                      parseNum(invoice.discount);
+    const grandTotalAll =
+      parseNum(invoice.familyPackTotal) +
+      parseNum(invoice.additionalItemsTotal) +
+      parseNum(invoice.deliveryFee) -
+      parseNum(invoice.discount);
 
     // Right side details
     const rightYStart = 55;
@@ -359,8 +369,7 @@ export class FinalinvoiceService {
     doc.text('Grand Total:', 140, rightYStart);
     doc.setFontSize(11);
     doc.text(
-      `Rs. ${formatNumberWithCommas(invoice.grandTotal
-      )}`,
+      `Rs. ${formatNumberWithCommas(invoice.grandTotal)}`,
       140,
       rightYStart + 5
     );
@@ -380,6 +389,8 @@ export class FinalinvoiceService {
     doc.text('Scheduled Date:', 140, rightYStart + 45);
     doc.setFont('helvetica', 'normal');
     doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
+
+    
 
     // Family Pack Items
     yPosition = Math.max(yPosition, rightYStart + 60);

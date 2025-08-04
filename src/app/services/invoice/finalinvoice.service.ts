@@ -334,6 +334,9 @@ export class FinalinvoiceService {
       invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
       invoice.pickupInfo
     ) {
+      // Add space before Pickup Center
+      yPosition += 5;
+      
       doc.setFont('helvetica', 'bold');
       doc.text('Pickup Center:', 15, yPosition);
       doc.setFont('helvetica', 'normal');
@@ -389,8 +392,6 @@ export class FinalinvoiceService {
     doc.text('Scheduled Date:', 140, rightYStart + 45);
     doc.setFont('helvetica', 'normal');
     doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
-
-    
 
     // Family Pack Items
     yPosition = Math.max(yPosition, rightYStart + 60);

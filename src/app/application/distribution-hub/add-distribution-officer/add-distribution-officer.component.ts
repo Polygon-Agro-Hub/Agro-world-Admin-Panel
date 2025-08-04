@@ -1,3 +1,6 @@
+  // Capitalize first letter and remove invalid characters for name fields
+
+
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -8,7 +11,7 @@ import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
-
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 interface Bank {
   ID: number;
   name: string;
@@ -30,11 +33,13 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule
   ],
   templateUrl: './add-distribution-officer.component.html',
   styleUrl: './add-distribution-officer.component.css',
 })
 export class AddDistributionOfficerComponent implements OnInit {
+  duplicatePhoneError: boolean = false;
 
   id: number | null = null;
   companyName: string | null = null;
@@ -138,7 +143,33 @@ export class AddDistributionOfficerComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+  // Capitalize first letter and remove invalid characters for name fields
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'|'accHolderName'): void {
+  let value = this.personalData[field] || '';
+  // Remove non-English letters and spaces
+  value = value.replace(/[^A-Za-z ]/g, '');
+  // Capitalize first letter
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+  this.personalData[field] = value;
+}
 
+blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  const allowed = /^[A-Za-z ]$/;
+  const input = this.personalData[field] || '';
+
+  // Block if key is invalid
+  if (!allowed.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Block first character as space
+  if (input.length === 0 && event.key === ' ') {
+    event.preventDefault();
+  }
+}
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -320,6 +351,18 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    // Validate duplicate phone numbers before navigating
+    this.duplicatePhoneError = false;
+    if (
+      this.personalData.phoneNumber01 &&
+      this.personalData.phoneNumber02 &&
+      this.personalData.phoneCode01 === this.personalData.phoneCode02 &&
+      this.personalData.phoneNumber01 === this.personalData.phoneNumber02
+    ) {
+      this.duplicatePhoneError = true;
+      Swal.fire('Error', 'Company Contact Number - 1 & 2 cannot be the same.', 'error');
+      return;
+    }
     this.selectedPage = page;
   }
 
@@ -352,9 +395,8 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
+  updateProvince(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
     const selected = this.districts.find(
       (district) => district.name === selectedDistrict
     );
@@ -400,10 +442,23 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('PERSONAL',this.personalData)
+    // Duplicate check for phone numbers
+    this.duplicatePhoneError = false;
+    if (
+      this.personalData.phoneNumber01 &&
+      this.personalData.phoneNumber02 &&
+      this.personalData.phoneCode01 === this.personalData.phoneCode02 &&
+      this.personalData.phoneNumber01 === this.personalData.phoneNumber02
+    ) {
+      this.duplicatePhoneError = true;
+      Swal.fire('Error', 'Company Contact Number - 1 & 2 cannot be the same.', 'error');
+      return;
+    }
+
+    console.log('PERSONAL', this.personalData);
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to create the distribution center head?',
+      text: 'Do you want to create the Distribution Centre Head?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, create it!',
@@ -413,7 +468,6 @@ export class AddDistributionOfficerComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
         this.distributionHubSrv
-        
           .createDistributionHead(this.personalData, this.selectedImage)
           .subscribe(
             (res: any) => {
@@ -505,11 +559,64 @@ export class AddDistributionOfficerComponent implements OnInit {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        this.banks = data;
+      this.banks = data.slice().sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => { }
     );
   }
+
+  blockPhoneLength(event: KeyboardEvent, value: string) {
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+
+  // Allow navigation keys
+  if (allowedKeys.includes(event.key)) return;
+
+  // Block non-numeric keys
+  if (!/^[0-9]$/.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Block input if already 9 digits
+  if (value && value.length >= 9) {
+    event.preventDefault();
+  }
+}
+
+// Trim input to 9 digits after input (for paste or autofill)
+enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
+  const value = event.target.value || '';
+  if (value.length > 9) {
+    this.personalData[field] = value.slice(0, 9);
+  }
+}
+
+  checkDuplicatePhoneNumbers(): void {
+    const phone1 = this.personalData.phoneNumber01 || '';
+    const phone2 = this.personalData.phoneNumber02 || '';
+    // Show error if both numbers are filled and equal, regardless of codes
+    if (phone1 && phone2 && phone1 === phone2) {
+      this.duplicatePhoneError = true;
+    } else {
+      this.duplicatePhoneError = false;
+    }
+  }
+
+  blockLeadingSpace(event: KeyboardEvent, field: string) {
+  const value = this.personalData[field] || '';
+
+  // If the first character is empty and user presses space, block it
+  if (value.length === 0 && event.key === ' ') {
+    event.preventDefault();
+  }
+}
+
+
+  capitalizeV(): void {
+  if (this.personalData.nic) {
+    this.personalData.nic = this.personalData.nic.replace(/v/g, 'V');
+  }
+}
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
@@ -522,6 +629,7 @@ export class AddDistributionOfficerComponent implements OnInit {
 }
 
 class Personal {
+  [key: string]: any;
   jobRole: string = 'Distribution Center Head';
   empId!: string;
   centerId!: number;

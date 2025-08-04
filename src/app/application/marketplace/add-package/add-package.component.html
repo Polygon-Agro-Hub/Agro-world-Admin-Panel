@@ -6,13 +6,13 @@
 
 <form>
   <!-- Save button -->
-  <div class="flex flex-row justify-between items-center mb-6">
-    <p class="text-xl text-[#292929] font-normal dark:text-textDark">Add Package</p>
-    <div>
-      <button type="button" class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
+    <p class="text-lg sm:text-xl text-[#292929] font-normal dark:text-textDark">Add Package</p>
+    <div class="flex flex-row gap-2">
+      <button type="button" class="bg-[#74788D] text-sm sm:text-lg text-white px-3 py-1 rounded-lg" (click)="onCancel()">
         Cancel
       </button>
-      <button type="button" class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" (click)="onSubmit()"
+      <button type="button" class="bg-[#3980C0] text-sm sm:text-lg text-white px-4 sm:px-5 py-1 rounded-lg" (click)="onSubmit()"
         [disabled]="
           this.packageObj.productPrice < 0.0 ||
           this.packageObj.packageFee < 0.0 ||
@@ -23,9 +23,9 @@
     </div>
   </div>
 
-  <div class="flex flex-row justify-between">
+  <div class="flex flex-col lg:flex-row justify-between">
     <!-- Left Panel -->
-    <div class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-14 shadow-md rounded-md w-[70%]">
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack py-10 px-6 sm:px-10 lg:px-14 shadow-md rounded-md w-full lg:w-[70%] mb-6 lg:mb-0">
       <div class="flex flex-row justify-between items-center mb-6">
         <!-- Display Package Name with validation -->
         <div class="w-[70%]">
@@ -169,55 +169,56 @@
     </div>
 
     <!-- Right Panel: Preview & Status -->
-    <div class="flex flex-col px-6 py-3 mx-6 w-[30%]">
+    <div class="flex flex-col px-4 sm:px-6 py-3 lg:mx-6 w-full lg:w-[30%]">
       <!-- Preview -->
-      <div class="rounded-lg px-12 py-6 border border-[#CFCFCF] dark:bg-tileBlack">
-        <p class="text-lg text-[#000000] dark:text-textDark font-normal">Preview</p>
+      <div class="rounded-lg px-6 sm:px-8 lg:px-12 py-4 sm:py-6 border border-[#CFCFCF] dark:bg-tileBlack">
+        <p class="text-base sm:text-lg text-[#000000] dark:text-textDark font-normal">Preview</p>
 
-        <div
-          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-5 py-3 h-auto rounded-xl shadow-md">
+        <div class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] dark:bg-gray-800 px-3 sm:px-5 py-3 h-auto rounded-xl shadow-md max-w-full">
 
-          <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage"
-            class="w-full h-auto object-cover px-4 py-2 mt-8" />
-          <ng-template #defaultIcon>
-            <div class="flex items-center justify-center w-full h-32 px-4 py-2 mt-8 text-gray-400">
-              <i class="fa-solid fa-image text-9xl"></i>
-            </div>
-          </ng-template>
+          <div class="w-full flex justify-center items-center mt-4 sm:mt-6 lg:mt-8">
+            <img *ngIf="selectedImage; else defaultIcon" [src]="selectedImage"
+              class="w-full h-auto max-w-[200px] sm:max-w-[250px] lg:max-w-full object-contain px-2 sm:px-4 py-2" />
+            <ng-template #defaultIcon>
+              <div class="flex items-center justify-center w-full h-24 sm:h-28 lg:h-32 px-2 sm:px-4 py-2 text-gray-400">
+                <i class="fa-solid fa-image text-4xl sm:text-6xl lg:text-9xl"></i>
+              </div>
+            </ng-template>
+          </div>
 
-          <div class="flex flex-col items-center justify-center gap-y-2">
-            <p class="text-xl text-[#393939] dark:text-textDark font-medium text-center"
+          <div class="flex flex-col items-center justify-center gap-y-2 mt-2 sm:mt-3 pb-2 sm:pb-3">
+            <p class="text-base sm:text-lg lg:text-xl text-[#393939] dark:text-textDark font-medium text-center px-2"
               *ngIf="packageObj.displayName; else noDisplayName">
               {{ packageObj.displayName }}
             </p>
             <ng-template #noDisplayName>
-              <p class="text-lg text-gray-500 italic">--Package Name--</p>
+              <p class="text-sm sm:text-base lg:text-lg text-gray-500 italic">--Package Name--</p>
             </ng-template>
 
-            <p class="text-lg text-[#00957D]" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
+            <p class="text-base sm:text-lg text-[#00957D] font-medium" *ngIf="packageObj.approximatedPrice > 0; else noPrice">
               Rs.{{ packageObj.approximatedPrice | number: '1.2-2' }}
             </p>
             <ng-template #noPrice>
-              <p class="text-sm text-gray-500 italic">--Price--</p>
+              <p class="text-xs sm:text-sm text-gray-500 italic">--Price--</p>
             </ng-template>
           </div>
         </div>
       </div>
 
       <!-- Status -->
-      <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-3 mt-10">
-        <label class="text-[#000000] dark:text-textDark font-normal">Status</label>
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-6 sm:px-8 lg:px-12 py-3 mt-6 sm:mt-8 lg:mt-10">
+        <label class="text-sm sm:text-base text-[#000000] dark:text-textDark font-normal">Status</label>
 
-        <div class="flex items-center space-x-2 my-5">
-          <input class="w-5 h-5 text-[#534E4E]" type="radio" id="statusEnabled" name="status" [value]="'Enabled'"
+        <div class="flex items-center space-x-2 my-3 sm:my-4 lg:my-5">
+          <input class="w-4 h-4 sm:w-5 sm:h-5 text-[#534E4E]" type="radio" id="statusEnabled" name="status" [value]="'Enabled'"
             [(ngModel)]="packageObj.status" />
           <label for="statusEnabled" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Enabled
           </label>
         </div>
 
-        <div class="flex items-center space-x-2 my-5">
-          <input class="w-5 h-5 text-[#534E4E]" type="radio" id="statusDisabled" name="status" [value]="'Disabled'"
+        <div class="flex items-center space-x-2 my-3 sm:my-4 lg:my-5">
+          <input class="w-4 h-4 sm:w-5 sm:h-5 text-[#534E4E]" type="radio" id="statusDisabled" name="status" [value]="'Disabled'"
             [(ngModel)]="packageObj.status" />
           <label for="statusDisabled" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Disabled

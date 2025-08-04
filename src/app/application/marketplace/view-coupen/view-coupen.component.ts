@@ -70,7 +70,6 @@ export class ViewCoupenComponent implements OnInit {
         this.coupenObj = res.items;
         this.totalItems = res.total;
         this.isLoading = false;
-        
       });
   }
 
@@ -113,7 +112,7 @@ export class ViewCoupenComponent implements OnInit {
         this.marketSrv.deleteCoupenById(id).subscribe(
           (data: boolean) => {
             if (data) {
-              Swal.fire('Deleted!', 'The Coupen has been deleted.', 'success');
+              Swal.fire('Deleted!', 'The Coupon has been deleted.', 'success');
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(
@@ -178,12 +177,33 @@ export class ViewCoupenComponent implements OnInit {
     });
   }
 
-  navPath(path:string): void {
+  navPath(path: string): void {
     this.router.navigate([path]);
   }
 
   naviagteCoupon(id: number) {
     this.router.navigate([`market/action/edit-coupen/${id}`]);
+  }
+
+  onSearchInput(event: any): void {
+    const input = event.target;
+    const originalValue = input.value;
+    const trimmedValue = originalValue.trimStart(); // Remove only leading spaces
+
+    if (originalValue !== trimmedValue) {
+      // Update the model and input field
+      this.searchText = trimmedValue;
+      input.value = trimmedValue;
+
+      // Maintain cursor position after trimming
+      const cursorPosition =
+        input.selectionStart - (originalValue.length - trimmedValue.length);
+      setTimeout(() => {
+        input.setSelectionRange(cursorPosition, cursorPosition);
+      }, 0);
+    } else {
+      this.searchText = trimmedValue;
+    }
   }
 }
 

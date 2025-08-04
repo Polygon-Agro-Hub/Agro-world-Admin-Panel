@@ -24,19 +24,9 @@
           </svg>
         </i>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="replyStatus"
-            [checkmark]="true"
-            optionLabel="status"
-            optionValue="value"
-            [showClear]="rpst === '' ? false : true"
-            placeholder="Reply"
-            [(ngModel)]="rpst"
-            (onChange)="regStatusFil()"
-          />
-        </div>
+        <p class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5">Filter By</p>
+
+        
 
         <div class="mr-5">
           <p-dropdown
@@ -71,6 +61,25 @@
             appendTo="body"
           ></p-dropdown>
         </div>
+
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="replyStatus"
+            [checkmark]="true"
+            optionLabel="status"
+            optionValue="value"
+            [showClear]="rpst === '' ? false : true"
+            placeholder="Reply"
+            [(ngModel)]="rpst"
+            (onChange)="regStatusFil()"
+          />
+        </div>
+
+        
+
+        
 
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
@@ -386,7 +395,7 @@
 
 
 <div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4">
+  <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4 relative">
     <div class="flex justify-center items-center">
       <span class="rounded-full px-4 py-3 bg-[#F6F6F6] dark:bg-gray-400">
         <i class="fa-regular fa-envelope text-2xl text-[#2D2D2D] 0"></i>
@@ -443,7 +452,7 @@
       </p>
     </div>
 
-    <div class="flex flex-row justify-end gap-x-4 mt-4">
+    <div class="flex flex-row justify-end gap-x-4 mt-4 mr-1">
       <button 
         (click)="closeReplyPopUp()"
         class="px-4 py-2 text-[#D3D3D3] dark:text-gray-200 bg-[#74788D] rounded transition"
@@ -453,3 +462,5 @@
     </div>
   </div>
 </div>
+
+

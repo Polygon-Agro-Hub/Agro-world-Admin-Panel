@@ -165,6 +165,7 @@ export class ViewRetailOrdersComponent implements OnInit {
   }
 
   searchReailOrders() {
+    this.searchItem = this.searchItem.trim();
     console.log(this.searchItem);
     this
       .fetchAllRetailOrders
@@ -209,18 +210,28 @@ export class ViewRetailOrdersComponent implements OnInit {
     }
   }
 
-  onDateSelect() {
-    this.isDateSelected = true;
-    this.applyDateFilter(); // call your original method
+  // onDateSelect() {
+  //   this.isDateSelected = true;
+  //   this.applyDateFilter(); // call your original method
+  // }
+
+  // onDateChange(event: any): void {
+  //   if (!event) {
+  //     this.isDateSelected = false;
+  //     console.log('Date cleared');
+  //     this.formattedDate = '';
+  //     this.fetchAllRetailOrders(); // or reset filters
+  //   }
+  // }
+
+  dateFilter() {
+    console.log('date', this.selectDate);
+    this.applyDateFilter();
   }
 
-  onDateChange(event: any): void {
-    if (!event) {
-      this.isDateSelected = false;
-      console.log('Date cleared');
-      this.formattedDate = '';
-      this.fetchAllRetailOrders(); // or reset filters
-    }
+  onDateClear() {
+    this.formattedDate = '';
+    this.fetchAllRetailOrders(); 
   }
 
   navigateDashboard(id: number) {

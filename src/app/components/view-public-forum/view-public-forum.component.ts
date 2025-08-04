@@ -270,6 +270,23 @@ export class ViewPublicForumComponent implements OnInit {
   back(): void {
     this.router.navigate(['/plant-care/action']);
   }
+
+  onReplyMassageInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const original = input.value;
+    
+    // Remove leading spaces
+    let trimmed = original.replace(/^\s+/, '');
+  
+    // Capitalize first letter if there's any input
+    if (trimmed.length > 0) {
+      trimmed = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+    }
+  
+    input.value = trimmed; // Update input display
+    this.replyMessage = trimmed; // Update model
+  }
+  
 }
 
 class PublicForum {

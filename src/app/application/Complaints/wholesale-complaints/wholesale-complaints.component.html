@@ -25,16 +25,7 @@
       </h2>
       <div class="flex items-center space-x-3">
         <!-- Reply Status -->
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-          [options]="replyStatus"
-          [(ngModel)]="rpst"
-          optionLabel="label"
-          optionValue="value"
-          [showClear]="true"
-          placeholder="Reply Status"
-          (onChange)="regStatusFil()"
-        ></p-dropdown>
+        
 
         <!-- Category -->
         <p-dropdown
@@ -58,6 +49,17 @@
           [showClear]="true"
           placeholder="Status"
           (onChange)="applyFilters()"
+        ></p-dropdown>
+
+        <p-dropdown
+          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="replyStatus"
+          [(ngModel)]="rpst"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="true"
+          placeholder="Reply"
+          (onChange)="regStatusFil()"
         ></p-dropdown>
 
        <!-- Search -->
@@ -174,8 +176,8 @@
               {{ item.contactNumber }}
             </td>
          <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center text-gray-900 dark:text-gray-100 whitespace-nowrap">
-  {{ item.createdAt | date: 'yyyy/MM/dd' : 'UTC' }}<br>
-  {{ item.createdAt | date: 'hh.mm a' : 'UTC' }}
+  {{ item.createdAt | date: 'yyyy/MM/dd'}}<br>
+  {{ item.createdAt | date: 'hh.mm a'}}
 </td>
 
             <td class="px-4 py-3 text-center">

@@ -50,6 +50,8 @@
           id="cropName"
           name="cropName"
           [(ngModel)]="productObj.cropName"
+          (blur)="trimDisplayName()"
+        (keydown)="preventLeadingSpace($event,productObj.cropName)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>

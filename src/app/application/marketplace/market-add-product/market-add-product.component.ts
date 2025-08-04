@@ -277,6 +277,7 @@ export class MarketAddProductComponent implements OnInit {
     }
 
     event.chipInput!.clear();
+    console.log('tags', this.productObj.tags)
   }
 
   removeTemplateKeyword(keyword: string) {

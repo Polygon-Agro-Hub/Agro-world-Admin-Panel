@@ -61,6 +61,19 @@ export class MarketEditProductComponent implements OnInit {
     this.getProduct();
   }
 
+  trimDisplayName() {
+    if (this.productObj.cropName) {
+      this.productObj.cropName = this.productObj.cropName.trimStart();
+    }
+  }
+
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
   getProduct() {
     this.marketSrv.getProductById(this.productId).subscribe((res) => {
       console.log('product:', res);
@@ -130,23 +143,24 @@ export class MarketEditProductComponent implements OnInit {
   // }
 
   onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productObj = new MarketPrice();
-        this.selectedVarieties = [];
-        this.isVerityVisible = false;
-        this.templateKeywords.update(() => []);
-        this.updateTags();
-        this.navigatePath('/market/action/view-products-list');
-      }
-    });
+    console.log('pob', this.productObj)
+    // Swal.fire({
+    //   icon: 'warning',
+    //   title: 'Are you sure?',
+    //   text: 'You may lose the added data after canceling!',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Yes, Cancel',
+    //   cancelButtonText: 'No, Keep Editing',
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.productObj = new MarketPrice();
+    //     this.selectedVarieties = [];
+    //     this.isVerityVisible = false;
+    //     this.templateKeywords.update(() => []);
+    //     this.updateTags();
+    //     this.navigatePath('/market/action/view-products-list');
+    //   }
+    // });
   }
 
   navigatePath(path: string) {

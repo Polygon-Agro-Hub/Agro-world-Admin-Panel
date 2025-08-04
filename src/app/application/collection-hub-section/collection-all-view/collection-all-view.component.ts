@@ -220,6 +220,7 @@ export class CollectionAllViewComponent implements OnInit {
   }
 
   searchPlantCareUsers() {
+    this.searchItem = this.searchItem?.trim() || ''
     this.page = 1;
     this.fetchAllCollectionCenter(
       this.page,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 
@@ -71,14 +71,51 @@ getProductTypes(): Observable<any> {
   }
   
 
-  createCoupen(Data: any): Observable<any> {
+  // createCoupen(Data: any): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+  //   return this.http.post(`${this.apiUrl}market-place/create-coupen`, Data, {
+  //     headers,
+  //   });
+  // }
+
+  createCoupen(couponData: any): Observable<{message?: string, result?: any, status: boolean, error?: string}> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${this.apiUrl}market-place/create-coupen`, Data, {
-      headers,
-    });
+    
+    return this.http.post<{
+      message?: string,
+      result?: any,
+      status: boolean,
+      error?: string
+    }>(`${this.apiUrl}market-place/create-coupen`, couponData, { headers }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Handle different error statuses as per the endpoint
+        if (error.status === 400) {
+          // Joi validation error
+          return throwError(() => ({
+            error: error.error?.error || 'Validation failed',
+            status: false
+          }));
+        } else if (error.status === 409) {
+          // Conflict - coupon already exists
+          return throwError(() => ({
+            error: error.error?.error || 'Coupon with this code already exists',
+            status: false
+          }));
+        } else {
+          // Generic server error
+          return throwError(() => ({
+            error: 'An error occurred while creating coupon',
+            status: false
+          }));
+        }
+      })
+    );
   }
 
   getAllCoupen(

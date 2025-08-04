@@ -10,6 +10,9 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { Country, COUNTRIES } from '../../../../assets/country-data';
 
 @Component({
   selector: 'app-edit-collection-center',
@@ -19,6 +22,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
     ReactiveFormsModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule, InputTextModule
   ],
   templateUrl: './edit-collection-center.component.html',
   styleUrl: './edit-collection-center.component.css',
@@ -48,12 +52,19 @@ export class EditCollectionCenterComponent implements OnInit {
     phone02: false,
   };
 
+  countries: Country[] = COUNTRIES;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
+
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
     private route: ActivatedRoute
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
+    const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
   }
 
   back(): void {
@@ -63,6 +74,10 @@ export class EditCollectionCenterComponent implements OnInit {
   ngOnInit(): void {
     this.fetchCollectionCenter();
     this.getAllCompanies();
+  }
+
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/24x18/${code}.png`;
   }
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {

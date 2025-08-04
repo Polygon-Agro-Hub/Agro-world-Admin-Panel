@@ -37,13 +37,12 @@
         </div> -->
       </div>
 
-      <div class="relative">
-        <!-- Label -->
+      <!-- <div class="relative">
+
         <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Companies *
         </label>
-      
-        <!-- Readonly display input -->
+
         <input
           type="text"
           [value]="selectedCompaniesNames.join(', ')"
@@ -53,7 +52,7 @@
           (click)="onCompanyInputClick()"
         />
       
-        <!-- Dropdown list -->
+
         <div
           *ngIf="dropdownOpen"
           class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
@@ -74,6 +73,48 @@
           </div>
         </div>
       
+
+        <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
+          Company is required
+        </div>
+      </div> -->
+
+      <div class="relative">
+        <!-- Label -->
+        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Companies *
+        </label>
+  
+        <!-- Readonly display input -->
+        <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
+          class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
+          placeholder="Select companies" (click)="onCompanyInputClick()" />
+  
+        <!-- Dropdown list -->
+        <div *ngIf="dropdownOpen"
+          class="absolute z-10 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+          <!-- Search input inside dropdown -->
+          <input type="text" (input)="filterCompanies($event)"
+            placeholder="Search company..." id="companySearchInput"
+            class="w-full p-2 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300" />
+  
+          <!-- Filtered list -->
+          <div *ngFor="let company of filteredCompanies"
+            class="px-4 py-2 cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+            (click)="toggleSelection(company)">
+            <div class="flex flex-row gap-2">
+              <input
+              type="checkbox"
+              [checked]="selectedCompaniesIds.includes(company.id)"
+              class="mr-2"
+              (click)="$event.stopPropagation()"
+            />
+            <div class="dark:text-white">{{ company.companyNameEnglish }}</div>
+            </div>
+          </div>
+        </div>
+  
+  
         <!-- Validation message -->
         <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
           Company is required
@@ -93,7 +134,7 @@
       
         <div class="mt-1 flex">
           <!-- Country Code Dropdown -->
-          <select
+          <!-- <select
             formControlName="contact01Code"
             id="contact01Code"
             class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
@@ -102,7 +143,41 @@
             <option value="+1">+1 (US)</option>
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
-          </select>
+          </select> -->
+          <p-dropdown
+  [options]="countries"
+  formControlName="contact01Code"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
       
           <!-- Phone Input -->
           <div class="flex flex-col flex-1">
@@ -114,7 +189,7 @@
               minlength="9"
               maxlength="9"
               (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone01')"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               placeholder="Enter your phone number"
             />
           </div>
@@ -154,13 +229,48 @@
       
         <div class="mt-1 flex">
           <!-- Country Code Select -->
-          <select formControlName="contact02Code" id="contact02Code"
+          <!-- <select formControlName="contact02Code" id="contact02Code"
             class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
             <option value="+94">+94 (LK)</option>
             <option value="+1">+1 (US)</option>
             <option value="+44">+44 (UK)</option>
             <option value="+91">+91 (India)</option>
-          </select>
+          </select> -->
+
+          <p-dropdown
+  [options]="countries"
+  formControlName="contact02Code"
+  [optionLabel]="'dialCode'"
+  [optionValue]="'dialCode'"
+  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+  [style]="{ width: '120px' }"
+>
+  <!-- Dropdown items -->
+  <ng-template let-country pTemplate="item">
+    <div class="flex items-center gap-2">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+
+  <!-- Selected item -->
+  <ng-template let-country pTemplate="selectedItem">
+    <div class="flex items-center gap-2" *ngIf="country">
+      <img
+        [src]="getFlagUrl(country.code)"
+        width="24"
+        height="18"
+        alt="{{ country.name }}"
+      />
+      <span>{{ country.dialCode }}</span>
+    </div>
+  </ng-template>
+</p-dropdown>
       
           <!-- Phone Input -->
           <div class="flex flex-col flex-1">
@@ -169,7 +279,7 @@
               id="contact02"
               name="contact02"
               placeholder="Enter your phone number"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              class="block w-full p-2 border h-12 border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
               (keypress)="allowOnlyNumbers($event)" 
             pattern="^[0-9]{9}$" minlength="9" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"/>
           </div>

@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-edit-complain-cagegories',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule ],
   templateUrl: './edit-complain-cagegories.component.html',
   styleUrl: './edit-complain-cagegories.component.css'
 })
@@ -46,6 +46,50 @@ export class EditComplainCagegoriesComponent implements OnInit {
     )
   }
 
+  blockLeadingSpace(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  // Block space key if cursor is at position 0 (start)
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+  }
+}
+
+validateEnglish(): void {
+  let value = this.complainObj.categoryEnglish || '';
+  
+  // Remove all characters except English letters and spaces
+  value = value.replace(/[^A-Za-z ]+/g, '');
+
+  // Also remove leading spaces just in case (e.g., from paste)
+  value = value.replace(/^\s+/, '');
+
+  this.complainObj.categoryEnglish = value;
+}
+
+  allowOnlySinhala(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[\u0D80-\u0DFF ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+allowOnlyTamil(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = event.key;
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+    if (!/^[\u0B80-\u0BFF ]$/.test(char) && event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
   fetchCategoriDetails() {
     this.isLoading=true
     this.complaintSrv.getCategoieDetailsById(this.categorieId).subscribe(
@@ -79,10 +123,21 @@ export class EditComplainCagegoriesComponent implements OnInit {
     )
   }
 
-  onCancel() {
-    this.fetchComplainCategory();
-    this.fetchCategoriDetails();
-  }
+    onCancel() {
+      Swal.fire({
+        icon: "warning",
+        title: "Are you sure?",
+        text: "You may lose the added data after canceling!",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Cancel",
+        cancelButtonText: "No, Keep Editing",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(["/complaints"]);
+        }
+      });
+    }
+
 
 }
 

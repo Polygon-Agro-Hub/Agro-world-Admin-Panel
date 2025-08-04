@@ -3,7 +3,7 @@
 <nav class="mb-4">
   <ol class="flex items-center space-x-2 text-sm text-gray-500">
     <li>
-      <a routerLink="/sales-dash">Marketplace</a>
+      <a routerLink="/sales-dash">Sales Dash</a>
     </li>
     <li>
       <span class="mx-2">></span>
@@ -164,7 +164,7 @@
           <div
             class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           >
-            Search by name, ID, phone, email, address, or agent
+            Search by Customer Name, Customer ID, Contact or Agent ID
           </div>
 
           <!-- Input field -->
@@ -226,9 +226,11 @@
     </div>
 
     <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-textLight dark:text-textDark text-lg">
-        No data to display
-      </p>
+    <!-- Table Section -->
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
     </div>
 
     <div *ngIf="hasData">

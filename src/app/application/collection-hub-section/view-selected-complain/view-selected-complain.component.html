@@ -17,7 +17,7 @@
         <span class="font-semibold">{{ complain.language }}</span>
       </p>
       <p class="text-sm text-gray-600 dark:text-textDark">
-        Received: {{ complain.createdAt }}
+        Received: {{ complain.createdAt | date: 'yyyy/MM/dd "at" hh.mm a' }}
       </p>
     </div>
 
@@ -51,7 +51,7 @@
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
         <label class="block text-gray-700 dark:text-textDark mb-2"
-          >Complainent (Farmer)</label
+          >Complainant (Farmer)</label
         >
         <input
           type="text"

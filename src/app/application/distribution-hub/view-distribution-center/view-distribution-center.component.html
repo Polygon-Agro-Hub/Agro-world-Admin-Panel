@@ -29,11 +29,13 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+        <h2
+          class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-5"
+        >
           <!-- Other Distribution Centres ({{ this.totalItems }}) -->
           Other Distribution Centres ({{ formatCount(totalItems) }})
         </h2>
@@ -46,7 +48,7 @@
             [checkmark]="true"
             optionLabel="label"
             optionValue="value"
-            [showClear]="true"
+            [showClear]="!!selectCompany"
             placeholder="Company"
             [(ngModel)]="selectCompany"
             (onChange)="applyCompanyFilter()"
@@ -60,7 +62,7 @@
             [checkmark]="true"
             optionLabel="label"
             optionValue="value"
-            [showClear]="true"
+            [showClear]="!!selectProvince"
             placeholder="Province"
             [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"
@@ -74,7 +76,7 @@
             [checkmark]="true"
             optionLabel="label"
             optionValue="value"
-            [showClear]="true"
+            [showClear]="!!selectDistrict"
             placeholder="District"
             [(ngModel)]="selectDistrict"
             (onChange)="applyDistrictFilters()"
@@ -90,11 +92,15 @@
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             [(ngModel)]="searchItem"
             (keydown.enter)="searchPlantCareUsers()"
+            (keydown)="preventLeadingSpace($event)"
+            (input)="trimLeadingSpaces($event)"
+            title="Search by Company, Centre Name, City"
           />
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchPlantCareUsers()"
+            title="Search"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -115,6 +121,7 @@
             type="button"
             (click)="clearSearch()"
             class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            title="Clear search"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -150,6 +157,12 @@
             <th
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
+              Reg Code
+            </th>
+
+            <th
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            >
               Centre Name
             </th>
             <th
@@ -174,12 +187,6 @@
             >
               City
             </th>
-            <th
-              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
-            >
-              Officer in charge
-            </th>
-
             <th
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
@@ -220,6 +227,9 @@
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+              {{ item.regCode }}
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.centerName }}
             </td>
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
@@ -238,13 +248,11 @@
             </td>
 
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{ item.officerName }}
-            </td>
-
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               <!-- {{ item.code1 }} {{ item.contact01 }} -->
               <span *ngIf="item.contact01 === null">-</span>
-              <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
+              <span *ngIf="item.contact01 != null"
+                >{{ item.code1 }}{{ " " + item.contact01 }}</span
+              >
             </td>
 
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
@@ -368,11 +376,10 @@
         *ngIf="!hasData"
         class="flex justify-center items-center py-20 shadow-lg"
       >
-        <p
-          class="text-center text-2xl text-black font-normal dark:text-textDark"
-        >
-          No data found
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
         </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
     </div>
     <div class="dark:bg-[#262f45]">

@@ -24,6 +24,12 @@ interface BranchesData {
   [key: string]: Branch[];
 }
 
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-collectiveofficers-edit',
   standalone: true,
@@ -106,6 +112,16 @@ export class CollectiveofficersEditComponent {
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+  ];
+
+
   isLanguageRequired = false;
 
   constructor(
@@ -138,10 +154,10 @@ export class CollectiveofficersEditComponent {
           this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
           this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
           this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-          this.personalData.phoneCode01 = officerData.phoneCode01 || '+94';
-          this.personalData.phoneNumber01 = officerData.phoneNumber01 || '';
-          this.personalData.phoneCode02 = officerData.phoneCode02 || '+94';
-          this.personalData.phoneNumber02 = officerData.phoneNumber02 || '';
+          this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+          this.personalData.contact1 = officerData.phoneNumber01 || '';
+          this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+          this.personalData.contact2 = officerData.phoneNumber02 || '';
           this.personalData.nic = officerData.nic || '';
           this.personalData.email = officerData.email || '';
           this.personalData.houseNumber = officerData.houseNumber || '';
@@ -182,6 +198,10 @@ export class CollectiveofficersEditComponent {
     this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
+  }
+
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
   loadBanks() {
@@ -293,9 +313,12 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  isFieldInvalid(fieldName: keyof Personal): boolean {
-    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+  // 6. ADD FIELD VALIDATION METHODS
+  isFieldInvalid(fieldName: string): boolean {
+    return !!this.touchedFields[fieldName as keyof Personal] &&
+      !this.personalData[fieldName as keyof Personal];
   }
+
 
   isValidEmail(email: string): boolean {
     if (!email) return false;
@@ -316,6 +339,8 @@ export class CollectiveofficersEditComponent {
     return phoneRegex.test(phone);
   }
 
+
+
   formatTextInput(fieldName: keyof Personal): void {
     const value = this.personalData[fieldName];
     if (typeof value === 'string') {
@@ -334,16 +359,6 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove leading spaces and special characters/numbers, keep only letters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
-      // Capitalize first letter and make rest lowercase
-      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      this.personalData[fieldName] = value;
-    }
-  }
 
   // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
@@ -357,23 +372,120 @@ export class CollectiveofficersEditComponent {
     }
   }
 
-  // Update existing formatSinhalaName method
-  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
+  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove leading spaces and allow only Sinhala unicode characters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^\u0D80-\u0DFF\s]/g, '');
+      // Remove special characters and numbers, keep only letters and spaces
+      value = value.replace(/[^a-zA-Z\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      // Capitalize first letter and make rest lowercase
+      if (value.length > 0) {
+        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      }
+
       this.personalData[fieldName] = value;
     }
   }
 
-  // Update existing formatTamilName method
+  // Updated formatSinhalaName function
+  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Allow only Sinhala unicode characters and spaces
+      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  // Updated formatTamilName function
   formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove leading spaces and allow only Tamil unicode characters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^\u0B80-\u0BFF\s]/g, '');
+      // Allow only Tamil unicode characters and spaces
+      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
+
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
+
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
       this.personalData[fieldName] = value;
+    }
+  }
+
+  // Add these methods to your component class
+
+  // Prevent invalid English characters (only allow letters and spaces)
+  preventInvalidEnglishCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys (backspace, delete, tab, escape, enter, etc.)
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow English letters (a-z, A-Z) and space
+    const englishLetterRegex = /^[a-zA-Z\s]$/;
+    if (!englishLetterRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Prevent invalid Sinhala characters (only allow Sinhala unicode range and spaces)
+  preventInvalidSinhalaCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow Sinhala characters (U+0D80-U+0DFF) and space
+    const sinhalaRegex = /^[\u0D80-\u0DFF\s]$/;
+    if (!sinhalaRegex.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Prevent invalid Tamil characters (only allow Tamil unicode range and spaces)
+  preventInvalidTamilCharacters(event: KeyboardEvent): void {
+    const char = event.key;
+
+    // Allow control keys
+    if (event.ctrlKey || event.altKey || event.metaKey ||
+      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
+      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
+      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
+      char === 'Home' || char === 'End') {
+      return;
+    }
+
+    // Allow Tamil characters (U+0B80-U+0BFF) and space
+    const tamilRegex = /^[\u0B80-\u0BFF\s]$/;
+    if (!tamilRegex.test(char)) {
+      event.preventDefault();
     }
   }
 
@@ -407,10 +519,12 @@ export class CollectiveofficersEditComponent {
   }
 
   arePhoneNumbersSame(): boolean {
-    if (!this.personalData.phoneNumber01 || !this.personalData.phoneNumber02) {
+    if (!this.personalData.contact1 || !this.personalData.contact2) {
       return false;
     }
-    return this.personalData.phoneNumber01 === this.personalData.phoneNumber02;
+    const fullPhone1 = this.personalData.contact1Code + this.personalData.contact1;
+    const fullPhone2 = this.personalData.contact2Code + this.personalData.contact2;
+    return fullPhone1 === fullPhone2;
   }
 
   isAtLeastOneLanguageSelected(): boolean {
@@ -457,7 +571,7 @@ export class CollectiveofficersEditComponent {
       !this.hasInvalidSinhalaCharacters('lastNameSinhala') &&
       !this.hasInvalidTamilCharacters('lastNameTamil');
 
-    const isPhoneNumberValid = this.isValidPhoneNumber(this.personalData.phoneNumber01);
+    const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
     const isEmailValid = this.isValidEmail(this.personalData.email);
     const isEmpTypeSelected = !!this.empType;
     const isLanguagesSelected = this.isAtLeastOneLanguageSelected();
@@ -473,7 +587,7 @@ export class CollectiveofficersEditComponent {
     return (
       isFirstNameValid &&
       isLastNameValid &&
-      isPhoneNumberValid &&
+      isContact1Valid && // Replace isPhoneNumberValid with this
       isEmailValid &&
       isEmpTypeSelected &&
       isLanguagesSelected &&
@@ -485,6 +599,26 @@ export class CollectiveofficersEditComponent {
       !this.arePhoneNumbersSame()
     );
   }
+
+  onInputChange(event: any, type: string): void {
+    if (type === 'phone') {
+      const value = event.target.value;
+      // Only allow numbers
+      event.target.value = value.replace(/[^0-9]/g, '');
+    }
+  }
+
+
+  getFieldError(fieldName: string): string {
+    if (fieldName === 'contact1') {
+      return 'Contact Number 01 is required';
+    }
+    if (fieldName === 'contact2') {
+      return 'Contact Number 02 is required';
+    }
+    return `${fieldName} is required`;
+  }
+
 
   checkSubmitValidity(): boolean {
     const {
@@ -800,10 +934,10 @@ class Personal {
   lastNameEnglish!: string;
   lastNameSinhala!: string;
   lastNameTamil!: string;
-  phoneCode01: string = '+94';
-  phoneNumber01!: string;
-  phoneCode02: string = '+94';
-  phoneNumber02!: string;
+  contact1Code: string = '+94';
+  contact1!: string;
+  contact2Code: string = '+94';
+  contact2!: string;
   nic!: string;
   email!: string;
   new!: string;

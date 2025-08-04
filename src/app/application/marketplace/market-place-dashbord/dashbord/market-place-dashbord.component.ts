@@ -6,16 +6,19 @@ import { DashbordSecondRowComponent } from '../dashbord-components/dashbord-seco
 import { DashbordTableComponent } from '../dashbord-components/dashbord-table/dashbord-table.component';
 import { MarketPlaceService } from '../../../../services/market-place/market-place.service';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-market-place-dashbord',
   standalone: true,
-  imports: [DashbordFirstRowComponent, DashbordAreaChartComponent, DashbordPieChartComponent, DashbordSecondRowComponent, DashbordTableComponent],
+  imports: [CommonModule, LoadingSpinnerComponent, DashbordFirstRowComponent, DashbordAreaChartComponent, DashbordPieChartComponent, DashbordSecondRowComponent, DashbordTableComponent],
   templateUrl: './market-place-dashbord.component.html',
   styleUrl: './market-place-dashbord.component.css'
 })
 export class MarketPlaceDashbordComponent implements OnInit {
   responceData!: Responce;
+  isLoading: boolean = true;
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -27,8 +30,10 @@ export class MarketPlaceDashbordComponent implements OnInit {
   }
 
   fetchData() {
+    this.isLoading = true
     this.marketSrv.getMarketPlaceDashbordDetails().subscribe(
       (res) => {
+        this.isLoading = false;
         console.log(res);
         this.responceData = res;
       }

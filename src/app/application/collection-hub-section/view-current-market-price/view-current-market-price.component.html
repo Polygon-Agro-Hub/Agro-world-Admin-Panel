@@ -29,7 +29,7 @@
     <div class="flex flex-row items-center my-5 ml-[20%]">
       <!-- Filter Icon and Text -->
       <div class="flex items-center mr-6">
-        <div class="flex items-center justify-center w-10 h-10 bg-[#F1F1F1] dark:bg-[#272F45] border border-2 border-[#yourLightColor] dark:border-[#AFAFAF] rounded-xl mr-3">
+        <div class="flex items-center justify-center w-10 h-10 bg-[#F1F1F1] dark:bg-[#272F45]  border-2 border-[#yourLightColor] dark:border-[#AFAFAF] rounded-xl mr-3">
           <i class="w-6 h-6 fill-current text-textLight dark:text-textDark">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path
@@ -157,6 +157,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
               Price ( per 1 Kg )
             </th>
+                <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg">
+              Average Price
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -172,6 +175,9 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.grade }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ item.price }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.price }}

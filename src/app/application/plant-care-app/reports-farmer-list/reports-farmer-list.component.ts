@@ -149,6 +149,13 @@ export class ReportsFarmerListComponent {
     );
   }
 
+   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
+      event.preventDefault();
+    }
+  }
+
   viewFixedAsset(id: number, firstName: string, lastName: string) {
     this.router.navigate(['/plant-care/action/assets/fixed-asset-category'], {
       queryParams: { id, firstName, lastName },

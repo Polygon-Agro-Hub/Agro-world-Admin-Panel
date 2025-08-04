@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { Country, COUNTRIES } from '../../../../assets/country-data';
 
 @Component({
   selector: 'app-add-collection-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DropdownModule, InputTextModule, FormsModule],
   templateUrl: './add-collection-center.component.html',
   styleUrls: ['./add-collection-center.component.css'],
 })
@@ -25,12 +28,21 @@ export class AddCollectionCenterComponent implements OnInit {
   selectDistrict: string = '';
   city: string = '';
   isLoadingregcode = false;
+  companyDisplayText: string = '';
+  companyTouched: boolean = false;
+
+  searchQuery: string = '';
+  filteredCompanies: Company[] = [];
 
   allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
   phone01: false,
   phone02: false,
 };
+
+countries: Country[] = COUNTRIES;
+  selectedCountry1: Country | null = null;
+  selectedCountry2: Country | null = null;
 
   leadingSpaceError: boolean = false;
   specialCharOrNumberError: boolean = false;
@@ -59,8 +71,36 @@ export class AddCollectionCenterComponent implements OnInit {
       province: ['', Validators.required],
       country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required],
+      searchQuery: ['']
     });
+    const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
+  this.selectedCountry1 = defaultCountry;
+  this.selectedCountry2 = defaultCountry;
+  this.filteredCompanies = [...this.CompanyData];
   }
+  //serachable company dropdown
+  filterCompanies(event: Event): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
+  
+    this.filteredCompanies = this.CompanyData.filter(company =>
+      company.companyNameEnglish.toLowerCase().includes(input)
+    );
+  }
+
+  onCompanyInputClick(): void {
+    this.dropdownOpen = !this.dropdownOpen;
+    this.companyTouched = true;
+  
+    // Reset search input and filtered data
+    this.filteredCompanies = [...this.CompanyData];
+  
+    // Clear the actual input field (optional but recommended)
+    const inputElement = document.querySelector('#companySearchInput') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = '';
+    }
+  }
+  
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
@@ -71,9 +111,6 @@ export class AddCollectionCenterComponent implements OnInit {
     }
     return true;
   }
-
-  
-
 
   validateSriLankanPhone(input: string, key: string): void {
     if (!input) {
@@ -117,12 +154,17 @@ export class AddCollectionCenterComponent implements OnInit {
     });
   }
 
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/24x18/${code}.png`;
+  }
+
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
   toggleSelection(company: any) {
     const index = this.selectedCompaniesIds.indexOf(company.id);
+  
     if (index === -1) {
       this.selectedCompaniesIds.push(company.id);
       this.selectedCompaniesNames.push(company.companyNameEnglish);
@@ -130,9 +172,28 @@ export class AddCollectionCenterComponent implements OnInit {
       this.selectedCompaniesIds.splice(index, 1);
       this.selectedCompaniesNames.splice(index, 1);
     }
+  
+    this.companyDisplayText = this.selectedCompaniesNames.join(', ');
+    console.log('companyDisplayText', this.companyDisplayText);
   }
+  
+
+  // trimCity(): void {
+  //   const control = this.collectionCenterForm.get('buildingNumber');
+  //   if (control) {
+  //     const value = control.value || '';
+  //     control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+  //   }
+  // }
 
   onProvinceChange() {
+
+    const control = this.collectionCenterForm.get('city');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+
     const selectedProvince = this.collectionCenterForm.get('province')?.value;
     const selectedDistrict = this.collectionCenterForm.get('district')?.value;
     const selectedCity = this.collectionCenterForm.get('city')?.value;
@@ -410,6 +471,30 @@ export class AddCollectionCenterComponent implements OnInit {
       ],
     },
   ];
+
+  trimBuildingNumber(): void {
+    const control = this.collectionCenterForm.get('buildingNumber');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+  }
+
+  trimCity(): void {
+    const control = this.collectionCenterForm.get('buildingNumber');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+  }
+
+  trimStreetName(): void {
+    const control = this.collectionCenterForm.get('street');
+    if (control) {
+      const value = control.value || '';
+      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
+    }
+  }
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;

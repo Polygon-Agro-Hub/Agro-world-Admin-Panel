@@ -43,7 +43,7 @@ export class DistributionViewCompanyComponent implements OnInit {
     private datePipe: DatePipe,
     private distributionHubService: DistributionHubService,
     private collectionService: CollectionService
-  ) {}
+  ) { }
 
   add(id: number, companyName: string): void {
     this.router.navigate(['/distribution-hub/action/add-distribution-officer', id, companyName]);
@@ -58,7 +58,7 @@ export class DistributionViewCompanyComponent implements OnInit {
     });
     this.fetchAllCompanyHeads();
   }
-  
+
   fetchAllCompanyHeads(
     companyId: number = this.companyId!,
     page: number = 1,
@@ -152,20 +152,20 @@ export class DistributionViewCompanyComponent implements OnInit {
     });
   }
 
-view(id: number, isView: boolean): void {
-  if (!id) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid Input',
-      text: 'Officer ID is missing.',
+  view(id: number, isView: boolean): void {
+    if (!id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Input',
+        text: 'Officer ID is missing.',
+      });
+      return;
+    }
+    this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
+      queryParams: { isView }
     });
-    return;
-  }
-this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
-  queryParams: { isView }
-});
 
-}
+  }
 
 
   edit(id: number): void {
@@ -176,17 +176,18 @@ this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
   }
 
   openPopup(item: any) {
-    this.isPopupVisible = true;
+    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
 
     const tableHtml = `
-        <div class="container mx-auto">
-          <h1 class="text-center text-2xl font-bold mb-4">Officer Name : ${item.firstNameEnglish}</h1>
+        <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
+          <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
           <div>
-            <p class="text-center">Are you sure you want to approve or reject this collection?</p>
+            <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection officer?</p>
           </div>
           <div class="flex justify-center mt-4">
-            <button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>
-            <button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>
+            ${showRejectButton ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>' : ''}
+            ${showApproveButton ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>' : ''}
           </div>
         </div>
       `;
@@ -195,90 +196,105 @@ this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
       html: tableHtml,
       showConfirmButton: false,
       width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
       didOpen: () => {
-        document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The collection was approved successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllCompanyHeads();
-                } else {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Distributed Center Head was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCompanyHeads();
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              (err) => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
+              );
+            });
+        }
 
-        document
-          .getElementById('rejectButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The collection was rejected successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllCompanyHeads();
-                } else {
+        if (showRejectButton) {
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Distributed Center Head was rejected successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCompanyHeads();
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              (err) => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while rejecting. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
+              );
+            });
+        }
       },
     });
+  }
+
+  trimLeadingSpaces() {
+    if (this.searchText && this.searchText.startsWith(' ')) {
+      this.searchText = this.searchText.trimStart();
+    }
   }
 }
 

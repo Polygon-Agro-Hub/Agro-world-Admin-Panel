@@ -54,13 +54,15 @@ export class UserCropCalendarComponent {
   swiper: any;
   isModalOpen = false;
   selectedImages: string[] = [];
+  firstStartingDate: string | null = null;
+  cropName: string = '';
 
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    public permissionService: PermissionService, 
+    public permissionService: PermissionService,
     public tokenService: TokenService
   ) {}
 
@@ -76,10 +78,10 @@ export class UserCropCalendarComponent {
       this.cultivationId = params['cultivationId']
         ? +params['cultivationId']
         : null;
-      this.userName = params['userName'] ? params['userName'] : '';
+      this.cropName = params['cropName'] ? params['cropName'] : ''; // Changed from userName to cropName
     });
 
-    console.log('onCulscropID', this.onCulscropID, 'userName', this.userName);
+    console.log('onCulscropID', this.onCulscropID, 'cropName', this.cropName); // Updated log
     this.getchUserTaskList(this.cropCalendarId, this.userId);
   }
 
@@ -95,9 +97,12 @@ export class UserCropCalendarComponent {
       .getUserTasks(cropId, userId, page, limit)
       .subscribe(
         (data) => {
+          console.log('User Task List Data:', data);
+
           this.isLoading = false;
           this.taskList = data.items;
           this.totalItems = data.total;
+          this.firstStartingDate = data.firstStartingDate;
         },
         (error) => {
           this.isLoading = false;
@@ -183,7 +188,13 @@ export class UserCropCalendarComponent {
     );
   }
 
-  addNewTask(cropId: string, indexId: string, userId: string, cultivationId: any, userName: string ) {
+  addNewTask(
+    cropId: string,
+    indexId: string,
+    userId: string,
+    cultivationId: any,
+    cropName: string // Changed from userName to cropName
+  ) {
     Swal.fire({
       text: 'Are you sure you want to add a new task?',
       showCancelButton: true,
@@ -198,13 +209,14 @@ export class UserCropCalendarComponent {
           'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]',
       },
     }).then((result) => {
-      console.log('this.onCulscropID', this.onCulscropID)
+      console.log('this.onCulscropID', this.onCulscropID);
       if (result.isConfirmed) {
-        this.router.navigate([
-          `/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`,
-        ],
-        { queryParams: { cultivationId, userName } }
-      );
+        this.router.navigate(
+          [
+            `/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`,
+          ],
+          { queryParams: { cultivationId, cropName } } // Changed from userName to cropName
+        );
       }
     });
   }

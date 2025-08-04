@@ -46,8 +46,14 @@ export class ViewPackageListService {
     }
     if (date) {
       params = params.append('date', date);
+      return this.http.get<any>(
+        `${this.apiUrl}market-place/get-all-package-list-date`,
+        {
+          headers,
+          params,
+        }
+      );
     }
-
     return this.http.get<any>(
       `${this.apiUrl}market-place/get-all-package-list`,
       {

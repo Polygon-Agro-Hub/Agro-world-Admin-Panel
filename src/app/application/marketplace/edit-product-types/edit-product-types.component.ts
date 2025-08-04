@@ -77,7 +77,23 @@ export class EditProductTypesComponent implements OnInit {
     });
   }
 
-
+  onTypeNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const original = input.value;
+    const trimmed = original.replace(/^\s+/, ''); // Remove leading spaces
+    if (original !== trimmed) {
+      input.value = trimmed; // Update the input's display value
+    }
+    this.productObj.typeName = trimmed; // Update the model
+  }
+  
+  onShortCodeInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const original = input.value;
+    const trimmedAndCapitalized = original.replace(/^\s+/, '').toUpperCase();
+    input.value = trimmedAndCapitalized;
+    this.productObj.shortCode = trimmedAndCapitalized;
+  }
 
 }
 

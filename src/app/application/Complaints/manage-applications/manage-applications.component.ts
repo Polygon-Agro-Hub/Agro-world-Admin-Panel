@@ -149,194 +149,141 @@ export class ManageApplicationsComponent {
   // swal2-input w-48 h-16 text-sm rounded-lg px-2 border border-gray-300
   // focus:border-blue-500 focus:outline-none
   addNewApp() {
-    Swal.fire({
-      // title: 'Add New Application',
-      html: `
+  Swal.fire({
+    html: `
       <div>
-      <h1 class="mb-8 font-semibold text-black dark:text-textDark">Add New Application</h1>
-      <div class="flex items-center gap-4 ">
-        <label for="appName" class="whitespace-nowrap text-base dark:text-textDark">Application Name</label>
-        <input id="appName" type="text"
-             class="text-sm rounded-lg p-3  w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
-      </div>
-
-    `,
-      showCancelButton: true,
-      confirmButtonText: "Add", // "Add" (Blue) second
-      cancelButtonText: "Cancel", // "Cancel" (Gray) first
-      reverseButtons: true, // Keeps cancel button first
-
-      customClass: {
-        popup: "rounded-card", // Custom class for rounded alert box
-        confirmButton: "add-btn", // Blue "Add" button
-        cancelButton: "cancel-btn", // Gray "Cancel" button
-      },
-
-      willOpen: () => {
-        // Apply Tailwind styles dynamically
-        document
-          .querySelector(".rounded-card")
-          ?.classList.add("rounded-xl", "p-5", "dark:dark:bg-tileBlack");
-
-        document
-          .querySelector(".add-btn")
-          ?.classList.add(
-            "bg-blue-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-blue-600",
-            "transition",
-            "w-24",
-          );
-
-        document
-          .querySelector(".cancel-btn")
-          ?.classList.add(
-            "bg-gray-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-gray-600",
-            "transition",
-            "w-24",
-          );
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // If "Add" is clicked
-        const applicationName = (
-          document.getElementById("appName") as HTMLInputElement
-        )?.value.trim();
-
-        if (applicationName) {
-          this.complaintSrv.addNewApplication(applicationName).subscribe(
-            (response) => {
-              Swal.fire(
-                "Success!",
-                "Application added successfully.",
-                "success",
-              ).then(() => {
-                window.location.reload();
-              });
-            },
-            (error) => {
-              Swal.fire(
-                "Error!",
-                "There was an error adding the application.",
-                "error",
-              );
-            },
-          );
-        } else {
-          Swal.fire("Error!", "You must enter an application name.", "error");
-        }
-      }
-    });
-  }
-
-  editApp(systemAppId: number, systemAppName: string) {
-    Swal.fire({
-      html: `
-      <div>
-        <h1 class="mb-8 font-semibold text-black dark:text-textDark">Edit Application Name</h1>
+        <h1 class="mb-8 font-semibold text-black dark:text-textDark">Add New Application</h1>
         <div class="flex items-center gap-4">
           <label for="appName" class="whitespace-nowrap text-base dark:text-textDark">Application Name</label>
-          <input id="appName" type="text" value="${systemAppName}"
-                 class="text-sm rounded-lg p-3 w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
+          <input id="appName" type="text"
+               class="text-sm rounded-lg p-3 w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
         </div>
       </div>
     `,
-      showCancelButton: true,
-      confirmButtonText: "Edit", // "Edit" (Blue) second
-      cancelButtonText: "Cancel", // "Cancel" (Gray) first
-      reverseButtons: true, // Keeps cancel button first
+    showCancelButton: true,
+    confirmButtonText: "Add",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
 
-      customClass: {
-        popup: "rounded-card", // Custom class for rounded alert box
-        confirmButton: "edit-btn", // Blue "Edit" button
-        cancelButton: "cancel-btn", // Gray "Cancel" button
-      },
+    customClass: {
+      popup: "rounded-card",
+      confirmButton: "add-btn",
+      cancelButton: "cancel-btn",
+    },
 
-      willOpen: () => {
-        // Apply Tailwind styles dynamically
-        document
-          .querySelector(".rounded-card")
-          ?.classList.add("rounded-xl", "p-5", "dark:dark:bg-tileBlack");
-
-        document
-          .querySelector(".edit-btn")
-          ?.classList.add(
-            "bg-blue-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-blue-600",
-            "transition",
-            "w-24",
-          );
-
-        document
-          .querySelector(".cancel-btn")
-          ?.classList.add(
-            "bg-gray-500",
-            "text-white",
-            "rounded-lg",
-            "px-4",
-            "py-2",
-            "text-sm",
-            "hover:bg-gray-600",
-            "transition",
-            "w-24",
-          );
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // If "Edit" is clicked
-        const applicationName = (
-          document.getElementById("appName") as HTMLInputElement
-        )?.value.trim();
-
-        // Input validation
-        if (!applicationName) {
-          Swal.fire("Error!", "You must enter an application name.", "error");
-          return;
-        }
-        if (!/^[A-Za-z\s]+$/.test(applicationName)) {
-          Swal.fire("Error!", "Only letters and spaces are allowed!", "error");
-          return;
-        }
-
-        // Call your service method here with both systemAppId and applicationName
-        this.complaintSrv
-          .editApplication(systemAppId, applicationName)
-          .subscribe(
-            (response) => {
-              Swal.fire(
-                "Success!",
-                "Application Name edited successfully.",
-                "success",
-              ).then(() => {
-                window.location.reload();
-              });
-            },
-            (error) => {
-              Swal.fire(
-                "Error!",
-                "There was an error editing the Application Name.",
-                "error",
-              );
-            },
-          );
+    didRender: () => {
+      // Apply Tailwind styles dynamically after popup is rendered
+      const popup = document.querySelector(".rounded-card");
+      if (popup) {
+        popup.classList.add("rounded-xl", "p-5", "dark:bg-tileBlack");
       }
-    });
-  }
+
+      const addBtn = document.querySelector(".add-btn");
+      if (addBtn) {
+        addBtn.classList.add(
+          "bg-blue-500",
+          "text-white",
+          "rounded-lg",
+          "px-4",
+          "py-2",
+          "text-sm",
+          "hover:bg-blue-600",
+          "transition",
+          "w-24"
+        );
+      }
+
+      const cancelBtn = document.querySelector(".cancel-btn");
+      if (cancelBtn) {
+        cancelBtn.classList.add(
+          "bg-gray-500",
+          "text-white",
+          "rounded-lg",
+          "px-4",
+          "py-2",
+          "text-sm",
+          "hover:bg-gray-600",
+          "transition",
+          "w-24"
+        );
+      }
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const applicationName = (document.getElementById("appName") as HTMLInputElement)?.value.trim();
+
+      if (applicationName) {
+        this.complaintSrv.addNewApplication(applicationName).subscribe(
+          () => {
+            Swal.fire("Success!", "Application added successfully.", "success").then(() => {
+              window.location.reload();
+            });
+          },
+          () => {
+            Swal.fire("Error!", "Application name already exists.", "error");
+          }
+        );
+      } else {
+        Swal.fire("Error!", "You must enter an application name.", "error");
+      }
+    }
+  });
+}
+
+ editApp(systemAppId: number, systemAppName: string) {
+  Swal.fire({
+    html: `
+      <div>
+        <h1 class="mb-5 font-semibold text-black dark:text-textDark">Edit Application Name</h1>
+        <div class="flex items-center gap-4">
+          <label for="appName" class="whitespace-nowrap text-base dark:text-textDark">Application Name</label>
+          <input id="appName" type="text" value="${systemAppName}"
+            class="text-sm rounded-lg p-3 w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: "Edit",
+    cancelButtonText: "Cancel",
+    reverseButtons: true,
+    customClass: {
+      popup: "rounded-xl p-5 dark:bg-tileBlack",
+      confirmButton: "bg-blue-500 text-white rounded-lg px-4 py-2 text-sm hover:bg-blue-600 transition w-24",
+      cancelButton: "bg-gray-500 text-white rounded-lg px-4 py-2 text-sm hover:bg-gray-600 transition w-24"
+    },
+    didRender: () => {
+      const popup = document.querySelector(".swal2-popup");
+      if (popup) popup.classList.add("rounded-xl", "p-5", "dark:bg-tileBlack");
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const inputElement = document.getElementById("appName") as HTMLInputElement;
+      const applicationName = inputElement?.value.trim();
+
+      if (!applicationName) {
+        Swal.fire("Error!", "Application name cannot be empty!", "error");
+        return;
+      }
+
+      if (!/^[A-Za-z\s]+$/.test(applicationName)) {
+        Swal.fire("Error!", "Only letters and spaces are allowed!", "error");
+        return;
+      }
+
+      this.complaintSrv.editApplication(systemAppId, applicationName).subscribe({
+        next: () => {
+          Swal.fire("Success!", "Application name updated successfully.", "success").then(() => {
+            window.location.reload();
+          });
+        },
+        error: (err) => {
+          console.error("Error updating app name:", err);
+          Swal.fire("Error!", "Already exists", "error");
+        }
+      });
+    }
+  });
+}
 
   deleteApp(systemAppId: number) {
     Swal.fire({

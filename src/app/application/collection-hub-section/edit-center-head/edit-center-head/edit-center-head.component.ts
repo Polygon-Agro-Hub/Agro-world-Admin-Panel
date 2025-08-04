@@ -300,6 +300,8 @@ export class EditCenterHeadComponent {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    const nicPattern = /^(\d{9}V|\d{12})$/;
+  
     if (
       !this.personalData.firstNameEnglish ||
       !this.personalData.firstNameSinhala ||
@@ -309,13 +311,16 @@ export class EditCenterHeadComponent {
       !this.personalData.lastNameTamil ||
       !this.personalData.phoneNumber01 ||
       !this.personalData.nic ||
+      !nicPattern.test(this.personalData.nic) || // ✅ Add pattern check here
       !this.personalData.email ||
       !this.personalData.empType
     ) {
       return;
     }
+  
     this.selectedPage = page;
   }
+  
 
   updateProvince(event: Event): void {
     const target = event.target as HTMLSelectElement;
@@ -401,7 +406,7 @@ export class EditCenterHeadComponent {
     this.isLoading = false;
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to edit the Center Head?',
+      text: 'Do you want to edit the Centre Head?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
@@ -421,10 +426,10 @@ export class EditCenterHeadComponent {
               this.isLoading = false;
               Swal.fire(
                 'Success',
-                'Center Head updated Successfully',
+                'Centre Head updated Successfully',
                 'success'
               );
-              this.navigatePath('/collection-hub/manage-company');
+              window.history.back();
             },
             (error: any) => {
               this.isLoading = false;

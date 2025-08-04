@@ -50,6 +50,8 @@
           id="cropName"
           name="cropName"
           [(ngModel)]="productObj.cropName"
+          (blur)="trimDisplayName()"
+        (keydown)="preventLeadingSpace($event,productObj.cropName)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
       </div>
@@ -235,7 +237,21 @@
 <div class="mb-6">
   <label class="text-[#534E4E] dark:text-textDark">Tags *</label>
   <div class="tag-wrapper dark:bg-tileBlack p-4 rounded-md">
-  <section>
+    <!-- <section class="w-full">
+      <p-chips
+        [(ngModel)]="templateKeywords"
+        [addOnTab]="true"
+        [addOnBlur]="true"
+        separator=","
+        placeholder="New keyword..."
+        class="w-full dark:bg-tileBlack dark:text-textDark custom-chip"
+        (onAdd)="announceTagAdded($event)"
+        (onRemove)="announceTagRemoved($event)"
+        (ngModelChange)="updateTags()"
+      >
+      </p-chips>
+    </section> -->
+    <section>
     <mat-form-field
       class="w-full"
       [class.dark-mode]="themeService.isDarkTheme()"

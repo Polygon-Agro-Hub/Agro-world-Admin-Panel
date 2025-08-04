@@ -8,6 +8,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DistributionHubService {
+  resetPassword(itemId: number, arg1: { currentPassword: string; newPassword: string; }) {
+    throw new Error('Method not implemented.');
+  }
+  checkDuplicates(payload: { nic: string; email: string; phoneNumber01: string; phoneNumber02: string; excludeId: number; }) {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
   constructor(private http: HttpClient, private tokenService: TokenService) {}

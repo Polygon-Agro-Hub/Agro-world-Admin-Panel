@@ -42,21 +42,35 @@
     <!-- Row 2 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Contact Number 01 *</label>
+        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
+          Contact Number 01 *
+        </label>
         <div class="flex">
-          <select formControlName="contact1Code"
-            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option *ngFor="let code of phoneCodes" [value]="code.value">
-              {{ code.label }}
-            </option>
-          </select>
-          <input type="tel" formControlName="contact1" placeholder="XXXXXXXXX" maxlength="9"
+          <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+            styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
+            <!-- Dropdown items -->
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+
+            <!-- Selected item -->
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
+          <input type="tel" formControlName="contact1" placeholder="7XXXXXXXX" maxlength="9"
             (input)="onInputChange($event, 'phone')" [class]="
-        ' dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-        (isFieldInvalid('contact1')
-          ? 'border-red-500'
-          : 'border-gray-300')
-      " />
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+          (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
+        " />
         </div>
         <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("contact1") }}
@@ -68,19 +82,31 @@
           Contact Number 02
         </label>
         <div class="flex">
-          <select formControlName="contact2Code"
-            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option *ngFor="let code of phoneCodes" [value]="code.value">
-              {{ code.label }}
-            </option>
-          </select>
-          <input type="tel" formControlName="contact2" placeholder="XXXXXXXXX" maxlength="9"
+          <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+            styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
+            <!-- Dropdown items -->
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+
+            <!-- Selected item -->
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
+          <input type="tel" formControlName="contact2" placeholder="7XXXXXXXX" maxlength="9"
             (input)="onInputChange($event, 'phone')" [class]="
-        'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-        (isFieldInvalid('contact2')
-          ? 'border-red-500'
-          : 'border-gray-300')
-      " />
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+          (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
+        " />
         </div>
         <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("contact2") }}

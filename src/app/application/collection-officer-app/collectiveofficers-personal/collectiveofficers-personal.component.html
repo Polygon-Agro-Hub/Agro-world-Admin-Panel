@@ -93,7 +93,7 @@
           </label>
           <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
-            (onChange)="getAllCollectionCetnter(personalData.companyId)" (onBlur)="onBlur('companyId')" 
+            (onChange)="getAllCollectionCetnter(personalData.companyId)" (onBlur)="onBlur('companyId')"
             styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom">
           </p-dropdown>
@@ -107,7 +107,8 @@
           <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!loaded"
             placeholder="Select a collection centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
-            panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom" (onChange)="changeCenter($event)"> >
+            panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+            (onChange)="changeCenter($event)"> >
           </p-dropdown>
           <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm">Collection Centre Name is a required
             field</span>
@@ -169,8 +170,8 @@
           </label>
           <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
-            styleClass="w-full h-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
-             [autoDisplayFirst]="false">
+            styleClass="w-full h-full mt-1" panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom" [autoDisplayFirst]="false">
           </p-dropdown>
         </div>
 
@@ -266,21 +267,34 @@
           </label>
           <div class="mt-1">
             <div class="flex">
-              <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-0 text-textLight dark:text-textDark dark:bg-tileBlack flex-shrink-0">
-                <option value="+880">+880 (BD)</option>
-                <option value="+855">+855 (KH)</option>
-                <option value="+91">+91 (IN)</option>
-                <option value="+31">+31 (NL)</option>
-                <option value="+94">+94 (LK)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+84">+84 (VN)</option>
-              </select>
-              <input id="phoneNumber01" name="phoneNumber01" type="tel" [(ngModel)]="personalData.phoneNumber01"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack border-l-0"
-                placeholder="Enter your phone number" (blur)="onBlur('phoneNumber01')"
-                (input)="formatPhoneNumber('phoneNumber01')" (keypress)="preventNonNumeric($event)" maxlength="9" />
+              <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
+                optionValue="dialCode"
+                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                [style]="{ width: '120px' }"
+                [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
+                <!-- Dropdown items -->
+                <ng-template let-country pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+
+                <!-- Selected item -->
+                <ng-template let-country pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="country">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+              <input type="tel" id="phoneNumber01" name="phoneNumber01" [(ngModel)]="personalData.phoneNumber01"
+                placeholder="XXXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber01')"
+                (keypress)="preventNonNumeric($event)" (blur)="onBlur('phoneNumber01')" [class]="
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-l-0 ' +
+          (touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) ? 'border-red-500' : 'border-gray-300')
+        " />
             </div>
             <!-- Error messages outside the flex container -->
             <div class="mt-1">
@@ -294,29 +308,41 @@
             </div>
           </div>
         </div>
-
         <!-- Fixed Mobile Number - 02 input -->
         <div>
-          <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 02
           </label>
           <div class="mt-1">
             <div class="flex">
-              <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-0 text-textLight dark:text-textDark dark:bg-tileBlack flex-shrink-0">
-                <option value="+880">+880 (BD)</option>
-                <option value="+855">+855 (KH)</option>
-                <option value="+91">+91 (IN)</option>
-                <option value="+31">+31 (NL)</option>
-                <option value="+94">+94 (LK)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+84">+84 (VN)</option>
-              </select>
-              <input id="phoneNumber02" name="phoneNumber02" type="tel" [(ngModel)]="personalData.phoneNumber02"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack border-l-0"
-                placeholder="Enter your phone number" (blur)="onBlur('phoneNumber02')"
-                (input)="formatPhoneNumber('phoneNumber02')" (keypress)="preventNonNumeric($event)" maxlength="9" />
+              <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
+                optionValue="dialCode"
+                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                [style]="{ width: '120px' }"
+                [ngClass]="{ 'border-red-500': personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) }">
+                <!-- Dropdown items -->
+                <ng-template let-country pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+
+                <!-- Selected item -->
+                <ng-template let-country pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="country">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+              <input type="tel" id="phoneNumber02" name="phoneNumber02" [(ngModel)]="personalData.phoneNumber02"
+                placeholder="XXXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber02')"
+                (keypress)="preventNonNumeric($event)" (blur)="onBlur('phoneNumber02')" [class]="
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-l-0 ' +
+          (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')
+        " />
             </div>
             <!-- Error messages outside the flex container -->
             <div class="mt-1">

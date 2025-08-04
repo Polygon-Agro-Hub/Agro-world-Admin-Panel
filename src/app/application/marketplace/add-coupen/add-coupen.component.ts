@@ -4,18 +4,18 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-add-coupen',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CalendarModule],
   templateUrl: './add-coupen.component.html',
   styleUrls: ['./add-coupen.component.css'],
 })
 export class AddCoupenComponent {
   coupenObj: Coupen = new Coupen();
   today: string = this.getTodayDate();
-  isValid: boolean = true;
   checkPrecentageValueMessage: string = '';
   checkfixAmountValueMessage: string = '';
 
@@ -23,6 +23,11 @@ export class AddCoupenComponent {
 
   back(): void {
     this.router.navigate(['market/action']);
+  }
+
+  clearValidationMessages(): void {
+    this.checkPrecentageValueMessage = '';
+    this.checkfixAmountValueMessage = '';
   }
 
   getTodayDate(): string {
@@ -71,83 +76,97 @@ export class AddCoupenComponent {
   }
 
   onSubmit() {
-    if (this.isValid) {
-      this.checkPrecentageValueMessage = 'Precentage value is required';
+  // Reset messages
+  this.clearValidationMessages();
+
+  // Check required fields for all types
+  if (
+    !this.coupenObj.code ||
+    !this.coupenObj.endDate ||
+    !this.coupenObj.startDate ||
+    !this.coupenObj.type
+  ) {
+    Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+    return;
+  }
+
+  // Type-specific validations
+  if (this.coupenObj.type === 'Percentage') {
+    if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+      this.checkPrecentageValueMessage = 'Percentage value is required';
+      Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
+      return;
+    }
+  } else if (this.coupenObj.type === 'Fixed Amount') {
+    if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
       this.checkfixAmountValueMessage = 'Fix amount value is required';
+      Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
       return;
     }
-    if (
-      !this.coupenObj.code ||
-      !this.coupenObj.endDate ||
-      !this.coupenObj.startDate ||
-      !this.coupenObj.type
-    ) {
-      Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
-      return;
-    }
+  }
 
-    if (this.coupenObj.type === 'Percentage' && !this.coupenObj.percentage) {
-      Swal.fire('Warning', 'Please fill Discount Persentage fields', 'warning');
-      return;
-    }
+  // Price limit validation if checkbox is checked
+  if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
+    Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
+    return;
+  }
 
-    if (this.coupenObj.type === 'Fixed Amount' && !this.coupenObj.fixDiscount) {
-      Swal.fire('Warning', 'Please fill Discount Amount fields', 'warning');
-      return;
-    }
-
-    if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-      Swal.fire('Warning', 'Please fill Price Limit fields', 'warning');
-      return;
-    }
-
-    this.marketSrv.createCoupen(this.coupenObj).subscribe((res) => {
+  // If all validations pass, save the coupon
+  this.marketSrv.createCoupen(this.coupenObj).subscribe({
+    next: (res) => {
       if (res.status) {
         Swal.fire({
           icon: 'success',
-          title: 'Coupen Created',
-          text: 'The coupen created successfull!',
+          title: 'Coupon Created',
+          text: 'The coupon was created successfully!',
           confirmButtonText: 'OK',
         }).then(() => {
           this.coupenObj = new Coupen();
           this.router.navigate(['market/action/view-coupen']);
         });
       }
-    });
-  }
-
-  onCancel() {
-    this.coupenObj = new Coupen();
-  }
+    },
+    error: (err) => {
+      if (err.error && err.error.error === 'Coupon with this code already exists') {
+        // Show validation message under the code input
+        this.checkPrecentageValueMessage = ''; // Clear other messages
+        this.checkfixAmountValueMessage = ''; // Clear other messages
+        Swal.fire('Error', 'Coupon with this code already exists', 'error');
+      } else {
+        Swal.fire('Error', err.error?.error || 'Coupon with this code already exists', 'error');
+      }
+    }
+  });
+}
 
   checkPrecentageValue(num: number) {
     if (num === null || isNaN(num)) {
-      this.isValid = true;
       this.checkPrecentageValueMessage = 'Percentage value is required';
       return;
     }
 
     if (num < 0) {
       this.coupenObj.percentage = 0;
-      this.isValid = true;
       this.checkPrecentageValueMessage = 'Cannot be negative number';
     } else if (num > 100) {
       this.coupenObj.percentage = 100;
-      this.isValid = true;
       this.checkPrecentageValueMessage = 'Cannot be greater than 100';
     } else {
-      this.isValid = false;
       this.checkPrecentageValueMessage = '';
     }
   }
 
   checkFixAmountValue(num: number) {
-    if (num < 0) {
-      this.isValid = true;
-      this.checkfixAmountValueMessage = 'Can not be negative number';
-    } else {
-      this.isValid = false;
+    if (num === null || isNaN(num)) {
       this.checkfixAmountValueMessage = 'Fix amount value is required';
+      return;
+    }
+
+    if (num < 0) {
+      this.coupenObj.fixDiscount = 0;
+      this.checkfixAmountValueMessage = 'Cannot be negative number';
+    } else {
+      this.checkfixAmountValueMessage = '';
     }
   }
 
@@ -159,12 +178,21 @@ export class AddCoupenComponent {
 
     // Prevent pasting negative numbers
     if (e.ctrlKey && e.key === 'v') {
-      // This is a simple prevention, for complete solution you'd need to handle paste event
       setTimeout(() => {
         if (this.coupenObj.percentage < 0) {
           this.coupenObj.percentage = 0;
         }
       }, 0);
+    }
+  }
+
+  onCodeInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const trimmedValue = input.value.trimStart();
+    
+    if (input.value !== trimmedValue) {
+      input.value = trimmedValue;
+      this.coupenObj.code = trimmedValue;
     }
   }
 }

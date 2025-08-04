@@ -25,8 +25,9 @@ import {
 
 
 interface PhoneCode {
-  value: string;
-  label: string;
+  code: string;
+  dialCode: string;
+  name: string;
 }
 
 interface DistributionCenter {
@@ -73,12 +74,24 @@ export class EditDistributionCentreComponent implements OnInit {
   private originalCenterName = '';
 
 
-  phoneCodes: PhoneCode[] = [
-    { value: '+94', label: '+94' },
-    { value: '+91', label: '+91' },
-    { value: '+1', label: '+1' },
-    { value: '+44', label: '+44' },
-  ];
+countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'US', dialCode: '+1', name: 'United States' },
+  { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'AU', dialCode: '+61', name: 'Australia' },
+  { code: 'CA', dialCode: '+1', name: 'Canada' },
+  { code: 'DE', dialCode: '+49', name: 'Germany' },
+  { code: 'FR', dialCode: '+33', name: 'France' }
+];
+
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
 
   provinces: string[] = [
     'Central',

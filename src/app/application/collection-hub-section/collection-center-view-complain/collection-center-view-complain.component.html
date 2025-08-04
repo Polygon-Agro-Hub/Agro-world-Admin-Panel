@@ -12,7 +12,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center min-w-[200px]">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Complaint List ({{ this.totalItems }})
+        Complaint List ({{ totalItems === 0 ? '0' : totalItems <10 ? '0' + totalItems : totalItems }})
       </h2>
     </div>
     <div class="flex items-center">
@@ -31,7 +31,7 @@
           [checkmark]="true"
           optionLabel="status"
           optionValue="value"
-          [showClear]="true"
+          [showClear]="!!rpst"
           placeholder="Reply"
           [(ngModel)]="rpst"
           (onChange)="regStatusFil()"
@@ -48,7 +48,7 @@
           [(ngModel)]="filterComCategory"
           [checkmark]="true"
           optionLabel="categoryEnglish"
-          [showClear]="true"
+          [showClear]="!!filterComCategory"
           placeholder="Category"
           (onChange)="applyFilters()"
           appendTo="body"
@@ -65,7 +65,7 @@
           [(ngModel)]="filterCompany"
           [checkmark]="true"
           optionLabel="companyNameEnglish"
-          [showClear]="true"
+          [showClear]="!!filterCompany"
           placeholder="Company"
           (onChange)="applyFilters()"
           appendTo="body"
@@ -81,7 +81,7 @@
           [(ngModel)]="filterStatus"
           [checkmark]="true"
           optionLabel="type"
-          [showClear]="true"
+          [showClear]="!!filterStatus"
           placeholder="Status"
           (onChange)="applyFilters()"
           appendTo="body"
@@ -99,7 +99,7 @@
       >
         <input
           type="text"
-          placeholder="Search.."
+          placeholder="Search By EMP ID, Company, Center Code..."
           [(ngModel)]="searchText"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           (keydown.enter)="searchComplain()"

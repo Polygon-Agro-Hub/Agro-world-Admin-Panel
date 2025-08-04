@@ -37,8 +37,8 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   complain: ComplainN = new ComplainN();
   comCategories: ComCategories[] = [];
   company: Company[] = [];
-  filterComCategory: any = {};
-  filterCompany: any = {};
+  filterComCategory: any = '';
+  filterCompany: any = '';
   hasData: boolean = true;
 
   isPopUpVisible: boolean = false;

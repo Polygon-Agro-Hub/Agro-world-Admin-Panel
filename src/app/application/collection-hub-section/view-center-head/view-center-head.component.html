@@ -235,7 +235,7 @@
             </label>
             <div class="mt-1 flex">
               <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack" [disabled]="true">
                 <option value="+94">+94 (LK)</option>
                 <option value="+1">+1 (US)</option>
                 <option value="+44">+44 (UK)</option>
@@ -244,7 +244,7 @@
               <input [disabled]="true" id="phoneNumber01" name="phoneNumber01" type="text" [(ngModel)]="personalData.phoneNumber01"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="7XXXXXXXX" #phoneNumber01Input="ngModel" required minlength="9" maxlength="9"
-                pattern="^[0-9]{9}$" />
+                pattern="^[0-9]{9}$" readonly />
             </div>
   
             <!-- Required Validation -->
@@ -277,7 +277,7 @@
             </label>
             <div class="mt-1 flex">
               <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack" [disabled]="true">
                 <option value="+94">+94 (LK)</option>
                 <option value="+1">+1 (US)</option>
                 <option value="+44">+44 (UK)</option>

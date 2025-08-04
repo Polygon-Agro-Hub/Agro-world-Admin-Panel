@@ -5,7 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { Router , ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-send-to-dispatch',
@@ -51,12 +51,12 @@ export class ViewSendToDispatchComponent {
     private orderService: ProcumentsService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
-  
+
 
 
 
@@ -161,6 +161,12 @@ export class ViewSendToDispatchComponent {
     this.router.navigate(['/procurement/view-dispatched-define-package'], {
       queryParams: { id },
     });
+  }
+
+  trimLeadingSpaces() {
+    if (this.searchTerm.startsWith(' ')) {
+      this.searchTerm = this.searchTerm.trimStart();
+    }
   }
 }
 

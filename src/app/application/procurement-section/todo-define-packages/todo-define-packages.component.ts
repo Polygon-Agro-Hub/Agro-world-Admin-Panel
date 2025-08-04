@@ -49,7 +49,7 @@ export class TodoDefinePackagesComponent implements OnInit {
   constructor(
     private orderService: ProcumentsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchOrders();
@@ -58,7 +58,8 @@ export class TodoDefinePackagesComponent implements OnInit {
   fetchOrders(
     ordstatus: string = this.statusFilter,
     dateFilter: string = this.dateFilter,
-    dateFilter1: string = this.dateFilter1
+    dateFilter1: string = this.dateFilter1,
+    searchText: string = this.searchTerm
   ): void {
     this.isLoading = true;
 
@@ -68,7 +69,8 @@ export class TodoDefinePackagesComponent implements OnInit {
         this.itemsPerPage,
         ordstatus,
         dateFilter,
-        dateFilter1
+        dateFilter1,
+        searchText
       )
       .subscribe({
         next: (response) => {
@@ -162,5 +164,11 @@ export class TodoDefinePackagesComponent implements OnInit {
     this.router.navigate(['/procurement/todo-define-premade-packages'], {
       queryParams: { id },
     });
+  }
+
+  trimLeadingSpaces() {
+    if (this.searchTerm.startsWith(' ')) {
+      this.searchTerm = this.searchTerm.trimStart();
+    }
   }
 }

@@ -264,37 +264,41 @@ export class FinalinvoiceService {
 
     let yPosition = 65;
 
-    // Address display
-    if (invoice.buildingType === 'Apartment') {
-      const aptAddress = [
-        `No. ${invoice.billingInfo.houseNo || 'N/A'}`,
-        invoice.billingInfo.street || 'N/A',
-        invoice.billingInfo.city || 'N/A',
-        ...(invoice.billingInfo.buildingName
-          ? [`Building: ${invoice.billingInfo.buildingName}`]
-          : []),
-        ...(invoice.billingInfo.buildingNo
-          ? [`Building No: ${invoice.billingInfo.buildingNo}`]
-          : []),
-        ...(invoice.billingInfo.unitNo
-          ? [`Unit No: ${invoice.billingInfo.unitNo}`]
-          : []),
-        ...(invoice.billingInfo.floorNo
-          ? [`Floor No: ${invoice.billingInfo.floorNo}`]
-          : []),
-      ];
+    // Only show address if delivery method is not Pickup
+    if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
+      // Address display
+      if (invoice.buildingType === 'Apartment') {
+        const aptAddress = [
+          `No. ${invoice.billingInfo.houseNo || 'N/A'}`,
+          invoice.billingInfo.street || 'N/A',
+          invoice.billingInfo.city || 'N/A',
+          ...(invoice.billingInfo.buildingName
+            ? [`Building: ${invoice.billingInfo.buildingName}`]
+            : []),
+          ...(invoice.billingInfo.buildingNo
+            ? [`Building No: ${invoice.billingInfo.buildingNo}`]
+            : []),
+          ...(invoice.billingInfo.unitNo
+            ? [`Unit No: ${invoice.billingInfo.unitNo}`]
+            : []),
+          ...(invoice.billingInfo.floorNo
+            ? [`Floor No: ${invoice.billingInfo.floorNo}`]
+            : []),
+        ];
 
-      aptAddress.forEach((line, i) => {
-        doc.text(line, 15, yPosition + i * 5);
-      });
-      yPosition += aptAddress.length * 5;
-    } else {
-      doc.text(`No. ${invoice.billingInfo.houseNo || 'N/A'}`, 15, yPosition);
-      doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
-      doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
-      yPosition += 15;
+        aptAddress.forEach((line, i) => {
+          doc.text(line, 15, yPosition + i * 5);
+        });
+        yPosition += aptAddress.length * 5;
+      } else {
+        doc.text(`No. ${invoice.billingInfo.houseNo || 'N/A'}`, 15, yPosition);
+        doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
+        doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
+        yPosition += 15;
+      }
     }
 
+    // Show contact information regardless of delivery method
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
       const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
         invoice.billingInfo.phone1 || ''

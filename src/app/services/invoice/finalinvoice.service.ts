@@ -249,7 +249,7 @@ export class FinalinvoiceService {
     doc.setFontSize(10);
     doc.text('No. 614, Nawam Mawatha, Colombo 02', 15, 30);
     doc.text('Contact No: +94 112 700 900', 15, 35);
-    doc.text('info@polygon.lk', 15, 40);
+    doc.text('Email Address: info@polygon.lk', 15, 40);
 
     // Bill To section
     doc.setFontSize(9);
@@ -257,9 +257,9 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title || ''} ${
-      invoice.billingInfo?.fullName || ''
-    }`.trim();
+    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''} ${
+  invoice.billingInfo?.fullName || ''
+}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;

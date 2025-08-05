@@ -29,13 +29,14 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   search: string = '';
   private searchSubject = new Subject<string>();
   private searchSubscription: Subscription | null = null;
+  hasData = false;
 
   constructor(
     private distributionHubService: DistributionHubService,
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.setupSearch();
@@ -68,22 +69,14 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.companies = response.results || [];
           this.total = response.total || 0;
-          if (!this.companies.length && this.search.trim()) {
-            Swal.fire({
-              icon: 'info',
-              title: 'No Results',
-              text: 'No companies found matching your search criteria.',
-            });
-          }
+
+          this.hasData = this.companies.length > 0;
         },
         (error) => {
           console.error('API Error:', error); // Debug: Log error
           this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to fetch companies. Please try again later.',
-          });
+          this.hasData = false; // Set to false on error
+
         }
       );
   }

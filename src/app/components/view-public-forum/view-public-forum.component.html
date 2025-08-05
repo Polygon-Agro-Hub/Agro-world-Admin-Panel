@@ -172,7 +172,8 @@
             Plant Care Admin
           </p>
           <p class="text-lg text-blue-500 underline" *ngIf="item.firstName">
-            {{ item.firstName }} {{ item.lastName }}
+            {{item.replyStaffId !== null ? item.staffFirstName + ' ' + item.staffLastName : item.firstName + ' ' + item.lastName}}
+            <!-- {{ item.firstName }} {{ item.lastName }} -->
           </p>
           <div class="flex flex-row py-2">
             <div

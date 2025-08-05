@@ -80,44 +80,45 @@
           <!-- <span *ngIf="isFieldInvalid('regNumber')" class="text-red-600 text-sm">Register Number is required.</span> -->
         </div>
 
+        <!-- Updated Company Name fields for ADD section (Page One) -->
         <div class="pb-6">
           <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
             Name (in English) <span style="color: #2E2E2E">*</span></label>
           <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
-            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+            (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')"
             (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
-            Only English letters are allowed.
-          </div> -->
-          <!-- <span *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-600 text-sm">Company Name in English
-            required.</span> -->
+          <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+            Only English letters are allowed. Numbers and special characters are not permitted.
+          </div>
+          <span *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-600 text-sm">Company Name in English
+            required.</span>
         </div>
 
         <div class="pb-6">
           <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
             Name (in Sinhala) <span style="color: #2E2E2E">*</span></label>
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
-            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameSinhala')"
+            (keydown)="allowOnlySinhala($event, companyData.companyNameSinhala || '')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
-            Only Sinhala letters are allowed.
-          </div> -->
-          <!-- <span *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-600 text-sm">Company Name in Sinhala
-            required.</span> -->
+          <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
+            Only Sinhala letters are allowed. Numbers and special characters are not permitted.
+          </div>
+          <span *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-600 text-sm">Company Name in Sinhala
+            required.</span>
         </div>
 
         <div class="pb-6">
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
             (in Tamil) <span style="color: #2E2E2E">*</span></label>
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
-            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameTamil')"
+            (keydown)="allowOnlyTamil($event, companyData.companyNameTamil || '')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
-            Only Tamil letters are allowed.
-          </div> -->
-          <!-- <span *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-600 text-sm">Company Name in Tamil
-            required.</span> -->
+          <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
+            Only Tamil letters are allowed. Numbers and special characters are not permitted.
+          </div>
+          <span *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-600 text-sm">Company Name in Tamil
+            required.</span>
         </div>
 
         <div class="pb-6">
@@ -150,17 +151,18 @@
         Billing Information
       </h2>
       <div>
+        <!-- Updated Account Holder Name and Account Number fields for ADD section (Page Two) -->
         <div class="pb-6">
-          <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s
+          <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
             Name <span style="color: #2E2E2E">*</span></label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-            (keydown)="handleInputWithSpaceTrimming($event, 'accHolderName')"
+            (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
-            Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
+            Only English letters and spaces are allowed. Numbers and special characters are not permitted.
           </div>
-          <!-- <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder Name is
-            required.</span> -->
+          <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder Name is
+            required.</span>
         </div>
 
         <div class="pb-6">
@@ -168,12 +170,14 @@
             Account Number <span style="color: #2E2E2E">*</span>
           </label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
-            (keypress)="numberOnly($event)" (paste)="onPaste($event, 'accNumber')"
-            (keydown)="handleInputWithSpaceTrimming($event, 'accNumber')"
+            (keydown)="allowOnlyDigitsForAccountNumber($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
+            Only digits are allowed in account number. Letters and special characters are not permitted.
+          </div>
+          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
             Account Number is required.
-          </span> -->
+          </span>
         </div>
 
         <div class="pb-6">
@@ -181,13 +185,14 @@
             Confirm Account Number <span style="color: #2E2E2E">*</span>
           </label>
           <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
-            (blur)="onBlur('confirmAccNumber')" (keypress)="numberOnly($event)"
-            (keydown)="handleInputWithSpaceTrimming($event, 'confirmAccNumber')"
-            (paste)="onPaste($event, 'confirmAccNumber')"
+            (blur)="onBlur('confirmAccNumber')" (keydown)="allowOnlyDigitsForAccountNumber($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <!-- <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
+            Only digits are allowed in account number. Letters and special characters are not permitted.
+          </div>
+          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
             Confirm Account Number is required.
-          </span> -->
+          </span>
           <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
             Account Numbers do not match.
           </span>
@@ -197,22 +202,11 @@
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
             Bank Name
           </label>
-          <p-dropdown
-            id="bankDropdown"
-            [(ngModel)]="selectedBankId"
-            (onChange)="onBankChange()"
-            [options]="banks"
-            optionLabel="name"
-            optionValue="ID"
-            [filter]="true"
-            filterBy="name"
-            placeholder="Select a bank"
-            [showClear]="false"
-            class="w-full"
-            [ngClass]="{
+          <p-dropdown id="bankDropdown" [(ngModel)]="selectedBankId" (onChange)="onBankChange()" [options]="banks"
+            optionLabel="name" optionValue="ID" [filter]="true" filterBy="name" placeholder="Select a bank"
+            [showClear]="false" class="w-full" [ngClass]="{
               'p-invalid': isFieldInvalid('bankName')
-            }"
-          >
+            }">
           </p-dropdown>
           <!-- <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
             Bank Name is required.
@@ -223,23 +217,11 @@
           <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
             Branch Name
           </label>
-          <p-dropdown
-            id="branchDropdown"
-            [(ngModel)]="selectedBranchId"
-            (onChange)="onBranchChange()"
-            [options]="branches"
-            optionLabel="name"
-            optionValue="ID"
-            [filter]="true"
-            filterBy="name"
-            placeholder="Select a branch"
-            [showClear]="false"
-            [disabled]="!selectedBankId"
-            class="w-full"
-            [ngClass]="{
+          <p-dropdown id="branchDropdown" [(ngModel)]="selectedBranchId" (onChange)="onBranchChange()"
+            [options]="branches" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
+            placeholder="Select a branch" [showClear]="false" [disabled]="!selectedBankId" class="w-full" [ngClass]="{
               'p-invalid': isFieldInvalid('branchName')
-            }"
-          >
+            }">
           </p-dropdown>
           <!-- <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
             Branch Name is required.
@@ -264,26 +246,37 @@
             <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Company Contact Number - 1 <span style="color: #2E2E2E">*</span>
             </label>
-            <div class="mt-1 flex">
-              <select id="phoneNumber01Code" name="oicConCode1" [(ngModel)]="companyData.oicConCode1"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-               <option value="+94">🇱🇰 +94</option>
-              <option value="+855">🇰🇭 +855</option>
-              <option value="+880">🇧🇩 +880</option>
-              <option value="+91">🇮🇳 +91</option>
-              <option value="+31">🇳🇱 +31</option>
-              </select>
-              <div class="w-full flex flex-col">
-                <input id="phoneNumber01" name="oicConNum1" type="text" inputmode="numeric" pattern="[0-9]*"
+            <div class="mt-1">
+              <div class="flex">
+                <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
+                  optionValue="dialCode"
+                  styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+                  [style]="{ width: '140px' }">
+                  <!-- Dropdown items -->
+                  <ng-template let-country pTemplate="item">
+                    <div class="flex items-center gap-2">
+                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                      <span>{{ country.dialCode }}</span>
+                    </div>
+                  </ng-template>
+
+                  <!-- Selected item -->
+                  <ng-template let-country pTemplate="selectedItem">
+                    <div class="flex items-center gap-2" *ngIf="country">
+                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                      <span>{{ country.dialCode }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <input id="phoneNumber01" name="oicConNum1" type="tel" inputmode="numeric" pattern="[0-9]*"
                   maxlength="9" required
                   class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                   placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1" #oicConNum1Ref="ngModel"
                   (blur)="validateContactNumbers()" />
-                <!-- <div *ngIf="oicConNum1Ref.invalid && oicConNum1Ref.touched && oicConNum1Ref.errors?.['required']"
-                  class="text-red-500 text-sm mt-1">
-                  Company Contact Number - 1 is required.
-                </div> -->
-                <div *ngIf="contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm mt-1">
+              </div>
+              <!-- Error messages outside the flex container -->
+              <div class="mt-1">
+                <div *ngIf="contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm">
                   Contact number must be exactly 9 digits.
                 </div>
               </div>
@@ -294,24 +287,39 @@
             <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Company Contact Number - 2
             </label>
-            <div class="mt-1 flex">
-              <select id="phoneNumber02Code" name="oicConCode2" [(ngModel)]="companyData.oicConCode2"
-                (blur)="validateContactNumbers()"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-                <option value="+94">🇱🇰 +94</option>
-                <option value="+84">🇻🇳 +84</option>
-                <option value="+855">🇰🇭 +855</option>
-                <option value="+880">🇧🇩 +880</option>
-                <option value="+91">🇮🇳 +91</option>
-                <option value="+31">🇳🇱 +31</option>
-              </select>
-              <input id="phoneNumber02" name="oicConNum2" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="9"
-                (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum2')"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
-              <div *ngIf="contactNumberError2" class="text-red-500 text-sm mt-1">
-                Contact number must be exactly 9 digits.
-              </div>
+               <div class="mt-1">
+      <div class="flex">
+        <p-dropdown [(ngModel)]="companyData.oicConCode2" [options]="countries" optionLabel="dialCode"
+          optionValue="dialCode"
+          styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+          [style]="{ width: '140px' }">
+          <!-- Dropdown items -->
+          <ng-template let-country pTemplate="item">
+            <div class="flex items-center gap-2">
+              <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+              <span>{{ country.dialCode }}</span>
+            </div>
+          </ng-template>
+
+          <!-- Selected item -->
+          <ng-template let-country pTemplate="selectedItem">
+            <div class="flex items-center gap-2" *ngIf="country">
+              <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+              <span>{{ country.dialCode }}</span>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        <input id="phoneNumber02" name="oicConNum2" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="9"
+          (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum2')"
+          class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
+      </div>
+      <!-- Error messages outside the flex container -->
+      <div class="mt-1">
+        <div *ngIf="contactNumberError2" class="text-red-500 text-sm">
+          Contact number must be exactly 9 digits.
+        </div>
+      </div>
             </div>
           </div>
         </div>
@@ -436,37 +444,36 @@
           <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
             Name (in English)</label>
           <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter('companyNameEnglish')"
-            (blur)="onBlur('companyNameEnglish')"
+            (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')"
+            (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
-            Only English letters are allowed.
+            Only English letters are allowed. Numbers and special characters are not permitted.
           </div>
           <div *ngIf="
-              userForm.get('companyNameEnglish')!.invalid &&
-              (userForm.get('companyNameEnglish')!.dirty ||
-                userForm.get('companyNameEnglish')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      userForm.get('companyNameEnglish')!.invalid &&
+      (userForm.get('companyNameEnglish')!.dirty ||
+        userForm.get('companyNameEnglish')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="userForm.get('companyNameEnglish')!.errors?.['required']">
               Company Name is required.
             </div>
           </div>
         </div>
-
         <div class="pb-6">
           <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company
             Name (in Sinhala)</label>
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
+            (keydown)="allowOnlySinhala($event, companyData.companyNameSinhala || '')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
-            Only Sinhala letters are allowed.
+            Only Sinhala letters are allowed. Numbers and special characters are not permitted.
           </div>
           <div *ngIf="
-              userForm.get('companyNameSinhala')!.invalid &&
-              (userForm.get('companyNameSinhala')!.dirty ||
-                userForm.get('companyNameSinhala')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      userForm.get('companyNameSinhala')!.invalid &&
+      (userForm.get('companyNameSinhala')!.dirty ||
+        userForm.get('companyNameSinhala')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="userForm.get('companyNameSinhala')!.errors?.['required']">
               Company Name is required.
             </div>
@@ -477,16 +484,16 @@
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
             (in Tamil)</label>
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
+            (keydown)="allowOnlyTamil($event, companyData.companyNameTamil || '')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
-            Only Tamil letters are allowed.
+            Only Tamil letters are allowed. Numbers and special characters are not permitted.
           </div>
           <div *ngIf="
-              userForm.get('companyNameTamil')!.invalid &&
-              (userForm.get('companyNameTamil')!.dirty ||
-                userForm.get('companyNameTamil')!.touched)
-            " class="text-red-500 text-sm mt-1">
+      userForm.get('companyNameTamil')!.invalid &&
+      (userForm.get('companyNameTamil')!.dirty ||
+        userForm.get('companyNameTamil')!.touched)
+    " class="text-red-500 text-sm mt-1">
             <div *ngIf="userForm.get('companyNameTamil')!.errors?.['required']">
               Company Name is required.
             </div>
@@ -512,34 +519,98 @@
           <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Contact Number - 1
           </label>
-          <div class="flex space-x-2">
-            <input id="oicConCode1" name="oicConCode1" [(ngModel)]="companyData.oicConCode1" type="text" maxlength="4"
-              placeholder="+94"
-              class="w-20 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <input id="oicConNum1" name="oicConNum1" [(ngModel)]="companyData.oicConNum1" type="text"
-              pattern="^[0-9]{10}$" required #oicConNum1="ngModel"
-              class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          </div>
-          <div *ngIf="oicConNum1.invalid && (oicConNum1.dirty || oicConNum1.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="oicConNum1.errors?.['required']">Contact Number 1 is required.</div>
-            <div *ngIf="oicConNum1.errors?.['pattern']">Please enter a valid 10-digit phone number.</div>
+          <div class="mt-1">
+            <div class="flex">
+              <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
+                optionValue="dialCode"
+                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+                [style]="{ width: '140px' }">
+                <!-- Dropdown items -->
+                <ng-template let-country pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+
+                <!-- Selected item -->
+                <ng-template let-country pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="country">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <input id="oicConNum1" name="oicConNum1" [(ngModel)]="companyData.oicConNum1" type="tel"
+                pattern="^[0-9]{9}$" required #oicConNum1="ngModel" (keydown)="allowOnlyDigitsForAccountNumber($event)"
+                (blur)="validateContactNumbers()" maxlength="9"
+                class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+            <!-- Error messages outside the flex container -->
+            <div class="mt-1">
+              <div *ngIf="!companyData.oicConNum1" class="text-gray-500 text-sm">
+                No contact number provided
+              </div>
+              <div *ngIf="oicConNum1.invalid && (oicConNum1.dirty || oicConNum1.touched)" class="text-red-500 text-sm">
+                <div *ngIf="oicConNum1.errors?.['required']">Contact Number 1 is required.</div>
+                <div *ngIf="oicConNum1.errors?.['pattern']">Please enter a valid 9-digit phone number.</div>
+              </div>
+              <div *ngIf="contactNumberError1" class="text-red-500 text-sm">
+                Contact number must be exactly 9 digits.
+              </div>
+              <div *ngIf="accountNumberError" class="text-red-600 text-sm">
+                Only digits are allowed. Letters and special characters are not permitted.
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="pb-6" *ngIf="companyData.oicConNum2">
+        <div class="pb-6">
           <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Contact Number - 2
           </label>
-          <div class="flex space-x-2">
-            <input id="oicConCode2" name="oicConCode2" [(ngModel)]="companyData.oicConCode2" type="text" maxlength="4"
-              placeholder="+94"
-              class="w-20 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="text"
-              pattern="^[0-9]{10}$" #oicConNum2="ngModel"
-              class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          </div>
-          <div *ngIf="oicConNum2.invalid && (oicConNum2.dirty || oicConNum2.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="oicConNum2.errors?.['pattern']">Please enter a valid 10-digit phone number.</div>
+          <div class="mt-1">
+            <div class="flex">
+              <p-dropdown [(ngModel)]="companyData.oicConCode2" [options]="countries" optionLabel="dialCode"
+                optionValue="dialCode"
+                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+                [style]="{ width: '140px' }">
+                <!-- Dropdown items -->
+                <ng-template let-country pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+
+                <!-- Selected item -->
+                <ng-template let-country pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="country">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="tel"
+                pattern="^[0-9]{9}$" #oicConNum2="ngModel" (keydown)="allowOnlyDigitsForAccountNumber($event)"
+                (blur)="validateContactNumbers()" maxlength="9"
+                class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            </div>
+            <!-- Error messages outside the flex container -->
+            <div class="mt-1">
+              <div *ngIf="!companyData.oicConNum2" class="text-gray-500 text-sm">
+                No contact number 2 provided
+              </div>
+              <div *ngIf="oicConNum2.invalid && (oicConNum2.dirty || oicConNum2.touched)" class="text-red-500 text-sm">
+                <div *ngIf="oicConNum2.errors?.['pattern']">Please enter a valid 9-digit phone number.</div>
+              </div>
+              <div *ngIf="contactNumberError2" class="text-red-500 text-sm">
+                Contact number must be exactly 9 digits.
+              </div>
+              <div *ngIf="accountNumberError" class="text-red-600 text-sm">
+                Only digits are allowed. Letters and special characters are not permitted.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -561,14 +632,15 @@
         Edit Billing Information
       </h2>
       <div>
+        <!-- Updated Account Holder Name and Account Number fields for EDIT section (Page Two) -->
         <div class="pb-6">
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
-            Holder’s Name</label>
+            Holder's Name</label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-            (keydown)="allowOnlyValidNameCharacters($event)"
+            (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
-            Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
+            Only English letters and spaces are allowed. Numbers and special characters are not permitted.
           </div>
         </div>
 
@@ -577,10 +649,10 @@
             Account Number
           </label>
           <input type="text" id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
-            (keydown)="allowOnlyDigits($event)" (blur)="validateConfirmAccNumber()"
+            (keydown)="allowOnlyDigitsForAccountNumber($event)" (blur)="validateConfirmAccNumber()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
-            Only digits are allowed in account number.
+            Only digits are allowed in account number. Letters and special characters are not permitted.
           </div>
           <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
             Account Number is required.
@@ -592,8 +664,11 @@
             Confirm Account Number
           </label>
           <input type="text" id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
-            (keydown)="allowOnlyDigits($event)" (blur)="validateConfirmAccNumber()"
+            (keydown)="allowOnlyDigitsForAccountNumber($event)" (blur)="validateConfirmAccNumber()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
+            Only digits are allowed in account number. Letters and special characters are not permitted.
+          </div>
           <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
             Confirm Account Number is required.
           </span>
@@ -606,22 +681,11 @@
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
             Bank Name
           </label>
-          <p-dropdown
-            id="bankDropdown"
-            [(ngModel)]="selectedBankId"
-            (onChange)="onBankChange()"
-            [options]="banks"
-            optionLabel="name"
-            optionValue="ID"
-            [filter]="true"
-            filterBy="name"
-            placeholder="Select a bank"
-            [showClear]="false"
-            class="w-full"
-            [ngClass]="{
+          <p-dropdown id="bankDropdown" [(ngModel)]="selectedBankId" (onChange)="onBankChange()" [options]="banks"
+            optionLabel="name" optionValue="ID" [filter]="true" filterBy="name" placeholder="Select a bank"
+            [showClear]="false" class="w-full" [ngClass]="{
               'p-invalid': isFieldInvalid('bankName')
-            }"
-          >
+            }">
           </p-dropdown>
           <span *ngIf="isFieldInvalid('bankName')" class="text-red-600 text-sm">
             Bank Name is required.
@@ -632,23 +696,11 @@
           <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
             Branch Name
           </label>
-          <p-dropdown
-            id="branchDropdown"
-            [(ngModel)]="selectedBranchId"
-            (onChange)="onBranchChange()"
-            [options]="branches"
-            optionLabel="name"
-            optionValue="ID"
-            [filter]="true"
-            filterBy="name"
-            placeholder="Select a branch"
-            [showClear]="false"
-            [disabled]="!selectedBankId"
-            class="w-full"
-            [ngClass]="{
+          <p-dropdown id="branchDropdown" [(ngModel)]="selectedBranchId" (onChange)="onBranchChange()"
+            [options]="branches" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
+            placeholder="Select a branch" [showClear]="false" [disabled]="!selectedBankId" class="w-full" [ngClass]="{
               'p-invalid': isFieldInvalid('branchName')
-            }"
-          >
+            }">
           </p-dropdown>
           <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
             Branch Name is required.
@@ -732,7 +784,8 @@
         <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Company Contact Number - 1
         </label>
-        <input id="oicConNum1" name="oicConNum1" [value]="companyData.oicConCode1 + ' ' + companyData.oicConNum1"
+        <input id="oicConNum1" name="oicConNum1"
+          [value]="companyData.oicConNum1 ? (companyData.oicConCode1 + ' ' + companyData.oicConNum1) : '-'"
           [disabled]="true" type="text"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
@@ -741,7 +794,8 @@
         <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Company Contact Number - 2
         </label>
-        <input id="oicConNum2" name="oicConNum2" [value]="companyData.oicConCode2 + ' ' + companyData.oicConNum2"
+        <input id="oicConNum2" name="oicConNum2"
+          [value]="companyData.oicConNum2 ? (companyData.oicConCode2 + ' ' + companyData.oicConNum2) : '-'"
           [disabled]="true" type="text"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
@@ -791,14 +845,12 @@
         <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
           Branch Nameeeee
         </label>
-  <input
-    id="branchName"
-    type="text"
-    [value]="getBranchNameById(selectedBranchId) || '—'"
-    readonly
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
-
+        <p-dropdown id="branchDropdown" [(ngModel)]="selectedBranchId" (onChange)="onBranchChange()"
+          [options]="branches" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
+          placeholder="Select a branch" [showClear]="true" [disabled]="!selectedBankId" class="w-full" [ngClass]="{
+            'p-invalid': isFieldInvalid('branchName')
+          }">
+        </p-dropdown>
         <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
           Branch Name is required.
         </span>

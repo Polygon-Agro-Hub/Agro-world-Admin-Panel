@@ -151,6 +151,7 @@ export class ManageCompanyComponent {
   isLoading = false;
   total: number | null = null;
   search: string = '';
+  hasData=false;
 
   constructor(
     private companyService: CollectionCenterService,
@@ -170,9 +171,12 @@ export class ManageCompanyComponent {
         this.isLoading = false;
         this.companies = response.results;
         this.total = response.total;
+        this.hasData = this.companies.length >0;
+
       },
       () => {
         this.isLoading = false;
+        this.hasData=false;
       }
     );
   }

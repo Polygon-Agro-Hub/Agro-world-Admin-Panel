@@ -80,18 +80,14 @@ export class CreateCompanyComponent implements OnInit {
   faviconSizeError: boolean = false;
 
   companyType: string = '';
-  countries = [
-    { code: '+94', name: 'Sri Lanka', flag: 'https://flagcdn.com/w20/lk.png' },
-    { code: '+84', name: 'Vietnam', flag: 'https://flagcdn.com/w20/vn.png' },
-    { code: '+855', name: 'Cambodia', flag: 'https://flagcdn.com/w20/kh.png' },
-    { code: '+880', name: 'Bangladesh', flag: 'https://flagcdn.com/w20/bd.png' },
-    { code: '+91', name: 'India', flag: 'https://flagcdn.com/w20/in.png' },
-    { code: '+31', name: 'Netherlands', flag: 'https://flagcdn.com/w20/nl.png' },
-    { code: '+1', name: 'United States', flag: 'https://flagcdn.com/w20/us.png' },
-    { code: '+44', name: 'United Kingdom', flag: 'https://flagcdn.com/w20/gb.png' },
-    { code: '+81', name: 'Japan', flag: 'https://flagcdn.com/w20/jp.png' },
-    { code: '+86', name: 'China', flag: 'https://flagcdn.com/w20/cn.png' },
-  ];
+countries = [
+  { name: 'Sri Lanka', code: 'LK', dialCode: '+94' },
+  { name: 'Vietnam', code: 'VN', dialCode: '+84' },
+  { name: 'Cambodia', code: 'KH', dialCode: '+855' },
+  { name: 'Bangladesh', code: 'BD', dialCode: '+880' },
+  { name: 'India', code: 'IN', dialCode: '+91' },
+  { name: 'Netherlands', code: 'NL', dialCode: '+31' }
+];
   constructor(
     private fb: FormBuilder,
     private collectionCenterSrv: CollectionCenterService,
@@ -128,6 +124,12 @@ export class CreateCompanyComponent implements OnInit {
       this.companyType = params['type'];
       console.log('Received type:', this.companyType);
     });
+    if (!this.companyData.oicConCode1) {
+    this.companyData.oicConCode1 = '+94';
+  }
+  if (!this.companyData.oicConCode2) {
+    this.companyData.oicConCode2 = '+94';
+  }
 
     this.loadBanks();
     this.loadBranches();
@@ -140,6 +142,10 @@ export class CreateCompanyComponent implements OnInit {
     });
     this.getCompanyData();
   }
+
+  getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
 
   async compressImage(
     file: File,
@@ -194,6 +200,178 @@ export class CreateCompanyComponent implements OnInit {
       reader.readAsDataURL(file);
     });
   }
+
+
+// Method for English name validation (block numbers and special characters)
+allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits and special characters
+  if (/^[0-9]$/.test(char) || /[^\w\s]/.test(char)) {
+    event.preventDefault();
+    this.englishInputError = true;
+    setTimeout(() => {
+      this.englishInputError = false;
+    }, 2000);
+    return;
+  }
+
+  // Block first space
+  if (char === ' ' && inputValue.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  // Only allow English letters and spaces
+  if (!/^[a-zA-Z\s]$/.test(char)) {
+    event.preventDefault();
+    this.englishInputError = true;
+    setTimeout(() => {
+      this.englishInputError = false;
+    }, 2000);
+  }
+}
+
+// Method for Sinhala name validation (block numbers and special characters)
+allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
+  const char = event.key;
+  const code = char.charCodeAt(0);
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  // Allow control keys
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits and special characters
+  if (/^[0-9]$/.test(char) || /[^\w\s\u0D80-\u0DFF]/.test(char)) {
+    event.preventDefault();
+    this.sinhalaInputError = true;
+    setTimeout(() => {
+      this.sinhalaInputError = false;
+    }, 2000);
+    return;
+  }
+
+  // Block first space
+  if (char === ' ' && inputValue.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  // Sinhala Unicode range: U+0D80 to U+0DFF
+  const isSinhala = code >= 0x0D80 && code <= 0x0DFF;
+
+  if (!isSinhala && char !== ' ') {
+    event.preventDefault();
+    this.sinhalaInputError = true;
+    setTimeout(() => {
+      this.sinhalaInputError = false;
+    }, 2000);
+  }
+}
+
+// Method for Tamil name validation (block numbers and special characters)
+allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
+  const char = event.key;
+  const code = char.charCodeAt(0);
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  // Allow control keys
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits and special characters
+  if (/^[0-9]$/.test(char) || /[^\w\s\u0B80-\u0BFF]/.test(char)) {
+    event.preventDefault();
+    this.tamilInputError = true;
+    setTimeout(() => {
+      this.tamilInputError = false;
+    }, 2000);
+    return;
+  }
+
+  // Block first space
+  if (char === ' ' && inputValue.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  // Tamil Unicode Range: U+0B80–U+0BFF
+  const isTamil = code >= 0x0B80 && code <= 0x0BFF;
+
+  if (!isTamil && char !== ' ') {
+    event.preventDefault();
+    this.tamilInputError = true;
+    setTimeout(() => {
+      this.tamilInputError = false;
+    }, 2000);
+  }
+}
+
+// Method for account holder name validation (only English letters and spaces)
+allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  if (allowedKeys.includes(char)) return;
+
+  // Block digits and special characters, allow only English letters and spaces
+  if (!/^[a-zA-Z\s]$/.test(char)) {
+    event.preventDefault();
+    this.invalidCharError = true;
+    setTimeout(() => {
+      this.invalidCharError = false;
+    }, 2000);
+  }
+}
+
+// Method for account number validation (only digits)
+allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  if (allowedKeys.includes(char)) return;
+
+  // Only allow digits
+  if (!/^[0-9]$/.test(char)) {
+    event.preventDefault();
+    this.accountNumberError = true;
+    setTimeout(() => {
+      this.accountNumberError = false;
+    }, 2000);
+  }
+}
+
+// Updated contact number validation with SweetAlert
+validateContactNumbers(): void {
+  const num1 = this.companyData.oicConNum1?.toString() || '';
+  const num2 = this.companyData.oicConNum2?.toString() || '';
+
+  // Length validation errors (for UI messages)
+  this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
+  this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
+
+  // Duplicate number check with country codes
+  if (
+    num1.length === 9 &&
+    num2.length === 9 &&
+    this.companyData.oicConNum1 &&
+    this.companyData.oicConNum2 &&
+    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate Numbers',
+      text: 'Company Contact Number 1 and 2 cannot be the same',
+    }).then(() => {
+      // Clear the second number
+      this.companyData.oicConNum2 = '';
+      this.contactNumberError2 = false;
+    });
+  }
+}
 
 
   handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
@@ -540,26 +718,41 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  getCompanyData() {
-    if (this.itemId) {
-      this.isLoading = true;
-      this.collectionCenterSrv.getCompanyById(this.itemId).subscribe(
-        (response: any) => {
-          this.isLoading = false;
-          this.companyData = response;
-          this.matchExistingBankToDropdown();
-        },
-        (error) => {
-          this.isLoading = false;
-          Swal.fire(
-            'Error',
-            'Failed to fetch company data. Please try again.',
-            'error'
-          );
+// Updated getCompanyData method to properly handle the response
+getCompanyData() {
+  if (this.itemId) {
+    this.isLoading = true;
+    this.collectionCenterSrv.getCompanyById(this.itemId).subscribe(
+      (response: any) => {
+        this.isLoading = false;
+        this.companyData = response;
+        
+        // Set default values for contact number codes if they don't exist
+        if (!this.companyData.oicConCode1) {
+          this.companyData.oicConCode1 = '+94';
         }
-      );
-    }
+        if (!this.companyData.oicConCode2) {
+          this.companyData.oicConCode2 = '+94';
+        }
+        
+        // Set confirmAccNumber to match accNumber for editing
+        if (!this.companyData.confirmAccNumber && this.companyData.accNumber) {
+          this.companyData.confirmAccNumber = this.companyData.accNumber;
+        }
+        
+        this.matchExistingBankToDropdown();
+      },
+      (error) => {
+        this.isLoading = false;
+        Swal.fire(
+          'Error',
+          'Failed to fetch company data. Please try again.',
+          'error'
+        );
+      }
+    );
   }
+}
 
   saveCompanyData() {
     // Validate contact numbers first
@@ -913,100 +1106,7 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
-  const char = event.key;
-  const code = char.charCodeAt(0);
-  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
-  // Allow control keys
-  if (allowedKeys.includes(char)) return;
-
-  // Block digits
-  if (!isNaN(Number(char))) {
-    event.preventDefault();
-    return;
-  }
-
-  // Block first space
-  if (char === ' ' && inputValue.length === 0) {
-    event.preventDefault();
-    return;
-  }
-
-  // Sinhala Unicode range: U+0D80 to U+0DFF
-  const isSinhala = code >= 0x0D80 && code <= 0x0DFF;
-
-  // Allow special characters (not letters/digits/space)
-  const isSpecialChar = /[^\w\s]/.test(char); // symbols like !@#$ etc.
-
-  if (!isSinhala && !isSpecialChar && char !== ' ') {
-    event.preventDefault();
-  }
-}
-
-getBankNameById(id: string | number | null): string | undefined {
-  return this.banks?.find(bank => bank.ID === id)?.name;
-}
-
-getBranchNameById(id: string | number | null): string | undefined {
-  return this.branches?.find(branch => branch.ID === id)?.name;
-}
-
-
-
-allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
-  const char = event.key;
-  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
-
-  if (allowedKeys.includes(char)) return;
-
-  // Block digits
-  if (/^[0-9]$/.test(char)) {
-    event.preventDefault();
-    return;
-  }
-
-  // Block first space
-  if (char === ' ' && inputValue.length === 0) {
-    event.preventDefault();
-    return;
-  }
-
-  // Allow all letters, spaces, and special characters
-}
-
-
-
-allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
-  const char = event.key;
-  const code = char.charCodeAt(0);
-  const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
-
-  // Allow control keys
-  if (allowedKeys.includes(char)) return;
-
-  // Block digits
-  if (!isNaN(Number(char))) {
-    event.preventDefault();
-    return;
-  }
-
-  // Block first space
-  if (char === ' ' && inputValue.length === 0) {
-    event.preventDefault();
-    return;
-  }
-
-  // Tamil Unicode Range: U+0B80–U+0BFF
-  const isTamil = code >= 0x0B80 && code <= 0x0BFF;
-
-  // Allow if Tamil character or special character (excluding digits)
-  const isSpecialChar = /[^\w\s]/.test(char); // matches punctuation & symbols
-
-  if (!isTamil && !isSpecialChar && char !== ' ') {
-    event.preventDefault();
-  }
-}
 
 
 
@@ -1104,33 +1204,9 @@ allowOnlyValidNameCharacters(event: KeyboardEvent): void {
 
 
 
-  validateContactNumbers(): void {
-    const num1 = this.companyData.oicConNum1?.toString() || '';
-    const num2 = this.companyData.oicConNum2?.toString() || '';
 
-    // Length validation errors (for UI messages)
-    this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
-    this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
 
-    // Duplicate number check with country codes
-    if (
-      num1.length === 9 &&
-      num2.length === 9 &&
-      this.companyData.oicConNum1 &&
-      this.companyData.oicConNum2 &&
-      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-      this.companyData.oicConCode1 === this.companyData.oicConCode2
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Duplicate Numbers',
-        text: 'Company Contact Number 1 and 2 cannot be the same',
-      });
-      // Clear the second number
-      this.companyData.oicConNum2 = '';
-      this.contactNumberError2 = false; // reset error for second input after clearing
-    }
-  }
+  
 
 
   validateContactNumberss() {
@@ -1168,6 +1244,7 @@ allowOnlyValidNameCharacters(event: KeyboardEvent): void {
   }
 }
 
+// Updated Company class to match the JSON response structure
 class Company {
   id!: number;
   regNumber!: string;
@@ -1194,4 +1271,8 @@ class Company {
   favicon!: string;
   logoFile?: File;
   faviconFile?: File;
+  status!: number;
+  isCollection!: number;
+  isDistributed!: number;
+  createdAt!: string;
 }

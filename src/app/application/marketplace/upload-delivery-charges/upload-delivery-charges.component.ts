@@ -81,46 +81,77 @@ export class UploadDeliveryChargesComponent {
   }
 
   onSave(): void {
-    if (!this.selectedFile) {
-      this.errorMessage = 'Please select a file first';
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    this.uploadservice.uploadDeliveryCharges(this.selectedFile).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        Swal.fire({
-          title: 'Success!',
-          html: `
-            <p>${response.message}</p>
-            <p>Inserted: ${response.data.inserted}</p>
-            <p>Duplicates skipped: ${response.data.duplicates}</p>
-          `,
-          icon: 'success',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#3980C0',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigate(['/market/action/view-delivery-charges']);
-          }
-        });
-        this.selectedFile = null;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.error('Upload error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: error.message || 'Failed to upload delivery charges',
-          icon: 'error',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#3980C0',
-        });
-      },
-    });
+  if (!this.selectedFile) {
+    this.errorMessage = 'Please select a file first';
+    return;
   }
+
+  this.isLoading = true;
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  this.uploadservice.uploadDeliveryCharges(this.selectedFile).subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      
+      // Create the success message based on the response
+      let successHtml = `<p>${response.message}</p>`;
+      
+      if (response.inserted > 0) {
+        successHtml += `<p>New records inserted: ${response.inserted}</p>`;
+      }
+      
+      if (response.updated > 0) {
+        successHtml += `<p>Existing records updated: ${response.updated}</p>`;
+      }
+      
+      if (response.duplicates > 0) {
+        successHtml += `<p>Duplicate records skipped: ${response.duplicates}</p>`;
+      }
+
+      // If no operations were performed (all duplicates)
+      if (response.inserted === 0 && response.updated === 0 && response.duplicates > 0) {
+        successHtml = `<p>All cities in the file already exist with the same charges.</p>
+                       <p>Duplicate records skipped: ${response.duplicates}</p>`;
+      }
+
+      Swal.fire({
+        title: 'Success!',
+        html: successHtml,
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3980C0',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/market/action/view-delivery-charges']);
+        }
+      });
+      
+      this.selectedFile = null;
+    },
+    error: (error) => {
+      this.isLoading = false;
+      console.error('Upload error:', error);
+      
+      let errorMessage = error.message || 'Failed to upload delivery charges';
+      
+      // Handle specific error cases
+      if (error.message.includes('Excel file is empty')) {
+        errorMessage = 'The uploaded Excel file is empty.';
+      } else if (error.message.includes('must contain')) {
+        errorMessage = 'The Excel file must contain "City Name" and "Charge (Rs.)" columns.';
+      } else if (error.message.includes('No valid data')) {
+        errorMessage = 'The Excel file contains no valid data to process.';
+      }
+
+      Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3980C0',
+      });
+    },
+  });
+}
 }

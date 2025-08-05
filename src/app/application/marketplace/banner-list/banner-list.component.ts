@@ -346,7 +346,12 @@ export class BannerListComponent {
   uploadBanner() {
     this.isLoading = true;
     if (!this.bannerName || !this.selectedFile) {
-      console.log('this.bannerName', this.bannerName, 'this.selectedFile', this.selectedFile)
+      console.log(
+        'this.bannerName',
+        this.bannerName,
+        'this.selectedFile',
+        this.selectedFile
+      );
       this.isLoading = false;
       Swal.fire(
         'Missing Data',
@@ -428,54 +433,54 @@ export class BannerListComponent {
     });
   }
 
- getAllFeedbacks() {
-  const token = this.tokenService.getToken();
-  if (!token) {
-    return;
+  getAllFeedbacks() {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    this.isLoading = true;
+    this.http
+      .get<any>(`${environment.API_URL}market-place/get-all-banners`, {
+        headers,
+      })
+      .subscribe(
+        (response) => {
+          this.feebackList = response.banners;
+          this.maxBannersReached = this.feebackList.length >= 5;
+          this.isLoading = false;
+        },
+        () => {}
+      );
   }
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-  this.isLoading = true;
-  this.http
-    .get<any>(`${environment.API_URL}market-place/get-all-banners`, {
-      headers,
-    })
-    .subscribe(
-      (response) => {
-        this.feebackList = response.banners;
-        this.maxBannersReached = this.feebackList.length >= 5;
-        this.isLoading = false;
-      },
-      () => {}
-    );
-}
 
   getAllFeedbacksWhole() {
-  const token = this.tokenService.getToken();
-  if (!token) {
-    return;
+    const token = this.tokenService.getToken();
+    if (!token) {
+      return;
+    }
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+    this.isLoading = true;
+    this.http
+      .get<any>(
+        `${environment.API_URL}market-place/get-all-banners-wholesale`,
+        {
+          headers,
+        }
+      )
+      .subscribe(
+        (response) => {
+          this.feebackListWhole = response.banners;
+          this.maxBannersReachedWholesale = this.feebackListWhole.length >= 5;
+          this.isLoading = false;
+        },
+        () => {}
+      );
   }
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-  this.isLoading = true;
-  this.http
-    .get<any>(
-      `${environment.API_URL}market-place/get-all-banners-wholesale`,
-      {
-        headers,
-      }
-    )
-    .subscribe(
-      (response) => {
-        this.feebackListWhole = response.banners;
-        this.maxBannersReachedWholesale = this.feebackListWhole.length >= 5;
-        this.isLoading = false;
-      },
-      () => {}
-    );
-}
   drop(event: CdkDragDrop<any[]>) {
     this.isLoading = true;
     moveItemInArray(this.feebackList, event.previousIndex, event.currentIndex);
@@ -534,11 +539,11 @@ export class BannerListComponent {
           this.feebackListWhole.forEach((item, index) => {
             item.orderNumber = index + 1;
           });
-          Swal.fire(
-            'Success',
-            'Feedback order updated successfully',
-            'success'
-          );
+          // Swal.fire(
+          //   'Success',
+          //   'Feedback order updated successfully',
+          //   'success'
+          // );
           this.getAllFeedbacks();
           this.getAllFeedbacksWhole();
           this.isLoading = false;

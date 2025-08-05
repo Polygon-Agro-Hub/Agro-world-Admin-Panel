@@ -440,21 +440,21 @@
             <input formControlName="accHolderName" id="accHolderName" name="accHolderName"
               (input)="onAccountHolderNameInput($event)" (keypress)="onAccountHolderNameKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              <div *ngIf="userForm.get('accHolderName')?.errors?.['required'] && (userForm.get('accHolderName')?.dirty || userForm.get('accHolderName')?.touched)"
+  class="text-red-500 text-sm mt-1">
+  Account holder's name is required
+</div>
+
           </div>
 
-          <div>
-            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Account Number*
-            </label>
-            <input formControlName="accNumber" id="accNumber" name="accNumber" (input)="onAccountNumberInput($event)"
-              (keypress)="onAccountNumberKeyPress($event)"
+        <div>
+            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number*</label>
+            <input formControlName="accNumber" id="accNumber" (input)="onAccountNumberInput($event)" (keypress)="onAccountNumberKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <div *ngIf="
-      userForm.get('accNumber')?.invalid &&
-      (userForm.get('accNumber')?.dirty ||
-        userForm.get('accNumber')?.touched)
-    " class="text-red-500 text-sm mt-1">
-              Please enter a valid account number
+            <div *ngIf="userForm.get('accNumber')?.invalid && (userForm.get('accNumber')?.touched || userForm.get('accNumber')?.dirty)"
+              class="text-red-500 text-sm mt-1">
+              <div *ngIf="userForm.get('accNumber')?.errors?.['required']">Account number is required.</div>
+              <div *ngIf="userForm.get('accNumber')?.errors?.['pattern']">Please enter a valid account number (numbers only).</div>
             </div>
           </div>
           <div>
@@ -639,7 +639,7 @@
             </div>
           </div>
 
-          <div>
+             <div>
             <label for="branchName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Branch Name
             </label>
@@ -655,6 +655,7 @@
     " class="text-red-500 text-sm mt-1">
               Branch name is required
             </div>
+     
           </div>
         </div>
       </div>

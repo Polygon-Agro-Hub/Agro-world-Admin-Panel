@@ -944,6 +944,13 @@ allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
   }
 }
 
+getBankNameById(id: string | number | null): string | undefined {
+  return this.banks?.find(bank => bank.ID === id)?.name;
+}
+
+getBranchNameById(id: string | number | null): string | undefined {
+  return this.branches?.find(branch => branch.ID === id)?.name;
+}
 
 
 

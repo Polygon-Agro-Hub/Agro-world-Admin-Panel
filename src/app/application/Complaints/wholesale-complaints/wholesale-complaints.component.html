@@ -232,33 +232,32 @@
   [closable]="false"
   [style]="{ width: '600px' }"
   [contentStyle]="{ padding: '0' }"
+  styleClass="bg-white dark:bg-gray-800"
 >
-<div class="dialog-header text-center">
-    <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
-   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000]">Reply as Polygon</h3>
-
-
+<div class="dialog-header text-center bg-white dark:bg-gray-800 p-4">
+    <i class="fa-regular fa-envelope text-gray-600 dark:text-gray-400" style="font-size: 1.5rem;"></i>
+   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000] dark:text-gray-100">Reply as Polygon</h3>
   </div>
  <div
   class="dialog-content text-[16px] md:text-[18px] border-t rounded-[20px]
- border-r border-b border-l border-gray-300 text-[#000000] mt-5 ml-8 mr-8 mb-5"
+ border-r border-b border-l border-gray-300 dark:border-gray-600 text-[#000000] dark:text-gray-100 mt-5 ml-8 mr-8 mb-5 bg-white dark:bg-gray-800"
 >
- <div class=" p-5 ">
+ <div class="p-5 bg-white dark:bg-gray-800">
     <div class="reply-header">
-      <span>Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
-      <p class="mt-3">We are pleased to inform you that your complaint has been resolved.</p>
+      <span class="text-gray-900 dark:text-gray-100">Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
+      <p class="mt-3 text-gray-900 dark:text-gray-100">We are pleased to inform you that your complaint has been resolved.</p>
     </div>
-    <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap">
+    <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap text-gray-900 dark:text-gray-100">
       {{ selectedComplaint.reply }}
     </p>
    
    
-    <p>
+    <p class="text-gray-900 dark:text-gray-100">
       If you have any further concerns or questions, feel free to reach out. <br>
       Thank you for your patience and understanding.
     </p>
 
-    <p class="mt-5">
+    <p class="mt-5 text-gray-900 dark:text-gray-100">
       Sincerely,<br />
       Polygon Customer Support Team
     </p>
@@ -266,15 +265,15 @@
 
   </div>
   <ng-template pTemplate="footer">
+    <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-600">
       <button
         pButton
         type="button"
         label="Cancel"
-        class="p-button-secondary"
-      style="margin-right: 8px; background-color: #74788D; color: #D3D3D3; border: none; width: 120px; height: 40px;border: none;
-"
+        class="p-button-secondary bg-[#74788D] dark:bg-gray-600 text-[#D3D3D3] dark:text-gray-200 hover:bg-gray-600 dark:hover:bg-gray-700 border-none"
+        style="margin-right: 8px; width: 120px; height: 40px;"
         (click)="hideDialog()"
       ></button>
- 
+    </div>
   </ng-template>
 </p-dialog> -->

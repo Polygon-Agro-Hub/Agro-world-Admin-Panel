@@ -10,6 +10,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { Router, ActivatedRoute } from '@angular/router';
 import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
 import Swal from 'sweetalert2';
+import {FormControl } from '@angular/forms';
 
 interface PhoneCode {
   value: string;
@@ -51,6 +52,9 @@ export class ViewDestributionCenterComponent implements OnInit {
 
   companyOptions: any[] = [];
 
+ form = new FormGroup({
+    company: new FormControl(null),
+  });
   phoneCodes: PhoneCode[] = [
     { value: '+94', label: '+94 (SL)' },
     { value: '+91', label: '+91 (India)' },
@@ -170,6 +174,11 @@ export class ViewDestributionCenterComponent implements OnInit {
       }
     );
   }
+
+  getCompanyNameById(id: string | number | null): string | undefined {
+  return this.companyList?.find(company => company.id === id)?.companyNameEnglish;
+}
+
 
   populateForm(data: DistributionCenter): void {
     // Find the company ID that matches the company name from the response

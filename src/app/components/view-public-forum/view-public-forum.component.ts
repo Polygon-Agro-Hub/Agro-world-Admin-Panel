@@ -48,9 +48,9 @@ export class ViewPublicForumComponent implements OnInit {
     private psotService: PublicforumService,
     private router: Router,
     private publicForumSrv: PublicForumService,
-    public permissionService: PermissionService, 
+    public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   sendMessage(id: number) {
     if (!this.replyMessage.trim()) {
@@ -153,7 +153,7 @@ export class ViewPublicForumComponent implements OnInit {
             return reply;
           });
         },
-        (error) => {}
+        (error) => { }
       );
   }
 
@@ -274,28 +274,31 @@ export class ViewPublicForumComponent implements OnInit {
   onReplyMassageInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const original = input.value;
-    
+
     // Remove leading spaces
     let trimmed = original.replace(/^\s+/, '');
-  
+
     // Capitalize first letter if there's any input
     if (trimmed.length > 0) {
       trimmed = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
     }
-  
+
     input.value = trimmed; // Update input display
     this.replyMessage = trimmed; // Update model
   }
-  
+
 }
 
 class PublicForum {
-  'id': number;
-  'replyMessage': string;
-  'firstName': string;
-  'lastName': string;
-  'createdAt': string;
+  id!: number;
+  replyMessage!: string;
+  firstName!: string;
+  lastName!: string;
+  createdAt!: string;
   timeAgo?: string;
+  replyStaffId!:number | null
+  staffFirstName!:string
+  staffLastName!:string
 }
 
 class ReplyCount {

@@ -170,38 +170,39 @@ export class EditTaskComponent implements OnInit {
   }
 
   getTaskById(id: string) {
-    this.taskService.getCropTaskBycropId(id).subscribe(
-      (data) => {
-        this.taskItems = data;
-        this.taskForm.patchValue({
-          taskEnglish: this.taskItems.taskEnglish,
-          taskTypeEnglish: this.taskItems.taskTypeEnglish,
-          taskCategoryEnglish: this.taskItems.taskCategoryEnglish,
-          taskDescriptionEnglish: this.taskItems.taskDescriptionEnglish,
-          taskSinhala: this.taskItems.taskSinhala,
-          taskTypeSinhala: this.taskItems.taskTypeSinhala,
-          taskCategorySinhala: this.taskItems.taskCategorySinhala,
-          taskDescriptionSinhala: this.taskItems.taskDescriptionSinhala,
-          taskTamil: this.taskItems.taskTamil,
-          taskTypeTamil: this.taskItems.taskTypeTamil,
-          taskCategoryTamil: this.taskItems.taskCategoryTamil,
-          taskDescriptionTamil: this.taskItems.taskDescriptionTamil,
-          reqImages: this.taskItems.reqImages,
-          hasImageLink: !!this.taskItems.imageLink,
-          imageLink: this.taskItems.imageLink,
-          videoLinkEnglish: this.taskItems.videoLinkEnglish,
-          videoLinkSinhala: this.taskItems.videoLinkSinhala,
-          videoLinkTamil: this.taskItems.videoLinkTamil,
-        });
-      },
-      (error) => {
-        console.error('Error fetching task:', error);
-        if (error.status === 401) {
-          // Handle unauthorized error
-        }
+  this.taskService.getCropTaskBycropId(id).subscribe(
+    (data) => {
+      this.taskItems = data;
+      this.taskForm.patchValue({
+        taskEnglish: this.taskItems.taskEnglish,
+        taskTypeEnglish: this.taskItems.taskTypeEnglish,
+        taskCategoryEnglish: this.taskItems.taskCategoryEnglish,
+        taskDescriptionEnglish: this.taskItems.taskDescriptionEnglish,
+        taskSinhala: this.taskItems.taskSinhala,
+        taskTypeSinhala: this.taskItems.taskTypeSinhala,
+        taskCategorySinhala: this.taskItems.taskCategorySinhala,
+        taskDescriptionSinhala: this.taskItems.taskDescriptionSinhala,
+        taskTamil: this.taskItems.taskTamil,
+        taskTypeTamil: this.taskItems.taskTypeTamil,
+        taskCategoryTamil: this.taskItems.taskCategoryTamil,
+        taskDescriptionTamil: this.taskItems.taskDescriptionTamil,
+        // Set default value to 0 if reqImages is empty or undefined
+        reqImages: this.taskItems.reqImages || '0',
+        hasImageLink: !!this.taskItems.imageLink,
+        imageLink: this.taskItems.imageLink,
+        videoLinkEnglish: this.taskItems.videoLinkEnglish,
+        videoLinkSinhala: this.taskItems.videoLinkSinhala,
+        videoLinkTamil: this.taskItems.videoLinkTamil,
+      });
+    },
+    (error) => {
+      console.error('Error fetching task:', error);
+      if (error.status === 401) {
+        // Handle unauthorized error
       }
-    );
-  }
+    }
+  );
+}
 
   updateTask() {
     this.taskForm.markAllAsTouched();

@@ -71,21 +71,26 @@ export class UserTaskEditComponent {
   }
 
   getTaskById(id: any) {
-    this.taskService.getUserCropTaskBycropId(id).subscribe(
-      (data) => {
-        this.taskItems = data;
-        this.taskItems.startingDate = this.formatDate(
-          this.taskItems.startingDate
-        );
-        this.hasImageLink = !!this.taskItems.imageLink;
-      },
-      (error) => {
-        if (error.status === 401) {
-          // Handle unauthorized error
-        }
+  this.taskService.getUserCropTaskBycropId(id).subscribe(
+    (data) => {
+      this.taskItems = data;
+      this.taskItems.startingDate = this.formatDate(
+        this.taskItems.startingDate
+      );
+      this.hasImageLink = !!this.taskItems.imageLink;
+      
+      // Set default value of 0 if reqImages is null/undefined
+      if (this.taskItems.reqImages == null || this.taskItems.reqImages === undefined) {
+        this.taskItems.reqImages = 0;
       }
-    );
-  }
+    },
+    (error) => {
+      if (error.status === 401) {
+        // Handle unauthorized error
+      }
+    }
+  );
+}
 
   onImageLinkChange(hasImage: boolean) {
     this.hasImageLink = hasImage;
@@ -139,9 +144,9 @@ export class UserTaskEditComponent {
 
   private isFormValid(): boolean {
     // Check common required fields
-    if (!this.taskItems.startingDate || !this.taskItems.reqImages) {
-      return false;
-    }
+    if (!this.taskItems.startingDate) {
+    return false;
+  }
 
     // Check language-specific fields based on selected language
     switch (this.selectedLanguage) {

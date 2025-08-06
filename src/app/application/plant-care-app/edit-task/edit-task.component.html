@@ -1,5 +1,8 @@
 <div>
-  <button onclick="history.back()" class="mb-5 text-textLight dark:text-textDark">
+  <button
+    onclick="history.back()"
+    class="mb-5 text-textLight dark:text-textDark"
+  >
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -22,16 +25,25 @@
       </div>
       <div class="mb-6">
         <ul class="flex">
-          <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'english' }" (click)="selectLanguage('english')">
+          <li
+            class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
+            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'english' }"
+            (click)="selectLanguage('english')"
+          >
             English
           </li>
-          <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'sinhala' }" (click)="selectLanguage('sinhala')">
+          <li
+            class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
+            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'sinhala' }"
+            (click)="selectLanguage('sinhala')"
+          >
             Sinhala
           </li>
-          <li class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
-            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'tamil' }" (click)="selectLanguage('tamil')">
+          <li
+            class="cursor-pointer py-2 px-4 text-center border-b-2 text-textLight dark:text-textDark"
+            [ngClass]="{ 'border-[#3980C0]': selectedLanguage === 'tamil' }"
+            (click)="selectLanguage('tamil')"
+          >
             Tamil
           </li>
         </ul>
@@ -39,52 +51,90 @@
 
       <div *ngIf="selectedLanguage === 'english'">
         <div class="mb-4">
-          <label for="taskEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskEnglish"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task English<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskEnglish" formControlName="taskEnglish" (keydown)="allowOnlyEnglishLetters($event)"
+          <input
+            type="text"
+            id="taskEnglish"
+            formControlName="taskEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="taskForm.get('taskEnglish')?.touched && taskForm.get('taskEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="taskForm.get('taskEnglish')?.touched && taskForm.get('taskEnglish')?.hasError('required')"
+            class="text-red-500 text-sm mt-1"
+          >
             Task name is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskTypeEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskTypeEnglish"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Type<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskTypeEnglish" formControlName="taskTypeEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="taskForm.get('taskTypeEnglish')?.touched && taskForm.get('taskTypeEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+          <input
+            type="text"
+            id="taskTypeEnglish"
+            formControlName="taskTypeEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
+            (input)="capitalizeFirstLetter($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="taskForm.get('taskTypeEnglish')?.touched && taskForm.get('taskTypeEnglish')?.hasError('required')"
+            class="text-red-500 text-sm mt-1"
+          >
             Task type is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskCategoryEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskCategoryEnglish"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Category<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskCategoryEnglish" formControlName="taskCategoryEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input
+            type="text"
+            id="taskCategoryEnglish"
+            formControlName="taskCategoryEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
+            (input)="capitalizeFirstLetter($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
           <div
             *ngIf="taskForm.get('taskCategoryEnglish')?.touched && taskForm.get('taskCategoryEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="text-red-500 text-sm mt-1"
+          >
             Task category is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskDescriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskDescriptionEnglish"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Description<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskDescriptionEnglish" formControlName="taskDescriptionEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)" (input)="capitalizeFirstLetter($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input
+            type="text"
+            id="taskDescriptionEnglish"
+            formControlName="taskDescriptionEnglish"
+            (keydown)="allowOnlyEnglishLetters($event)"
+            (input)="capitalizeFirstLetter($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
           <div
             *ngIf="taskForm.get('taskDescriptionEnglish')?.touched && taskForm.get('taskDescriptionEnglish')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="text-red-500 text-sm mt-1"
+          >
             Task description is required.
           </div>
         </div>
@@ -92,51 +142,86 @@
 
       <div *ngIf="selectedLanguage === 'sinhala'">
         <div class="mb-4">
-          <label for="taskSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskSinhala"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Sinhala<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskSinhala" formControlName="taskSinhala" (keydown)="allowOnlySinhalaLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="taskForm.get('taskSinhala')?.touched && taskForm.get('taskSinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+          <input
+            type="text"
+            id="taskSinhala"
+            formControlName="taskSinhala"
+            (keydown)="allowOnlySinhalaLetters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="taskForm.get('taskSinhala')?.touched && taskForm.get('taskSinhala')?.hasError('required')"
+            class="text-red-500 text-sm mt-1"
+          >
             Task in Sinhala is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskTypeSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskTypeSinhala"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Type<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskTypeSinhala" formControlName="taskTypeSinhala"
+          <input
+            type="text"
+            id="taskTypeSinhala"
+            formControlName="taskTypeSinhala"
             (keydown)="allowOnlySinhalaLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="taskForm.get('taskTypeSinhala')?.touched && taskForm.get('taskTypeSinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="taskForm.get('taskTypeSinhala')?.touched && taskForm.get('taskTypeSinhala')?.hasError('required')"
+            class="text-red-500 text-sm mt-1"
+          >
             Task Type in Sinhala is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskCategorySinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskCategorySinhala"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Category<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskCategorySinhala" formControlName="taskCategorySinhala"
+          <input
+            type="text"
+            id="taskCategorySinhala"
+            formControlName="taskCategorySinhala"
             (keydown)="allowOnlySinhalaLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
           <div
             *ngIf="taskForm.get('taskCategorySinhala')?.touched && taskForm.get('taskCategorySinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="text-red-500 text-sm mt-1"
+          >
             Task Category in Sinhala is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskDescriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskDescriptionSinhala"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Description<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskDescriptionSinhala" formControlName="taskDescriptionSinhala"
+          <input
+            type="text"
+            id="taskDescriptionSinhala"
+            formControlName="taskDescriptionSinhala"
             (keydown)="allowOnlySinhalaLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
           <div
             *ngIf="taskForm.get('taskDescriptionSinhala')?.touched && taskForm.get('taskDescriptionSinhala')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="text-red-500 text-sm mt-1"
+          >
             Task Description in Sinhala is required.
           </div>
         </div>
@@ -144,51 +229,86 @@
 
       <div *ngIf="selectedLanguage === 'tamil'">
         <div class="mb-4">
-          <label for="taskTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskTamil"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Tamil<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskTamil" formControlName="taskTamil" (keydown)="allowOnlyTamilLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="taskForm.get('taskTamil')?.touched && taskForm.get('taskTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+          <input
+            type="text"
+            id="taskTamil"
+            formControlName="taskTamil"
+            (keydown)="allowOnlyTamilLetters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="taskForm.get('taskTamil')?.touched && taskForm.get('taskTamil')?.hasError('required')"
+            class="text-red-500 text-sm mt-1"
+          >
             Task in Tamil is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskTypeTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskTypeTamil"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Type<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskTypeTamil" formControlName="taskTypeTamil"
+          <input
+            type="text"
+            id="taskTypeTamil"
+            formControlName="taskTypeTamil"
             (keydown)="allowOnlyTamilLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="taskForm.get('taskTypeTamil')?.touched && taskForm.get('taskTypeTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <div
+            *ngIf="taskForm.get('taskTypeTamil')?.touched && taskForm.get('taskTypeTamil')?.hasError('required')"
+            class="text-red-500 text-sm mt-1"
+          >
             Task Type in Tamil is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskCategoryT Pamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskCategoryTamil"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Category<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskCategoryTamil" formControlName="taskCategoryTamil"
+          <input
+            type="text"
+            id="taskCategoryTamil"
+            formControlName="taskCategoryTamil"
             (keydown)="allowOnlyTamilLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
           <div
             *ngIf="taskForm.get('taskCategoryTamil')?.touched && taskForm.get('taskCategoryTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="text-red-500 text-sm mt-1"
+          >
             Task Category in Tamil is required.
           </div>
         </div>
         <div class="mb-4">
-          <label for="taskDescriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="taskDescriptionTamil"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Task Description<span style="color: #2E2E2E">*</span>
           </label>
-          <input type="text" id="taskDescriptionTamil" formControlName="taskDescriptionTamil"
+          <input
+            type="text"
+            id="taskDescriptionTamil"
+            formControlName="taskDescriptionTamil"
             (keydown)="allowOnlyTamilLetters($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
           <div
             *ngIf="taskForm.get('taskDescriptionTamil')?.touched && taskForm.get('taskDescriptionTamil')?.hasError('required')"
-            class="text-red-500 text-sm mt-1">
+            class="text-red-500 text-sm mt-1"
+          >
             Task Description in Tamil is required.
           </div>
         </div>
@@ -197,14 +317,24 @@
       <hr class="border-[2px] border-gray-400 my-10" />
 
       <div class="mb-4">
-        <label for="reqImages" class="block text-sm font-medium text-textLight dark:text-textDark">
+        <label
+          for="reqImages"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
           Number of required images
         </label>
-        <input type="text" id="reqImages" formControlName="reqImages" (keypress)="validateImagesInput($event)"
+        <input
+          type="text"
+          id="reqImages"
+          formControlName="reqImages"
+          (keypress)="validateImagesInput($event)"
           (input)="onImagesInput($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="taskForm.get('reqImages')?.touched && taskForm.get('reqImages')?.hasError('pattern')"
-          class="text-red-500 text-sm mt-1">
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <div
+          *ngIf="taskForm.get('reqImages')?.touched && taskForm.get('reqImages')?.hasError('pattern')"
+          class="text-red-500 text-sm mt-1"
+        >
           Please enter a valid number (no leading zeros or decimals).
         </div>
       </div>
@@ -215,55 +345,96 @@
         </label>
         <div class="mt-1">
           <label class="inline-flex items-center">
-            <input type="radio" [(ngModel)]="hasImageLink" name="hasImageLink" [value]="true" (change)="changeHasImage(true)"/>
-
+            <input
+              type="radio"
+              formControlName="hasImageLink"
+              [value]="true"
+              (change)="onImageLinkChange()"
+            />
             <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
           </label>
           <label class="inline-flex items-center ml-6">
-            <input type="radio" [(ngModel)]="hasImageLink" name="hasImageLink" [value]="false" (change)="changeHasImage(false)"/>
-
+            <input
+              type="radio"
+              formControlName="hasImageLink"
+              [value]="false"
+              (change)="onImageLinkChange()"
+            />
             <span class="ml-2 text-textLight dark:text-textDark">No</span>
           </label>
         </div>
       </div>
 
-
-      <div class="mb-4" *ngIf="hasImageLink">
-        <label for="imageLink" class="block text-sm font-medium text-textLight dark:text-textDark">
+      <div class="mb-4" *ngIf="taskForm.get('hasImageLink')?.value">
+        <label
+          for="imageLink"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
           Image Link<span style="color: #2E2E2E">*</span>
         </label>
-        <input type="text" id="imageLink" formControlName="imageLink"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="taskForm.get('imageLink')?.touched && taskForm.get('imageLink')?.hasError('required')"
-          class="text-red-500 text-sm mt-1">
+        <input
+          type="text"
+          id="imageLink"
+          formControlName="imageLink"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <div
+          *ngIf="taskForm.get('hasImageLink')?.value && taskForm.get('imageLink')?.touched && taskForm.get('imageLink')?.hasError('required')"
+          class="text-red-500 text-sm mt-1"
+        >
           Image Link is required when "Has Image Link" is set to Yes.
         </div>
       </div>
 
       <div class="mb-4">
-        <label for="videoLinkEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+        <label
+          for="videoLinkEnglish"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
           Video Link English
         </label>
-        <input type="text" id="videoLinkEnglish" formControlName="videoLinkEnglish"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input
+          type="text"
+          id="videoLinkEnglish"
+          formControlName="videoLinkEnglish"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
       </div>
       <div class="mb-4">
-        <label for="videoLinkSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+        <label
+          for="videoLinkSinhala"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
           Video Link Sinhala
         </label>
-        <input type="text" id="videoLinkSinhala" formControlName="videoLinkSinhala"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input
+          type="text"
+          id="videoLinkSinhala"
+          formControlName="videoLinkSinhala"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
       </div>
       <div class="mb-4">
-        <label for="videoLinkTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+        <label
+          for="videoLinkTamil"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
           Video Link Tamil
         </label>
-        <input type="text" id="videoLinkTamil" formControlName="videoLinkTamil"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input
+          type="text"
+          id="videoLinkTamil"
+          formControlName="videoLinkTamil"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
       </div>
       <div class="flex justify-end mt-6">
         <div class="w-[20px]"></div>
-        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" [disabled]="taskForm.invalid">
+        <button
+          type="submit"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+          [disabled]="taskForm.invalid"
+        >
           Save
         </button>
       </div>

@@ -69,7 +69,7 @@ export class EditTaskComponent implements OnInit {
       taskTypeTamil: ['', Validators.required],
       taskCategoryTamil: ['', Validators.required],
       taskDescriptionTamil: ['', Validators.required],
-      reqImages: ['', [Validators.pattern(/^[1-9][0-9]*$/)]],
+      reqImages: ['', [Validators.pattern(/^(0|[1-9][0-9]*)$/)]],
       hasImageLink: [false],
       imageLink: [''],
       videoLinkEnglish: [''],
@@ -151,11 +151,11 @@ export class EditTaskComponent implements OnInit {
     const currentValue = (event.target as HTMLInputElement).value;
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
     if (allowedKeys.includes(inputChar)) return;
-    if (!/^[0-9]$/.test(inputChar)) {
-      event.preventDefault();
-      return;
-    }
-    if (inputChar === '0' && currentValue.length === 0) {
+    // if (!/^[0-9]$/.test(inputChar)) {
+    //   event.preventDefault();
+    //   return;
+    // }
+    if (currentValue.length === 0) {
       event.preventDefault();
     }
   }

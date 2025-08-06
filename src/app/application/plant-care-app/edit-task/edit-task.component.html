@@ -327,10 +327,11 @@
           type="text"
           id="reqImages"
           formControlName="reqImages"
-          (keypress)="validateImagesInput($event)"
-          (input)="onImagesInput($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
+                  <!-- (keypress)="validateImagesInput($event)"
+          (input)="onImagesInput($event)" -->
+
         <div
           *ngIf="taskForm.get('reqImages')?.touched && taskForm.get('reqImages')?.hasError('pattern')"
           class="text-red-500 text-sm mt-1"

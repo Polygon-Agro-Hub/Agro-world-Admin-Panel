@@ -1,5 +1,3 @@
-
-
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -48,7 +46,6 @@ export class EditTaskComponent implements OnInit {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   itemId!: string;
   taskItems: CropTask = new CropTask();
-  hasImageLink: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -59,7 +56,6 @@ export class EditTaskComponent implements OnInit {
     private tokenService: TokenService,
     private location: Location
   ) {
-    // Initialize the form with validators
     this.taskForm = this.fb.group({
       taskEnglish: ['', Validators.required],
       taskTypeEnglish: ['', Validators.required],
@@ -73,7 +69,8 @@ export class EditTaskComponent implements OnInit {
       taskTypeTamil: ['', Validators.required],
       taskCategoryTamil: ['', Validators.required],
       taskDescriptionTamil: ['', Validators.required],
-      reqImages: ['', [Validators.pattern(/^[1-9][0-9]*$/)]],
+      reqImages: ['', [Validators.pattern(/^(0|[1-9][0-9]*)$/)]],
+      hasImageLink: [false],
       imageLink: [''],
       videoLinkEnglish: [''],
       videoLinkSinhala: [''],
@@ -83,7 +80,6 @@ export class EditTaskComponent implements OnInit {
 
   ngOnInit() {
     this.itemId = this.route.snapshot.params['id'];
-    console.log('Item ID: ', this.itemId);
     this.getTaskById(this.itemId);
   }
 
@@ -91,57 +87,56 @@ export class EditTaskComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
-allowOnlyEnglishLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-  if (allowedControlKeys.includes(event.key)) return;
+  allowOnlyEnglishLetters(event: KeyboardEvent): void {
+    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedControlKeys.includes(event.key)) return;
 
-  const input = event.currentTarget as HTMLInputElement;
+    const input = event.currentTarget as HTMLInputElement;
 
-  // Prevent space at the beginning
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const isLetter = /^[a-zA-Z]$/.test(event.key);
+    if (!isLetter && event.key !== ' ') {
+      event.preventDefault();
+    }
   }
 
-  const isLetter = /^[a-zA-Z]$/.test(event.key);
-  if (!isLetter && event.key !== ' ') {
-    event.preventDefault();
-  }
-}
+  allowOnlySinhalaLetters(event: KeyboardEvent): void {
+    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedControlKeys.includes(event.key)) return;
 
-allowOnlySinhalaLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-  if (allowedControlKeys.includes(event.key)) return;
+    const input = event.currentTarget as HTMLInputElement;
 
-  const input = event.currentTarget as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
 
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
-  }
-
-  const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
-  if (!isSinhala && event.key !== ' ') {
-    event.preventDefault();
-  }
-}
-
-allowOnlyTamilLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-  if (allowedControlKeys.includes(event.key)) return;
-
-  const input = event.currentTarget as HTMLInputElement;
-
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
+    const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
+    if (!isSinhala && event.key !== ' ') {
+      event.preventDefault();
+    }
   }
 
-  const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
-  if (!isTamil && event.key !== ' ') {
-    event.preventDefault();
+  allowOnlyTamilLetters(event: KeyboardEvent): void {
+    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedControlKeys.includes(event.key)) return;
+
+    const input = event.currentTarget as HTMLInputElement;
+
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
+    if (!isTamil && event.key !== ' ') {
+      event.preventDefault();
+    }
   }
-}
 
   capitalizeFirstLetter(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -156,11 +151,11 @@ allowOnlyTamilLetters(event: KeyboardEvent): void {
     const currentValue = (event.target as HTMLInputElement).value;
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
     if (allowedKeys.includes(inputChar)) return;
-    if (!/^[0-9]$/.test(inputChar)) {
-      event.preventDefault();
-      return;
-    }
-    if (inputChar === '0' && currentValue.length === 0) {
+    // if (!/^[0-9]$/.test(inputChar)) {
+    //   event.preventDefault();
+    //   return;
+    // }
+    if (currentValue.length === 0) {
       event.preventDefault();
     }
   }
@@ -175,49 +170,46 @@ allowOnlyTamilLetters(event: KeyboardEvent): void {
   }
 
   getTaskById(id: string) {
-    this.taskService.getCropTaskBycropId(id).subscribe(
-      (data) => {
-        console.log('Task Data:', data);
-        this.taskItems = data;
-        this.hasImageLink = !!this.taskItems.imageLink;
-        // Patch form values
-        this.taskForm.patchValue({
-          taskEnglish: this.taskItems.taskEnglish,
-          taskTypeEnglish: this.taskItems.taskTypeEnglish,
-          taskCategoryEnglish: this.taskItems.taskCategoryEnglish,
-          taskDescriptionEnglish: this.taskItems.taskDescriptionEnglish,
-          taskSinhala: this.taskItems.taskSinhala,
-          taskTypeSinhala: this.taskItems.taskTypeSinhala,
-          taskCategorySinhala: this.taskItems.taskCategorySinhala,
-          taskDescriptionSinhala: this.taskItems.taskDescriptionSinhala,
-          taskTamil: this.taskItems.taskTamil,
-          taskTypeTamil: this.taskItems.taskTypeTamil,
-          taskCategoryTamil: this.taskItems.taskCategoryTamil,
-          taskDescriptionTamil: this.taskItems.taskDescriptionTamil,
-          reqImages: this.taskItems.reqImages,
-          imageLink: this.taskItems.imageLink,
-          videoLinkEnglish: this.taskItems.videoLinkEnglish,
-          videoLinkSinhala: this.taskItems.videoLinkSinhala,
-          videoLinkTamil: this.taskItems.videoLinkTamil,
-        });
-      },
-      (error) => {
-        console.error('Error fetching task:', error);
-        if (error.status === 401) {
-          // Handle unauthorized error
-        }
+  this.taskService.getCropTaskBycropId(id).subscribe(
+    (data) => {
+      this.taskItems = data;
+      this.taskForm.patchValue({
+        taskEnglish: this.taskItems.taskEnglish,
+        taskTypeEnglish: this.taskItems.taskTypeEnglish,
+        taskCategoryEnglish: this.taskItems.taskCategoryEnglish,
+        taskDescriptionEnglish: this.taskItems.taskDescriptionEnglish,
+        taskSinhala: this.taskItems.taskSinhala,
+        taskTypeSinhala: this.taskItems.taskTypeSinhala,
+        taskCategorySinhala: this.taskItems.taskCategorySinhala,
+        taskDescriptionSinhala: this.taskItems.taskDescriptionSinhala,
+        taskTamil: this.taskItems.taskTamil,
+        taskTypeTamil: this.taskItems.taskTypeTamil,
+        taskCategoryTamil: this.taskItems.taskCategoryTamil,
+        taskDescriptionTamil: this.taskItems.taskDescriptionTamil,
+        // Set default value to 0 if reqImages is empty or undefined
+        reqImages: this.taskItems.reqImages || '0',
+        hasImageLink: !!this.taskItems.imageLink,
+        imageLink: this.taskItems.imageLink,
+        videoLinkEnglish: this.taskItems.videoLinkEnglish,
+        videoLinkSinhala: this.taskItems.videoLinkSinhala,
+        videoLinkTamil: this.taskItems.videoLinkTamil,
+      });
+    },
+    (error) => {
+      console.error('Error fetching task:', error);
+      if (error.status === 401) {
+        // Handle unauthorized error
       }
-    );
-  }
+    }
+  );
+}
 
   updateTask() {
-    // Mark all fields as touched to trigger validation
     this.taskForm.markAllAsTouched();
 
-    // Custom validation for imageLink when hasImageLink is true
-    if (this.hasImageLink && !this.taskForm.get('imageLink')?.value) {
+    if (this.taskForm.get('hasImageLink')?.value && !this.taskForm.get('imageLink')?.value) {
       this.taskForm.get('imageLink')?.setErrors({ required: true });
-    } else if (!this.hasImageLink) {
+    } else if (!this.taskForm.get('hasImageLink')?.value) {
       this.taskForm.get('imageLink')?.setErrors(null);
       this.taskForm.get('imageLink')?.setValue('');
     }
@@ -242,7 +234,6 @@ allowOnlyTamilLetters(event: KeyboardEvent): void {
       return;
     }
 
-    // Update taskItems with form values
     this.taskItems = { ...this.taskItems, ...this.taskForm.value };
 
     this.taskService.updateCropTask(this.itemId, this.taskItems).subscribe(
@@ -268,12 +259,10 @@ allowOnlyTamilLetters(event: KeyboardEvent): void {
   }
 
   onImageLinkChange() {
-    if (!this.hasImageLink) {
-      this.taskForm.get('imageLink')?.setValue('');
-      this.taskForm.get('imageLink')?.setErrors(null);
-    }
+    if (!this.taskForm.get('hasImageLink')?.value) {
+    this.taskForm.get('imageLink')?.setErrors(null);
   }
-  
+  }
 }
 
 export class CreateTask {

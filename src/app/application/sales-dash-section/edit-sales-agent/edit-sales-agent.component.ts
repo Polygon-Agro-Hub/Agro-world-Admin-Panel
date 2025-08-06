@@ -8,7 +8,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -40,6 +40,9 @@ interface BranchesData {
   styleUrl: './edit-sales-agent.component.css',
 })
 export class EditSalesAgentComponent implements OnInit {
+onBlur(arg0: string) {
+throw new Error('Method not implemented.');
+}
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
@@ -245,21 +248,7 @@ export class EditSalesAgentComponent implements OnInit {
     this.personalData.empType = selectedType;
   }
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
 
-    if (this.itemId === null) {
-      this.personalData.province = selected ? selected.province : '';
-    } else {
-      if (selected) {
-        this.personalData.province = selected.province;
-      }
-    }
-  }
 
   onBankChange() {
     if (this.selectedBankId) {
@@ -427,6 +416,16 @@ export class EditSalesAgentComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+ updateProvince(event: DropdownChangeEvent): void {
+  const selectedDistrict = event.value;
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
+
+  if (this.itemId === null) {
+    this.personalData.province = selected ? selected.province : '';
+  }
+}
 
   validateNameInput(event: KeyboardEvent): void {
     // Allow navigation and control keys
@@ -454,14 +453,34 @@ export class EditSalesAgentComponent implements OnInit {
       event.preventDefault();
     }
   }
+capitalizeFirstLetter(field: 'firstName' | 'lastName') {
+  let value = this.personalData[field];
 
-  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
-    if (this.personalData[fieldName]) {
-      // Capitalize first letter and make the rest lowercase
-      this.personalData[fieldName] =
-        this.personalData[fieldName].charAt(0).toUpperCase() +
-        this.personalData[fieldName].slice(1).toLowerCase();
-    }
+  if (!value) return;
+
+  // Find index of first non-space character
+  const firstNonSpaceIndex = value.search(/\S/);
+
+  if (firstNonSpaceIndex === -1) {
+    // Only spaces - do nothing
+    return;
+  }
+
+  // Extract parts
+  const before = value.slice(0, firstNonSpaceIndex);
+  const firstChar = value.charAt(firstNonSpaceIndex);
+  const after = value.slice(firstNonSpaceIndex + 1);
+
+  // Capitalize the first non-space character and keep the rest as is
+  this.personalData[field] = before + firstChar.toUpperCase() + after;
+}
+
+  onFieldTouched(field: keyof Personal) {
+    this.touchedFields[field] = true;
+  }
+
+  onBranchTouched(field: keyof Personal) {
+    this.touchedFields[field] = true;
   }
 
   validateNICInput(event: KeyboardEvent) {

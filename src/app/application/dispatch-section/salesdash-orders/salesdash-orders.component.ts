@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { DispatchService } from '../../../services/dispatch/dispatch.service';
+import { CalendarModule } from 'primeng/calendar';
 
 interface ProductInfo {
   productId: number;
@@ -33,6 +34,7 @@ interface PremadePackages {
   orderPackageItemsId: any;
   fullTotal: number;
   additionalProductIds: number[];
+  hasData:boolean;
 
   // Simplified maps using 0|1 directly
   additionalProductsMap: Record<number, 0 | 1>;
@@ -80,7 +82,8 @@ interface SelectdPackage {
     NgxPaginationModule,
     DropdownModule,
     FormsModule,
-    DatePipe
+    DatePipe,
+    CalendarModule
   ],
   templateUrl: './salesdash-orders.component.html',
   styleUrl: './salesdash-orders.component.css'
@@ -90,18 +93,23 @@ export class SalesdashOrdersComponent {
   isLoading = false;
   status = ['Pending', 'Completed', 'Opened'];
   selectedStatus: any = '';
-  date: string = '';
+
   itemsPerPage: number = 10;
   premadePackages: PremadePackages[] = [];
   selectdPackage: SelectdPackage[] = [];
   totalItems: number = 0;
   page: number = 1;
   isPremade = true;
+  hasData=false;
+  hasDataCustom = false;
 
   orderId: number = 0;
   orderName: string = '';
   orderPrice: string = '';
   orderInv: string = '';
+  date: Date = new Date(); // Initialize with current date
+  datesl: Date = new Date();
+  
 
   totalPackageItems: number = 0;
 
@@ -112,7 +120,7 @@ export class SalesdashOrdersComponent {
   pagesl: number = 1;
   statussl = ['Pending', 'Completed', 'Opened'];
   selectedStatussl: any = '';
-  datesl: string = '';
+
   itemsPerPagesl: number = 10;
   searchsl: string = '';
 
@@ -149,73 +157,94 @@ selectedInvoiceIdAdditional: number = 0;
   ) { }
 
 
-  getPreMadePackages(page: number = 1, limit: number = this.itemsPerPage) {
-    this.isLoading = true;
+ // Method to convert Date to string format expected by API
+private formatDateForAPI(date: Date | null): string {
+  if (!date) return '';
+  // Format as YYYY-MM-DD (ISO date string format)
+  return date.toISOString().split('T')[0];
+}
 
+// Updated getPreMadePackages method
+getPreMadePackages(page: number = 1, limit: number = this.itemsPerPage) {
+  this.isLoading = true;
 
-    this.dispatchService
-      .getPreMadePackages(page, limit, this.selectedStatus, this.date, this.search)
-      .subscribe(
-        (response) => {
-          // Add fullTotal to each item
-          this.premadePackages = response.items.map((item: any) => {
-            const productPrice = parseFloat(item.productPrice) || 0;
-            const additionalPrice = parseFloat(item.totalAdditionalItemsPrice) || 0;
-            return {
-              ...item,
-              fullTotal: (productPrice + additionalPrice).toFixed(2)
-            };
-          });
-  
-          this.totalItems = response.total;
-          console.log(this.premadePackages);
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
-          if (error.status === 401) {
-          }
-          this.isLoading = false;
+  this.dispatchService
+    .getPreMadePackages(
+      page, 
+      limit, 
+      this.selectedStatus, 
+      this.formatDateForAPI(this.date), // Convert Date to string
+      this.search.trim()
+    )
+    .subscribe(
+      (response) => {
+        // Add fullTotal to each item
+        this.premadePackages = response.items.map((item: any) => {
+          const productPrice = parseFloat(item.productPrice) || 0;
+          const additionalPrice = parseFloat(item.totalAdditionalItemsPrice) || 0;
+          return {
+            ...item,
+            fullTotal: (productPrice + additionalPrice).toFixed(2)
+          };
+        });
+
+        this.totalItems = response.total;
+        
+        // Set hasData based on whether items exist
+        this.hasData = response.items && response.items.length > 0;
+        
+        console.log(this.premadePackages);
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching ongoing cultivations:', error);
+        if (error.status === 401) {
         }
-      );
-  }
+        this.hasData = false; // Set to false on error
+        this.isLoading = false;
+      }
+    );
+}
 
+// Updated getSelectedPackages method
+getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
+  this.isLoading = true;
 
-
-
-
-
-  getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
-    this.isLoading = true;
-
-
-    this.dispatchService
-      .getSelectedPackages(pagesl, limitsl, this.selectedStatussl, this.datesl, this.searchsl)
-      .subscribe(
-        (response) => {
-          console.log('response', response);
-         
-          this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
-            return {
-              ...item,
-              scheduleDateFormattedSL: this.formatDate(item.scheduleDate)
-            };
-          });
-          this.totalItemssl = response.total;
-          console.log(this.selectdPackage)
-          // this.purchaseReport.forEach((head) => {
-          //   head.createdAtFormatted = this.datePipe.transform(head.createdAt, 'yyyy/MM/dd \'at\' hh.mm a');
-          // });
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
-          if (error.status === 401) {
-          }
-          this.isLoading = false;
+  this.dispatchService
+    .getSelectedPackages(
+      pagesl, 
+      limitsl, 
+      this.selectedStatussl, 
+      this.formatDateForAPI(this.datesl), // Convert Date to string
+      this.searchsl.trim()
+    )
+    .subscribe(
+      (response) => {
+        console.log('response', response);
+       
+        this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
+          return {
+            ...item,
+            scheduleDateFormattedSL: this.formatDate(item.scheduleDate)
+          };
+        });
+        this.totalItemssl = response.total;
+        
+        // Add hasData logic for custom packages
+        this.hasDataCustom = response.items && response.items.length > 0;
+        
+        console.log(this.selectdPackage)
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching ongoing cultivations:', error);
+        if (error.status === 401) {
         }
-      );
-  }
+        this.hasDataCustom = false; // Set to false on error
+        this.isLoading = false;
+      }
+    );
+}
 
 
   togglePackageType(isPremade: boolean) {

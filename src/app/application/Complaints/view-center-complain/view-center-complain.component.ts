@@ -17,13 +17,13 @@ import { environment } from '../../../environment/environment';
   selector: 'app-view-center-complain',
   standalone: true,
   imports: [
-     DialogModule,
-        ButtonModule,
-        InputTextareaModule,
-        FormsModule,
-        FormsModule,
-        CommonModule,
-        LoadingSpinnerComponent,
+    DialogModule,
+    ButtonModule,
+    InputTextareaModule,
+    FormsModule,
+    FormsModule,
+    CommonModule,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './view-center-complain.component.html',
   styleUrl: './view-center-complain.component.css',
@@ -38,6 +38,10 @@ export class ViewCenterComplainComponent {
   messageContent: string = "";
   isLoading = false;
 
+  isPopUpVisible: boolean = false;
+  selectedLanguage: string = 'English';
+  selectedOfficerName: string = '';
+
   constructor(
     private complainSrv: CollectionCenterService,
     private router: Router,
@@ -45,12 +49,12 @@ export class ViewCenterComplainComponent {
     private datePipe: DatePipe,
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
     this.complainId = this.route.snapshot.params["id"];
-    
+
     this.fetchComplain();
   }
 
@@ -111,7 +115,7 @@ export class ViewCenterComplainComponent {
           const actionsElement = document.querySelector('.swal2-actions');
           if (actionsElement) {
             actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
-            
+
             // Also swap buttons if needed (in addition to reverseButtons)
             const cancelButton = document.querySelector('.swal2-cancel');
             const confirmButton = document.querySelector('.swal2-confirm');
@@ -119,7 +123,7 @@ export class ViewCenterComplainComponent {
               actionsElement.insertBefore(cancelButton, confirmButton);
             }
           }
-        }, ); // Small delay to ensure DOM is ready
+        },); // Small delay to ensure DOM is ready
       }
     }).then((result) => {
       if (result.isConfirmed) {
@@ -129,7 +133,7 @@ export class ViewCenterComplainComponent {
     });
   }
 
- submitComplaint() {
+  submitComplaint() {
     this.isLoading = true;
     const token = this.tokenService.getToken();
     if (!token) {
@@ -137,16 +141,23 @@ export class ViewCenterComplainComponent {
       return;
     }
 
+    if(this.complain.reply === '' || this.complain.reply === null || this.complain.reply === undefined) {
+      Swal.fire({ 
+        icon: "warning",
+        title: "Warning",
+        text: "Reply cannot be empty!",
+      });
+      this.isLoading = false;
+      return;
+    }
+
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
 
-    this.hideDialog();
 
-    console.log(this.complainId);
-    console.log(this.messageContent);
-
-    const body = { reply: this.messageContent };
+    const body = { reply: this.complain.reply };
 
     this.http
       .put(
@@ -165,6 +176,7 @@ export class ViewCenterComplainComponent {
           });
           this.fetchComplain();
           this.isLoading = false;
+          this.isPopUpVisible = false;
         },
         (error) => {
           console.error("Error updating news", error);
@@ -179,7 +191,7 @@ export class ViewCenterComplainComponent {
         },
       );
   }
-    
+
 
   showDialog() {
     this.display = true; // Opens the dialog
@@ -188,6 +200,20 @@ export class ViewCenterComplainComponent {
   hideDialog() {
     this.display = false; // Closes the dialog
   }
+
+  showReplyPopUp(fname: string, language: string) {
+    this.selectedOfficerName = fname;
+    this.selectedLanguage = language;
+    this.isPopUpVisible = true;
+  }
+
+
+  closeReplyPopUp() {
+    this.isPopUpVisible = false;
+    this.selectedOfficerName = 'English';
+    this.selectedLanguage = '';
+
+  }
 }
 
 
@@ -195,7 +221,7 @@ export class ViewCenterComplainComponent {
 class Complain {
   id!: string;
   empId!: any;
-  jobRole!: string; 
+  jobRole!: string;
   refNo!: string;
   status!: string;
   firstName!: string;
@@ -212,4 +238,6 @@ class Complain {
   officerName!: string;
   officerPhone!: string;
   farmerName!: string;
+  officerNameSinhala!:string;
+  officerNameTamil!:string;
 }

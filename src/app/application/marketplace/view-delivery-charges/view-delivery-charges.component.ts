@@ -220,4 +220,38 @@ export class ViewDeliveryChargesComponent implements OnInit {
         },
       });
   }
+
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // If the input is empty and user presses space, prevent it
+    if (currentValue.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+
+  trimLeadingSpaces(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Remove leading spaces
+    if (value.startsWith(' ')) {
+      this.searchCity = value.trimStart();
+      // Update the input value to reflect the change
+      input.value = this.searchCity;
+    }
+  }
+
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // Remove leading spaces
+    value = value.trimStart();
+
+    // Update both the model and input value
+    this.searchCity = value;
+    input.value = value;
+  }
 }

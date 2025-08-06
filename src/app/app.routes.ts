@@ -164,6 +164,7 @@ import { ViewCurrentCenterTargetComponent } from './application/collection-hub-s
 import { ViewCenterHeadComponent } from './application/collection-hub-section/view-center-head/view-center-head.component';
 import {ViewPackageHistoryComponent} from './application/marketplace/view-package-history/view-package-history.component';
 import { TestingComponent } from './application/collection-hub-section/testing/testing.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -720,6 +721,9 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
           },
+
+      
+          
           {
             path: 'define-packages',
             component: DefinePackagesComponent,

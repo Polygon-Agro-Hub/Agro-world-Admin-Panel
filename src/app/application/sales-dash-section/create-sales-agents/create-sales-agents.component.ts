@@ -12,7 +12,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 interface Bank {
   ID: number;
   name: string;
@@ -68,7 +68,8 @@ export class CreateSalesAgentsComponent implements OnInit {
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   errorMessage: string = '';
-
+isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
+isSpecialCharErrorMap: { [key: string]: boolean } = {};
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -184,21 +185,17 @@ export class CreateSalesAgentsComponent implements OnInit {
     this.personalData.empType = selectedType; // Update personalData.empType dynamically
     console.log('Selected Employee Type:', this.personalData.empType);
   }
+updateProvince(event: DropdownChangeEvent): void {
+  const selectedDistrict = event.value;
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast to HTMLSelectElement
-    const selectedDistrict = target.value;
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = ''; // Clear if no matching district is found
-      }
-    }
+  if (this.itemId === null) {
+    this.personalData.province = selected ? selected.province : '';
   }
+}
+
 
   EpmloyeIdCreate() {
     // const currentCompanyId = this.personalData.companyId;
@@ -229,6 +226,17 @@ export class CreateSalesAgentsComponent implements OnInit {
       });
     // this.personalData.companyId = currentCompanyId;
   }
+
+  validateFirstName(value: string): void {
+  const field = 'firstName';
+  this.personalData[field] = value;
+
+  // Check for leading space
+  this.isLeadingSpaceErrorMap[field] = /^\s/.test(value);
+
+  // Check for valid English name (starts with capital, rest are letters/spaces)
+  this.isSpecialCharErrorMap[field] = !/^[A-Z][a-zA-Z\s]*$/.test(value.trim());
+}
 
   getLastID(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -320,15 +328,15 @@ export class CreateSalesAgentsComponent implements OnInit {
     }
   }
 
-  isFieldInvalid(fieldName: keyof Personal): boolean {
-    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
-  }
+
 
   isValidPhoneNumber(phone: string): boolean {
     const phoneRegex = /^7\d{8}$/; // Allows only 9-digit numbers
     return phoneRegex.test(phone);
   }
-
+isFieldInvalid(fieldName: keyof Personal): boolean {
+  return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+}
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -512,6 +520,9 @@ export class CreateSalesAgentsComponent implements OnInit {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+    onFieldTouched(field: keyof Personal) {
+    this.touchedFields[field] = true;
+  }
 
   validateNameInput(event: KeyboardEvent, fieldName?: string): void {
     // Allow navigation and control keys
@@ -559,6 +570,10 @@ export class CreateSalesAgentsComponent implements OnInit {
     }
   }
 
+
+onBranchTouched(field: keyof Personal) {
+  this.touchedFields[field] = true;
+}
   validateNICInput(event: KeyboardEvent) {
     // Allow navigation keys
     const allowedKeys = [

@@ -157,123 +157,112 @@ export class AddPackageComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.submitAttempted = true;
-    // Mark all fields as touched when submit is attempted
-    Object.keys(this.fieldTouched).forEach(key => {
-      this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
+  this.submitAttempted = true;
+  // Mark all fields as touched when submit is attempted
+  Object.keys(this.fieldTouched).forEach(key => {
+    this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
+  });
+
+  console.log('submit', this.packageObj);
+  console.log('Final quantities:', this.packageObj.quantities);
+
+  // Validation with specific error messages
+  let errorMessages: string[] = [];
+
+  if (!this.packageObj.displayName?.trim()) {
+    errorMessages.push('Display Package Name is required');
+  }
+  if (!this.packageObj.description?.trim()) {
+    errorMessages.push('Description is required');
+  }
+  if (!this.packageObj.productPrice || this.packageObj.productPrice <= 0) {
+    errorMessages.push('Total Package Price must be greater than 0');
+  }
+  if (this.packageObj.packageFee === undefined || this.packageObj.packageFee < 0) {
+    errorMessages.push('Packaging Fee cannot be negative');
+  }
+  if (this.packageObj.serviceFee === undefined || this.packageObj.serviceFee < 0) {
+    errorMessages.push('Service Fee cannot be negative');
+  }
+  if (!this.selectedImage) {
+    errorMessages.push('Package Image is required');
+  }
+  if (this.productTypeObj.length > 0 && !Object.values(this.packageObj.quantities).some(qty => qty > 0)) {
+    errorMessages.push('At least one product type with quantity greater than 0 is required');
+  }
+
+  if (errorMessages.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      html: errorMessages.join('<br>'),
+      confirmButtonText: 'OK',
     });
+    return;
+  }
 
-    console.log('submit', this.packageObj);
-    console.log('Final quantities:', this.packageObj.quantities);
+  this.isLoading = true;
 
-    // Validation with specific error messages
-    let errorMessages: string[] = [];
+  try {
+    // Check if display name exists
+    const nameCheck = await this.marketSrv
+      .checkPackageDisplayName(this.packageObj.displayName)
+      .toPromise();
 
-    if (!this.packageObj.displayName?.trim()) {
-      errorMessages.push('Display Package Name is required');
-    }
-    if (!this.packageObj.description?.trim()) {
-      errorMessages.push('Description is required');
-    }
-    if (!this.packageObj.productPrice || this.packageObj.productPrice <= 0) {
-      errorMessages.push('Total Package Price must be greater than 0');
-    }
-    if (!this.packageObj.packageFee || this.packageObj.packageFee < 0) {
-      errorMessages.push('Packaging Fee cannot be negative');
-    }
-    if (!this.packageObj.serviceFee || this.packageObj.serviceFee < 0) {
-      errorMessages.push('Service Fee cannot be negative');
-    }
-    if (!this.selectedImage) {
-      errorMessages.push('Package Image is required');
-    }
-
-    if (errorMessages.length > 0) {
+    if (nameCheck.exists) {
       Swal.fire({
         icon: 'error',
-        title: 'Validation Error',
-        html: errorMessages.join('<br>'),
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
-
-    // Check if at least one quantity is > 0
-    const hasAtLeastOneQuantity = Object.values(this.packageObj.quantities).some((qty) => qty > 0);
-
-    if (!hasAtLeastOneQuantity) {
-      Swal.fire({
-        icon: 'error',
-        title: 'No product type selected',
-        text: 'You must select at least one product type with quantity greater than 0.',
-        confirmButtonText: 'OK',
-      });
-      return;
-    }
-
-    this.isLoading = true;
-
-    try {
-      // First check if display name exists
-      const nameCheck = await this.marketSrv
-        .checkPackageDisplayName(this.packageObj.displayName)
-        .toPromise();
-
-      if (nameCheck.exists) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Package Name Exists',
-          text: 'A package with this display name already exists. Please choose a different name.',
-          confirmButtonText: 'OK',
-        });
-        this.isLoading = false;
-        return;
-      }
-
-      // If name doesn't exist, proceed with creation
-      this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
-        (res) => {
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Package Created',
-              text: 'The package was created successfully!',
-              confirmButtonText: 'OK',
-            }).then(() => {
-              this.packageObj = new Package();
-              this.router.navigate(['/market/action/view-packages-list']);
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Package Not Created',
-              text: 'The package could not be created. Please try again.',
-              confirmButtonText: 'OK',
-            });
-          }
-          this.isLoading = false;
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'An Error Occurred',
-            text: 'There was an error while creating the package. Please try again later.',
-            confirmButtonText: 'OK',
-          });
-          this.isLoading = false;
-        }
-      );
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'An Error Occurred',
-        text: 'There was an error checking the package name. Please try again later.',
+        title: 'Package Name Exists',
+        text: 'A package with this display name already exists. Please choose a different name.',
         confirmButtonText: 'OK',
       });
       this.isLoading = false;
+      return;
     }
-  }
 
+    // Proceed with package creation
+    this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Package Created',
+            text: 'The package was created successfully!',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            this.packageObj = new Package();
+            this.router.navigate(['/market/action/view-packages-list']);
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Package Not Created',
+            text: 'The package could not be created. Please try again.',
+            confirmButtonText: 'OK',
+          });
+        }
+        this.isLoading = false;
+      },
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'An Error Occurred',
+          text: 'There was an error while creating the package. Please try again later.',
+          confirmButtonText: 'OK',
+        });
+        this.isLoading = false;
+      }
+    );
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'An Error Occurred',
+      text: 'There was an error checking the package name. Please try again later.',
+      confirmButtonText: 'OK',
+    });
+    this.isLoading = false;
+  }
+}
   onCancel() {
     Swal.fire({
       icon: 'warning',

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { Router } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-completed-define-package',
@@ -16,11 +17,12 @@ import { Router } from '@angular/router';
     DropdownModule,
     NgxPaginationModule,
     FormsModule,
+    CalendarModule
   ],
   templateUrl: './completed-define-package.component.html',
   styleUrl: './completed-define-package.component.css',
 })
-export class CompletedDefinePackageComponent {
+export class CompletedDefinePackageComponent implements OnInit {
   isLoading = false;
   orders: any[] = [];
   page: number = 1;
@@ -28,7 +30,7 @@ export class CompletedDefinePackageComponent {
   totalItems: number = 0;
 
   statusFilter: string = '';
-  dateFilter: string = '';
+  dateFilter: Date | null = null; // Changed to Date type
   deliveryDateFilter: string = '';
   searchTerm: string = '';
   hasData: boolean = false;
@@ -48,22 +50,15 @@ export class CompletedDefinePackageComponent {
   constructor(
     private orderService: ProcumentsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
 
-  fetchOrders(dateFilter: string = this.dateFilter, searchTerm: string = this.searchTerm): void {
+  fetchOrders(dateFilter: string = this.dateFilter ? this.formatDate(this.dateFilter) : '', 
+              searchTerm: string = this.searchTerm): void {
     this.isLoading = true;
-
-    // Add packingStatus filter to the request
-    // const filters = {
-    //   statusFilter: this.statusFilter,
-    //   dateFilter: this.dateFilter,
-    //   searchTerm: this.searchTerm,
-    //   packingStatus: 'Completed', // Add this filter
-    // };
 
     this.orderService
       .getAllOrdersWithProcessInfoCompleted(
@@ -74,18 +69,16 @@ export class CompletedDefinePackageComponent {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response); // Debug log
+          console.log('API Response:', response);
           this.hasData = response.total === 0 ? false : true;
 
           if (response && response.data) {
-            // Optional: Filter on client side if needed (but better to do it server-side)
             this.orders = response.data.filter(
               (order: { packingStatus: string }) =>
                 order.packingStatus === 'Completed'
             );
             this.totalItems = response.total || response.totalCount || 0;
           } else {
-            // Fallback client-side filtering if API doesn't support it
             const allOrders = Array.isArray(response) ? response : [];
             this.orders = allOrders.filter(
               (order) => order.packingStatus === 'Completed'
@@ -93,8 +86,7 @@ export class CompletedDefinePackageComponent {
             this.totalItems = this.orders.length;
           }
 
-          console.log('Orders:', this.orders.length, 'Total:', this.totalItems); // Debug log
-          console.log('here are the orders,', this.orders)
+          console.log('Orders:', this.orders.length, 'Total:', this.totalItems);
           this.isLoading = false;
         },
         error: (error) => {
@@ -104,6 +96,14 @@ export class CompletedDefinePackageComponent {
           this.isLoading = false;
         },
       });
+  }
+
+  // Helper method to format Date to YYYY-MM-DD string
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   onSearch(): void {
@@ -122,38 +122,29 @@ export class CompletedDefinePackageComponent {
     this.fetchOrders();
   }
 
+  onDateSelect(): void {
+    this.page = 1;
+    this.fetchOrders();
+  }
+
+  onDateClear(): void {
+    this.dateFilter = null;
+    this.page = 1;
+    this.fetchOrders();
+  }
+
   onPageChange(event: number): void {
     this.page = event;
     this.fetchOrders();
   }
 
-  private getFilterDate(): string {
-    if (!this.dateFilter) return '';
-
-    const today = new Date();
-    switch (this.dateFilter) {
-      case 'today':
-        return today.toISOString().split('T')[0];
-      case 'week':
-        const weekAgo = new Date(today);
-        weekAgo.setDate(today.getDate() - 7);
-        return weekAgo.toISOString().split('T')[0];
-      case 'month':
-        const monthAgo = new Date(today);
-        monthAgo.setMonth(today.getMonth() - 1);
-        return monthAgo.toISOString().split('T')[0];
-      default:
-        return '';
-    }
-  }
-
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
-      case 'Completed':
+      case 'completed':
         return 'bg-green-100 text-green-800';
-      case 'ToDo':
+      case 'todo':
         return 'bg-yellow-100 text-yellow-800';
-      case 'Dispatch':
+      case 'dispatch':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -164,5 +155,11 @@ export class CompletedDefinePackageComponent {
     this.router.navigate(['/procurement/edit-completed-define-package'], {
       queryParams: { id },
     });
+  }
+
+  trimLeadingSpaces() {
+    if (this.searchTerm.startsWith(' ')) {
+      this.searchTerm = this.searchTerm.trimStart();
+    }
   }
 }

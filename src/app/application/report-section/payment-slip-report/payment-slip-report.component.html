@@ -25,13 +25,17 @@
         </svg>
       </i>
       <div>
-        <input
-          id="createdDateFilter"
-          type="date"
-          class="border-solid border-2 text-gray-500 focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center"
-          [(ngModel)]="createdDate"
-          (change)="onDateChange()"
-        />
+        <div class="flex  ml-45">
+          <p-calendar id="fromDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="false"
+            [showButtonBar]="true" iconDisplay="input" [style]="{ width: '18rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[25rem] h-8 pr-12" />
+        </div>
       </div>
       <div class="ml-5">
         <div
@@ -95,9 +99,14 @@
     <p class="text-lg text-textLight dark:text-textDark">On {{this.createdDate}}</p>
   </div>
 
-  <div *ngIf="!hasData" class="text-center py-8">
-    <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
-</div>
+        
+    <div *ngIf="!hasData" class="text-center py-8">
+    <!-- Table Section -->
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+    </div>
   <div class="overflow-hidden mt-10"  *ngIf="hasData">
     <table
       class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"

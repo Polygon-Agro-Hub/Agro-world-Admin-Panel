@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -42,7 +42,8 @@ export class CenterCollectionExpenceComponent implements OnInit {
   constructor(
     private router: Router,
     private TargetSrv: CollectionCenterService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -236,6 +237,10 @@ export class CenterCollectionExpenceComponent implements OnInit {
   navigateToCenterTarget() {
     this.router.navigate(['/centers']);
   }
+
+  goBack() {
+  this.location.back();
+}
 }
 
 class FarmerPayments {

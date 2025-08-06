@@ -1,4 +1,11 @@
 <app-loading-spinner *ngIf="isLoading" />
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  (click)="goBack()"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
 
 <div *ngIf="!isLoading" class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg overflow-x-auto">
 

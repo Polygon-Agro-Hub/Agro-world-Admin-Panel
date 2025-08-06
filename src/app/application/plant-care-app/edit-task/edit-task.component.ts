@@ -260,9 +260,8 @@ export class EditTaskComponent implements OnInit {
 
   onImageLinkChange() {
     if (!this.taskForm.get('hasImageLink')?.value) {
-      this.taskForm.get('imageLink')?.setValue('');
-      this.taskForm.get('imageLink')?.setErrors(null);
-    }
+    this.taskForm.get('imageLink')?.setErrors(null);
+  }
   }
 }
 

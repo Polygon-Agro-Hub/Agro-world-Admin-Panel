@@ -195,6 +195,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
 
 class RetailOrders {
   id!: number;
+  orderId!: number;
   customerName!: string;
   method!: number;
   amount!: number;

@@ -35,15 +35,16 @@
           class="dark:text-textDark block text-sm font-medium text-[#534E4E] mb-2"
           >Company</label
         >
-        <select
-          formControlName="company"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="company" disabled selected>Select a company</option>
-          <option *ngFor="let company of companyList" [value]="company.id">
-            {{ company.companyNameEnglish }}
-          </option>
-        </select>
+       <select
+  formControlName="company"
+  class="no-arrow dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+>
+  <option value="" disabled selected hidden>Select a company</option>
+  <option *ngFor="let company of companyList" [value]="company.id">
+    {{ company.companyNameEnglish }}
+  </option>
+</select>
+
       </div>
 
       <div class="flex-1">
@@ -69,7 +70,7 @@
         <div class="flex">
           <select
             formControlName="contact1Code"
-            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="dark:text-textDark no-arrow dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option *ngFor="let code of phoneCodes" [value]="code.value">
               {{ code.label }}
@@ -92,7 +93,7 @@
         <div class="flex">
           <select
             formControlName="contact2Code"
-            class="dark:text-textDark dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="dark:text-textDark no-arrow dark:bg-tileBlack px-3 py-2 text-[#534E4E] bg-gray-100 border border-r-0 border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option *ngFor="let code of phoneCodes" [value]="code.value">
               {{ code.label }}
@@ -161,7 +162,7 @@
         >
         <select
           formControlName="country"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="" disabled>Select Country</option>
           <option value="Sri Lanka">Sri Lanka</option>
@@ -175,7 +176,7 @@
         >
         <select
           formControlName="province"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select Province</option>
           <option *ngFor="let province of provinces" [value]="province">
@@ -194,7 +195,7 @@
         >
         <select
           formControlName="district"
-          class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="dark:text-textDark no-arrow bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="" disabled>Select District</option>
           <option *ngFor="let district of getDistricts()" [value]="district">

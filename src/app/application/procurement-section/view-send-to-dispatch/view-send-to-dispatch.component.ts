@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { Router , ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-view-send-to-dispatch',
@@ -16,12 +17,12 @@ import { Router , ActivatedRoute } from '@angular/router';
     DropdownModule,
     NgxPaginationModule,
     FormsModule,
+    CalendarModule
   ],
   templateUrl: './view-send-to-dispatch.component.html',
   styleUrl: './view-send-to-dispatch.component.css',
 })
-export class ViewSendToDispatchComponent {
-
+export class ViewSendToDispatchComponent implements OnInit {
   isLoading = false;
   orders: any[] = [];
   page: number = 1;
@@ -29,11 +30,10 @@ export class ViewSendToDispatchComponent {
   totalItems: number = 0;
 
   statusFilter: string = '';
-  dateFilter: string = '';
+  dateFilter: Date | null = null; // Changed to Date type
   deliveryDateFilter: string = '';
   searchTerm: string = '';
   hasData: boolean = false;
-
 
   statusOptions = [
     { label: 'Paid', value: 'Paid' },
@@ -51,16 +51,14 @@ export class ViewSendToDispatchComponent {
     private orderService: ProcumentsService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchOrders();
   }
-  
 
-
-
-  fetchOrders(dateFilter: string = this.dateFilter, searchTerm: string = this.searchTerm): void {
+  fetchOrders(dateFilter: string = this.dateFilter ? this.formatDate(this.dateFilter) : '', 
+              searchTerm: string = this.searchTerm): void {
     this.isLoading = true;
 
     this.orderService
@@ -72,18 +70,16 @@ export class ViewSendToDispatchComponent {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response); // Debug log
+          console.log('API Response:', response);
           this.hasData = response.total === 0 ? false : true;
 
           if (response && response.data) {
-            // Optional: Filter on client side if needed (but better to do it server-side)
             this.orders = response.data.filter(
               (order: { packingStatus: string }) =>
                 order.packingStatus === 'Dispatch'
             );
             this.totalItems = response.total || response.totalCount || 0;
           } else {
-            // Fallback client-side filtering if API doesn't support it
             const allOrders = Array.isArray(response) ? response : [];
             this.orders = allOrders.filter(
               (order) => order.packingStatus === 'Dispatch'
@@ -91,7 +87,7 @@ export class ViewSendToDispatchComponent {
             this.totalItems = this.orders.length;
           }
 
-          console.log('Orders:', this.orders.length, 'Total:', this.totalItems); // Debug log
+          console.log('Orders:', this.orders.length, 'Total:', this.totalItems);
           this.isLoading = false;
         },
         error: (error) => {
@@ -101,6 +97,14 @@ export class ViewSendToDispatchComponent {
           this.isLoading = false;
         },
       });
+  }
+
+  // Helper method to format Date to YYYY-MM-DD string
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   onSearch(): void {
@@ -119,29 +123,20 @@ export class ViewSendToDispatchComponent {
     this.fetchOrders();
   }
 
-  onPageChange(event: number): void {
-    this.page = event;
+  onDateSelect(): void {
+    this.page = 1;
     this.fetchOrders();
   }
 
-  private getFilterDate(): string {
-    if (!this.dateFilter) return '';
+  onDateClear(): void {
+    this.dateFilter = null;
+    this.page = 1;
+    this.fetchOrders();
+  }
 
-    const today = new Date();
-    switch (this.dateFilter) {
-      case 'today':
-        return today.toISOString().split('T')[0];
-      case 'week':
-        const weekAgo = new Date(today);
-        weekAgo.setDate(today.getDate() - 7);
-        return weekAgo.toISOString().split('T')[0];
-      case 'month':
-        const monthAgo = new Date(today);
-        monthAgo.setMonth(today.getMonth() - 1);
-        return monthAgo.toISOString().split('T')[0];
-      default:
-        return '';
-    }
+  onPageChange(event: number): void {
+    this.page = event;
+    this.fetchOrders();
   }
 
   getStatusClass(status: string): string {
@@ -162,8 +157,13 @@ export class ViewSendToDispatchComponent {
       queryParams: { id },
     });
   }
-}
 
+  trimLeadingSpaces() {
+    if (this.searchTerm.startsWith(' ')) {
+      this.searchTerm = this.searchTerm.trimStart();
+    }
+  }
+}
 
 class ExcludeItems {
   id!: number;

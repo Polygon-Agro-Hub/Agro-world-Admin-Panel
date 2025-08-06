@@ -1,9 +1,7 @@
-
-
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CropCalendarService } from '../../../services/plant-care/crop-calendar.service';
 import { environment } from '../../../environment/environment';
@@ -37,7 +35,7 @@ class CropTask {
 @Component({
   selector: 'app-edit-task',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './edit-task.component.html',
   styleUrls: ['./edit-task.component.css'],
 })
@@ -49,6 +47,8 @@ export class EditTaskComponent implements OnInit {
   itemId!: string;
   taskItems: CropTask = new CropTask();
   hasImageLink: boolean = false;
+  imageLink: string = '';
+  originalImageLink: string = ''; // Added to store original image link
 
   constructor(
     private fb: FormBuilder,
@@ -91,57 +91,57 @@ export class EditTaskComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
-allowOnlyEnglishLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-  if (allowedControlKeys.includes(event.key)) return;
+  allowOnlyEnglishLetters(event: KeyboardEvent): void {
+    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedControlKeys.includes(event.key)) return;
 
-  const input = event.currentTarget as HTMLInputElement;
+    const input = event.currentTarget as HTMLInputElement;
 
-  // Prevent space at the beginning
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
+    // Prevent space at the beginning
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const isLetter = /^[a-zA-Z]$/.test(event.key);
+    if (!isLetter && event.key !== ' ') {
+      event.preventDefault();
+    }
   }
 
-  const isLetter = /^[a-zA-Z]$/.test(event.key);
-  if (!isLetter && event.key !== ' ') {
-    event.preventDefault();
-  }
-}
+  allowOnlySinhalaLetters(event: KeyboardEvent): void {
+    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedControlKeys.includes(event.key)) return;
 
-allowOnlySinhalaLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-  if (allowedControlKeys.includes(event.key)) return;
+    const input = event.currentTarget as HTMLInputElement;
 
-  const input = event.currentTarget as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
 
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
-  }
-
-  const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
-  if (!isSinhala && event.key !== ' ') {
-    event.preventDefault();
-  }
-}
-
-allowOnlyTamilLetters(event: KeyboardEvent): void {
-  const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
-  if (allowedControlKeys.includes(event.key)) return;
-
-  const input = event.currentTarget as HTMLInputElement;
-
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
-    return;
+    const isSinhala = /^[\u0D80-\u0DFF]$/.test(event.key);
+    if (!isSinhala && event.key !== ' ') {
+      event.preventDefault();
+    }
   }
 
-  const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
-  if (!isTamil && event.key !== ' ') {
-    event.preventDefault();
+  allowOnlyTamilLetters(event: KeyboardEvent): void {
+    const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
+    if (allowedControlKeys.includes(event.key)) return;
+
+    const input = event.currentTarget as HTMLInputElement;
+
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const isTamil = /^[\u0B80-\u0BFF]$/.test(event.key);
+    if (!isTamil && event.key !== ' ') {
+      event.preventDefault();
+    }
   }
-}
 
   capitalizeFirstLetter(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -180,6 +180,9 @@ allowOnlyTamilLetters(event: KeyboardEvent): void {
         console.log('Task Data:', data);
         this.taskItems = data;
         this.hasImageLink = !!this.taskItems.imageLink;
+        this.imageLink = this.taskItems.imageLink || '';
+        this.originalImageLink = this.taskItems.imageLink || ''; // Store original value
+        
         // Patch form values
         this.taskForm.patchValue({
           taskEnglish: this.taskItems.taskEnglish,
@@ -269,11 +272,30 @@ allowOnlyTamilLetters(event: KeyboardEvent): void {
 
   onImageLinkChange() {
     if (!this.hasImageLink) {
-      this.taskForm.get('imageLink')?.setValue('');
-      this.taskForm.get('imageLink')?.setErrors(null);
+      // this.taskForm.get('imageLink')?.setValue('');
+      // this.taskForm.get('imageLink')?.setErrors(null);
     }
   }
-  
+
+  // Fixed changeHasImage method
+  changeHasImage(hasImage: boolean) {
+    this.hasImageLink = hasImage;
+    
+    if (hasImage) {
+      // Restore the original image link or keep current form value if user has typed something
+      const currentFormValue = this.taskForm.get('imageLink')?.value;
+      const valueToSet = currentFormValue || this.originalImageLink || '';
+      
+      this.taskForm.patchValue({
+        imageLink: valueToSet
+      });
+    } else {
+      // Clear the image link when "No" is selected
+      this.taskForm.patchValue({
+        imageLink: ''
+      });
+    }
+  }
 }
 
 export class CreateTask {

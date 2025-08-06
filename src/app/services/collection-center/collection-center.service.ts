@@ -23,6 +23,20 @@ export class CollectionCenterService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
   constructor(private http: HttpClient, private tokenService: TokenService) {}
+// distribution-hub.service.ts or similar
+resetPassword(id: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.put(`${this.apiUrl}/distribution-head/reset-password/${id}`, data, {
+    headers,
+  });
+}
+
+
+
 
   getAllCollectionCenter(): Observable<any> {
     const headers = new HttpHeaders({
@@ -492,5 +506,48 @@ export class CollectionCenterService {
       .pipe(
         map((response) => response.exists) // Assuming your API returns {exists: boolean}
       );
+  }
+
+  getAllCenterPayments(
+    page: number = 1,
+    limit: number = 10,
+    fromDate: Date | string = '',
+    toDate: Date | string = '',
+    centerId: number,
+    searchText: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Base URL with date range
+    let url = `${this.apiUrl}auth/get-all-center-payments?page=${page}&limit=${limit}&fromDate=${fromDate}&toDate=${toDate}&centerId=${centerId}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get(url, { headers });
+  }
+
+  downloadCenterPaymentReportFile(
+    fromDate: Date | string,
+    toDate: Date | string,
+    centerId: number,
+    searchText: string = ''
+  ): Observable<Blob> {
+    let url = `${this.apiUrl}auth/download-center-payment-report?fromDate=${fromDate}&toDate=${toDate}&centerId=${centerId}`;
+
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get(url, { headers, responseType: 'blob' });
   }
 }

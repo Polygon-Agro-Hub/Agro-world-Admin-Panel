@@ -66,14 +66,23 @@
           <div class="mx-6">
             <p-dropdown
               styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
-              [options]="status" [(ngModel)]="selectedStatus" [showClear]="true" placeholder="Status"
+              [options]="status" [(ngModel)]="selectedStatus" [showClear]="false" placeholder="Status"
               (onChange)="applyStatus()" />
           </div>
 
-          <div class="flex items-center gap-2">
-            <input id="toDate" type="date"
-              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64"
-              placeholder="Delivery Date" [(ngModel)]="date" (change)="applyStatus()" />
+          <div class="flex items-center gap-2 h-8">
+            <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="applyStatus()" (onClear)="applyStatus()"
+              placeholder="Delivery Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true"
+              iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+              [appendTo]="'body'" />
           </div>
 
 
@@ -91,7 +100,8 @@
 
 
 
-          <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
+          <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
+            title="Search by crop & variety">
             <input type="text" placeholder="Search.." class="bg-transparent outline-none w-full text-gray-600"
               [(ngModel)]="search" (keydown.enter)="applysearch()" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -113,6 +123,12 @@
       </div>
 
 
+
+
+
+
+
+
       <div class="flex justify-between items-center mb-5">
         <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           All ({{this.totalItems}})
@@ -125,7 +141,12 @@
 
       <div>
 
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+          <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
+          <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+
+        <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200 table-auto">
           <thead>
             <tr>
               <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
@@ -183,19 +204,17 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
                 {{ item.displayName }}
               </td>
-              
+
               <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
 
-                <button 
-                (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.packageProductsCount, item.displayName, item.fullTotal)"
-                class="w-6 h-6 mr-3" 
-                  [class.text-yellow-500]="item.packageProductStatus === 'Opened'"
+                <button
+                  (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.packageProductsCount, item.displayName, item.fullTotal)"
+                  class="w-6 h-6 mr-3" [class.text-yellow-500]="item.packageProductStatus === 'Opened'"
                   [class.text-green-500]="item.packageProductStatus === 'Completed'"
                   [class.text-red-500]="item.packageProductStatus === 'Pending'"
                   [class.hover:text-yellow-700]="item.packageProductStatus === 'Opened'"
                   [class.hover:text-green-700]="item.packageProductStatus === 'Completed'"
-                  [class.hover:text-red-700]="item.packageProductStatus === 'Pending'"
-                  >
+                  [class.hover:text-red-700]="item.packageProductStatus === 'Pending'">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -206,36 +225,28 @@
               </td>
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 {{ item.productPrice | number: '1.2-2' }}
-              <!-- </td>
+                <!-- </td>
 
               <td> -->
 
               </td>
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 <button
-                (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)"
-                  class="w-6 h-6 mr-3"
-                  [disabled]="item.additionalProductsCount === 0"
-                  [ngClass]="{
+                  (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)"
+                  class="w-6 h-6 mr-3" [disabled]="item.additionalProductsCount === 0" [ngClass]="{
                     'text-gray-300 cursor-not-allowed': item.additionalProductsCount === 0,
                     'text-yellow-500 hover:text-yellow-700': item.additionalProductStatus === 'Opened' && item.additionalProductsCount > 0,
                     'text-green-500 hover:text-green-700': item.additionalProductStatus === 'Completed' && item.additionalProductsCount > 0,
                     'text-red-500 hover:text-red-700': item.additionalProductStatus === 'Pending' && item.additionalProductsCount > 0
-                  }"
-                  
-                >
+                  }">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
               </td>
-              
+
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 <ng-container *ngIf="item.totalAdditionalItemsPrice != 0; else showDash">
                   {{ item.totalAdditionalItemsPrice | number: '1.2-2' }}
@@ -248,23 +259,26 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                 {{ item.fullTotal | number: '1.2-2' }}
               </td>
-              
+
 
               <td class="px-4 py-3 text-center">
                 <ng-container *ngIf="item.combinedStatus === 'Pending'">
-                  <span class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
+                  <span
+                    class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
                     Pending
                   </span>
                 </ng-container>
-                
+
                 <ng-container *ngIf="item.combinedStatus === 'Opened'">
-                  <span class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
+                  <span
+                    class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
                     Opened
                   </span>
                 </ng-container>
-                
+
                 <ng-container *ngIf="item.combinedStatus === 'Completed'">
-                  <span class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
+                  <span
+                    class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
                     Completed
                   </span>
                 </ng-container>
@@ -278,7 +292,7 @@
         <!-- <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
         <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
       </div> -->
-        <div class="dark:bg-[#262f45]">
+        <div class="dark:bg-[#262f45]" *ngIf="hasData">
           <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
             [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
             [screenReaderCurrentLabel]="'Youre on page'">
@@ -294,6 +308,8 @@
 
 
     <div *ngIf="!isPremade">
+
+
 
       <div class="flex justify-end items-right mb-8">
 
@@ -311,15 +327,25 @@
           <div class="mx-6">
             <p-dropdown
               styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-10"
-              [options]="statussl" [(ngModel)]="selectedStatussl" [showClear]="true" placeholder="Status"
+              [options]="statussl" [(ngModel)]="selectedStatussl" [showClear]="false" placeholder="Status"
               (onChange)="applyStatussl()" />
           </div>
 
-          <div class="flex items-center gap-2">
-            <input id="toDate" type="date"
-              class="p-2 border rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark focus:ring focus:ring-blue-300 w-64"
-              placeholder="Delivery Date" [(ngModel)]="datesl" (change)="applyStatussl()" />
+          <div class="flex items-center gap-2 h-8">
+            <p-calendar id="toDatesl" [(ngModel)]="datesl" (onSelect)="applyStatussl()" (onClear)="applyStatussl()"
+              placeholder="Delivery Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true"
+              iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+              [appendTo]="'body'" />
           </div>
+
 
 
 
@@ -338,7 +364,7 @@
 
           <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
             <input type="text" placeholder="Search..." class="bg-transparent outline-none w-full text-gray-600"
-              [(ngModel)]="searchsl" (keydown.enter)="applysearchsl()" />
+              [(ngModel)]="searchsl" (keydown.enter)="applysearchsl()" title="Search by crop & variety" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
               (click)="applysearchsl()">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -359,6 +385,8 @@
       </div>
 
 
+
+
       <div class="flex justify-between items-center mb-5">
         <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
           All ({{this.totalItemssl}})
@@ -370,8 +398,12 @@
 
 
       <div>
+        <div *ngIf="!hasDataCustom" class="flex flex-col items-center w-full h-screen mt-6">
+          <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
+          <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
 
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
+        <table *ngIf="hasDataCustom" class="min-w-full divide-y divide-gray-200 table-auto">
           <thead>
             <tr>
               <th class="py-3 font-normal text-[#000000] dark:text-textDark text-left">
@@ -415,19 +447,16 @@
               <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
                 {{ item.invNo }}
               </td>
-              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center"
-              >
-                <button 
-                (click)="navigateToCustomAdditionalItemView(item.id, item.invNo, item.productCount, item.fullTotal)"
-                class="w-6 h-6 mr-3" [class.text-[#EBC351]]="item.customItemStatus === 'Opened'"
-                [disabled]="item.productCount === 0"
-                [ngClass]="{
+              <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                <button
+                  (click)="navigateToCustomAdditionalItemView(item.id, item.invNo, item.productCount, item.fullTotal)"
+                  class="w-6 h-6 mr-3" [class.text-[#EBC351]]="item.customItemStatus === 'Opened'"
+                  [disabled]="item.productCount === 0" [ngClass]="{
                   'text-gray-300 cursor-not-allowed': item.productCount === 0,
                   'text-yellow-500 hover:text-yellow-700': item.customItemStatus === 'Opened' && item.productCount > 0,
                   'text-green-500 hover:text-green-700': item.customItemStatus === 'Completed' && item.productCount > 0,
                   'text-red-500 hover:text-red-700': item.customItemStatus === 'Pending' && item.productCount > 0
-                }"
-                  >
+                }">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -476,7 +505,7 @@
         <!-- <div *ngIf="purchaseReport.length === 0" class="text-center py-4 text-gray-500 dark:text-textDark">
           <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
         </div> -->
-        <div class="dark:bg-[#262f45]">
+        <div class="dark:bg-[#262f45]" *ngIf="hasDataCustom">
           <pagination-controls (pageChange)="onPageChangesl($event)" [responsive]="true" [previousLabel]="'Previous'"
             [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
             [screenReaderCurrentLabel]="'Youre on page'">

@@ -2,23 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-center-collection-expence',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    NgxPaginationModule, 
+    LoadingSpinnerComponent,
+    CalendarModule
+  ],
   templateUrl: './center-collection-expence.component.html',
   styleUrl: './center-collection-expence.component.css'
 })
 export class CenterCollectionExpenceComponent implements OnInit {
-
   farmerPaymentsArr!: FarmerPayments[];
   centerArr: Center[] = [];
-  totalPaymentsAmount: number = 0; // New variable to store the sum of all payments
+  totalPaymentsAmount: number = 0;
 
   centerId!: number;
 
@@ -29,14 +36,13 @@ export class CenterCollectionExpenceComponent implements OnInit {
 
   searchText: string = '';
 
-  fromDate: Date | string = '';
-  toDate: Date | string = '';
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
 
   isPopupVisible: boolean = false;
   logingRole: string | null = null;
   isLoading: boolean = false;
   isDateFilterSet: boolean = false;
-
   isDownloading = false;
 
   constructor(
@@ -57,11 +63,15 @@ export class CenterCollectionExpenceComponent implements OnInit {
   fetchFilteredPayments(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
 
+    // Format dates for API call
+    const fromDateStr = this.formatDateForAPI(this.fromDate);
+    const toDateStr = this.formatDateForAPI(this.toDate);
+
     this.TargetSrv.getAllCenterPayments(
       page,
       limit,
-      this.fromDate,
-      this.toDate,
+      fromDateStr,
+      toDateStr,
       this.centerId,
       this.searchText
     ).subscribe(
@@ -117,7 +127,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
 
   validateToDate() {
     if (!this.fromDate) {
-      this.toDate = '';
+      this.toDate = null;
       Swal.fire({
         icon: 'warning',
         title: 'Warning',
@@ -135,7 +145,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
       const to = new Date(this.toDate);
 
       if (to <= from) {
-        this.toDate = '';
+        this.toDate = null;
         Swal.fire({
           icon: 'warning',
           title: 'Warning',
@@ -155,11 +165,11 @@ export class CenterCollectionExpenceComponent implements OnInit {
     }
 
     if (this.toDate) {
-      const from = new Date(this.fromDate);
+      const from = new Date(this.fromDate as Date);
       const to = new Date(this.toDate);
 
       if (to <= from) {
-        this.fromDate = '';
+        this.fromDate = null;
         Swal.fire({
           icon: 'warning',
           title: 'Warning',
@@ -193,14 +203,18 @@ export class CenterCollectionExpenceComponent implements OnInit {
   downloadTemplate1() {
     this.isDownloading = true;
 
+    // Format dates for API call
+    const fromDateStr = this.formatDateForAPI(this.fromDate);
+    const toDateStr = this.formatDateForAPI(this.toDate);
+
     this.TargetSrv
-      .downloadCenterPaymentReportFile(this.fromDate, this.toDate, this.centerId, this.searchText)
+      .downloadCenterPaymentReportFile(fromDateStr, toDateStr, this.centerId, this.searchText)
       .subscribe({
         next: (blob) => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `Expenses Report From ${this.fromDate} To ${this.toDate}.xlsx`;
+          a.download = `Expenses Report From ${fromDateStr} To ${toDateStr}.xlsx`;
           a.click();
           window.URL.revokeObjectURL(url);
 
@@ -230,6 +244,17 @@ export class CenterCollectionExpenceComponent implements OnInit {
       });
   }
 
+  private formatDateForAPI(date: Date | null): string {
+    if (!date) return '';
+    
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    
+    return `${year}-${month}-${day}`;
+  }
+
   navigateToFarmerReport(invNo: string) {
     this.router.navigate([`reports/farmer-report-invoice/${invNo}`]);
   }
@@ -239,8 +264,8 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   goBack() {
-  this.location.back();
-}
+    this.location.back();
+  }
 }
 
 class FarmerPayments {

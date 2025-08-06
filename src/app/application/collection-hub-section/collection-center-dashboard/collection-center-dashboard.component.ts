@@ -97,6 +97,10 @@ fetchCenterDashbordDetails() {
   navigateToTarget() {
     this.router.navigate(['collection-hub/view-current-centre-target']); // Replace with your actual route
   }
+
+  navigateCollectionExpenses(){
+    this.router.navigate([`collection-hub/center-collection-expense/${this.centerId}`]);
+  }
 }
 
 class CenterName {

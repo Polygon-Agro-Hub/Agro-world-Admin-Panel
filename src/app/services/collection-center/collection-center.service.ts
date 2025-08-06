@@ -507,4 +507,47 @@ resetPassword(id: number, data: any): Observable<any> {
         map((response) => response.exists) // Assuming your API returns {exists: boolean}
       );
   }
+
+  getAllCenterPayments(
+    page: number = 1,
+    limit: number = 10,
+    fromDate: Date | string = '',
+    toDate: Date | string = '',
+    centerId: number,
+    searchText: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    // Base URL with date range
+    let url = `${this.apiUrl}auth/get-all-center-payments?page=${page}&limit=${limit}&fromDate=${fromDate}&toDate=${toDate}&centerId=${centerId}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get(url, { headers });
+  }
+
+  downloadCenterPaymentReportFile(
+    fromDate: Date | string,
+    toDate: Date | string,
+    centerId: number,
+    searchText: string = ''
+  ): Observable<Blob> {
+    let url = `${this.apiUrl}auth/download-center-payment-report?fromDate=${fromDate}&toDate=${toDate}&centerId=${centerId}`;
+
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get(url, { headers, responseType: 'blob' });
+  }
 }

@@ -122,13 +122,15 @@
       <div
         class="flex items-center rounded-full px-4 py-2 w-96 h-8 bg-[#F1F1F1] dark:bg-[#272F45]"
       >
-        <input
-          type="text"
-          placeholder="First name/ Last name/ EMP ID"
-          [(ngModel)]="searchText"
-          (keydown.enter)="onSearch()"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-        />
+       <input
+  type="text"
+  placeholder="First name/ Last name/ EMP ID"
+  [(ngModel)]="searchText"
+  (keydown.enter)="onSearch()"
+  (keydown)="blockFirstSpace($event)"
+  class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+/>
+
         <button
           type="button"
           class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"

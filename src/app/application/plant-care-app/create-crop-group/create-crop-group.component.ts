@@ -45,6 +45,21 @@ export class CreateCropGroupComponent {
       event.preventDefault();
     }
   }
+capitalizeFirstLetter(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.value.length > 0) {
+    const capitalized = input.value.charAt(0).toUpperCase() + input.value.slice(1);
+    const cursorPos = input.selectionStart || 0;
+
+    this.cropGroup.cropNameEnglish = capitalized;
+    input.value = capitalized;
+
+    // Restore cursor position to avoid jumpiness
+    input.setSelectionRange(cursorPos, cursorPos);
+  }
+}
+
+
 
   // Allow only Tamil letters (Unicode range: 0B80–0BFF) and spaces (no leading space)
   allowOnlyTamil(event: KeyboardEvent): void {

@@ -710,7 +710,7 @@ blockNonNumbers(event: KeyboardEvent) {
     if (!this.personalData.phoneNumber01) {
       missingFields.push('Phone Number 01 is Required');
     } else if (this.isPhoneInvalidMap['phone01']) {
-      missingFields.push('Phone Number 01  (e.g., 77XXXXXXX, 72XXXXXXX, etc )');
+      missingFields.push('Phone Number 01  (format: +947XXXXXXXX)');
     } else if (!phonePattern.test(this.personalData.phoneNumber01)) {
       missingFields.push('Phone Number (Must be 9 digits)');
     }
@@ -719,7 +719,7 @@ blockNonNumbers(event: KeyboardEvent) {
       if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
         missingFields.push('Phone Number 02 (Phone Number 2 Must Not Equal to Phone Number 01)');
       } else if (this.isPhoneInvalidMap['phone02']) {
-        missingFields.push('Phone Number 02  (e.g., 77XXXXXXX, 72XXXXXXX, etc )');
+        missingFields.push('Phone Number 02  (format: +947XXXXXXXX)');
       } else if (!phonePattern.test(this.personalData.phoneNumber02)) {
         missingFields.push('Phone Number (Must be 9 digits)');
       }

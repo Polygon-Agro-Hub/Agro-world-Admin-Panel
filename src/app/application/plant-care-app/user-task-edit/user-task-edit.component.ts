@@ -94,101 +94,101 @@ export class UserTaskEditComponent {
 
   onImageLinkChange(hasImage: boolean) {
     this.hasImageLink = hasImage;
-    if (!hasImage) {
-      this.taskItems.imageLink = null;
-    }
   }
 
   updateTask() {
-    this.formSubmitted = true;
+  this.formSubmitted = true;
 
-    if (!this.isFormValid()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Please fill all required fields correctly',
-      });
-      return;
-    }
-
-    const token = this.tokenService.getToken();
-
-    if (!token) {
-      return;
-    }
-
-    const taskData = {
-      ...this.taskItems,
-      startingDate: this.formatDate(this.taskItems.startingDate),
-    };
-
-    this.taskService.updateUserCropTask(this.id, taskData).subscribe(
-      (res: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Task updated successfully!',
-        });
-        this.formSubmitted = false;
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Unsuccessful',
-          text: 'Error updating task',
-        });
-        this.formSubmitted = false;
-      }
-    );
+  if (!this.isFormValid()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      text: 'Please fill all required fields correctly',
+    });
+    return;
   }
 
+  const token = this.tokenService.getToken();
+
+  if (!token) {
+    return;
+  }
+
+  // Create a copy of taskItems to avoid modifying the original
+  const taskData = {
+    ...this.taskItems,
+    startingDate: this.formatDate(this.taskItems.startingDate),
+    // Set imageLink to null if hasImageLink is false
+    imageLink: this.hasImageLink ? this.taskItems.imageLink : null
+  };
+
+  this.taskService.updateUserCropTask(this.id, taskData).subscribe(
+    (res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Task updated successfully!',
+      });
+      this.formSubmitted = false;
+    },
+    (error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsuccessful',
+        text: 'Error updating task',
+      });
+      this.formSubmitted = false;
+    }
+  );
+}
+
   private isFormValid(): boolean {
-    // Check common required fields
-    if (!this.taskItems.startingDate) {
+  // Check common required fields
+  if (!this.taskItems.startingDate) {
     return false;
   }
 
-    // Check language-specific fields based on selected language
-    switch (this.selectedLanguage) {
-      case 'english':
-        if (
-          !this.taskItems.taskEnglish ||
-          !this.taskItems.taskTypeEnglish ||
-          !this.taskItems.taskCategoryEnglish ||
-          !this.taskItems.taskDescriptionEnglish
-        ) {
-          return false;
-        }
-        break;
-      case 'sinhala':
-        if (
-          !this.taskItems.taskSinhala ||
-          !this.taskItems.taskTypeSinhala ||
-          !this.taskItems.taskCategorySinhala ||
-          !this.taskItems.taskDescriptionSinhala
-        ) {
-          return false;
-        }
-        break;
-      case 'tamil':
-        if (
-          !this.taskItems.taskTamil ||
-          !this.taskItems.taskTypeTamil ||
-          !this.taskItems.taskCategoryTamil ||
-          !this.taskItems.taskDescriptionTamil
-        ) {
-          return false;
-        }
-        break;
-    }
-
-    // Check image link if hasImageLink is true
-    if (this.hasImageLink && !this.taskItems.imageLink) {
-      return false;
-    }
-
-    return true;
+  // Check language-specific fields based on selected language
+  switch (this.selectedLanguage) {
+    case 'english':
+      if (
+        !this.taskItems.taskEnglish ||
+        !this.taskItems.taskTypeEnglish ||
+        !this.taskItems.taskCategoryEnglish ||
+        !this.taskItems.taskDescriptionEnglish
+      ) {
+        return false;
+      }
+      break;
+    case 'sinhala':
+      if (
+        !this.taskItems.taskSinhala ||
+        !this.taskItems.taskTypeSinhala ||
+        !this.taskItems.taskCategorySinhala ||
+        !this.taskItems.taskDescriptionSinhala
+      ) {
+        return false;
+      }
+      break;
+    case 'tamil':
+      if (
+        !this.taskItems.taskTamil ||
+        !this.taskItems.taskTypeTamil ||
+        !this.taskItems.taskCategoryTamil ||
+        !this.taskItems.taskDescriptionTamil
+      ) {
+        return false;
+      }
+      break;
   }
+
+  // Only check image link if hasImageLink is true
+  if (this.hasImageLink && !this.taskItems.imageLink) {
+    return false;
+  }
+
+  return true;
+}
 
   formatDate(date: any): string {
     if (!date) return '';

@@ -157,6 +157,134 @@ throw new Error('Method not implemented.');
     }
   }
 
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+    
+    // Additional checks for invalid patterns
+    if (!email || email.length === 0) return false;
+    
+    // Check for consecutive dots
+    if (email.includes('..')) return false;
+    
+    // Check for leading dot in local part
+    if (email.startsWith('.')) return false;
+    
+    // Check for trailing dot before @
+    const atIndex = email.indexOf('@');
+    if (atIndex > 0 && email.charAt(atIndex - 1) === '.') return false;
+    
+    // Check for dot immediately after @
+    if (atIndex < email.length - 1 && email.charAt(atIndex + 1) === '.') return false;
+    
+    // Check for invalid special characters (only allow letters, numbers, dots, hyphens, underscores)
+    const localPart = email.substring(0, atIndex);
+    const domainPart = email.substring(atIndex + 1);
+    
+    // Local part validation - only allow alphanumeric, dots, hyphens, underscores
+    const localPartRegex = /^[a-zA-Z0-9._-]+$/;
+    if (!localPartRegex.test(localPart)) return false;
+    
+    // Domain part validation
+    const domainPartRegex = /^[a-zA-Z0-9.-]+$/;
+    if (!domainPartRegex.test(domainPart)) return false;
+    
+    // Use the main regex for final validation
+    return emailRegex.test(email);
+  }
+
+  validateEmailInput(event: KeyboardEvent, fieldName: string): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    // Allow these special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value
+    const currentValue =
+      (this.personalData[fieldName as keyof Personal] as string) || '';
+
+    // Block space completely for email
+    if (event.key === ' ') {
+      event.preventDefault();
+      return;
+    }
+
+    // Block leading dot
+    if (event.key === '.' && currentValue.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // Block consecutive dots
+    if (event.key === '.' && currentValue.endsWith('.')) {
+      event.preventDefault();
+      return;
+    }
+
+    // Block dot immediately before @ or after @
+    const atIndex = currentValue.indexOf('@');
+    if (event.key === '.' && atIndex !== -1) {
+      // Get cursor position (approximation - in real implementation you'd need to track cursor position)
+      const cursorPosition = currentValue.length;
+      if (cursorPosition === atIndex + 1) { // Trying to add dot right after @
+        event.preventDefault();
+        return;
+      }
+    }
+
+    // Block dot at the end if @ exists (to prevent trailing dot before @)
+    if (event.key === '@' && currentValue.endsWith('.')) {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow only valid email characters: letters, numbers, dots, hyphens, underscores, and @
+    const emailPattern = /^[a-zA-Z0-9._@-]$/;
+    if (!emailPattern.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Ensure only one @ symbol
+    if (event.key === '@' && currentValue.includes('@')) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  validateEmailOnInput(): void {
+    if (this.personalData.email) {
+      // Remove any invalid characters that might have been pasted
+      this.personalData.email = this.personalData.email
+        .replace(/\s/g, '') // Remove all spaces
+        .replace(/\.{2,}/g, '.') // Replace multiple consecutive dots with single dot
+        .replace(/^\./, '') // Remove leading dot
+        .replace(/\.@/, '@'); // Remove dot immediately before @
+      
+      // Remove invalid special characters (keep only alphanumeric, dots, hyphens, underscores, @)
+      this.personalData.email = this.personalData.email.replace(/[^a-zA-Z0-9._@-]/g, '');
+      
+      // Ensure only one @ symbol
+      const atCount = (this.personalData.email.match(/@/g) || []).length;
+      if (atCount > 1) {
+        const firstAtIndex = this.personalData.email.indexOf('@');
+        this.personalData.email = 
+          this.personalData.email.substring(0, firstAtIndex + 1) + 
+          this.personalData.email.substring(firstAtIndex + 1).replace(/@/g, '');
+      }
+    }
+  }
+
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
     if (charCode < 48 || charCode > 57) {
@@ -355,6 +483,12 @@ throw new Error('Method not implemented.');
       return;
     }
 
+    // Enhanced email validation
+    if (!this.personalData.email || !this.isValidEmail(this.personalData.email)) {
+      Swal.fire('Error', 'Please enter a valid email address', 'error');
+      return;
+    }
+
     if (
       !this.personalData.firstName ||
       !this.personalData.lastName ||
@@ -362,7 +496,6 @@ throw new Error('Method not implemented.');
       !phonePattern.test(this.personalData.phoneNumber1) ||
       !this.personalData.nic ||
       !this.validateNIC() ||
-      !this.personalData.email ||
       !this.personalData.houseNumber ||
       !this.personalData.streetName ||
       !this.personalData.city ||
@@ -385,6 +518,8 @@ throw new Error('Method not implemented.');
           'Invalid NIC format (e.g., 123456789V or 200012345678)',
           'error'
         );
+      } else {
+        Swal.fire('Error', 'Please fill all required fields correctly', 'error');
       }
       return;
     }

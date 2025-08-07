@@ -68,8 +68,8 @@ export class CreateSalesAgentsComponent implements OnInit {
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   errorMessage: string = '';
-isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
-isSpecialCharErrorMap: { [key: string]: boolean } = {};
+  isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
+  isSpecialCharErrorMap: { [key: string]: boolean } = {};
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -106,7 +106,7 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {};
     private http: HttpClient,
     private router: Router,
     private salesAgentService: SalesAgentsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.EpmloyeIdCreate();
@@ -201,16 +201,16 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {};
     this.personalData.empType = selectedType; // Update personalData.empType dynamically
     console.log('Selected Employee Type:', this.personalData.empType);
   }
-updateProvince(event: DropdownChangeEvent): void {
-  const selectedDistrict = event.value;
-  const selected = this.districts.find(
-    (district) => district.name === selectedDistrict
-  );
+  updateProvince(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict
+    );
 
-  if (this.itemId === null) {
-    this.personalData.province = selected ? selected.province : '';
+    if (this.itemId === null) {
+      this.personalData.province = selected ? selected.province : '';
+    }
   }
-}
 
 
   EpmloyeIdCreate() {
@@ -244,15 +244,15 @@ updateProvince(event: DropdownChangeEvent): void {
   }
 
   validateFirstName(value: string): void {
-  const field = 'firstName';
-  this.personalData[field] = value;
+    const field = 'firstName';
+    this.personalData[field] = value;
 
-  // Check for leading space
-  this.isLeadingSpaceErrorMap[field] = /^\s/.test(value);
+    // Check for leading space
+    this.isLeadingSpaceErrorMap[field] = /^\s/.test(value);
 
-  // Check for valid English name (starts with capital, rest are letters/spaces)
-  this.isSpecialCharErrorMap[field] = !/^[A-Z][a-zA-Z\s]*$/.test(value.trim());
-}
+    // Check for valid English name (starts with capital, rest are letters/spaces)
+    this.isSpecialCharErrorMap[field] = !/^[A-Z][a-zA-Z\s]*$/.test(value.trim());
+  }
 
   getLastID(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -350,11 +350,40 @@ updateProvince(event: DropdownChangeEvent): void {
     const phoneRegex = /^7\d{8}$/; // Allows only 9-digit numbers
     return phoneRegex.test(phone);
   }
-isFieldInvalid(fieldName: keyof Personal): boolean {
-  return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
-}
+  isFieldInvalid(fieldName: keyof Personal): boolean {
+    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+  }
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+
+
+    if (!email || email.length === 0) return false;
+
+
+    if (email.includes('..')) return false;
+
+    if (email.startsWith('.')) return false;
+
+
+    const atIndex = email.indexOf('@');
+    if (atIndex > 0 && email.charAt(atIndex - 1) === '.') return false;
+
+
+    if (atIndex < email.length - 1 && email.charAt(atIndex + 1) === '.') return false;
+
+
+    const localPart = email.substring(0, atIndex);
+    const domainPart = email.substring(atIndex + 1);
+
+
+    const localPartRegex = /^[a-zA-Z0-9._-]+$/;
+    if (!localPartRegex.test(localPart)) return false;
+
+
+    const domainPartRegex = /^[a-zA-Z0-9.-]+$/;
+    if (!domainPartRegex.test(domainPart)) return false;
+
+
     return emailRegex.test(email);
   }
 
@@ -382,6 +411,7 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
     const englishNamePattern = /^[A-Z][a-z]*$/; // First letter capitalized, rest lowercase
     const namePattern = /^[A-Za-z\s'-]+$/; // For names with spaces, hyphens, apostrophes
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email pattern
+
 
     // Destructure personalData for easier access
     const {
@@ -412,7 +442,11 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
     // Contact validations
     const isPhoneNumber1Valid =
       !!phoneNumber1 && phonePattern.test(phoneNumber1);
-    const isEmailValid = !!email && emailPattern.test(email);
+    const isEmailValid = !!email && this.isValidEmail(email) &&
+      !email.includes('..') &&
+      !email.startsWith('.') &&
+      !email.includes('.@') &&
+      !email.includes('@.');
     const isEmpTypeSelected = !!empType;
     const isNicValid = !!nic && this.isValidNIC(nic);
 
@@ -442,12 +476,14 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
       !!branchName &&
       isConfirmAccNumberValid;
 
+
+
     // Final validation combining all checks
     return (
       isFirstNameValid &&
       isLastNameValid &&
       isPhoneNumber1Valid &&
-      isEmailValid &&
+      isEmailValid && 
       isEmpTypeSelected &&
       isNicValid &&
       isPhoneNumber2Valid &&
@@ -536,7 +572,7 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
-    onFieldTouched(field: keyof Personal) {
+  onFieldTouched(field: keyof Personal) {
     this.touchedFields[field] = true;
   }
 
@@ -587,9 +623,9 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
   }
 
 
-onBranchTouched(field: keyof Personal) {
-  this.touchedFields[field] = true;
-}
+  onBranchTouched(field: keyof Personal) {
+    this.touchedFields[field] = true;
+  }
   validateNICInput(event: KeyboardEvent) {
     // Allow navigation keys
     const allowedKeys = [
@@ -716,25 +752,82 @@ onBranchTouched(field: keyof Personal) {
       'End',
     ];
 
-    // Allow these special keys
     if (allowedKeys.includes(event.key)) {
       return;
     }
 
-    // Get current value
+
     const currentValue =
       (this.personalData[fieldName as keyof Personal] as string) || '';
 
-    // Block space if it's the first character
-    if (event.key === ' ' && currentValue.length === 0) {
+
+    if (event.key === ' ') {
       event.preventDefault();
       return;
     }
 
-    // For email fields, we might want to prevent spaces altogether
-    if (event.key === ' ') {
+
+    if (event.key === '.' && currentValue.length === 0) {
       event.preventDefault();
       return;
+    }
+
+
+    if (event.key === '.' && currentValue.endsWith('.')) {
+      event.preventDefault();
+      return;
+    }
+
+
+    const atIndex = currentValue.indexOf('@');
+    if (event.key === '.' && atIndex !== -1) {
+
+      const cursorPosition = currentValue.length;
+      if (cursorPosition === atIndex + 1) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+
+    if (event.key === '@' && currentValue.endsWith('.')) {
+      event.preventDefault();
+      return;
+    }
+
+
+    const emailPattern = /^[a-zA-Z0-9._@-]$/;
+    if (!emailPattern.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+
+
+    if (event.key === '@' && currentValue.includes('@')) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  validateEmailOnInput(): void {
+    if (this.personalData.email) {
+      this.personalData.email = this.personalData.email
+        .replace(/\s/g, '')
+        .replace(/\.{2,}/g, '.')
+        .replace(/^\./, '')
+        .replace(/\.@/, '@');
+
+
+      this.personalData.email = this.personalData.email.replace(/[^a-zA-Z0-9._@-]/g, '');
+
+      // Ensure only one @ symbol
+      const atCount = (this.personalData.email.match(/@/g) || []).length;
+      if (atCount > 1) {
+        const firstAtIndex = this.personalData.email.indexOf('@');
+        this.personalData.email =
+          this.personalData.email.substring(0, firstAtIndex + 1) +
+          this.personalData.email.substring(firstAtIndex + 1).replace(/@/g, '');
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button onclick="history.back()" class="ml-5 text-textLight dark:text-textDark">
+<button (click)="back()"
+ class="ml-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -135,7 +136,7 @@
       </div>
 
       <div class="flex justify-end m-10">
-        <button type="submit" class="px-4 py-2 w-20 bg-[#74788D] text-white rounded-md mr-5" onclick="history.back()">
+      <button type="button" (click)="onCancel()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
         <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageTwo')">

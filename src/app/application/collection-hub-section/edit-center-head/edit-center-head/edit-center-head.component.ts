@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule,Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
@@ -98,7 +98,8 @@ export class EditCenterHeadComponent {
     private route: ActivatedRoute,
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
-    private collectionOfficerService: CollectionOfficerService
+    private collectionOfficerService: CollectionOfficerService,
+   private location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -159,6 +160,22 @@ export class EditCenterHeadComponent {
 
     this.getAllCompanies();
   }
+
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+        this.location.back();
+      }
+  });
+}
+
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -293,8 +310,8 @@ export class EditCenterHeadComponent {
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/collection-hub/edit-center-head');
+     if (result.isConfirmed) {
+        this.location.back();
       }
     });
   }

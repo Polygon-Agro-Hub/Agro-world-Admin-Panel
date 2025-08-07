@@ -239,6 +239,7 @@ export class ManageCompanyComponent {
     });
   }
 
+  
   back(): void {
     this.router.navigate(['/collection-hub']);
   }

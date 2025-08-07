@@ -402,20 +402,23 @@ isFieldInvalid(field: string): boolean {
       );
   }
 
+  
+
   onCancel() {
-    Swal.fire({
-      icon: 'info',
-      title: 'Cancelled',
-      text: 'Form has been cleared!',
-      timer: 2000,
-      showConfirmButton: false,
-    }).then(() => {
-      this.collectionCenterForm.reset();
-      this.selectedDistrict = [];
-      this.selectProvince = '';
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'All entered data will be lost!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Reset',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.router.navigate(['/collection-hub/view-collection-centers']);
-    });
-  }
+    }
+  });
+}
+
 
   getAllCompanies() {
     this.collectionCenterService.getAllCompanyList().subscribe((res) => {
@@ -431,9 +434,22 @@ isFieldInvalid(field: string): boolean {
     return null;
   }
 
+
   back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
     this.router.navigate(['/collection-hub']);
-  }
+    }
+  });
+}
+
 
   ProvinceData = [
     {

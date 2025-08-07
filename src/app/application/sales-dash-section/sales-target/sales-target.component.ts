@@ -61,9 +61,23 @@ export class SalesTargetComponent implements OnInit {
     private router: Router
   ) { }
 
+
+
   back(): void {
-    this.router.navigate(['sales-dash']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/sales-dash']);
+    }
+  });
+}
+
 
   toggleCalendar() {
     this.calendar.overlayVisible = !this.calendar.overlayVisible;

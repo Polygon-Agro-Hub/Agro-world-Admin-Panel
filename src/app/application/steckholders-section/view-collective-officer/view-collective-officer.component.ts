@@ -323,7 +323,7 @@ export class ViewCollectiveOfficerComponent {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Collection officer was approved successfully.',
+                      text: 'The Collection Officer was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
@@ -366,7 +366,7 @@ export class ViewCollectiveOfficerComponent {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Collection officer was rejected successfully.',
+                      text: 'The Collection Officer was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
                     });

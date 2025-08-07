@@ -1,6 +1,7 @@
 <!-- Updated template with all requested changes -->
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="navigatePath('/steckholders/action/collective-officer')" *ngIf="selectedPage === 'pageOne'"
+<button (click)="back()"
+ *ngIf="selectedPage === 'pageOne'"
   class="text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back

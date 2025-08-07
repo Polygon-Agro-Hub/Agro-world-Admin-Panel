@@ -294,9 +294,22 @@ export class MarketAddProductComponent implements OnInit {
     });
   }
 
+
   back(): void {
-    this.router.navigate(['/market/action']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(['/market/action']);
+    }
+  });
+}
+
 
   trimDisplayName() {
     if (this.productObj.cropName) {

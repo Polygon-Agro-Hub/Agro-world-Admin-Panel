@@ -204,6 +204,21 @@ export class CollectiveofficersEditComponent {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/collective-officer']);
+    }
+  });
+}
+
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe((data) => {
       this.banks = data.sort((a, b) => a.name.localeCompare(b.name));

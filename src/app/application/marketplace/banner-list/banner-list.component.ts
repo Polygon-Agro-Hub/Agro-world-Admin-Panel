@@ -79,9 +79,23 @@ export class BannerListComponent {
     this.getAllFeedbacksWhole();
   }
 
+
+
   back(): void {
-    this.router.navigate(['/market/action']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(['/market/action']);
+    }
+  });
+}
+
 
   toogleRetail(isRetail: boolean) {
     this.isRetail = isRetail;
@@ -96,18 +110,42 @@ export class BannerListComponent {
   }
 
   cancelUploadRetail(): void {
-    this.bannerName = '';
-    this.selectedFile = null;
-    this.selectedRetailImageUrl = null;
-    this.ViewRetailAddBanner = false;
-  }
-
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'Your selected image and data will be lost!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.bannerName = '';
+      this.selectedFile = null;
+      this.selectedRetailImageUrl = null;
+      this.ViewRetailAddBanner = false;
+    }
+  });
+}
   cancelUploadWholesale(): void {
-    this.bannerNameWholesale = '';
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'Your selected image and data will be lost!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+   this.bannerNameWholesale = '';
     this.selectedFileWholesale = null;
     this.selectedWholesaleImageUrl = null;
     this.ViewWholesaleAddBanner = false;
-  }
+    }
+  });
+}
+
+
+
 
   loadNextNumberRetail() {
     const token = this.tokenService.getToken();

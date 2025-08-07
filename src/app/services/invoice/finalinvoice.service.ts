@@ -354,7 +354,7 @@ export class FinalinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-      const pickupLabel = 'Pickup Center:';
+      const pickupLabel = 'Centre:';
       doc.text(pickupLabel, 15, yPosition);
 
       // Calculate position for center name with small space

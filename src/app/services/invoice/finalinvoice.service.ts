@@ -331,6 +331,9 @@ export class FinalinvoiceService {
       yPosition += 5;
     }
 
+    // Add small space above Invoice No
+    yPosition += 3;
+
     // Invoice Details
     doc.setFont('helvetica', 'bold');
     doc.text('Invoice No:', 15, yPosition);

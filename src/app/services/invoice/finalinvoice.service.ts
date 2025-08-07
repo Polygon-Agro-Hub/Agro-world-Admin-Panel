@@ -346,7 +346,7 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.deliveryMethod || 'N/A', 15, yPosition + 5);
+    doc.text(invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery' , 15, yPosition + 5);
     yPosition += 10;
 
     if (invoice.deliveryMethod?.toLowerCase() === 'pickup' && invoice.pickupInfo) {
@@ -502,10 +502,7 @@ export class FinalinvoiceService {
 
       // Calculate total amount for additional items
       const additionalItemsTotalAmount = invoice.additionalItems.reduce((total, item) => {
-        const unitPrice = parseFloat(item.unitPrice || '0');
-        const itemDiscount = parseFloat(item.itemDiscount || '0');
-        const quantity = parseFloat(item.quantity === '0.00' ? '1' : item.quantity || '1');
-        return total + (unitPrice + itemDiscount) * quantity;
+        return total + parseFloat(item.normalPrice || '0');
       }, 0);
 
       const addTitle = `Additional Items (${invoice.additionalItems.length} Items)`;
@@ -552,8 +549,8 @@ export class FinalinvoiceService {
           const unitPrice = parseFloat(it.unitPrice || '0');
           const itemDiscount = parseFloat(it.itemDiscount || '0');
           const quantity = parseFloat(it.quantity === '0.00' ? '1' : it.quantity || '1');
-          const amount = (unitPrice + itemDiscount) * quantity;
-          const unitPriceDisplay = (unitPrice + itemDiscount);
+          const amount = parseFloat(it.normalPrice)
+          const unitPriceDisplay = (parseFloat(it.normalPrice)/ quantity);
 
           return [
             `${i + 1}.`,
@@ -625,10 +622,7 @@ export class FinalinvoiceService {
     // Add additional items total if they exist
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
       const additionalItemsTotal = invoice.additionalItems.reduce((total, item) => {
-        const unitPrice = parseFloat(item.unitPrice || '0');
-        const itemDiscount = parseFloat(item.itemDiscount || '0');
-        const quantity = parseFloat(item.quantity === '0.00' ? '1' : item.quantity || '1');
-        return total + (unitPrice + itemDiscount) * quantity;
+        return total + parseFloat(item.normalPrice || '0');
       }, 0);
       
       grandTotalBody.push([

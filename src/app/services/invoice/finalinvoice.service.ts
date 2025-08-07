@@ -257,9 +257,9 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''} ${
-      invoice.billingInfo?.fullName || ''
-    }`.trim();
+    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''}${
+  invoice.billingInfo?.fullName || ''
+}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;

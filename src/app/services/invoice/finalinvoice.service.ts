@@ -258,66 +258,78 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'normal');
 
     const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''} ${
-  invoice.billingInfo?.fullName || ''
-}`.trim();
+      invoice.billingInfo?.fullName || ''
+    }`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
 
-    // Only show address if delivery method is not Pickup
-    if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
-      // Address display
-      if (invoice.buildingType === 'Apartment') {
-        const aptAddress = [
-          `No. ${invoice.billingInfo.houseNo || 'N/A'}`,
-          invoice.billingInfo.street || 'N/A',
-          invoice.billingInfo.city || 'N/A',
-          ...(invoice.billingInfo.buildingName
-            ? [`Building: ${invoice.billingInfo.buildingName}`]
-            : []),
-          ...(invoice.billingInfo.buildingNo
-            ? [`Building No: ${invoice.billingInfo.buildingNo}`]
-            : []),
-          ...(invoice.billingInfo.unitNo
-            ? [`Unit No: ${invoice.billingInfo.unitNo}`]
-            : []),
-          ...(invoice.billingInfo.floorNo
-            ? [`Floor No: ${invoice.billingInfo.floorNo}`]
-            : []),
-        ];
-
-        aptAddress.forEach((line, i) => {
-          doc.text(line, 15, yPosition + i * 5);
-        });
-        yPosition += aptAddress.length * 5;
-      } else {
-        doc.text(`No. ${invoice.billingInfo.houseNo || 'N/A'}`, 15, yPosition);
-        doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
-        doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
-        yPosition += 15;
-      }
-    }
-
-    // Show contact information regardless of delivery method
+    // Add contact information right after the name
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
       const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
         invoice.billingInfo.phone1 || ''
       }`.trim();
       if (phoneNumber) {
-        doc.text(`${phoneNumber}`, 15, yPosition);
+        doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
         yPosition += 5;
       }
     }
 
     if (invoice.billingInfo.userEmail) {
-      const email = `${invoice.billingInfo.userEmail} `.trim();
+      const email = `${invoice.billingInfo.userEmail}`.trim();
       if (email) {
-        doc.text(`${email}`, 15, yPosition);
+        doc.text(`Email: ${email}`, 15, yPosition);
         yPosition += 5;
       }
     }
 
-    yPosition += 5;
+    // Only show address if delivery method is not Pickup
+    if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
+      // Add space before address
+      yPosition += 3;
+
+      // Address display - updated to match the image examples
+      if (invoice.buildingType === 'Apartment') {
+        doc.setFont('helvetica', 'bold');
+        doc.text('Apartment Address:', 15, yPosition);
+        yPosition += 5;
+        doc.setFont('helvetica', 'normal');
+        
+        const aptAddress = [
+          `No : ${invoice.billingInfo.buildingNo || 'N/A'},`,
+          `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
+          `Flat : ${invoice.billingInfo.unitNo || 'N/A'},`,
+          `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
+          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
+          `City : ${invoice.billingInfo.city || 'N/A'}`
+        ];
+
+        aptAddress.forEach((line) => {
+          doc.text(line, 15, yPosition);
+          yPosition += 5;
+        });
+      } else {
+        doc.setFont('helvetica', 'bold');
+        doc.text('House Address:', 15, yPosition);
+        yPosition += 5;
+        doc.setFont('helvetica', 'normal');
+        
+        const houseAddress = [
+          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
+          `City : ${invoice.billingInfo.city || 'N/A'}`
+        ];
+
+        houseAddress.forEach((line) => {
+          doc.text(line, 15, yPosition);
+          yPosition += 5;
+        });
+      }
+      
+      // Add space after address
+      yPosition += 5;
+    }
 
     // Invoice Details
     doc.setFont('helvetica', 'bold');
@@ -334,10 +346,7 @@ export class FinalinvoiceService {
     doc.text(invoice.deliveryMethod || 'N/A', 15, yPosition + 5);
     yPosition += 10;
 
-    if (
-      invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
-      invoice.pickupInfo
-    ) {
+    if (invoice.deliveryMethod?.toLowerCase() === 'pickup' && invoice.pickupInfo) {
       // Add space before Pickup Center
       yPosition += 5;
 
@@ -371,12 +380,6 @@ export class FinalinvoiceService {
 
     // Add extra space here between Delivery Method and Package Title
     yPosition += 10;
-
-    const grandTotalAll =
-      parseNum(invoice.familyPackTotal) +
-      parseNum(invoice.additionalItemsTotal) +
-      parseNum(invoice.deliveryFee) -
-      parseNum(invoice.discount);
 
     // Right side details
     const rightYStart = 55;

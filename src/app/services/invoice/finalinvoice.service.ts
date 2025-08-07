@@ -494,12 +494,20 @@ export class FinalinvoiceService {
         yPosition = 20;
       }
 
+      // Calculate total amount for additional items
+      const additionalItemsTotalAmount = invoice.additionalItems.reduce((total, item) => {
+        const unitPrice = parseFloat(item.unitPrice || '0');
+        const itemDiscount = parseFloat(item.itemDiscount || '0');
+        const quantity = parseFloat(item.quantity === '0.00' ? '1' : item.quantity || '1');
+        return total + (unitPrice + itemDiscount) * quantity;
+      }, 0);
+
       const addTitle = `Additional Items (${invoice.additionalItems.length} Items)`;
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.text(addTitle, 15, yPosition);
       doc.text(
-        `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
+        `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
         180,
         yPosition,
         { align: 'right' }
@@ -534,15 +542,21 @@ export class FinalinvoiceService {
             styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
           },
         ],
-        ...invoice.additionalItems.map((it, i) => [
-          `${i + 1}.`,
-          it.name || 'N/A',
-          it.unitPrice
-            ? `Rs. ${formatNumberWithCommas((parseFloat(it.unitPrice)+parseFloat(it.itemDiscount))/parseInt(it.quantity === '0.00' ? '1' : it.quantity))}`
-            : 'Rs. 0.00',
-          `${it.quantity || '0'} ${it.unit || ''}`.trim(),
-          it.amount ? `Rs. ${formatNumberWithCommas((parseFloat(it.unitPrice)+parseFloat(it.itemDiscount)))}` : 'Rs. 0.00',
-        ]),
+        ...invoice.additionalItems.map((it, i) => {
+          const unitPrice = parseFloat(it.unitPrice || '0');
+          const itemDiscount = parseFloat(it.itemDiscount || '0');
+          const quantity = parseFloat(it.quantity === '0.00' ? '1' : it.quantity || '1');
+          const amount = (unitPrice + itemDiscount) * quantity;
+          const unitPriceDisplay = (unitPrice + itemDiscount);
+
+          return [
+            `${i + 1}.`,
+            it.name || 'N/A',
+            `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
+            `${quantity} ${it.unit || ''}`.trim(),
+            `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
+          ];
+        }),
       ];
 
       (doc as any).autoTable({
@@ -604,9 +618,16 @@ export class FinalinvoiceService {
 
     // Add additional items total if they exist
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
+      const additionalItemsTotal = invoice.additionalItems.reduce((total, item) => {
+        const unitPrice = parseFloat(item.unitPrice || '0');
+        const itemDiscount = parseFloat(item.itemDiscount || '0');
+        const quantity = parseFloat(item.quantity === '0.00' ? '1' : item.quantity || '1');
+        return total + (unitPrice + itemDiscount) * quantity;
+      }, 0);
+      
       grandTotalBody.push([
         'Additional Items',
-        `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
+        `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
       ]);
     }
 
@@ -620,16 +641,27 @@ export class FinalinvoiceService {
       `Rs. ${formatNumberWithCommas(invoice.discount)}`,
     ]);
 
+    // Calculate final grand total
+    const familyPackTotal = invoice.familyPackItems?.reduce((total, pack) => 
+      total + parseNum(pack.amount), 0) || 0;
+    
+    const additionalItemsTotal = invoice.additionalItems?.reduce((total, item) => {
+      const unitPrice = parseFloat(item.unitPrice || '0');
+      const itemDiscount = parseFloat(item.itemDiscount || '0');
+      const quantity = parseFloat(item.quantity === '0.00' ? '1' : item.quantity || '1');
+      return total + (unitPrice + itemDiscount) * quantity;
+    }, 0) || 0;
+
+    const finalGrandTotal = familyPackTotal + 
+                          additionalItemsTotal + 
+                          parseNum(invoice.deliveryFee) - 
+                          parseNum(invoice.discount);
+
     // Add final total
     grandTotalBody.push([
       { content: 'Grand Total', styles: { fontStyle: 'bold' } },
       {
-        content: `Rs. ${formatNumberWithCommas(
-          parseNum(invoice.familyPackTotal) +
-            parseNum(invoice.additionalItemsTotal) +
-            parseNum(invoice.deliveryFee) -
-            parseNum(invoice.discount)
-        )}`,
+        content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
         styles: { fontStyle: 'bold' },
       },
     ]);

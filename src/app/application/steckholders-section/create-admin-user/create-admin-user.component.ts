@@ -93,6 +93,20 @@ export class CreateAdminUserComponent implements OnInit {
       }
     });
   }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/admin']);
+    }
+  });
+}
 
   setPasswordValidation(isRequired: boolean) {
     const passwordControl = this.userForm.get('password');
@@ -443,10 +457,21 @@ export class CreateAdminUserComponent implements OnInit {
   openPopup() {
     this.isPopupVisible = true;
   }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/admin']);
+    }
+  });
+}
 
-  onCancel() {
-    this.userForm.reset();
-  }
 
   onCancel2() {
     this.userForm.reset();

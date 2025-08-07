@@ -162,6 +162,21 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     return `https://flagcdn.com/24x18/${code}.png`;
   }
 
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+  if (result.isConfirmed) {
+        this.location.back();
+      }
+  });
+}
+
   // Field configurations
 private fieldConfigs: { [key: string]: FieldConfig } = {
   'firstNameEnglish': {

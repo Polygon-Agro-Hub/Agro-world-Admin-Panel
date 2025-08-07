@@ -646,16 +646,42 @@ export class AddDestributionCenterComponent implements OnInit {
     this.submitSuccess = null;
   }
 
-  onCancel() {
-    this.distributionForm.reset({
-      contact1Code: '+94',
-      contact2Code: '+94',
-    });
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'All entered data will be lost!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Reset',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.distributionForm.reset({
+        contact1Code: '+94',
+        contact2Code: '+94',
+      });
+    }
+  });
+}
+
+
+ 
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+    }
+  });
+}
+
 
   navigatePath(path: string) {
     this.router.navigate([path]);

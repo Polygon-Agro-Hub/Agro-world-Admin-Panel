@@ -1219,8 +1219,20 @@ export class EditPlantcareUsersComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/steckholders/action/farmers']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/farmers']);
+    }
+  });
+}
+
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -1429,7 +1441,19 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
   }
 
-  onCancel() {
-    this.router.navigate(['/steckholders/action/farmers']);
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/farmers']);
+    }
+  });
+}
+
 }

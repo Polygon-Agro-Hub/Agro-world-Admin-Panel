@@ -94,6 +94,22 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+        this.location.back();
+    }
+  });
+}
+
+
 allowOnlyEnglishLetters(event: KeyboardEvent): void {
   const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
   if (allowedControlKeys.includes(event.key)) return;
@@ -254,19 +270,24 @@ onSubmit() {
     }
   }
 
-  back(cropCalendarId: string, userId: string) {
-    this.router.navigate(
-      ['plant-care/action/view-crop-task-by-user/user-task-list'],
-      {
-        queryParams: { cropCalendarId, userId },
-      }
-    );
-  }
 
-  onCancel(): void {
-    console.log('Cancelled');
-    this.selectedLanguage = 'english';
-  }
+
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+        this.location.back();
+
+    }
+  });
+}
+
 
   onlyAllowIntegers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;

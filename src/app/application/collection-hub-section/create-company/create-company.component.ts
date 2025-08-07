@@ -1060,8 +1060,20 @@ getCompanyData() {
   }
 
   back(): void {
-    this.router.navigate(['collection-hub']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/collection-hub/manage-company']);
+    }
+  });
+}
+
 
   onCancel() {
     Swal.fire({

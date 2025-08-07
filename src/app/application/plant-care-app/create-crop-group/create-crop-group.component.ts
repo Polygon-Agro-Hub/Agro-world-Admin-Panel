@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
@@ -112,7 +112,8 @@ capitalizeFirstLetter(event: Event) {
     private route: ActivatedRoute,
     private router: Router,
     private cropCalendarService: CropCalendarService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+     private location: Location,
   ) {}
 
   ngOnInit() {
@@ -268,7 +269,7 @@ capitalizeFirstLetter(event: Event) {
           bgColor: '',
           fileName: '',
         };
-        this.router.navigate(['/plant-care/action']);
+       this.location.back();
       }
     });
   }
@@ -375,11 +376,39 @@ capitalizeFirstLetter(event: Event) {
     return true;
   }
 
-  backCreate(): void {
-    this.router.navigate(['/plant-care/action']);
-  }
 
-  backEdit(): void {
-    this.router.navigate(['/plant-care/action/view-crop-group']);
-  }
+
+  backCreate(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+       this.location.back();
+    }
+  });
+}
+
+ backEdit(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.location.back();
+    }
+  });
+}
+
+
+
+
 }

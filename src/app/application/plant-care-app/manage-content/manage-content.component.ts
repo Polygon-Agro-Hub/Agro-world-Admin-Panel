@@ -244,9 +244,23 @@ private formatLocalDate(date: Date): string {
     this.fetchAllNews(1, this.itemsPerPage);
   }
 
+
+
   back(): void {
-    this.router.navigate(['/plant-care/action']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/plant-care/action']);
+    }
+  });
+}
+
 
   onDateClear(){
     this.createdDateFilter = '';

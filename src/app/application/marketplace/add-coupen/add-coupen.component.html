@@ -9,12 +9,9 @@
       Add a Coupon
     </p>
     <div>
-      <span
-        class="bg-[#74788D] text-lg text-white px-3 py-2 rounded-lg mx-2 cursor-pointer"
-        onclick="history.back()"
-      >
-        Cancel
-      </span>
+     <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+            Cancel
+          </button>
       <span
         class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer"
         (click)="onSubmit()"

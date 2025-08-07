@@ -309,104 +309,104 @@ export class ViewCollectiveOfficerComponent {
     </div>
   `;
 
-  Swal.fire({
-    html: tableHtml,
-    showConfirmButton: false,
-    width: 'auto',
-    background: 'transparent',
-    backdrop: 'rgba(0, 0, 0, 0.5)',
-    grow: 'row',
-    showClass: { popup: 'animate__animated animate__fadeIn' },
-    hideClass: { popup: 'animate__animated animate__fadeOut' },
-    didOpen: () => {
-      if (showApproveButton) {
-        document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The Collection officer was approved successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                } else {
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
+      didOpen: () => {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection Officer was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
-      }
+              );
+            });
+        }
 
-      if (showRejectButton) {
-        document
-          .getElementById('rejectButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The Collection officer was rejected successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-                } else {
+        if (showRejectButton) {
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection Officer was rejected successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while rejecting. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
-      }
-    },
-  });
-}
+              );
+            });
+        }
+      },
+    });
+  }
 
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;

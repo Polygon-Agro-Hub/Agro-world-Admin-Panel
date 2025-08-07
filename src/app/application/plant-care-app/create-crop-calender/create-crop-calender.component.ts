@@ -1063,13 +1063,37 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-  backCreate(): void {
-    this.router.navigate(['/plant-care/action']);
-  }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/plant-care/action']);
+    }
+  });
+}
 
-  backEdit(): void {
-    this.router.navigate(['/plant-care/action/view-crop-calender']);
-  }
+
+backEdit(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/plant-care/action/view-crop-calender']);
+    }
+  });
+}
+
 }
 
 export function nonZeroValidator(control: AbstractControl): ValidationErrors | null {

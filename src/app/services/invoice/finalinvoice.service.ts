@@ -399,7 +399,7 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, rightYStart + 15);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.paymentMethod || 'N/A', 140, rightYStart + 20);
+    doc.text(invoice.paymentMethod === 'Card' ? 'Debit/Credit Card' : 'Cash On Delivery', 140, rightYStart + 20);
 
     doc.setFont('helvetica', 'bold');
     doc.text('Ordered Date:', 140, rightYStart + 30);

@@ -538,10 +538,10 @@ export class FinalinvoiceService {
           `${i + 1}.`,
           it.name || 'N/A',
           it.unitPrice
-            ? `Rs. ${formatNumberWithCommas(it.unitPrice)}`
+            ? `Rs. ${formatNumberWithCommas((parseFloat(it.unitPrice)+parseFloat(it.itemDiscount))/parseInt(it.quantity === '0.00' ? '1' : it.quantity))}`
             : 'Rs. 0.00',
           `${it.quantity || '0'} ${it.unit || ''}`.trim(),
-          it.amount ? `Rs. ${formatNumberWithCommas(it.amount)}` : 'Rs. 0.00',
+          it.amount ? `Rs. ${formatNumberWithCommas((parseFloat(it.unitPrice)+parseFloat(it.itemDiscount)))}` : 'Rs. 0.00',
         ]),
       ];
 

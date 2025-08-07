@@ -733,15 +733,16 @@ export class FinalinvoiceService {
     });
 
     // Footer
-    yPosition += 8;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
+    yPosition += 20;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'italic', 'bold');
     doc.text('Thank you for shopping with us!', 105, yPosition, {
       align: 'center',
     });
 
-    yPosition += 6;
+    yPosition += 10;
     doc.setFontSize(9);
+    doc.setFont('helvetica', 'italic');
     doc.text(
       'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
       105,
@@ -749,7 +750,7 @@ export class FinalinvoiceService {
       { align: 'center' }
     );
 
-    yPosition += 6;
+    yPosition += 15;
     doc.setTextColor(128, 128, 128);
     doc.setFontSize(8);
     doc.text(

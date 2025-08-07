@@ -257,9 +257,9 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''}${
-  invoice.billingInfo?.fullName || ''
-}`.trim();
+    const billingName = `${
+      invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
+    }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
@@ -294,7 +294,7 @@ export class FinalinvoiceService {
         doc.text('Apartment Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
-        
+
         const aptAddress = [
           `No : ${invoice.billingInfo.buildingNo || 'N/A'},`,
           `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
@@ -302,7 +302,7 @@ export class FinalinvoiceService {
           `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
           `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
-          `City : ${invoice.billingInfo.city || 'N/A'}`
+          `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
 
         aptAddress.forEach((line) => {
@@ -314,11 +314,11 @@ export class FinalinvoiceService {
         doc.text('House Address:', 15, yPosition);
         yPosition += 5;
         doc.setFont('helvetica', 'normal');
-        
+
         const houseAddress = [
           `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
           `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
-          `City : ${invoice.billingInfo.city || 'N/A'}`
+          `City : ${invoice.billingInfo.city || 'N/A'}`,
         ];
 
         houseAddress.forEach((line) => {
@@ -326,7 +326,7 @@ export class FinalinvoiceService {
           yPosition += 5;
         });
       }
-      
+
       // Add space after address
       yPosition += 5;
     }
@@ -346,10 +346,17 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery' , 15, yPosition + 5);
+    doc.text(
+      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
+      15,
+      yPosition + 5
+    );
     yPosition += 10;
 
-    if (invoice.deliveryMethod?.toLowerCase() === 'pickup' && invoice.pickupInfo) {
+    if (
+      invoice.deliveryMethod?.toLowerCase() === 'pickup' &&
+      invoice.pickupInfo
+    ) {
       // Add space before Pickup Center
       yPosition += 5;
 
@@ -399,7 +406,13 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, rightYStart + 15);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.paymentMethod === 'Card' ? 'Debit/Credit Card' : 'Cash On Delivery', 140, rightYStart + 20);
+    doc.text(
+      invoice.paymentMethod === 'Card'
+        ? 'Debit/Credit Card'
+        : 'Cash On Delivery',
+      140,
+      rightYStart + 20
+    );
 
     doc.setFont('helvetica', 'bold');
     doc.text('Ordered Date:', 140, rightYStart + 30);
@@ -501,9 +514,12 @@ export class FinalinvoiceService {
       }
 
       // Calculate total amount for additional items
-      const additionalItemsTotalAmount = invoice.additionalItems.reduce((total, item) => {
-        return total + parseFloat(item.normalPrice || '0');
-      }, 0);
+      const additionalItemsTotalAmount = invoice.additionalItems.reduce(
+        (total, item) => {
+          return total + parseFloat(item.normalPrice || '0');
+        },
+        0
+      );
 
       const addTitle = `Additional Items (${invoice.additionalItems.length} Items)`;
       doc.setFontSize(9);
@@ -548,9 +564,11 @@ export class FinalinvoiceService {
         ...invoice.additionalItems.map((it, i) => {
           const unitPrice = parseFloat(it.unitPrice || '0');
           const itemDiscount = parseFloat(it.itemDiscount || '0');
-          const quantity = parseFloat(it.quantity === '0.00' ? '1' : it.quantity || '1');
-          const amount = parseFloat(it.normalPrice)
-          const unitPriceDisplay = (parseFloat(it.normalPrice)/ quantity);
+          const quantity = parseFloat(
+            it.quantity === '0.00' ? '1' : it.quantity || '1'
+          );
+          const amount = parseFloat(it.normalPrice);
+          const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
 
           return [
             `${i + 1}.`,
@@ -621,10 +639,13 @@ export class FinalinvoiceService {
 
     // Add additional items total if they exist
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
-      const additionalItemsTotal = invoice.additionalItems.reduce((total, item) => {
-        return total + parseFloat(item.normalPrice || '0');
-      }, 0);
-      
+      const additionalItemsTotal = invoice.additionalItems.reduce(
+        (total, item) => {
+          return total + parseFloat(item.normalPrice || '0');
+        },
+        0
+      );
+
       grandTotalBody.push([
         'Additional Items',
         `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
@@ -642,20 +663,27 @@ export class FinalinvoiceService {
     ]);
 
     // Calculate final grand total
-    const familyPackTotal = invoice.familyPackItems?.reduce((total, pack) => 
-      total + parseNum(pack.amount), 0) || 0;
-    
-    const additionalItemsTotal = invoice.additionalItems?.reduce((total, item) => {
-      const unitPrice = parseFloat(item.unitPrice || '0');
-      const itemDiscount = parseFloat(item.itemDiscount || '0');
-      const quantity = parseFloat(item.quantity === '0.00' ? '1' : item.quantity || '1');
-      return total + (unitPrice + itemDiscount) * quantity;
-    }, 0) || 0;
+    const familyPackTotal =
+      invoice.familyPackItems?.reduce(
+        (total, pack) => total + parseNum(pack.amount),
+        0
+      ) || 0;
 
-    const finalGrandTotal = familyPackTotal + 
-                          additionalItemsTotal + 
-                          parseNum(invoice.deliveryFee) - 
-                          parseNum(invoice.discount);
+    const additionalItemsTotal =
+      invoice.additionalItems?.reduce((total, item) => {
+        const unitPrice = parseFloat(item.unitPrice || '0');
+        const itemDiscount = parseFloat(item.itemDiscount || '0');
+        const quantity = parseFloat(
+          item.quantity === '0.00' ? '1' : item.quantity || '1'
+        );
+        return total + (unitPrice + itemDiscount) * quantity;
+      }, 0) || 0;
+
+    const finalGrandTotal =
+      familyPackTotal +
+      additionalItemsTotal +
+      parseNum(invoice.deliveryFee) -
+      parseNum(invoice.discount);
 
     // Add final total
     grandTotalBody.push([
@@ -666,6 +694,7 @@ export class FinalinvoiceService {
       },
     ]);
 
+    // Grand Total section - updated to modify borders
     (doc as any).autoTable({
       startY: yPosition,
       body: grandTotalBody,
@@ -684,7 +713,8 @@ export class FinalinvoiceService {
         lineWidth: 0,
       },
       didDrawCell: (data: any) => {
-        if (data.row.index === grandTotalBody.length - 1) {
+        // Add border between Grand Total and Discount (second last row)
+        if (data.row.index === grandTotalBody.length - 2) {
           doc.setDrawColor(0, 0, 0);
           doc.setLineWidth(0.5);
           doc.line(
@@ -694,6 +724,8 @@ export class FinalinvoiceService {
             data.cell.y + data.cell.height
           );
         }
+        // Remove bottom border from the last row (Grand Total)
+        // (No action needed as we're not drawing anything for the last row)
       },
     });
 

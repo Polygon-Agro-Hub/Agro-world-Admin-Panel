@@ -797,23 +797,63 @@ export class FinalinvoiceService {
   }
 
   private async getLogoUrl(): Promise<string | null> {
-    try {
-      const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
+  try {
+    const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
+    const logoBlob = (await this.http
+      .get(logoPath, { responseType: 'blob' })
+      .toPromise()) as Blob;
 
-      // Add type assertion
-      const logoBlob = (await this.http
-        .get(logoPath, { responseType: 'blob' })
-        .toPromise()) as Blob;
-
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(logoBlob);
-      });
-    } catch (error) {
-      console.error('Error loading logo:', error);
-      return null;
-    }
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const originalDataUrl = reader.result as string;
+        
+        // Create an image element to check dimensions
+        const img = new Image();
+        img.src = originalDataUrl;
+        
+        await img.decode(); // Wait for image to load
+        
+        // Create canvas to resize if needed
+        const canvas = document.createElement('canvas');
+        const maxWidth = 200; // Maximum width in pixels
+        const maxHeight = 100; // Maximum height in pixels
+        
+        // Calculate new dimensions maintaining aspect ratio
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+        
+        if (height > maxHeight) {
+          width = (maxHeight / height) * width;
+          height = maxHeight;
+        }
+        
+        // Only resize if necessary
+        if (width !== img.width || height !== img.height) {
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Convert to PNG with reduced quality (0.9 maintains good quality)
+          const optimizedDataUrl = canvas.toDataURL('image/png', 0.9);
+          resolve(optimizedDataUrl);
+        } else {
+          // Use original if no resizing needed
+          resolve(originalDataUrl);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(logoBlob);
+    });
+  } catch (error) {
+    console.error('Error loading logo:', error);
+    return null;
   }
+}
 }

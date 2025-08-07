@@ -20,12 +20,19 @@
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Crop Name By English*
         </label>
-        <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameEnglish" name="cropName"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropEngNameInput="ngModel"
-          pattern="^(?!\d+$)[a-zA-Z\s]*$"
-          (keydown)="allowOnlyEnglish($event)"
-          required />
+<input
+  type="text"
+  id="cropName"
+  name="cropName"
+  [(ngModel)]="cropGroup.cropNameEnglish"
+  #cropEngNameInput="ngModel"
+  (input)="capitalizeFirstLetter($event)"
+  (keydown)="allowOnlyEnglish($event)"
+  pattern="^(?!\d+$)[a-zA-Z\s]*$"
+  required
+  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+/>
+
       
         <!-- Error: Required Field -->
         <div *ngIf="cropEngNameInput.touched && !cropGroup.cropNameEnglish" class="text-red-500 text-sm mt-1">
@@ -170,10 +177,19 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Crop Name By English*
           </label>
-          <input type="text" id="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish" name="cropNameEnglish"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required #cropNameEnglishInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" 
-          (keydown)="allowOnlyEnglish($event)" />
+         <input
+  type="text"
+  id="cropNameEnglish"
+  name="cropNameEnglish"
+  [(ngModel)]="newsItems[0].cropNameEnglish"
+  #cropNameEnglishInput="ngModel"
+  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+  required
+  pattern="^(?!\d+$)[a-zA-Z0-9]*$"
+  (keydown)="allowOnlyEnglish($event)"
+  (input)="capitalizeFirstLetter($event)"
+/>
+
 
           <div *ngIf="cropNameEnglishInput.touched && !newsItems[0].cropNameEnglish" class="text-red-500 text-sm mt-1">
             <div>English Crop name is required</div>

@@ -1,0 +1,122 @@
+ :host ::ng-deep .p-calendar .p-button {
+    color: black;             
+  }
+  :host-context(.dark) ::ng-deep .p-calendar .p-button {
+    color: white;              
+  }
+
+  ::ng-deep .p-calendar .p-inputtext {
+    padding-right: 3rem !important; /* Make room for both icons */
+  }
+  
+  ::ng-deep .p-calendar .p-calendar-clear-icon {
+    right: 1.2rem !important; /* Position clear button to the left of calendar icon */
+    top: 8.2px !important; /* Move clear button slightly down */
+    order: 1;
+  }
+  
+  
+  ::ng-deep .p-calendar .p-datepicker-trigger {
+    right: 0.5rem !important; /* Position calendar icon on the far right */
+    order: 2;
+  }
+  
+  /* For light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c; /* gray-400 */
+}
+
+/* For dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B; /* gray-300 */
+}
+
+/* making pop up small*/
+
+::ng-deep .calendar-popup-small {
+  width: 320px !important; /* Adjust as needed */
+  min-width: 280px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.875rem; /* Smaller font */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.25rem !important; /* Smaller cell padding */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  line-height: 1.5rem !important;
+}
+
+  
+
+/* Placeholder styling for dark mode */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B; /* gray-300 */
+}
+
+/* Make calendar input smaller */
+
+/* Shrink calendar icon */
+:host ::ng-deep .p-calendar .p-datepicker-trigger {
+  width: 1rem !important;
+  height: 1rem !important;
+  font-size: 0.75rem !important;
+  right: 0.3rem !important;
+  top: 0.3rem !important;
+}
+
+/* Shrink clear icon */
+
+::ng-deep .p-datepicker {
+  left: auto !important;      /* reset any forced left */
+  right: 0 !important;        /* align to right edge by default */
+  transform: translateX(-40px) !important; /* shift left by 40px, adjust as needed */
+}
+
+
+/* Reduce padding and cell size inside popup */
+:host ::ng-deep .p-datepicker td > span {
+  padding: 0.25rem !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+}
+
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+    display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+    display: inline-flex !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+    border-radius: 6px !important;
+    /* <-- add this for rounded corners */
+    overflow: hidden;
+    /* ensures child items don't spill over rounded corners */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+

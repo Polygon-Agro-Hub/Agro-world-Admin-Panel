@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Output, EventEmitter } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs/operators';
@@ -63,6 +63,7 @@ interface PackageItem {
   styleUrl: './todo-define-premade-packages.component.css',
 })
 export class TodoDefinePremadePackagesComponent implements OnInit {
+  
   orderdetailsArr: OrderDetails[] = [];
   excludeItemsArr: ExcludeItems[] = [];
   orderDetails: OrderDetailItem[] = [];

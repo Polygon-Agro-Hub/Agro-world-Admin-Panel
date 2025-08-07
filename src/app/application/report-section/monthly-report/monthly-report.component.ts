@@ -14,11 +14,12 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-monthly-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent,CalendarModule,],
   templateUrl: './monthly-report.component.html',
   styleUrl: './monthly-report.component.css',
 })

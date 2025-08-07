@@ -7,7 +7,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-    Update Collection Centres
+    Edit Collection Centres
   </h2>
 
   <form (ngSubmit)="onSubmit()">
@@ -197,7 +197,7 @@
             *ngIf="isPhoneInvalidMap['phone01'] && centerFetchData.contact01"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+          Please enter a valid mobile number (format: +947XXXXXXXX)
           </div>
         </div>
       </div>
@@ -309,7 +309,7 @@
             *ngIf="isPhoneInvalidMap['phone02'] && centerFetchData.contact02"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+          Please enter a valid mobile number (format: +947XXXXXXXX)
           </div>
         </div>
       </div>

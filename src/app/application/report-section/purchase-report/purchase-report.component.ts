@@ -11,7 +11,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
-
+import { CalendarModule } from 'primeng/calendar';
 interface PurchaseReport {
   id: number;
   grnNumber: string;
@@ -37,6 +37,7 @@ interface PurchaseReport {
     DropdownModule,
     FormsModule,
     LoadingSpinnerComponent,
+        CalendarModule,
   ],
   templateUrl: './purchase-report.component.html',
   styleUrl: './purchase-report.component.css',
@@ -73,6 +74,7 @@ export class PurchaseReportComponent {
   selectedMonth: Months | null = null;
   createdDate: string = new Date().toISOString().split('T')[0];
   search: string = '';
+dateFilter: any;
 
   constructor(
     private collectionoOfficer: CollectionService,
@@ -86,47 +88,96 @@ export class PurchaseReportComponent {
     this.getAllCenters();
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
+    
   }
+
+  get hasData(): boolean {
+  return this.purchaseReport && this.purchaseReport.length > 0;
+}
+
+preventLeadingSpace(event: KeyboardEvent): void {
+  if (event.key === ' ' && this.search.length === 0) {
+    event.preventDefault();
+  }
+}
+
+  // fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
+  //   this.isLoading = true;
+
+  //   const centerId = this.selectedCenter?.id || '';
+  //   const monthNumber = this.selectedMonth?.id || '';
+
+  //   if (this.createdDate === '' && this.selectedMonth == null) {
+  //     this.createdDate = new Date().toISOString().split('T')[0];
+  //   }
+
+  //   this.collectionoOfficer
+  //     .fetchAllPurchaseReport(
+  //       page,
+  //       limit,
+  //       centerId,
+  //       this.fromDate,
+  //       this.toDate,
+  //       this.search
+  //     )
+  //     .subscribe(
+  //       (response) => {
+  //         this.purchaseReport = response.items;
+  //         this.totalItems = response.total;
+  //         this.grandTotal = response.grandTotal;
+  //         this.purchaseReport.forEach((head) => {
+  //           head.createdAtFormatted = this.datePipe.transform(
+  //             head.createdAt,
+  //             "yyyy/MM/dd 'at' hh.mm a"
+  //           );
+  //         });
+  //         this.isLoading = false;
+  //       },
+  //       (error) => {
+  //         if (error.status === 401) {
+  //         }
+  //         this.isLoading = false;
+  //       }
+  //     );
+  // }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
-    this.isLoading = true;
+  this.isLoading = true;
+  const centerId = this.selectedCenter?.id || '';
+  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
 
-    const centerId = this.selectedCenter?.id || '';
-    const monthNumber = this.selectedMonth?.id || '';
-
-    if (this.createdDate === '' && this.selectedMonth == null) {
-      this.createdDate = new Date().toISOString().split('T')[0];
-    }
-
-    this.collectionoOfficer
-      .fetchAllPurchaseReport(
-        page,
-        limit,
-        centerId,
-        this.fromDate,
-        this.toDate,
-        this.search
-      )
-      .subscribe(
-        (response) => {
-          this.purchaseReport = response.items;
-          this.totalItems = response.total;
-          this.grandTotal = response.grandTotal;
-          this.purchaseReport.forEach((head) => {
-            head.createdAtFormatted = this.datePipe.transform(
-              head.createdAt,
-              "yyyy/MM/dd 'at' hh.mm a"
-            );
-          });
-          this.isLoading = false;
-        },
-        (error) => {
-          if (error.status === 401) {
-          }
-          this.isLoading = false;
+  this.collectionoOfficer
+    .fetchAllPurchaseReport(
+      page,
+      limit,
+      centerId,
+      formattedFromDate,
+      formattedToDate,
+      this.search
+    )
+    .subscribe(
+      (response) => {
+        this.purchaseReport = response.items;
+        this.totalItems = response.total;
+        this.grandTotal = response.grandTotal;
+        this.purchaseReport.forEach((head) => {
+          head.createdAtFormatted = this.datePipe.transform(
+            head.createdAt,
+            "yyyy/MM/dd 'at' hh.mm a"
+          );
+        });
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching report:', error);
+        if (error.status === 401) {
+          // Handle unauthorized
         }
-      );
-  }
+        this.isLoading = false;
+      }
+    );
+}
 
   onPageChange(event: number) {
     this.page = event;

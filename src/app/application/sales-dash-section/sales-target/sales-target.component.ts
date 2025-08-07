@@ -74,6 +74,14 @@ export class SalesTargetComponent implements OnInit {
     this.fetchAllSalesAgents();
   }
 
+  blockFirstSpace(event: KeyboardEvent) {
+  const input = (event.target as HTMLInputElement).value;
+  if (event.key === ' ' && input.length === 0) {
+    event.preventDefault(); // Prevent space at the beginning
+  }
+}
+
+
   futureDateValidator(control: any) {
     const selectedDate = new Date(control.value);
     const today = new Date();

@@ -348,7 +348,7 @@
           </div>
         </div>
 
-        <div>
+<div>
           <label
             for="email"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -359,10 +359,11 @@
             id="email"
             name="email"
             [(ngModel)]="personalData.email"
+            (keydown)="validateEmailInput($event, 'email')"
+            (input)="validateEmailOnInput()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #emailInput="ngModel"
             required
-            email
           />
 
           <div
@@ -373,13 +374,15 @@
           </div>
 
           <div
-            *ngIf="emailInput.touched && emailInput.errors?.['email']"
-            class="text-red-500 text-sm mt-1"
+            *ngIf="emailInput.touched && personalData.email && !isValidEmail(personalData.email)"
+            class="text-red-600 text-sm"
           >
-            <div>
-              Please enter a valid email in the format: example&#64;domain.com
-            </div>
+            Please enter a valid email format ( example{{ '@' }}domain.com). 
+            <br>• No consecutive dots allowed
+            <br>• Cannot start or end with dots
+            <br>• Only letters, numbers, dots, hyphens, and underscores allowed
           </div>
+        </div>
         </div>
       </div>
     </div>

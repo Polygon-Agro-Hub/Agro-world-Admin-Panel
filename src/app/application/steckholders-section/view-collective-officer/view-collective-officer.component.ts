@@ -160,6 +160,7 @@ export class ViewCollectiveOfficerComponent {
             this.isLoading = false;
             this.collectionOfficers = response.items;
             this.totalItems = response.total;
+            this.hasData = response.total > 0;
           },
           (error) => {
             this.isLoading = false;

@@ -157,12 +157,12 @@ import { WholesaleComplaintsComponent } from './application/Complaints/wholesale
 import { W } from '@angular/cdk/keycodes';
 import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
 import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
-import{SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
+import { SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
 import { CustomerOrdersComponent } from './application/sales-dash-section/customer-orders/customer-orders.component';
-import {ViewHeadPortalComponent} from './application/distribution-hub/view-head-portal/view-head-portal.component';
+import { ViewHeadPortalComponent } from './application/distribution-hub/view-head-portal/view-head-portal.component';
 import { ViewCurrentCenterTargetComponent } from './application/collection-hub-section/view-current-center-target/view-current-center-target.component';
 import { ViewCenterHeadComponent } from './application/collection-hub-section/view-center-head/view-center-head.component';
-import {ViewPackageHistoryComponent} from './application/marketplace/view-package-history/view-package-history.component';
+import { ViewPackageHistoryComponent } from './application/marketplace/view-package-history/view-package-history.component';
 import { TestingComponent } from './application/collection-hub-section/testing/testing.component';
 import { CenterCollectionExpenceComponent } from './application/collection-hub-section/center-collection-expence/center-collection-expence.component';
 
@@ -707,11 +707,15 @@ export const routes: Routes = [
             path: 'view-center-head/:id',
             component: ViewCenterHeadComponent,
           },
-        {
-          path: 'center-collection-expense/:id',
-          component: CenterCollectionExpenceComponent
-        }
-          
+          {
+            path: 'center-collection-expense/:id',
+            component: CenterCollectionExpenceComponent
+          },
+          {
+            path: 'view-center-officers',
+            component: ViewCollectiveOfficerComponent
+          }
+
         ],
       },
 
@@ -727,8 +731,8 @@ export const routes: Routes = [
             component: RecievedOrdersComponent,
           },
 
-      
-          
+
+
           {
             path: 'define-packages',
             component: DefinePackagesComponent,
@@ -817,9 +821,9 @@ export const routes: Routes = [
               },
               {
                 path: 'view-packages-history',
-                component:ViewPackageHistoryComponent,
+                component: ViewPackageHistoryComponent,
               },
-               {
+              {
                 path: 'view-packages-list',
                 component: ViewPackageListComponent,
               },
@@ -873,7 +877,7 @@ export const routes: Routes = [
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
               },
-               {
+              {
                 path: 'view-package-history',
                 component: ViewPackageHistoryComponent,
               },
@@ -1074,4 +1078,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

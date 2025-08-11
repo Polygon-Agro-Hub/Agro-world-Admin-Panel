@@ -52,10 +52,10 @@ export class CollectionCenterDashboardComponent {
       this.isLoading = false;
 
       this.centerNameObj = res.officerCount;
-      this.transCount= res.transCount.transactionCount;
-      this.transAmount= res.transAmountCount.transAmountCount
-      this.totExpences= res.totExpences.totExpences ?? 0;
-      this.expencePrecentage= res.difExpences;
+      this.transCount = res.transCount.transactionCount;
+      this.transAmount = res.transAmountCount.transAmountCount
+      this.totExpences = res.totExpences.totExpences ?? 0;
+      this.expencePrecentage = res.difExpences;
       this.resentCollectionArr = res.limitedResentCollection
     });
   }
@@ -88,6 +88,12 @@ export class CollectionCenterDashboardComponent {
 
   navigateCollectionExpenses() {
     this.router.navigate([`collection-hub/center-collection-expense/${this.centerId}`]);
+  }
+
+  viewCenterOfficers() {
+    this.router.navigate(['collection-hub/view-center-officers'], {
+      queryParams: { id: this.centerId }
+    });
   }
 }
 

@@ -521,7 +521,12 @@ export class FinalinvoiceService {
         0
       );
 
-      const addTitle = `Additional Items (${invoice.additionalItems.length} Items)`;
+      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+
+      const addTitle = hasFamilyPacks 
+        ? `Additional Items (${invoice.additionalItems.length} Items)`
+        : `Custom Items (${invoice.additionalItems.length} Items)`;
+
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.text(addTitle, 15, yPosition);
@@ -646,8 +651,11 @@ export class FinalinvoiceService {
         0
       );
 
+      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+      const label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+
       grandTotalBody.push([
-        'Additional Items',
+        label,
         `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
       ]);
     }

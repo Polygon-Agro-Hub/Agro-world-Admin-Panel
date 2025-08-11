@@ -442,7 +442,7 @@ export class FinalinvoiceService {
           15,
           yPosition
         );
-        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 180, yPosition, {
+        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
         yPosition += 5;
@@ -527,7 +527,7 @@ export class FinalinvoiceService {
       doc.text(addTitle, 15, yPosition);
       doc.text(
         `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
-        180,
+        195,
         yPosition,
         { align: 'right' }
       );

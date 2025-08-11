@@ -663,10 +663,13 @@ export class FinalinvoiceService {
     }
 
     // Add delivery fee and discount
-    grandTotalBody.push([
-      'Delivery Fee',
-      `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-    ]);
+    if (invoice.deliveryMethod !== 'Pickup') {
+  grandTotalBody.push([
+    'Delivery Fee',
+    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+  ]);
+}
+
     grandTotalBody.push([
       'Discount',
       `Rs. ${formatNumberWithCommas(invoice.discount)}`,
@@ -696,10 +699,11 @@ export class FinalinvoiceService {
       }, 0) || 0;
 
     const finalGrandTotal =
-      familyPackTotal +
-      additionalItemsTotal +
-      parseNum(invoice.deliveryFee) -
-      parseNum(invoice.discount);
+  familyPackTotal +
+  additionalItemsTotal +
+  (invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0) -
+  parseNum(invoice.discount);
+
 
     // Add final total
     grandTotalBody.push([

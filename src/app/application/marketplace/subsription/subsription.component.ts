@@ -102,10 +102,21 @@ export class SubsriptionComponent implements OnInit {
     this.hasData = this.totalItems > 0;
   }
 
-  onSearchChange() {
-    this.applySearchFilter();
-    this.page = 1;
+ onSearchChange() {
+  if (this.searchText) {
+    // Remove only the very first leading space, keep others
+    this.searchText = this.searchText.replace(/^\s/, '');
   }
+
+  this.applySearchFilter();
+  this.page = 1;
+}
+blockFirstSpace(event: KeyboardEvent) {
+  if (this.searchText.length === 0 && event.key === ' ') {
+    event.preventDefault(); // stops the space from being typed
+  }
+}
+
 
   clearSearch() {
     this.searchText = '';

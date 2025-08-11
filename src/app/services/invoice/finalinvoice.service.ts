@@ -695,40 +695,47 @@ export class FinalinvoiceService {
     ]);
 
     // Grand Total section - updated to modify borders
-    (doc as any).autoTable({
-      startY: yPosition,
-      body: grandTotalBody,
-      margin: { left: 15, right: 15 },
-      columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'right' },
-      },
-      styles: {
-        fontSize: 9,
-        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-        lineColor: [255, 255, 255],
-        lineWidth: 0,
-      },
-      bodyStyles: {
-        lineWidth: 0,
-      },
-      didDrawCell: (data: any) => {
-        // Add border between Grand Total and Discount (second last row)
-        if (data.row.index === grandTotalBody.length - 2) {
-          doc.setDrawColor(0, 0, 0);
-          doc.setLineWidth(0.5);
-          doc.line(
-            data.cell.x,
-            data.cell.y + data.cell.height,
-            data.cell.x + data.cell.width,
-            data.cell.y + data.cell.height
-          );
-        }
-        // Remove bottom border from the last row (Grand Total)
-        // (No action needed as we're not drawing anything for the last row)
-      },
-    });
 
+    if (invoice.additionalItems && invoice.additionalItems.length > 0 && 
+    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+  grandTotalBody.splice(grandTotalBody.length - 2, 0, [
+    'Service Fee',
+    'Rs. 180.00'
+  ]);
+}
+
+
+    (doc as any).autoTable({
+  startY: yPosition,
+  body: grandTotalBody,
+  margin: { left: 15, right: 15 },
+  columnStyles: {
+    0: { cellWidth: 'auto', halign: 'left' },
+    1: { cellWidth: 'auto', halign: 'right' },
+  },
+  styles: {
+    fontSize: 9,
+    cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+    lineColor: [255, 255, 255],
+    lineWidth: 0,
+  },
+  bodyStyles: {
+    lineWidth: 0,
+  },
+  didDrawCell: (data: any) => {
+    // Add border between Grand Total and Discount (second last row)
+    if (data.row.index === grandTotalBody.length - 2) {
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(
+        data.cell.x,
+        data.cell.y + data.cell.height,
+        data.cell.x + data.cell.width,
+        data.cell.y + data.cell.height
+      );
+    }
+  },
+});
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)

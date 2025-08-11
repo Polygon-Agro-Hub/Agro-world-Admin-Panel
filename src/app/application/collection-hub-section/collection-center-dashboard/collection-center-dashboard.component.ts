@@ -23,14 +23,14 @@ export class CollectionCenterDashboardComponent {
   transCount: number = 0;
   transAmount: number = 0.0;
   totExpences: number = 0.0;
-  expencePrecentage: number = -22.0;
+  expencePrecentage: number = 0.0;
   isLoading = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private TargetSrv: CollectionCenterService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['id'];
@@ -39,38 +39,26 @@ export class CollectionCenterDashboardComponent {
     this.fetchCenterDashbordDetails();
   }
 
-   centerOfficers(id = this.centerId) {
+  centerOfficers(id = this.centerId) {
     this.router.navigate(
       ['/steckholders/action/collective-officer'],
       { queryParams: { id } }
     );
   }
 
-fetchCenterDashbordDetails() {
-  this.isLoading = true;
-  this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
-    this.isLoading = false;
+  fetchCenterDashbordDetails() {
+    this.isLoading = true;
+    this.TargetSrv.getDashbordDetails(this.centerId).subscribe((res) => {
+      this.isLoading = false;
 
-    // Try to fetch regCode from the most reliable source, as in agro-world-centers.component.ts
-    if (res.centerDetails) {
-      this.centerNameObj.centerName = res.centerDetails.centerName;
-      this.centerNameObj.regCode = res.centerDetails.regCode;
-      this.centerNameObj.officerCount = res.centerDetails.officerCount;
-      console.log('regCode from centerDetails:', res.centerDetails.regCode);
-    } else if (res.regCode) {
-      // fallback if regCode is at the root
-      this.centerNameObj.regCode = res.regCode;
-      console.log('regCode from root:', res.regCode);
-    } else {
-      this.centerNameObj.regCode = '';
-      console.log('regCode not found.');
-    }
-
-    this.resentCollectionArr = res.limitedResentCollection;
-    this.totExpences = res.totExpences?.totExpences ?? 0;
-    this.expencePrecentage = res.difExpences ?? 0;
-  });
-}
+      this.centerNameObj = res.officerCount;
+      this.transCount= res.transCount.transactionCount;
+      this.transAmount= res.transAmountCount.transAmountCount
+      this.totExpences= res.totExpences.totExpences ?? 0;
+      this.expencePrecentage= res.difExpences;
+      this.resentCollectionArr = res.limitedResentCollection
+    });
+  }
 
 
 
@@ -98,7 +86,7 @@ fetchCenterDashbordDetails() {
     this.router.navigate(['collection-hub/view-current-centre-target']); // Replace with your actual route
   }
 
-  navigateCollectionExpenses(){
+  navigateCollectionExpenses() {
     this.router.navigate([`collection-hub/center-collection-expense/${this.centerId}`]);
   }
 }

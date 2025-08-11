@@ -136,15 +136,19 @@ export class EditCoupenComponent {
   // Reset validation messages
   this.checkPrecentageValueMessage = '';
   this.checkfixAmountValueMessage = '';
-
+ const missingFields = [];
   // Validate required fields
-  if (
-    !this.coupenObj.code ||
-    !this.coupenObj.endDate ||
-    !this.coupenObj.startDate ||
-    !this.coupenObj.type
-  ) {
-    Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+  if (!this.coupenObj.code) missingFields.push('Code');
+  if (!this.coupenObj.startDate) missingFields.push('Start Date');
+  if (!this.coupenObj.endDate) missingFields.push('End Date');
+  if (!this.coupenObj.type) missingFields.push('Type');
+
+  if (missingFields.length > 0) {
+    Swal.fire(
+      'Warning',
+      `Please fill in the following required field(s): ${missingFields.join(', ')}`,
+      'warning'
+    );
     return;
   }
 
@@ -221,6 +225,8 @@ export class EditCoupenComponent {
     });
 }
 
+
+
   private formatDateForAPI(date: Date | null): string | null {
     if (!date) return null;
     return date.toISOString().split('T')[0];
@@ -252,6 +258,30 @@ export class EditCoupenComponent {
     this.checkfixAmountValueMessage = '';
   }
 }
+
+validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Regex to match numbers with up to 2 decimal places
+  const regex = /^\d+(\.\d{0,2})?$/;
+
+  if (value === '') {
+    this.coupenObj[field] = null!;
+    return;
+  }
+
+  if (!regex.test(value)) {
+    while (value.length > 0 && !regex.test(value)) {
+      value = value.slice(0, -1);
+    }
+    input.value = value;
+  }
+
+  this.coupenObj[field] = value ? parseFloat(value) : null!;
+}
+
+
 
   onCodeInput(event: any): void {
     const input = event.target;

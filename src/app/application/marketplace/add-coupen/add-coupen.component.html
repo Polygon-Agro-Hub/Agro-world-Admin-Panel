@@ -93,7 +93,7 @@
               id="freeDelivery"
               name="type"
               [(ngModel)]="coupenObj.type"
-              [value]="'Free Delivary'"
+              [value]="'Free Delivery'"
               (change)="clearValidationMessages()"
             />
             <label
@@ -111,16 +111,18 @@
           >Discount Percentage *</label
         >
         <input
-          type="number"
-          id="percentage"
-          name="percentage"
-          [(ngModel)]="coupenObj.percentage"
-          min="0"
-          max="100"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          (change)="checkPrecentageValue(coupenObj.percentage)"
-          (keydown)="preventNegative($event)"
-        />
+  type="number"
+  id="percentage"
+  name="percentage"
+  [(ngModel)]="coupenObj.percentage"
+  min="0"
+  max="100"
+  (input)="validateDecimalInput($event, 'percentage')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  (change)="checkPrecentageValue(coupenObj.percentage)"
+  (keydown)="preventNegative($event)"
+/>
+
         <div
           *ngIf="coupenObj.type === 'Percentage'"
           class="text-red-500 text-sm mt-1"
@@ -138,6 +140,7 @@
           id="fixDiscount"
           name="fixDiscount"
           [(ngModel)]="coupenObj.fixDiscount"
+           (input)="validateDecimalInput($event, 'fixDiscount')"
           min="0"
           (change)="checkFixAmountValue(coupenObj.fixDiscount)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -173,6 +176,8 @@
           id="priceLimit"
           name="priceLimit"
           [(ngModel)]="coupenObj.priceLimit"
+                     (input)="validateDecimalInput($event, 'priceLimit')"
+
           min="0"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -247,13 +252,13 @@
             [showButtonBar]="true"
             iconDisplay="input"
             [style]="{ width: '100%' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 cursor-pointer
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            inputStyleClass="mt-2 block cursor-pointer w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
             [appendTo]="'body'"
           />
         </div>
@@ -273,13 +278,13 @@
             [showButtonBar]="true"
             iconDisplay="input"
             [style]="{ width: '100%' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 cursor-pointer
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
             [appendTo]="'body'"
           />
         </div>

@@ -108,6 +108,7 @@
           [(ngModel)]="coupenObj.percentage"
           min="0"
           max="100"
+         (input)="validateDecimalInput($event, 'percentage')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           (change)="checkPrecentageValue(coupenObj.percentage)"
         />
@@ -123,6 +124,7 @@
           id="fixDiscount"
           name="fixDiscount"
           [(ngModel)]="coupenObj.fixDiscount"
+             (input)="validateDecimalInput($event, 'fixDiscount')"
           min="0"
           (change)="checkFixAmountValue(coupenObj.fixDiscount)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -155,6 +157,7 @@
           id="priceLimit"
           name="priceLimit"
           [(ngModel)]="coupenObj.priceLimit"
+          (input)="validateDecimalInput($event, 'priceLimit')"
           min="0"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
@@ -235,7 +238,7 @@
            [&_.p-datepicker-header]:dark:bg-[#2d354d] 
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            inputStyleClass="mt-2 block w-full p-2 cursor-pointer border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [appendTo]="'body'"
             dateFormat="yy-mm-dd"
           />
@@ -262,7 +265,7 @@
            [&_.p-datepicker-header]:dark:bg-[#2d354d] 
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            inputStyleClass="mt-2 block w-full cursor-pointer p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [appendTo]="'body'"
             dateFormat="yy-mm-dd"
           />

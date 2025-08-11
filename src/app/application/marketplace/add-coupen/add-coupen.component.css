@@ -13,6 +13,10 @@ input[type="date"]:valid::before {
 ::ng-deep .p-dropdown .p-dropdown-clear {
   display: none;
 }
+::ng-deep .p-datepicker-trigger {
+  cursor: pointer !important;
+}
+
 
 /* Show the clear button only when a value is selected */
 ::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {

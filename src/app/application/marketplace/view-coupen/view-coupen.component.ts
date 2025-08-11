@@ -57,22 +57,23 @@ export class ViewCoupenComponent implements OnInit {
   }
 
   fetchAllCoupon(page: number = 1, limit: number = this.itemsPerPage) {
-    const status = this.selectedStatus?.name || '';
-    const types = this.selectedType?.name || '';
-    const search = this.searchText || '';
-    this.hasData = true;
-    this.marketSrv
-      .getAllCoupen(page, limit, status, types, search)
-      .subscribe((res) => {
-        // console.log(res);
+  const status = this.selectedStatus?.name || '';
+  const types = this.selectedType?.name || '';
+  const search = this.searchText || '';
+  this.hasData = true;
+  this.marketSrv
+    .getAllCoupen(page, limit, status, types, search)
+    .subscribe((res) => {
+      this.hasData = res.items.length > 0;
+      this.coupenObj = res.items;
+      this.totalItems = res.total;
+      this.isLoading = false;
 
-        this.hasData = res.items.length > 0;
-        this.coupenObj = res.items;
-        this.totalItems = res.total;
-        this.isLoading = false;
-      });
-  }
+      // Add this line to update button visibility
+      this.checkDelete = this.coupenObj.length > 0;
 
+    });
+}
   searchCode() {
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
@@ -88,6 +89,7 @@ export class ViewCoupenComponent implements OnInit {
   }
 
   applyFilterStatus() {
+      // Update component state with the response
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
@@ -138,7 +140,7 @@ export class ViewCoupenComponent implements OnInit {
   deleteAllCoupon() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this all coupen? This action cannot be undone.',
+      text: 'Do you really want to delete this all Coupon? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -152,14 +154,14 @@ export class ViewCoupenComponent implements OnInit {
             if (data) {
               Swal.fire(
                 'Deleted!',
-                'The Coupenes has been deleted.',
+                'The Coupons has been deleted.',
                 'success'
               );
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(
                 'Failed!',
-                'The Coupenes could not be deleted. Please try again later.',
+                'The Coupons could not be deleted. Please try again later.',
                 'error'
               );
             }

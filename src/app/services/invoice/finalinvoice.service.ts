@@ -35,6 +35,7 @@ interface InvoiceData {
     buildingName?: string;
     unitNo?: string;
     floorNo?: string;
+    couponValue: string;
   };
   pickupInfo?: {
     centerName: string;
@@ -132,6 +133,7 @@ export class FinalinvoiceService {
           buildingName: invoiceDetails.buildingName || '',
           unitNo: invoiceDetails.unitNo || '',
           floorNo: invoiceDetails.floorNo || '',
+          couponValue: billingDetails.couponValue || '0.00',
         },
         pickupInfo: response.data?.pickupCenter
           ? {
@@ -669,6 +671,12 @@ export class FinalinvoiceService {
       'Discount',
       `Rs. ${formatNumberWithCommas(invoice.discount)}`,
     ]);
+
+    grandTotalBody.push([
+  'Coupon Discount',
+  `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`,
+]);
+
 
     // Calculate final grand total
     const familyPackTotal =

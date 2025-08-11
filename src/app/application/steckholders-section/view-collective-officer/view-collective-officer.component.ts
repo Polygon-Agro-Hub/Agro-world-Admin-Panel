@@ -153,13 +153,14 @@ export class ViewCollectiveOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-          this.centerId ? this.centerId : 0
+          this.centerId ? this.centerId : ''
         )
         .subscribe(
           (response) => {
             this.isLoading = false;
             this.collectionOfficers = response.items;
             this.totalItems = response.total;
+            this.hasData = response.total > 0;
           },
           (error) => {
             this.isLoading = false;

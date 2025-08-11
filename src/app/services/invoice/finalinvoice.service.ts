@@ -35,6 +35,7 @@ interface InvoiceData {
     buildingName?: string;
     unitNo?: string;
     floorNo?: string;
+    couponValue: string;
   };
   pickupInfo?: {
     centerName: string;
@@ -132,6 +133,7 @@ export class FinalinvoiceService {
           buildingName: invoiceDetails.buildingName || '',
           unitNo: invoiceDetails.unitNo || '',
           floorNo: invoiceDetails.floorNo || '',
+          couponValue: billingDetails.couponValue || '0.00',
         },
         pickupInfo: response.data?.pickupCenter
           ? {
@@ -235,7 +237,7 @@ export class FinalinvoiceService {
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 20);
+        doc.addImage(logoUrl, 'PNG', 140, 25, 40, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);
@@ -442,7 +444,7 @@ export class FinalinvoiceService {
           15,
           yPosition
         );
-        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 180, yPosition, {
+        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
         yPosition += 5;
@@ -521,13 +523,18 @@ export class FinalinvoiceService {
         0
       );
 
-      const addTitle = `Additional Items (${invoice.additionalItems.length} Items)`;
+      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+
+      const addTitle = hasFamilyPacks 
+        ? `Additional Items (${invoice.additionalItems.length} Items)`
+        : `Custom Items (${invoice.additionalItems.length} Items)`;
+
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.text(addTitle, 15, yPosition);
       doc.text(
         `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
-        180,
+        195,
         yPosition,
         { align: 'right' }
       );
@@ -646,21 +653,33 @@ export class FinalinvoiceService {
         0
       );
 
+      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+      const label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+
       grandTotalBody.push([
-        'Additional Items',
+        label,
         `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
       ]);
     }
 
     // Add delivery fee and discount
-    grandTotalBody.push([
-      'Delivery Fee',
-      `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-    ]);
+    if (invoice.deliveryMethod !== 'Pickup') {
+  grandTotalBody.push([
+    'Delivery Fee',
+    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+  ]);
+}
+
     grandTotalBody.push([
       'Discount',
       `Rs. ${formatNumberWithCommas(invoice.discount)}`,
     ]);
+
+    grandTotalBody.push([
+  'Coupon Discount',
+  `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`,
+]);
+
 
     // Calculate final grand total
     const familyPackTotal =
@@ -680,10 +699,11 @@ export class FinalinvoiceService {
       }, 0) || 0;
 
     const finalGrandTotal =
-      familyPackTotal +
-      additionalItemsTotal +
-      parseNum(invoice.deliveryFee) -
-      parseNum(invoice.discount);
+  familyPackTotal +
+  additionalItemsTotal +
+  (invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0) -
+  parseNum(invoice.discount);
+
 
     // Add final total
     grandTotalBody.push([
@@ -695,40 +715,47 @@ export class FinalinvoiceService {
     ]);
 
     // Grand Total section - updated to modify borders
-    (doc as any).autoTable({
-      startY: yPosition,
-      body: grandTotalBody,
-      margin: { left: 15, right: 15 },
-      columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'right' },
-      },
-      styles: {
-        fontSize: 9,
-        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-        lineColor: [255, 255, 255],
-        lineWidth: 0,
-      },
-      bodyStyles: {
-        lineWidth: 0,
-      },
-      didDrawCell: (data: any) => {
-        // Add border between Grand Total and Discount (second last row)
-        if (data.row.index === grandTotalBody.length - 2) {
-          doc.setDrawColor(0, 0, 0);
-          doc.setLineWidth(0.5);
-          doc.line(
-            data.cell.x,
-            data.cell.y + data.cell.height,
-            data.cell.x + data.cell.width,
-            data.cell.y + data.cell.height
-          );
-        }
-        // Remove bottom border from the last row (Grand Total)
-        // (No action needed as we're not drawing anything for the last row)
-      },
-    });
 
+    if (invoice.additionalItems && invoice.additionalItems.length > 0 && 
+    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+  grandTotalBody.splice(grandTotalBody.length - 2, 0, [
+    'Service Fee',
+    'Rs. 180.00'
+  ]);
+}
+
+
+    (doc as any).autoTable({
+  startY: yPosition,
+  body: grandTotalBody,
+  margin: { left: 15, right: 15 },
+  columnStyles: {
+    0: { cellWidth: 'auto', halign: 'left' },
+    1: { cellWidth: 'auto', halign: 'right' },
+  },
+  styles: {
+    fontSize: 9,
+    cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+    lineColor: [255, 255, 255],
+    lineWidth: 0,
+  },
+  bodyStyles: {
+    lineWidth: 0,
+  },
+  didDrawCell: (data: any) => {
+    // Add border between Grand Total and Discount (second last row)
+    if (data.row.index === grandTotalBody.length - 2) {
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(
+        data.cell.x,
+        data.cell.y + data.cell.height,
+        data.cell.x + data.cell.width,
+        data.cell.y + data.cell.height
+      );
+    }
+  },
+});
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)

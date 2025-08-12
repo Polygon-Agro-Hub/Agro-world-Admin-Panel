@@ -243,22 +243,29 @@
                 </span>
               </div> -->
 
+         
             <td class="px-4 py-3 text-center dark:text-textDark">
               <span
                 class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1"
                 [ngClass]="{
-                  'text-blue-500 bg-blue-100': item.status === 'Ordered',
-                  'text-[#308233] bg-green-100 border-[#BBFFC6]':
+                  'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
+                  'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]':
                     item.status === 'Delivered',
-                  'text-[#A8A100] bg-yellow-100 border-[#F8FFA6]':
-                    item.status === 'Assigned',
-                  'text-[#BBFFC6] bg-purple-100 border-[#308233]':
+            
+                  'text-[#BBFFC6] bg-[#BBFFC6] border-[#308233]':
                     item.status === 'Picked Up',
-                  'text-[#3B82F6] bg-orange-100 border-[#CFE1FF]':
-                    item.status === 'Processing'
+                  'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]':
+                    item.status === 'Processing',
+                  'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]':
+                    item.status === 'On the way',
+                  'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]':
+                    item.status === 'Failed', 
+                  'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]':
+                    item.status === 'Cancelled'
+                    
                 }"
               >
-                {{ item.status }}
+               {{ item.status === 'Ordered' ? 'Assigned' : item.status }}
               </span>
             </td>
 

@@ -11,7 +11,7 @@ import { CollectionOfficerService } from '../../../services/collection-officer/c
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -467,21 +467,21 @@ getFlagUrl(countryCode: string): string {
     });
   }
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
+updateProvince(event: DropdownChangeEvent): void {
+  const selectedDistrict = event.value;
+
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
+
+  if (this.itemId === null) {
+    if (selected) {
+      this.personalData.province = selected.province;
+    } else {
+      this.personalData.province = '';
     }
   }
-
+}
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;

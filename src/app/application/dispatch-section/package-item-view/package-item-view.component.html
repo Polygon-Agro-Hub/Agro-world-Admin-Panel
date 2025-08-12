@@ -29,28 +29,28 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                 <thead class="">
                     <tr>
-                        <th class=" text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                        <th class=" text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
 
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                        <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             ITEM
-                            ({{total}})</th>
+                            ({{total === 0 ? '0' : total < 10 ? '0'+ total : total}})</th>
                         <th
-                            class="px-6 py-3 text-center text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             QUANTITY
                         </th>
                         <th
-                            class="px-6 py-3 text-center text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             UNIT</th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             UNIT PRICE
                         </th>
                         <th
-                            class="px-6 py-3 text-left text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             TOTAL</th>
                         <th
-                            class="px-6 py-3 text-center text-xs font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             PACKED</th>
                     </tr>
                 </thead>
@@ -65,11 +65,11 @@
                             </div>
 
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
+                        <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-white text-left">
                             {{ item.displayName || 'N/A' }}
                         </td>
 
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300 ">
+                        <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
                             {{ item.quantity != null ? item.quantity : '0' }}
                         </td>
 
@@ -80,15 +80,15 @@
               Rs. {{ item.discountedPrice != null ? item.discountedPrice : '0.00' }}
             </td> -->
 
-                        <td class="px-6 text-left py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300">
+                        <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
                             Rs. {{ item.discountedPrice != null ? item.discountedPrice : '0.00' }}
                         </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300 text-left ">
+                        <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
                             Rs. {{ item.price != null ? item.price : '0.00' }}
                         </td>
 
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 ">
+                        <td class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 ">
                             <input type="checkbox" [checked]="item.packedStatus === 1"
                                 (change)="onCheckboxChange(item, $event)"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">

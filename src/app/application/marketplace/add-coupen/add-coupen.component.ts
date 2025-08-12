@@ -105,17 +105,22 @@ onCancel() {
   }
 
   onSubmit() {
-  // Reset messages
   this.clearValidationMessages();
 
-  // Check required fields for all types
-  if (
-    !this.coupenObj.code ||
-    !this.coupenObj.endDate ||
-    !this.coupenObj.startDate ||
-    !this.coupenObj.type
-  ) {
-    Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
+  // Collect missing required fields
+  const missingFields = [];
+
+  if (!this.coupenObj.code) missingFields.push('Code');
+  if (!this.coupenObj.startDate) missingFields.push('Start Date');
+  if (!this.coupenObj.endDate) missingFields.push('End Date');
+  if (!this.coupenObj.type) missingFields.push('Type');
+
+  if (missingFields.length > 0) {
+    Swal.fire(
+      'Warning',
+      `Please fill in the following required field(s): ${missingFields.join(', ')}`,
+      'warning'
+    );
     return;
   }
 
@@ -140,7 +145,7 @@ onCancel() {
     return;
   }
 
-  // If all validations pass, save the coupon
+  // Save the coupon
   this.marketSrv.createCoupen(this.coupenObj).subscribe({
     next: (res) => {
       if (res.status) {
@@ -157,9 +162,8 @@ onCancel() {
     },
     error: (err) => {
       if (err.error && err.error.error === 'Coupon with this code already exists') {
-        // Show validation message under the code input
-        this.checkPrecentageValueMessage = ''; // Clear other messages
-        this.checkfixAmountValueMessage = ''; // Clear other messages
+        this.checkPrecentageValueMessage = '';
+        this.checkfixAmountValueMessage = '';
         Swal.fire('Error', 'Coupon with this code already exists', 'error');
       } else {
         Swal.fire('Error', err.error?.error || 'Coupon with this code already exists', 'error');
@@ -167,6 +171,29 @@ onCancel() {
     }
   });
 }
+
+validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Regex to match numbers with up to 2 decimal places
+  const regex = /^\d+(\.\d{0,2})?$/;
+
+  if (value === '') {
+    this.coupenObj[field] = null!;
+    return;
+  }
+
+  if (!regex.test(value)) {
+    while (value.length > 0 && !regex.test(value)) {
+      value = value.slice(0, -1);
+    }
+    input.value = value;
+  }
+
+  this.coupenObj[field] = value ? parseFloat(value) : null!;
+}
+
 
   checkPrecentageValue(num: number) {
     if (num === null || isNaN(num)) {
@@ -201,7 +228,7 @@ onCancel() {
 
   preventNegative(e: KeyboardEvent) {
     // Prevent minus key, comma, and period (for negative numbers in some locales)
-    if (e.key === '-' || e.key === ',' || e.key === '.') {
+    if (e.key === '-' || e.key === ',' ) {
       e.preventDefault();
     }
 

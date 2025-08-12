@@ -81,6 +81,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   showExcludedItemsModal = false;
   isNewAddPopUp: boolean = false
   excludedItemsCount!: number;
+  additionalItemsCount!: number;
 
 
   totalDefinePkgPrice: number = 0.00;
@@ -182,6 +183,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.excludeItemsArr = response.excludeList;
         this.excludedItemsCount = response.excludeList.length;
         this.categories = response.category;
+        this.additionalItemsCount = response.additionalItems.length || 0;
 
 
         console.log('orderdetailsArr', this.orderdetailsArr);

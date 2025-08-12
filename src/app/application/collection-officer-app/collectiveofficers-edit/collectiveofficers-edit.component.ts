@@ -1,13 +1,13 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -45,6 +45,8 @@ interface PhoneCode {
   styleUrl: './collectiveofficers-edit.component.css',
 })
 export class CollectiveofficersEditComponent {
+userForm: FormGroup = new FormGroup({});
+
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
@@ -81,37 +83,49 @@ export class CollectiveofficersEditComponent {
   managerOptions: any[] = [];
   bankOptions: any[] = [];
   branchOptions: any[] = [];
-
+  districtOptions: any[] = [];
   invalidFields: Set<string> = new Set();
 
-  districts = [
-    { name: 'Ampara', province: 'Eastern' },
-    { name: 'Anuradhapura', province: 'North Central' },
-    { name: 'Badulla', province: 'Uva' },
-    { name: 'Batticaloa', province: 'Eastern' },
-    { name: 'Colombo', province: 'Western' },
-    { name: 'Galle', province: 'Southern' },
-    { name: 'Gampaha', province: 'Western' },
-    { name: 'Hambantota', province: 'Southern' },
-    { name: 'Jaffna', province: 'Northern' },
-    { name: 'Kalutara', province: 'Western' },
-    { name: 'Kandy', province: 'Central' },
-    { name: 'Kegalle', province: 'Sabaragamuwa' },
-    { name: 'Kilinochchi', province: 'Northern' },
-    { name: 'Kurunegala', province: 'North Western' },
-    { name: 'Mannar', province: 'Northern' },
-    { name: 'Matale', province: 'Central' },
-    { name: 'Matara', province: 'Southern' },
-    { name: 'Monaragala', province: 'Uva' },
-    { name: 'Mullaitivu', province: 'Northern' },
-    { name: 'Nuwara Eliya', province: 'Central' },
-    { name: 'Polonnaruwa', province: 'North Central' },
-    { name: 'Puttalam', province: 'North Western' },
-    { name: 'Rathnapura', province: 'Sabaragamuwa' },
-    { name: 'Trincomalee', province: 'Eastern' },
-    { name: 'Vavuniya', province: 'Northern' },
-  ];
+// Remove the redundant `district` array
+// Keep only the `districts` array
+districts = [
+  { name: 'Ampara', province: 'Eastern' },
+  { name: 'Anuradhapura', province: 'North Central' },
+  { name: 'Badulla', province: 'Uva' },
+  { name: 'Batticaloa', province: 'Eastern' },
+  { name: 'Colombo', province: 'Western' },
+  { name: 'Galle', province: 'Southern' },
+  { name: 'Gampaha', province: 'Western' },
+  { name: 'Hambantota', province: 'Southern' },
+  { name: 'Jaffna', province: 'Northern' },
+  { name: 'Kalutara', province: 'Western' },
+  { name: 'Kandy', province: 'Central' },
+  { name: 'Kegalle', province: 'Sabaragamuwa' },
+  { name: 'Kilinochchi', province: 'Northern' },
+  { name: 'Kurunegala', province: 'North Western' },
+  { name: 'Mannar', province: 'Northern' },
+  { name: 'Matale', province: 'Central' },
+  { name: 'Matara', province: 'Southern' },
+  { name: 'Monaragala', province: 'Uva' },
+  { name: 'Mullaitivu', province: 'Northern' },
+  { name: 'Nuwara Eliya', province: 'Central' },
+  { name: 'Polonnaruwa', province: 'North Central' },
+  { name: 'Puttalam', province: 'North Western' },
+  { name: 'Rathnapura', province: 'Sabaragamuwa' },
+  { name: 'Trincomalee', province: 'Eastern' },
+  { name: 'Vavuniya', province: 'Northern' },
+];
 
+// Update the setupDropdownOptions method to use `districts`
+setupDropdownOptions() {
+  this.districts = this.districts.sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+  this.districtOptions = this.districts.map(district => ({
+    label: district.name,
+    value: district.name
+  }));
+}
   countries: PhoneCode[] = [
     { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
     { code: 'VN', dialCode: '+84', name: 'Vietnam' },
@@ -121,8 +135,12 @@ export class CollectiveofficersEditComponent {
     { code: 'NL', dialCode: '+31', name: 'Netherlands' }
   ];
 
+  
+
 
   isLanguageRequired = false;
+
+  
 
   constructor(
     private fb: FormBuilder,
@@ -134,72 +152,79 @@ export class CollectiveofficersEditComponent {
   ) { }
 
   ngOnInit() {
-    this.loadBanks();
-    this.loadBranches();
-    this.itemId = this.route.snapshot.params['id'];
+  this.loadBanks();
+  this.loadBranches();
+  this.setupDropdownOptions(); // Ensure district dropdown is set up
+  this.itemId = this.route.snapshot.params['id'];
 
-    if (this.itemId) {
-      this.isLoading = true;
-      this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
-        next: (response: any) => {
-          const officerData = response.officerData[0];
+  if (this.itemId) {
+    this.isLoading = true;
+    this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
+      next: (response: any) => {
+        console.log('Officer Data Response:', response); // Debug API response
+        const officerData = response.officerData[0];
 
-          this.personalData.empId = officerData.empId;
-          this.personalData.jobRole = officerData.jobRole || '';
-          this.personalData.firstNameEnglish =
-            officerData.firstNameEnglish || '';
-          this.personalData.firstNameSinhala =
-            officerData.firstNameSinhala || '';
-          this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-          this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-          this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-          this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-          this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-          this.personalData.contact1 = officerData.phoneNumber01 || '';
-          this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-          this.personalData.contact2 = officerData.phoneNumber02 || '';
-          this.personalData.nic = officerData.nic || '';
-          this.personalData.email = officerData.email || '';
-          this.personalData.houseNumber = officerData.houseNumber || '';
-          this.personalData.streetName = officerData.streetName || '';
-          this.personalData.city = officerData.city || '';
-          this.personalData.district = officerData.district || '';
-          this.personalData.province = officerData.province || '';
-          this.personalData.languages = officerData.languages || '';
-          this.personalData.companyId = officerData.companyId || '';
-          this.personalData.centerId = officerData.centerId || '';
-          this.personalData.bankName = officerData.bankName || '';
-          this.personalData.branchName = officerData.branchName || '';
-          this.personalData.accHolderName = officerData.accHolderName || '';
-          this.personalData.accNumber = officerData.accNumber || '';
-          this.personalData.confirmAccNumber = officerData.accNumber || '';
-          this.personalData.empType = officerData.empType || '';
-          this.personalData.irmId = officerData.irmId || '';
-          this.personalData.image = officerData.image || '';
+        // Populate personalData with API response or fallback to defaults
+        this.personalData.empId = officerData.empId || '';
+        this.personalData.jobRole = officerData.jobRole || '';
+        this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
+        this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
+        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+        this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+        this.personalData.contact1 = officerData.phoneNumber01 || '';
+        this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+        this.personalData.contact2 = officerData.phoneNumber02 || '';
+        this.personalData.nic = officerData.nic || '';
+        this.personalData.email = officerData.email || '';
+        this.personalData.houseNumber = officerData.houseNumber || '';
+        this.personalData.streetName = officerData.streetName || '';
+        this.personalData.city = officerData.city || '';
+        this.personalData.district = officerData.district || '';
+        this.personalData.province = officerData.province || '';
+        this.personalData.languages = officerData.languages || '';
+        this.personalData.companyId = officerData.companyId || '';
+        this.personalData.centerId = officerData.centerId || '';
+        this.personalData.bankName = officerData.bankName || '';
+        this.personalData.branchName = officerData.branchName || '';
+        this.personalData.accHolderName = officerData.accHolderName || '';
+        this.personalData.accNumber = officerData.accNumber || '';
+        this.personalData.confirmAccNumber = officerData.accNumber || '';
+        this.personalData.empType = officerData.empType || '';
+        this.personalData.irmId = officerData.irmId || '';
+        this.personalData.image = officerData.image || '';
 
-          this.selectedLanguages = this.personalData.languages.split(',');
-          this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-5);
-          this.cenId = this.personalData.centerId;
-          this.comId = this.personalData.companyId;
-          this.initiateJobRole = officerData.jobRole || '';
-          this.initiateId = officerData.empId.slice(-5);
+        this.selectedLanguages = this.personalData.languages
+          ? this.personalData.languages.split(',')
+          : [];
+        this.empType = this.personalData.empType;
+        this.lastID = this.personalData.empId.slice(-5);
+        this.cenId = this.personalData.centerId;
+        this.comId = this.personalData.companyId;
+        this.initiateJobRole = officerData.jobRole || '';
+        this.initiateId = officerData.empId.slice(-5);
 
-          this.matchExistingBankToDropdown();
-          this.getAllCollectionManagers();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.isLoading = false;
-        },
-      });
-    }
-
-    this.getAllCollectionCetnter();
-    this.getAllCompanies();
-    this.EpmloyeIdCreate();
+        console.log('Assigned Contact1Code:', this.personalData.contact1Code); // Debug
+        console.log('Assigned Contact1:', this.personalData.contact1); // Debug
+        console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
+        console.log('Assigned Contact2:', this.personalData.contact2); // Debug
+        this.matchExistingBankToDropdown();
+        this.getAllCollectionManagers();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching officer data:', error);
+        this.isLoading = false;
+      },
+    });
   }
 
+  this.getAllCollectionCetnter();
+  this.getAllCompanies();
+  this.EpmloyeIdCreate();
+}
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
@@ -232,30 +257,29 @@ export class CollectiveofficersEditComponent {
   }
 
   // Update the onBankChange method
-  onBankChange() {
-    const selectedBankName = this.personalData.bankName;
-    if (selectedBankName) {
-      const selectedBank = this.banks.find(
-        (bank) => bank.name === selectedBankName
-      );
-      if (selectedBank) {
-        this.selectedBankId = selectedBank.ID;
-        this.branches = this.allBranches[selectedBank.ID.toString()] || [];
-
-        // Convert to dropdown options format
-        this.branchOptions = this.branches.map(branch => ({
-          label: branch.name,
-          value: branch.name
-        }));
-
-        this.personalData.branchName = '';
-      }
-    } else {
-      this.branches = [];
-      this.branchOptions = [];
-      this.selectedBankId = null;
+onBankChange() {
+  const selectedBankName = this.personalData.bankName;
+  console.log('Selected Bank Name:', selectedBankName); // Debug
+  if (selectedBankName) {
+    const selectedBank = this.banks.find((bank) => bank.name === selectedBankName);
+    console.log('Selected Bank:', selectedBank); // Debug
+    if (selectedBank) {
+      this.selectedBankId = selectedBank.ID;
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      console.log('Branches for Bank:', this.branches); // Debug
+      this.branchOptions = this.branches.map(branch => ({
+        label: branch.name,
+        value: branch.name
+      }));
+      this.personalData.branchName = ''; // Reset branch
     }
+  } else {
+    this.branches = [];
+    this.branchOptions = [];
+    this.selectedBankId = null;
+    this.personalData.branchName = '';
   }
+}
 
   loadBranches() {
     this.http
@@ -268,47 +292,50 @@ export class CollectiveofficersEditComponent {
       });
   }
 
-  matchExistingBankToDropdown() {
-    if (
-      this.banks.length > 0 &&
-      Object.keys(this.allBranches).length > 0 &&
-      this.personalData &&
-      this.personalData.bankName
-    ) {
-      const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
-      );
-
-      if (matchedBank) {
-        this.selectedBankId = matchedBank.ID;
-        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-
-        if (this.personalData.branchName) {
-          const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
-          );
-          if (matchedBranch) {
-            this.selectedBranchId = matchedBranch.ID;
-          }
+ matchExistingBankToDropdown() {
+  if (
+    this.banks.length > 0 &&
+    Object.keys(this.allBranches).length > 0 &&
+    this.personalData &&
+    this.personalData.bankName
+  ) {
+    const matchedBank = this.banks.find(
+      (bank) => bank.name === this.personalData.bankName
+    );
+    console.log('Matched Bank:', matchedBank); // Debug
+    if (matchedBank) {
+      this.selectedBankId = matchedBank.ID;
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      this.branchOptions = this.branches.map(branch => ({
+        label: branch.name,
+        value: branch.name
+      }));
+      console.log('Branch Options:', this.branchOptions); // Debug
+      if (this.personalData.branchName) {
+        const matchedBranch = this.branches.find(
+          (branch) => branch.name === this.personalData.branchName
+        );
+        if (matchedBranch) {
+          this.selectedBranchId = matchedBranch.ID;
+          this.personalData.branchName = matchedBranch.name;
         }
       }
     }
   }
-
-
-  onBranchChange() {
-    if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
+}
+onBranchChange(event: DropdownChangeEvent): void {
+    const selectedBranchName = event.value;
+    if (selectedBranchName) {
+      const selectedBranch = this.branches.find((branch) => branch.name === selectedBranchName);
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
+        this.selectedBranchId = selectedBranch.ID;
       }
     } else {
       this.personalData.branchName = '';
+      this.selectedBranchId = null;
     }
   }
-
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
 
@@ -518,6 +545,8 @@ export class CollectiveofficersEditComponent {
     // Check if contains non-Sinhala characters
     return /[^\u0D80-\u0DFF\s]/.test(value);
   }
+
+
 
   hasInvalidTamilCharacters(fieldName: 'firstNameTamil' | 'lastNameTamil'): boolean {
     const value = this.personalData[fieldName];
@@ -780,26 +809,25 @@ export class CollectiveofficersEditComponent {
     this.selectedPage = page;
   }
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
+updateProvince(event: DropdownChangeEvent): void {
+  const selectedDistrict = event.value;  // Get selected district name directly
 
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
 
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
+  if (this.itemId === null) {
+    if (selected) {
+      this.personalData.province = selected.province;
     } else {
-      if (selected) {
-        this.personalData.province = selected.province;
-      }
+      this.personalData.province = '';
+    }
+  } else {
+    if (selected) {
+      this.personalData.province = selected.province;
     }
   }
+}
 
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
@@ -861,39 +889,58 @@ export class CollectiveofficersEditComponent {
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
-  onSubmit() {
-    if (!this.checkSubmitValidity()) {
-      this.isLoading = false;
-      return;
-    }
+onSubmit() {
+  // Log personalData to verify phone numbers
+  console.log('personalData before submit:', {
+    contact1: this.personalData.contact1,
+    contact1Code: this.personalData.contact1Code,
+    contact2: this.personalData.contact2,
+    contact2Code: this.personalData.contact2Code
+  });
 
-    this.isLoading = true;
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to update the collection officer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Save it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.collectionOfficerService
-          .editCollectiveOfficer(
-            this.personalData,
-            this.itemId,
-            this.selectedImage
-          )
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              Swal.fire(
-                'Success',
-                'Collection Officer Updated Successfully',
-                'success'
-              );
-              this.navigatePath('/steckholders/action/collective-officer');
-            },
+  if (!this.checkSubmitValidity()) {
+    this.isLoading = false;
+    return;
+  }
+
+  this.isLoading = true;
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to update the collection officer?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Save it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Map phone number fields to backend expected names
+      const payload = {
+        ...this.personalData,
+        phoneNumber01: this.personalData.contact1 || '',
+        phoneCode01: this.personalData.contact1Code || '+94',
+        phoneNumber02: this.personalData.contact2 || '', // Handle optional contact2
+        phoneCode02: this.personalData.contact2Code || this.personalData.contact1Code || '+94' // Fallback to contact1Code
+      };
+      console.log('Payload sent to backend:', {
+        phoneNumber01: payload.phoneNumber01,
+        phoneCode01: payload.phoneCode01,
+        phoneNumber02: payload.phoneNumber02,
+        phoneCode02: payload.phoneCode02
+      });
+
+      this.collectionOfficerService
+        .editCollectiveOfficer(payload, this.itemId, this.selectedImage)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            Swal.fire(
+              'Success',
+              'Collection Officer Updated Successfully',
+              'success'
+            );
+            this.navigatePath('/steckholders/action/collective-officer');
+          },
             (error: any) => {
               this.isLoading = false;
               let errorMessage = 'An unexpected error occurred';
@@ -989,3 +1036,4 @@ class Company {
   id!: number;
   companyNameEnglish!: string;
 }
+

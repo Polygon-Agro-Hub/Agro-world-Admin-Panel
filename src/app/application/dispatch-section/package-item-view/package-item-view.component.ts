@@ -32,7 +32,7 @@ export class PackageItemViewComponent implements OnInit {
 
   id!: number | null;
   invNo!: string | null;
-  total!: number;
+  total: number = 0;
   name!: string;
   fullTotal!: number;
   packageItemsArr: packageItems[] = [];

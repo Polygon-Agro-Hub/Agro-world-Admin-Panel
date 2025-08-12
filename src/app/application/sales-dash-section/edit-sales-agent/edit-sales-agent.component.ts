@@ -587,31 +587,43 @@ if (!this.isFormValid()) {
 }
 
   validateNameInput(event: KeyboardEvent): void {
-    // Allow navigation and control keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-      ' ',
-      'Spacebar',
-    ];
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End'
+  ];
 
-    // Allow these special keys
-    if (allowedKeys.includes(event.key)) {
+  // Allow these special keys
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Block leading spaces for name fields
+  const target = event.target as HTMLInputElement;
+  const fieldName = target.getAttribute('name') as keyof Personal;
+  
+  if (['firstName', 'lastName'].includes(fieldName)) {
+    const currentValue = this.personalData[fieldName] as string || '';
+    
+    // Block space if field is empty or cursor is at beginning
+    if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+      event.preventDefault();
       return;
     }
-
-    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
-    const allowedPattern = /^[a-zA-Z\s'-]$/;
-
-    if (!allowedPattern.test(event.key)) {
-      event.preventDefault();
-    }
   }
+
+  // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+  const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+  if (!allowedPattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
 capitalizeFirstLetter(field: 'firstName' | 'lastName') {
   let value = this.personalData[field];
 
@@ -826,6 +838,58 @@ handleNamePaste(event: ClipboardEvent): void {
   setTimeout(() => {
     target.setSelectionRange(newCursorPos, newCursorPos);
   });
+}
+
+preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
+  const target = event.target as HTMLInputElement;
+  const currentValue = this.personalData[fieldName] as string || '';
+  
+  // Block space if field is empty or contains only spaces
+  if (event.key === ' ' && (!currentValue || currentValue.trim().length === 0)) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Block space if cursor is at the beginning and current value starts with spaces
+  if (event.key === ' ' && target.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+}
+
+cleanFieldInput(fieldName: keyof Personal): void {
+  if (this.personalData[fieldName]) {
+    // Remove leading spaces while preserving the rest of the content
+    let value = this.personalData[fieldName] as string;
+    value = value.replace(/^\s+/, ''); // Remove only leading spaces
+    (this.personalData[fieldName] as string) = value;
+  }
+}
+
+validateAddressInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End'
+  ];
+
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Block leading spaces
+  const target = event.target as HTMLInputElement;
+  const currentValue = target.value || '';
+  
+  if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+    event.preventDefault();
+    return;
+  }
 }
 
 }

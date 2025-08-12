@@ -76,9 +76,11 @@
           <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name <span
               class="text-[#2E2E2E]">*</span></label>
           <input id="firstName" [(ngModel)]="personalData.firstName" name="firstName"
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameInput="ngModel" (keydown)="validateNameInput($event)" (input)="capitalizeFirstLetter('firstName')"
-            required />
+    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #firstNameInput="ngModel" 
+    (keydown)="validateNameInput($event)" 
+    (input)="capitalizeFirstLetter('firstName'); cleanFieldInput('firstName')"
+    required />
           <div *ngIf="firstNameInput.touched && !personalData.firstName" class="text-red-500 text-sm mt-1">
             <div>First Name is required</div>
           </div>
@@ -88,9 +90,11 @@
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name <span
               class="text-[#2E2E2E]">*</span></label>
           <input id="lastName" name="lastName" [(ngModel)]="personalData.lastName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameInput="ngModel" (keydown)="validateNameInput($event)" (input)="capitalizeFirstLetter('lastName')"
-            required />
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #lastNameInput="ngModel" 
+    (keydown)="validateNameInput($event)" 
+    (input)="capitalizeFirstLetter('lastName'); cleanFieldInput('lastName')"
+    required />
           <div *ngIf="lastNameInput.touched && !personalData.lastName" class="text-red-500 text-sm mt-1">
             <div>Last Name is required</div>
           </div>
@@ -248,8 +252,11 @@
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot Number
             <span class="text-[#2E2E2E]">*</span></label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #houseNumberInput="ngModel" required />
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #houseNumberInput="ngModel" 
+    (keydown)="validateAddressInput($event)"
+    (input)="cleanFieldInput('houseNumber')"
+    required />
           <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
             <div>House number is required</div>
           </div>
@@ -259,8 +266,11 @@
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name <span
               class="text-[#2E2E2E]">*</span></label>
           <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #streetNameInput="ngModel" required />
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #streetNameInput="ngModel" 
+    (keydown)="validateAddressInput($event)"
+    (input)="cleanFieldInput('streetName')"
+    required />
           <div *ngIf="streetNameInput.touched && !personalData.streetName" class="text-red-500 text-sm mt-1">
             <div>Street Name is required</div>
           </div>
@@ -270,8 +280,11 @@
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City <span
               class="text-[#2E2E2E]">*</span></label>
           <input id="city" name="city" [(ngModel)]="personalData.city"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #cityInput="ngModel" required />
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #cityInput="ngModel" 
+    (keydown)="validateAddressInput($event)"
+    (input)="cleanFieldInput('city')"
+    required />
           <div *ngIf="cityInput.touched && !personalData.city" class="text-red-500 text-sm mt-1">
             <div>City is required</div>
           </div>

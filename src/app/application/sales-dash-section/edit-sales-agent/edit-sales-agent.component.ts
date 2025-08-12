@@ -478,6 +478,11 @@ throw new Error('Method not implemented.');
     const accountPattern = /^[a-zA-Z0-9]+$/;
 
     // Check if employee type is selected
+if (!this.isFormValid()) {
+    Swal.fire('Error', 'Please fill all required fields correctly', 'error');
+    return;
+  }
+
     if (!this.empType) {
       Swal.fire('Error', 'Staff Employee Type is a required field', 'error');
       return;
@@ -691,6 +696,63 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName') {
     const namePattern = /^[A-Za-z\s'-]+$/;
     return namePattern.test(name);
   }
+
+  isFormValid(): boolean {
+  // Check all required fields
+  if (!this.empType ||
+      !this.personalData.firstName ||
+      !this.personalData.lastName ||
+      !this.personalData.phoneNumber1 ||
+      !this.personalData.nic ||
+      !this.personalData.email ||
+      !this.personalData.houseNumber ||
+      !this.personalData.streetName ||
+      !this.personalData.city ||
+      !this.personalData.district ||
+      !this.personalData.accHolderName ||
+      !this.personalData.accNumber ||
+      !this.personalData.bankName ||
+      !this.personalData.branchName ||
+      !this.confirmAccNumber) {
+    return false;
+  }
+
+  // Check field-specific validations
+  if (!this.isValidEmail(this.personalData.email) ||
+      !this.validateNIC() ||
+      this.confirmAccountNumberError ||
+      this.confirmAccountNumberRequired ||
+      this.nicError) {
+    return false;
+  }
+
+  // Check phone number patterns
+  const phonePattern = /^[0-9]{9}$/;
+  if (!phonePattern.test(this.personalData.phoneNumber1) ||
+      (this.personalData.phoneNumber2 && !phonePattern.test(this.personalData.phoneNumber2))) {
+    return false;
+  }
+
+  // Check account number pattern
+  const accountPattern = /^[0-9]+$/;
+  if (!accountPattern.test(this.personalData.accNumber) ||
+      !accountPattern.test(this.confirmAccNumber)) {
+    return false;
+  }
+
+  // Check if account numbers match
+  if (this.personalData.accNumber !== this.confirmAccNumber) {
+    return false;
+  }
+
+  // Check if phone numbers are different if both provided
+  if (this.personalData.phoneNumber2 && 
+      this.personalData.phoneNumber2 === this.personalData.phoneNumber1) {
+    return false;
+  }
+
+  return true;
+}
 }
 
 class Personal {

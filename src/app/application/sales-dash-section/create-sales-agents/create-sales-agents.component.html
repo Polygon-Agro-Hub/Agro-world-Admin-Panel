@@ -368,7 +368,9 @@ class="text-textLight dark:text-textDark">
     Name <span class="text-[#2E2E2E]">*</span></label>
   <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
     (blur)="onBlur('accHolderName'); capitalizeName('accHolderName')"
-    (keydown)="validateNameInput($event, 'accHolderName')" (input)="capitalizeName('accHolderName')"
+    (keydown)="validateNameInput($event, 'accHolderName')" 
+    (paste)="onPaste($event, 'accHolderName')"
+    (input)="capitalizeName('accHolderName')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
   <span *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">Account Holder's Name is
     required.</span>
@@ -377,7 +379,7 @@ class="text-textLight dark:text-textDark">
       personalData.accHolderName &&
       !isValidName(personalData.accHolderName)
     " class="text-red-600 text-sm">
-    Please enter a valid name (only letters, spaces, hyphens, and apostrophes allowed)
+    Please enter a valid name (only English letters, spaces, hyphens, and apostrophes allowed)
   </span>
 </div>
 

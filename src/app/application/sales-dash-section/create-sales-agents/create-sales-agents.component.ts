@@ -607,7 +607,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     return;
   }
 
-  // For account holder name, only allow letters, spaces, hyphens, and apostrophes
+  // For account holder name, only allow English letters, spaces, hyphens, and apostrophes
   if (fieldName === 'accHolderName') {
     const allowedPattern = /^[a-zA-Z\s'-]$/;
     if (!allowedPattern.test(event.key)) {
@@ -704,7 +704,7 @@ export class CreateSalesAgentsComponent implements OnInit {
 }
 
   isValidName(name: string): boolean {
-  // Allows only letters, spaces, hyphens, and apostrophes
+  // Allows only English letters, spaces, hyphens, and apostrophes
   const namePattern = /^[A-Za-z\s'-]+$/;
   return namePattern.test(name) && !/\d/.test(name); // Also check for numbers
 }
@@ -871,6 +871,21 @@ export class CreateSalesAgentsComponent implements OnInit {
       return;
     }
   }
+
+  onPaste(event: ClipboardEvent, fieldName: keyof Personal): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData || (window as any).clipboardData;
+  const pastedText = clipboardData.getData('text');
+  
+  // Clean the pasted text - remove any non-allowed characters
+  const cleanedText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
+  
+  // Update the model with cleaned text
+  this.personalData[fieldName] = cleanedText;
+  
+  // Trigger the capitalize function
+  this.capitalizeName(fieldName);
+}
 }
 
 class Personal {

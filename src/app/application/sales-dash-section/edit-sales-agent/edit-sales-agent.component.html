@@ -316,9 +316,11 @@
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
           Name <span class="text-[#2E2E2E]">*</span></label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          (keydown)="validateNameInput($event)" (input)="capitalizeName('accHolderName')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #accHolderNameInput="ngModel" required />
+  (keydown)="validateEnglishNameInput($event)" 
+  (input)="formatEnglishName('accHolderName')"
+  (paste)="handleNamePaste($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  #accHolderNameInput="ngModel" required />
         <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">
           <div>Account Holder's name is required</div>
         </div>

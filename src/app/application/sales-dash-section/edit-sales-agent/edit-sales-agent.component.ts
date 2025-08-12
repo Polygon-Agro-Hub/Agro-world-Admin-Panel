@@ -761,6 +761,73 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName') {
 
   return true;
 }
+
+validateEnglishNameInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
+    'Tab', 'Home', 'End', ' ', 'Spacebar'
+  ];
+
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Allow only English letters, space, hyphen, apostrophe
+  const englishNamePattern = /^[a-zA-Z\s'-]$/;
+  
+  if (!englishNamePattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
+
+formatEnglishName(fieldName: keyof Personal): void {
+  if (this.personalData[fieldName]) {
+    // Remove any non-English characters that might have been pasted
+    let value = (this.personalData[fieldName] as string)
+      .replace(/[^a-zA-Z\s'-]/g, '') // Remove non-English characters
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+
+    // Capitalize first letter of each word
+    value = value.replace(/(^|\s|-|')[a-z]/g, (char) => char.toUpperCase());
+
+    (this.personalData[fieldName] as string) = value;
+  }
+}
+
+isValidEnglishName(name: string): boolean {
+  // Allows only English letters, spaces, hyphens, and apostrophes
+  const englishNamePattern = /^[a-zA-Z\s'-]+$/;
+  return englishNamePattern.test(name);
+}
+
+handleNamePaste(event: ClipboardEvent): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData || (window as any).clipboardData;
+  const pastedText = clipboardData.getData('text');
+  
+  // Filter out non-English characters
+  const cleanText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
+  
+  // Insert the cleaned text at cursor position
+  const target = event.target as HTMLInputElement;
+  const startPos = target.selectionStart || 0;
+  const endPos = target.selectionEnd || 0;
+  
+  const currentValue = target.value;
+  target.value = currentValue.substring(0, startPos) + cleanText + currentValue.substring(endPos);
+  
+  // Update ngModel
+  this.personalData.accHolderName = target.value;
+  
+  // Move cursor to end of inserted text
+  const newCursorPos = startPos + cleanText.length;
+  setTimeout(() => {
+    target.setSelectionRange(newCursorPos, newCursorPos);
+  });
+}
+
 }
 
 class Personal {

@@ -436,8 +436,10 @@ export class CreateSalesAgentsComponent implements OnInit {
     // Name validations
     const isFirstNameValid = !!firstName && englishNamePattern.test(firstName);
     const isLastNameValid = !!lastName && englishNamePattern.test(lastName);
-    const isAccHolderNameValid =
-      !!accHolderName && namePattern.test(accHolderName);
+    const isAccHolderNameValid = 
+    !!this.personalData.accHolderName && 
+    this.isValidName(this.personalData.accHolderName) &&
+    !/\d/.test(this.personalData.accHolderName); // Ensure no numbers
 
     // Contact validations
     const isPhoneNumber1Valid =
@@ -577,41 +579,49 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   validateNameInput(event: KeyboardEvent, fieldName?: string): void {
-    // Allow navigation and control keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-      'Spacebar',
-    ];
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End',
+    'Spacebar',
+  ];
 
-    // Allow these special keys
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
+  // Allow these special keys
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
 
-    // Get the current input value (if fieldName is provided)
-    const currentValue = fieldName
-      ? (this.personalData[fieldName as keyof Personal] as string) || ''
-      : '';
+  // Get the current input value (if fieldName is provided)
+  const currentValue = fieldName
+    ? (this.personalData[fieldName as keyof Personal] as string) || ''
+    : '';
 
-    // Block space if it's the first character
-    if (event.key === ' ' && currentValue.length === 0) {
-      event.preventDefault();
-      return;
-    }
+  // Block space if it's the first character
+  if (event.key === ' ' && currentValue.length === 0) {
+    event.preventDefault();
+    return;
+  }
 
-    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+  // For account holder name, only allow letters, spaces, hyphens, and apostrophes
+  if (fieldName === 'accHolderName') {
     const allowedPattern = /^[a-zA-Z\s'-]$/;
-
+    if (!allowedPattern.test(event.key)) {
+      event.preventDefault();
+    }
+  } 
+  // For other name fields (first name, last name)
+  else {
+    const allowedPattern = /^[a-zA-Z\s'-]$/;
     if (!allowedPattern.test(event.key)) {
       event.preventDefault();
     }
   }
+}
 
   capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
     if (this.personalData[fieldName]) {
@@ -664,37 +674,40 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   capitalizeName(fieldName: keyof Personal): void {
-    if (!this.personalData[fieldName]) return;
+  if (!this.personalData[fieldName]) return;
 
-    // Convert to lowercase first
-    let name = this.personalData[fieldName].toLowerCase();
-    let result = '';
-    let capitalizeNext = true;
+  // Convert to lowercase first
+  let name = this.personalData[fieldName].toLowerCase();
+  let result = '';
+  let capitalizeNext = true;
 
-    for (let i = 0; i < name.length; i++) {
-      const char = name[i];
+  for (let i = 0; i < name.length; i++) {
+    const char = name[i];
 
-      if (capitalizeNext && /[a-z]/.test(char)) {
-        result += char.toUpperCase();
-        capitalizeNext = false;
-      } else {
-        result += char;
-      }
+    // Skip any numbers or special characters that might have slipped through
+    if (!/[a-zA-Z\s'-]/.test(char)) continue;
 
-      // Set flag to capitalize next letter if current character is a separator
-      if ([' ', '-', "'"].includes(char)) {
-        capitalizeNext = true;
-      }
+    if (capitalizeNext && /[a-z]/.test(char)) {
+      result += char.toUpperCase();
+      capitalizeNext = false;
+    } else {
+      result += char;
     }
 
-    this.personalData[fieldName] = result;
+    // Set flag to capitalize next letter if current character is a separator
+    if ([' ', '-', "'"].includes(char)) {
+      capitalizeNext = true;
+    }
   }
 
+  this.personalData[fieldName] = result;
+}
+
   isValidName(name: string): boolean {
-    // Allows letters, spaces, hyphens, and apostrophes
-    const namePattern = /^[A-Za-z\s'-]+$/;
-    return namePattern.test(name);
-  }
+  // Allows only letters, spaces, hyphens, and apostrophes
+  const namePattern = /^[A-Za-z\s'-]+$/;
+  return namePattern.test(name) && !/\d/.test(name); // Also check for numbers
+}
 
   allowOnlyAlphanumeric(event: KeyboardEvent): void {
     // Allow navigation keys

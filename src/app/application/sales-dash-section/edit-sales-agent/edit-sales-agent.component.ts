@@ -439,24 +439,28 @@ throw new Error('Method not implemented.');
   }
 
   validateNIC(): boolean {
-    const nic = this.personalData.nic;
+  const nic = this.personalData.nic;
 
-    if (!nic) {
-      this.nicError = true;
-      return false;
-    }
-
-    // Single pattern: matches either 9 digits + V/v OR 12 digits
-    const pattern = /^(\d{9}[Vv]|\d{12})$/;
-
-    if (!pattern.test(nic)) {
-      this.nicError = true;
-      return false;
-    }
-
-    this.nicError = false;
-    return true;
+  if (!nic) {
+    this.nicError = true;
+    return false;
   }
+
+  // Trim and convert to uppercase
+  const cleanNIC = nic.trim().toUpperCase();
+
+  // Check for old format (9 digits + V) or new format (12 digits)
+  const isOldFormat = /^[0-9]{9}V$/.test(cleanNIC);
+  const isNewFormat = /^[0-9]{12}$/.test(cleanNIC);
+
+  if (!isOldFormat && !isNewFormat) {
+    this.nicError = true;
+    return false;
+  }
+
+  this.nicError = false;
+  return true;
+}
 
   onCancel() {
     Swal.fire({
@@ -639,41 +643,45 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName') {
   }
 
   validateNICInput(event: KeyboardEvent) {
-    // Allow navigation keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-    ];
+  // Allow navigation keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End',
+  ];
 
-    if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
-    }
-
-    // Allow only numbers or uppercase V (but not lowercase v)
-    const nicInputPattern = /^[0-9V]$/;
-    if (!nicInputPattern.test(event.key.toUpperCase())) {
-      event.preventDefault();
-    }
+  if (allowedKeys.includes(event.key)) {
+    return; // Allow these special keys
   }
+
+  // Block lowercase 'v' explicitly
+  if (event.key === 'v') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only numbers or uppercase V
+  const nicInputPattern = /^[0-9V]$/;
+  if (!nicInputPattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
 
   formatNIC() {
-    if (this.personalData.nic) {
-      // Convert to uppercase and remove any spaces
-      this.personalData.nic = this.personalData.nic
-        .toUpperCase()
-        .replace(/\s/g, '');
+  if (this.personalData.nic) {
+    // Remove all spaces and convert to uppercase
+    this.personalData.nic = this.personalData.nic.replace(/\s/g, '').toUpperCase();
 
-      // If it ends with 'v', convert to 'V'
-      if (this.personalData.nic.endsWith('v')) {
-        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
-      }
+    // If it ends with 'v' (shouldn't happen due to input validation, but just in case)
+    if (this.personalData.nic.endsWith('v')) {
+      this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
     }
   }
+}
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];

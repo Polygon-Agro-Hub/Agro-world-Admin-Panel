@@ -159,7 +159,7 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #normalPriceField="ngModel" required />
         <div *ngIf="normalPriceField.invalid && normalPriceField.touched" class="text-red-500 text-sm mt-1">
-          Price Per kg is required.
+          Actual Price Per kg is required.
         </div>
         <div *ngIf="productObj.normalPrice < 0" class="text-red-500 text-sm mt-1">
           Price cannot be negative.

@@ -35,6 +35,7 @@ interface InvoiceData {
     buildingName?: string;
     unitNo?: string;
     floorNo?: string;
+    couponValue: string;
   };
   pickupInfo?: {
     centerName: string;
@@ -132,6 +133,7 @@ export class FinalinvoiceService {
           buildingName: invoiceDetails.buildingName || '',
           unitNo: invoiceDetails.unitNo || '',
           floorNo: invoiceDetails.floorNo || '',
+          couponValue: billingDetails.couponValue || '0.00',
         },
         pickupInfo: response.data?.pickupCenter
           ? {
@@ -235,7 +237,7 @@ export class FinalinvoiceService {
     try {
       const logoUrl = await this.getLogoUrl();
       if (logoUrl) {
-        doc.addImage(logoUrl, 'PNG', 150, 20, 40, 20);
+        doc.addImage(logoUrl, 'PNG', 140, 25, 40, 20);
       }
     } catch (error) {
       console.warn('Could not load logo:', error);
@@ -244,7 +246,7 @@ export class FinalinvoiceService {
     // Company Info
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Polygon Holdings (Private) Ltd', 15, 25);
+    doc.text('Polygon Agro Holdings (Private) Ltd', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.text('No. 614, Nawam Mawatha, Colombo 02', 15, 30);
@@ -257,67 +259,82 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''} ${
-  invoice.billingInfo?.fullName || ''
-}`.trim();
+    const billingName = `${
+      invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
+    }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
 
-    // Only show address if delivery method is not Pickup
-    if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
-      // Address display
-      if (invoice.buildingType === 'Apartment') {
-        const aptAddress = [
-          `No. ${invoice.billingInfo.houseNo || 'N/A'}`,
-          invoice.billingInfo.street || 'N/A',
-          invoice.billingInfo.city || 'N/A',
-          ...(invoice.billingInfo.buildingName
-            ? [`Building: ${invoice.billingInfo.buildingName}`]
-            : []),
-          ...(invoice.billingInfo.buildingNo
-            ? [`Building No: ${invoice.billingInfo.buildingNo}`]
-            : []),
-          ...(invoice.billingInfo.unitNo
-            ? [`Unit No: ${invoice.billingInfo.unitNo}`]
-            : []),
-          ...(invoice.billingInfo.floorNo
-            ? [`Floor No: ${invoice.billingInfo.floorNo}`]
-            : []),
-        ];
-
-        aptAddress.forEach((line, i) => {
-          doc.text(line, 15, yPosition + i * 5);
-        });
-        yPosition += aptAddress.length * 5;
-      } else {
-        doc.text(`No. ${invoice.billingInfo.houseNo || 'N/A'}`, 15, yPosition);
-        doc.text(invoice.billingInfo.street || 'N/A', 15, yPosition + 5);
-        doc.text(invoice.billingInfo.city || 'N/A', 15, yPosition + 10);
-        yPosition += 15;
-      }
-    }
-
-    // Show contact information regardless of delivery method
+    // Add contact information right after the name
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
       const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
         invoice.billingInfo.phone1 || ''
       }`.trim();
       if (phoneNumber) {
-        doc.text(`${phoneNumber}`, 15, yPosition);
+        doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
         yPosition += 5;
       }
     }
 
     if (invoice.billingInfo.userEmail) {
-      const email = `${invoice.billingInfo.userEmail} `.trim();
+      const email = `${invoice.billingInfo.userEmail}`.trim();
       if (email) {
-        doc.text(`${email}`, 15, yPosition);
+        doc.text(`Email: ${email}`, 15, yPosition);
         yPosition += 5;
       }
     }
 
-    yPosition += 5;
+    // Only show address if delivery method is not Pickup
+    if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
+      // Add space before address
+      yPosition += 3;
+
+      // Address display - updated to match the image examples
+      if (invoice.buildingType === 'Apartment') {
+        doc.setFont('helvetica', 'bold');
+        doc.text('Apartment Address:', 15, yPosition);
+        yPosition += 5;
+        doc.setFont('helvetica', 'normal');
+
+        const aptAddress = [
+          `No : ${invoice.billingInfo.buildingNo || 'N/A'},`,
+          `Name : ${invoice.billingInfo.buildingName || 'N/A'},`,
+          `Flat : ${invoice.billingInfo.unitNo || 'N/A'},`,
+          `Floor : ${invoice.billingInfo.floorNo || 'N/A'},`,
+          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
+          `City : ${invoice.billingInfo.city || 'N/A'}`,
+        ];
+
+        aptAddress.forEach((line) => {
+          doc.text(line, 15, yPosition);
+          yPosition += 5;
+        });
+      } else {
+        doc.setFont('helvetica', 'bold');
+        doc.text('House Address:', 15, yPosition);
+        yPosition += 5;
+        doc.setFont('helvetica', 'normal');
+
+        const houseAddress = [
+          `House No : ${invoice.billingInfo.houseNo || 'N/A'},`,
+          `Street Name : ${invoice.billingInfo.street || 'N/A'},`,
+          `City : ${invoice.billingInfo.city || 'N/A'}`,
+        ];
+
+        houseAddress.forEach((line) => {
+          doc.text(line, 15, yPosition);
+          yPosition += 5;
+        });
+      }
+
+      // Add space after address
+      yPosition += 5;
+    }
+
+    // Add small space above Invoice No
+    yPosition += 3;
 
     // Invoice Details
     doc.setFont('helvetica', 'bold');
@@ -331,7 +348,11 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'bold');
     doc.text('Delivery Method:', 15, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.deliveryMethod || 'N/A', 15, yPosition + 5);
+    doc.text(
+      invoice.deliveryMethod === 'Pickup' ? 'Instore Pickup' : 'Home Delivery',
+      15,
+      yPosition + 5
+    );
     yPosition += 10;
 
     if (
@@ -342,7 +363,7 @@ export class FinalinvoiceService {
       yPosition += 5;
 
       doc.setFont('helvetica', 'bold');
-      const pickupLabel = 'Pickup Center:';
+      const pickupLabel = 'Centre:';
       doc.text(pickupLabel, 15, yPosition);
 
       // Calculate position for center name with small space
@@ -372,12 +393,6 @@ export class FinalinvoiceService {
     // Add extra space here between Delivery Method and Package Title
     yPosition += 10;
 
-    const grandTotalAll =
-      parseNum(invoice.familyPackTotal) +
-      parseNum(invoice.additionalItemsTotal) +
-      parseNum(invoice.deliveryFee) -
-      parseNum(invoice.discount);
-
     // Right side details
     const rightYStart = 55;
     doc.setFont('helvetica', 'bold');
@@ -393,7 +408,13 @@ export class FinalinvoiceService {
     doc.setFont('helvetica', 'bold');
     doc.text('Payment Method:', 140, rightYStart + 15);
     doc.setFont('helvetica', 'normal');
-    doc.text(invoice.paymentMethod || 'N/A', 140, rightYStart + 20);
+    doc.text(
+      invoice.paymentMethod === 'Card'
+        ? 'Debit/Credit Card'
+        : 'Cash On Delivery',
+      140,
+      rightYStart + 20
+    );
 
     doc.setFont('helvetica', 'bold');
     doc.text('Ordered Date:', 140, rightYStart + 30);
@@ -423,7 +444,7 @@ export class FinalinvoiceService {
           15,
           yPosition
         );
-        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 180, yPosition, {
+        doc.text(`Rs. ${formatNumberWithCommas(pack.amount)}`, 195, yPosition, {
           align: 'right',
         });
         yPosition += 5;
@@ -494,13 +515,26 @@ export class FinalinvoiceService {
         yPosition = 20;
       }
 
-      const addTitle = `Additional Items (${invoice.additionalItems.length} Items)`;
+      // Calculate total amount for additional items
+      const additionalItemsTotalAmount = invoice.additionalItems.reduce(
+        (total, item) => {
+          return total + parseFloat(item.normalPrice || '0');
+        },
+        0
+      );
+
+      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+
+      const addTitle = hasFamilyPacks 
+        ? `Additional Items (${invoice.additionalItems.length} Items)`
+        : `Custom Items (${invoice.additionalItems.length} Items)`;
+
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.text(addTitle, 15, yPosition);
       doc.text(
-        `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
-        180,
+        `Rs. ${formatNumberWithCommas(additionalItemsTotalAmount.toFixed(2))}`,
+        195,
         yPosition,
         { align: 'right' }
       );
@@ -534,15 +568,23 @@ export class FinalinvoiceService {
             styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
           },
         ],
-        ...invoice.additionalItems.map((it, i) => [
-          `${i + 1}.`,
-          it.name || 'N/A',
-          it.unitPrice
-            ? `Rs. ${formatNumberWithCommas(it.unitPrice)}`
-            : 'Rs. 0.00',
-          `${it.quantity || '0'} ${it.unit || ''}`.trim(),
-          it.amount ? `Rs. ${formatNumberWithCommas(it.amount)}` : 'Rs. 0.00',
-        ]),
+        ...invoice.additionalItems.map((it, i) => {
+          const unitPrice = parseFloat(it.unitPrice || '0');
+          const itemDiscount = parseFloat(it.itemDiscount || '0');
+          const quantity = parseFloat(
+            it.quantity === '0.00' ? '1' : it.quantity || '1'
+          );
+          const amount = parseFloat(it.normalPrice);
+          const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
+
+          return [
+            `${i + 1}.`,
+            it.name || 'N/A',
+            `Rs. ${formatNumberWithCommas(unitPriceDisplay.toFixed(2))}`,
+            `${quantity} ${it.unit || ''}`.trim(),
+            `Rs. ${formatNumberWithCommas(amount.toFixed(2))}`,
+          ];
+        }),
       ];
 
       (doc as any).autoTable({
@@ -604,67 +646,116 @@ export class FinalinvoiceService {
 
     // Add additional items total if they exist
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
+      const additionalItemsTotal = invoice.additionalItems.reduce(
+        (total, item) => {
+          return total + parseFloat(item.normalPrice || '0');
+        },
+        0
+      );
+
+      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+      const label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+
       grandTotalBody.push([
-        'Additional Items',
-        `Rs. ${formatNumberWithCommas(invoice.additionalItemsTotal)}`,
+        label,
+        `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
       ]);
     }
 
     // Add delivery fee and discount
-    grandTotalBody.push([
-      'Delivery Fee',
-      `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-    ]);
+    if (invoice.deliveryMethod !== 'Pickup') {
+  grandTotalBody.push([
+    'Delivery Fee',
+    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
+  ]);
+}
+
     grandTotalBody.push([
       'Discount',
       `Rs. ${formatNumberWithCommas(invoice.discount)}`,
     ]);
 
+    grandTotalBody.push([
+  'Coupon Discount',
+  `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`,
+]);
+
+
+    // Calculate final grand total
+    const familyPackTotal =
+      invoice.familyPackItems?.reduce(
+        (total, pack) => total + parseNum(pack.amount),
+        0
+      ) || 0;
+
+    const additionalItemsTotal =
+      invoice.additionalItems?.reduce((total, item) => {
+        const unitPrice = parseFloat(item.unitPrice || '0');
+        const itemDiscount = parseFloat(item.itemDiscount || '0');
+        const quantity = parseFloat(
+          item.quantity === '0.00' ? '1' : item.quantity || '1'
+        );
+        return total + (unitPrice + itemDiscount) * quantity;
+      }, 0) || 0;
+
+    const finalGrandTotal =
+  familyPackTotal +
+  additionalItemsTotal +
+  (invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0) -
+  parseNum(invoice.discount);
+
+
     // Add final total
     grandTotalBody.push([
       { content: 'Grand Total', styles: { fontStyle: 'bold' } },
       {
-        content: `Rs. ${formatNumberWithCommas(
-          parseNum(invoice.familyPackTotal) +
-            parseNum(invoice.additionalItemsTotal) +
-            parseNum(invoice.deliveryFee) -
-            parseNum(invoice.discount)
-        )}`,
+        content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
         styles: { fontStyle: 'bold' },
       },
     ]);
 
-    (doc as any).autoTable({
-      startY: yPosition,
-      body: grandTotalBody,
-      margin: { left: 15, right: 15 },
-      columnStyles: {
-        0: { cellWidth: 'auto', halign: 'left' },
-        1: { cellWidth: 'auto', halign: 'right' },
-      },
-      styles: {
-        fontSize: 9,
-        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-        lineColor: [255, 255, 255],
-        lineWidth: 0,
-      },
-      bodyStyles: {
-        lineWidth: 0,
-      },
-      didDrawCell: (data: any) => {
-        if (data.row.index === grandTotalBody.length - 1) {
-          doc.setDrawColor(0, 0, 0);
-          doc.setLineWidth(0.5);
-          doc.line(
-            data.cell.x,
-            data.cell.y + data.cell.height,
-            data.cell.x + data.cell.width,
-            data.cell.y + data.cell.height
-          );
-        }
-      },
-    });
+    // Grand Total section - updated to modify borders
 
+    if (invoice.additionalItems && invoice.additionalItems.length > 0 && 
+    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+  grandTotalBody.splice(grandTotalBody.length - 2, 0, [
+    'Service Fee',
+    'Rs. 180.00'
+  ]);
+}
+
+
+    (doc as any).autoTable({
+  startY: yPosition,
+  body: grandTotalBody,
+  margin: { left: 15, right: 15 },
+  columnStyles: {
+    0: { cellWidth: 'auto', halign: 'left' },
+    1: { cellWidth: 'auto', halign: 'right' },
+  },
+  styles: {
+    fontSize: 9,
+    cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+    lineColor: [255, 255, 255],
+    lineWidth: 0,
+  },
+  bodyStyles: {
+    lineWidth: 0,
+  },
+  didDrawCell: (data: any) => {
+    // Add border between Grand Total and Discount (second last row)
+    if (data.row.index === grandTotalBody.length - 2) {
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(
+        data.cell.x,
+        data.cell.y + data.cell.height,
+        data.cell.x + data.cell.width,
+        data.cell.y + data.cell.height
+      );
+    }
+  },
+});
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)
@@ -701,15 +792,16 @@ export class FinalinvoiceService {
     });
 
     // Footer
-    yPosition += 8;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
+    yPosition += 20;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'italic', 'bold');
     doc.text('Thank you for shopping with us!', 105, yPosition, {
       align: 'center',
     });
 
-    yPosition += 6;
+    yPosition += 10;
     doc.setFontSize(9);
+    doc.setFont('helvetica', 'italic');
     doc.text(
       'WE WILL SEND YOU MORE OFFERS , LOWEST PRICED VEGGIES FROM US.',
       105,
@@ -717,7 +809,7 @@ export class FinalinvoiceService {
       { align: 'center' }
     );
 
-    yPosition += 6;
+    yPosition += 15;
     doc.setTextColor(128, 128, 128);
     doc.setFontSize(8);
     doc.text(
@@ -732,23 +824,63 @@ export class FinalinvoiceService {
   }
 
   private async getLogoUrl(): Promise<string | null> {
-    try {
-      const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
+  try {
+    const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
+    const logoBlob = (await this.http
+      .get(logoPath, { responseType: 'blob' })
+      .toPromise()) as Blob;
 
-      // Add type assertion
-      const logoBlob = (await this.http
-        .get(logoPath, { responseType: 'blob' })
-        .toPromise()) as Blob;
-
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(logoBlob);
-      });
-    } catch (error) {
-      console.error('Error loading logo:', error);
-      return null;
-    }
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const originalDataUrl = reader.result as string;
+        
+        // Create an image element to check dimensions
+        const img = new Image();
+        img.src = originalDataUrl;
+        
+        await img.decode(); // Wait for image to load
+        
+        // Create canvas to resize if needed
+        const canvas = document.createElement('canvas');
+        const maxWidth = 200; // Maximum width in pixels
+        const maxHeight = 100; // Maximum height in pixels
+        
+        // Calculate new dimensions maintaining aspect ratio
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+        
+        if (height > maxHeight) {
+          width = (maxHeight / height) * width;
+          height = maxHeight;
+        }
+        
+        // Only resize if necessary
+        if (width !== img.width || height !== img.height) {
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Convert to PNG with reduced quality (0.9 maintains good quality)
+          const optimizedDataUrl = canvas.toDataURL('image/png', 0.9);
+          resolve(optimizedDataUrl);
+        } else {
+          // Use original if no resizing needed
+          resolve(originalDataUrl);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(logoBlob);
+    });
+  } catch (error) {
+    console.error('Error loading logo:', error);
+    return null;
   }
+}
 }

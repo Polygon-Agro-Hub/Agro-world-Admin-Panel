@@ -43,7 +43,7 @@
             <div *ngIf="shortCodeInput.touched && shortCodeInput.errors" class="text-red-500 text-sm mt-1">
                 <div *ngIf="shortCodeInput.errors['required']">Short Code is required</div>
                 <div *ngIf="shortCodeInput.errors['maxlength']">Short Code cannot be longer than 3 characters</div>
-                <div *ngIf="shortCodeInput.errors['pattern']">Only letters (A-Z) allowed</div>
+                <div *ngIf="shortCodeInput.errors['pattern']">Short Code must be 1 to 3 uppercase letters (A–Z) only.</div>
             </div>
         </div>
     </div>

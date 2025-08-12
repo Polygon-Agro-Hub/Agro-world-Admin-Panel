@@ -72,42 +72,65 @@ onCancel() {
 
 
 
-  onTypeNameInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const original = input.value;
-    const trimmed = original.replace(/^\s+/, ''); // Remove leading spaces
-    if (original !== trimmed) {
-      input.value = trimmed; // Update the input's display value
-    }
-    this.productObj.typeName = trimmed; // Update the model
-  }
-  
-  onShortCodeInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const original = input.value;
-    const trimmedAndCapitalized = original.replace(/^\s+/, '').toUpperCase();
-    input.value = trimmedAndCapitalized;
-    this.productObj.shortCode = trimmedAndCapitalized;
-  }
-  
+onTypeNameInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // Allow only English letters (A–Z, a–z) and spaces
+  value = value.replace(/[^A-Za-z\s]/g, '');
+
+  input.value = value;
+  this.productObj.typeName = value;
+}
+
+onShortCodeInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // 1. Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // 2. Remove anything that is NOT a letter (A–Z or a–z)
+  value = value.replace(/[^A-Za-z]/g, '');
+
+  // 3. Convert to uppercase
+  value = value.toUpperCase();
+
+  // 4. Assign back to input and model
+  input.value = value;
+  this.productObj.shortCode = value;
+}
+
   createType() {
     // Check if fields are empty
-    if (!this.productObj.typeName || !this.productObj.shortCode) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Type Name and Short Code are required.',
-      });
-      return;
-    }
-
+    const missingFields: string[] = [];
+   
+     if (!this.productObj.typeName) {
+       missingFields.push('Type Name');
+     }
+     if (!this.productObj.shortCode) {
+       missingFields.push('Short Code');
+     }
+   
+     if (missingFields.length > 0) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: `${missingFields.join(' and ')} ${missingFields.length > 1 ? 'are' : 'is'} required.`,
+       });
+       return;
+     }
+   
     // Validate shortCode: only A-Z letters, 1-3 characters
     const shortCodePattern = /^[A-Za-z]{1,3}$/;
     if (!shortCodePattern.test(this.productObj.shortCode)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Short Code must contain only letters (A-Z) and be 1-3 characters long.',
+        text: 'Short Code must be 1 to 3 uppercase letters (A–Z) only.',
       });
       return;
     }

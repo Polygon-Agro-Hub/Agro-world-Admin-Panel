@@ -352,6 +352,107 @@ updateTags() {
       this.productObj.startValue = 0.0;
     }
   }
+
+  validateDecimalInput(event: KeyboardEvent): boolean {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const key = event.key;
+
+  // Allow control keys
+  const controlKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste'];
+  if (controlKeys.includes(key)) {
+    return true;
+  }
+
+  // Allow numbers and decimal point
+  if (!/^[0-9.]$/.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Prevent multiple decimal points
+  if (key === '.' && value.includes('.')) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Check if adding this character would exceed 2 decimal places
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+    if (decimalPart && decimalPart.length >= 2 && key !== '.') {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  // Prevent decimal point at the beginning
+  if (key === '.' && value === '') {
+    event.preventDefault();
+    return false;
+  }
+
+  return true;
+}
+
+validatePriceFormat(value: any, fieldName: string): boolean {
+  if (value === null || value === undefined || value === '') {
+    return true; // Allow empty values, required validation will handle this
+  }
+
+  const stringValue = value.toString();
+  
+  // Check for invalid formats like 12..00, 99.999, etc.
+  const validPriceRegex = /^\d+(\.\d{1,2})?$/;
+  
+  if (!validPriceRegex.test(stringValue)) {
+    // Show error message or handle invalid format
+    console.error(`Invalid format for ${fieldName}: ${stringValue}`);
+    return false;
+  }
+
+  return true;
+}
+
+formatPrice(event: any, fieldName: string): void {
+  const input = event.target;
+  let value = input.value;
+
+  if (value && !isNaN(value)) {
+    const numericValue = parseFloat(value);
+    if (numericValue >= 0) {
+      const formattedValue = numericValue.toFixed(2);
+      input.value = formattedValue;
+      
+      // Update the model based on field name
+      switch (fieldName) {
+        case 'normalPrice':
+          this.productObj.normalPrice = parseFloat(formattedValue);
+          break;
+        case 'discountedPrice':
+          this.productObj.discountedPrice = parseFloat(formattedValue);
+          break;
+        case 'salePrice':
+          this.productObj.salePrice = parseFloat(formattedValue);
+          break;
+        case 'startValue':
+          this.productObj.startValue = parseFloat(formattedValue);
+          break;
+        case 'changeby':
+          this.productObj.changeby = parseFloat(formattedValue);
+          break;
+        case 'maxQuantity':
+          this.productObj.maxQuantity = parseFloat(formattedValue);
+          break;
+      }
+      
+      // Recalculate sale price if needed
+      if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+        this.calculeSalePrice();
+      }
+    }
+  }
+}
+
 }
 
 class Crop {

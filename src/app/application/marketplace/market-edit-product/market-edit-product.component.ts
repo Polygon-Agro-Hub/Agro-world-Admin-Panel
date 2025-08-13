@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../services/theme.service';
 import { ChipsModule } from 'primeng/chips';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-market-edit-product',
@@ -23,6 +24,7 @@ import { ChipsModule } from 'primeng/chips';
     MatIconModule,
     CommonModule,
      ChipsModule,
+     DropdownModule
   ],
   templateUrl: './market-edit-product.component.html',
   styleUrl: './market-edit-product.component.css',

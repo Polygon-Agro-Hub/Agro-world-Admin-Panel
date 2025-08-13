@@ -448,10 +448,10 @@
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Minimum Quantity *</label
-          >
-          <input
+  <label class="text-lg text-[#534E4E] dark:text-textDark"
+    >Minimum Quantity *</label
+  >
+  <input
     type="text"
     id="startValue"
     name="startValue"
@@ -464,19 +464,16 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     placeholder="0.00"
   />
-          <div
-            *ngIf="productObj.startValue <= 0.0"
-            class="text-red-500 text-sm mt-1"
-          >
-            Please enter a value greater than 0.
-          </div>
-        </div>
+  <div *ngIf="getMinQuantityError()" class="text-red-500 text-sm mt-1">
+    {{ getMinQuantityError() }}
+  </div>
+</div>
 
         <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Maximum Quantity *</label
-          >
-          <input
+  <label class="text-lg text-[#534E4E] dark:text-textDark"
+    >Maximum Quantity *</label
+  >
+  <input
     type="text"
     id="maxQuantity"
     name="maxQuantity"
@@ -489,13 +486,10 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     placeholder="0.00"
   />
-          <div
-            *ngIf="productObj.maxQuantity <= 0.0"
-            class="text-red-500 text-sm mt-1"
-          >
-            Please enter a value greater than 0.
-          </div>
-        </div>
+  <div *ngIf="getMaxQuantityError()" class="text-red-500 text-sm mt-1">
+    {{ getMaxQuantityError() }}
+  </div>
+</div>
 
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">

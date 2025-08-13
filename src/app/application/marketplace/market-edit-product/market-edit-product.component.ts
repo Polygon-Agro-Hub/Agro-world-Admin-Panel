@@ -187,59 +187,70 @@ export class MarketEditProductComponent implements OnInit {
   // }
 
   onSubmit() {
-    this.updateTags();
-    console.log(this.productObj.promo);
+  this.updateTags();
+  console.log(this.productObj.promo);
 
-    // Check for empty required fields
-    const emptyFields = [];
-    
-    if (!this.productObj.category) emptyFields.push('Category');
-    if (!this.productObj.cropName) emptyFields.push('Display Name');
-    if (!this.productObj.varietyId) emptyFields.push('Variety');
-    if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
-    if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
-    if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
-    if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
-    
-    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
-        emptyFields.push('Maximum Quantity');
-    }
-    
-    if (this.productObj.promo) {
-        if (!this.productObj.discountedPrice) emptyFields.push('Discount Percentage');
-        if (!this.productObj.salePrice) emptyFields.push('Sale Price');
-        if (!this.productObj.displaytype) emptyFields.push('Display Type');
-    }
+  // Validate min and max quantities
+  if (this.productObj.category === 'WholeSale' && !this.validateMinMaxQuantities()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      text: 'Minimum quantity cannot be greater than maximum quantity.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
 
-    if (emptyFields.length > 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Missing Required Fields',
-            html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
+  // Check for empty required fields
+  const emptyFields = [];
+  
+  if (!this.productObj.category) emptyFields.push('Category');
+  if (!this.productObj.cropName) emptyFields.push('Display Name');
+  if (!this.productObj.varietyId) emptyFields.push('Variety');
+  if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+  if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+  if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
+  if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
+  
+  if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
+      emptyFields.push('Maximum Quantity');
+  }
+  
+  if (this.productObj.promo) {
+      if (!this.productObj.discountedPrice) emptyFields.push('Discount Percentage');
+      if (!this.productObj.salePrice) emptyFields.push('Sale Price');
+      if (!this.productObj.displaytype) emptyFields.push('Display Type');
+  }
 
-    this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
-        (res) => {
-            if (res.status) {
-                Swal.fire('Success', 'Product Updated Successfully', 'success');
-                this.router.navigate(['/market/action/view-products-list']);
-            } else {
-                Swal.fire('Error', 'Product Update Failed', 'error');
-            }
-        },
-        (error) => {
-            console.error('Product update error:', error);
-            Swal.fire(
-                'Error',
-                'An error occurred while updating the product',
-                'error'
-            );
-        }
-    );
-    console.log('Form submitted:', this.productObj);
+  if (emptyFields.length > 0) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Missing Required Fields',
+          html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+          confirmButtonText: 'OK'
+      });
+      return;
+  }
+
+  this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
+      (res) => {
+          if (res.status) {
+              Swal.fire('Success', 'Product Updated Successfully', 'success');
+              this.router.navigate(['/market/action/view-products-list']);
+          } else {
+              Swal.fire('Error', 'Product Update Failed', 'error');
+          }
+      },
+      (error) => {
+          console.error('Product update error:', error);
+          Swal.fire(
+              'Error',
+              'An error occurred while updating the product',
+              'error'
+          );
+      }
+  );
+  console.log('Form submitted:', this.productObj);
 }
 updateTags() {
     this.productObj.tags = this.templateKeywords().join(', ');
@@ -453,6 +464,38 @@ formatPrice(event: any, fieldName: string): void {
       }
     }
   }
+}
+
+validateMinMaxQuantities(): boolean {
+  if (this.productObj.category === 'WholeSale' && 
+      this.productObj.maxQuantity > 0 && 
+      this.productObj.startValue > this.productObj.maxQuantity) {
+    return false;
+  }
+  return true;
+}
+
+getMinQuantityError(): string {
+  if (this.productObj.startValue <= 0) {
+    return 'Please enter a value greater than 0.';
+  }
+  if (this.productObj.category === 'WholeSale' && 
+      this.productObj.maxQuantity > 0 && 
+      this.productObj.startValue > this.productObj.maxQuantity) {
+    return 'Minimum quantity cannot be greater than maximum quantity.';
+  }
+  return '';
+}
+
+getMaxQuantityError(): string {
+  if (this.productObj.maxQuantity <= 0) {
+    return 'Please enter a value greater than 0.';
+  }
+  if (this.productObj.startValue > 0 && 
+      this.productObj.maxQuantity < this.productObj.startValue) {
+    return 'Maximum quantity must be greater than or equal to minimum quantity.';
+  }
+  return '';
 }
 
 }

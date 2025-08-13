@@ -49,34 +49,53 @@
 
       <!-- Crop Selection -->
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-        <select id="selectId" name="selectId"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.selectId" (change)="onCropChange()" #cropField="ngModel" required>
-          <option selected disabled value="">--- Select Crop ---</option>
-          <option *ngFor="let cropItem of cropsObj" [value]="cropItem.cropId">
-            {{ cropItem.cropNameEnglish }}
-          </option>
-        </select>
-        <div *ngIf="cropField.invalid && cropField.touched" class="text-red-500 text-sm mt-1">
-          Crop selection is required.
-        </div>
-      </div>
+  <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
+  <p-dropdown 
+    id="selectId" 
+    name="selectId"
+    [(ngModel)]="productObj.selectId" 
+    [options]="cropsObj" 
+    optionLabel="cropNameEnglish"
+    optionValue="cropId"
+    [filter]="true"
+    filterBy="cropNameEnglish"
+    placeholder="Select Crop"
+    [showClear]="true"
+    (onChange)="onCropChange()"
+    #cropField="ngModel"
+    required
+    [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+    [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+  </p-dropdown>
+  <div *ngIf="cropField.invalid && cropField.touched" class="text-red-500 text-sm mt-1">
+    Crop selection is required.
+  </div>
+</div>
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-        <select id="variety" name="variety"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.varietyId" (change)="selectVerityImage()" #varietyField="ngModel" required>
-          <option selected disabled value="">--- Select Variety ---</option>
-          <option *ngFor="let variety of selectedVarieties" [value]="variety.id">
-            {{ variety.varietyEnglish }}
-          </option>
-        </select>
-        <div *ngIf="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
-          Variety selection is required.
-        </div>
-      </div>
+  <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
+  <p-dropdown 
+    id="variety" 
+    name="variety"
+    [(ngModel)]="productObj.varietyId" 
+    [options]="selectedVarieties" 
+    optionLabel="varietyEnglish"
+    optionValue="id"
+    [filter]="true"
+    filterBy="varietyEnglish"
+    placeholder="Select Variety"
+    [showClear]="true"
+    (onChange)="selectVerityImage()"
+    #varietyField="ngModel"
+    required
+    [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+    [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+    [disabled]="!isVerityVisible">
+  </p-dropdown>
+  <div *ngIf="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
+    Variety selection is required.
+  </div>
+</div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price *</label>
@@ -123,10 +142,13 @@
     productObj.promo
   ">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" min="0" max="100" step="0.01" id="discountedPrice" name="discountedPrice"
-          (change)="calculeSalePrice()" (input)="validateDiscountPercentage()" [(ngModel)]="productObj.discountedPrice"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #discountField="ngModel" required />
+        <input type="number" min="0" max="100" step="0.01" id="discountedPrice" name="discountedPrice" 
+  (change)="calculeSalePrice()" 
+  (input)="validatePriceInput($event, 'discountedPrice')"
+  (keydown)="preventInvalidChars($event)"
+  [(ngModel)]="productObj.discountedPrice"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  #discountField="ngModel" required />
         <div *ngIf="discountField.invalid && discountField.touched" class="text-red-500 text-sm mt-1">
           Discount Percentage is required.
         </div>
@@ -154,10 +176,13 @@
         <label class="text-[#534E4E] dark:text-textDark">{{
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
           }}</label>
-        <input type="number" min="0" step="0.01" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()"
-          (input)="validateNormalPrice()" [(ngModel)]="productObj.normalPrice"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #normalPriceField="ngModel" required />
+        <input type="number" min="0" step="0.01" id="normalPrice" name="normalPrice" 
+  (change)="calculeSalePrice()" 
+  (input)="validatePriceInput($event, 'normalPrice')"
+  (keydown)="preventInvalidChars($event)"
+  [(ngModel)]="productObj.normalPrice"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  #normalPriceField="ngModel" required />
         <div *ngIf="normalPriceField.invalid && normalPriceField.touched" class="text-red-500 text-sm mt-1">
           Actual Price Per kg is required.
         </div>
@@ -260,7 +285,7 @@
             <p *ngIf="
                 productObj.displaytype === 'D&AP' && productObj.salePrice !== 0
               " class="text-[#00957D] my-1">
-              Rs.{{ productObj.normalPrice }}.00
+              Rs.{{ productObj.normalPrice }}
             </p>
 
             <p *ngIf="
@@ -354,9 +379,11 @@
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Starting Value *</label>
           <input type="number" min="0.1" step="0.1" id="startValue" name="startValue"
-            [(ngModel)]="productObj.startValue"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (input)="validateMinQuantity()" #startValueField="ngModel" required />
+  [(ngModel)]="productObj.startValue"
+  (input)="validatePriceInput($event, 'startValue')"
+  (keydown)="preventInvalidChars($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  #startValueField="ngModel" required />
           <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
             Starting Value is required.
           </div>
@@ -381,9 +408,12 @@
 
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>
-          <input type="number" min="0.1" step="0.1" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (input)="validateChangeBy()" #changeByField="ngModel" required />
+          <input type="number" min="0.1" step="0.1" id="changeby" name="changeby" 
+  [(ngModel)]="productObj.changeby"
+  (input)="validatePriceInput($event, 'changeby')"
+  (keydown)="preventInvalidChars($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  #changeByField="ngModel" required />
           <div *ngIf="changeByField.invalid && changeByField.touched" class="text-red-500 text-sm mt-1">
             Increase/Decrease by is required.
           </div>

@@ -92,7 +92,7 @@
     [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
     [disabled]="!isVerityVisible">
   </p-dropdown>
-  <div *If="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
+  <div *ngIf="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
     Variety selection is required.
   </div>
 </div>

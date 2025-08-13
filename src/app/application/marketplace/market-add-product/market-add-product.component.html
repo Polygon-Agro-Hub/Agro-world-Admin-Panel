@@ -401,7 +401,8 @@
   <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
   <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
     [(ngModel)]="productObj.maxQuantity"
-    (input)="validateMaxQuantity()" 
+    (input)="validatePriceInput($event, 'maxQuantity')"
+    (keydown)="preventInvalidChars($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #maxQuantityField="ngModel" required />
   <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
@@ -410,7 +411,6 @@
   <div *ngIf="productObj.maxQuantity <= 0.0" class="text-red-500 text-sm mt-1">
     Please enter a value greater than 0.
   </div>
-  <!-- Add this new validation message -->
   <div *ngIf="productObj.startValue && productObj.maxQuantity && productObj.maxQuantity < productObj.startValue" 
        class="text-red-500 text-sm mt-1">
     Maximum quantity must be greater than or equal to minimum quantity.

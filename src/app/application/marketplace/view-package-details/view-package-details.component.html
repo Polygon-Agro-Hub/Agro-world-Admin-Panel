@@ -18,11 +18,11 @@
             </h2>
             <h2 class="text-2xl font-bold px-5 dark:text-textDark">-</h2>
             <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
-              Rs.{{ package?.productPrice| number: '1.0-0'  }}
+              Rs {{ (package?.productPrice || 0).toFixed(2) }}
             </h2>
           </div>
           <div class="flex flex-col pt-2">
-            <div class="text-[#0D9488]" [class.text-green-500]="package?.status === 'Disabled'"
+            <div class="text-[#0D9488]" [class.text-green-500]="package?.status === 'Enabled'"
               [class.text-red-500]="package?.status !== 'Enabled'">
               <span>{{ package?.status }}</span>
             </div>
@@ -74,28 +74,26 @@
           <div class="grid grid-cols-2 gap-4 px-6 py-6 border-b border-gray-200">
             <div class="text-sm text-[#3980C0] font-medium">Packaging Fee</div>
             <div class="text-sm text-[#00957D] font-medium text-right">
-              Rs.{{ package?.packingFee }}
+              Rs.{{ (package?.packingFee || 0).toFixed(2) }}
             </div>
           </div>
-          <div class="grid grid-cols-2 gap-4 px-6 py-6  border-gray-200">
+          <div class="grid grid-cols-2 gap-4 px-6 py-6 border-gray-200">
             <div class="text-sm text-[#3980C0] font-medium">Service Fee</div>
             <div class="text-sm text-[#00957D] font-medium text-right">
-              Rs.{{ package?.serviceFee }}
+              Rs.{{ (package?.serviceFee || 0).toFixed(2) }}
             </div>
           </div>
         </div>
 
-        <div class=" border-gray-200 mt-6">
+        <div class="border-gray-200 mt-6">
           <h3
             class="text-lg font-normal text-textLight dark:text-textDark mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">
             Defined Items on <span class="font-semibold">{{ package?.date | date: 'MMMM d, y' }}</span>
           </h3>
 
-
-
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-900 dark:text-white">
-              <thead class=" text-gray-700  dark:bg-gray-700 border-b border-[#F3F4F6]" style="color: #8492A3;font-size: 16px;">
+              <thead class=" text-gray-700  dark:bg-gray-700" style="color: #8492A3;font-size: 16px;">
                 <tr>
                   <th scope="col" class="px-6 py-3">Product Type</th>
                   <th scope="col" class="px-6 py-3">Product</th>
@@ -104,30 +102,24 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of packageItems" class="bg-white dark:bg-gray-800  dark:border-gray-700">
+                <tr *ngFor="let item of packageItems" class="bg-white dark:bg-gray-800 dark:border-gray-700">
                   <td class="px-6 py-4">{{ item.productType }}</td>
                   <td class="px-6 py-4">{{ item.productName }}</td>
-                  <td class="px-6 py-4">{{ item.quantity.toFixed(3) }}</td>
+                  <td class="px-6 py-4">{{ (item.quantity || 0).toFixed(2) }}</td>
                   <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
-
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="grid grid-cols-2 gap-4 px-6 py-4 mt-4 border-t border-b border-[#F3F4F6]">
-  <div class="text-sm text-[#3980C0] font-medium">
-    Counted Total For Today
-  </div>
-  <div class="text-sm text-[#00957D] font-medium ml-60">
-     Rs.{{ package?.totalPrice | number: '1.0-0' }}
-  </div>
-</div>
-
+          <div class="grid grid-cols-2 gap-4 px-6 py-4 mt-4">
+            <div class="text-sm text-[#3980C0] font-medium">Counted Total For Today</div>
+            <div class="text-sm text-[#00957D] font-medium text-right">
+              Rs.{{ (package?.totalPrice || 0).toFixed(2) }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-
   </div>
 </div>

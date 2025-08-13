@@ -98,15 +98,12 @@
             >Rs.{{ getCombinedCalculatedTotal() | number : "1.2-2" }}</span
           >
         </div>
-        <div
-          *ngIf="isWithinLimit"
-          class="text-[#006C5A] dark:text-blue-400 italic"
-        >
-          Allowed limit : {{ getCombinedProductPrice() | number : "1.2-2" }} +
-          {{ getCombinedProductPrice() * 0.08 | number : "1.2-2" }} = Rs.{{
-            getCombinedProductPrice() * 1.08 | number : "1.2-2"
-          }}
-        </div>
+        <div *ngIf="isWithinLimit" class="text-[#006C5A] dark:text-blue-400 italic">
+  Allowed limit : {{ getCombinedProductPrice() | number:'1.2-2' }} + 
+  {{ getCombinedProductPrice() | number:'1.2-2' }} x 8% = Rs.{{
+    getCombinedProductPrice() * 1.08 | number:'1.2-2'
+  }}
+</div>
         <div
           *ngIf="!isWithinLimit"
           class="text-[#E11E21] dark:text-red-400 mt-1 italic"

@@ -174,95 +174,88 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
-    this.updateTags();
+  this.updateTags();
 
-    if (this.templateKeywords().length === 0) {
-      Swal.fire(
-        'Warning',
-        'Please add at least one keyword before submitting.',
-        'warning'
-      );
-      return;
-    }
-
-    if (this.productObj.salePrice <= 0) {
-      Swal.fire(
-        'Invalid Value',
-        'Sale Price must be greater than 0, check the discount you applied',
-        'warning'
-      );
-      return;
-    }
-
-    if (this.productObj.promo) {
-      if (
-        !this.productObj.category ||
-        !this.productObj.cropName ||
-        !this.productObj.varietyId ||
-        !this.productObj.normalPrice ||
-        !this.productObj.unitType ||
-        !this.productObj.startValue ||
-        !this.productObj.changeby ||
-        !this.productObj.salePrice ||
-        (this.productObj.category === 'WholeSale' &&
-          !this.productObj.maxQuantity) ||
-        this.productObj.startValue <= 0.0 ||
-        this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' &&
-          this.productObj.maxQuantity <= 0.0)
-      ) {
-        Swal.fire(
-          'Warning',
-          'Please fill in all the required fields',
-          'warning'
-        );
-        return;
-      }
-    } else {
-      if (
-        !this.productObj.category ||
-        !this.productObj.cropName ||
-        !this.productObj.varietyId ||
-        !this.productObj.normalPrice ||
-        !this.productObj.unitType ||
-        !this.productObj.startValue ||
-        !this.productObj.changeby ||
-        (this.productObj.category === 'WholeSale' &&
-          !this.productObj.maxQuantity) ||
-        this.productObj.startValue <= 0.0 ||
-        this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' &&
-          this.productObj.maxQuantity <= 0.0)
-      ) {
-        Swal.fire(
-          'Warning',
-          'Please fill in all the required fields',
-          'warning'
-        );
-        return;
-      }
-    }
-
-    if (this.productObj.unitType == 'g') {
-      this.productObj.startValue = this.productObj.startValue / 1000;
-      this.productObj.changeby = this.productObj.changeby / 1000;
-    }
-    console.log('productObj', this.productObj);
-    this.marketSrv.createProduct(this.productObj).subscribe(
-      (res) => {
-        if (res.status === true) {
-          Swal.fire('Success', 'Product Created Successfully', 'success');
-          this.router.navigate(['/market/action/view-products-list']);
-        } else {
-          Swal.fire('Error', res.message, 'error');
-        }
-      },
-      (error) => {
-        console.error('Product creation error:', error);
-        Swal.fire('Error', error.message, 'error');
-      }
-    );
+  // Check for empty required fields
+  const emptyFields = [];
+  
+  if (!this.productObj.category) emptyFields.push('Category');
+  if (!this.productObj.cropName) emptyFields.push('Display Name');
+  if (!this.productObj.selectId) emptyFields.push('Crop');
+  if (!this.productObj.varietyId) emptyFields.push('Variety');
+  if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+  if (!this.productObj.unitType) emptyFields.push('Unit Type');
+  if (!this.productObj.startValue) emptyFields.push('Starting Value');
+  if (!this.productObj.changeby) emptyFields.push('Increase/Decrease by');
+  
+  if (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) {
+    emptyFields.push('Maximum Quantity');
   }
+
+  if (this.productObj.promo && !this.productObj.displaytype) {
+    emptyFields.push('Display Type');
+  }
+
+  if (emptyFields.length > 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Required Fields',
+      html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  if (this.templateKeywords().length === 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Required Fields',
+      html: 'Please add at least one keyword',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+
+  if (this.productObj.salePrice <= 0) {
+    Swal.fire(
+      'Invalid Value',
+      'Sale Price must be greater than 0, check the discount you applied',
+      'warning'
+    );
+    return;
+  }
+
+  // Additional validations
+  if (this.productObj.startValue <= 0.0) {
+    Swal.fire('Invalid Value', 'Starting Value must be greater than 0', 'warning');
+    return;
+  }
+
+  if (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0) {
+    Swal.fire('Invalid Value', 'Maximum Quantity must be greater than 0', 'warning');
+    return;
+  }
+
+  if (this.productObj.unitType == 'g') {
+    this.productObj.startValue = this.productObj.startValue / 1000;
+    this.productObj.changeby = this.productObj.changeby / 1000;
+  }
+
+  this.marketSrv.createProduct(this.productObj).subscribe(
+    (res) => {
+      if (res.status === true) {
+        Swal.fire('Success', 'Product Created Successfully', 'success');
+        this.router.navigate(['/market/action/view-products-list']);
+      } else {
+        Swal.fire('Error', res.message, 'error');
+      }
+    },
+    (error) => {
+      console.error('Product creation error:', error);
+      Swal.fire('Error', error.message, 'error');
+    }
+  );
+}
 
   addTemplateKeyword(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();

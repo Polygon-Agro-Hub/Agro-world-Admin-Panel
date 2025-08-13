@@ -188,76 +188,57 @@ export class MarketEditProductComponent implements OnInit {
     this.updateTags();
     console.log(this.productObj.promo);
 
+    // Check for empty required fields
+    const emptyFields = [];
+    
+    if (!this.productObj.category) emptyFields.push('Category');
+    if (!this.productObj.cropName) emptyFields.push('Display Name');
+    if (!this.productObj.varietyId) emptyFields.push('Variety');
+    if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+    if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+    if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
+    if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
+    
+    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
+        emptyFields.push('Maximum Quantity');
+    }
+    
     if (this.productObj.promo) {
-      if (
-        !this.productObj.category ||
-        !this.productObj.cropName ||
-        !this.productObj.varietyId ||
-        !this.productObj.normalPrice ||
-        !this.productObj.unitType ||
-        !this.productObj.startValue ||
-        !this.productObj.changeby ||
-        !this.productObj.discountedPrice ||
-        !this.productObj.salePrice ||
-        (this.productObj.category === 'WholeSale' &&
-          !this.productObj.maxQuantity) ||
-        this.productObj.startValue <= 0.0 ||
-        this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' &&
-          this.productObj.maxQuantity <= 0.0)
-      ) {
-        Swal.fire(
-          'Warning',
-          'Please fill in all the required fields correctly',
-          'warning'
-        );
+        if (!this.productObj.discountedPrice) emptyFields.push('Discount Percentage');
+        if (!this.productObj.salePrice) emptyFields.push('Sale Price');
+        if (!this.productObj.displaytype) emptyFields.push('Display Type');
+    }
+
+    if (emptyFields.length > 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Required Fields',
+            html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+            confirmButtonText: 'OK'
+        });
         return;
-      }
-    } else {
-      if (
-        !this.productObj.category ||
-        !this.productObj.cropName ||
-        !this.productObj.varietyId ||
-        !this.productObj.normalPrice ||
-        !this.productObj.unitType ||
-        !this.productObj.startValue ||
-        !this.productObj.changeby ||
-        (this.productObj.category === 'WholeSale' &&
-          !this.productObj.maxQuantity) ||
-        this.productObj.startValue <= 0.0 ||
-        this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' &&
-          this.productObj.maxQuantity <= 0.0)
-      ) {
-        Swal.fire(
-          'Warning',
-          'Please fill in all the required fields correctly',
-          'warning'
-        );
-        return;
-      }
     }
 
     this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
-      (res) => {
-        if (res.status) {
-          Swal.fire('Success', 'Product Created Successfully', 'success');
-          this.router.navigate(['/market/action/view-products-list']);
-        } else {
-          Swal.fire('Error', 'Product Creation Failed', 'error');
+        (res) => {
+            if (res.status) {
+                Swal.fire('Success', 'Product Updated Successfully', 'success');
+                this.router.navigate(['/market/action/view-products-list']);
+            } else {
+                Swal.fire('Error', 'Product Update Failed', 'error');
+            }
+        },
+        (error) => {
+            console.error('Product update error:', error);
+            Swal.fire(
+                'Error',
+                'An error occurred while updating the product',
+                'error'
+            );
         }
-      },
-      (error) => {
-        console.error('Product creation error:', error);
-        Swal.fire(
-          'Error',
-          'An error occurred while creating the product',
-          'error'
-        );
-      }
     );
     console.log('Form submitted:', this.productObj);
-  }
+}
 updateTags() {
     this.productObj.tags = this.templateKeywords().join(', ');
   }

@@ -144,7 +144,7 @@ export class MarketPriceBulkUploadComponent {
     title: 'Are you sure?',
     text: 'All entered data will be lost!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Reset',
+    confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
   }).then((result) => {
     if (result.isConfirmed) {

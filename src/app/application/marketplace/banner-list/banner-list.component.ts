@@ -216,52 +216,51 @@ export class BannerListComponent {
   // }
 
   onFileSelectedWholesale(event: Event): void {
-    const input = event.target as HTMLInputElement | null;
+  const input = event.target as HTMLInputElement | null;
 
-    if (input && input.files && input.files[0]) {
-      const file = input.files[0];
-      const img = new Image();
-      const objectUrl = URL.createObjectURL(file);
+  if (input && input.files && input.files[0]) {
+    const file = input.files[0];
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
 
-      img.onload = () => {
-        const width = img.width;
-        const height = img.height;
+    img.onload = () => {
+      const width = img.width;
+      const height = img.height;
 
-        URL.revokeObjectURL(objectUrl); // Cleanup memory
+      URL.revokeObjectURL(objectUrl); // Cleanup memory
 
-        // const isValidSize = width >= 1100 && width <= 1300 && height >= 400 && height <= 500;
-        const isValidSize = width == 1200 && height == 451;
+      // Allow both 1200×450 and 1200×451
+      const isValidSize = (width === 1200 && height === 450) || (width === 1200 && height === 451);
 
-        if (isValidSize) {
-          this.selectedFileWholesale = file;
-          console.log('selectedFileWholesale', this.selectedFileWholesale);
-          this.previewImage(file);
-        } else {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Invalid Image Dimensions',
-            text: 'Please select an Image with suitable dimensions as mentioned in the Description',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#d33',
-          });
-          input.value = ''; // Clear file input
-        }
-      };
-
-      img.onerror = () => {
+      if (isValidSize) {
+        this.selectedFileWholesale = file;
+        this.previewImage(file);
+      } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Invalid File',
-          text: 'Could not load the selected image. Please choose a valid image file.',
+          icon: 'warning',
+          title: 'Invalid Image Dimensions',
+          text: 'Please select an Image with dimensions 1200 × 450 px',
+          confirmButtonText: 'OK',
           confirmButtonColor: '#d33',
         });
-        URL.revokeObjectURL(objectUrl);
-        input.value = '';
-      };
+        input.value = ''; // Clear file input
+      }
+    };
 
-      img.src = objectUrl;
-    }
+    img.onerror = () => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Could not load the selected image. Please choose a valid image file.',
+        confirmButtonColor: '#d33',
+      });
+      URL.revokeObjectURL(objectUrl);
+      input.value = '';
+    };
+
+    img.src = objectUrl;
   }
+}
 
   onDragLeave(event: DragEvent): void {
     event.preventDefault();
@@ -304,52 +303,51 @@ export class BannerListComponent {
   // }
 
   onFileSelectedRetail(event: Event): void {
-    const input = event.target as HTMLInputElement | null;
+  const input = event.target as HTMLInputElement | null;
 
-    if (input && input.files && input.files[0]) {
-      const file = input.files[0];
-      const img = new Image();
-      const objectUrl = URL.createObjectURL(file);
+  if (input && input.files && input.files[0]) {
+    const file = input.files[0];
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
 
-      img.onload = () => {
-        const width = img.width;
-        const height = img.height;
+    img.onload = () => {
+      const width = img.width;
+      const height = img.height;
 
-        URL.revokeObjectURL(objectUrl); // Cleanup memory
+      URL.revokeObjectURL(objectUrl); // Cleanup memory
 
-        // const isValidSize = width >= 1100 && width <= 1300 && height >= 400 && height <= 500;
-        const isValidSize = width == 1200 && height == 451;
+      // Allow both 1200×450 and 1200×451
+      const isValidSize = (width === 1200 && height === 450) || (width === 1200 && height === 451);
 
-        if (isValidSize) {
-          this.selectedFile = file;
-          console.log('selectedFile', this.selectedFile);
-          this.previewImageRetail(file);
-        } else {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Invalid Image Dimensions',
-            text: 'Please select an Image with suitable dimensions as mentioned in the Description',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#d33',
-          });
-          input.value = ''; // Clear file input
-        }
-      };
-
-      img.onerror = () => {
+      if (isValidSize) {
+        this.selectedFile = file;
+        this.previewImageRetail(file);
+      } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Invalid File',
-          text: 'Could not load the selected image. Please choose a valid image file.',
+          icon: 'warning',
+          title: 'Invalid Image Dimensions',
+          text: 'Please select an Image with dimensions 1200 × 450 px',
+          confirmButtonText: 'OK',
           confirmButtonColor: '#d33',
         });
-        URL.revokeObjectURL(objectUrl);
-        input.value = '';
-      };
+        input.value = ''; // Clear file input
+      }
+    };
 
-      img.src = objectUrl;
-    }
+    img.onerror = () => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Could not load the selected image. Please choose a valid image file.',
+        confirmButtonColor: '#d33',
+      });
+      URL.revokeObjectURL(objectUrl);
+      input.value = '';
+    };
+
+    img.src = objectUrl;
   }
+}
 
   onDragLeaveRetail(event: DragEvent): void {
     event.preventDefault();

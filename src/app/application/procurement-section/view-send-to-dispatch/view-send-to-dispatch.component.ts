@@ -57,8 +57,8 @@ export class ViewSendToDispatchComponent implements OnInit {
     this.fetchOrders();
   }
 
-  fetchOrders(dateFilter: string = this.dateFilter ? this.formatDate(this.dateFilter) : '', 
-              searchTerm: string = this.searchTerm): void {
+  fetchOrders(dateFilter: string = this.dateFilter ? this.formatDate(this.dateFilter) : '',
+    searchTerm: string = this.searchTerm): void {
     this.isLoading = true;
 
     this.orderService
@@ -74,19 +74,12 @@ export class ViewSendToDispatchComponent implements OnInit {
           this.hasData = response.total === 0 ? false : true;
 
           if (response && response.data) {
-            this.orders = response.data.filter(
-              (order: { packingStatus: string }) =>
-                order.packingStatus === 'Dispatch'
-            );
-            this.totalItems = response.total || response.totalCount || 0;
+            this.orders = response.data
+            this.totalItems = response.total || 0;
           } else {
-            const allOrders = Array.isArray(response) ? response : [];
-            this.orders = allOrders.filter(
-              (order) => order.packingStatus === 'Dispatch'
-            );
+            this.orders = response.data
             this.totalItems = this.orders.length;
           }
-
           console.log('Orders:', this.orders.length, 'Total:', this.totalItems);
           this.isLoading = false;
         },

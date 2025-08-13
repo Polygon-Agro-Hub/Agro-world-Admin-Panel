@@ -439,24 +439,28 @@ throw new Error('Method not implemented.');
   }
 
   validateNIC(): boolean {
-    const nic = this.personalData.nic;
+  const nic = this.personalData.nic;
 
-    if (!nic) {
-      this.nicError = true;
-      return false;
-    }
-
-    // Single pattern: matches either 9 digits + V/v OR 12 digits
-    const pattern = /^(\d{9}[Vv]|\d{12})$/;
-
-    if (!pattern.test(nic)) {
-      this.nicError = true;
-      return false;
-    }
-
-    this.nicError = false;
-    return true;
+  if (!nic) {
+    this.nicError = true;
+    return false;
   }
+
+  // Trim and convert to uppercase
+  const cleanNIC = nic.trim().toUpperCase();
+
+  // Check for old format (9 digits + V) or new format (12 digits)
+  const isOldFormat = /^[0-9]{9}V$/.test(cleanNIC);
+  const isNewFormat = /^[0-9]{12}$/.test(cleanNIC);
+
+  if (!isOldFormat && !isNewFormat) {
+    this.nicError = true;
+    return false;
+  }
+
+  this.nicError = false;
+  return true;
+}
 
   onCancel() {
     Swal.fire({
@@ -478,6 +482,11 @@ throw new Error('Method not implemented.');
     const accountPattern = /^[a-zA-Z0-9]+$/;
 
     // Check if employee type is selected
+if (!this.isFormValid()) {
+    Swal.fire('Error', 'Please fill all required fields correctly', 'error');
+    return;
+  }
+
     if (!this.empType) {
       Swal.fire('Error', 'Staff Employee Type is a required field', 'error');
       return;
@@ -578,31 +587,43 @@ throw new Error('Method not implemented.');
 }
 
   validateNameInput(event: KeyboardEvent): void {
-    // Allow navigation and control keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-      ' ',
-      'Spacebar',
-    ];
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End'
+  ];
 
-    // Allow these special keys
-    if (allowedKeys.includes(event.key)) {
+  // Allow these special keys
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Block leading spaces for name fields
+  const target = event.target as HTMLInputElement;
+  const fieldName = target.getAttribute('name') as keyof Personal;
+  
+  if (['firstName', 'lastName'].includes(fieldName)) {
+    const currentValue = this.personalData[fieldName] as string || '';
+    
+    // Block space if field is empty or cursor is at beginning
+    if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+      event.preventDefault();
       return;
     }
-
-    // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
-    const allowedPattern = /^[a-zA-Z\s'-]$/;
-
-    if (!allowedPattern.test(event.key)) {
-      event.preventDefault();
-    }
   }
+
+  // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
+  const allowedPattern = /^[a-zA-Z\s'-]$/;
+
+  if (!allowedPattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
 capitalizeFirstLetter(field: 'firstName' | 'lastName') {
   let value = this.personalData[field];
 
@@ -634,41 +655,45 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName') {
   }
 
   validateNICInput(event: KeyboardEvent) {
-    // Allow navigation keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-    ];
+  // Allow navigation keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End',
+  ];
 
-    if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
-    }
-
-    // Allow only numbers or uppercase V (but not lowercase v)
-    const nicInputPattern = /^[0-9V]$/;
-    if (!nicInputPattern.test(event.key.toUpperCase())) {
-      event.preventDefault();
-    }
+  if (allowedKeys.includes(event.key)) {
+    return; // Allow these special keys
   }
+
+  // Block lowercase 'v' explicitly
+  if (event.key === 'v') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only numbers or uppercase V
+  const nicInputPattern = /^[0-9V]$/;
+  if (!nicInputPattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
 
   formatNIC() {
-    if (this.personalData.nic) {
-      // Convert to uppercase and remove any spaces
-      this.personalData.nic = this.personalData.nic
-        .toUpperCase()
-        .replace(/\s/g, '');
+  if (this.personalData.nic) {
+    // Remove all spaces and convert to uppercase
+    this.personalData.nic = this.personalData.nic.replace(/\s/g, '').toUpperCase();
 
-      // If it ends with 'v', convert to 'V'
-      if (this.personalData.nic.endsWith('v')) {
-        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
-      }
+    // If it ends with 'v' (shouldn't happen due to input validation, but just in case)
+    if (this.personalData.nic.endsWith('v')) {
+      this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
     }
   }
+}
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
@@ -691,6 +716,182 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName') {
     const namePattern = /^[A-Za-z\s'-]+$/;
     return namePattern.test(name);
   }
+
+  isFormValid(): boolean {
+  // Check all required fields
+  if (!this.empType ||
+      !this.personalData.firstName ||
+      !this.personalData.lastName ||
+      !this.personalData.phoneNumber1 ||
+      !this.personalData.nic ||
+      !this.personalData.email ||
+      !this.personalData.houseNumber ||
+      !this.personalData.streetName ||
+      !this.personalData.city ||
+      !this.personalData.district ||
+      !this.personalData.accHolderName ||
+      !this.personalData.accNumber ||
+      !this.personalData.bankName ||
+      !this.personalData.branchName ||
+      !this.confirmAccNumber) {
+    return false;
+  }
+
+  // Check field-specific validations
+  if (!this.isValidEmail(this.personalData.email) ||
+      !this.validateNIC() ||
+      this.confirmAccountNumberError ||
+      this.confirmAccountNumberRequired ||
+      this.nicError) {
+    return false;
+  }
+
+  // Check phone number patterns
+  const phonePattern = /^[0-9]{9}$/;
+  if (!phonePattern.test(this.personalData.phoneNumber1) ||
+      (this.personalData.phoneNumber2 && !phonePattern.test(this.personalData.phoneNumber2))) {
+    return false;
+  }
+
+  // Check account number pattern
+  const accountPattern = /^[0-9]+$/;
+  if (!accountPattern.test(this.personalData.accNumber) ||
+      !accountPattern.test(this.confirmAccNumber)) {
+    return false;
+  }
+
+  // Check if account numbers match
+  if (this.personalData.accNumber !== this.confirmAccNumber) {
+    return false;
+  }
+
+  // Check if phone numbers are different if both provided
+  if (this.personalData.phoneNumber2 && 
+      this.personalData.phoneNumber2 === this.personalData.phoneNumber1) {
+    return false;
+  }
+
+  return true;
+}
+
+validateEnglishNameInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
+    'Tab', 'Home', 'End', ' ', 'Spacebar'
+  ];
+
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Allow only English letters, space, hyphen, apostrophe
+  const englishNamePattern = /^[a-zA-Z\s'-]$/;
+  
+  if (!englishNamePattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
+
+formatEnglishName(fieldName: keyof Personal): void {
+  if (this.personalData[fieldName]) {
+    // Remove any non-English characters that might have been pasted
+    let value = (this.personalData[fieldName] as string)
+      .replace(/[^a-zA-Z\s'-]/g, '') // Remove non-English characters
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+
+    // Capitalize first letter of each word
+    value = value.replace(/(^|\s|-|')[a-z]/g, (char) => char.toUpperCase());
+
+    (this.personalData[fieldName] as string) = value;
+  }
+}
+
+isValidEnglishName(name: string): boolean {
+  // Allows only English letters, spaces, hyphens, and apostrophes
+  const englishNamePattern = /^[a-zA-Z\s'-]+$/;
+  return englishNamePattern.test(name);
+}
+
+handleNamePaste(event: ClipboardEvent): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData || (window as any).clipboardData;
+  const pastedText = clipboardData.getData('text');
+  
+  // Filter out non-English characters
+  const cleanText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
+  
+  // Insert the cleaned text at cursor position
+  const target = event.target as HTMLInputElement;
+  const startPos = target.selectionStart || 0;
+  const endPos = target.selectionEnd || 0;
+  
+  const currentValue = target.value;
+  target.value = currentValue.substring(0, startPos) + cleanText + currentValue.substring(endPos);
+  
+  // Update ngModel
+  this.personalData.accHolderName = target.value;
+  
+  // Move cursor to end of inserted text
+  const newCursorPos = startPos + cleanText.length;
+  setTimeout(() => {
+    target.setSelectionRange(newCursorPos, newCursorPos);
+  });
+}
+
+preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
+  const target = event.target as HTMLInputElement;
+  const currentValue = this.personalData[fieldName] as string || '';
+  
+  // Block space if field is empty or contains only spaces
+  if (event.key === ' ' && (!currentValue || currentValue.trim().length === 0)) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Block space if cursor is at the beginning and current value starts with spaces
+  if (event.key === ' ' && target.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+}
+
+cleanFieldInput(fieldName: keyof Personal): void {
+  if (this.personalData[fieldName]) {
+    // Remove leading spaces while preserving the rest of the content
+    let value = this.personalData[fieldName] as string;
+    value = value.replace(/^\s+/, ''); // Remove only leading spaces
+    (this.personalData[fieldName] as string) = value;
+  }
+}
+
+validateAddressInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End'
+  ];
+
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Block leading spaces
+  const target = event.target as HTMLInputElement;
+  const currentValue = target.value || '';
+  
+  if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+    event.preventDefault();
+    return;
+  }
+}
+
 }
 
 class Personal {

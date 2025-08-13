@@ -534,22 +534,33 @@
           </div>
         </div>
 
-        <div class="pb-6">
-          <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            District*
-          </label>
-          <select id="district" name="district" [(ngModel)]="personalData.district" (change)="updateProvince($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #districtInput="ngModel" required>
-            <option value="" disabled selected>Select a district</option>
-            <option *ngFor="let district of districts" [value]="district.name">
-              {{ district.name }}
-            </option>
-          </select>
-          <div *ngIf="districtInput.touched && !personalData.district" class="text-red-500 text-sm mt-1">
-            <div>DistrictInput is required</div>
-          </div>
-        </div>
+     <div class="pb-6">
+  <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    District*
+  </label>
+  
+<p-dropdown
+  [options]="districts"
+  [(ngModel)]="personalData.district"
+  optionLabel="name"
+  optionValue="name"
+  filter="true"
+  filterBy="name"
+  placeholder="Select a district"
+  (onChange)="updateProvince($event)"
+  class="mt-1 block w-full"
+  [showClear]="true"
+  [autoDisplayFirst]="false"
+  #districtInput="ngModel"
+  required
+  styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+></p-dropdown>
+
+  
+  <div *ngIf="districtInput.touched && !personalData.district" class="text-red-500 text-sm mt-1">
+    District is required
+  </div>
+</div>
 
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -646,18 +657,16 @@
         </p-dropdown>
       </div>
 
-      <!-- Replace Branch Name dropdown in pageTwo -->
-      <div class="pb-6">
-        <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Branch Name*
-        </label>
-        <p-dropdown [(ngModel)]="personalData.branchName" [options]="branchOptions" optionLabel="label"
-          optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!personalData.bankName"
-          placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-          class="mt-1 block w-full p-dropdown-custom">
-        </p-dropdown>
-      </div>
-
+ <div class="pb-6">
+  <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Branch Name*
+  </label>
+  <p-dropdown [(ngModel)]="personalData.branchName" [options]="branchOptions" optionLabel="label"
+    optionValue="value" [filter]="true" filterBy="label" [showClear]="true" [disabled]="!branchOptions.length"
+    placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+    class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
+  </p-dropdown>
+</div>
       <div class="flex justify-end m-10">
         <button (click)="nextFormCreate('pageOne')" type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">

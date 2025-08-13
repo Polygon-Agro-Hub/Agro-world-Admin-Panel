@@ -196,10 +196,10 @@
             <td class="text-center text-textLight dark:text-textDark pl-5">
               {{ item.cusId }}
             </td>
-            <td class="pl-5 text-center text-textLight dark:text-textDark">
+            <td class="pl-5  text-textLight dark:text-textDark text-left">
               {{ item.firstName + " " + item.lastName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
 
@@ -237,7 +237,7 @@
                     'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
                       item.paymentStatus === 0
                   }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center">
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
                   {{ item.paymentStatus == 1 ? "Paid" : "Pending" }}
                 </span>
               </div>
@@ -264,7 +264,7 @@
                     'font-bold px-3 py-1 text-sm bg-[#FFDCDA] text-[#FF1100] rounded-3xl':
                       item.orderStatus === 'Failed'
                   }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs cursor-pointer text-center">
+                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
                   {{
                   item.orderStatus === "Ordered"
                   ? "Assigned"

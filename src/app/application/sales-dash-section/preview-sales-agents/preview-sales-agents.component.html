@@ -128,8 +128,14 @@
               Phone Number - 1
             </label>
             <div class="mt-1 flex">
-                <input id="phoneNumber1Code" name="phoneNumber1Code" [(ngModel)]="personalData.phoneCode1" class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-                [disabled]="true"/>
+               <input
+  id="phoneNumber1Code"
+  name="phoneNumber1Code"
+  [(ngModel)]="personalData.phoneCode1"
+  class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack w-16"
+  [disabled]="true"
+/>
+
               
               <input id="phoneNumber1" name="phoneNumber1" type="text" [(ngModel)]="personalData.phoneNumber1"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -145,9 +151,14 @@
               Phone Number - 2
             </label>
             <div class="mt-1 flex">
-                <input id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode2"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack" [disabled]="true"/>
-              
+              <input
+  id="phoneNumber02Code"
+  name="phoneNumber02Code"
+  [(ngModel)]="personalData.phoneCode2"
+  class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack w-16"
+  [disabled]="true"
+/>
+
               <input id="phoneNumber2" name="phoneNumber2" type="number" [(ngModel)]="personalData.phoneNumber2"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                [disabled] = 'true'/>

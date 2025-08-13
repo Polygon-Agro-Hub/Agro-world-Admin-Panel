@@ -994,6 +994,34 @@ onSubmit() {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  formatHouseNumber(): void {
+  if (this.personalData.houseNumber) {
+    // Remove leading spaces and capitalize first letter
+    this.personalData.houseNumber = this.personalData.houseNumber
+      .replace(/^\s+/, '')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+}
+
+formatStreetName(): void {
+  if (this.personalData.streetName) {
+    // Remove leading spaces and capitalize first letter
+    this.personalData.streetName = this.personalData.streetName
+      .replace(/^\s+/, '')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+}
+
+formatCity(): void {
+  if (this.personalData.city) {
+    // Remove leading spaces and capitalize first letter
+    this.personalData.city = this.personalData.city
+      .replace(/^\s+/, '')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+}
+
 }
 
 class Personal {

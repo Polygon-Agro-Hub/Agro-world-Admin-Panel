@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ThemeService } from '../../../services/theme.service';
+import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-market-add-product',
   standalone: true,
@@ -24,6 +25,7 @@ import { ThemeService } from '../../../services/theme.service';
     MatIconModule,
     CommonModule,
     MatInputModule,
+    DropdownModule,
   ],
   templateUrl: './market-add-product.component.html',
   styleUrls: ['./market-add-product.component.css'],

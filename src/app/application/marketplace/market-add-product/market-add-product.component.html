@@ -377,34 +377,45 @@
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
-          <input type="number" min="0.1" step="0.1" id="startValue" name="startValue"
-  [(ngModel)]="productObj.startValue"
-  (input)="validatePriceInput($event, 'startValue')"
-  (keydown)="preventInvalidChars($event)"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #startValueField="ngModel" required />
-          <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
-            Starting Value is required.
-          </div>
-          <div *ngIf="productObj.startValue <= 0.0" class="text-red-500 text-sm mt-1">
-            Please enter a value greater than 0.
-          </div>
-        </div>
+  <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
+  <input type="number" min="0.1" step="0.1" id="startValue" name="startValue"
+    [(ngModel)]="productObj.startValue"
+    (input)="validatePriceInput($event, 'startValue')"
+    (keydown)="preventInvalidChars($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #startValueField="ngModel" required />
+  <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
+    Starting Value is required.
+  </div>
+  <div *ngIf="productObj.startValue <= 0.0" class="text-red-500 text-sm mt-1">
+    Please enter a value greater than 0.
+  </div>
+  <!-- Add this new validation message -->
+  <div *ngIf="productObj.category === 'WholeSale' && productObj.startValue && productObj.maxQuantity && productObj.startValue > productObj.maxQuantity" 
+       class="text-red-500 text-sm mt-1">
+    Minimum quantity cannot be greater than maximum quantity.
+  </div>
+</div>
 
         <div class="my-3" *ngIf="productObj.category === 'WholeSale'">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
-          <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
-            [(ngModel)]="productObj.maxQuantity"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (input)="validateMaxQuantity()" #maxQuantityField="ngModel" required />
-          <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
-            Maximum Quantity is required.
-          </div>
-          <div *ngIf="productObj.maxQuantity <= 0.0" class="text-red-500 text-sm mt-1">
-            Please enter a value greater than 0.
-          </div>
-        </div>
+  <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
+  <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
+    [(ngModel)]="productObj.maxQuantity"
+    (input)="validateMaxQuantity()" 
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #maxQuantityField="ngModel" required />
+  <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
+    Maximum Quantity is required.
+  </div>
+  <div *ngIf="productObj.maxQuantity <= 0.0" class="text-red-500 text-sm mt-1">
+    Please enter a value greater than 0.
+  </div>
+  <!-- Add this new validation message -->
+  <div *ngIf="productObj.startValue && productObj.maxQuantity && productObj.maxQuantity < productObj.startValue" 
+       class="text-red-500 text-sm mt-1">
+    Maximum quantity must be greater than or equal to minimum quantity.
+  </div>
+</div>
 
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>

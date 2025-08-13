@@ -177,6 +177,16 @@ export class MarketAddProductComponent implements OnInit {
 
   onSubmit() {
   // First, round all decimal values to 2 places
+  if (this.productObj.category === 'WholeSale' && 
+      !this.validateQuantityRange()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Quantity Range',
+      html: 'Minimum quantity cannot be greater than maximum quantity',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
   this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
   if (this.productObj.promo) {
     this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
@@ -492,6 +502,15 @@ preventInvalidChars(event: KeyboardEvent) {
   if (event.key === '-' || event.key.toLowerCase() === 'e') {
     event.preventDefault();
   }
+}
+
+validateQuantityRange() {
+  if (this.productObj.category === 'WholeSale' && 
+      this.productObj.startValue && 
+      this.productObj.maxQuantity) {
+    return this.productObj.startValue <= this.productObj.maxQuantity;
+  }
+  return true;
 }
 
 }

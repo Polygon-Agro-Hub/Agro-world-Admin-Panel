@@ -292,20 +292,7 @@ throw new Error('Method not implemented.');
     }
   }
 
-  back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/steckholders/action/sales-agents']);
-    }
-  });
-}
+
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -354,6 +341,46 @@ throw new Error('Method not implemented.');
       }
     }
   }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.navigatePath('/steckholders/action/sales-agents');
+    }
+  });
+}
+
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+       this.router.navigate(['/steckholders/action/sales-agents']);
+    }
+  });
+}
+
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -458,20 +485,7 @@ throw new Error('Method not implemented.');
     return true;
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/sales-agents');
-      }
-    });
-  }
+
 
   onSubmit() {
     const phonePattern = /^[0-9]{9}$/;

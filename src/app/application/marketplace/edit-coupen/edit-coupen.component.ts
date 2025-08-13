@@ -90,10 +90,22 @@ export class EditCoupenComponent {
       });
   }
 
-  back(): void {
-    this.router.navigate(['market/action/view-coupen']);
-  }
+  
 
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+    }).then((result) => {
+      if (result.isConfirmed) {
+       this.router.navigate(['market/action/view-coupen']);
+      }
+    });
+  }
   checkExpireDate() {
     if (!this.coupenObj.startDate) {
       Swal.fire({
@@ -231,9 +243,19 @@ export class EditCoupenComponent {
     if (!date) return null;
     return date.toISOString().split('T')[0];
   }
-
   onCancel() {
-    this.coupenObj = new Coupen();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['market/action/view-coupen']);
+      }
+    });
   }
 
   checkPrecentageValue(num: number) {

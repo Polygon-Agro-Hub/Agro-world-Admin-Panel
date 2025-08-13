@@ -126,7 +126,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     );
   }
 
-  back(): void {
+
+
+back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -134,9 +136,33 @@ export class CreateSalesAgentsComponent implements OnInit {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/steckholders/action/sales-agents']);
+     this.router.navigate(['/steckholders/action/sales-agents']);
+    }
+  });
+}
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+       this.navigatePath('/steckholders/action/sales-agents');
     }
   });
 }
@@ -554,21 +580,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     });
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/sales-agents');
-      }
-    });
-  }
-
+  
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

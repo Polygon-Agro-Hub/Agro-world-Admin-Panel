@@ -171,7 +171,7 @@ getFlagUrl(countryCode: string): string {
     }
   }
 
-  back(): void {
+back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -179,12 +179,18 @@ getFlagUrl(countryCode: string): string {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/steckholders/action/collective-officer']);
     }
   });
 }
+
 
   onSubmit() {
     Swal.fire({
@@ -249,20 +255,25 @@ getFlagUrl(countryCode: string): string {
     });
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
-      }
-    });
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.navigatePath('/steckholders/action/collective-officer');
+    }
+  });
+}
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.selectedPage = page;

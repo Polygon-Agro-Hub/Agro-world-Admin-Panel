@@ -512,7 +512,7 @@ applyFilter() {
   }
 
   // You no longer need filterTypeTemp
-  this.filterType = 'ScheduleDate';
+  this.filterType = 'Schedule Date';
 
   // Convert Date object to string in yyyy-MM-dd format for API
   this.date = formatDate(this.dateTemp, 'yyyy-MM-dd', 'en-US');

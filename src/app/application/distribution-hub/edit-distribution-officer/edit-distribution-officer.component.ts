@@ -137,7 +137,22 @@ bankTouched: any;
       }
     });
   }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.location.back(); // Go to the previous page
+    }
+  });
+}
 
+  
   
 blockLeadingSpace(event: KeyboardEvent, field: string) {
   const value = this.personalData[field] || '';

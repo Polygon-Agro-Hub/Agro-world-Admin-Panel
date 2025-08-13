@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <button
-  onclick="history.back()"
+(click)="back()"
   *ngIf="selectedPage === 'pageOne'"
   class="ml-5 text-textLight dark:text-textDark"
 >

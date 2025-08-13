@@ -9,12 +9,10 @@
       Edit Coupon
     </p>
     <div>
-      <span
-        class="bg-[#74788D] text-lg text-white px-3 py-2 rounded-lg mx-2 cursor-pointer"
-        onclick="history.back()"
-      >
+    <button type="button" (click)="onCancel()"
+        class="px-4 w-30 py-2 bg-[#74788D] border border-gray-300 rounded-md text-[#D3D3D3] focus:outline-none focus:ring-2 focus:ring-blue-500">
         Cancel
-      </span>
+      </button>
       <span
         class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer"
         (click)="onSubmit()"

@@ -643,6 +643,26 @@ export class CreateCropCalenderComponent implements OnInit {
     });
   }
 
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/plant-care/action']);
+    }
+  });
+}
+
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.cropId = params['id'] ? +params['id'] : null;
@@ -991,40 +1011,49 @@ export class CreateCropCalenderComponent implements OnInit {
     });
   }
 
+
+
+
+
   onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.selectedFile = null;
-        this.selectedImage = null;
-        this.router.navigate(['/plant-care/action']);
-      }
-    });
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(['/plant-care/action']);
+    }
+  });
+}
 
-  onCancelEdit() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.selectedFile = null;
-        this.selectedImage = null;
-        this.router.navigate(['/plant-care/action/view-crop-calender']);
-      }
-    });
-  }
-
+    onCancelEdit() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(['/plant-care/action/view-crop-calender']);
+    }
+  });
+}
   deleteCropCalender(id: number) {
     this.isLoading = true;
     this.cropCalendarService.deleteCropCalender(id).subscribe({
@@ -1062,8 +1091,7 @@ export class CreateCropCalenderComponent implements OnInit {
       event.preventDefault();
     }
   }
-
-back(): void {
+ backEdit(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -1071,6 +1099,11 @@ back(): void {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/plant-care/action']);
@@ -1079,22 +1112,11 @@ back(): void {
 }
 
 
-backEdit(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/action/view-crop-calender']);
-    }
-  });
-}
 
 }
+
+
+
 
 export function nonZeroValidator(control: AbstractControl): ValidationErrors | null {
   const value = Number(control.value);

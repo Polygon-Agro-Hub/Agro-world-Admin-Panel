@@ -290,22 +290,26 @@ export class CreateNewsComponent {
     }
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.selectedFile = null;
-        this.selectedImage = null;
-        this.location.back(); // This will navigate to the previous page
-      }
-    });
-  }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+   this.router.navigate(['/plant-care/action']);
+    }
+  });
+}
+
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
@@ -493,6 +497,27 @@ export class CreateNewsComponent {
     }
   }
 
+  onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+       this.location.back(); // This will navigate to the previous page
+    }
+  });
+}
+
+
   getTodayDate(): string {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -548,20 +573,7 @@ export class CreateNewsComponent {
   }
 }
 
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/action']);
-    }
-  });
-}
+
 
 
 

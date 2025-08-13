@@ -234,6 +234,25 @@ allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
     }, 2000);
   }
 }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(['/collection-hub/manage-company']);
+    }
+  });
+}
 
 // Method for Sinhala name validation (block numbers and special characters)
 allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
@@ -1059,36 +1078,28 @@ getCompanyData() {
     return emailPattern.test(email);
   }
 
-  back(): void {
+onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
+    text: 'You may lose the added data after canceling!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/collection-hub/manage-company']);
+    this.router.navigate(['/collection-hub/manage-company']);
     }
   });
 }
 
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/collection-hub/manage-company']);
-      }
-    });
-  }
+
 
   numberOnly(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;

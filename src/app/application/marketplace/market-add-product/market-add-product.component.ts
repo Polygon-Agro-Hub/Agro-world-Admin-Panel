@@ -433,15 +433,38 @@ export class MarketAddProductComponent implements OnInit {
 
   validatePriceInput(event: Event, fieldName: string) {
   const input = event.target as HTMLInputElement;
-  const value = input.value;
+  let value = input.value;
   
-  // Check if the value has more than 2 decimal places
+  // Prevent negative numbers and invalid characters
+  if (value.includes('-') || value.toLowerCase().includes('e')) {
+    value = value.replace(/[-e]/g, '');
+    input.value = value;
+    
+    // Update the model
+    switch (fieldName) {
+      case 'normalPrice':
+        this.productObj.normalPrice = value ? parseFloat(value) : 0;
+        break;
+      case 'discountedPrice':
+        this.productObj.discountedPrice = value ? parseFloat(value) : 0;
+        break;
+      case 'startValue':
+        this.productObj.startValue = value ? parseFloat(value) : 0;
+        break;
+      case 'changeby':
+        this.productObj.changeby = value ? parseFloat(value) : 0;
+        break;
+    }
+    
+    event.preventDefault();
+    return;
+  }
+  
+  // Rest of your existing validation for decimal places
   if (value.includes('.') && value.split('.')[1].length > 2) {
-    // Truncate to 2 decimal places
     const truncatedValue = parseFloat(value).toFixed(2);
     input.value = truncatedValue;
     
-    // Update the model
     switch (fieldName) {
       case 'normalPrice':
         this.productObj.normalPrice = parseFloat(truncatedValue);
@@ -456,28 +479,18 @@ export class MarketAddProductComponent implements OnInit {
         this.productObj.changeby = parseFloat(truncatedValue);
         break;
     }
-    
-    // Trigger the calculation if needed
-    this.calculeSalePrice();
   }
   
-  // Also validate the basic constraints
-  switch (fieldName) {
-    case 'normalPrice':
-      this.validateNormalPrice();
-      break;
-    case 'discountedPrice':
-      this.validateDiscountPercentage();
-      break;
-    case 'startValue':
-      this.validateMinQuantity();
-      break;
-    case 'changeby':
-      this.validateChangeBy();
-      break;
-  }
+  // Trigger the calculation if needed
+  this.calculeSalePrice();
 }
 
+preventInvalidChars(event: KeyboardEvent) {
+  // Block '-' and 'e' characters
+  if (event.key === '-' || event.key.toLowerCase() === 'e') {
+    event.preventDefault();
+  }
+}
 
 }
 

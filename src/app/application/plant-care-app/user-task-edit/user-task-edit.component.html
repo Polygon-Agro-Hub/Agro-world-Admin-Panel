@@ -1,5 +1,5 @@
 <div>
-  <button class="text-textLight dark:text-textDark" onclick="history.back()">
+  <button class="text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -530,6 +530,13 @@
 
     <div class="flex justify-end mt-6">
       <div class="w-[20px]"></div>
+         <button
+          type="button"
+          class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
       <button
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         type="button"

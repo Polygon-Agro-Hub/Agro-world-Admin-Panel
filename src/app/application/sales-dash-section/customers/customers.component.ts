@@ -150,6 +150,11 @@ onSearchChange(searchText: string) {
   this.searchSubject.next(searchText);
 }
 
+onSearchClick() {
+  const trimmedSearch = this.searchText.trimStart();
+  this.filterCustomers(trimmedSearch);
+}
+
 
   filterCustomers(searchText: string) {
     const loweredSearch = searchText.trim().toLowerCase();
@@ -166,28 +171,20 @@ onSearchChange(searchText: string) {
   }
 
   private searchInCustomer(customer: Customers, searchText: string): boolean {
-    const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-    const agentName =
-      `${customer.salesAgentFirstName} ${customer.salesAgentLastName}`.toLowerCase();
-    const address =
-      customer.buildingType === 'House'
-        ? `${customer.houseHouseNo} ${customer.houseStreetName} ${customer.houseCity}`
-        : `${customer.apartmentBuildingNo} ${customer.apartmentBuildingName} ${customer.apartmentUnitNo} ${customer.apartmentFloorNo} ${customer.apartmentHouseNo} ${customer.apartmentStreetName} ${customer.apartmentCity}`.toLowerCase();
+  const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
 
-    const fieldsToSearch = [
-      customer.cusId,
-      fullName,
-      customer.phoneNumber,
-      customer.email,
-      customer.empId,
-      agentName,
-      address,
-    ];
+  const fieldsToSearch = [
+    customer.cusId,                // Customer ID
+    fullName,                       // Customer Name
+    customer.phoneNumber,           // Contact
+    customer.empId                  // Agent ID
+  ];
 
-    return fieldsToSearch.some((field) =>
-      field?.toLowerCase().includes(searchText)
-    );
-  }
+  return fieldsToSearch.some((field) =>
+    field?.toLowerCase().includes(searchText)
+  );
+}
+
 
   offSearch() {
     this.searchText = '';

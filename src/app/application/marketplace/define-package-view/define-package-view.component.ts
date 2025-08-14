@@ -181,23 +181,42 @@ export class DefinePackageViewComponent implements OnInit {
   }
 
   onQuantityChanged(productType: ProductTypes, event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    let quantity = parseFloat(inputElement.value);
+  const inputElement = event.target as HTMLInputElement;
+  let value = inputElement.value;
+  
+  // Remove any extra decimal points
+  if ((value.match(/\./g) || []).length > 1) {
+    value = value.substring(0, value.lastIndexOf('.'));
+    inputElement.value = value;
+  }
+  
+  // Enforce max 2 decimal places
+  if (value.includes('.')) {
+    const parts = value.split('.');
+    if (parts[1].length > 2) {
+      value = parts[0] + '.' + parts[1].substring(0, 2);
+      inputElement.value = value;
+    }
+  }
 
-    if (isNaN(quantity)) {
+  const quantity = parseFloat(value);
+  
+  if (isNaN(quantity)) {
+    productType.quantity = undefined;
+    productType.calculatedPrice = undefined;
+  } else {
+    if (quantity <= 0) {
       productType.quantity = undefined;
       productType.calculatedPrice = undefined;
-    } else {
-      if (quantity <= 0) {
-        quantity = 0;
-        Swal.fire('Warning', 'Quantity must be greater than 0!', 'warning');
-        inputElement.value = '';
-      }
-      productType.quantity = quantity;
-      productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
+      inputElement.value = '';
+      Swal.fire('Warning', 'Quantity must be greater than 0!', 'warning');
+      return;
     }
-    this.calculateTotalPrice();
+    productType.quantity = quantity;
+    productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
   }
+  this.calculateTotalPrice();
+}
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
@@ -358,4 +377,46 @@ export class DefinePackageViewComponent implements OnInit {
     }
     return 'An unknown error occurred';
   }
+
+  validateQuantityInput(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  const key = event.key;
+  
+  // Allow: backspace, delete, tab, escape, enter, arrows (up/down/left/right)
+  if (
+    ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key) ||
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    (event.ctrlKey === true && ['a', 'c', 'v', 'x'].includes(key.toLowerCase()))
+  ) {
+    return; // let it happen, don't do anything
+  }
+
+  // Ensure that it is a number and stop the keypress if not
+  if (event.key === ' ' || isNaN(Number(key))) {
+    event.preventDefault();
+    return;
+  }
+
+  // Get the current value and proposed new value
+  const currentValue = input.value;
+  const selectionStart = input.selectionStart || 0;
+  const selectionEnd = input.selectionEnd || 0;
+  const proposedValue = 
+    currentValue.substring(0, selectionStart) + 
+    key + 
+    currentValue.substring(selectionEnd);
+
+  // Check if the proposed value matches our pattern
+  const pattern = /^\d*\.?\d{0,2}$/;
+  if (!pattern.test(proposedValue)) {
+    event.preventDefault();
+  }
+
+  // Only allow one decimal point
+  if (key === '.' && currentValue.includes('.')) {
+    event.preventDefault();
+  }
+}
+
+
 }

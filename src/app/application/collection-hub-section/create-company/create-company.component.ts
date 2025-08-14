@@ -234,6 +234,25 @@ allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
     }, 2000);
   }
 }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(['/collection-hub/manage-company']);
+    }
+  });
+}
 
 // Method for Sinhala name validation (block numbers and special characters)
 allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
@@ -477,123 +496,98 @@ validateContactNumbers(): void {
   }
 
   async onLogoChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const maxSize = 1024 * 1024; // 1MB
+    
+    if (file.size > maxSize) {
+      this.logoSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Logo must be less than 1MB'
+      });
+      input.value = '';
+      return;
+    }
 
-      // Check file size (1MB = 1024 * 1024 bytes)
-      const maxSize = 1024 * 1024; // 1MB
-      if (file.size > maxSize) {
-        this.logoSizeError = true;
-        Swal.fire({
-          icon: 'error',
-          title: 'File Size Too Large',
-          text: 'Image size is too large. Please upload an image less than 1MB',
-        });
-        // Clear the file input
-        input.value = '';
-        return;
-      }
+    try {
+      this.isLoading = true;
+      this.logoSizeError = false;
+      const compressedFile = await this.compressImage(file, 800, 800, 0.7);
+      this.selectedLogoFile = compressedFile;
+      this.companyData.logoFile = compressedFile;
 
-      try {
-        this.isLoading = true;
-        this.logoSizeError = false; // Reset error state
-
-        const compressedFile = await this.compressImage(
-          file,
-          800,
-          800,
-          0.7
-        );
-        this.selectedLogoFile = compressedFile;
-        this.companyData.logoFile = compressedFile;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.logo = e.target?.result as string;
-          this.isLoading = false;
-        };
-        reader.readAsDataURL(this.selectedLogoFile);
-      } catch (error) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.logo = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing image:', error);
-      }
+      };
+      reader.readAsDataURL(this.selectedLogoFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing logo:', error);
     }
   }
+}
 
   // Updated onFaviconChange method
   async onFaviconChange(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const maxSize = 1024 * 1024; // 1MB
+    
+    if (file.size > maxSize) {
+      this.faviconSizeError = true;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Favicon must be less than 1MB'
+      });
+      input.value = '';
+      return;
+    }
 
-      // Check file size (1MB = 1024 * 1024 bytes)
-      const maxSize = 1024 * 1024; // 1MB
-      if (file.size > maxSize) {
-        this.faviconSizeError = true;
-        Swal.fire({
-          icon: 'error',
-          title: 'File Size Too Large',
-          text: 'Image size is too large. Please upload an image less than 1MB',
-        });
-        // Clear the file input
-        input.value = '';
-        return;
-      }
+    try {
+      this.isLoading = true;
+      this.faviconSizeError = false;
+      const compressedFile = await this.compressImage(file, 800, 800, 0.7);
+      this.selectedFaviconFile = compressedFile;
+      this.companyData.faviconFile = compressedFile;
 
-      try {
-        this.isLoading = true;
-        this.faviconSizeError = false; // Reset error state
-
-        const compressedFile = await this.compressImage(
-          file,
-          800,
-          800,
-          0.7
-        );
-        this.selectedFaviconFile = compressedFile;
-        this.companyData.faviconFile = compressedFile;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.companyData.favicon = e.target?.result as string;
-          this.isLoading = false;
-        };
-        reader.readAsDataURL(this.selectedFaviconFile);
-      } catch (error) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.companyData.favicon = e.target?.result as string;
         this.isLoading = false;
-        console.error('Error compressing image:', error);
-      }
+      };
+      reader.readAsDataURL(this.selectedFaviconFile);
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error compressing favicon:', error);
     }
   }
+}
 
   removeLogo(event: Event): void {
-    event.stopPropagation();
-    this.companyData.logo = '';
-    this.selectedLogoFile = null;
-    this.companyData.logoFile = undefined;
-
-    const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
-    if (logoInput) {
-      logoInput.value = '';
-    }
-
-    this.touchedFields['logo'] = true;
-  }
+  event.stopPropagation();
+  this.companyData.logo = '';
+  this.selectedLogoFile = null;
+  this.companyData.logoFile = undefined;
+  const logoInput = document.getElementById('logoUploadEdit') as HTMLInputElement;
+  if (logoInput) logoInput.value = '';
+  this.touchedFields['logo'] = true;
+}
 
   removeFavicon(event: Event): void {
-    event.stopPropagation();
-    this.companyData.favicon = '';
-    this.selectedFaviconFile = null;
-
-    const faviconInput = document.getElementById(
-      'faviconUpload'
-    ) as HTMLInputElement;
-    if (faviconInput) {
-      faviconInput.value = '';
-    }
-
-    this.touchedFields['favicon'] = true;
-  }
+  event.stopPropagation();
+  this.companyData.favicon = '';
+  this.selectedFaviconFile = null;
+  const faviconInput = document.getElementById('faviconUploadEdit') as HTMLInputElement;
+  if (faviconInput) faviconInput.value = '';
+  this.touchedFields['favicon'] = true;
+}
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -905,34 +899,83 @@ getCompanyData() {
       );
   }
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    if (page === 'pageTwo') {
-      const missingFields: string[] = [];
+  if (page === 'pageTwo') {
+    // Mark all fields as touched to show validation messages
+    this.touchedFields = {
+      regNumber: true,
+      companyNameEnglish: true,
+      companyNameSinhala: true,
+      companyNameTamil: true,
+      email: true,
+      logo: true,
+      favicon: true
+    };
 
-      if (!this.companyData.regNumber)
-        missingFields.push('Company Register Number');
-      if (!this.companyData.companyNameEnglish)
-        missingFields.push('Company Name (English)');
-      if (!this.companyData.companyNameSinhala)
-        missingFields.push('Company Name (Sinhala)');
-      if (!this.companyData.companyNameTamil)
-        missingFields.push('Company Name (Tamil)');
+    const missingFields: string[] = [];
 
-      if (!this.companyData.email) missingFields.push('Company Email');
+    if (!this.companyData.regNumber) missingFields.push('Company Register Number');
+    if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English)');
+    if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
+    if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
+    if (!this.companyData.email) missingFields.push('Company Email');
+    if (!this.companyData.logo) missingFields.push('Company Logo');
+    if (!this.companyData.favicon) missingFields.push('Company Favicon');
 
-      if (missingFields.length > 0) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Please fill all fields',
-          html: `The following fields are missing:<br><ul>${missingFields
-            .map((field) => `<li>${field}</li>`)
-            .join('')}</ul>`,
-        });
-        return;
-      }
+    // Validate email format if email exists
+    if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
+      missingFields.push('Valid Email Address');
     }
 
-    this.selectedPage = page;
+    if (missingFields.length > 0) {
+      // Create a more detailed error message
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      
+      missingFields.forEach(field => {
+        errorMessage += `<li>${field} is required</li>`;
+        
+        // Add specific guidance for certain fields
+        if (field === 'Company Logo' || field === 'Company Favicon') {
+          errorMessage += ` (must be an image less than 1MB)`;
+        } else if (field === 'Valid Email Address') {
+          errorMessage = errorMessage.replace('Valid Email Address is required', 'Please enter a valid email address (e.g., example@domain.com)');
+        }
+      });
+      
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left'
+        }
+      });
+      return;
+    }
+
+    // Validate language-specific names
+    if (this.englishInputError || this.sinhalaInputError || this.tamilInputError) {
+      let languageError = '';
+      if (this.englishInputError) languageError += 'English name contains invalid characters. ';
+      if (this.sinhalaInputError) languageError += 'Sinhala name contains invalid characters. ';
+      if (this.tamilInputError) languageError += 'Tamil name contains invalid characters.';
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Characters',
+        text: languageError.trim(),
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
   }
+
+  this.selectedPage = page;
+}
   allowOnlyEnglishLetterss(event: KeyboardEvent): void {
     const key = event.key;
     const pattern = /^[a-zA-Z\s]$/;
@@ -1030,8 +1073,16 @@ getCompanyData() {
 
 
   isFieldInvalid(fieldName: keyof Company): boolean {
-    return !!this.touchedFields[fieldName] && !this.companyData[fieldName];
+  const value = this.companyData[fieldName];
+  
+  // Special handling for logo and favicon
+  if (fieldName === 'logo' || fieldName === 'favicon') {
+    return !!this.touchedFields[fieldName] && !value;
   }
+  
+  // For other fields
+  return !!this.touchedFields[fieldName] && !value;
+}
 
   validateConfirmAccNumber(): void {
     // Reset error flags
@@ -1059,36 +1110,28 @@ getCompanyData() {
     return emailPattern.test(email);
   }
 
-  back(): void {
+onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
+    text: 'You may lose the added data after canceling!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/collection-hub/manage-company']);
+    this.router.navigate(['/collection-hub/manage-company']);
     }
   });
 }
 
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/collection-hub/manage-company']);
-      }
-    });
-  }
+
 
   numberOnly(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;

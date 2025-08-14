@@ -162,7 +162,9 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     return `https://flagcdn.com/24x18/${code}.png`;
   }
 
-  back(): void {
+
+
+back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -170,12 +172,18 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
-  if (result.isConfirmed) {
-        this.location.back();
-      }
+    if (result.isConfirmed) {
+ this.location.back();
+    }
   });
 }
+
 
   // Field configurations
 private fieldConfigs: { [key: string]: FieldConfig } = {
@@ -291,6 +299,26 @@ capitalizeAccHolderName(event: Event): void {
   
   this.personalData.accHolderName = value;
   inputElement.value = value;
+}
+
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+         this.location.back();
+    }
+  });
 }
 
 validateSriLankanPhone(input: string, key: string): void {
@@ -584,20 +612,7 @@ blockNonNumbers(event: KeyboardEvent) {
     });
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.location.back();
-      }
-    });
-  }
+
 
   validateFile(file: File): boolean {
     if (file.size > 5000000) {

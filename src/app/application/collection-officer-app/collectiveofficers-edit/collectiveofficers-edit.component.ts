@@ -229,7 +229,7 @@ setupDropdownOptions() {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
-  back(): void {
+back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -237,12 +237,18 @@ setupDropdownOptions() {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/steckholders/action/collective-officer']);
     }
   });
 }
+
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe((data) => {
@@ -787,20 +793,26 @@ onBranchChange(event: DropdownChangeEvent): void {
     });
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
-      }
-    });
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.navigatePath('/steckholders/action/collective-officer');
+    }
+  });
+}
+
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo' && !this.checkFormValidity()) {
@@ -982,6 +994,34 @@ onSubmit() {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  formatHouseNumber(): void {
+  if (this.personalData.houseNumber) {
+    // Remove leading spaces and capitalize first letter
+    this.personalData.houseNumber = this.personalData.houseNumber
+      .replace(/^\s+/, '')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+}
+
+formatStreetName(): void {
+  if (this.personalData.streetName) {
+    // Remove leading spaces and capitalize first letter
+    this.personalData.streetName = this.personalData.streetName
+      .replace(/^\s+/, '')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+}
+
+formatCity(): void {
+  if (this.personalData.city) {
+    // Remove leading spaces and capitalize first letter
+    this.personalData.city = this.personalData.city
+      .replace(/^\s+/, '')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+}
+
 }
 
 class Personal {

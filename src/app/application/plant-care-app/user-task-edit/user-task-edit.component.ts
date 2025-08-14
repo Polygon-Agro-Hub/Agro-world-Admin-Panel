@@ -8,6 +8,7 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
+import { Location } from '@angular/common';
 
 class CropTask {
   'id': number;
@@ -46,6 +47,7 @@ export class UserTaskEditComponent {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   hasImageLink: boolean = false;
   formSubmitted: boolean = false;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +57,8 @@ export class UserTaskEditComponent {
     private ongoingCultivationService: OngoingCultivationService,
     private router: Router,
     private taskService: CropCalendarService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+      private location: Location
   ) {}
 
   ngOnInit() {
@@ -190,6 +193,25 @@ export class UserTaskEditComponent {
   return true;
 }
 
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+     customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+        this.location.back();
+    }
+  });
+}
+
   formatDate(date: any): string {
     if (!date) return '';
     const d = new Date(date);
@@ -236,6 +258,25 @@ export class UserTaskEditComponent {
     if (!sinhalaRegex.test(value)) {
       event.target.value = value.slice(0, -1);
     }
+  }
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+       customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+          this.location.back();
+  
+      }
+    });
   }
 
   validateTamilInput(event: any) {

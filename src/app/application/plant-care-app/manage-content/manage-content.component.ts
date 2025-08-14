@@ -211,6 +211,26 @@ private formatLocalDate(date: Date): string {
     this.isPopupVisible = false;
     this.fetchAllNews();
   }
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/action']);
+    }
+  });
+}
+
 
   updateStatus(id: any) {
     this.isLoading = true;
@@ -246,20 +266,6 @@ private formatLocalDate(date: Date): string {
 
 
 
-  back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/action']);
-    }
-  });
-}
 
 
   onDateClear(){

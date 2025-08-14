@@ -23,6 +23,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
+import { Location } from '@angular/common';
 
 interface PhoneCode {
   code: string;
@@ -88,6 +89,7 @@ countries: PhoneCode[] = [
   { code: 'DE', dialCode: '+49', name: 'Germany' },
   { code: 'FR', dialCode: '+33', name: 'France' }
 ];
+  location: any;
 
 getFlagUrl(countryCode: string): string {
   return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
@@ -436,7 +438,7 @@ getFlagUrl(countryCode: string): string {
 
 
 
-  back(): void {
+back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -446,7 +448,7 @@ getFlagUrl(countryCode: string): string {
     cancelButtonText: 'No, Stay Here',
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
+      this.location.back(); // Go to the previous page
     }
   });
 }
@@ -622,7 +624,7 @@ getFlagUrl(countryCode: string): string {
     title: 'Are you sure?',
     text: 'All entered data will be lost!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Reset',
+    confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
   }).then((result) => {
     if (result.isConfirmed) {

@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../services/theme.service';
 import { ChipsModule } from 'primeng/chips';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-market-edit-product',
@@ -23,6 +24,7 @@ import { ChipsModule } from 'primeng/chips';
     MatIconModule,
     CommonModule,
      ChipsModule,
+     DropdownModule
   ],
   templateUrl: './market-edit-product.component.html',
   styleUrl: './market-edit-product.component.css',
@@ -185,59 +187,70 @@ export class MarketEditProductComponent implements OnInit {
   // }
 
   onSubmit() {
-    this.updateTags();
-    console.log(this.productObj.promo);
+  this.updateTags();
+  console.log(this.productObj.promo);
 
-    // Check for empty required fields
-    const emptyFields = [];
-    
-    if (!this.productObj.category) emptyFields.push('Category');
-    if (!this.productObj.cropName) emptyFields.push('Display Name');
-    if (!this.productObj.varietyId) emptyFields.push('Variety');
-    if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
-    if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
-    if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
-    if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
-    
-    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
-        emptyFields.push('Maximum Quantity');
-    }
-    
-    if (this.productObj.promo) {
-        if (!this.productObj.discountedPrice) emptyFields.push('Discount Percentage');
-        if (!this.productObj.salePrice) emptyFields.push('Sale Price');
-        if (!this.productObj.displaytype) emptyFields.push('Display Type');
-    }
+  // Validate min and max quantities
+  if (this.productObj.category === 'WholeSale' && !this.validateMinMaxQuantities()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      text: 'Minimum quantity cannot be greater than maximum quantity.',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
 
-    if (emptyFields.length > 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Missing Required Fields',
-            html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
+  // Check for empty required fields
+  const emptyFields = [];
+  
+  if (!this.productObj.category) emptyFields.push('Category');
+  if (!this.productObj.cropName) emptyFields.push('Display Name');
+  if (!this.productObj.varietyId) emptyFields.push('Variety');
+  if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+  if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+  if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
+  if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
+  
+  if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
+      emptyFields.push('Maximum Quantity');
+  }
+  
+  if (this.productObj.promo) {
+      if (!this.productObj.discountedPrice) emptyFields.push('Discount Percentage');
+      if (!this.productObj.salePrice) emptyFields.push('Sale Price');
+      if (!this.productObj.displaytype) emptyFields.push('Display Type');
+  }
 
-    this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
-        (res) => {
-            if (res.status) {
-                Swal.fire('Success', 'Product Updated Successfully', 'success');
-                this.router.navigate(['/market/action/view-products-list']);
-            } else {
-                Swal.fire('Error', 'Product Update Failed', 'error');
-            }
-        },
-        (error) => {
-            console.error('Product update error:', error);
-            Swal.fire(
-                'Error',
-                'An error occurred while updating the product',
-                'error'
-            );
-        }
-    );
-    console.log('Form submitted:', this.productObj);
+  if (emptyFields.length > 0) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Missing Required Fields',
+          html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+          confirmButtonText: 'OK'
+      });
+      return;
+  }
+
+  this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
+      (res) => {
+          if (res.status) {
+              Swal.fire('Success', 'Product Updated Successfully', 'success');
+              this.router.navigate(['/market/action/view-products-list']);
+          } else {
+              Swal.fire('Error', 'Product Update Failed', 'error');
+          }
+      },
+      (error) => {
+          console.error('Product update error:', error);
+          Swal.fire(
+              'Error',
+              'An error occurred while updating the product',
+              'error'
+          );
+      }
+  );
+  console.log('Form submitted:', this.productObj);
 }
 updateTags() {
     this.productObj.tags = this.templateKeywords().join(', ');
@@ -352,6 +365,139 @@ updateTags() {
       this.productObj.startValue = 0.0;
     }
   }
+
+  validateDecimalInput(event: KeyboardEvent): boolean {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const key = event.key;
+
+  // Allow control keys
+  const controlKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste'];
+  if (controlKeys.includes(key)) {
+    return true;
+  }
+
+  // Allow numbers and decimal point
+  if (!/^[0-9.]$/.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Prevent multiple decimal points
+  if (key === '.' && value.includes('.')) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Check if adding this character would exceed 2 decimal places
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+    if (decimalPart && decimalPart.length >= 2 && key !== '.') {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  // Prevent decimal point at the beginning
+  if (key === '.' && value === '') {
+    event.preventDefault();
+    return false;
+  }
+
+  return true;
+}
+
+validatePriceFormat(value: any, fieldName: string): boolean {
+  if (value === null || value === undefined || value === '') {
+    return true; // Allow empty values, required validation will handle this
+  }
+
+  const stringValue = value.toString();
+  
+  // Check for invalid formats like 12..00, 99.999, etc.
+  const validPriceRegex = /^\d+(\.\d{1,2})?$/;
+  
+  if (!validPriceRegex.test(stringValue)) {
+    // Show error message or handle invalid format
+    console.error(`Invalid format for ${fieldName}: ${stringValue}`);
+    return false;
+  }
+
+  return true;
+}
+
+formatPrice(event: any, fieldName: string): void {
+  const input = event.target;
+  let value = input.value;
+
+  if (value && !isNaN(value)) {
+    const numericValue = parseFloat(value);
+    if (numericValue >= 0) {
+      const formattedValue = numericValue.toFixed(2);
+      input.value = formattedValue;
+      
+      // Update the model based on field name
+      switch (fieldName) {
+        case 'normalPrice':
+          this.productObj.normalPrice = parseFloat(formattedValue);
+          break;
+        case 'discountedPrice':
+          this.productObj.discountedPrice = parseFloat(formattedValue);
+          break;
+        case 'salePrice':
+          this.productObj.salePrice = parseFloat(formattedValue);
+          break;
+        case 'startValue':
+          this.productObj.startValue = parseFloat(formattedValue);
+          break;
+        case 'changeby':
+          this.productObj.changeby = parseFloat(formattedValue);
+          break;
+        case 'maxQuantity':
+          this.productObj.maxQuantity = parseFloat(formattedValue);
+          break;
+      }
+      
+      // Recalculate sale price if needed
+      if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+        this.calculeSalePrice();
+      }
+    }
+  }
+}
+
+validateMinMaxQuantities(): boolean {
+  if (this.productObj.category === 'WholeSale' && 
+      this.productObj.maxQuantity > 0 && 
+      this.productObj.startValue > this.productObj.maxQuantity) {
+    return false;
+  }
+  return true;
+}
+
+getMinQuantityError(): string {
+  if (this.productObj.startValue <= 0) {
+    return 'Please enter a value greater than 0.';
+  }
+  if (this.productObj.category === 'WholeSale' && 
+      this.productObj.maxQuantity > 0 && 
+      this.productObj.startValue > this.productObj.maxQuantity) {
+    return 'Minimum quantity cannot be greater than maximum quantity.';
+  }
+  return '';
+}
+
+getMaxQuantityError(): string {
+  if (this.productObj.maxQuantity <= 0) {
+    return 'Please enter a value greater than 0.';
+  }
+  if (this.productObj.startValue > 0 && 
+      this.productObj.maxQuantity < this.productObj.startValue) {
+    return 'Maximum quantity must be greater than or equal to minimum quantity.';
+  }
+  return '';
+}
+
 }
 
 class Crop {

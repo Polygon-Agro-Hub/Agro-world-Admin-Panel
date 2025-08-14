@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ThemeService } from '../../../services/theme.service';
+import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-market-add-product',
   standalone: true,
@@ -24,6 +25,7 @@ import { ThemeService } from '../../../services/theme.service';
     MatIconModule,
     CommonModule,
     MatInputModule,
+    DropdownModule,
   ],
   templateUrl: './market-add-product.component.html',
   styleUrls: ['./market-add-product.component.css'],
@@ -174,6 +176,29 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
+  // First, round all decimal values to 2 places
+  if (this.productObj.category === 'WholeSale' && 
+      !this.validateQuantityRange()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Quantity Range',
+      html: 'Minimum quantity cannot be greater than maximum quantity',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
+  this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
+  if (this.productObj.promo) {
+    this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
+    this.productObj.salePrice = parseFloat(this.productObj.salePrice.toFixed(2));
+  }
+  this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
+  this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
+  
+  if (this.productObj.category === 'WholeSale') {
+    this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(2));
+  }
+
   this.updateTags();
 
   // Check for empty required fields
@@ -183,12 +208,12 @@ export class MarketAddProductComponent implements OnInit {
   if (!this.productObj.cropName) emptyFields.push('Display Name');
   if (!this.productObj.selectId) emptyFields.push('Crop');
   if (!this.productObj.varietyId) emptyFields.push('Variety');
-  if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+  if (!this.productObj.normalPrice && this.productObj.normalPrice !== 0) emptyFields.push('Price Per kg');
   if (!this.productObj.unitType) emptyFields.push('Unit Type');
-  if (!this.productObj.startValue) emptyFields.push('Starting Value');
-  if (!this.productObj.changeby) emptyFields.push('Increase/Decrease by');
+  if (!this.productObj.startValue && this.productObj.startValue !== 0) emptyFields.push('Starting Value');
+  if (!this.productObj.changeby && this.productObj.changeby !== 0) emptyFields.push('Increase/Decrease by');
   
-  if (this.productObj.category === 'WholeSale' && !this.productObj.maxQuantity) {
+  if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity && this.productObj.maxQuantity !== 0)) {
     emptyFields.push('Maximum Quantity');
   }
 
@@ -216,31 +241,89 @@ export class MarketAddProductComponent implements OnInit {
     return;
   }
 
-  if (this.productObj.salePrice <= 0) {
-    Swal.fire(
-      'Invalid Value',
-      'Sale Price must be greater than 0, check the discount you applied',
-      'warning'
-    );
+  // Validate decimal places for all numeric fields
+  const decimalIssues = [];
+  
+  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.normalPrice.toString())) {
+    decimalIssues.push('Price Per kg must have max 2 decimal places');
+  }
+  
+  if (this.productObj.promo && this.productObj.discountedPrice && 
+      !/^\d+(\.\d{1,2})?$/.test(this.productObj.discountedPrice.toString())) {
+    decimalIssues.push('Discount Percentage must have max 2 decimal places');
+  }
+  
+  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.startValue.toString())) {
+    decimalIssues.push('Starting Value must have max 2 decimal places');
+  }
+  
+  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.changeby.toString())) {
+    decimalIssues.push('Increase/Decrease by must have max 2 decimal places');
+  }
+  
+  if (this.productObj.category === 'WholeSale' && 
+      !/^\d+(\.\d{1,2})?$/.test(this.productObj.maxQuantity.toString())) {
+    decimalIssues.push('Maximum Quantity must have max 2 decimal places');
+  }
+
+  if (decimalIssues.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Decimal Values',
+      html: decimalIssues.join('<br>'),
+      confirmButtonText: 'OK'
+    });
     return;
   }
 
+  // Validate price relationships
+  if (this.productObj.promo) {
+    if (this.productObj.salePrice <= 0) {
+      Swal.fire(
+        'Invalid Value',
+        'Sale Price must be greater than 0, check the discount you applied',
+        'warning'
+      );
+      return;
+    }
+    
+    if (this.productObj.displaytype === 'AP&SP' && 
+        this.productObj.salePrice >= this.productObj.normalPrice) {
+      Swal.fire(
+        'Invalid Value',
+        'Sale Price must be less than Actual Price',
+        'warning'
+      );
+      return;
+    }
+  }
+
   // Additional validations
-  if (this.productObj.startValue <= 0.0) {
+  if (this.productObj.startValue <= 0) {
     Swal.fire('Invalid Value', 'Starting Value must be greater than 0', 'warning');
     return;
   }
 
-  if (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0.0) {
+  if (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0) {
     Swal.fire('Invalid Value', 'Maximum Quantity must be greater than 0', 'warning');
     return;
   }
 
+  if (this.productObj.changeby <= 0) {
+    Swal.fire('Invalid Value', 'Increase/Decrease by must be greater than 0', 'warning');
+    return;
+  }
+
+  // Convert grams to kg if needed
   if (this.productObj.unitType == 'g') {
     this.productObj.startValue = this.productObj.startValue / 1000;
     this.productObj.changeby = this.productObj.changeby / 1000;
+    if (this.productObj.category === 'WholeSale') {
+      this.productObj.maxQuantity = this.productObj.maxQuantity / 1000;
+    }
   }
 
+  // Submit the form
   this.marketSrv.createProduct(this.productObj).subscribe(
     (res) => {
       if (res.status === true) {
@@ -311,19 +394,21 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   validateDiscountPercentage() {
-    if (this.productObj.discountedPrice < 0) {
-      this.productObj.discountedPrice = 0;
-    }
-    if (this.productObj.discountedPrice > 100) {
-      this.productObj.discountedPrice = 100;
-    }
+  if (this.productObj.discountedPrice < 0) {
+    this.productObj.discountedPrice = 0;
   }
+  if (this.productObj.discountedPrice > 100) {
+    this.productObj.discountedPrice = 100;
+  }
+  this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
+}
 
   validateNormalPrice() {
-    if (this.productObj.normalPrice < 0) {
-      this.productObj.normalPrice = 0;
-    }
+  if (this.productObj.normalPrice < 0) {
+    this.productObj.normalPrice = 0;
   }
+  this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
+}
 
   validateSalePrice() {
     if (this.productObj.salePrice < 0) {
@@ -332,10 +417,11 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   validateChangeBy() {
-    if (this.productObj.changeby < 0) {
-      this.productObj.changeby = 0;
-    }
+  if (this.productObj.changeby < 0) {
+    this.productObj.changeby = 0;
   }
+  this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
+}
 
   validateMaxQuantity() {
     if (this.productObj.maxQuantity < 0) {
@@ -344,10 +430,11 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   validateMinQuantity() {
-    if (this.productObj.startValue < 0) {
-      this.productObj.startValue = 0;
-    }
+  if (this.productObj.startValue < 0) {
+    this.productObj.startValue = 0;
   }
+  this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
+}
 
    preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
     const input = event.target as HTMLInputElement;
@@ -355,6 +442,76 @@ export class MarketAddProductComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  validatePriceInput(event: Event, fieldName: string) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Prevent negative numbers and invalid characters
+  if (value.includes('-') || value.toLowerCase().includes('e')) {
+    value = value.replace(/[-e]/g, '');
+    input.value = value;
+    
+    // Update the model
+    switch (fieldName) {
+      case 'normalPrice':
+        this.productObj.normalPrice = value ? parseFloat(value) : 0;
+        break;
+      case 'discountedPrice':
+        this.productObj.discountedPrice = value ? parseFloat(value) : 0;
+        break;
+      case 'startValue':
+        this.productObj.startValue = value ? parseFloat(value) : 0;
+        break;
+      case 'changeby':
+        this.productObj.changeby = value ? parseFloat(value) : 0;
+        break;
+    }
+    
+    event.preventDefault();
+    return;
+  }
+  
+  // Rest of your existing validation for decimal places
+  if (value.includes('.') && value.split('.')[1].length > 2) {
+    const truncatedValue = parseFloat(value).toFixed(2);
+    input.value = truncatedValue;
+    
+    switch (fieldName) {
+      case 'normalPrice':
+        this.productObj.normalPrice = parseFloat(truncatedValue);
+        break;
+      case 'discountedPrice':
+        this.productObj.discountedPrice = parseFloat(truncatedValue);
+        break;
+      case 'startValue':
+        this.productObj.startValue = parseFloat(truncatedValue);
+        break;
+      case 'changeby':
+        this.productObj.changeby = parseFloat(truncatedValue);
+        break;
+    }
+  }
+  
+  // Trigger the calculation if needed
+  this.calculeSalePrice();
+}
+
+preventInvalidChars(event: KeyboardEvent) {
+  // Block '-' and 'e' characters
+  if (event.key === '-' || event.key.toLowerCase() === 'e') {
+    event.preventDefault();
+  }
+}
+
+validateQuantityRange() {
+  if (this.productObj.category === 'WholeSale' && 
+      this.productObj.startValue && 
+      this.productObj.maxQuantity) {
+    return this.productObj.startValue <= this.productObj.maxQuantity;
+  }
+  return true;
+}
 
 }
 

@@ -101,12 +101,20 @@ back(): void {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    // keep default button styling
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/steckholders/action/admin']);
     }
   });
 }
+
+
 
   setPasswordValidation(isRequired: boolean) {
     const passwordControl = this.userForm.get('password');
@@ -465,12 +473,18 @@ onCancel() {
     showCancelButton: true,
     confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/steckholders/action/admin']);
     }
   });
 }
+
 
 
   onCancel2() {

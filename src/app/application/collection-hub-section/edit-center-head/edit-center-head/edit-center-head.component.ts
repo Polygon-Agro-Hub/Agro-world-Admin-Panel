@@ -161,21 +161,7 @@ export class EditCenterHeadComponent {
     this.getAllCompanies();
   }
 
-  back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-  }).then((result) => {
-    if (result.isConfirmed) {
-        this.location.back();
-      }
-  });
-}
-
+  
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -264,6 +250,27 @@ export class EditCenterHeadComponent {
     this.personalData.empType = selectedType;
   }
 
+  onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+       this.location.back();
+    }
+  });
+}
+
+
   onCheckboxChange1(lang: string, event: any) {
     if (event.target.checked) {
       if (this.personalData.languages) {
@@ -301,20 +308,26 @@ export class EditCenterHeadComponent {
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-     if (result.isConfirmed) {
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
         this.location.back();
-      }
-    });
-  }
+    }
+  });
+}
+
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     const nicPattern = /^(\d{9}V|\d{12})$/;

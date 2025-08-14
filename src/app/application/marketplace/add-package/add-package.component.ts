@@ -176,12 +176,10 @@ export class AddPackageComponent implements OnInit {
     this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
   });
 
-  console.log('submit', this.packageObj);
-  console.log('Final quantities:', this.packageObj.quantities);
-
   // Validation with specific error messages
   let errorMessages: string[] = [];
 
+  // Required field validations
   if (!this.packageObj.displayName?.trim()) {
     errorMessages.push('Display Package Name is required');
   }
@@ -202,6 +200,18 @@ export class AddPackageComponent implements OnInit {
   }
   if (this.productTypeObj.length > 0 && !Object.values(this.packageObj.quantities).some(qty => qty > 0)) {
     errorMessages.push('At least one product type with quantity greater than 0 is required');
+  }
+
+  // Decimal validation
+  const decimalRegex = /^\d+(\.\d{1,2})?$/;
+  if (!decimalRegex.test(this.packageObj.productPrice?.toString())) {
+    errorMessages.push('Total Package Price must have up to 2 decimal places');
+  }
+  if (!decimalRegex.test(this.packageObj.packageFee?.toString())) {
+    errorMessages.push('Packaging Fee must have up to 2 decimal places');
+  }
+  if (!decimalRegex.test(this.packageObj.serviceFee?.toString())) {
+    errorMessages.push('Service Fee must have up to 2 decimal places');
   }
 
   if (errorMessages.length > 0) {
@@ -348,25 +358,72 @@ export class AddPackageComponent implements OnInit {
   }
 
   allowDecimalNumbers(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-    // Allow numbers 0-9
-    if (charCode >= 48 && charCode <= 57) {
-      return true;
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const charCode = event.which ? event.which : event.keyCode;
+  
+  // Allow numbers 0-9
+  if (charCode >= 48 && charCode <= 57) {
+    // Check if we're adding to the decimal part and if it already has 2 digits
+    if (value.includes('.') && value.split('.')[1].length >= 2) {
+      event.preventDefault();
+      return false;
     }
-    // Allow decimal point
-    if (charCode === 46) {
-      const currentValue = (event.target as HTMLInputElement).value;
-      // Prevent more than one decimal point
-      return currentValue.indexOf('.') === -1;
-    }
-    // Allow backspace, tab, enter, arrows
-    if ([8, 9, 13, 37, 39].includes(charCode)) {
-      return true;
-    }
-    // Prevent all other key presses
-    event.preventDefault();
-    return false;
+    return true;
   }
+  
+  // Allow decimal point only if not already present and not at the start
+  if (charCode === 46) {
+    if (value.indexOf('.') !== -1 || value.length === 0) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+  
+  // Allow backspace, tab, enter, arrows
+  if ([8, 9, 13, 37, 39].includes(charCode)) {
+    return true;
+  }
+  
+  // Prevent all other key presses
+  event.preventDefault();
+  return false;
+}
+
+validateDecimalInput(event: Event, fieldName: 'productPrice' | 'packageFee' | 'serviceFee') {
+  const target = event.target as HTMLInputElement;
+  const value = target.value;
+  
+  if (value === '') {
+    // If empty, set to 0
+    this.packageObj[fieldName] = 0;
+    target.value = '0';
+    this.calculateApproximatedPrice();
+    return;
+  }
+  
+  // Check for valid number format with up to 2 decimal places
+  if (!/^\d*\.?\d{0,2}$/.test(value)) {
+    // If invalid, reset to previous valid value or 0
+    target.value = this.packageObj[fieldName]?.toFixed(2) || '0.00';
+    this.packageObj[fieldName] = parseFloat(target.value) || 0;
+    this.calculateApproximatedPrice();
+    return;
+  }
+  
+  // Round to 2 decimal places if needed
+  const numValue = parseFloat(value);
+  if (!isNaN(numValue)) {
+    const roundedValue = Math.round(numValue * 100) / 100;
+    if (roundedValue !== numValue) {
+      target.value = roundedValue.toFixed(2);
+      this.packageObj[fieldName] = roundedValue;
+      this.calculateApproximatedPrice();
+    }
+  }
+}
+
 }
 
 class Package {

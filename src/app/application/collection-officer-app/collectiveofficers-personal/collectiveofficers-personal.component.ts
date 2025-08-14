@@ -171,7 +171,7 @@ getFlagUrl(countryCode: string): string {
     }
   }
 
-  back(): void {
+back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -179,12 +179,18 @@ getFlagUrl(countryCode: string): string {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/steckholders/action/collective-officer']);
     }
   });
 }
+
 
   onSubmit() {
     Swal.fire({
@@ -249,20 +255,25 @@ getFlagUrl(countryCode: string): string {
     });
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
-      }
-    });
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.navigatePath('/steckholders/action/collective-officer');
+    }
+  });
+}
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.selectedPage = page;
@@ -585,29 +596,34 @@ updateProvince(event: DropdownChangeEvent): void {
 
     const char = String.fromCharCode(event.which);
     // Allow letters, numbers, and space for address fields
-    if (!/[a-zA-Z0-9\s]/.test(char)) {
-      event.preventDefault();
-    }
+    if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
+    event.preventDefault();
+  }
   }
 
   // Format address fields to handle spaces
   formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter of each word for streetName and city
-      if (fieldName === 'streetName' || fieldName === 'city') {
-        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter of each word for streetName and city
+    if (fieldName === 'streetName' || fieldName === 'city') {
+      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
     }
+    
+    // For houseNumber, capitalize the first letter only if it's alphabetic
+    if (fieldName === 'houseNumber' && value.length > 0) {
+      const firstChar = value.charAt(0);
+      if (/[a-zA-Z]/.test(firstChar)) {
+        value = firstChar.toUpperCase() + value.slice(1);
+      }
+    }
+
+    this.personalData[fieldName] = value;
   }
+}
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];

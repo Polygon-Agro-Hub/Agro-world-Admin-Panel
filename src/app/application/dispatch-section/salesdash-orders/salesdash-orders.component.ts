@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { DispatchService } from '../../../services/dispatch/dispatch.service';
 import { CalendarModule } from 'primeng/calendar';
 import { DashPredefinePackagesComponent } from '../dash-dispatch-components/dash-predefine-packages/dash-predefine-packages.component';
+import { SalesdashCustomePackageComponent } from '../dash-dispatch-components/salesdash-custome-package/salesdash-custome-package.component';
 
 interface ProductInfo {
   productId: number;
@@ -67,7 +68,8 @@ interface SelectdPackage {
     FormsModule,
     DatePipe,
     CalendarModule,
-    DashPredefinePackagesComponent
+    DashPredefinePackagesComponent,
+    SalesdashCustomePackageComponent
   ],
   templateUrl: './salesdash-orders.component.html',
   styleUrl: './salesdash-orders.component.css'
@@ -83,7 +85,7 @@ export class SalesdashOrdersComponent implements OnInit{
   selectdPackage: SelectdPackage[] = [];
   totalItems: number = 0;
   page: number = 1;
-  isPremade = true;
+  isPremade = false;
   hasData = false;
   hasDataCustom = false;
 

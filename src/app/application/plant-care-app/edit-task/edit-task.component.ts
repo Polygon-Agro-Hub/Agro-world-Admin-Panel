@@ -121,6 +121,18 @@ export class EditTaskComponent implements OnInit {
     }
   }
 
+  allowOnlyNumbers(event: any) {
+  let value = event.target.value;
+
+  // Remove any non-digit characters
+  value = value.replace(/[^0-9]/g, '');
+
+  // Update input value and form control
+  event.target.value = value;
+ this.taskForm.get('reqImages')?.setValue(value);
+}
+
+
   allowOnlyTamilLetters(event: KeyboardEvent): void {
     const allowedControlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
     if (allowedControlKeys.includes(event.key)) return;

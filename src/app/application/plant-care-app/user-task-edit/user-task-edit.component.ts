@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup,FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NewsService } from '../../../services/plant-care/news.service';
 import { OngoingCultivationService } from '../../../services/plant-care/ongoing-cultivation.service';
@@ -42,6 +42,7 @@ class CropTask {
   styleUrl: './user-task-edit.component.css',
 })
 export class UserTaskEditComponent {
+   taskForm!: FormGroup;
   id: any | null = null;
   taskItems: CropTask = new CropTask();
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
@@ -72,6 +73,32 @@ export class UserTaskEditComponent {
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }
+
+    allowOnlyNumbers(event: any) {
+  let value = event.target.value;
+
+  // Remove any non-digit characters
+  value = value.replace(/[^0-9]/g, '');
+
+  // Update input value and form control
+  event.target.value = value;
+ this.taskForm.get('reqImages')?.setValue(value);
+}
+validateAndCapitalizeEnglish(event: any, field: 'taskEnglish' | 'taskTypeEnglish'| 'taskCategoryEnglish' | 'taskDescriptionEnglish') {
+  // Step 1: Remove non-English characters
+  let value = event.target.value.replace(/[^A-Za-z\s]/g, '');
+
+  // Step 2: Capitalize first letter
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  // Update both the input box and ngModel
+  event.target.value = value;
+  this.taskItems[field] = value;
+}
+
+
 
   getTaskById(id: any) {
   this.taskService.getUserCropTaskBycropId(id).subscribe(

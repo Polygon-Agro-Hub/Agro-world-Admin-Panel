@@ -109,7 +109,7 @@
             *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError"
             class="text-red-600 text-sm mt-1">
             <div *ngIf="companyNameEnglish.errors?.['required']">
-              Company Name in English is required.
+              Company Name (in English) is required.
             </div>
           </div>
 
@@ -134,7 +134,7 @@
             *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
             class="text-red-600 text-sm mt-1">
             <div *ngIf="companyNameSinhala.errors?.['required']">
-              Company Name in Sinhala is required.
+              Company Name (in Sinhala) is required.
             </div>
           </div>
           <!-- Language-specific message -->
@@ -154,7 +154,7 @@
           <span
             *ngIf="companyNameTamil.invalid && (companyNameTamil.dirty || companyNameTamil.touched) && !tamilInputError"
             class="text-red-600 text-sm mt-1">
-            Company Name in Tamil is required.
+            Company Name (in Tamil) is required.
           </span>
           <!-- Language-specific message -->
           <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
@@ -513,6 +513,8 @@
   </div>
 
         </div>
+
+        <div class="pb-6"> <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark"> Company Name (in English) <span style="color: #2E2E2E">*</span> </label> <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')" (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" /> <!-- Required field message --> <div *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError" class="text-red-600 text-sm mt-1"> <div *ngIf="companyNameEnglish.errors?.['required']"> Company Name (in English) is required. </div> </div> <!-- Language-specific validation message --> <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1"> Only English letters are allowed in this field. </div> </div>
 
      <div class="pb-6">
   <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">

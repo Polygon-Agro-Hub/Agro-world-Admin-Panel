@@ -3,41 +3,41 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { DispatchService } from '../../../../services/dispatch/dispatch.service';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
-import { DropdownModule } from 'primeng/dropdown';
-import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: 'app-dash-predefine-packages',
+  selector: 'app-market-place-premade-packages',
   standalone: true,
   imports: [CommonModule, FormsModule, CalendarModule, NgxPaginationModule, DropdownModule, LoadingSpinnerComponent],
-  templateUrl: './dash-predefine-packages.component.html',
-  styleUrl: './dash-predefine-packages.component.css'
+  templateUrl: './market-place-premade-packages.component.html',
+  styleUrl: './market-place-premade-packages.component.css'
 })
-export class DashPredefinePackagesComponent implements OnInit {
+export class MarketPlacePremadePackagesComponent implements OnInit {
 
   premadePackages: PremadePackages[] = [];
   search: string = '';
-  isLoading = false;
-  status = ['Pending', 'Completed', 'Opened'];
-  selectedStatus: any = '';
 
+  isLoading: boolean = false;
   itemsPerPage: number = 10;
   totalItems: number = 0;
   page: number = 1;
-  isPremade = true;
+
+  selectedStatus: any = '';
+  date: Date = new Date();
+  status = ['Pending', 'Completed', 'Opened'];
+
+
+
   hasData = false;
   hasDataCustom = false;
 
-  date: Date = new Date(); // Initialize with current date
-
-
   ngOnInit(): void {
     this.getPreMadePackages();
-
   }
 
   constructor(
@@ -51,7 +51,7 @@ export class DashPredefinePackagesComponent implements OnInit {
     this.isLoading = true;
 
     this.dispatchService
-      .getPreMadePackages(
+      .getMarketPlacePreMadePackages(
         page,
         limit,
         this.selectedStatus,
@@ -99,7 +99,6 @@ export class DashPredefinePackagesComponent implements OnInit {
 
   }
 
-
   applyStatus() {
     this.getPreMadePackages();
   }
@@ -123,24 +122,19 @@ export class DashPredefinePackagesComponent implements OnInit {
     });
 
   }
-
 }
 
-
 interface PremadePackages {
-  orderId: number;
+  id: number; 
   processOrderId: number;
-  orderPackageId: number;
-  displayName: string;
-  productPrice: string;
-  sheduleDate: Date;
-  invNo: string;
-  hasData: boolean;
-  packageStatus: string
-
-  totcount: number
-  packCount: number
-  orderAdditionalCount: number
-  additionalPrice: string
-  additionalItemsStatus: string;
+  invNo: string; 
+  sheduleDate: string; 
+  packageCount: number;
+  packagePrice: number; 
+  totPackageItems: number; 
+  packPackageItems: number; 
+  totalAdditionalItems: number;
+  packedAdditionalItems: number; 
+  packingStatus: string; 
+  additionalItemsStatus: string; 
 }

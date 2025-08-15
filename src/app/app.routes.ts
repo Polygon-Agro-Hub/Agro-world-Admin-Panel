@@ -165,6 +165,7 @@ import { ViewCenterHeadComponent } from './application/collection-hub-section/vi
 import { ViewPackageHistoryComponent } from './application/marketplace/view-package-history/view-package-history.component';
 import { TestingComponent } from './application/collection-hub-section/testing/testing.component';
 import { CenterCollectionExpenceComponent } from './application/collection-hub-section/center-collection-expence/center-collection-expence.component';
+import { DispatchMarketplaceComponent } from './application/dispatch-section/market-place-dispatch/dispatch-marketplace/dispatch-marketplace.component';
 
 export const routes: Routes = [
   {
@@ -777,6 +778,10 @@ export const routes: Routes = [
           {
             path: 'custom-additional-items',
             component: CustomAdditionalItemsComponent,
+          },
+           {
+            path: 'marketplace-dispatch',
+            component: DispatchMarketplaceComponent,
           },
         ],
       },

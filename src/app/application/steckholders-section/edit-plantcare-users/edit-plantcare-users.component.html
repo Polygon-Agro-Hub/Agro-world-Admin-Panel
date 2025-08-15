@@ -260,7 +260,7 @@
           class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">
           Cancel
         </button>
-        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+        <button type="submit"  (click)="onSubmit()"class="px-4 py-2 bg-[#3980C0] text-white rounded-md ">
           Save
         </button>
       </div>
@@ -500,7 +500,7 @@
           class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md mr-3">
           Cancel
         </button>
-        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" [disabled]="!userForm.valid">
+        <button type="submit"  class="px-4 py-2 bg-[#3980C0] text-white rounded-md" >
           Save
         </button>
       </div>

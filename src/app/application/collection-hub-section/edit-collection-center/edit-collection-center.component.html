@@ -508,23 +508,7 @@
       <button
         type="submit"
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
-        [disabled]="
-          !centerFetchData.centerName ||
-          !centerFetchData.buildingNumber ||
-          !centerFetchData.city ||
-          !centerFetchData.companies ||
-          !centerFetchData.contact01 ||
-          !centerFetchData.country ||
-          !centerFetchData.district ||
-          !centerFetchData.province ||
-          !centerFetchData.street ||
-          contact01.invalid ||
-          isPhoneInvalidMap['phone01'] ||
-          (centerFetchData.contact02 &&
-            (centerFetchData.contact01 === centerFetchData.contact02 ||
-              isPhoneInvalidMap['phone02'] ||
-              contact02.invalid))
-        "
+       
       >
         Save
       </button>

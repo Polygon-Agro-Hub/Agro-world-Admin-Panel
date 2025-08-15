@@ -491,100 +491,153 @@ back(): void {
 
 
 
-  onSubmit() {
-    const phonePattern = /^[0-9]{9}$/;
-    const accountPattern = /^[a-zA-Z0-9]+$/;
+onSubmit() {
+  const missingFields: string[] = [];
 
-    // Check if employee type is selected
-if (!this.isFormValid()) {
-    Swal.fire('Error', 'Please fill all required fields correctly', 'error');
+  // Regular expressions
+  const phonePattern = /^[0-9]{9}$/; // 9 digits only
+  const accountPattern = /^[a-zA-Z0-9]+$/; // alphanumeric only
+  const englishNamePattern = /^[A-Z][a-zA-Z\s]*$/;
+  const nicPattern = /(^\d{12}$)|(^\d{9}[V]$)/;
+
+  // Employee type
+  if (!this.empType) {
+    missingFields.push('Staff Employee Type');
+  }
+
+  // First Name
+  if (!this.personalData.firstName) {
+    missingFields.push('First Name');
+  } else if (!englishNamePattern.test(this.personalData.firstName)) {
+    missingFields.push('First Name - Must start with a capital letter and contain only English letters');
+  }
+
+  // Last Name
+  if (!this.personalData.lastName) {
+    missingFields.push('Last Name');
+  } else if (!englishNamePattern.test(this.personalData.lastName)) {
+    missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
+  }
+
+  // Phone Number 1
+  if (!this.personalData.phoneNumber1) {
+    missingFields.push('Contact Number 1');
+  } else if (!phonePattern.test(this.personalData.phoneNumber1)) {
+    missingFields.push('Contact Number 1 - Must be 9 digits');
+  }
+
+  // Phone Number 2 (optional)
+  if (this.personalData.phoneNumber2) {
+    if (!phonePattern.test(this.personalData.phoneNumber2)) {
+      missingFields.push('Contact Number 2 - Must be 9 digits');
+    }
+    if (this.personalData.phoneNumber1 === this.personalData.phoneNumber2) {
+      missingFields.push('Contact Number 2 - Cannot be the same as Contact Number 1');
+    }
+  }
+
+  // Email
+  if (!this.personalData.email) {
+    missingFields.push('Email');
+  } else if (!this.isValidEmail(this.personalData.email)) {
+    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+  }
+
+  // NIC
+  if (!this.personalData.nic) {
+    missingFields.push('NIC');
+  } else if (!nicPattern.test(this.personalData.nic)) {
+    missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
+  }
+
+  // Address
+  if (!this.personalData.houseNumber) missingFields.push('House Number');
+  if (!this.personalData.streetName) missingFields.push('Street Name');
+  if (!this.personalData.city) missingFields.push('City');
+  if (!this.personalData.province) missingFields.push('Province');
+  if (!this.personalData.district) missingFields.push('District');
+
+  // Account Holder Name
+  if (!this.personalData.accHolderName) {
+    missingFields.push('Account Holder Name');
+  } else if (!this.isValidName(this.personalData.accHolderName)) {
+    missingFields.push('Account Holder Name - Only letters, spaces, hyphens, and apostrophes allowed');
+  }
+
+  // Account Number
+  if (!this.personalData.accNumber) {
+    missingFields.push('Account Number');
+  } else if (!accountPattern.test(this.personalData.accNumber)) {
+    missingFields.push('Account Number - Only alphanumeric characters allowed');
+  }
+
+  // Confirm Account Number
+  if (!this.confirmAccNumber) {
+    missingFields.push('Confirm Account Number');
+  } else if (this.personalData.accNumber !== this.confirmAccNumber) {
+    missingFields.push('Confirm Account Number - Must match Account Number');
+  } else if (!accountPattern.test(this.confirmAccNumber)) {
+    missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
+  }
+
+  // Bank details
+  if (!this.personalData.bankName) missingFields.push('Bank Name');
+  if (!this.personalData.branchName) missingFields.push('Branch Name');
+
+  // If any errors, show them in SweetAlert and stop
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
     return;
   }
 
-    if (!this.empType) {
-      Swal.fire('Error', 'Staff Employee Type is a required field', 'error');
-      return;
-    }
-
-    // Enhanced email validation
-    if (!this.personalData.email || !this.isValidEmail(this.personalData.email)) {
-      Swal.fire('Error', 'Please enter a valid email address', 'error');
-      return;
-    }
-
-    if (
-      !this.personalData.firstName ||
-      !this.personalData.lastName ||
-      !this.personalData.phoneNumber1 ||
-      !phonePattern.test(this.personalData.phoneNumber1) ||
-      !this.personalData.nic ||
-      !this.validateNIC() ||
-      !this.personalData.houseNumber ||
-      !this.personalData.streetName ||
-      !this.personalData.city ||
-      !this.personalData.province ||
-      !this.personalData.district ||
-      !this.personalData.accHolderName ||
-      !this.personalData.accNumber ||
-      !accountPattern.test(this.personalData.accNumber) ||
-      !this.personalData.bankName ||
-      !this.personalData.branchName ||
-      this.personalData.accNumber !== this.confirmAccNumber ||
-      !accountPattern.test(this.confirmAccNumber) ||
-      (this.personalData.phoneNumber2 &&
-        (!phonePattern.test(this.personalData.phoneNumber2) ||
-          this.personalData.phoneNumber2 === this.personalData.phoneNumber1))
-    ) {
-      if (this.nicError) {
-        Swal.fire(
-          'Error',
-          'Invalid NIC format (e.g., 123456789V or 200012345678)',
-          'error'
+  // If valid, proceed with confirmation
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to edit the Sales Agent?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Save it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.salesAgentService
+        .editSalesAgent(this.personalData, this.itemId, this.selectedImage)
+        .subscribe(
+          () => {
+            this.isLoading = false;
+            Swal.fire('Success', 'Sales Agent Updated Successfully', 'success');
+            this.navigatePath('/steckholders/action/sales-agents');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            this.errorMessage =
+              error.error.error || 'An unexpected error occurred';
+            Swal.fire('Error', this.errorMessage, 'error');
+          }
         );
-      } else {
-        Swal.fire('Error', 'Please fill all required fields correctly', 'error');
-      }
-      return;
+    } else {
+      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
     }
-
-    this.isLoading = true;
-
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to edit the Sales Agent?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Save it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.salesAgentService
-          .editSalesAgent(this.personalData, this.itemId, this.selectedImage)
-          .subscribe(
-            () => {
-              this.isLoading = false;
-              Swal.fire(
-                'Success',
-                'Sales Agent Updated Successfully',
-                'success'
-              );
-              this.navigatePath('/steckholders/action/sales-agents');
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
-              Swal.fire('Error', this.errorMessage, 'error');
-            }
-          );
-      } else {
-        this.isLoading = false;
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-      }
-    });
-  }
+  });
+}
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -638,7 +691,7 @@ if (!this.isFormValid()) {
     event.preventDefault();
   }
 }
-capitalizeFirstLetter(field: 'firstName' | 'lastName') {
+capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName') {
   let value = this.personalData[field];
 
   if (!value) return;

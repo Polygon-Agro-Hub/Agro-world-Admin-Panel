@@ -153,142 +153,213 @@ export class CreateNewsComponent {
     return input;
   }
 
-  createNews() {
-    console.log('clicked');
-    console.log(this.createNewsObj);
+createNews() {
+  console.log('clicked');
+  console.log(this.createNewsObj);
 
-    if (!this.isPublishAfterExpireValid) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Dates',
-        text: 'Please check the publish date and expire date again',
-      });
-      return;
-    }
+  const missingFields: string[] = [];
 
-    const missingFields: string[] = [];
+  // Validation for required fields
+  if (!this.createNewsObj.titleEnglish || this.createNewsObj.titleEnglish.trim() === '') {
+    missingFields.push('Title (English)');
+  }
 
-    if (this.createNewsObj.titleEnglish.trim() === '') {
-      missingFields.push('Title (English)');
-    }
-    if (this.createNewsObj.descriptionEnglish.trim() === '') {
-      missingFields.push('Description (English)');
-    }
-    if (this.createNewsObj.titleSinhala.trim() === '') {
-      missingFields.push('Title (Sinhala)');
-    }
-    if (this.createNewsObj.descriptionSinhala.trim() === '') {
-      missingFields.push('Description (Sinhala)');
-    }
-    if (this.createNewsObj.titleTamil.trim() === '') {
-      missingFields.push('Title (Tamil)');
-    }
-    if (this.createNewsObj.descriptionTamil.trim() === '') {
-      missingFields.push('Description (Tamil)');
-    }
-    if (this.createNewsObj.publishDate.trim() === '') {
-      missingFields.push('Publish Date');
-    }
-    if (this.createNewsObj.expireDate.trim() === '') {
-      missingFields.push('Expire Date');
-    }
-    if (!this.selectedFile) {
-      missingFields.push('Image');
-    }
+  if (!this.createNewsObj.descriptionEnglish || this.createNewsObj.descriptionEnglish.trim() === '') {
+    missingFields.push('Description (English)');
+  }
 
-    if (missingFields.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing Fields',
-        html: `<strong>Please fill in the following fields:</strong><ul>${missingFields
-          .map((field) => `<li>${field}</li>`)
-          .join('')}</ul>`,
-      });
-      return;
-    }
+  if (!this.createNewsObj.titleSinhala || this.createNewsObj.titleSinhala.trim() === '') {
+    missingFields.push('Title (Sinhala)');
+  }
 
-    const formData = new FormData();
-    formData.append(
-      'titleEnglish',
-      this.isEnglishOnly(this.createNewsObj.titleEnglish)
-    );
-    formData.append(
-      'titleSinhala',
-      this.isSinhalaAndNumberOnly(this.createNewsObj.titleSinhala)
-    );
-    formData.append(
-      'titleTamil',
-      this.isTamilAndNumberOnly(this.createNewsObj.titleTamil)
-    );
-    formData.append(
-      'descriptionEnglish',
-      this.isEnglishOnly(this.createNewsObj.descriptionEnglish)
-    );
-    formData.append(
-      'descriptionSinhala',
-      this.isSinhalaAndNumberOnly(this.createNewsObj.descriptionSinhala)
-    );
-    formData.append(
-      'descriptionTamil',
-      this.isTamilAndNumberOnly(this.createNewsObj.descriptionTamil)
-    );
-    formData.append('status', this.createNewsObj.status);
-    formData.append('publishDate', this.createNewsObj.publishDate);
-    formData.append('expireDate', this.createNewsObj.expireDate);
-    if (this.selectedFile) {
-      const allowedTypes = ['image/jpeg', 'image/png'];
+  if (!this.createNewsObj.descriptionSinhala || this.createNewsObj.descriptionSinhala.trim() === '') {
+    missingFields.push('Description (Sinhala)');
+  }
 
-      if (!allowedTypes.includes(this.selectedFile.type)) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Invalid Image Type',
-          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
-        });
-        this.selectedFile = null;
-        return;
-      } else {
-        formData.append('image', this.selectedFile);
-      }
-    }
+  if (!this.createNewsObj.titleTamil || this.createNewsObj.titleTamil.trim() === '') {
+    missingFields.push('Title (Tamil)');
+  }
 
-    if (
-      formData.get('titleEnglish') === '' ||
-      formData.get('descriptionEnglish') === '' ||
-      formData.get('titleSinhala') === '' ||
-      formData.get('descriptionSinhala') === '' ||
-      formData.get('titleTamil') === '' ||
-      formData.get('descriptionTamil') === ''
-    ) {
-      return;
-    } else {
+  if (!this.createNewsObj.descriptionTamil || this.createNewsObj.descriptionTamil.trim() === '') {
+    missingFields.push('Description (Tamil)');
+  }
+
+  if (!this.createNewsObj.publishDate || this.createNewsObj.publishDate.trim() === '') {
+    missingFields.push('Publish Date');
+  }
+
+  if (!this.createNewsObj.expireDate || this.createNewsObj.expireDate.trim() === '') {
+    missingFields.push('Expire Date');
+  }
+
+  if (!this.isPublishAfterExpireValid) {
+    missingFields.push('Publish and Expire Dates - Publish date must be before expire date');
+  }
+
+  if (!this.selectedFile) {
+    missingFields.push('Image - Please upload an image');
+  }
+
+  // Display validation errors if any
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Validate image type
+  const allowedTypes = ['image/jpeg', 'image/png'];
+  if (this.selectedFile && !allowedTypes.includes(this.selectedFile.type)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Image Type',
+      text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    this.selectedFile = null;
+    return;
+  }
+
+  // Validate language-specific fields
+  const formData = new FormData();
+  const titleEnglish = this.isEnglishOnly(this.createNewsObj.titleEnglish);
+  const descriptionEnglish = this.isEnglishOnly(this.createNewsObj.descriptionEnglish);
+  const titleSinhala = this.isSinhalaAndNumberOnly(this.createNewsObj.titleSinhala);
+  const descriptionSinhala = this.isSinhalaAndNumberOnly(this.createNewsObj.descriptionSinhala);
+  const titleTamil = this.isTamilAndNumberOnly(this.createNewsObj.titleTamil);
+  const descriptionTamil = this.isTamilAndNumberOnly(this.createNewsObj.descriptionTamil);
+
+  if (
+    titleEnglish === '' ||
+    descriptionEnglish === '' ||
+    titleSinhala === '' ||
+    descriptionSinhala === '' ||
+    titleTamil === '' ||
+    descriptionTamil === ''
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Input',
+      text: 'One or more fields contain invalid characters. Please ensure titles and descriptions use the correct language characters.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // Append validated data to FormData
+  formData.append('titleEnglish', titleEnglish);
+  formData.append('descriptionEnglish', descriptionEnglish);
+  formData.append('titleSinhala', titleSinhala);
+  formData.append('descriptionSinhala', descriptionSinhala);
+  formData.append('titleTamil', titleTamil);
+  formData.append('descriptionTamil', descriptionTamil);
+  formData.append('status', this.createNewsObj.status);
+  formData.append('publishDate', this.createNewsObj.publishDate);
+  formData.append('expireDate', this.createNewsObj.expireDate);
+  if (this.selectedFile) {
+    formData.append('image', this.selectedFile);
+  }
+
+  // Confirmation dialog
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create this news item?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.isLoading = true;
-      this.newsService.createNews(formData).subscribe(
-        (res: any) => {
+      this.newsService.createNews(formData).subscribe({
+        next: (res: any) => {
           this.isLoading = false;
           Swal.fire({
             icon: 'success',
             title: 'Success',
             text: 'News created successfully!',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          }).then(() => {
+            this.createNewsObj = new CreateNews();
+            this.selectedFile = null;
+            this.selectedImage = null;
+            this.selectedLanguage = 'english';
+            this.router.navigate(['/plant-care/action/manage-content']);
           });
-          this.createNewsObj = new CreateNews();
-          this.selectedFile = null;
-          this.selectedImage = null;
-          this.selectedLanguage = 'english';
-          this.router.navigate(['/plant-care/action/manage-content']);
         },
-        (error) => {
+        error: (error: any) => {
           this.isLoading = false;
+          let errorMessage = 'An unexpected error occurred';
+          if (error.error && error.error.error) {
+            switch (error.error.error) {
+              case 'Invalid file format':
+                errorMessage = 'Invalid file format. Please upload a valid image.';
+                break;
+              case 'Duplicate news title':
+                errorMessage = 'A news item with this title already exists.';
+                break;
+              default:
+                errorMessage = error.error.error || 'An unexpected error occurred';
+            }
+          }
           Swal.fire({
             icon: 'error',
-            title: 'Unsuccess',
-            text: 'Error creating news',
+            title: 'Error',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
-          // this.createNewsObj = new CreateNews();
-          // this.selectedFile = null; // Reset file input
-        }
-      );
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Cancelled',
+        text: 'News creation has been cancelled',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
     }
-  }
+  });
+}
 
 back(): void {
   Swal.fire({
@@ -373,123 +444,224 @@ back(): void {
     return d.toISOString().split('T')[0];
   }
 
-  updateNews() {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      return;
-    }
+updateNews() {
+  // Check for valid token
+  const token = this.tokenService.getToken();
+  if (!token) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Authentication Error',
+      text: 'No valid token found. Please log in again.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
 
-    const editMissingFields: string[] = [];
+  const missingFields: string[] = [];
 
-    if (this.newsItems[0].titleEnglish.trim() === '') {
-      editMissingFields.push('Title (English)');
-    }
-    if (this.newsItems[0].descriptionEnglish.trim() === '') {
-      editMissingFields.push('Description (English)');
-    }
-    if (this.newsItems[0].titleSinhala.trim() === '') {
-      editMissingFields.push('Title (Sinhala)');
-    }
-    if (this.newsItems[0].descriptionSinhala.trim() === '') {
-      editMissingFields.push('Description (Sinhala)');
-    }
-    if (this.newsItems[0].titleTamil.trim() === '') {
-      editMissingFields.push('Title (Tamil)');
-    }
-    if (this.newsItems[0].descriptionTamil.trim() === '') {
-      editMissingFields.push('Description (Tamil)');
-    }
-    if (this.newsItems[0].publishDate.trim() === '') {
-      editMissingFields.push('Publishe Date');
-    }
-    if (this.newsItems[0].expireDate.trim() === '') {
-      editMissingFields.push('Expire Date');
-    }
+  // Validation for required fields
+  if (!this.newsItems[0].titleEnglish || this.newsItems[0].titleEnglish.trim() === '') {
+    missingFields.push('Title (English)');
+  }
 
-    if (editMissingFields.length > 0) {
+  if (!this.newsItems[0].descriptionEnglish || this.newsItems[0].descriptionEnglish.trim() === '') {
+    missingFields.push('Description (English)');
+  }
+
+  if (!this.newsItems[0].titleSinhala || this.newsItems[0].titleSinhala.trim() === '') {
+    missingFields.push('Title (Sinhala)');
+  }
+
+  if (!this.newsItems[0].descriptionSinhala || this.newsItems[0].descriptionSinhala.trim() === '') {
+    missingFields.push('Description (Sinhala)');
+  }
+
+  if (!this.newsItems[0].titleTamil || this.newsItems[0].titleTamil.trim() === '') {
+    missingFields.push('Title (Tamil)');
+  }
+
+  if (!this.newsItems[0].descriptionTamil || this.newsItems[0].descriptionTamil.trim() === '') {
+    missingFields.push('Description (Tamil)');
+  }
+
+  if (!this.newsItems[0].publishDate || this.newsItems[0].publishDate.trim() === '') {
+    missingFields.push('Publish Date');
+  }
+
+  if (!this.newsItems[0].expireDate || this.newsItems[0].expireDate.trim() === '') {
+    missingFields.push('Expire Date');
+  }
+
+  if (!this.isPublishAfterExpireValid) {
+    missingFields.push('Publish and Expire Dates - Publish date must be before expire date');
+  }
+
+  // Display validation errors if any
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Validate language-specific fields
+  const formData = new FormData();
+  const titleEnglish = this.isEnglishOnly(this.newsItems[0].titleEnglish);
+  const descriptionEnglish = this.isEnglishOnly(this.newsItems[0].descriptionEnglish);
+  const titleSinhala = this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala);
+  const descriptionSinhala = this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala);
+  const titleTamil = this.isTamilAndNumberOnly(this.newsItems[0].titleTamil);
+  const descriptionTamil = this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil);
+
+  if (
+    titleEnglish === '' ||
+    descriptionEnglish === '' ||
+    titleSinhala === '' ||
+    descriptionSinhala === '' ||
+    titleTamil === '' ||
+    descriptionTamil === ''
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Input',
+      text: 'One or more fields contain invalid characters. Please ensure titles and descriptions use the correct language characters.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // Append validated data to FormData
+  formData.append('titleEnglish', titleEnglish);
+  formData.append('descriptionEnglish', descriptionEnglish);
+  formData.append('titleSinhala', titleSinhala);
+  formData.append('descriptionSinhala', descriptionSinhala);
+  formData.append('titleTamil', titleTamil);
+  formData.append('descriptionTamil', descriptionTamil);
+  formData.append('publishDate', this.newsItems[0].publishDate);
+  formData.append('expireDate', this.newsItems[0].expireDate);
+  if (this.newsItems[0].status) {
+    formData.append('status', this.newsItems[0].status);
+  }
+  if (this.selectedFile) {
+    const allowedTypes = ['image/jpeg', 'image/png'];
+    if (!allowedTypes.includes(this.selectedFile.type)) {
       Swal.fire({
         icon: 'error',
-        title: 'Missing Fields',
-        html: `<strong>Please fill in the following fields:</strong><ul>${editMissingFields
-          .map((field) => `<li>${field}</li>`)
-          .join('')}</ul>`,
+        title: 'Invalid Image Type',
+        text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
       });
+      this.selectedFile = null;
       return;
     }
-
-    const formData = new FormData();
-    formData.append(
-      'titleEnglish',
-      this.isEnglishOnly(this.newsItems[0].titleEnglish)
-    );
-    formData.append(
-      'titleSinhala',
-      this.isSinhalaAndNumberOnly(this.newsItems[0].titleSinhala)
-    );
-    formData.append(
-      'titleTamil',
-      this.isTamilAndNumberOnly(this.newsItems[0].titleTamil)
-    );
-    formData.append(
-      'descriptionEnglish',
-      this.isEnglishOnly(this.newsItems[0].descriptionEnglish)
-    );
-    formData.append(
-      'descriptionSinhala',
-      this.isSinhalaAndNumberOnly(this.newsItems[0].descriptionSinhala)
-    );
-    formData.append(
-      'descriptionTamil',
-      this.isTamilAndNumberOnly(this.newsItems[0].descriptionTamil)
-    );
-    formData.append('publishDate', this.newsItems[0].publishDate);
-    formData.append('expireDate', this.newsItems[0].expireDate);
-    if (this.selectedFile) {
-      const allowedTypes = ['image/jpeg', 'image/png'];
-
-      if (!allowedTypes.includes(this.selectedFile.type)) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Invalid Image Type',
-          text: 'Only JPEG and PNG images are allowed. Please upload a valid image.',
-        });
-        this.selectedFile = null;
-        return;
-      }
-
-      formData.append('image', this.selectedFile);
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    this.isLoading = true;
-    this.http
-      .put(`${environment.API_URL}auth/edit-news/${this.itemId}`, formData, {
-        headers,
-      })
-      .subscribe(
-        (res: any) => {
-          console.log('Market Price updated successfully', res);
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'News updated successfully!',
-          });
-          this.router.navigate(['/plant-care/action/manage-content']);
-        },
-        (error) => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Unsuccessful',
-            text: 'Error updating news',
-          });
-        }
-      );
+    formData.append('image', this.selectedFile);
   }
+
+  // Confirmation dialog
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to update this news item?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      this.http
+        .put(`${environment.API_URL}auth/edit-news/${this.itemId}`, formData, { headers })
+        .subscribe({
+          next: (res: any) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'News updated successfully!',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              this.router.navigate(['/plant-care/action/manage-content']);
+            });
+          },
+          error: (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+            if (error.error && error.error.error) {
+              switch (error.error.error) {
+                case 'Invalid file format':
+                  errorMessage = 'Invalid file format. Please upload a valid image.';
+                  break;
+                case 'Duplicate news title':
+                  errorMessage = 'A news item with this title already exists.';
+                  break;
+                default:
+                  errorMessage = error.error.error || 'An unexpected error occurred';
+              }
+            }
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: errorMessage,
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          },
+        });
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Cancelled',
+        text: 'News update has been cancelled',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  });
+}
 
   onDeleteImage() {
     if (this.newsItems[0]) {

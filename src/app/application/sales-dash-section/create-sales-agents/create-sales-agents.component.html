@@ -303,9 +303,16 @@ class="text-textLight dark:text-textDark">
         <div class="pb-6">
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot Number
             <span class="text-[#2E2E2E]">*</span></label>
-          <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
-            [(ngModel)]="personalData.houseNumber" (keydown)="validateAddressInput($event, 'houseNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input 
+  (blur)="onBlur('houseNumber')" 
+  (input)="capitalizeFirstLetter('houseNumber')" 
+  id="houseNumber" 
+  name="houseNumber"
+  [(ngModel)]="personalData.houseNumber" 
+  (keydown)="validateAddressInput($event, 'houseNumber')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+/>
+
           <span *ngIf="isFieldInvalid('houseNumber')" class="text-red-600 text-sm">House Number is required.</span>
         </div>
 
@@ -313,6 +320,7 @@ class="text-textLight dark:text-textDark">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name <span
               class="text-[#2E2E2E]">*</span></label>
           <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
+           (input)="capitalizeFirstLetter('streetName')" 
             (keydown)="validateAddressInput($event, 'streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is required.</span>
@@ -322,6 +330,7 @@ class="text-textLight dark:text-textDark">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City <span
               class="text-[#2E2E2E]">*</span></label>
           <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData.city"
+           (input)="capitalizeFirstLetter('city')" 
             (keydown)="validateAddressInput($event, 'city')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is required.</span>
@@ -464,10 +473,13 @@ class="text-textLight dark:text-textDark">
         <button type="button" (click)="onCancel()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
-        <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()"
-          [disabled]="!checkSubmitValidity()">
-          Submit
-        </button>
+      <button 
+  type="submit" 
+  class="px-4 py-2 bg-[#3980C0] text-white rounded-md" 
+  (click)="onSubmit()">
+  Submit
+</button>
+
       </div>
     </div>
   </div>

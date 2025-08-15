@@ -636,13 +636,25 @@ export class FinalinvoiceService {
 
     // Add each family pack separately if they exist
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
-      invoice.familyPackItems.forEach((pack) => {
-        grandTotalBody.push([
-          pack.name || 'Family Pack',
-          `Rs. ${formatNumberWithCommas(pack.amount)}`,
-        ]);
-      });
-    }
+  if (invoice.familyPackItems.length > 1) {
+    // Calculate total for all packages
+    const packagesTotal = invoice.familyPackItems.reduce(
+      (total, pack) => total + parseNum(pack.amount),
+      0
+    );
+    grandTotalBody.push([
+      'Total for Packages',
+      `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`
+    ]);
+  } else {
+    // Only one package - show its name
+    const pack = invoice.familyPackItems[0];
+    grandTotalBody.push([
+      pack.name || 'Family Pack',
+      `Rs. ${formatNumberWithCommas(pack.amount)}`
+    ]);
+  }
+}
 
     // Add additional items total if they exist
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {

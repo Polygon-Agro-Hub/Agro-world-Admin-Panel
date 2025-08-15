@@ -358,6 +358,7 @@ export class ProcumentsService {
 
     return this.http.get<any>(url, { headers }).pipe(
       map((response) => {
+        console.log('response', response)
         if (response.success) {
           return {
             invNo: response.data.invNo,
@@ -449,6 +450,7 @@ export class ProcumentsService {
   // }
 
   updateDefinePackageItemData(array: any): Observable<any> {
+    console.log('array', array)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

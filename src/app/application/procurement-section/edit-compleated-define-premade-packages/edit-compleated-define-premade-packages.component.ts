@@ -131,6 +131,7 @@ excludedItemsCount: any;
         );
 
         if (matchingItem) {
+          console.log('matching items, ', matchingItem)
           productType.productId = matchingItem.productId;
           productType.quantity = matchingItem.qty;
           productType.selectedProductPrice = matchingItem.price;
@@ -195,7 +196,9 @@ excludedItemsCount: any;
           };
 
           if (pkg.productTypes && Array.isArray(pkg.productTypes)) {
+            console.log('packagede', pkg.productTypes)
             packageDetail.productTypes = pkg.productTypes.map((pt: any) => {
+              
               const productType: ProductTypes = {
                 id: pt.id, // This is orderpackageitems.id (if needed for updates)
                 typeName: pt.typeName,

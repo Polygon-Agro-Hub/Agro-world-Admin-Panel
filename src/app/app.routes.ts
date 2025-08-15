@@ -166,6 +166,7 @@ import { ViewPackageHistoryComponent } from './application/marketplace/view-pack
 import { TestingComponent } from './application/collection-hub-section/testing/testing.component';
 import { CenterCollectionExpenceComponent } from './application/collection-hub-section/center-collection-expence/center-collection-expence.component';
 import { DispatchMarketplaceComponent } from './application/dispatch-section/market-place-dispatch/dispatch-marketplace/dispatch-marketplace.component';
+import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
 
 export const routes: Routes = [
   {
@@ -779,9 +780,13 @@ export const routes: Routes = [
             path: 'custom-additional-items',
             component: CustomAdditionalItemsComponent,
           },
-           {
+          {
             path: 'marketplace-dispatch',
             component: DispatchMarketplaceComponent,
+          },
+          {
+            path: 'view-premade-packages/:id/:inv',
+            component: ViewPremadePackagesComponent,
           },
         ],
       },

@@ -22,13 +22,13 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   premadePackages: PremadePackages[] = [];
   search: string = '';
 
-  isLoading:boolean= false;
+  isLoading: boolean = false;
   itemsPerPage: number = 10;
   totalItems: number = 0;
   page: number = 1;
 
   selectedStatus: any = '';
-  date: Date = new Date(); 
+  date: Date = new Date();
   status = ['Pending', 'Completed', 'Opened'];
 
 
@@ -37,7 +37,7 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   hasDataCustom = false;
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.getPreMadePackages();
   }
 
   constructor(
@@ -51,7 +51,7 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
     this.isLoading = true;
 
     this.dispatchService
-      .getPreMadePackages(
+      .getMarketPlacePreMadePackages(
         page,
         limit,
         this.selectedStatus,
@@ -78,7 +78,7 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
       );
   }
 
-   private formatDateForAPI(date: Date | null): string {
+  private formatDateForAPI(date: Date | null): string {
     if (!date) return '';
     // Format as YYYY-MM-DD (ISO date string format)
     return date.toISOString().split('T')[0];
@@ -125,19 +125,16 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
 }
 
 interface PremadePackages {
-  orderId: number;
+  id: number; 
   processOrderId: number;
-  orderPackageId: number;
-  displayName: string;
-  productPrice: string;
-  sheduleDate: Date;
-  invNo: string;
-  hasData: boolean;
-  packageStatus: string
-
-  totcount: number
-  packCount: number
-  orderAdditionalCount: number
-  additionalPrice: string
-  additionalItemsStatus: string;
+  invNo: string; 
+  sheduleDate: string; 
+  packageCount: number;
+  packagePrice: number; 
+  totPackageItems: number; 
+  packPackageItems: number; 
+  totalAdditionalItems: number;
+  packedAdditionalItems: number; 
+  packingStatus: string; 
+  additionalItemsStatus: string; 
 }

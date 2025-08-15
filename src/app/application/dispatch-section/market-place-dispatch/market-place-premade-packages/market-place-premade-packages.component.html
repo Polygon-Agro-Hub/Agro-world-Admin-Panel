@@ -104,39 +104,34 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <tr *ngFor="let item of premadePackages| paginate
+                <tr *ngFor="let item of premadePackages| paginate
                   : {
                       itemsPerPage: itemsPerPage,
                       currentPage: page,
                       totalItems: totalItems
                     }
                     let i = index
-            "> -->
-                <tr>
+            ">
                     <td class="py-3 text-[#000000] dark:text-textDark text-left">
-                        <!-- {{ ((page - 1) * itemsPerPage + i + 1) | number: '2.0' }} -->
-                        ss
+                        {{ ((page - 1) * itemsPerPage + i + 1) | number: '2.0' }}
                     </td>
 
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
-                        <!-- {{ item.invNo }} -->
-                        inv
+                        {{ item.invNo }}
                     </td>
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <!-- {{ item.displayName }} -->
-                        09
+                        {{item.packageCount | number : '2.0'}}
                     </td>
 
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <!-- {{ item.sheduleDate | date: 'd MMM, y' }} -->
-                        date
+                        {{ item.sheduleDate | date: 'd MMM, y' }}
                     </td>
 
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <!-- {{ item.productPrice | number: '1.2-2' }} --> price
+                        {{ item.packagePrice| number: '1.2-2' }} 
                     </td>
                     <td class="px-4 py-3 text-center">
-                        <!-- <ng-container *ngIf="item.packageStatus === 'Pending'">
+                        <ng-container *ngIf="item.packingStatus === 'Pending'">
 
                             <span
                                 class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
@@ -144,20 +139,19 @@
                             </span>
                         </ng-container>
 
-                        <ng-container *ngIf="item.packageStatus === 'Opened'">
+                        <ng-container *ngIf="item.packingStatus === 'Opened'">
                             <span
                                 class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
                                 Opened
                             </span>
                         </ng-container>
 
-                        <ng-container *ngIf="item.packageStatus === 'Completed'">
+                        <ng-container *ngIf="item.packingStatus === 'Completed'">
                             <span
                                 class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
                                 Completed
                             </span>
-                        </ng-container> -->
-                        status
+                        </ng-container>
                     </td>
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
                         <!-- <button

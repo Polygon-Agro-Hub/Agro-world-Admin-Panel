@@ -89,7 +89,7 @@ countries: PhoneCode[] = [
   { code: 'DE', dialCode: '+49', name: 'Germany' },
   { code: 'FR', dialCode: '+33', name: 'France' }
 ];
-  location: any;
+
 
 getFlagUrl(countryCode: string): string {
   return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
@@ -123,7 +123,8 @@ getFlagUrl(countryCode: string): string {
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private distributionService: DestributionService
+    private distributionService: DestributionService,
+    private location: Location
   ) {
     this.initializeForm();
   }
@@ -628,11 +629,9 @@ back(): void {
     cancelButtonText: 'No, Keep Editing',
   }).then((result) => {
     if (result.isConfirmed) {
-      this.distributionForm.reset({
-        contact1Code: '+94',
-        contact2Code: '+94',
-         country: 'Sri Lanka',
-      });
+    
+       this.location.back(); // Go to the previous page
+   
     }
   });
 }

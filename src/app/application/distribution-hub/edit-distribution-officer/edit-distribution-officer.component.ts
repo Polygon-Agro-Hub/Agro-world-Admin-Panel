@@ -543,25 +543,27 @@ checkDuplicatePhoneNumbers(): void {
     }
   }
 
-  onBankChange() {
-    if (this.selectedBankId) {
-      const branches = this.allBranches[this.selectedBankId.toString()] || [];
-      // Sort branches alphabetically by name
-      this.branches = branches.slice().sort((a, b) => a.name.localeCompare(b.name));
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-        this.invalidFields.delete('bankName');
-      }
-      this.selectedBranchId = null;
-      this.personalData.branchName = '';
-    } else {
-      this.branches = [];
-      this.personalData.bankName = '';
+onBankChange() {
+  if (this.selectedBankId) {
+    console.log('Selected Bank ID:', this.selectedBankId);
+    console.log('Available branches:', this.allBranches);
+    const branches = this.allBranches[this.selectedBankId.toString()] || [];
+    this.branches = branches.slice().sort((a, b) => a.name.localeCompare(b.name));
+    console.log('Filtered branches:', this.branches);
+    const selectedBank = this.banks.find((bank) => bank.ID === this.selectedBankId);
+    if (selectedBank) {
+      this.personalData.bankName = selectedBank.name;
+      this.invalidFields.delete('bankName');
     }
+    this.selectedBranchId = null;
+    this.personalData.branchName = '';
+    this.cdr.detectChanges(); // Force change detection
+  } else {
+    this.branches = [];
+    this.personalData.bankName = '';
+    this.cdr.detectChanges();
   }
+}
 
   onBranchChange() {
     if (this.selectedBranchId) {

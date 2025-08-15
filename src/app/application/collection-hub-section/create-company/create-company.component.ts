@@ -78,6 +78,8 @@ export class CreateCompanyComponent implements OnInit {
   contactNumberError2: boolean = false;
   logoSizeError: boolean = false;
   faviconSizeError: boolean = false;
+ sameNumberError: boolean = false;
+
 
   companyType: string = '';
 countries = [
@@ -146,6 +148,27 @@ countries = [
   getFlagUrl(countryCode: string): string {
   return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
 }
+
+
+// Validate a given mobile number
+isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
+  const code = numberField === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
+  const number = numberField === 'oicConNum1' ? this.companyData.oicConNum1 : this.companyData.oicConNum2;
+
+  // Skip validation if fields are empty
+  if (!code || !number) return false;
+
+  // Combine code + number
+  const fullNumber = `${code}${number}`;
+
+  // Validate: +947XXXXXXXX
+  const mobilePattern = /^\+947\d{8}$/;
+  return !mobilePattern.test(fullNumber);
+}
+
+
+// Validate both numbers for duplication
+
 
   async compressImage(
     file: File,
@@ -363,34 +386,34 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
 }
 
 // Updated contact number validation with SweetAlert
-validateContactNumbers(): void {
-  const num1 = this.companyData.oicConNum1?.toString() || '';
-  const num2 = this.companyData.oicConNum2?.toString() || '';
+// validateContactNumbers(): void {
+//   const num1 = this.companyData.oicConNum1?.toString() || '';
+//   const num2 = this.companyData.oicConNum2?.toString() || '';
 
-  // Length validation errors (for UI messages)
-  this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
-  this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
+//   // Length validation errors (for UI messages)
+//   this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
+//   this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
 
-  // Duplicate number check with country codes
-  if (
-    num1.length === 9 &&
-    num2.length === 9 &&
-    this.companyData.oicConNum1 &&
-    this.companyData.oicConNum2 &&
-    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-    this.companyData.oicConCode1 === this.companyData.oicConCode2
-  ) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Duplicate Numbers',
-      text: 'Company Contact Number 1 and 2 cannot be the same',
-    }).then(() => {
-      // Clear the second number
-      this.companyData.oicConNum2 = '';
-      this.contactNumberError2 = false;
-    });
-  }
-}
+//   // Duplicate number check with country codes
+//   if (
+//     num1.length === 9 &&
+//     num2.length === 9 &&
+//     this.companyData.oicConNum1 &&
+//     this.companyData.oicConNum2 &&
+//     this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+//     this.companyData.oicConCode1 === this.companyData.oicConCode2
+//   ) {
+//     Swal.fire({
+//       icon: 'error',
+//       title: 'Duplicate Numbers',
+//       text: 'Company Contact Number 1 and 2 cannot be the same',
+//     }).then(() => {
+//       // Clear the second number
+//       this.companyData.oicConNum2 = '';
+//       this.contactNumberError2 = false;
+//     });
+//   }
+// }
 
 
   handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
@@ -699,18 +722,20 @@ validateContactNumbers(): void {
     }
   }
 
-  onBranchChange() {
-    if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (selectedBranch) {
-        this.companyData.branchName = selectedBranch.name;
-      }
+onBranchChange() {
+  if (this.selectedBranchId) {
+    const selectedBranch = this.branches.find((branch) => branch.ID === this.selectedBranchId);
+    if (selectedBranch) {
+      this.companyData.branchName = selectedBranch.name;
+      this.invalidFields.delete('branchName');
     } else {
       this.companyData.branchName = '';
     }
+  } else {
+    this.companyData.branchName = '';
   }
+  console.log('Selected branch:', this.companyData.branchName);
+}
 
 // Updated getCompanyData method to properly handle the response
 getCompanyData() {
@@ -974,8 +999,32 @@ getCompanyData() {
     }
   }
 
-  this.selectedPage = page;
+    this.selectedPage = page;
+  }
+
+  validateContactNumbers() {
+  // Check individual number length validation (already present)
+  this.contactNumberError1 =
+    this.companyData.oicConNum1?.length > 0 &&
+    this.companyData.oicConNum1?.length !== 9;
+
+  this.contactNumberError2 =
+    this.companyData.oicConNum2?.length > 0 &&
+    this.companyData.oicConNum2?.length !== 9;
+
+  // Check if both numbers are the same (only if both are non-empty)
+  if (
+    this.companyData.oicConNum1 &&
+    this.companyData.oicConNum2 &&
+    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+    this.companyData.oicConCode1 === this.companyData.oicConCode2 // also check country code
+  ) {
+    this.sameNumberError = true;
+  } else {
+    this.sameNumberError = false;
+  }
 }
+
   allowOnlyEnglishLetterss(event: KeyboardEvent): void {
     const key = event.key;
     const pattern = /^[a-zA-Z\s]$/;
@@ -1181,12 +1230,14 @@ allowOnlyEnglishLetters(event: KeyboardEvent): void {
     }
   }
 
-  capitalizeFirstLetter(field: 'companyNameEnglish' | 'foName') {
+  capitalizeFirstLetter(field: 'companyNameEnglish' | 'foName' | 'accHolderName'): void {
     const currentValue = this.companyData[field];
     if (currentValue && currentValue.length > 0) {
       this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
     }
   }
+
+  
 
 allowOnlyValidNameCharacters(event: KeyboardEvent): void {
   const allowedPattern = /^[a-zA-Z\s]$/;

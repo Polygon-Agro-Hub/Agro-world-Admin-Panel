@@ -246,6 +246,7 @@
             formControlName="taskDescriptionSinhala"
             id="taskDescriptionSinhala"
             [(ngModel)]="cropTaskObj.taskDescriptionSinhala"
+            (keydown)="allowOnlySinhalaLetters($event)"
             name="taskDescriptionSinhala"
             rows="5"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"

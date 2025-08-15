@@ -58,20 +58,23 @@
 
       <!-- Crop Selection -->
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-        <select
-          id="selectId"
-          name="selectId"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.selectId"
-          (change)="onCropChange()"
-        >
-          <option selected disabled value="">--- Select Crop ---</option>
-          <option *ngFor="let cropItem of cropsObj" [value]="cropItem.cropId">
-            {{ cropItem.cropNameEnglish }}
-          </option>
-        </select>
-      </div>
+  <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
+  <p-dropdown 
+    id="selectId"
+    name="selectId"
+    [(ngModel)]="productObj.selectId"
+    (onChange)="onCropChange()"
+    [options]="cropsObj"
+    optionLabel="cropNameEnglish"
+    optionValue="cropId"
+    [filter]="true"
+    filterBy="cropNameEnglish"
+    placeholder="--- Select Crop ---"
+    [showClear]="false"
+    class="w-full mt-2"
+  >
+  </p-dropdown>
+</div>
 
       <!-- <div>
         <select
@@ -90,23 +93,24 @@
       </div> -->
 
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-        <select
-          id="variety"
-          name="variety"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.varietyId"
-          (change)="selectVerityImage()"
-        >
-          <option selected disabled>--- Select Variety ---</option>
-          <option
-            *ngFor="let variety of selectedVarieties"
-            [value]="variety.id"
-          >
-            {{ variety.varietyEnglish }}
-          </option>
-        </select>
-      </div>
+  <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
+  <p-dropdown 
+    id="variety"
+    name="variety"
+    [(ngModel)]="productObj.varietyId"
+    (onChange)="selectVerityImage()"
+    [options]="selectedVarieties"
+    optionLabel="varietyEnglish"
+    optionValue="id"
+    [filter]="true"
+    filterBy="varietyEnglish"
+    placeholder="--- Select Variety ---"
+    [showClear]="false"
+    class="w-full mt-2"
+    [disabled]="!isVerityVisible"
+  >
+  </p-dropdown>
+</div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price *</label>

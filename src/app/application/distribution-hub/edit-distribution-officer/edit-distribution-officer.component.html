@@ -788,31 +788,31 @@
 
 
 
- <div class="pb-6">
-    <label for="branchDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-      Branch Name*
-    </label>
-    <p-dropdown
-      id="branchDropdown"
-      name="branchName"
-      [options]="branches"
-      [(ngModel)]="selectedBranchId"
-      optionLabel="name"
-      optionValue="ID"
-      [filter]="true"
-      filterPlaceholder="Search Branch"
-      placeholder="Select a branch"
-      [showClear]="true"
-      [disabled]="!selectedBankId"
-      required
-      #branchRef="ngModel"
-      class="w-full"
-    ></p-dropdown>
-
-    <span *ngIf="branchRef.invalid && branchRef.touched" class="text-red-600 text-sm">
-      Branch Name is required.
-    </span>
-  </div>
+<div class="pb-6">
+  <label for="branchDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+    Branch Name*
+  </label>
+  <p-dropdown
+    id="branchDropdown"
+    name="branchName"
+    [options]="branches"
+    [(ngModel)]="selectedBranchId"
+    optionLabel="name"
+    optionValue="ID"
+    [filter]="true"
+    filterPlaceholder="Search Branch"
+    placeholder="Select a branch"
+    [showClear]="true"
+    [disabled]="!selectedBankId"
+    (onChange)="onBranchChange()"
+    required
+    #branchRef="ngModel"
+    class="w-full"
+  ></p-dropdown>
+  <span *ngIf="branchRef.invalid && branchRef.touched" class="text-red-600 text-sm">
+    Branch Name is required.
+  </span>
+</div>
 
 
 

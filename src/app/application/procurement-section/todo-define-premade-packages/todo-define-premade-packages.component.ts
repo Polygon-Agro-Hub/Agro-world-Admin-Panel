@@ -252,7 +252,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       item.isExcluded = false; // fallback
     }
 
-    console.log(item.price);
+    console.log('price', item.price);
 
     this.recalculatePackageTotal();
   }
@@ -405,8 +405,12 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
+    console.log('odarray', this.orderdetailsArr)
+
     this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
+      
       (res) => {
+
         this.loading = false;
         console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Updated Successfully', 'success');

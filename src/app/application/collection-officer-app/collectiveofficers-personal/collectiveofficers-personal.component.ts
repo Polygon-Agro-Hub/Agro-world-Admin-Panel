@@ -192,69 +192,207 @@ back(): void {
 }
 
 
-  onSubmit() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to create the collection officer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.collectionOfficerService
-          .createCollectiveOfficer(this.personalData, this.selectedImage)
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.officerId = res.officerId;
-              this.errorMessage = '';
+onSubmit() {
+  const missingFields: string[] = [];
 
-              Swal.fire(
-                'Success',
-                'Collection Officer Created Successfully',
-                'success'
-              );
-              this.navigatePath('/steckholders/action/collective-officer');
-            },
-            (error: any) => {
-              this.isLoading = false;
-              let errorMessage = 'An unexpected error occurred';
-
-              if (error.error && error.error.error) {
-                switch (error.error.error) {
-                  case 'NIC already exists':
-                    errorMessage = 'The NIC number is already registered.';
-                    break;
-                  case 'Email already exists':
-                    errorMessage = 'The email address is already in use.';
-                    break;
-                  case 'Primary phone number already exists':
-                    errorMessage = 'The primary phone number is already registered.';
-                    break;
-                  case 'Secondary phone number already exists':
-                    errorMessage = 'The secondary phone number is already registered.';
-                    break;
-                  case 'Invalid file format or file upload error':
-                    errorMessage = 'Invalid file format or error uploading the file.';
-                    break;
-                  default:
-                    errorMessage = error.error.error || 'An unexpected error occurred';
-                }
-              }
-
-              this.errorMessage = errorMessage;
-              Swal.fire('Error', this.errorMessage, 'error');
-            }
-          );
-      } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-      }
-    });
+  // Check required fields for pageOne
+  if (!this.personalData.empType) {
+    missingFields.push('Staff Employee Type');
   }
 
+  if (!this.isAtLeastOneLanguageSelected()) {
+    missingFields.push('Preferred Languages');
+  }
+
+  if (!this.personalData.companyId) {
+    missingFields.push('Company Name');
+  }
+
+  if (!this.personalData.centerId) {
+    missingFields.push('Collection Centre Name');
+  }
+
+  if (!this.personalData.jobRole) {
+    missingFields.push('Job Role');
+  }
+
+  if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
+    missingFields.push('Manager Name');
+  }
+
+  if (!this.personalData.firstNameEnglish) {
+    missingFields.push('First Name (in English)');
+  }
+
+  if (!this.personalData.lastNameEnglish) {
+    missingFields.push('Last Name (in English)');
+  }
+
+  if (!this.personalData.firstNameSinhala) {
+    missingFields.push('First Name (in Sinhala)');
+  }
+
+  if (!this.personalData.lastNameSinhala) {
+    missingFields.push('Last Name (in Sinhala)');
+  }
+
+  if (!this.personalData.firstNameTamil) {
+    missingFields.push('First Name (in Tamil)');
+  }
+
+  if (!this.personalData.lastNameTamil) {
+    missingFields.push('Last Name (in Tamil)');
+  }
+
+  if (!this.personalData.phoneNumber01) {
+    missingFields.push('Mobile Number - 01');
+  } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+    missingFields.push('Mobile Number - 01 - Must be 9 digits');
+  }
+
+  if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+    missingFields.push('Mobile Number - 02 - Must be 9 digits');
+  }
+
+  if (this.areDuplicatePhoneNumbers()) {
+    missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+  }
+
+  if (!this.personalData.nic) {
+    missingFields.push('NIC Number');
+  } else if (!this.isValidNIC(this.personalData.nic)) {
+    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+  }
+
+  if (!this.personalData.email) {
+    missingFields.push('Email');
+  } else if (!this.isValidEmail(this.personalData.email)) {
+    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+  }
+
+  // Check required fields for pageTwo
+  if (!this.personalData.houseNumber) {
+    missingFields.push('House Number');
+  }
+
+  if (!this.personalData.streetName) {
+    missingFields.push('Street Name');
+  }
+
+  if (!this.personalData.city) {
+    missingFields.push('City');
+  }
+
+  if (!this.personalData.district) {
+    missingFields.push('District');
+  }
+
+  if (!this.personalData.province) {
+    missingFields.push('Province');
+  }
+
+  if (!this.personalData.accHolderName) {
+    missingFields.push('Account Holder Name');
+  }
+
+  if (!this.personalData.accNumber) {
+    missingFields.push('Account Number');
+  }
+
+  if (!this.personalData.confirmAccNumber) {
+    missingFields.push('Confirm Account Number');
+  } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+    missingFields.push('Confirm Account Number - Must match Account Number');
+  }
+
+  if (!this.selectedBankId) {
+    missingFields.push('Bank Name');
+  }
+
+  if (!this.selectedBranchId) {
+    missingFields.push('Branch Name');
+  }
+
+  // If errors, show list and stop
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // If valid, confirm creation
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create the collection officer?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.collectionOfficerService
+        .createCollectiveOfficer(this.personalData, this.selectedImage)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.officerId = res.officerId;
+            this.errorMessage = '';
+
+            Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
+            this.navigatePath('/steckholders/action/collective-officer');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+
+            if (error.error && error.error.error) {
+              switch (error.error.error) {
+                case 'NIC already exists':
+                  errorMessage = 'The NIC number is already registered.';
+                  break;
+                case 'Email already exists':
+                  errorMessage = 'The email address is already in use.';
+                  break;
+                case 'Primary phone number already exists':
+                  errorMessage = 'The primary phone number is already registered.';
+                  break;
+                case 'Secondary phone number already exists':
+                  errorMessage = 'The secondary phone number is already registered.';
+                  break;
+                case 'Invalid file format or file upload error':
+                  errorMessage = 'Invalid file format or error uploading the file.';
+                  break;
+                default:
+                  errorMessage = error.error.error || 'An unexpected error occurred';
+              }
+            }
+
+            this.errorMessage = errorMessage;
+            Swal.fire('Error', this.errorMessage, 'error');
+          }
+        );
+    } else {
+      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+    }
+  });
+}
 onCancel() {
   Swal.fire({
     icon: 'warning',
@@ -275,9 +413,111 @@ onCancel() {
   });
 }
 
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    this.selectedPage = page;
+nextFormCreate(page: 'pageOne' | 'pageTwo') {
+  if (page === 'pageTwo') {
+    const missingFields: string[] = [];
+
+    // Validate pageOne fields
+    if (!this.personalData.empType) {
+      missingFields.push('Staff Employee Type');
+    }
+
+    if (!this.isAtLeastOneLanguageSelected()) {
+      missingFields.push('Preferred Languages');
+    }
+
+    if (!this.personalData.companyId) {
+      missingFields.push('Company Name');
+    }
+
+    if (!this.personalData.centerId) {
+      missingFields.push('Collection Centre Name');
+    }
+
+    if (!this.personalData.jobRole) {
+      missingFields.push('Job Role');
+    }
+
+    if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
+      missingFields.push('Manager Name');
+    }
+
+    if (!this.personalData.firstNameEnglish) {
+      missingFields.push('First Name (in English)');
+    }
+
+    if (!this.personalData.lastNameEnglish) {
+      missingFields.push('Last Name (in English)');
+    }
+
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name (in Sinhala)');
+    }
+
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name (in Sinhala)');
+    }
+
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name (in Tamil)');
+    }
+
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name (in Tamil)');
+    }
+
+    if (!this.personalData.phoneNumber01) {
+      missingFields.push('Mobile Number - 01');
+    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+      missingFields.push('Mobile Number - 01 - Must be 9 digits');
+    }
+
+    if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+      missingFields.push('Mobile Number - 02 - Must be 9 digits');
+    }
+
+    if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+    }
+
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
+
+    if (!this.personalData.email) {
+      missingFields.push('Email');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+    }
+
+    // If errors, show popup and stop navigation
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
   }
+
+  // Navigate to the selected page
+  this.selectedPage = page;
+}
 
   ngOnInit(): void {
     this.loadBanks();

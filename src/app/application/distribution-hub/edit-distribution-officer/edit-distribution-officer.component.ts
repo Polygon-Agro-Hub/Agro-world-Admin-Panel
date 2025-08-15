@@ -445,10 +445,13 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
       });
   }
 
-  isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+isValidPhoneNumber(phone: string, code: string): boolean {
+  if (!phone || !code) return false;
+  const fullNumber = `${code}${phone}`;
+  const mobilePattern = /^\+947\d{8}$/; // Sri Lankan numbers
+  return mobilePattern.test(fullNumber);
+}
+
 
 checkDuplicatePhoneNumbers(): void {
   const phone1 = `${this.personalData.phoneCode01 || ''}${this.personalData.phoneNumber01 || ''}`.trim();
@@ -499,37 +502,40 @@ checkDuplicatePhoneNumbers(): void {
   }
 
   checkFormValidity(): boolean {
-    const namePattern = /^[A-Za-z ]+$/;
+  const namePattern = /^[A-Za-z ]+$/;
 
-    const isFirstNameValid =
-      !!this.personalData.firstNameEnglish &&
-      namePattern.test(this.personalData.firstNameEnglish);
+  const isFirstNameValid =
+    !!this.personalData.firstNameEnglish &&
+    namePattern.test(this.personalData.firstNameEnglish);
 
-    const isLastNameValid =
-      !!this.personalData.lastNameEnglish &&
-      namePattern.test(this.personalData.lastNameEnglish);
+  const isLastNameValid =
+    !!this.personalData.lastNameEnglish &&
+    namePattern.test(this.personalData.lastNameEnglish);
 
-    const isPhoneNumberValid = this.isValidPhoneNumber(
-      this.personalData.phoneNumber01
-    );
-    const isEmailValid = this.isValidEmail(this.personalData.email);
-    const isLanguagesSelected = !!this.personalData.languages;
-    const isCompanySelected = !!this.personalData.companyId;
-    const isJobRoleSelected = !!this.personalData.jobRole;
-    const isNicSelected =
-      !!this.personalData.nic && this.isValidNIC(this.personalData.nic);
+  const isPhoneNumberValid = this.isValidPhoneNumber(
+    this.personalData.phoneNumber01,
+    this.personalData.phoneCode01
+  );
 
-    return (
-      isFirstNameValid &&
-      isLastNameValid &&
-      isPhoneNumberValid &&
-      isEmailValid &&
-      isLanguagesSelected &&
-      isCompanySelected &&
-      isJobRoleSelected &&
-      isNicSelected
-    );
-  }
+  const isEmailValid = this.isValidEmail(this.personalData.email);
+  const isLanguagesSelected = !!this.personalData.languages;
+  const isCompanySelected = !!this.personalData.companyId;
+  const isJobRoleSelected = !!this.personalData.jobRole;
+  const isNicSelected =
+    !!this.personalData.nic && this.isValidNIC(this.personalData.nic);
+
+  return (
+    isFirstNameValid &&
+    isLastNameValid &&
+    isPhoneNumberValid &&
+    isEmailValid &&
+    isLanguagesSelected &&
+    isCompanySelected &&
+    isJobRoleSelected &&
+    isNicSelected
+  );
+}
+
 
  updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
@@ -542,6 +548,29 @@ checkDuplicatePhoneNumbers(): void {
       this.personalData.province = '';
     }
   }
+
+
+  // Prevent entering more than 12 characters for NIC
+blockNicInput(event: KeyboardEvent) {
+  const value = this.personalData.nic || '';
+
+  // Allow control keys
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+  if (allowedKeys.includes(event.key)) return;
+
+  // Block input if already 12 characters
+  if (value.length >= 12) {
+    event.preventDefault();
+  }
+}
+
+// Trim NIC input after paste/autofill
+enforceNicLength(event: any) {
+  const value = event.target.value || '';
+  if (value.length > 12) {
+    this.personalData.nic = value.slice(0, 12);
+  }
+}
 
 onBankChange() {
   if (this.selectedBankId) {

@@ -243,11 +243,11 @@ export class MarketEditProductComponent implements OnInit {
       },
       (error) => {
           console.error('Product update error:', error);
-          Swal.fire(
-              'Error',
-              'An error occurred while updating the product',
-              'error'
-          );
+          let errorMessage = 'An error occurred while updating the product';
+          if (error.error && error.error.error) {
+              errorMessage = error.error.error;
+          }
+          Swal.fire('Error', errorMessage, 'error');
       }
   );
   console.log('Form submitted:', this.productObj);

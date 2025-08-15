@@ -51,18 +51,19 @@
           for="taskEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task English
+          Task English*
         </label>
-        <input
-          type="text"
-          id="taskEnglish"
-          [(ngModel)]="taskItems.taskEnglish"
-          (keydown)="onKeyDown($event, taskItems.taskEnglish)"
-          (input)="validateEnglishInput($event)"
-          #taskEnglish="ngModel"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+       <input
+  type="text"
+  id="taskEnglish"
+  [(ngModel)]="taskItems.taskEnglish"
+  (keydown)="onKeyDown($event, taskItems.taskEnglish)"
+ (input)="validateAndCapitalizeEnglish($event, 'taskEnglish')"
+  #taskEnglish="ngModel"
+  required
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
         <div
           *ngIf="
             taskEnglish.invalid && (taskEnglish.dirty || taskEnglish.touched)
@@ -77,18 +78,19 @@
           for="taskTypeEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Type
+          Task Type*
         </label>
-        <input
-          type="text"
-          id="taskTypeEnglish"
-          [(ngModel)]="taskItems.taskTypeEnglish"
-          (keydown)="onKeyDown($event, taskItems.taskTypeEnglish)"
-          (input)="validateEnglishInput($event)"
-          #taskTypeEnglish="ngModel"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+      <input
+  type="text"
+  id="taskTypeEnglish"
+  [(ngModel)]="taskItems.taskTypeEnglish"
+  (keydown)="onKeyDown($event, taskItems.taskTypeEnglish)"
+(input)="validateAndCapitalizeEnglish($event, 'taskTypeEnglish')"
+  #taskTypeEnglish="ngModel"
+  required
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
         <div
           *ngIf="
             taskTypeEnglish.invalid &&
@@ -104,14 +106,14 @@
           for="taskCategoryEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Category
+          Task Category*
         </label>
         <input
           type="text"
           id="taskCategoryEnglish"
           [(ngModel)]="taskItems.taskCategoryEnglish"
           (keydown)="onKeyDown($event, taskItems.taskCategoryEnglish)"
-          (input)="validateEnglishInput($event)"
+         (input)="validateAndCapitalizeEnglish($event, 'taskCategoryEnglish')"
           #taskCategoryEnglish="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -131,14 +133,14 @@
           for="taskDescriptionEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Description
+          Task Description*
         </label>
         <input
           type="text"
           id="taskDescriptionEnglish"
           [(ngModel)]="taskItems.taskDescriptionEnglish"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionEnglish)"
-          (input)="validateEnglishInput($event)"
+         (input)="validateAndCapitalizeEnglish($event, 'taskDescriptionEnglish')"
           #taskDescriptionEnglish="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -407,24 +409,14 @@
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >Number of required images</label
       >
-      <input
-        type="number"
-        min="0"
-        id="reqImages"
-        [(ngModel)]="taskItems.reqImages"
-        name="reqImages"
-        #reqImages="ngModel"
-        required
-        rows="3"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      />
-      <!-- <div
-        *ngIf="reqImages.invalid && (reqImages.dirty || reqImages.touched)"
-        class="text-red-500 text-sm mt-1"
-      >
-        Number of required images is required
-      </div> -->
-    </div>
+    
+ <input
+  type="text"
+  id="reqImages"
+  formControlName="reqImages"
+  (input)="allowOnlyNumbers($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
 
     <div class="md:col-span-2 my-3">
       <label

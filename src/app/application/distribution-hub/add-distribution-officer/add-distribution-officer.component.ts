@@ -334,10 +334,15 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
       });
   }
 
-  isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01): boolean {
+  if (!phone || !code) return false;
+
+  const fullNumber = `${code}${phone}`;
+  const mobilePattern = /^\+947\d{8}$/; // Sri Lanka +947XXXXXXXX
+  return mobilePattern.test(fullNumber); // true if valid
+}
+
+
 
   isValidNIC(nic: string): boolean {
     const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
@@ -423,23 +428,54 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
     }
   }
 
-  onBankChange() {
-    if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-        this.invalidFields.delete('bankName');
-      }
-      this.selectedBranchId = null;
-      this.personalData.branchName = '';
-    } else {
-      this.branches = [];
-      this.personalData.bankName = '';
+ onBankChange() {
+  if (this.selectedBankId) {
+    // Get branches for this bank, default to empty array
+    const bankBranches = this.allBranches[this.selectedBankId.toString()] || [];
+
+    // Sort alphabetically by branch name
+    this.branches = bankBranches.slice().sort((a, b) => a.name.localeCompare(b.name));
+
+    const selectedBank = this.banks.find(
+      (bank) => bank.ID === this.selectedBankId
+    );
+    if (selectedBank) {
+      this.personalData.bankName = selectedBank.name;
+      this.invalidFields.delete('bankName');
     }
+    
+    this.selectedBranchId = null;
+    this.personalData.branchName = '';
+  } else {
+    this.branches = [];
+    this.personalData.bankName = '';
   }
+}
+// Prevent entering more than 12 characters for NIC
+blockNicInput(event: KeyboardEvent) {
+  const value = this.personalData.nic || '';
+
+  // Allow control keys
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+  if (allowedKeys.includes(event.key)) return;
+
+  // Block input if already 12 characters
+  if (value.length >= 12) {
+    event.preventDefault();
+  }
+}
+
+// Trim NIC input after paste/autofill
+enforceNicLength(event: any) {
+  const value = event.target.value || '';
+  if (value.length > 12) {
+    this.personalData.nic = value.slice(0, 12);
+  }
+}
+
+// Capitalize 'v' to 'V' for 10-digit NIC
+
+
 
   onBranchChange() {
     if (this.selectedBranchId) {
@@ -632,14 +668,24 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
   }
 }
 
-  loadBranches() {
-    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-      (data) => {
-        this.allBranches = data;
-      },
-      (error) => { }
-    );
-  }
+loadBranches() {
+  this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+    (data) => {
+      this.allBranches = data; // store all branches
+      // If you want to populate initial branches for selected bank:
+      if (this.selectedBankId) {
+        this.branches = (data[this.selectedBankId.toString()] || []).slice()
+          .sort((a, b) => a.name.localeCompare(b.name));
+      }
+    },
+    (error) => {
+      console.error('Failed to load branches', error);
+    }
+  );
+}
+
+
+
 }
 
 class Personal {

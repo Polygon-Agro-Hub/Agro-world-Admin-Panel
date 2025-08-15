@@ -329,29 +329,103 @@ back(): void {
 }
 
 
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
+nextFormCreate(page: 'pageOne' | 'pageTwo') {
+  // Only validate when navigating to pageTwo
+  if (page === 'pageTwo') {
+    const missingFields: string[] = [];
     const nicPattern = /^(\d{9}V|\d{12})$/;
-  
-    if (
-      !this.personalData.firstNameEnglish ||
-      !this.personalData.firstNameSinhala ||
-      !this.personalData.firstNameTamil ||
-      !this.personalData.lastNameEnglish ||
-      !this.personalData.lastNameSinhala ||
-      !this.personalData.lastNameTamil ||
-      !this.personalData.phoneNumber01 ||
-      !this.personalData.nic ||
-      !nicPattern.test(this.personalData.nic) || // ✅ Add pattern check here
-      !this.personalData.email ||
-      !this.personalData.empType
-    ) {
+    const phonePattern = /^[0-9]{9}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!this.empType) {
+      missingFields.push('Staff Employee Type');
+    }
+
+    if (this.isLanguageRequired && this.selectedLanguages.length === 0) {
+      missingFields.push('Preferred Languages - At least one language must be selected');
+    }
+
+    if (!this.personalData.companyId) {
+      missingFields.push('Company Name');
+    }
+
+    if (!this.personalData.firstNameEnglish) {
+      missingFields.push('First Name (in English)');
+    }
+
+    if (!this.personalData.lastNameEnglish) {
+      missingFields.push('Last Name (in English)');
+    }
+
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name (in Sinhala)');
+    }
+
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name (in Sinhala)');
+    }
+
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name (in Tamil)');
+    }
+
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name (in Tamil)');
+    }
+
+    if (!this.personalData.phoneNumber01) {
+      missingFields.push('Phone Number - 1');
+    } else if (!phonePattern.test(this.personalData.phoneNumber01)) {
+      missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+    }
+
+    if (this.personalData.phoneNumber02) {
+      if (!phonePattern.test(this.personalData.phoneNumber02)) {
+        missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+      }
+      if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+        missingFields.push('Phone Number - 2 - Must be different from Phone Number - 1');
+      }
+    }
+
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number');
+    } else if (!nicPattern.test(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
+    }
+
+    if (!this.personalData.email) {
+      missingFields.push('Email');
+    } else if (!emailPattern.test(this.personalData.email)) {
+      missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+    }
+
+    // Display errors if any
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
       return;
     }
-  
-    this.selectedPage = page;
   }
-  
 
+  // Navigate to the requested page
+  this.selectedPage = page;
+}
   updateProvince(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const selectedDistrict = target.value;
@@ -416,65 +490,213 @@ back(): void {
     }
   }
 
-  onSubmit() {
-    if (
-      !this.personalData.houseNumber ||
-      !this.personalData.streetName ||
-      !this.personalData.city ||
-      !this.personalData.province ||
-      !this.personalData.district ||
-      !this.personalData.accHolderName ||
-      !this.personalData.accNumber ||
-      !this.personalData.bankName ||
-      !this.personalData.branchName ||
-      this.personalData.accNumber !== this.confirmAccNumber
-    ) {
-      return;
-    }
+onSubmit() {
+  const missingFields: string[] = [];
 
-    this.isLoading = true;
-    this.isLoading = false;
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to edit the Centre Head?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Save it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.collectionOfficerService
-          .editCollectiveOfficer(
-            this.personalData,
-            this.itemId,
-            this.selectedImage
-          )
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              Swal.fire(
-                'Success',
-                'Centre Head updated Successfully',
-                'success'
-              );
-              window.history.back();
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred'; // Update the error message
-              Swal.fire('Error', this.errorMessage, 'error');
-            }
-          );
-      } else {
-        this.isLoading = false;
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-      }
-    });
+  // Validation for pageOne fields
+  if (!this.empType) {
+    missingFields.push('Staff Employee Type');
   }
 
+  if (this.isLanguageRequired && this.selectedLanguages.length === 0) {
+    missingFields.push('Preferred Languages - At least one language must be selected');
+  }
+
+  if (!this.personalData.companyId) {
+    missingFields.push('Company Name');
+  }
+
+  if (!this.personalData.firstNameEnglish) {
+    missingFields.push('First Name (in English)');
+  }
+
+  if (!this.personalData.lastNameEnglish) {
+    missingFields.push('Last Name (in English)');
+  }
+
+  if (!this.personalData.firstNameSinhala) {
+    missingFields.push('First Name (in Sinhala)');
+  }
+
+  if (!this.personalData.lastNameSinhala) {
+    missingFields.push('Last Name (in Sinhala)');
+  }
+
+  if (!this.personalData.firstNameTamil) {
+    missingFields.push('First Name (in Tamil)');
+  }
+
+  if (!this.personalData.lastNameTamil) {
+    missingFields.push('Last Name (in Tamil)');
+  }
+
+  if (!this.personalData.phoneNumber01) {
+    missingFields.push('Phone Number - 1');
+  } else if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber01)) {
+    missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+  }
+
+  if (this.personalData.phoneNumber02) {
+    if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber02)) {
+      missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+    }
+    if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+      missingFields.push('Phone Number - 2 - Must be different from Phone Number - 1');
+    }
+  }
+
+  if (!this.personalData.nic) {
+    missingFields.push('NIC Number');
+  } else if (!/^(\d{9}V|\d{12})$/.test(this.personalData.nic)) {
+    missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
+  }
+
+  if (!this.personalData.email) {
+    missingFields.push('Email');
+  } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.personalData.email)) {
+    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+  }
+
+  // Validation for pageTwo fields
+  if (!this.personalData.houseNumber) {
+    missingFields.push('House Number');
+  }
+
+  if (!this.personalData.streetName) {
+    missingFields.push('Street Name');
+  }
+
+  if (!this.personalData.city) {
+    missingFields.push('City');
+  }
+
+  if (!this.personalData.district) {
+    missingFields.push('District');
+  }
+
+  if (!this.personalData.province) {
+    missingFields.push('Province');
+  }
+
+  // Bank details validation (only required if companyId is 1)
+  if (this.personalData.companyId == 1) {
+    if (!this.personalData.accHolderName) {
+      missingFields.push('Account Holder’s Name');
+    }
+
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number');
+    }
+
+    if (!this.confirmAccNumber) {
+      missingFields.push('Confirm Account Number');
+    } else if (this.personalData.accNumber !== this.confirmAccNumber) {
+      missingFields.push('Confirm Account Number - Must match Account Number');
+    }
+
+    if (!this.selectedBankId) {
+      missingFields.push('Bank Name');
+    }
+
+    if (!this.selectedBranchId) {
+      missingFields.push('Branch Name');
+    }
+  }
+
+  // Display errors if any
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Confirmation dialog
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to edit the Centre Head?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Save it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.collectionOfficerService
+        .editCollectiveOfficer(this.personalData, this.itemId, this.selectedImage)
+        .subscribe({
+          next: (res: any) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Centre Head updated successfully',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              window.history.back();
+            });
+          },
+          error: (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+
+            if (error.error && error.error.error) {
+              switch (error.error.error) {
+                case 'NIC already exists':
+                  errorMessage = 'The NIC number is already registered.';
+                  break;
+                case 'Email already exists':
+                  errorMessage = 'The email address is already in use.';
+                  break;
+                case 'Primary phone number already exists':
+                  errorMessage = 'The primary phone number is already registered.';
+                  break;
+                case 'Secondary phone number already exists':
+                  errorMessage = 'The secondary phone number is already registered.';
+                  break;
+                case 'Invalid file format or file upload error':
+                  errorMessage = 'Invalid file format or error uploading the file.';
+                  break;
+                default:
+                  errorMessage = error.error.error || 'An unexpected error occurred';
+              }
+            }
+
+            this.errorMessage = errorMessage;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: this.errorMessage,
+              confirmButtonText: 'OK',
+            });
+          },
+        });
+    } else {
+      this.isLoading = false;
+      Swal.fire({
+        icon: 'info',
+        title: 'Cancelled',
+        text: 'Your action has been cancelled',
+        confirmButtonText: 'OK',
+      });
+    }
+  });
+}
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

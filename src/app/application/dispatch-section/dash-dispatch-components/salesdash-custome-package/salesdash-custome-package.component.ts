@@ -8,6 +8,7 @@ import { DispatchService } from '../../../../services/dispatch/dispatch.service'
 import { Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-salesdash-custome-package',
@@ -18,7 +19,8 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
     DropdownModule,
     FormsModule,
     DatePipe,
-    CalendarModule
+    CalendarModule,
+    LoadingSpinnerComponent
   ],
   templateUrl: './salesdash-custome-package.component.html',
   styleUrl: './salesdash-custome-package.component.css'

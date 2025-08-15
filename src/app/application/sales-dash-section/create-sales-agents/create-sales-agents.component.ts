@@ -520,67 +520,173 @@ onCancel() {
     );
   }
 
-  onSubmit() {
-    // Check if employee type is selected
+onSubmit() {
+  // Mark all fields as touched to trigger validation
+  this.touchedFields = {
+    empType: true,
+    firstName: true,
+    lastName: true,
+    phoneNumber1: true,
+    phoneNumber2: !!this.personalData.phoneNumber2,
+    email: true,
+    nic: true,
+    houseNumber: true,
+    streetName: true,
+    city: true,
+    district: true,
+    province: true,
+    accHolderName: true,
+    accNumber: true,
+    confirmAccNumber: true,
+    bankName: true,
+    branchName: true,
+  };
+
+  // Check if the form is valid
+  if (!this.checkSubmitValidity()) {
+    const missingFields: string[] = [];
+
+    // Regular expressions for validation
+    const englishNamePattern = /^[A-Z][a-zA-Z\s]*$/;
+    const phonePattern = /^7\d{8}$/;
+    const emailPattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+    const nicPattern = /(^\d{12}$)|(^\d{9}[V]$)/;
+    const accountPattern = /^[a-zA-Z0-9]+$/;
+
+    // Validate each field and add error messages
     if (!this.personalData.empType) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Staff Employee Type is a required field',
-      });
-      return; // Exit the function if not selected
+      missingFields.push('Staff Employee Type');
+    }
+    if (!this.personalData.firstName) {
+      missingFields.push('First Name');
+    } else if (!englishNamePattern.test(this.personalData.firstName)) {
+      missingFields.push('First Name - Must start with a capital letter and contain only English letters');
+    }
+    if (!this.personalData.lastName) {
+      missingFields.push('Last Name');
+    } else if (!englishNamePattern.test(this.personalData.lastName)) {
+      missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
+    }
+    if (!this.personalData.phoneNumber1) {
+      missingFields.push('Contact Number 1');
+    } else if (!phonePattern.test(this.personalData.phoneNumber1)) {
+      missingFields.push('Contact Number 1 - Must be 9 digits starting with 7');
+    }
+    if (this.personalData.phoneNumber2 && !phonePattern.test(this.personalData.phoneNumber2)) {
+      missingFields.push('Contact Number 2 - Must be 9 digits starting with 7');
+    }
+    if (this.personalData.phoneNumber2 && this.personalData.phoneNumber1 === this.personalData.phoneNumber2) {
+      missingFields.push('Contact Number 2 - Cannot be the same as Contact Number 1');
+    }
+    if (!this.personalData.email) {
+      missingFields.push('Email');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+    }
+    if (!this.personalData.nic) {
+      missingFields.push('NIC');
+    } else if (!nicPattern.test(this.personalData.nic)) {
+      missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
+    }
+    if (!this.personalData.houseNumber) {
+      missingFields.push('House Number');
+    }
+    if (!this.personalData.streetName) {
+      missingFields.push('Street Name');
+    }
+    if (!this.personalData.city) {
+      missingFields.push('City');
+    }
+    if (!this.personalData.district) {
+      missingFields.push('District');
+    }
+    if (!this.personalData.province) {
+      missingFields.push('Province');
+    }
+    if (!this.personalData.accHolderName) {
+      missingFields.push('Account Holder Name');
+    } else if (!this.isValidName(this.personalData.accHolderName)) {
+      missingFields.push('Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed');
+    }
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number');
+    } else if (!accountPattern.test(this.personalData.accNumber)) {
+      missingFields.push('Account Number - Only alphanumeric characters allowed');
+    }
+    if (!this.personalData.confirmAccNumber) {
+      missingFields.push('Confirm Account Number');
+    } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+      missingFields.push('Confirm Account Number - Must match Account Number');
+    } else if (!accountPattern.test(this.personalData.confirmAccNumber)) {
+      missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
+    }
+    if (!this.personalData.bankName) {
+      missingFields.push('Bank Name');
+    }
+    if (!this.personalData.branchName) {
+      missingFields.push('Branch Name');
     }
 
-    // Only proceed with the rest of the validation if employee type is selected
-    if (!this.checkSubmitValidity()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Please fill all required fields correctly',
-      });
-      return;
-    }
-
-    console.log(this.personalData, this.selectedImage);
+    // Display popup with missing/invalid fields
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to create the Sales Agent?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.salesAgentService
-          .createSalesAgent(this.personalData, this.selectedImage)
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.officerId = res.officerId;
-              this.errorMessage = '';
-
-              Swal.fire(
-                'Success',
-                'Sales Agent Profile Created Successfully',
-                'success'
-              );
-              this.navigatePath('/steckholders/action/sales-agents');
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
-              Swal.fire('Error', this.errorMessage, 'error');
-            }
-          );
-      } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-      }
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
     });
+    return;
   }
+
+  // If form is valid, proceed with submission
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create the Sales Agent?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.salesAgentService
+        .createSalesAgent(this.personalData, this.selectedImage)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.officerId = res.officerId;
+            this.errorMessage = '';
+
+            Swal.fire(
+              'Success',
+              'Sales Agent Profile Created Successfully',
+              'success'
+            );
+            this.navigatePath('/steckholders/action/sales-agents');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            this.errorMessage =
+              error.error.error || 'An unexpected error occurred';
+            Swal.fire('Error', this.errorMessage, 'error');
+          }
+        );
+    } else {
+      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+    }
+  });
+}
 
   
   navigatePath(path: string) {
@@ -635,7 +741,7 @@ onCancel() {
   }
 }
 
-  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName') {
+  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName' | 'accHolderName' | 'branchName'|'houseNumber'|'streetName'|'city' ) : void {
     if (this.personalData[fieldName]) {
       // Capitalize first letter and make the rest lowercase
       this.personalData[fieldName] =

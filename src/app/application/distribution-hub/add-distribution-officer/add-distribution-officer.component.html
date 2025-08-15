@@ -194,87 +194,105 @@
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
            Mobile Number - 1*
           </label>
-          <div class="mt-1 flex">
-            <select id="phoneNumber01Code" name="phoneNumber01Code" [(ngModel)]="personalData.phoneCode01"
-              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
-            </select>
-            <div class="w-full flex flex-col">
-<input
-  id="phoneNumber01"
-  name="phoneNumber01"
-  type="text"
-  [(ngModel)]="personalData.phoneNumber01"
-  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  placeholder="Enter your phone number"
-  (blur)="onBlur('phoneNumber01')"
-  (keypress)="blockPhoneLength($event, personalData.phoneNumber01)"
-  (input)="checkDuplicatePhoneNumbers(); enforcePhoneLength($event, 'phoneNumber01')"
+         <div class="mt-1 flex flex-col">
+  <div class="flex">
+    <select id="phoneNumber01Code" name="phoneNumber01Code"
+      [(ngModel)]="personalData.phoneCode01"
+      class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+      <option value="+94">+94 (LK)</option>
+      <option value="+1">+1 (US)</option>
+      <option value="+44">+44 (UK)</option>
+      <option value="+91">+91 (India)</option>
+    </select>
 
-/>           
-              <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
-                Company Contact Number - 1 & 2 cannot be the same.
-              </span>
-              <span *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)" class="text-red-600 text-sm">
-                Please enter a valid mobile number (format: +947XXXXXXXX)
-              </span>
-              <span *ngIf="isFieldInvalid('phoneNumber01') && !personalData.phoneNumber01" class="text-red-600 text-sm">
-                Mobile Number - 1 is a required field.
-              </span>
-            </div>
-          </div>
+    <input
+      id="phoneNumber01"
+      name="phoneNumber01"
+      type="text"
+      [(ngModel)]="personalData.phoneNumber01"
+      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      placeholder="Enter your phone number"
+      (blur)="onBlur('phoneNumber01')"
+      (keypress)="blockPhoneLength($event, personalData.phoneNumber01)"
+      (input)="checkDuplicatePhoneNumbers(); enforcePhoneLength($event, 'phoneNumber01')"
+    />
+  </div>
+
+  <!-- Validation messages below both inputs, full width -->
+  <div class="mt-1 flex flex-col w-full">
+    <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
+      Company Contact Number - 1 & 2 cannot be the same.
+    </span>
+<div *ngIf="personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)" class="text-red-500 text-sm">
+  Please enter a valid mobile number (format: +947XXXXXXXX)
+</div>
+
+
+    <span *ngIf="isFieldInvalid('phoneNumber01') && !personalData.phoneNumber01" class="text-red-600 text-sm">
+    Mobile Number - 01 and Mobile Number - 02 cannot be the same
+    </span>
+  </div>
+</div>
         </div>
+        
 
-        <div>
-          <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-       Mobile Number - 2
-          </label>
-          <div class="mt-1 flex">
-            <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
-              class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-              <option value="+94">+94 (LK)</option>
-              <option value="+1">+1 (US)</option>
-              <option value="+44">+44 (UK)</option>
-              <option value="+91">+91 (India)</option>
-            </select>
-            <div class="w-full flex flex-col">
-              <input
-  id="phoneNumber02"
-  name="phoneNumber02"
-  type="text"
-  [(ngModel)]="personalData.phoneNumber02"
-  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  placeholder="Enter your phone number"
-  (blur)="onBlur('phoneNumber02')"
-  (keypress)="blockPhoneLength($event, personalData.phoneNumber02)"
-(input)="checkDuplicatePhoneNumbers(); enforcePhoneLength($event, 'phoneNumber02')"
-/>
+      <div>
+  <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Mobile Number - 2
+  </label>
 
-              <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
-                Mobile Number - 1 & 2 cannot be the same.
-              </span>
-              <!-- <span *ngIf="
-                  touchedFields.phoneNumber02 &&
-                  !isValidPhoneNumber(personalData.phoneNumber02)
-                " class="text-red-600 text-sm">
-                Invalid phone number.
-              </span> -->
-            </div>
-          </div>
-        </div>
+  <div class="mt-1 flex">
+    <select id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode02"
+      class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
+      <option value="+94">+94 (LK)</option>
+      <option value="+1">+1 (US)</option>
+      <option value="+44">+44 (UK)</option>
+      <option value="+91">+91 (India)</option>
+    </select>
 
-       <div>
-  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
+    <input
+      id="phoneNumber02"
+      name="phoneNumber02"
+      type="text"
+      [(ngModel)]="personalData.phoneNumber02"
+      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      placeholder="Enter your phone number"
+      (blur)="onBlur('phoneNumber02')"
+      (keypress)="blockPhoneLength($event, personalData.phoneNumber02)"
+      (input)="checkDuplicatePhoneNumbers(); enforcePhoneLength($event, 'phoneNumber02')"
+    />
+  </div>
+
+  <!-- Validation messages below the row -->
+  <div class="mt-1 flex flex-col w-full">
+    <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
+      Mobile Number - 01 and Mobile Number - 02 cannot be the same
+    </span>
+<span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02)" class="text-red-600 text-sm">
+  Please enter a valid mobile number (format: +947XXXXXXXX)
+</span>
+
+
+    <!-- Optional extra validation
+    <span *ngIf="touchedFields.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)" class="text-red-600 text-sm">
+      Invalid phone number.
+    </span>
+    -->
+  </div>
+</div>
+
+
+      <div>
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    NIC Number*
+  </label>
   <input
     id="nic"
     name="nic"
     [(ngModel)]="personalData.nic"
     (blur)="onBlur('nic')"
-    (input)="capitalizeV()"
-     (keydown)="blockLeadingSpace($event, 'nic')"
+    (input)="capitalizeV(); enforceNicLength($event)"
+    (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
   <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
@@ -348,8 +366,7 @@
 
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is required.</span>
         </div>
-
-   <div class="pb-6">
+<div class="pb-6">
   <label for="districtDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     District*
   </label>
@@ -365,7 +382,8 @@
     optionLabel="name"
     optionValue="name"
     placeholder="Select a district"
-    [showClear]="false"
+    [filter]="true"                    
+    filterPlaceholder="Search district" 
     class="w-full"
     [ngClass]="{
       'p-invalid': isFieldInvalid('district')
@@ -377,6 +395,7 @@
     District is required.
   </span>
 </div>
+
 
 
         <div class="pb-6">
@@ -507,7 +526,7 @@
 
 
 
-     <div class="pb-6">
+<div class="pb-6">
   <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Branch Name*
   </label>
@@ -516,22 +535,25 @@
     id="branchDropdown"
     name="branchDropdown"
     [(ngModel)]="selectedBranchId"
+    #branchModel="ngModel"
+    required
     (onChange)="onBranchChange()"
     [options]="branches"
     optionLabel="name"
     optionValue="ID"
     [disabled]="!selectedBankId"
     placeholder="Select a branch"
+    [filter]="true"                     
+    filterPlaceholder="Search branch"  
     class="w-full"
-    [ngClass]="{
-      'p-invalid': isFieldInvalid('branchName')
-    }">
+    [ngClass]="{ 'p-invalid': branchModel.invalid && branchModel.touched }">
   </p-dropdown>
 
-  <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
+  <span *ngIf="branchModel.invalid && branchModel.touched" class="text-red-600 text-sm">
     Branch Name is required.
   </span>
 </div>
+
 
 
     <div class="flex justify-end my-10 ml-10 mr-0">

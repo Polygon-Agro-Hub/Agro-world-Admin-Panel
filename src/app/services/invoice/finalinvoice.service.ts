@@ -613,9 +613,8 @@ export class FinalinvoiceService {
       yPosition = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    // Grand Total
-    const estimatedTotalHeight =
-      30 + (invoice.familyPackItems?.length || 0) * 5;
+    // Grand Total Section
+    const estimatedTotalHeight = 30 + (invoice.familyPackItems?.length || 0) * 5;
     if (yPosition + estimatedTotalHeight > 250) {
       doc.addPage();
       yPosition = 20;
@@ -634,14 +633,26 @@ export class FinalinvoiceService {
     // Create grand total body with individual packages
     const grandTotalBody: any[] = [];
 
-    // Add each family pack separately if they exist
+    // Handle family packages - show total if multiple, single package name if only one
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
-      invoice.familyPackItems.forEach((pack) => {
+      if (invoice.familyPackItems.length > 1) {
+        // Calculate total for all packages
+        const packagesTotal = invoice.familyPackItems.reduce(
+          (total, pack) => total + parseNum(pack.amount),
+          0
+        );
+        grandTotalBody.push([
+          'Total for Packages',
+          `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`
+        ]);
+      } else {
+        // Only one package - show its name
+        const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
           pack.name || 'Family Pack',
-          `Rs. ${formatNumberWithCommas(pack.amount)}`,
+          `Rs. ${formatNumberWithCommas(pack.amount)}`
         ]);
-      });
+      }
     }
 
     // Add additional items total if they exist
@@ -658,52 +669,63 @@ export class FinalinvoiceService {
 
       grandTotalBody.push([
         label,
-        `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
+        `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`
       ]);
     }
 
     // Add delivery fee and discount
     if (invoice.deliveryMethod !== 'Pickup') {
-  grandTotalBody.push([
-    'Delivery Fee',
-    `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
-  ]);
-}
+      grandTotalBody.push([
+        'Delivery Fee',
+        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`
+      ]);
+    }
 
     grandTotalBody.push([
       'Discount',
-      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+      `Rs. ${formatNumberWithCommas(invoice.discount)}`
     ]);
 
-    grandTotalBody.push([
-  'Coupon Discount',
-  `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`,
-]);
+    // Add service fee between Discount and Coupon Discount
+    if (invoice.additionalItems && invoice.additionalItems.length > 0 && 
+        (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+      grandTotalBody.push([
+        'Service Fee',
+        'Rs. 180.00'
+      ]);
+    }
 
+    grandTotalBody.push([
+      'Coupon Discount',
+      `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`
+    ]);
 
     // Calculate final grand total
-    const familyPackTotal =
-      invoice.familyPackItems?.reduce(
-        (total, pack) => total + parseNum(pack.amount),
-        0
-      ) || 0;
+    const familyPackTotal = invoice.familyPackItems?.reduce(
+      (total, pack) => total + parseNum(pack.amount),
+      0
+    ) || 0;
 
-    const additionalItemsTotal =
-      invoice.additionalItems?.reduce((total, item) => {
-        const unitPrice = parseFloat(item.unitPrice || '0');
-        const itemDiscount = parseFloat(item.itemDiscount || '0');
-        const quantity = parseFloat(
-          item.quantity === '0.00' ? '1' : item.quantity || '1'
-        );
-        return total + (unitPrice + itemDiscount) * quantity;
-      }, 0) || 0;
+    const additionalItemsTotal = invoice.additionalItems?.reduce(
+      (total, item) => total + parseFloat(item.normalPrice || '0'),
+      0
+    ) || 0;
 
-    const finalGrandTotal =
-  familyPackTotal +
-  additionalItemsTotal +
-  (invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0) -
-  parseNum(invoice.discount);
+    const deliveryFeeTotal = invoice.deliveryMethod !== 'Pickup' 
+      ? parseNum(invoice.deliveryFee) 
+      : 0;
 
+    const discountTotal = parseNum(invoice.discount) + parseNum(invoice.billingInfo.couponValue);
+
+    const serviceFee = (invoice.additionalItems && invoice.additionalItems.length > 0 && 
+                      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) ? 180 : 0;
+
+    const finalGrandTotal = 
+      familyPackTotal + 
+      additionalItemsTotal + 
+      deliveryFeeTotal +
+      serviceFee -
+      discountTotal;
 
     // Add final total
     grandTotalBody.push([
@@ -714,48 +736,38 @@ export class FinalinvoiceService {
       },
     ]);
 
-    // Grand Total section - updated to modify borders
-
-    if (invoice.additionalItems && invoice.additionalItems.length > 0 && 
-    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-  grandTotalBody.splice(grandTotalBody.length - 2, 0, [
-    'Service Fee',
-    'Rs. 180.00'
-  ]);
-}
-
-
+    // Create the table
     (doc as any).autoTable({
-  startY: yPosition,
-  body: grandTotalBody,
-  margin: { left: 15, right: 15 },
-  columnStyles: {
-    0: { cellWidth: 'auto', halign: 'left' },
-    1: { cellWidth: 'auto', halign: 'right' },
-  },
-  styles: {
-    fontSize: 9,
-    cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
-    lineColor: [255, 255, 255],
-    lineWidth: 0,
-  },
-  bodyStyles: {
-    lineWidth: 0,
-  },
-  didDrawCell: (data: any) => {
-    // Add border between Grand Total and Discount (second last row)
-    if (data.row.index === grandTotalBody.length - 2) {
-      doc.setDrawColor(0, 0, 0);
-      doc.setLineWidth(0.5);
-      doc.line(
-        data.cell.x,
-        data.cell.y + data.cell.height,
-        data.cell.x + data.cell.width,
-        data.cell.y + data.cell.height
-      );
-    }
-  },
-});
+      startY: yPosition,
+      body: grandTotalBody,
+      margin: { left: 15, right: 15 },
+      columnStyles: {
+        0: { cellWidth: 'auto', halign: 'left' },
+        1: { cellWidth: 'auto', halign: 'right' },
+      },
+      styles: {
+        fontSize: 9,
+        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        lineColor: [255, 255, 255],
+        lineWidth: 0,
+      },
+      bodyStyles: {
+        lineWidth: 0,
+      },
+      didDrawCell: (data: any) => {
+        // Add border between Grand Total and Discount (second last row)
+        if (data.row.index === grandTotalBody.length - 2) {
+          doc.setDrawColor(0, 0, 0);
+          doc.setLineWidth(0.5);
+          doc.line(
+            data.cell.x,
+            data.cell.y + data.cell.height,
+            data.cell.x + data.cell.width,
+            data.cell.y + data.cell.height
+          );
+        }
+      },
+    });
     yPosition = (doc as any).lastAutoTable.finalY + 10;
 
     // UPDATED REMARKS SECTION (WITHOUT UNDERLINE)

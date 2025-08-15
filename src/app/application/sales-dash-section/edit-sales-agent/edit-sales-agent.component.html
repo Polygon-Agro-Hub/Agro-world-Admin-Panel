@@ -252,9 +252,11 @@
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot Number
             <span class="text-[#2E2E2E]">*</span></label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
+          
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #houseNumberInput="ngModel" 
     (keydown)="validateAddressInput($event)"
+     (input)="capitalizeFirstLetter('houseNumber')"
     (input)="cleanFieldInput('houseNumber')"
     required />
           <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
@@ -269,6 +271,7 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #streetNameInput="ngModel" 
     (keydown)="validateAddressInput($event)"
+       (input)="capitalizeFirstLetter('streetName')"
     (input)="cleanFieldInput('streetName')"
     required />
           <div *ngIf="streetNameInput.touched && !personalData.streetName" class="text-red-500 text-sm mt-1">
@@ -283,6 +286,7 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #cityInput="ngModel" 
     (keydown)="validateAddressInput($event)"
+       (input)="capitalizeFirstLetter('city')"
     (input)="cleanFieldInput('city')"
     required />
           <div *ngIf="cityInput.touched && !personalData.city" class="text-red-500 text-sm mt-1">
@@ -434,7 +438,7 @@
         <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
-        <button type="submit" (click)="onSubmit()" [disabled]="!isFormValid()"
+        <button type="submit" (click)="onSubmit()" 
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
           Submit
         </button>

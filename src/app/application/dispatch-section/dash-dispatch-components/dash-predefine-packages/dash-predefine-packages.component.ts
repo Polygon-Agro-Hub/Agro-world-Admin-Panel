@@ -8,11 +8,12 @@ import { Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-dash-predefine-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, CalendarModule, NgxPaginationModule, DropdownModule],
+  imports: [CommonModule, FormsModule, CalendarModule, NgxPaginationModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './dash-predefine-packages.component.html',
   styleUrl: './dash-predefine-packages.component.css'
 })

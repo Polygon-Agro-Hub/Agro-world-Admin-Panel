@@ -318,16 +318,60 @@ export class BannerListComponent {
   }
 
   onDropWholesale(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOver = false;
+  event.preventDefault();
+  this.isDragOver = false;
 
-    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-      const file = event.dataTransfer.files[0];
-      if (file.type.startsWith('image/')) {
-        this.previewImage(file);
-      }
+  if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+    const file = event.dataTransfer.files[0];
+    
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Please drop an image file (JPEG/PNG)',
+        confirmButtonColor: '#d33',
+      });
+      return;
     }
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const width = img.width;
+      const height = img.height;
+      URL.revokeObjectURL(objectUrl); // Cleanup memory
+
+      // Check dimensions (1200×450)
+      const isValidSize = (width === 1200 && height === 450);
+
+      if (isValidSize) {
+        this.selectedFileWholesale = file;
+        this.previewImage(file);
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Image Dimensions',
+          text: 'Please drop an image with dimensions 1200 × 450 px',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d33',
+        });
+      }
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Image',
+        text: 'Could not load the dropped image',
+        confirmButtonColor: '#d33',
+      });
+    };
+
+    img.src = objectUrl;
   }
+}
 
   previewImage(file: File): void {
     const reader = new FileReader();
@@ -405,16 +449,60 @@ export class BannerListComponent {
   }
 
   onDropRetail(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragOverReatil = false;
+  event.preventDefault();
+  this.isDragOverReatil = false;
 
-    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-      const file = event.dataTransfer.files[0];
-      if (file.type.startsWith('image/')) {
-        this.previewImageRetail(file);
-      }
+  if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+    const file = event.dataTransfer.files[0];
+    
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Please drop an image file (JPEG/PNG)',
+        confirmButtonColor: '#d33',
+      });
+      return;
     }
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const width = img.width;
+      const height = img.height;
+      URL.revokeObjectURL(objectUrl); // Cleanup memory
+
+      // Check dimensions (1200×450)
+      const isValidSize = (width === 1200 && height === 450);
+
+      if (isValidSize) {
+        this.selectedFile = file;
+        this.previewImageRetail(file);
+      } else {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Invalid Image Dimensions',
+          text: 'Please drop an image with dimensions 1200 × 450 px',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d33',
+        });
+      }
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Image',
+        text: 'Could not load the dropped image',
+        confirmButtonColor: '#d33',
+      });
+    };
+
+    img.src = objectUrl;
   }
+}
 
   previewImageRetail(file: File): void {
     const reader = new FileReader();

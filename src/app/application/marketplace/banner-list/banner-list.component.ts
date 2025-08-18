@@ -279,7 +279,7 @@ export class BannerListComponent {
 
       URL.revokeObjectURL(objectUrl); // Cleanup memory
 
-      // Allow both 1200×450 and 1200×451
+      // Allow 1200×450
       const isValidSize = (width === 1200 && height === 450);
 
       if (isValidSize) {
@@ -366,7 +366,7 @@ export class BannerListComponent {
 
       URL.revokeObjectURL(objectUrl); // Cleanup memory
 
-      // Allow both 1200×450 and 1200×451
+      // Allow 1200×450
       const isValidSize = (width === 1200 && height === 450);
 
       if (isValidSize) {

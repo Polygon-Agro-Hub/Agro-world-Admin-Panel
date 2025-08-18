@@ -121,16 +121,17 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
 }
 
 interface PremadePackages {
-  id: number; 
+  id: number;
   processOrderId: number;
-  invNo: string; 
-  sheduleDate: string; 
+  invNo: string;
+  sheduleDate: string;
   packageCount: number;
-  packagePrice: number; 
-  totPackageItems: number; 
-  packPackageItems: number; 
+  packagePrice: number;
+  totPackageItems: number;
+  packPackageItems: number;
   totalAdditionalItems: number;
-  packedAdditionalItems: number; 
-  packingStatus: string; 
-  additionalItemsStatus: string; 
+  packedAdditionalItems: number;
+  packingStatus: string;
+  additionalItemsStatus: string;
+  packageStatus:string
 }

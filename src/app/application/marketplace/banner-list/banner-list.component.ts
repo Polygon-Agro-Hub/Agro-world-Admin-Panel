@@ -520,20 +520,31 @@ export class BannerListComponent {
   uploadBanner() {
   this.isLoading = true;
   this.bannerName = this.bannerName.trim();
-  if (!this.bannerName || !this.selectedFile) {
+  
+  // Check for empty fields and collect their names
+  const emptyFields = [];
+  if (!this.bannerName) emptyFields.push('Banner Name');
+  if (!this.selectedFile) emptyFields.push('Image');
+
+  if (emptyFields.length > 0) {
     this.isLoading = false;
     Swal.fire(
       'Missing Data',
-      'Please enter a banner name and select an image.',
+      `Please provide: ${emptyFields.join(', ')}`,
       'warning'
     );
     return;
   }
 
+  // Create form data only if we have all required fields
   const formData = new FormData();
   formData.append('index', this.indexRetail.toString());
   formData.append('name', this.bannerName);
-  formData.append('image', this.selectedFile);
+  
+  // TypeScript now knows selectedFile can't be null here because of our validation
+  if (this.selectedFile) {
+    formData.append('image', this.selectedFile);
+  }
 
   this.marketPlaceSrv.uploadRetailBanner(formData).subscribe({
     next: (response) => {
@@ -544,8 +555,6 @@ export class BannerListComponent {
       this.bannerName = '';
       this.selectedFile = null;
       this.selectedRetailImageUrl = null;
-      
-      // Reset the index so it will be fetched fresh next time
       this.indexRetail = 0;
     },
     error: (err) => {
@@ -564,11 +573,17 @@ export class BannerListComponent {
   uploadBannerWholesale() {
   this.isLoading = true;
   this.bannerNameWholesale = this.bannerNameWholesale.trim();
-  if (!this.bannerNameWholesale || !this.selectedFileWholesale) {
+  
+  // Check for empty fields and collect their names
+  const emptyFields = [];
+  if (!this.bannerNameWholesale) emptyFields.push('Banner Name');
+  if (!this.selectedFileWholesale) emptyFields.push('Image');
+
+  if (emptyFields.length > 0) {
     this.isLoading = false;
     Swal.fire(
       'Missing Data',
-      'Please enter a banner name and select an image.',
+      `Please provide: ${emptyFields.join(', ')}`,
       'warning'
     );
     return;
@@ -577,7 +592,11 @@ export class BannerListComponent {
   const formData = new FormData();
   formData.append('index', this.indexWholesale.toString());
   formData.append('name', this.bannerNameWholesale);
-  formData.append('image', this.selectedFileWholesale!);
+  
+  // TypeScript now knows selectedFileWholesale can't be null here
+  if (this.selectedFileWholesale) {
+    formData.append('image', this.selectedFileWholesale);
+  }
 
   this.marketPlaceSrv.uploadRetailBannerWholesale(formData).subscribe({
     next: (response) => {
@@ -588,8 +607,6 @@ export class BannerListComponent {
       this.bannerNameWholesale = '';
       this.selectedFileWholesale = null;
       this.selectedWholesaleImageUrl = null;
-      
-      // Reset the index so it will be fetched fresh next time
       this.indexWholesale = 0;
     },
     error: (err) => {

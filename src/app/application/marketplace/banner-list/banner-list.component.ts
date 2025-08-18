@@ -689,19 +689,21 @@ export class BannerListComponent {
     confirmButtonText: 'Yes, delete it!',
   }).then((result) => {
     if (result.isConfirmed) {
+      this.isLoading = true;
       this.marketPlaceSrv.deleteBannerWhole(feedbackId).subscribe({
         next: () => {
           Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
+          // After deletion, force a complete refresh of both lists
+          this.getAllFeedbacks();
+          this.getAllFeedbacksWhole();
           // Reset indexes so they'll be fetched fresh next time
           this.indexRetail = 0;
           this.indexWholesale = 0;
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
+          this.isLoading = false;
         },
         error: () => {
           Swal.fire('Error!', 'Failed to delete Banner.', 'error');
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
+          this.isLoading = false;
         },
       });
     }

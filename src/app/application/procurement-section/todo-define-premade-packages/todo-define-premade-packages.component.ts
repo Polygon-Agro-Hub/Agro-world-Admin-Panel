@@ -58,7 +58,7 @@ interface PackageItem {
 @Component({
   selector: 'app-todo-define-premade-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [ CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './todo-define-premade-packages.component.html',
   styleUrl: './todo-define-premade-packages.component.css',
 })
@@ -414,7 +414,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
         this.loading = false;
         console.log('Updated successfully:', res);
-        Swal.fire('Success', 'Product Updated Successfully', 'success');
+        Swal.fire('Success', 'Order has been successfully completed.', 'success');
         this.goToCompleteTab()
       },
       (err) => {

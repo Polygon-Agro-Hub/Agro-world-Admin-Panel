@@ -576,7 +576,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       Swal.fire({
         icon: 'success',
         title: 'Dispatched!',
-        html: `All ${results.length} packages were updated successfully`,
+        html: `Order has been successfully dispatched`,
         confirmButtonColor: '#3085d6',
       });
 

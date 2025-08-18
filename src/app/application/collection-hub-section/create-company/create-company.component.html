@@ -704,6 +704,15 @@
             Branch Name is required.
           </span>
         </div>
+        <div class="pb-6">
+          <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
+            Name <span style="color: #2E2E2E">*</span></label>
+          <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
+            (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
+            (blur)="onBlur('foName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
+        </div>
           <div class="flex gap-6">
   <!-- Contact Number 1 -->
   <div class="flex-1">

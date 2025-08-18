@@ -353,10 +353,17 @@ allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
 
 // Method for account holder name validation (only English letters and spaces)
 allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
   const char = event.key;
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
   if (allowedKeys.includes(char)) return;
+
+  // Prevent space at the start or multiple consecutive spaces
+  if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
+    event.preventDefault();
+    return;
+  }
 
   // Block digits and special characters, allow only English letters and spaces
   if (!/^[a-zA-Z\s]$/.test(char)) {
@@ -1098,6 +1105,10 @@ getCompanyData() {
   }
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
+
+    if (fieldName === 'accHolderName' && this.companyData.accHolderName) {
+    this.companyData.accHolderName = this.companyData.accHolderName.trim();
+  }
 
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();

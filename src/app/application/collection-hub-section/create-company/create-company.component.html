@@ -197,9 +197,11 @@
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
             Name <span style="color: #2E2E2E">*</span></label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-            #accHolderName="ngModel" required (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
-            (input)="capitalizeFirstLetter('accHolderName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  #accHolderName="ngModel" required 
+  (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
+  (blur)="onBlur('accHolderName')"
+  (input)="capitalizeFirstLetter('accHolderName')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="accHolderName.invalid && (accHolderName.dirty || accHolderName.touched)"
             class="text-red-600 text-sm">

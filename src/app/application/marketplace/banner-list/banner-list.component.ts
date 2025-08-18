@@ -230,7 +230,7 @@ export class BannerListComponent {
       URL.revokeObjectURL(objectUrl); // Cleanup memory
 
       // Allow both 1200×450 and 1200×451
-      const isValidSize = (width === 1200 && height === 450) || (width === 1200 && height === 451);
+      const isValidSize = (width === 1200 && height === 450);
 
       if (isValidSize) {
         this.selectedFileWholesale = file;
@@ -317,7 +317,7 @@ export class BannerListComponent {
       URL.revokeObjectURL(objectUrl); // Cleanup memory
 
       // Allow both 1200×450 and 1200×451
-      const isValidSize = (width === 1200 && height === 450) || (width === 1200 && height === 451);
+      const isValidSize = (width === 1200 && height === 450);
 
       if (isValidSize) {
         this.selectedFile = file;

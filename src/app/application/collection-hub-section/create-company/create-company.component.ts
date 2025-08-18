@@ -272,7 +272,7 @@ back(): void {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-     this.router.navigate(['/collection-hub/manage-company']);
+     this.router.navigate(['/distribution-hub/action/view-companies']);
     }
   });
 }
@@ -1174,7 +1174,7 @@ onCancel() {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-    this.router.navigate(['/collection-hub/manage-company']);
+    this.router.navigate(['/distribution-hub/action/view-companies']);
     }
   });
 }

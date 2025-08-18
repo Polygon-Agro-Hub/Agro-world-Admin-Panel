@@ -86,7 +86,7 @@
      <div>
         <div class="pb-6">
           <label for="regNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Registration Number
-            of the Company <span style="color: #2E2E2E">*</span></label>
+            of the Company *</label>
           <input id="regNumber" name="regNumber" [(ngModel)]="companyData.regNumber" (blur)="onBlur('regNumber')"
             (keydown)="handleInputWithSpaceTrimming($event, 'regNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -95,7 +95,7 @@
 
         <div class="pb-6">
           <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name (in English) <span style="color: #2E2E2E">*</span>
+            Company Name (in English) *
           </label>
 
           <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
@@ -122,7 +122,7 @@
 
         <div class="pb-6">
           <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name (in Sinhala) <span style="color: #2E2E2E">*</span>
+            Company Name (in Sinhala)*
           </label>
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
             #companyNameSinhala="ngModel" required
@@ -144,7 +144,7 @@
         </div>
         <div class="pb-6">
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name (in Tamil) <span style="color: #2E2E2E">*</span>
+            Company Name (in Tamil) *
           </label>
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
             #companyNameTamil="ngModel" required (keydown)="allowOnlyTamil($event, companyData.companyNameTamil || '')"
@@ -163,7 +163,7 @@
         </div>
         <div class="pb-6">
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
-            Address <span style="color: #2E2E2E">*</span></label>
+            Address *</label>
           <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
             (keydown)="handleInputWithSpaceTrimming($event, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -195,7 +195,7 @@
         <!-- Updated Account Holder Name and Account Number fields for ADD section (Page Two) -->
         <div class="pb-6">
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-            Name <span style="color: #2E2E2E">*</span></label>
+            Name *</label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
             #accHolderName="ngModel" required (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             (input)="capitalizeFirstLetter('accHolderName')"
@@ -212,7 +212,7 @@
 
         <div class="pb-6">
           <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Account Number <span style="color: #2E2E2E">*</span>
+            Account Number *
           </label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
             (keydown)="allowOnlyDigitsForAccountNumber($event)"
@@ -227,7 +227,7 @@
 
         <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number <span style="color: #2E2E2E">*</span>
+            Confirm Account Number *
           </label>
           <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
             (blur)="onBlur('confirmAccNumber')" (keydown)="allowOnlyDigitsForAccountNumber($event)"
@@ -285,7 +285,7 @@
 
         <div class="pb-6">
           <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
-            Name <span style="color: #2E2E2E">*</span></label>
+            Name *</label>
           <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
             (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
             (blur)="onBlur('foName')"
@@ -299,7 +299,7 @@
         <div class="flex gap-5">
           <div class="w-1/2">
             <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Contact Number - 1 <span style="color: #2E2E2E">*</span>
+              Company Contact Number - 1 *
             </label>
             <div class="mt-1">
               <div class="flex">
@@ -514,11 +514,11 @@
 
         </div>
 
-        <div class="pb-6"> <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark"> Company Name (in English) <span style="color: #2E2E2E">*</span> </label> <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')" (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" /> <!-- Required field message --> <div *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError" class="text-red-600 text-sm mt-1"> <div *ngIf="companyNameEnglish.errors?.['required']"> Company Name (in English) is required. </div> </div> <!-- Language-specific validation message --> <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1"> Only English letters are allowed in this field. </div> </div>
+        <div class="pb-6"> <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark"> Company Name (in English) * </label> <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')" (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" /> <!-- Required field message --> <div *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError" class="text-red-600 text-sm mt-1"> <div *ngIf="companyNameEnglish.errors?.['required']"> Company Name (in English) is required. </div> </div> <!-- Language-specific validation message --> <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1"> Only English letters are allowed in this field. </div> </div>
 
      <div class="pb-6">
   <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Company Name (in Sinhala) <span style="color: #2E2E2E">*</span>
+    Company Name (in Sinhala) *
   </label>
 
   <input id="companyNameSinhala" name="companyNameSinhala"
@@ -543,7 +543,7 @@
 
 <div class="pb-6">
   <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Company Name (in Tamil) <span style="color: #2E2E2E">*</span>
+    Company Name (in Tamil) *
   </label>
 
   <input id="companyNameTamil" name="companyNameTamil"

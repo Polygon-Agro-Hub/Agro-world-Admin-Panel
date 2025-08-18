@@ -221,7 +221,7 @@
   <!-- Validation messages below both inputs, full width -->
   <div class="mt-1 flex flex-col w-full">
     <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
-      Company Contact Number - 1 & 2 cannot be the same.
+    Mobile Number - 01 and Mobile Number - 02 cannot be the same
     </span>
 <div *ngIf="personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)" class="text-red-500 text-sm">
   Please enter a valid mobile number (format: +947XXXXXXXX)
@@ -465,7 +465,7 @@
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Account Number*
         </label>
-        <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"  (keydown)="blockLeadingSpace($event, 'nic')"
+        <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"  (keydown)="blockLeadingSpace($event, 'accNumber')"
           (blur)="onBlur('accNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">

@@ -153,15 +153,45 @@ back(): void {
 }
 
   
-  
+
+
 blockLeadingSpace(event: KeyboardEvent, field: string) {
   const value = this.personalData[field] || '';
 
-  // If the first character is empty and user presses space, block it
-  if (value.length === 0 && event.key === ' ') {
+  if (value.length === 0) {
+    // Normal and numpad keys
+    const key = event.key;
+    const code = event.code;
+
+    if (
+      key === ' ' || // Space
+      key === '+' || // Plus from main keyboard
+      key === '-' || // Minus from main keyboard
+      code === 'NumpadAdd' || // Plus from numpad
+      code === 'NumpadSubtract' // Minus from numpad
+    ) {
+      event.preventDefault();
+    }
+  }
+}
+
+blockLeadingChars(event: KeyboardEvent, field: string) {
+  const value = this.personalData[field] || '';
+
+  // Block only if at first position
+  if (value.length === 0 && [' ', '+', '-'].includes(event.key)) {
     event.preventDefault();
   }
 }
+
+fixPastedLeadingChars(event: Event, field: string) {
+  let value = (event.target as HTMLInputElement).value;
+  // Remove only bad chars at the start
+  value = value.replace(/^[\+\-\s]+/, '');
+  this.personalData[field] = value;
+}
+
+
 
   loadDistributionHeadData(id: number): void {
     this.isLoading = true;
@@ -495,7 +525,7 @@ checkDuplicatePhoneNumbers(): void {
     // Block navigation if duplicate phone numbers
     this.checkDuplicatePhoneNumbers();
     if (this.duplicatePhoneError) {
-      Swal.fire('Error', "Company Phone Number - 1 and 2 can't be the same", 'error');
+      Swal.fire('Error', "Company Mobile Number - 1 and Mobile Number - 2 can't be the same", 'error');
       return;
     }
     this.selectedPage = page;
@@ -648,7 +678,7 @@ onBankChange() {
 
               Swal.fire(
                 'Success',
-                'Updated Distribution Center Head Successfully',
+                'Updated Distribution Centre Head Successfully',
                 'success'
               ).then(() => {
                 this.location.back();

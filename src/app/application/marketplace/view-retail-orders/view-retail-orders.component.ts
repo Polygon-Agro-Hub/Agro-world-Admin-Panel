@@ -55,9 +55,9 @@ export class ViewRetailOrdersComponent implements OnInit {
   ];
 
   statusOptions = [
-    { label: 'Assigned', value: 'Assigned' },
+    { label: 'Assigned', value: 'Ordered' },
     { label: 'Delivered', value: 'Delivered' },
-    { label: 'Ordered', value: 'Ordered' },
+  
     { label: 'Picked Up', value: 'Picked Up' },
     { label: 'Processing', value: 'Processing' },
   ];

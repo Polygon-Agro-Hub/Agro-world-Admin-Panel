@@ -186,33 +186,33 @@ export class AddPackageComponent implements OnInit {
   if (!this.packageObj.description?.trim()) {
     errorMessages.push('Description is required');
   }
-  if (!this.packageObj.productPrice || this.packageObj.productPrice <= 0) {
-    errorMessages.push('Total Package Price must be greater than 0');
+  if (!this.packageObj.productPrice ) {
+    errorMessages.push('Total Package Price is required');
   }
-  if (this.packageObj.packageFee === undefined || this.packageObj.packageFee < 0) {
-    errorMessages.push('Packaging Fee cannot be negative');
+  if (this.packageObj.packageFee === undefined ) {
+    errorMessages.push('Packaging Fee is required');
   }
-  if (this.packageObj.serviceFee === undefined || this.packageObj.serviceFee < 0) {
-    errorMessages.push('Service Fee cannot be negative');
+  if (this.packageObj.serviceFee === undefined ) {
+    errorMessages.push('Service Fee is required');
   }
   if (!this.selectedImage) {
     errorMessages.push('Package Image is required');
   }
-  if (this.productTypeObj.length > 0 && !Object.values(this.packageObj.quantities).some(qty => qty > 0)) {
-    errorMessages.push('At least one product type with quantity greater than 0 is required');
-  }
+  // if (this.productTypeObj.length > 0 && !Object.values(this.packageObj.quantities).some(qty => qty > 0)) {
+  //   errorMessages.push('At least one product type with quantity greater than 0 is required');
+  // }
 
-  // Decimal validation
-  const decimalRegex = /^\d+(\.\d{1,2})?$/;
-  if (!decimalRegex.test(this.packageObj.productPrice?.toString())) {
-    errorMessages.push('Total Package Price must have up to 2 decimal places');
-  }
-  if (!decimalRegex.test(this.packageObj.packageFee?.toString())) {
-    errorMessages.push('Packaging Fee must have up to 2 decimal places');
-  }
-  if (!decimalRegex.test(this.packageObj.serviceFee?.toString())) {
-    errorMessages.push('Service Fee must have up to 2 decimal places');
-  }
+  // // Decimal validation
+  // const decimalRegex = /^\d+(\.\d{1,2})?$/;
+  // if (!decimalRegex.test(this.packageObj.productPrice?.toString())) {
+  //   errorMessages.push('Total Package Price must have up to 2 decimal places');
+  // }
+  // if (!decimalRegex.test(this.packageObj.packageFee?.toString())) {
+  //   errorMessages.push('Packaging Fee must have up to 2 decimal places');
+  // }
+  // if (!decimalRegex.test(this.packageObj.serviceFee?.toString())) {
+  //   errorMessages.push('Service Fee must have up to 2 decimal places');
+  // }
 
   if (errorMessages.length > 0) {
     Swal.fire({

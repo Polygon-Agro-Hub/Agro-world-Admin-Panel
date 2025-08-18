@@ -197,9 +197,11 @@
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
             Name *</label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-            #accHolderName="ngModel" required (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
-            (input)="capitalizeFirstLetter('accHolderName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  #accHolderName="ngModel" required 
+  (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
+  (blur)="onBlur('accHolderName')"
+  (input)="capitalizeFirstLetter('accHolderName')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="accHolderName.invalid && (accHolderName.dirty || accHolderName.touched)"
             class="text-red-600 text-sm">
@@ -505,37 +507,53 @@
   </label>
   <input [(ngModel)]="companyData.regNumber" id="regNumber" name="regNumber" required
     #regNumber="ngModel"
+    (keydown)="handleInputWithSpaceTrimming($event, 'regNumber')"
+    (blur)="onBlur('regNumber')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-
   <div *ngIf="regNumber.invalid && (regNumber.dirty || regNumber.touched)" class="text-red-500 text-sm mt-1">
     <div *ngIf="regNumber.errors?.['required']">Registration number is required.</div>
-    <div *ngIf="regNumber.errors?.['pattern']">Please enter a valid registration number.</div>
   </div>
+</div>
 
-        </div>
-
-        <div class="pb-6"> <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark"> Company Name (in English) * </label> <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')" (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" /> <!-- Required field message --> <div *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError" class="text-red-600 text-sm mt-1"> <div *ngIf="companyNameEnglish.errors?.['required']"> Company Name (in English) is required. </div> </div> <!-- Language-specific validation message --> <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1"> Only English letters are allowed in this field. </div> </div>
+        <div class="pb-6">
+  <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Company Name (in English) *
+  </label>
+  <input id="companyNameEnglish" name="companyNameEnglish" 
+    [(ngModel)]="companyData.companyNameEnglish" 
+    #companyNameEnglish="ngModel" required 
+    (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+    (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')"
+    (blur)="onBlur('companyNameEnglish')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <div *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError" 
+    class="text-red-600 text-sm mt-1">
+    <div *ngIf="companyNameEnglish.errors?.['required']">
+      Company Name (in English) is required.
+    </div>
+  </div>
+  <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+    Only English letters are allowed in this field.
+  </div>
+</div>
 
      <div class="pb-6">
   <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Company Name (in Sinhala) *
   </label>
-
   <input id="companyNameSinhala" name="companyNameSinhala"
     [(ngModel)]="companyData.companyNameSinhala"
     #companyNameSinhala="ngModel" required
+    (keydown)="handleInputWithSpaceTrimming($event, 'companyNameSinhala')"
     (keydown)="allowOnlySinhala($event, companyData.companyNameSinhala || '')"
+    (blur)="onBlur('companyNameSinhala')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-
-  <!-- Required field message -->
   <div *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
     class="text-red-600 text-sm mt-1">
     <div *ngIf="companyNameSinhala.errors?.['required']">
       Company Name (in Sinhala) is required.
     </div>
   </div>
-
-  <!-- Language-specific validation message -->
   <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
     Only Sinhala letters are allowed in this field.
   </div>
@@ -545,43 +563,41 @@
   <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Company Name (in Tamil) *
   </label>
-
   <input id="companyNameTamil" name="companyNameTamil"
     [(ngModel)]="companyData.companyNameTamil"
     #companyNameTamil="ngModel" required
+    (keydown)="handleInputWithSpaceTrimming($event, 'companyNameTamil')"
     (keydown)="allowOnlyTamil($event, companyData.companyNameTamil || '')"
+    (blur)="onBlur('companyNameTamil')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-
-  <!-- Required field message -->
   <div *ngIf="companyNameTamil.invalid && (companyNameTamil.dirty || companyNameTamil.touched) && !tamilInputError"
     class="text-red-600 text-sm mt-1">
     <div *ngIf="companyNameTamil.errors?.['required']">
       Company Name (in Tamil) is required.
     </div>
   </div>
-
-  <!-- Language-specific validation message -->
   <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
     Only Tamil letters are allowed in this field.
   </div>
 </div>
 
         <div class="pb-6">
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
-            Address*</label>
-          <input id="email" name="email" [(ngModel)]="companyData.email" #email="ngModel" type="email" required email
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-
-          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-red-500 text-sm mt-1">
-            <div *ngIf="email.errors?.['required']">
-              Email is required.
-            </div>
-            <!-- <div *ngIf="email.errors?.['email']">
-    Please enter a valid email address.
-  </div> -->
-          </div>
-
-        </div>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Company Email Address*
+  </label>
+  <input id="email" name="email" 
+    [(ngModel)]="companyData.email" 
+    #email="ngModel" 
+    type="email" 
+    required 
+    (keydown)="handleInputWithSpaceTrimming($event, 'email')"
+    (blur)="onBlur('email')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-red-500 text-sm mt-1">
+    <div *ngIf="email.errors?.['required']">Email is required.</div>
+    <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+  </div>
+</div>
 
         <div class="pb-6">
     
@@ -687,6 +703,15 @@
           <span *ngIf="isFieldInvalid('branchName')" class="text-red-600 text-sm">
             Branch Name is required.
           </span>
+        </div>
+        <div class="pb-6">
+          <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
+            Name <span style="color: #2E2E2E">*</span></label>
+          <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
+            (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
+            (blur)="onBlur('foName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
           <div class="flex gap-6">
   <!-- Contact Number 1 -->

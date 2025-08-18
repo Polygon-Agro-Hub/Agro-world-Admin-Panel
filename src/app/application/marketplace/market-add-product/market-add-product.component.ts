@@ -40,8 +40,9 @@ export class MarketAddProductComponent implements OnInit {
   selectedVarieties!: Variety[];
   isVerityVisible = false;
   selectedImage!: any;
-
+tagsTouched = false;
   isNoDiscount: boolean = true;
+  formSubmitted = false;
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -176,6 +177,8 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
+    this.formSubmitted = true;
+    this.tagsTouched = true;
   // First, round all decimal values to 2 places
   if (this.productObj.category === 'WholeSale' && 
       !this.validateQuantityRange()) {

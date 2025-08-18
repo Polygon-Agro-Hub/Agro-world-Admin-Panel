@@ -236,9 +236,10 @@
         </mat-form-field>
 
         <!-- Validation message -->
-        <p class="text-red-600 text-sm mt-1" *ngIf="templateKeywords().length === 0">
-          At least one keyword is required.
-        </p>
+        <!-- Replace your current tags validation message with this -->
+<p class="text-red-600 text-sm mt-1" *ngIf="(tagsTouched || formSubmitted) && templateKeywords().length === 0">
+  At least one keyword is required.
+</p>
       </div>
     </div>
 

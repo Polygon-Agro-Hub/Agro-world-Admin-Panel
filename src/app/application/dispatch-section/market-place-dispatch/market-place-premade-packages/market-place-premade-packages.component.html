@@ -1,4 +1,4 @@
-<app-loading-spinner *ngIf="isLoading"/>
+<app-loading-spinner *ngIf="isLoading" />
 
 <div>
     <div class="flex justify-end items-right mb-8">
@@ -39,8 +39,9 @@
             <div class="w-5"></div>
             <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
                 title="Search by crop & variety">
-                <input type="text" placeholder="Search by Invoice No..." class="bg-transparent outline-none w-full text-gray-600"
-                    [(ngModel)]="search" (keydown.enter)="applysearch()" />
+                <input type="text" placeholder="Search by Invoice No..."
+                    class="bg-transparent outline-none w-full text-gray-600" [(ngModel)]="search"
+                    (keydown.enter)="applysearch()" />
                 <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
                     (click)="applysearch()">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -68,12 +69,12 @@
     </div>
 
     <div>
-        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+        <!-- <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
             <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-        </div>
+        </div> -->
 
-        <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200 table-auto">
+        <table class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
                     <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
@@ -82,20 +83,8 @@
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
                         Invoice No
                     </th>
-                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
-                        Package Name
-                    </th>
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-                        Package Items
-                    </th>
-                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-                        Package Price (Rs.)
-                    </th>
-                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center ">
-                        Additional Items
-                    </th>
-                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-                        Additional Items Price (Rs.)
+                        No. of Packages
                     </th>
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                         Scheduled Dilevery Date
@@ -106,14 +95,16 @@
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                         Packaging Status
                     </th>
-
-
+                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        Details
+                    </th>
+                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        Completed By
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="
-              let item of premadePackages
-                | paginate
+                <tr *ngFor="let item of premadePackages| paginate
                   : {
                       itemsPerPage: itemsPerPage,
                       currentPage: page,
@@ -128,39 +119,42 @@
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
                         {{ item.invNo }}
                     </td>
-                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
-                        {{ item.displayName }}
-                    </td>
-
-                    <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-                        <!-- (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.packageProductsCount, item.displayName, item.fullTotal)" -->
-
-                        <button class="w-6 h-6 mr-3" 
-                        [disabled]="item.packageStatus === 'Unknown'"
-                        (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.totcount, item.displayName, item.productPrice)"
-                        [ngClass]="{
-                            'text-gray-100 cursor-not-allowed': item.packageStatus === 'Unknown',
-                          'text-yellow-500 hover:text-yellow-700': item.packageStatus === 'Opened',
-                          'text-green-500 hover:text-green-700': item.packageStatus === 'Completed',
-                          'text-red-500 hover:text-red-700': item.packageStatus === 'Pending'
-                        }">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                        </button>
-
+                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                        {{item.packageCount | number : '2.0'}}
                     </td>
 
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        {{ item.productPrice | number: '1.2-2' }}
+                        {{ item.sheduleDate | date: 'd MMM, y' }}
                     </td>
-                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)" -->
 
-                        <button
+                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                        {{ item.packagePrice| number: '1.2-2' }} 
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <ng-container *ngIf="item.packingStatus === 'Pending'">
+
+                            <span
+                                class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
+                                Pending
+                            </span>
+                        </ng-container>
+
+                        <ng-container *ngIf="item.packingStatus === 'Opened'">
+                            <span
+                                class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
+                                Opened
+                            </span>
+                        </ng-container>
+
+                        <ng-container *ngIf="item.packingStatus === 'Completed'">
+                            <span
+                                class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
+                                Completed
+                            </span>
+                        </ng-container>
+                    </td>
+                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
+                        <!-- <button
                             (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)"
                             class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.additionalItemsStatus === 'Unknown',
@@ -169,50 +163,31 @@
                               'text-red-500 hover:text-red-700': item.additionalItemsStatus === 'Pending' && item.orderAdditionalCount > 0
                             }"
                             [disabled]="item.additionalItemsStatus === 'Unknown'">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
-                        
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        </button> -->
+                        <button
+                            class="w-6 h-6 mr-3" 
+                            >
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        </button>
+
                     </td>
 
+                    
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <ng-container *ngIf="item.additionalPrice !== '0'; else showDash">
-                            {{ item.additionalPrice | number: '1.2-2' }}
-                        </ng-container>
-                        <ng-template #showDash>-</ng-template>
-                    </td>
-                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        {{ item.sheduleDate | date: 'd MMM, y' }}
-                    </td>
-                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        {{ calculateTotPrice(item.additionalPrice, item.productPrice) | number: '1.2-2' }}
+                        <!-- {{ calculateTotPrice(item.additionalPrice, item.productPrice) | number: '1.2-2' }} -->
+                          --
                     </td>
 
-                    <td class="px-4 py-3 text-center">
-                        <ng-container *ngIf="item.packageStatus === 'Pending'">
-                            <span
-                                class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
-                                Pending
-                            </span>
-                        </ng-container>
 
-                        <ng-container *ngIf="item.packageStatus === 'Opened'">
-                            <span
-                                class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
-                                Opened
-                            </span>
-                        </ng-container>
-
-                        <ng-container *ngIf="item.packageStatus === 'Completed'">
-                            <span
-                                class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
-                                Completed
-                            </span>
-                        </ng-container>
-                    </td>
                 </tr>
             </tbody>
         </table>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit,Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -63,7 +63,7 @@ interface PackageItem {
   styleUrl: './todo-define-premade-packages.component.css',
 })
 export class TodoDefinePremadePackagesComponent implements OnInit {
-  
+
   orderdetailsArr: OrderDetails[] = [];
   excludeItemsArr: ExcludeItems[] = [];
   orderDetails: OrderDetailItem[] = [];
@@ -98,7 +98,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   constructor(
     private procurementService: ProcumentsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   goBack() {
@@ -252,7 +253,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       item.isExcluded = false; // fallback
     }
 
-    console.log(item.price);
+    console.log('price', item.price);
 
     this.recalculatePackageTotal();
   }
@@ -405,11 +406,16 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     }
 
+    console.log('odarray', this.orderdetailsArr)
+
     this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
+
       (res) => {
+
         this.loading = false;
         console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Updated Successfully', 'success');
+        this.goToCompleteTab()
       },
       (err) => {
         this.loading = false;
@@ -550,19 +556,25 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   validateQuantity(item: any) {
-  // Ensure quantity is not negative
-  if (item.qty < 0) {
-    item.qty = 0;
+    // Ensure quantity is not negative
+    if (item.qty < 0) {
+      item.qty = 0;
+    }
+    this.calculatePrice(item);
   }
-  this.calculatePrice(item);
-}
 
-preventNegativeInput(event: KeyboardEvent) {
-  // Prevent minus key (-) from being entered
-  if (event.key === '-' || event.key === 'Subtract') {
-    event.preventDefault();
+  preventNegativeInput(event: KeyboardEvent) {
+    // Prevent minus key (-) from being entered
+    if (event.key === '-' || event.key === 'Subtract') {
+      event.preventDefault();
+    }
   }
-}
+
+  goToCompleteTab() {
+    this.router.navigate(['/procurement/define-packages'], {
+      queryParams: { tab: 'completed' }
+    });
+  }
 
 
 }

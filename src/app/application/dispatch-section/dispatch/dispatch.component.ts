@@ -11,16 +11,20 @@ import { PermissionService } from '../../../services/roles-permission/permission
   styleUrl: './dispatch.component.css'
 })
 export class DispatchComponent {
-constructor(
-    private router: Router, 
+  constructor(
+    private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
 
 
   salesDashOrders(): void {
     this.router.navigate(['/dispatch/salesdash-orders']);
   }
+  marketPlaceOrders(): void {
+    this.router.navigate(['/dispatch/marketplace-dispatch']);
+  }
+  
 
 }

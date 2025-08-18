@@ -170,7 +170,7 @@
           Banner Name here
           <span class="text-xs text-gray-500">( Maximum 50 characters )</span>
         </label>
-        <input type="text" placeholder="--Enter Name here--" maxlength="50" [(ngModel)]="bannerName"
+        <input type="text" placeholder="--Enter Name here--" maxlength="50" [(ngModel)]="bannerName" (input)="onBannerNameInput($event, true)"
           class="mt-1 pl-3 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
       </div>
 
@@ -258,7 +258,7 @@
           Banner Name here
           <span class="text-xs text-gray-500">( Maximum 50 characters )</span>
         </label>
-        <input type="text" placeholder="--Enter Name here--" maxlength="50" [(ngModel)]="bannerNameWholesale"
+        <input type="text" placeholder="--Enter Name here--" maxlength="50" [(ngModel)]="bannerNameWholesale" (input)="onBannerNameInput($event, false)"
           class="mt-1 pl-3 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
       </div>
 

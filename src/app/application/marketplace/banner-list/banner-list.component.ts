@@ -519,6 +519,7 @@ export class BannerListComponent {
 
   uploadBanner() {
   this.isLoading = true;
+  this.bannerName = this.bannerName.trim();
   if (!this.bannerName || !this.selectedFile) {
     this.isLoading = false;
     Swal.fire(
@@ -562,6 +563,7 @@ export class BannerListComponent {
 
   uploadBannerWholesale() {
   this.isLoading = true;
+  this.bannerNameWholesale = this.bannerNameWholesale.trim();
   if (!this.bannerNameWholesale || !this.selectedFileWholesale) {
     this.isLoading = false;
     Swal.fire(
@@ -797,4 +799,24 @@ export class BannerListComponent {
     }
   });
 }
+
+trimLeadingSpaces(event: any, isRetail: boolean = true): void {
+  const inputValue = event.target.value;
+  if (inputValue.startsWith(' ')) {
+    // If input starts with space, remove leading spaces
+    const trimmedValue = inputValue.trimStart();
+    if (isRetail) {
+      this.bannerName = trimmedValue;
+    } else {
+      this.bannerNameWholesale = trimmedValue;
+    }
+    // Update the input field value
+    event.target.value = trimmedValue;
+  }
+}
+
+onBannerNameInput(event: any, isRetail: boolean = true): void {
+  this.trimLeadingSpaces(event, isRetail);
+}
+
 }

@@ -396,23 +396,27 @@
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >Province *</label
         >
-        <select
-          id="province"
-          name="province"
-          [(ngModel)]="selectProvince"
-          (change)="onProvinceChange()"
-          [value]="centerFetchData.province"
-          #provinceInput="ngModel"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        >
-          <option selected disabled>-- select --</option>
-          <option *ngFor="let item of ProvinceData" [value]="item.province">
-            {{ item.province }}
-          </option>
-        </select>
+        <p-dropdown
+  id="district"
+  name="district"
+  [(ngModel)]="centerFetchData.district"
+  (onChange)="onDistrictChange()"
+  [options]="selectedDistrict"
+  optionLabel="districtName"
+  optionValue="districtName"
+  filter="true"
+  filterBy="districtName"
+  placeholder="-- select --"
+  [showClear]="true"
+  [autoDisplayFirst]="false"
+  #districtInput="ngModel"
+  [style]="{ 'min-height': '38px' }"
+  styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+  [disabled]="!selectProvince"
+></p-dropdown>
         <!-- ... validation ... -->
         <div
-          *ngIf="!centerFetchData.province && districtInput.touched"
+          *ngIf="!centerFetchData.province"
           class="text-red-500 text-sm mt-1"
         >
           <div>Province is required</div>
@@ -426,26 +430,26 @@
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >District *</label
         >
-        <select
-          id="district"
-          name="district"
-          [value]="centerFetchData.district"
-          [(ngModel)]="centerFetchData.district"
-          (change)="onDistrictChange()"
-          #districtInput="ngModel"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        >
-          <option selected disabled>-- select --</option>
-          <option
-            *ngFor="let item of selectedDistrict"
-            [value]="item.districtName"
-          >
-            {{ item.districtName }}
-          </option>
-        </select>
+        <p-dropdown
+  id="province"
+  name="province"
+  [(ngModel)]="selectProvince"
+  (onChange)="onProvinceChange()"
+  [options]="ProvinceData"
+  optionLabel="province"
+  optionValue="province"
+  filter="true"
+  filterBy="province"
+  placeholder="-- select --"
+  [showClear]="true"
+  [autoDisplayFirst]="false"
+  #provinceInput="ngModel"
+  styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+  panelStyleClass="custom-dropdown-panel"
+></p-dropdown>
         <!-- ... validation ... -->
         <div
-          *ngIf="!centerFetchData.district && districtInput.touched"
+          *ngIf="!centerFetchData.district "
           class="text-red-500 text-sm mt-1"
         >
           <div>Province is required</div>

@@ -107,12 +107,8 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
     return parseFloat(num1) + parseFloat(num2);
   }
 
-  navigateToPackageItemView(id: number, invNo: string, total: number, name: string, fullTotal: string | number) {
-    console.log(id, invNo, name, total);
-    // this.router.navigate(['/dispatch/package-items']);
-    this.router.navigate(['/dispatch/package-items'], {
-      queryParams: { id, invNo, name, total, fullTotal },
-    });
+  navigateToPackageView(id: number, invNo: string) {
+    this.router.navigate([`/dispatch/view-premade-packages/${id}/${invNo}`])
   }
 
   navigateToAdditionalItemView(id: number, invNo: string, total: number, name: string, fullTotal: number | string) {

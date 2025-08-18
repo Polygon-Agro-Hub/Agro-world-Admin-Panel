@@ -353,10 +353,17 @@ allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
 
 // Method for account holder name validation (only English letters and spaces)
 allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
   const char = event.key;
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
   if (allowedKeys.includes(char)) return;
+
+  // Prevent space at the start or multiple consecutive spaces
+  if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
+    event.preventDefault();
+    return;
+  }
 
   // Block digits and special characters, allow only English letters and spaces
   if (!/^[a-zA-Z\s]$/.test(char)) {
@@ -426,6 +433,11 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
     if (controlKeys.includes(key)) {
       return;
     }
+
+    if (key === ' ' && cursorPosition === 0) {
+    event.preventDefault();
+    return;
+  }
 
     const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
     const englishOnlyFields = ['companyNameEnglish', 'accHolderName', 'foName'];
@@ -501,7 +513,7 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
       setTimeout(() => {
         let trimmedValue = input.value;
 
-
+trimmedValue = this.trimLeadingSpaces(trimmedValue);
         trimmedValue = trimmedValue.replace(/^\s+/, '');
 
         trimmedValue = trimmedValue.replace(/\s{2,}/g, ' ');
@@ -1099,6 +1111,10 @@ getCompanyData() {
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
 
+    if (fieldName === 'accHolderName' && this.companyData.accHolderName) {
+    this.companyData.accHolderName = this.companyData.accHolderName.trim();
+  }
+
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
@@ -1348,6 +1364,10 @@ allowOnlyValidNameCharacters(event: KeyboardEvent): void {
       },
     });
   }
+
+  trimLeadingSpaces(value: string): string {
+  return value ? value.replace(/^\s+/, '') : value;
+}
 }
 
 // Updated Company class to match the JSON response structure

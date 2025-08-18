@@ -7,8 +7,8 @@
 <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
     <div>
         <div class="flex justify-between items-center mb-5">
-            <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-                <!-- All ({{totalItems | number: '2.0'}}) -->
+            <h4 class="text-xl font-normal text-[#292929] dark:text-textDark">
+               Invoice No : <span class="font-semibold">{{invNo}}</span>
             </h4>
         </div>
 
@@ -34,35 +34,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <tr *ngFor="let item of premadePackages"> -->
-                    <tr>
+                    <tr *ngFor="let item of packageObj.packageData">
                         <td class="py-3 text-[#000000] dark:text-textDark text-left">
-                            <!-- {{ ((page - 1) * itemsPerPage + i + 1) | number: '2.0' }} -->
-                            dsfsf
+                            {{item.name}}
                         </td>
 
                         <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
-                            <!-- {{ item.invNo }} -->eee
+                            {{item.price | number : '1.2-2'}}
                         </td>
 
                         <td
                             class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
-                            <!-- <button
-                            (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)"
-                            class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
-                              'text-gray-300 cursor-not-allowed': item.additionalItemsStatus === 'Unknown',
-                              'text-yellow-500 hover:text-yellow-700': item.additionalItemsStatus === 'Opened' && item.orderAdditionalCount > 0,
-                              'text-green-500 hover:text-green-700': item.additionalItemsStatus === 'Completed' && item.orderAdditionalCount > 0,
-                              'text-red-500 hover:text-red-700': item.additionalItemsStatus === 'Pending' && item.orderAdditionalCount > 0
-                            }"
-                            [disabled]="item.additionalItemsStatus === 'Unknown'">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        </button> -->
-                            <button class="w-6 h-6 mr-3">
+                            <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo,
+                            item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
+
+                            <button class="w-6 h-6 mr-3" [disabled]="item.packStatus === 'Unknown'" [ngClass]="{
+                              'text-gray-300 cursor-not-allowed': item.packStatus === 'Unknown',
+                              'text-yellow-500 hover:text-yellow-700': item.packStatus === 'Opened',
+                              'text-green-500 hover:text-green-700': item.packStatus === 'Completed',
+                              'text-red-500 hover:text-red-700': item.packStatus === 'Pending' 
+                            }" [disabled]="item.packStatus === 'Unknown'">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
@@ -71,6 +62,37 @@
                                 </svg>
                             </button>
 
+
+                        </td>
+
+                    </tr>
+                    <tr *ngIf="packageObj.additionalData.orderId || packageObj.additionalData.price">
+                        <td class="py-3 text-[#000000] dark:text-textDark text-left">
+                            Additional
+                        </td>
+
+                        <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
+                            {{packageObj.additionalData.price| number : '1.2-2'}}
+                        </td>
+
+                        <td
+                            class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
+                            <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
+
+                            <button class="w-6 h-6 mr-3" [disabled]="packageObj.additionalData.packStatus === 'Unknown'"
+                                [ngClass]="{
+                              'text-gray-300 cursor-not-allowed': packageObj.additionalData.packStatus === 'Unknown',
+                              'text-yellow-500 hover:text-yellow-700': packageObj.additionalData.packStatus === 'Opened',
+                              'text-green-500 hover:text-green-700': packageObj.additionalData.packStatus === 'Completed',
+                              'text-red-500 hover:text-red-700': packageObj.additionalData.packStatus === 'Pending'
+                            }" [disabled]="packageObj.additionalData.packStatus === 'Unknown'">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </button>
                         </td>
 
                     </tr>

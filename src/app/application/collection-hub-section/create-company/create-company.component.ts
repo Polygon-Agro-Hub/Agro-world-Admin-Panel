@@ -434,6 +434,11 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
       return;
     }
 
+    if (key === ' ' && cursorPosition === 0) {
+    event.preventDefault();
+    return;
+  }
+
     const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
     const englishOnlyFields = ['companyNameEnglish', 'accHolderName', 'foName'];
     const emailFields = ['email'];
@@ -508,7 +513,7 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
       setTimeout(() => {
         let trimmedValue = input.value;
 
-
+trimmedValue = this.trimLeadingSpaces(trimmedValue);
         trimmedValue = trimmedValue.replace(/^\s+/, '');
 
         trimmedValue = trimmedValue.replace(/\s{2,}/g, ' ');
@@ -1359,6 +1364,10 @@ allowOnlyValidNameCharacters(event: KeyboardEvent): void {
       },
     });
   }
+
+  trimLeadingSpaces(value: string): string {
+  return value ? value.replace(/^\s+/, '') : value;
+}
 }
 
 // Updated Company class to match the JSON response structure

@@ -174,72 +174,134 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   onVarietyNameInput(event: any, field: string): void {
-    let value = event.target.value;
-    value = value.replace(/^\s+/, '');
-
-    if (value.length > 0) {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
+  let value = event.target.value;
+  
+  // Trim leading spaces immediately
+  value = value.replace(/^\s+/, '');
+  
+  // If the field becomes empty after trimming, set it to empty
+  if (value === '') {
+    event.target.value = '';
     if (field === 'english') {
-      this.cropForm.patchValue({ varietyNameEnglish: value });
+      this.cropForm.patchValue({ varietyNameEnglish: '' });
     } else if (field === 'sinhala') {
-      this.cropForm.patchValue({ varietyNameSinhala: value });
+      this.cropForm.patchValue({ varietyNameSinhala: '' });
     } else if (field === 'tamil') {
-      this.cropForm.patchValue({ varietyNameTamil: value });
+      this.cropForm.patchValue({ varietyNameTamil: '' });
     }
-
-    event.target.value = value;
+    return;
   }
+
+  // Capitalize first letter
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  if (field === 'english') {
+    this.cropForm.patchValue({ varietyNameEnglish: value });
+  } else if (field === 'sinhala') {
+    this.cropForm.patchValue({ varietyNameSinhala: value });
+  } else if (field === 'tamil') {
+    this.cropForm.patchValue({ varietyNameTamil: value });
+  }
+
+  event.target.value = value;
+}
 
   onDescriptionInput(event: any, field: string): void {
-    let value = event.target.value;
-    value = value.replace(/^\s+/, '');
-
+  let value = event.target.value;
+  
+  // Trim leading spaces immediately
+  value = value.replace(/^\s+/, '');
+  
+  // If the field becomes empty after trimming, set it to empty
+  if (value === '') {
+    event.target.value = '';
     if (field === 'english') {
-      this.cropForm.patchValue({ descriptionEnglish: value });
+      this.cropForm.patchValue({ descriptionEnglish: '' });
     } else if (field === 'sinhala') {
-      this.cropForm.patchValue({ descriptionSinhala: value });
+      this.cropForm.patchValue({ descriptionSinhala: '' });
     } else if (field === 'tamil') {
-      this.cropForm.patchValue({ descriptionTamil: value });
+      this.cropForm.patchValue({ descriptionTamil: '' });
     }
-
-    event.target.value = value;
+    return;
   }
+
+  if (field === 'english') {
+    this.cropForm.patchValue({ descriptionEnglish: value });
+  } else if (field === 'sinhala') {
+    this.cropForm.patchValue({ descriptionSinhala: value });
+  } else if (field === 'tamil') {
+    this.cropForm.patchValue({ descriptionTamil: value });
+  }
+
+  event.target.value = value;
+}
 
   onEditVarietyNameInput(event: any, field: string): void {
-    let value = event.target.value;
-    value = value.replace(/^\s+/, '');
-
-    if (value.length > 0) {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
+  let value = event.target.value;
+  
+  // Trim leading spaces immediately
+  value = value.replace(/^\s+/, '');
+  
+  // If the field becomes empty after trimming, set it to empty
+  if (value === '') {
+    event.target.value = '';
     if (field === 'english') {
-      this.newsItems[0].varietyNameEnglish = value;
+      this.newsItems[0].varietyNameEnglish = '';
     } else if (field === 'sinhala') {
-      this.newsItems[0].varietyNameSinhala = value;
+      this.newsItems[0].varietyNameSinhala = '';
     } else if (field === 'tamil') {
-      this.newsItems[0].varietyNameTamil = value;
+      this.newsItems[0].varietyNameTamil = '';
     }
-
-    event.target.value = value;
+    return;
   }
+
+  // Capitalize first letter
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  if (field === 'english') {
+    this.newsItems[0].varietyNameEnglish = value;
+  } else if (field === 'sinhala') {
+    this.newsItems[0].varietyNameSinhala = value;
+  } else if (field === 'tamil') {
+    this.newsItems[0].varietyNameTamil = value;
+  }
+
+  event.target.value = value;
+}
 
   onEditDescriptionInput(event: any, field: string): void {
-    let value = event.target.value;
-    value = value.replace(/^\s+/, '');
-
+  let value = event.target.value;
+  
+  // Trim leading spaces immediately
+  value = value.replace(/^\s+/, '');
+  
+  // If the field becomes empty after trimming, set it to empty
+  if (value === '') {
+    event.target.value = '';
     if (field === 'english') {
-      this.newsItems[0].descriptionEnglish = value;
+      this.newsItems[0].descriptionEnglish = '';
     } else if (field === 'sinhala') {
-      this.newsItems[0].descriptionSinhala = value;
+      this.newsItems[0].descriptionSinhala = '';
     } else if (field === 'tamil') {
-      this.newsItems[0].descriptionTamil = value;
+      this.newsItems[0].descriptionTamil = '';
     }
-
-    event.target.value = value;
+    return;
   }
+
+  if (field === 'english') {
+    this.newsItems[0].descriptionEnglish = value;
+  } else if (field === 'sinhala') {
+    this.newsItems[0].descriptionSinhala = value;
+  } else if (field === 'tamil') {
+    this.newsItems[0].descriptionTamil = value;
+  }
+
+  event.target.value = value;
+}
 
   onSubmit() {
     const cropValues = this.cropForm.value;

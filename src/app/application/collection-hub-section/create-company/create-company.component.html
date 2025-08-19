@@ -162,15 +162,15 @@
           </div>
         </div>
         <div class="pb-6">
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email Address *</label>
-          <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
-            (keydown)="handleInputWithSpaceTrimming($event, 'email')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
-          <span *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm">
-            Enter a valid email address.
-          </span>
-        </div>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email Address *</label>
+  <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
+    (keydown)="handleInputWithSpaceTrimming($event, 'email')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
+  <span *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm">
+    {{ emailValidationMessage }}
+  </span>
+</div>
       </div>
 
 

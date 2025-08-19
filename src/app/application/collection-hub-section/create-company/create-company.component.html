@@ -162,8 +162,7 @@
           </div>
         </div>
         <div class="pb-6">
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
-            Address *</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email Address *</label>
           <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
             (keydown)="handleInputWithSpaceTrimming($event, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />

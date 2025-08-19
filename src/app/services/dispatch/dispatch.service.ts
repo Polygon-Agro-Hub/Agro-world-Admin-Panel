@@ -299,4 +299,53 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
+  getMarketPlaceCustomePackages(page: number, limit: number, selectedStatus: string = '', date: string, search: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('selectedStatus', selectedStatus, 'date', date, 'search', search)
+
+
+    let url = `${this.apiUrl}dispatch/marketplace-custome-package?page=${page}&limit=${limit}`;
+
+    if (selectedStatus) {
+      url += `&selectedStatus=${selectedStatus}`;
+    }
+
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+
+    if (search) {
+      url += `&search=${search}`;
+    }
+    return this.http.get<any>(url, { headers });
+  }
+
+    getPackageItemsForDispatch(id: number, orderId:number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}dispatch/get-package-for-dispatch/${id}/${orderId}`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+    dispatchPackageItemData(array: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}dispatch/dispatch-package`;
+
+    // Send the array as a named field in the body
+    return this.http.patch<any>(url, array, { headers });
+  }
+
 }

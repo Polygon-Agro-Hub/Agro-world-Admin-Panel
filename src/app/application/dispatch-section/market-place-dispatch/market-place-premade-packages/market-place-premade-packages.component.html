@@ -131,7 +131,11 @@
                         {{ item.packagePrice| number: '1.2-2' }} 
                     </td>
                     <td class="px-4 py-3 text-center">
-                        <ng-container *ngIf="item.packingStatus === 'Pending'">
+                        <ng-container 
+                        *ngIf="
+                            (item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Pending') ||
+                            (item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Unknown')
+                            ">
 
                             <span
                                 class="w-24 h-7 inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-3 py-1 text-sm">
@@ -139,14 +143,18 @@
                             </span>
                         </ng-container>
 
-                        <ng-container *ngIf="item.packingStatus === 'Opened'">
+                        <ng-container *ngIf="item.packageStatus === 'Opened' || item.additionalItemsStatus === 'Opened'">
                             <span
                                 class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
                                 Opened
                             </span>
                         </ng-container>
 
-                        <ng-container *ngIf="item.packingStatus === 'Completed'">
+                        <ng-container 
+                        *ngIf="
+                            (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Completed') ||
+                            (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Unknown') 
+                            ">
                             <span
                                 class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
                                 Completed

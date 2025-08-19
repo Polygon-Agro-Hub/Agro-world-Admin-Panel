@@ -102,7 +102,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   }
 
   viewCompany(id: number, isView: boolean) {
-    this.router.navigate(['/collection-hub/create-company'], {
+    this.router.navigate(['/distribution-hub/action//create-company'], {
       queryParams: { id, isView },
     });
   }

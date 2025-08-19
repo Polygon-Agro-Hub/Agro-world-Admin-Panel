@@ -174,9 +174,6 @@
   </option>
 </select>
 
-            <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
-            ></i>
           </div>
           <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm"
             >Company Name is required.</span
@@ -568,6 +565,7 @@
             id="houseNumber"
             name="houseNumber"
             [(ngModel)]="personalData.houseNumber"
+             (input)="capitalizeWhileTyping('houseNumber')"
              (keydown)="blockLeadingSpace($event, 'houseNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -590,6 +588,7 @@
             name="streetName"
             [(ngModel)]="personalData.streetName"
             (keydown)="blockLeadingSpace($event, 'streetName')"
+              (input)="capitalizeWhileTyping('streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -611,6 +610,7 @@
             name="city"
             [(ngModel)]="personalData.city"
             (keydown)="blockLeadingSpace($event, 'city')"
+            (input)="capitalizeWhileTyping('city')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm"
@@ -720,28 +720,23 @@
 </div>
 
 
-      <div class="pb-6">
-        <label
-          for="accNumber"
-          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-        >
-          Account Number*
-        </label>
-        <input
-          id="accNumber"
-          name="accNumber"
-          type="number"
-          [(ngModel)]="personalData.accNumber"
-          (keydown)="blockLeadingSpace($event, 'accNumber')"
-        
-          (blur)="onBlur('accNumber')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-        <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
-          Account Number is required.
-        </span>
-      </div>
 
+       <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input id="accNumber" name="accNumber"    type="number" [(ngModel)]="personalData.accNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #accNumberInput="ngModel" required pattern="^[0-9]+$"   (keydown)="blockLeadingSpace($event, 'accNumber')"   (blur)="onBlur('accNumber')"
+        (ngModelChange)="validateAccNumber()" />
+        <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
+          <div>Account Number is required</div>
+        </div>
+        <div *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </div>
+      </div>
+<!-- 
       <div class="pb-6">
         <label
           for="confirmAccNumber"
@@ -770,7 +765,33 @@
         >
           Account Numbers do not match.
         </span>
+      </div> -->
+
+
+        <div class="pb-6">
+        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+        </label>
+        <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"   type="number"
+          [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
+         (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Confirm Account Number is required.
+        </span>
+
+        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Account Numbers do not match.
+        </span>
+
+        <span
+          *ngIf="confirmAccNumberInput.touched && this.personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </span>
       </div>
+
 
 <div class="pb-6">
   <label for="bankDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">

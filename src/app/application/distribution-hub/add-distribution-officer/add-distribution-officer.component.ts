@@ -158,14 +158,20 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.router.navigate([path]);
   }
   // Capitalize first letter and remove invalid characters for name fields
-capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'|'accHolderName'): void {
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
   let value = this.personalData[field] || '';
-  // Remove non-English letters and spaces
+
+  // Remove non-English letters/spaces
   value = value.replace(/[^A-Za-z ]/g, '');
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
   // Capitalize first letter
   if (value.length > 0) {
     value = value.charAt(0).toUpperCase() + value.slice(1);
   }
+
   this.personalData[field] = value;
 }
 
@@ -277,6 +283,18 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
       this.confirmAccountNumberError = false;
     }
   }
+
+  validateAccNumber(): void {
+  
+
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
@@ -660,6 +678,15 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
     event.preventDefault();
   }
 }
+
+
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
 
 
   capitalizeV(): void {

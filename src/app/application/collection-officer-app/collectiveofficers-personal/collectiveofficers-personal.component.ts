@@ -975,7 +975,15 @@ updateProvince(event: DropdownChangeEvent): void {
       this.confirmAccountNumberError = false;
     }
   }
-
+  validateAccNumber(): void {
+   
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }

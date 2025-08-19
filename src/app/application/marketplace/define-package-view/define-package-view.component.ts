@@ -384,7 +384,7 @@ onCancel() {
       Swal.fire({
         icon: 'success',
         title: 'Success!',
-        text: 'Package created successfully!',
+        text: 'Package defined successfully!',
         confirmButtonColor: '#3085d6',
       }).then((result) => {
         this.isLoading = false;

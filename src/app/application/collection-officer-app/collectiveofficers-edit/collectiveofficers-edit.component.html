@@ -604,7 +604,7 @@
           Account Holder's name should only contain English letters
         </span>
       </div>
-      <div class="pb-6">
+      <!-- <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
           Number*</label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
@@ -632,6 +632,45 @@
           class="text-red-500 text-sm mt-1">
           <div>Account Numbers do not match</div>
         </div>
+      </div> -->
+
+         <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"(ngModelChange)="validateAccNumber()" />
+        <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
+          <div>Account Number is required</div>
+        </div>
+        <div *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </div>
+      </div>
+
+      <div class="pb-6">
+        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+        </label>
+        <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
+          [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
+          (keypress)="allowOnlyNumbers($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Confirm Account Number is required.
+        </span>
+
+        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Account Numbers do not match.
+        </span>
+
+        <span
+          *ngIf="confirmAccNumberInput.touched && this.personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </span>
       </div>
 
       <!-- <div class="pb-6">

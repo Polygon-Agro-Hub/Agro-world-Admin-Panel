@@ -464,7 +464,15 @@ back(): void {
       this.confirmAccountNumberError = false;
     }
   }
-
+  validateAccNumber(): void {
+  
+    if (this.personalData.accNumber && this.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
   validateNIC(): boolean {
   const nic = this.personalData.nic;
 

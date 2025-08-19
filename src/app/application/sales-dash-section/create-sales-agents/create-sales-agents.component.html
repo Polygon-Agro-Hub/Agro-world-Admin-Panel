@@ -398,7 +398,7 @@ class="text-textLight dark:text-textDark">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Account Number <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber" (blur)="onBlur('accNumber')"
+        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber" (blur)="onBlur('accNumber')" (ngModelChange)="validateAccNumber()"
           (keypress)="allowOnlyAlphanumeric($event)" #accNumberInput="ngModel" required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
@@ -440,6 +440,7 @@ class="text-textLight dark:text-textDark">
         </span>
       </div>
 
+      
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
           Bank Name <span class="text-[#2E2E2E]">*</span>

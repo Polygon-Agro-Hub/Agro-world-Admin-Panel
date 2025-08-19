@@ -376,21 +376,25 @@ allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
 }
 
 // Method for account number validation (only digits)
-allowOnlyDigitsForAccountNumber(event: KeyboardEvent): void {
+allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'confirmAccNumber' |'oicConNum1'|'oicConNum2'): void {
   const char = event.key;
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
   if (allowedKeys.includes(char)) return;
 
-  // Only allow digits
   if (!/^[0-9]$/.test(char)) {
     event.preventDefault();
-    this.accountNumberError = true;
-    setTimeout(() => {
-      this.accountNumberError = false;
-    }, 2000);
+
+    if (field === 'accNumber') {
+      this.accountNumberError = true;
+      setTimeout(() => (this.accountNumberError = false), 2000);
+    } else if (field === 'confirmAccNumber') {
+      this.confirmAccountNumberError = true;
+      setTimeout(() => (this.confirmAccountNumberError = false), 2000);
+    }
   }
 }
+
 
 // Updated contact number validation with SweetAlert
 // validateContactNumbers(): void {
@@ -1014,6 +1018,8 @@ getCompanyData() {
     this.selectedPage = page;
   }
 
+  
+
   validateContactNumbers() {
   // Check individual number length validation (already present)
   this.contactNumberError1 =
@@ -1149,25 +1155,51 @@ getCompanyData() {
   return !!this.touchedFields[fieldName] && !value;
 }
 
-  validateConfirmAccNumber(): void {
-    // Reset error flags
-    this.confirmAccountNumberRequired = false;
-    this.confirmAccountNumberError = false;
+  // validateConfirmAccNumber(): void {
+  //   // Reset both flags initially
+  //   this.confirmAccountNumberRequired = false;
+  //   this.confirmAccountNumberError = false;
 
-    // Check if confirm account number is empty
-    if (!this.companyData.confirmAccNumber) {
-      this.confirmAccountNumberRequired = true;
-      return;
-    }
+  //   // Check if confirmAccNumber is empty
+  //   if (
+  //     !this.companyData.confirmAccNumber ||
+  //     this.companyData.confirmAccNumber.toString().trim() === ''
+  //   ) {
+  //     this.confirmAccountNumberRequired = true;
+  //     return;
+  //   }
 
-    // Check if account numbers match (convert to string to avoid number comparison issues)
-    if (
-      String(this.companyData.accNumber) !==
-      String(this.companyData.confirmAccNumber)
-    ) {
-      this.confirmAccountNumberError = true;
+  //   // Check if both account numbers exist and match
+  //   if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
+  //     this.confirmAccountNumberError =
+  //       this.companyData.accNumber.toString() !==
+  //       this.companyData.confirmAccNumber.toString();
+  //   }
+  // }
+
+    validateConfirmAccNumber(): void {
+    this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
+
+    // Check if account numbers match
+    if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.companyData.accNumber !== this.companyData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
     }
   }
+
+      validateAccNumber(): void {
+   
+    // Check if account numbers match
+    if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.companyData.accNumber !== this.companyData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
 
   isValidEmail(email: string): boolean {
     const emailPattern =

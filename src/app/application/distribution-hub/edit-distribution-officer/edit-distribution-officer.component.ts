@@ -251,7 +251,7 @@ fixPastedLeadingChars(event: Event, field: string) {
       }
     );
   }
-capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'): void {
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
   let value = this.personalData[field] || '';
 
   // Remove non-English letters/spaces
@@ -398,24 +398,21 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
   }
 
   validateConfirmAccNumber(): void {
-    // Reset both flags initially
-    this.confirmAccountNumberRequired = false;
-    this.confirmAccountNumberError = false;
-
-    // Check if confirmAccNumber is empty
-    if (
-      !this.personalData.confirmAccNumber ||
-      this.personalData.confirmAccNumber.toString().trim() === ''
-    ) {
-      this.confirmAccountNumberRequired = true;
-      return;
-    }
-
-    // Check if both account numbers exist and match
+    this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
-        this.personalData.accNumber.toString() !==
-        this.personalData.confirmAccNumber.toString();
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+  validateAccNumber(): void {
+  
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
     }
   }
 

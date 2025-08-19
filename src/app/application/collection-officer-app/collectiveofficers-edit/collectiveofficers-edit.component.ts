@@ -228,6 +228,13 @@ setupDropdownOptions() {
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
 
 back(): void {
   Swal.fire({
@@ -360,6 +367,18 @@ onBranchChange(event: DropdownChangeEvent): void {
       this.confirmAccountNumberError = false;
     }
   }
+
+    validateAccNumber(): void {
+   
+
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
 
   // 6. ADD FIELD VALIDATION METHODS
   isFieldInvalid(fieldName: string): boolean {

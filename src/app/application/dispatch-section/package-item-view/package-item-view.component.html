@@ -128,9 +128,11 @@
         <div class="flex justify-center mt-4 mb-10">
             <div class="border-2 border-dashed border-red-400 rounded-md p-4 text-center w-1/2">
                 <p class="text-sm text-[#8492A3] dark:text-gray-200">Selected product</p>
-                <p class="font-normal text-[#000000] dark:text-white mt-1">{{this.previousDisplayName}} -
-                    {{'1.0'}}kg - Rs.
-  {{ previousQuantity ? (previousPrice / previousQuantity) : 0 | number:'1.2-2' }} 
+<p class="font-normal text-[#000000] dark:text-white mt-1">
+  {{ this.previousDisplayName }} - 
+  {{ previousQuantity || 0 }}kg - 
+  Rs. {{ previousPrice | number:'1.2-2' }} 
+
 </p>
 
                 <p class="text-sm text-[#8492A3] dark:text-gray-200 mt-2">Relevant Product Type :</p>
@@ -171,17 +173,18 @@
                     <label class="block text-sm text-center font-medium text-gray-500 dark:text-gray-300 mb-2">
                       QUANTITY (KG)
                     </label>
-                   <input 
-  type="number" 
+                  <input 
+  type="number"
   placeholder="--Qty in kg--"
   class="border text-center rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700"
   [(ngModel)]="quantity" 
   (input)="validateQuantity()" 
   (keydown)="blockInvalidKeys($event)"
+   (keydown)="blockInvalidDecimal($event)" 
   min="1"
-  step="0.01"
-  style="::placeholder { font-style: italic; }"
+  step="0.001"  
 />
+
                   </div>
                   
 
@@ -195,13 +198,13 @@
 
                 </div>
 
-                <!-- Total -->
-                <div class="w-1/3">
-                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">TOTAL (RS.)</label>
-                  <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
-    {{ totalPrice != null ? 'Rs. ' + (totalPrice | number:'1.2-2') : '----' }}
+             <div class="w-1/3">
+  <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">TOTAL (RS.)</label>
+  <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
+    {{ (quantity != null && unitPrice != null) ? 'Rs. ' + (quantity * unitPrice | number:'1.2-2') : '----' }}
   </span>
-                </div>
+</div>
+
             </div>
 
 

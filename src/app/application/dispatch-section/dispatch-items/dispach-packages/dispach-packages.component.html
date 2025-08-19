@@ -82,13 +82,13 @@
 
         <div class="border-t border-gray-200 dark:border-gray-600 my-6"></div>
 
-        <!-- <div *ngIf="validationFailedMessage" class="text-[#FA0000] italic font-normal mb-2 text-right">
+        <div *ngIf="validationFailedMessage" class="text-[#FA0000] italic font-normal mb-2 text-right">
             {{ validationFailedMessage }}
         </div>
 
         <div *ngIf="validationSuccessMessage" class="text-[#308233] italic font-normal mb-2 text-right">
             {{ validationSuccessMessage }}
-        </div> -->
+        </div>
 
         <div class="flex justify-end space-x-4 mx-5">
             <button (click)="onCancel()"
@@ -102,3 +102,9 @@
         </div>
     </div>
 </div>
+
+<!-- countdown component -->
+ <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<app-count-down *ngIf="showCountdown" [duration]="30" (completed)="onTimerCompleted()"
+    (cancelled)="onTimerCancelled()"></app-count-down>

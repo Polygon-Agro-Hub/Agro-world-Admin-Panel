@@ -3,21 +3,27 @@ import { DispatchService } from '../../../../services/dispatch/dispatch.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
+import Swal from 'sweetalert2';
+import { CountDownComponent } from '../../../../components/count-down/count-down.component';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-dispach-packages',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CountDownComponent, LoadingSpinnerComponent],
   templateUrl: './dispach-packages.component.html',
   styleUrl: './dispach-packages.component.css'
 })
 export class DispachPackagesComponent implements OnInit {
   packageArr: PakageItem[] = [];
   packageId!: number;
+
   isLoading: boolean = true;
   validationFailedMessage: string = '';
   validationSuccessMessage: string = '';
+
+  showCountdown: boolean = false;
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id']
@@ -29,7 +35,9 @@ export class DispachPackagesComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location,
+
   ) { }
 
 
@@ -48,9 +56,49 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   saveCheckedItems() {
-
+    this.showCountdown = true;
   }
 
+  onTimerCompleted() {
+    this.showCountdown = false;
+    this.executeApiCall(); // Perform the API call
+  }
+
+  onTimerCancelled() {
+    this.showCountdown = false;
+  }
+
+  private executeApiCall() {
+    this.isLoading = true;
+
+    const updatedData = this.packageArr.map(item => ({
+
+      id: item.id,
+      isPacked: item.isPacked,
+      qty: item.qty,
+      price: item.price,
+
+    }));
+    this.dispatchService.dispatchPackageItemData(updatedData).subscribe(
+      (res) => {
+        this.isLoading = false;
+        if (res.status) {
+          console.log('Updated successfully:', res);
+          Swal.fire('Success', 'Order dispatched successfully!', 'success');
+          // this.router.navigate(['/dispatch/salesdash-orders']);
+          this.location.back();
+        }else{
+          Swal.fire('Error', 'Order dispatched Faild!', 'error');
+
+        }
+
+      },
+      (err) => {
+        console.error('Update failed:', err);
+        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+      }
+    );
+  }
 
 
   onCheckboxChange(item: PakageItem, event: Event): void {

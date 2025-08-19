@@ -809,31 +809,31 @@
         </div>
 
         <div>
-          <label
-            for="email"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Email *</label
-          >
-          <input
-            type="email"
-            id="email"
-            name="nic"
-            [(ngModel)]="personalData.email"
-            (blur)="onBlur('email')"
-            #emailInput="ngModel"
-            required
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-            (input)="onTrimInput($event, personalData, 'email')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />  
+  <label
+    for="email"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >Email *</label
+  >
+  <input
+    type="email"
+    id="email"
+    name="email"
+    [(ngModel)]="personalData.email"
+    (blur)="validateEmail(); onBlur('email')"
+    #emailInput="ngModel"
+    required
+    (input)="onTrimInput($event, personalData, 'email')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />  
 
-          <div *ngIf="emailInput.touched && (emailInput.errors?.['required'] || !personalData.email)"  class="text-red-500 text-sm mt-1">
-            Email Address is required
-          </div>
-          <div *ngIf="emailInput.touched && emailInput.errors?.['pattern'] && personalData.email" class="text-red-500 text-sm mt-1">
-            Please enter a valid Email Address.({{ 'etc., example@gmail.com' }})
-        </div>
-        </div>
+  <div *ngIf="emailInput.touched && (emailInput.errors?.['required'] || !personalData.email)"  class="text-red-500 text-sm mt-1">
+    Email Address is required
+  </div>
+  
+  <div *ngIf="isEmailTouched && emailErrorMessage" class="text-red-500 text-sm mt-1">
+    {{ emailErrorMessage }}
+  </div>
+</div>
         
       </div>
 

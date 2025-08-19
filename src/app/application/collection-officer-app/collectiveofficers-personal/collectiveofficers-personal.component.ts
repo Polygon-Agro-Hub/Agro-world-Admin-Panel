@@ -265,10 +265,10 @@ onSubmit() {
   }
 
   if (!this.personalData.email) {
-    missingFields.push('Email');
-  } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-  }
+  missingFields.push('Email');
+} else if (!this.isValidEmail(this.personalData.email)) {
+  missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+}
 
   // Check required fields for pageTwo
   if (!this.personalData.houseNumber) {
@@ -487,10 +487,10 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
 
     if (!this.personalData.email) {
-      missingFields.push('Email');
-    } else if (!this.isValidEmail(this.personalData.email)) {
-      missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-    }
+  missingFields.push('Email');
+} else if (!this.isValidEmail(this.personalData.email)) {
+  missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+}
 
     // If errors, show popup and stop navigation
     if (missingFields.length > 0) {
@@ -922,10 +922,25 @@ updateProvince(event: DropdownChangeEvent): void {
   }
 
   isValidEmail(email: string): boolean {
-    if (!email) return false;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  if (!email) return false;
+  
+  // Updated email regex to allow + character
+  const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
+  
+  // Check for invalid patterns
+  if (email.includes('..')) {
+    return false; // Consecutive dots
   }
+  if (email.startsWith('.') || email.endsWith('.')) {
+    return false; // Leading or trailing dot
+  }
+  // Updated special characters check to exclude + from invalid characters
+  if (/[!#$%^&*()=<>?\/\\]/.test(email.replace(/\+/g, ''))) {
+    return false; // Invalid special characters (excluding +)
+  }
+  
+  return emailRegex.test(email);
+}
 
   // Updated NIC validation
   isValidNIC(nic: string): boolean {
@@ -1236,8 +1251,8 @@ preventEmailInvalidCharacters(event: KeyboardEvent): void {
     return;
   }
   
-  // Allow alphanumeric, @, ., -, _
-  if (!/[a-zA-Z0-9@.\-_]/.test(char)) {
+  // Updated to allow alphanumeric, @, ., -, _, and +
+  if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
     event.preventDefault();
   }
 }
@@ -1320,6 +1335,33 @@ formatEmail(): void {
     // this.centerOptions = [];
     this.getAllCollectionManagers();
   }
+
+  getEmailErrorMessage(email: string): string {
+  if (!email) {
+    return 'Email is required';
+  }
+  
+  if (email.includes('..')) {
+    return 'Email cannot contain consecutive dots';
+  }
+  if (email.startsWith('.')) {
+    return 'Email cannot start with a dot';
+  }
+  if (email.endsWith('.')) {
+    return 'Email cannot end with a dot';
+  }
+  if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
+    return 'Email contains invalid special characters';
+  }
+  if (!/@/.test(email)) {
+    return 'Email must contain an @ symbol';
+  }
+  if (!/\./.test(email.split('@')[1])) {
+    return 'Email domain must contain a dot (.)';
+  }
+  
+  return 'Please enter a valid email in the format: example@domain.com';
+}
   
 }
 

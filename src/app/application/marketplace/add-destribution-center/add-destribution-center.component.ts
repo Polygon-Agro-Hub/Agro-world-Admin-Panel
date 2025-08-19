@@ -24,6 +24,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { DropdownModule } from 'primeng/dropdown';
+import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
 
 interface PhoneCode {
   code: string;
@@ -93,7 +94,8 @@ export class AddDestributionCenterComponent implements OnInit {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private distributionService: DestributionService
+    private distributionService: DestributionService,
+    private emailValidationService: EmailvalidationsService
   ) { }
 
   ngOnInit() {
@@ -128,7 +130,7 @@ export class AddDestributionCenterComponent implements OnInit {
             this.numericDecimalValidator
           ],
         ],
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
         country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
         province: ['', Validators.required],
         district: ['', Validators.required],
@@ -306,9 +308,10 @@ export class AddDestributionCenterComponent implements OnInit {
     if (field.errors['required']) {
       return `${this.getFieldLabel(fieldName)} is required`;
     }
-    if (field.errors['email']) {
-      return 'Please enter a valid email in the format: example@domain.com';
-    }
+    if (field.errors['email'] || field.errors['customEmail']) {
+    // Use custom email validation message
+    return field.errors['customEmail'] || 'Please enter a valid email';
+  }
     if (field.errors['pattern']) {
       if (fieldName.includes('contact')) {
         return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
@@ -686,6 +689,15 @@ onCancel() {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  private customEmailValidator(control: AbstractControl): { [key: string]: any } | null {
+  if (!control.value || control.value.trim() === '') {
+    return null; // Let required validator handle empty values
+  }
+  
+  const validation = this.emailValidationService.validateEmail(control.value);
+  return validation.isValid ? null : { customEmail: validation.errorMessage };
+}
 }
 
 class CompanyList {

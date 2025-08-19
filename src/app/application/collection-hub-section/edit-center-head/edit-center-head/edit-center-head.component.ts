@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { EmailvalidationsService } from '../../../../services/email-validation/emailvalidations.service';
 
 interface Bank {
   ID: number;
@@ -63,6 +64,7 @@ export class EditCenterHeadComponent {
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
+  emailErrorMessage: string | null = null;
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -100,6 +102,7 @@ export class EditCenterHeadComponent {
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
    private location: Location,
+   public emailValidationService: EmailvalidationsService
   ) {}
 
   ngOnInit(): void {
@@ -395,10 +398,13 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
 
     if (!this.personalData.email) {
-      missingFields.push('Email');
-    } else if (!emailPattern.test(this.personalData.email)) {
-      missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-    }
+  missingFields.push('Email');
+} else {
+  const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+  if (!emailValidation.isValid) {
+    missingFields.push(`Email - ${emailValidation.errorMessage}`);
+  }
+}
 
     // Display errors if any
     if (missingFields.length > 0) {
@@ -552,10 +558,13 @@ onSubmit() {
   }
 
   if (!this.personalData.email) {
-    missingFields.push('Email');
-  } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.personalData.email)) {
-    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+  missingFields.push('Email');
+} else {
+  const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+  if (!emailValidation.isValid) {
+    missingFields.push(`Email - ${emailValidation.errorMessage}`);
   }
+}
 
   // Validation for pageTwo fields
   if (!this.personalData.houseNumber) {
@@ -700,6 +709,10 @@ onSubmit() {
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  validateEmail(): void {
+  this.emailErrorMessage = this.emailValidationService.getErrorMessage(this.personalData.email);
+}
 }
 
 class Personal {

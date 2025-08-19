@@ -14,6 +14,7 @@ import { CollectionOfficerService } from '../../../../services/collection-office
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { EmailvalidationsService } from '../../../../services/email-validation/emailvalidations.service';
 
 interface Bank {
   ID: number;
@@ -74,6 +75,8 @@ export class CreateCenterHeadComponent implements OnInit {
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   errorMessage: string = '';
+  emailErrorMessage: string = '';
+  isEmailTouched: boolean = false;
 
   allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
@@ -145,6 +148,7 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     private http: HttpClient,
     private router: Router,
     private location: Location,
+    private emailValidationService: EmailvalidationsService
     
   ) {const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
   this.selectedCountry1 = defaultCountry;
@@ -634,10 +638,13 @@ onSubmit() {
   }
 
   if (!this.personalData.email) {
-    missingFields.push('Email');
-  } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.personalData.email)) {
-    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-  }
+      missingFields.push('Email');
+    } else {
+      const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+      if (!emailValidation.isValid) {
+        missingFields.push(`Email - ${emailValidation.errorMessage}`);
+      }
+    }
 
   // Validation for pageTwo fields
   if (!this.personalData.houseNumber) {
@@ -833,8 +840,7 @@ onSubmit() {
   }
 
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
+    return this.emailValidationService.isEmailValid(email);
   }
 
   isValidNIC(nic: string): boolean {
@@ -916,10 +922,13 @@ checkFormValidity(): boolean {
 
   // Email validations
   if (!this.personalData.email) {
-    missingFields.push('Email is Required');
-  } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push('Email (Please enter a valid email address)');
-  }
+      missingFields.push('Email is Required');
+    } else {
+      const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+      if (!emailValidation.isValid) {
+        missingFields.push(`Email - ${emailValidation.errorMessage}`);
+      }
+    }
 
   // NIC validations
   if (!this.personalData.nic) {
@@ -998,6 +1007,24 @@ navigateToPage(page: 'pageOne' | 'pageTwo'): void {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  validateEmail(): void {
+    this.isEmailTouched = true;
+    const email = this.personalData.email;
+    
+    if (!email) {
+      this.emailErrorMessage = this.emailValidationService.validationMessages.required;
+      return;
+    }
+
+    const validation = this.emailValidationService.validateEmail(email);
+    
+    if (!validation.isValid) {
+      this.emailErrorMessage = validation.errorMessage!;
+    } else {
+      this.emailErrorMessage = '';
+    }
   }
 }
 

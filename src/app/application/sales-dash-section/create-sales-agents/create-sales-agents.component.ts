@@ -52,6 +52,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   officerId: number | null = null;
+  emailError: string = '';
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -341,6 +342,13 @@ onCancel() {
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
 
+    if (fieldName === 'email') {
+    if (this.personalData.email) {
+      this.personalData.email = this.personalData.email.trim();
+      this.isValidEmail(this.personalData.email);
+    }
+  }
+
     // Trim leading spaces
     if (this.personalData[fieldName]) {
       this.personalData[fieldName] = (
@@ -390,38 +398,58 @@ onCancel() {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-
-
-    if (!email || email.length === 0) return false;
-
-
-    if (email.includes('..')) return false;
-
-    if (email.startsWith('.')) return false;
-
-
-    const atIndex = email.indexOf('@');
-    if (atIndex > 0 && email.charAt(atIndex - 1) === '.') return false;
-
-
-    if (atIndex < email.length - 1 && email.charAt(atIndex + 1) === '.') return false;
-
-
-    const localPart = email.substring(0, atIndex);
-    const domainPart = email.substring(atIndex + 1);
-
-
-    const localPartRegex = /^[a-zA-Z0-9._-]+$/;
-    if (!localPartRegex.test(localPart)) return false;
-
-
-    const domainPartRegex = /^[a-zA-Z0-9.-]+$/;
-    if (!domainPartRegex.test(domainPart)) return false;
-
-
-    return emailRegex.test(email);
+  if (!email) {
+    this.emailError = 'Email is required.';
+    return false;
   }
+
+  // Check for consecutive dots
+  if (email.includes('..')) {
+    this.emailError = 'Email cannot contain consecutive dots (..)';
+    return false;
+  }
+
+  // Check for leading dot
+  if (email.startsWith('.')) {
+    this.emailError = 'Email cannot start with a dot';
+    return false;
+  }
+
+  // Check for trailing dot
+  if (email.endsWith('.')) {
+    this.emailError = 'Email cannot end with a dot';
+    return false;
+  }
+
+  // Check for dot right before @
+  if (email.includes('.@')) {
+    this.emailError = 'Email cannot have a dot right before the @ symbol';
+    return false;
+  }
+
+  // Check for dot right after @
+  if (email.includes('@.')) {
+    this.emailError = 'Email cannot have a dot right after the @ symbol';
+    return false;
+  }
+
+  // Check for invalid characters (but allow +)
+  const invalidChars = /[!#$%^&*()=<>?\/\\]/;
+  if (invalidChars.test(email)) {
+    this.emailError = 'Email contains invalid special characters (only +, -, _, and . are allowed)';
+    return false;
+  }
+
+  // Check basic format (allowing + in the local part)
+  const emailRegex = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    this.emailError = 'Please enter a valid email in the format: example@domain.com or user+tag@domain.com';
+    return false;
+  }
+
+  this.emailError = '';
+  return true;
+}
 
   isValidNIC(nic: string): boolean {
     // 12 digits only (new format)
@@ -877,95 +905,32 @@ blockLeadingSpace(event: KeyboardEvent) {
   }
 
   validateEmailInput(event: KeyboardEvent, fieldName: string): void {
-    // Allow navigation and control keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-    ];
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
+    'Tab', 'Home', 'End'
+  ];
 
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-
-
-    const currentValue =
-      (this.personalData[fieldName as keyof Personal] as string) || '';
-
-
-    if (event.key === ' ') {
-      event.preventDefault();
-      return;
-    }
-
-
-    if (event.key === '.' && currentValue.length === 0) {
-      event.preventDefault();
-      return;
-    }
-
-
-    if (event.key === '.' && currentValue.endsWith('.')) {
-      event.preventDefault();
-      return;
-    }
-
-
-    const atIndex = currentValue.indexOf('@');
-    if (event.key === '.' && atIndex !== -1) {
-
-      const cursorPosition = currentValue.length;
-      if (cursorPosition === atIndex + 1) {
-        event.preventDefault();
-        return;
-      }
-    }
-
-
-    if (event.key === '@' && currentValue.endsWith('.')) {
-      event.preventDefault();
-      return;
-    }
-
-
-    const emailPattern = /^[a-zA-Z0-9._@-]$/;
-    if (!emailPattern.test(event.key)) {
-      event.preventDefault();
-      return;
-    }
-
-
-    if (event.key === '@' && currentValue.includes('@')) {
-      event.preventDefault();
-      return;
-    }
+  if (allowedKeys.includes(event.key)) {
+    return;
   }
+
+  // Allow only typical email characters
+  const allowedChars = /^[a-zA-Z0-9@._+-]$/;
+  if (!allowedChars.test(event.key)) {
+    event.preventDefault();
+  }
+}
 
   validateEmailOnInput(): void {
-    if (this.personalData.email) {
-      this.personalData.email = this.personalData.email
-        .replace(/\s/g, '')
-        .replace(/\.{2,}/g, '.')
-        .replace(/^\./, '')
-        .replace(/\.@/, '@');
-
-
-      this.personalData.email = this.personalData.email.replace(/[^a-zA-Z0-9._@-]/g, '');
-
-      // Ensure only one @ symbol
-      const atCount = (this.personalData.email.match(/@/g) || []).length;
-      if (atCount > 1) {
-        const firstAtIndex = this.personalData.email.indexOf('@');
-        this.personalData.email =
-          this.personalData.email.substring(0, firstAtIndex + 1) +
-          this.personalData.email.substring(firstAtIndex + 1).replace(/@/g, '');
-      }
-    }
+  if (this.personalData.email) {
+    // Trim whitespace
+    this.personalData.email = this.personalData.email.trim();
+    
+    // Validate the email
+    this.isValidEmail(this.personalData.email);
   }
+}
 
   validateAddressInput(event: KeyboardEvent, fieldName: string): void {
     // Allow navigation and control keys

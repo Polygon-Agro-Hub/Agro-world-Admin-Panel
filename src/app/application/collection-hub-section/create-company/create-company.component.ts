@@ -79,6 +79,7 @@ export class CreateCompanyComponent implements OnInit {
   logoSizeError: boolean = false;
   faviconSizeError: boolean = false;
  sameNumberError: boolean = false;
+ emailValidationMessage: string = '';
 
 
   companyType: string = '';
@@ -428,111 +429,101 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
 
   handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
-    const input = event.target as HTMLInputElement;
-    const key = event.key;
-    const currentValue = input.value;
-    const cursorPosition = input.selectionStart || 0;
+  const input = event.target as HTMLInputElement;
+  const key = event.key;
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
 
-    const controlKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
-    if (controlKeys.includes(key)) {
-      return;
-    }
+  const controlKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+  if (controlKeys.includes(key)) {
+    return;
+  }
 
-    if (key === ' ' && cursorPosition === 0) {
+  if (key === ' ' && cursorPosition === 0) {
     event.preventDefault();
     return;
   }
 
-    const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
-    const englishOnlyFields = ['companyNameEnglish', 'accHolderName', 'foName'];
-    const emailFields = ['email'];
-    const sinhalaFields = [''];
-    const tamilFields = [''];
+  const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
+  const englishOnlyFields = ['companyNameEnglish', 'accHolderName', 'foName'];
+  const emailFields = ['email'];
+  const sinhalaFields = [''];
+  const tamilFields = [''];
 
-    if (numericFields.includes(fieldName)) {
-
-      if (!/^[0-9]$/.test(key)) {
-        event.preventDefault();
-        return;
-      }
-    }
-
-    if (englishOnlyFields.includes(fieldName)) {
-     
-      if (!/^[A-Za-z\s'-]$/.test(key)) {
-        event.preventDefault();
-        this.englishInputError = true;
-        setTimeout(() => {
-          this.englishInputError = false;
-        }, 2000);
-        return;
-      }
-    }
-
-    if (sinhalaFields.includes(fieldName)) {
-      const charCode = key.charCodeAt(0);
-      if ((charCode < 0x0D80 || charCode > 0x0DFF) && key !== ' ') {
-        event.preventDefault();
-        this.sinhalaInputError = true;
-        setTimeout(() => {
-          this.sinhalaInputError = false;
-        }, 2000);
-        return;
-      }
-    }
-
-
-    if (tamilFields.includes(fieldName)) {
-      const charCode = key.charCodeAt(0);
-      if ((charCode < 0x0B80 || charCode > 0x0BFF) && key !== ' ') {
-        event.preventDefault();
-        this.tamilInputError = true;
-        setTimeout(() => {
-          this.tamilInputError = false;
-        }, 2000);
-        return;
-      }
-    }
-
-    if (emailFields.includes(fieldName)) {
-
-      if (!/^[A-Za-z0-9@.\-_]$/.test(key)) {
-        event.preventDefault();
-        return;
-      }
-    }
-
-    if (!numericFields.includes(fieldName) && key === ' ') {
-
-      const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue);
-      const charBeforeCursor = currentValue.charAt(cursorPosition - 1);
-
-      if (cursorPosition === 0 || charBeforeCursor === ' ' || !hasLetters) {
-        event.preventDefault();
-        return;
-      }
-    }
-
-    if (!numericFields.includes(fieldName)) {
-      setTimeout(() => {
-        let trimmedValue = input.value;
-
-trimmedValue = this.trimLeadingSpaces(trimmedValue);
-        trimmedValue = trimmedValue.replace(/^\s+/, '');
-
-        trimmedValue = trimmedValue.replace(/\s{2,}/g, ' ');
-
-
-        if (input.value !== trimmedValue) {
-          input.value = trimmedValue;
-          (this.companyData as any)[fieldName] = trimmedValue;
-
-          const newCursorPosition = Math.min(cursorPosition, trimmedValue.length);
-          input.setSelectionRange(newCursorPosition, newCursorPosition);
-        }
-      }, 0);
+  if (numericFields.includes(fieldName)) {
+    if (!/^[0-9]$/.test(key)) {
+      event.preventDefault();
+      return;
     }
   }
+
+  if (englishOnlyFields.includes(fieldName)) {
+    if (!/^[A-Za-z\s'-]$/.test(key)) {
+      event.preventDefault();
+      this.englishInputError = true;
+      setTimeout(() => {
+        this.englishInputError = false;
+      }, 2000);
+      return;
+    }
+  }
+
+  // Allow all characters in email fields (validation happens on blur/submit)
+  if (emailFields.includes(fieldName)) {
+    return; // Allow any character input for email
+  }
+
+  if (sinhalaFields.includes(fieldName)) {
+    const charCode = key.charCodeAt(0);
+    if ((charCode < 0x0D80 || charCode > 0x0DFF) && key !== ' ') {
+      event.preventDefault();
+      this.sinhalaInputError = true;
+      setTimeout(() => {
+        this.sinhalaInputError = false;
+      }, 2000);
+      return;
+    }
+  }
+
+  if (tamilFields.includes(fieldName)) {
+    const charCode = key.charCodeAt(0);
+    if ((charCode < 0x0B80 || charCode > 0x0BFF) && key !== ' ') {
+      event.preventDefault();
+      this.tamilInputError = true;
+      setTimeout(() => {
+        this.tamilInputError = false;
+      }, 2000);
+      return;
+    }
+  }
+
+  if (!numericFields.includes(fieldName) && key === ' ') {
+    const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue);
+    const charBeforeCursor = currentValue.charAt(cursorPosition - 1);
+
+    if (cursorPosition === 0 || charBeforeCursor === ' ' || !hasLetters) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  if (!numericFields.includes(fieldName)) {
+    setTimeout(() => {
+      let trimmedValue = input.value;
+      trimmedValue = this.trimLeadingSpaces(trimmedValue);
+      trimmedValue = trimmedValue.replace(/^\s+/, '');
+      trimmedValue = trimmedValue.replace(/\s{2,}/g, ' ');
+
+      if (input.value !== trimmedValue) {
+        input.value = trimmedValue;
+        (this.companyData as any)[fieldName] = trimmedValue;
+
+        const newCursorPosition = Math.min(cursorPosition, trimmedValue.length);
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+      }
+    }, 0);
+  }
+}
 
   async onLogoChange(event: Event): Promise<void> {
   const input = event.target as HTMLInputElement;
@@ -1065,57 +1056,71 @@ getCompanyData() {
 
 
   updateCompanyData() {
-    if (this.itemId) {
-      this.isLoading = true;
-
-      const formData = new FormData();
-
-      Object.entries(this.companyData).forEach(([key, value]) => {
-        if (
-          key !== 'logoFile' &&
-          key !== 'faviconFile' &&
-          value !== null &&
-          value !== undefined
-        ) {
-          formData.append(key, String(value));
-        }
-      });
-
-      if (this.companyData.logoFile) {
-        formData.append('logo', this.companyData.logoFile);
-      }
-
-      if (this.companyData.faviconFile) {
-        formData.append('favicon', this.companyData.faviconFile);
-      }
-
-      this.collectionCenterSrv
-        .updateCompany(this.companyData, this.itemId)
-        .subscribe(
-          (response) => {
-            this.isLoading = false;
-            Swal.fire('Success', 'Company Updated Successfully', 'success');
-            if (this.companyType === 'distribution') {
-              this.router.navigate(['/distribution-hub/action/view-companies']);
-            } else {
-              this.router.navigate(['/collection-hub/manage-company']);
-            }
-          },
-          (error) => {
-            this.isLoading = false;
-            Swal.fire(
-              'Error',
-              'Failed to update company. Please try again.',
-              'error'
-            );
-          }
-        );
-    } else {
-      Swal.fire('Error', 'No company ID found for update', 'error');
-    }
+  // Validate email format
+  if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Email',
+      text: this.emailValidationMessage || 'Please enter a valid email address',
+    });
+    return;
   }
+
+  if (this.itemId) {
+    this.isLoading = true;
+
+    const formData = new FormData();
+
+    Object.entries(this.companyData).forEach(([key, value]) => {
+      if (
+        key !== 'logoFile' &&
+        key !== 'faviconFile' &&
+        value !== null &&
+        value !== undefined
+      ) {
+        formData.append(key, String(value));
+      }
+    });
+
+    if (this.companyData.logoFile) {
+      formData.append('logo', this.companyData.logoFile);
+    }
+
+    if (this.companyData.faviconFile) {
+      formData.append('favicon', this.companyData.faviconFile);
+    }
+
+    this.collectionCenterSrv
+      .updateCompany(this.companyData, this.itemId)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          Swal.fire('Success', 'Company Updated Successfully', 'success');
+          if (this.companyType === 'distribution') {
+            this.router.navigate(['/distribution-hub/action/view-companies']);
+          } else {
+            this.router.navigate(['/collection-hub/manage-company']);
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          Swal.fire(
+            'Error',
+            'Failed to update company. Please try again.',
+            'error'
+          );
+        }
+      );
+  } else {
+    Swal.fire('Error', 'No company ID found for update', 'error');
+  }
+}
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
+
+    if (fieldName === 'email' && this.companyData.email) {
+    this.isValidEmail(this.companyData.email);
+  }
 
     if (fieldName === 'accHolderName' && this.companyData.accHolderName) {
     this.companyData.accHolderName = this.companyData.accHolderName.trim();
@@ -1201,11 +1206,70 @@ getCompanyData() {
   }
 
 
-  isValidEmail(email: string): boolean {
-    const emailPattern =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|lk|co)$/i;
-    return emailPattern.test(email);
+isValidEmail(email: string): boolean {
+  // Reset validation message
+  this.emailValidationMessage = '';
+  
+  // Check if email is empty
+  if (!email) {
+    return false;
   }
+  
+  // Trim the email
+  const trimmedEmail = email.trim();
+  
+  // Check for empty string after trimming
+  if (trimmedEmail === '') {
+    this.emailValidationMessage = 'Email is required.';
+    return false;
+  }
+  
+  // Check for consecutive dots
+  if (trimmedEmail.includes('..')) {
+    this.emailValidationMessage = 'Email cannot contain consecutive dots.';
+    return false;
+  }
+  
+  // Check for leading dot
+  if (trimmedEmail.startsWith('.')) {
+    this.emailValidationMessage = 'Email cannot start with a dot.';
+    return false;
+  }
+  
+  // Check for trailing dot
+  if (trimmedEmail.endsWith('.')) {
+    this.emailValidationMessage = 'Email cannot end with a dot.';
+    return false;
+  }
+
+  if (trimmedEmail.endsWith('.@')) {
+    this.emailValidationMessage = 'Email cannot end with a dot.@';
+    return false;
+  }
+  
+  // Check for invalid characters (allow letters, numbers, plus sign, and specific special characters)
+  const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
+  if (invalidCharRegex.test(trimmedEmail)) {
+    this.emailValidationMessage = 'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
+    return false;
+  }
+  
+  // Basic email format validation
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailPattern.test(trimmedEmail)) {
+    this.emailValidationMessage = 'Please enter a valid email in the format: example@domain.com';
+    return false;
+  }
+  
+  // Check domain has at least one dot
+  const domainPart = trimmedEmail.split('@')[1];
+  if (!domainPart || domainPart.indexOf('.') === -1) {
+    this.emailValidationMessage = 'Please enter a valid email domain.';
+    return false;
+  }
+  
+  return true;
+}
 
 onCancel() {
   Swal.fire({

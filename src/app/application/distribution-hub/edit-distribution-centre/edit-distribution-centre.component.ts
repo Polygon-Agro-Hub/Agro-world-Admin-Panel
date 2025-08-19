@@ -24,6 +24,7 @@ import {
 } from 'rxjs/operators';
 
 import { Location } from '@angular/common';
+import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
 
 interface PhoneCode {
   code: string;
@@ -124,7 +125,8 @@ getFlagUrl(countryCode: string): string {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private distributionService: DestributionService,
-    private location: Location
+    private location: Location,
+    private emailValidationService: EmailvalidationsService
   ) {
     this.initializeForm();
   }
@@ -349,7 +351,10 @@ getFlagUrl(countryCode: string): string {
           this.numericDecimalValidator
         ],
       ],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [
+  Validators.required, 
+  this.customEmailValidator.bind(this)
+]],
       country: ['Sri Lanka', Validators.required],
       province: ['', Validators.required],
       district: ['', Validators.required],
@@ -799,9 +804,9 @@ back(): void {
       return `${this.getFieldLabel(fieldName)} is required`;
     }
 
-    if (field.errors['email']) {
-      return 'Please enter a valid email in the format: example@domain.com';
-    }
+    if (field.errors['customEmail']) {
+  return field.errors['customEmail']; // Return the specific error message from service
+}
 
     if (field.errors['pattern']) {
       if (fieldName.includes('contact')) {
@@ -915,6 +920,21 @@ back(): void {
       nameControl.setValue(formatted);
     }
   }
+
+  // Custom email validator using the service
+private customEmailValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) {
+    return null; // Let required validator handle empty values
+  }
+  
+  const validation = this.emailValidationService.validateEmail(control.value);
+  
+  if (!validation.isValid) {
+    return { customEmail: validation.errorMessage };
+  }
+  
+  return null;
+}
 }
 
 class CompanyList {

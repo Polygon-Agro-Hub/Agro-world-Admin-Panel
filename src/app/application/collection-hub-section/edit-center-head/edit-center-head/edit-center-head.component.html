@@ -238,24 +238,18 @@
   
             <!-- Required Validation -->
             <div *ngIf="phoneNumber01Input.touched && !personalData.phoneNumber01" class="text-red-500 text-sm mt-1">
-              <div>Phone Number - 1 is required</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
-  
-            <!-- Length Validation -->
-            <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['minlength']"
-              class="text-red-500 text-sm mt-1">
-              <div>Phone Number must be exactly 9 digits</div>
-            </div>
-  
+
             <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['maxlength']"
               class="text-red-500 text-sm mt-1">
-              <div>Phone Number must be exactly 9 digits</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
   
             <!-- Pattern Validation (Ensuring Only Numbers) -->
             <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['pattern']"
               class="text-red-500 text-sm mt-1">
-              <div>Phone Number can only contain numbers</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
           </div>
   
@@ -285,7 +279,7 @@
             <!-- Pattern Validation (Ensuring Only Numbers) -->
             <div *ngIf="phoneNumber02Input.touched && phoneNumber02Input.errors?.['pattern']"
               class="text-red-500 text-sm mt-1">
-              <div>Phone Number can only contain numbers</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
           </div>
   
@@ -308,19 +302,21 @@
   
   
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
-            <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              #emailInput="ngModel" required email />
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email</label>
+  <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+    (blur)="validateEmail()"
+    (input)="validateEmail()"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #emailInput="ngModel" required />
   
-            <div *ngIf="emailInput.touched && !personalData.email" class="text-red-500 text-sm mt-1">
-              <div>Email is required</div>
-            </div>
+  <div *ngIf="emailInput.touched && !personalData.email" class="text-red-500 text-sm mt-1">
+    <div>{{ emailValidationService.validationMessages.required }}</div>
+  </div>
   
-            <div *ngIf="emailInput.touched && emailInput.errors?.['email']" class="text-red-500 text-sm mt-1">
-              <div>Please enter a valid email address</div>
-            </div>
-          </div>
+  <div *ngIf="emailErrorMessage" class="text-red-500 text-sm mt-1">
+    <div>{{ emailErrorMessage }}</div>
+  </div>
+</div>
         </div>
   
         <div class="flex justify-end m-10">

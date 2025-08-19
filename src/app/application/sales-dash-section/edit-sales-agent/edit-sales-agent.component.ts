@@ -60,6 +60,7 @@ throw new Error('Method not implemented.');
   initiateId!: string;
   errorMessage: string = '';
   img!: string;
+  emailValidationError: string = '';
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -158,39 +159,56 @@ throw new Error('Method not implemented.');
   }
 
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-    
-    // Additional checks for invalid patterns
-    if (!email || email.length === 0) return false;
-    
-    // Check for consecutive dots
-    if (email.includes('..')) return false;
-    
-    // Check for leading dot in local part
-    if (email.startsWith('.')) return false;
-    
-    // Check for trailing dot before @
-    const atIndex = email.indexOf('@');
-    if (atIndex > 0 && email.charAt(atIndex - 1) === '.') return false;
-    
-    // Check for dot immediately after @
-    if (atIndex < email.length - 1 && email.charAt(atIndex + 1) === '.') return false;
-    
-    // Check for invalid special characters (only allow letters, numbers, dots, hyphens, underscores)
-    const localPart = email.substring(0, atIndex);
-    const domainPart = email.substring(atIndex + 1);
-    
-    // Local part validation - only allow alphanumeric, dots, hyphens, underscores
-    const localPartRegex = /^[a-zA-Z0-9._-]+$/;
-    if (!localPartRegex.test(localPart)) return false;
-    
-    // Domain part validation
-    const domainPartRegex = /^[a-zA-Z0-9.-]+$/;
-    if (!domainPartRegex.test(domainPart)) return false;
-    
-    // Use the main regex for final validation
-    return emailRegex.test(email);
+  if (!email) return false;
+  
+  // Basic email pattern
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  // Additional checks
+  if (email.includes('..')) {
+    this.emailValidationError = 'Email cannot contain consecutive dots';
+    return false;
   }
+  
+  if (email.startsWith('.')) {
+    this.emailValidationError = 'Email cannot start with a dot';
+    return false;
+  }
+  
+  if (email.endsWith('.')) {
+    this.emailValidationError = 'Email cannot end with a dot';
+    return false;
+  }
+  
+  const atIndex = email.indexOf('@');
+  if (atIndex < 0) {
+    this.emailValidationError = 'Email must contain an @ symbol';
+    return false;
+  }
+  
+  const localPart = email.substring(0, atIndex);
+  const domainPart = email.substring(atIndex + 1);
+  
+  if (localPart.length === 0) {
+    this.emailValidationError = 'Email must have characters before @';
+    return false;
+  }
+  
+  if (domainPart.length === 0) {
+    this.emailValidationError = 'Email must have a domain after @';
+    return false;
+  }
+  
+  if (!emailPattern.test(email)) {
+    this.emailValidationError = 'Please enter a valid email format (example@domain.com)';
+    return false;
+  }
+  
+  // If all checks pass
+  this.emailValidationError = '';
+  return true;
+}
+
 
   validateEmailInput(event: KeyboardEvent, fieldName: string): void {
     // Allow navigation and control keys
@@ -263,27 +281,20 @@ throw new Error('Method not implemented.');
   }
 
   validateEmailOnInput(): void {
-    if (this.personalData.email) {
-      // Remove any invalid characters that might have been pasted
-      this.personalData.email = this.personalData.email
-        .replace(/\s/g, '') // Remove all spaces
-        .replace(/\.{2,}/g, '.') // Replace multiple consecutive dots with single dot
-        .replace(/^\./, '') // Remove leading dot
-        .replace(/\.@/, '@'); // Remove dot immediately before @
-      
-      // Remove invalid special characters (keep only alphanumeric, dots, hyphens, underscores, @)
-      this.personalData.email = this.personalData.email.replace(/[^a-zA-Z0-9._@-]/g, '');
-      
-      // Ensure only one @ symbol
-      const atCount = (this.personalData.email.match(/@/g) || []).length;
-      if (atCount > 1) {
-        const firstAtIndex = this.personalData.email.indexOf('@');
-        this.personalData.email = 
-          this.personalData.email.substring(0, firstAtIndex + 1) + 
-          this.personalData.email.substring(firstAtIndex + 1).replace(/@/g, '');
-      }
-    }
+  if (this.personalData.email) {
+    // Basic cleanup - remove leading/trailing spaces
+    this.personalData.email = this.personalData.email.trim();
+    
+    // Clear error when user starts correcting
+    this.emailValidationError = '';
   }
+}
+
+validateEmailOnBlur(): void {
+  if (this.personalData.email) {
+    this.isValidEmail(this.personalData.email);
+  }
+}
 
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
@@ -966,6 +977,8 @@ validateAddressInput(event: KeyboardEvent): void {
     return;
   }
 }
+
+
 
 }
 

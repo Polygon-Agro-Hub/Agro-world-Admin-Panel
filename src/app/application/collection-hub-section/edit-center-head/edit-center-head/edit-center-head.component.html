@@ -238,24 +238,18 @@
   
             <!-- Required Validation -->
             <div *ngIf="phoneNumber01Input.touched && !personalData.phoneNumber01" class="text-red-500 text-sm mt-1">
-              <div>Phone Number - 1 is required</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
-  
-            <!-- Length Validation -->
-            <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['minlength']"
-              class="text-red-500 text-sm mt-1">
-              <div>Phone Number must be exactly 9 digits</div>
-            </div>
-  
+
             <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['maxlength']"
               class="text-red-500 text-sm mt-1">
-              <div>Phone Number must be exactly 9 digits</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
   
             <!-- Pattern Validation (Ensuring Only Numbers) -->
             <div *ngIf="phoneNumber01Input.touched && phoneNumber01Input.errors?.['pattern']"
               class="text-red-500 text-sm mt-1">
-              <div>Phone Number can only contain numbers</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
           </div>
   
@@ -285,7 +279,7 @@
             <!-- Pattern Validation (Ensuring Only Numbers) -->
             <div *ngIf="phoneNumber02Input.touched && phoneNumber02Input.errors?.['pattern']"
               class="text-red-500 text-sm mt-1">
-              <div>Phone Number can only contain numbers</div>
+              <div>Please enter a valid mobile number (format: +947XXXXXXXX)</div>
             </div>
           </div>
   

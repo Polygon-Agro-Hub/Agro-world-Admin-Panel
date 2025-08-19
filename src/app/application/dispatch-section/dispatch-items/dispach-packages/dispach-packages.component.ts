@@ -7,17 +7,22 @@ import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CountDownComponent } from '../../../../components/count-down/count-down.component';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dispach-packages',
   standalone: true,
-  imports: [CommonModule, CountDownComponent, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, CountDownComponent, LoadingSpinnerComponent],
   templateUrl: './dispach-packages.component.html',
   styleUrl: './dispach-packages.component.css'
 })
 export class DispachPackagesComponent implements OnInit {
   packageArr: PakageItem[] = [];
+  productArr: MarketPlaceItems[] = [];
+  selectProduct!: PakageItem;
+  newProductObj!: MarketPlaceItems;
   packageId!: number;
+  orderId!: number;
 
   isLoading: boolean = true;
   validationFailedMessage: string = '';
@@ -25,8 +30,12 @@ export class DispachPackagesComponent implements OnInit {
 
   showCountdown: boolean = false;
 
+  isPopupOpen: boolean = false;
+
+
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id']
+    this.orderId = this.route.snapshot.params['orderId']
     this.fetchData();
   }
 
@@ -43,10 +52,11 @@ export class DispachPackagesComponent implements OnInit {
 
   fetchData() {
     this.isLoading = true;
-    this.dispatchService.getPackageItemsForDispatch(this.packageId).subscribe(
+    this.dispatchService.getPackageItemsForDispatch(this.packageId, this.orderId).subscribe(
       (res) => {
         // this.packageObj = res
-        this.packageArr = res;
+        this.packageArr = res.packageData;
+        this.productArr = res.marketplaceItems
         this.isLoading = false
       }
     )
@@ -87,7 +97,7 @@ export class DispachPackagesComponent implements OnInit {
           Swal.fire('Success', 'Order dispatched successfully!', 'success');
           // this.router.navigate(['/dispatch/salesdash-orders']);
           this.location.back();
-        }else{
+        } else {
           Swal.fire('Error', 'Order dispatched Faild!', 'error');
 
         }
@@ -117,6 +127,19 @@ export class DispachPackagesComponent implements OnInit {
     // console.log(this.packageItemsArr);
   }
 
+  openPopUp(item: PakageItem) {
+    this.isPopupOpen = true;
+    this.selectProduct = item;
+    // this.newProductObj.displayName = item.displayName;
+    // this.newProductObj.id = item.
+  }
+  onCancelPopup() {
+    this.isPopupOpen = false;
+  }
+
+  replaceProduct() {
+
+  }
 }
 
 interface PakageItem {
@@ -126,4 +149,17 @@ interface PakageItem {
   price: number;
   discountedPrice: number;
   displayName: string;
+}
+
+interface MarketPlaceItems {
+  id: number
+  varietyId: number
+  displayName: string
+  normalPrice: number
+  discountedPrice: number
+  discount: number
+  unitType: number
+  startValue: number
+  changeby: number
+  isExcluded: Boolean
 }

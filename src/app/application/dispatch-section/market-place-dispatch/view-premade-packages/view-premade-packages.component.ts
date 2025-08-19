@@ -46,8 +46,8 @@ export class ViewPremadePackagesComponent implements OnInit {
     )
   }
 
-  navigateDispatchItems(id:number){
-    this.router.navigate([`/dispatch/dispatch-package/${id}`])
+  navigateDispatchItems(id: number) {
+    this.router.navigate([`/dispatch/dispatch-package/${id}/${this.orderId}`])
   }
 
 
@@ -58,7 +58,7 @@ interface Items {
   name: string;
   price: number;
   packStatus: string;
-  packageId:number;
+  packageId: number;
 }
 
 interface Package {

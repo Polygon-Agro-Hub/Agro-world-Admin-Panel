@@ -790,7 +790,7 @@ export const routes: Routes = [
             component: ViewPremadePackagesComponent,
           },
           {
-            path: 'dispatch-package/:id',
+            path: 'dispatch-package/:id/:orderId',
             component: DispachPackagesComponent,
           },
         ],

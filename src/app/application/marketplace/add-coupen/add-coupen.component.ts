@@ -104,16 +104,34 @@ onCancel() {
     }
   }
 
-  onSubmit() {
+onSubmit() {
   this.clearValidationMessages();
 
   // Collect missing required fields
   const missingFields = [];
 
-  if (!this.coupenObj.code) missingFields.push('Code');
-  if (!this.coupenObj.startDate) missingFields.push('Start Date');
-  if (!this.coupenObj.endDate) missingFields.push('End Date');
-  if (!this.coupenObj.type) missingFields.push('Type');
+  if (!this.coupenObj.code) missingFields.push('Code *');
+  if (!this.coupenObj.startDate) missingFields.push('Start Date *');
+  if (!this.coupenObj.endDate) missingFields.push('Expire Date *');
+  if (!this.coupenObj.type) missingFields.push('Type *');
+  if (!this.coupenObj.type) missingFields.push('Type *');
+
+  // Type-specific validations
+  if (this.coupenObj.type === 'Percentage') {
+    if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+      missingFields.push('Discount Percentage *');
+      this.checkPrecentageValueMessage = 'Discount Percentage is required';
+    }
+  } else if (this.coupenObj.type === 'Fixed Amount') {
+    if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
+      missingFields.push('Discount Amount *');
+      this.checkfixAmountValueMessage = 'Discount Amount is required';
+    }
+  }
+
+  if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
+    missingFields.push('Price Limit *');
+  }
 
   if (missingFields.length > 0) {
     Swal.fire(
@@ -121,27 +139,6 @@ onCancel() {
       `Please fill in the following required field(s): ${missingFields.join(', ')}`,
       'warning'
     );
-    return;
-  }
-
-  // Type-specific validations
-  if (this.coupenObj.type === 'Percentage') {
-    if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-      this.checkPrecentageValueMessage = 'Percentage value is required';
-      Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
-      return;
-    }
-  } else if (this.coupenObj.type === 'Fixed Amount') {
-    if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-      Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
-      return;
-    }
-  }
-
-  // Price limit validation if checkbox is checked
-  if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-    Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
     return;
   }
 
@@ -171,6 +168,7 @@ onCancel() {
     }
   });
 }
+
 
 validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
   const input = event.target as HTMLInputElement;

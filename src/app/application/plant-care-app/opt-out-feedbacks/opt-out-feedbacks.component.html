@@ -8,13 +8,13 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div
-    class="mb-10 p-6 min-w-[1200px] bg-white rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x">
+    class="mb-10 p-6 min-w-[1200px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x">
     <!-- Total Deleted Accounts -->
     <div class="flex items-center justify-center w-full">
       <div class="flex flex-col items-start">
-        <p class="text-gray-600 text-sm">Total Deleted accounts</p>
+        <p class="text-gray-600 text-sm dark:text-textDark">Total Deleted accounts</p>
         <div class="flex items-center">
-          <p class="text-4xl font-bold text-gray-800">{{ deleteCount }}</p>
+          <p class="text-4xl font-bold dark:text-textDark text-gray-800">{{ deleteCount }}</p>
           <span class="flex ml-2 items-center" [ngClass]="{
               'text-red-500': percentageChange > 0,
               'text-green-500': percentageChange <= 0,
@@ -56,8 +56,8 @@
     <!-- Total Feedbacks -->
     <div class="flex items-center justify-center w-full">
       <div class="text-center">
-        <p class="text-gray-600 text-sm">Total Feedbacks</p>
-        <p class="text-4xl font-bold text-gray-800">{{ total }}</p>
+        <p class="text-gray-600 text-sm dark:text-textDark">Total Feedbacks</p>
+        <p class="text-4xl font-bold text-gray-800 dark:text-textDark">{{ total }}</p>
       </div>
     </div>
 
@@ -95,45 +95,45 @@
     <div class="overflow-x-auto w-full">
       <table class="w-full table-auto">
         <thead>
-          <tr class="border-b border-gray-300">
-            <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm">
+          <tr class="border-b border-gray-300  dark:bg-tileBlack">
+            <th class="px-6 py-4 font-normal dark:text-white text-gray-700 text-left text-sm">
               No
             </th>
-            <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm text-nowrap">
+            <th class="px-6 py-4 font-normal dark:text-white text-gray-700 text-left text-sm text-nowrap">
               First Name
             </th>
-            <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm text-nowrap">
+            <th class="px-6 py-4 font-normal dark:text-white text-gray-700 text-left text-sm text-nowrap">
               Last Name
             </th>
-            <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm text-nowrap">
+            <th class="px-6 py-4 font-normal dark:text-white text-gray-700 text-left text-sm text-nowrap">
               User Exit Date
             </th>
-            <th class="px-6 py-4 font-normal text-gray-700 text-center text-sm text-nowrap">
+            <th class="px-6 py-4 font-normal dark:text-white text-gray-700 text-center text-sm text-nowrap">
               Feedback No
             </th>
-            <th class="px-6 py-4 font-normal text-gray-700 text-left text-sm">
+            <th class="px-6 py-4 font-normal dark:text-white text-gray-700 text-left text-sm">
               Feedback
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white">
+        <tbody class="bg-white  dark:bg-tileBlack">
           <tr *ngFor="let item of feedbacks; let i = index" class="border-b border-gray-200">
-            <td class="px-6 py-4 text-gray-900 text-sm">
+            <td class="px-6 py-4 dark:text-white text-gray-900 text-sm">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-6 py-4 text-gray-900 text-sm">
+            <td class="px-6 py-4 dark:text-white text-gray-900 text-sm">
               {{ item.firstName }}
             </td>
-            <td class="px-6 py-4 text-gray-900 text-sm">
+            <td class="px-6 py-4 dark:text-white text-gray-900 text-sm">
               {{ item.lastName }}
             </td>
-            <td class="px-6 py-4 text-gray-900 text-sm">
+            <td class="px-6 py-4 dark:text-white text-gray-900 text-sm">
               {{ item.deletedUserCreatedAt | date }}
             </td>
-            <td class="px-6 py-4 text-gray-900 text-sm text-center">
+            <td class="px-6 py-4 dark:text-white text-gray-900 text-sm text-center">
               {{ item.orderNumbers }}
             </td>
-            <td class="px-6 py-4 text-gray-900 text-sm leading-relaxed">
+            <td class="px-6 py-4 dark:text-white text-gray-900 text-sm leading-relaxed">
               {{ item.feedbacks }}
             </td>
           </tr>

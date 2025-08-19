@@ -740,15 +740,37 @@ onSubmit() {
     }
   }
 }
+capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName', event?: any) {
+  let value = this.personalData[field];
+  if (!value) return;
 
-  capitalizeFirstLetter(fieldName: 'firstName' | 'lastName' | 'accHolderName' | 'branchName'|'houseNumber'|'streetName'|'city' ) : void {
-    if (this.personalData[fieldName]) {
-      // Capitalize first letter and make the rest lowercase
-      this.personalData[fieldName] =
-        this.personalData[fieldName].charAt(0).toUpperCase() +
-        this.personalData[fieldName].slice(1).toLowerCase();
-    }
+  const inputElement = event?.target as HTMLInputElement;
+  const caretPos = inputElement?.selectionStart || 0;
+
+  const firstNonSpaceIndex = value.search(/\S/);
+  if (firstNonSpaceIndex === -1) return;
+
+  const before = value.slice(0, firstNonSpaceIndex);
+  const firstChar = value.charAt(firstNonSpaceIndex);
+  const after = value.slice(firstNonSpaceIndex + 1);
+
+  this.personalData[field] = before + firstChar.toUpperCase() + after;
+
+  // Restore caret position
+  if (inputElement) {
+    setTimeout(() => {
+      inputElement.selectionStart = inputElement.selectionEnd = caretPos;
+    });
   }
+}
+blockLeadingSpace(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+
+  // If cursor is at position 0 and user typed a space, prevent it
+  if (input.selectionStart === 0 && event.key === ' ') {
+    event.preventDefault();
+  }
+}
 
 
   onBranchTouched(field: keyof Personal) {

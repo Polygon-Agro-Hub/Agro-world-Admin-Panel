@@ -732,7 +732,8 @@
           name="accNumber"
           type="number"
           [(ngModel)]="personalData.accNumber"
-          (keydown)="blockLeadingSpace($event, 'email')"
+          (keydown)="blockLeadingSpace($event, 'accNumber')"
+        
           (blur)="onBlur('accNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />

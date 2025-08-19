@@ -9,18 +9,20 @@
 
     <div>
 
-        <div class="mb-5">
-            <!-- Role Input -->
-            <label for="typeName" class="block text-[#534E4E] dark:text-textDark my-2">Type Name</label>
-            <input id="typeName" name="typeName" [(ngModel)]="productObj.typeName"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                placeholder="Ex : Up County Fruits" #typeNameInput="ngModel" required (input)="onTypeNameInput($event)"/>
+       <div class="mb-5">
+        <!-- Type Name Input -->
+        <label for="typeName" class="block text-[#534E4E] dark:text-textDark my-2">Type Name</label>
+        <input id="typeName" name="typeName" [(ngModel)]="productObj.typeName"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            placeholder="Ex: Up Country Fruits" #typeNameInput="ngModel" required
+            pattern="^[A-Za-z\s]*$" (input)="onTypeNameInput($event)"/>
 
-            <!-- Error: Required Field -->
-            <div *ngIf="typeNameInput.touched && !productObj.typeName" class="text-red-500 text-sm mt-1">
-                <div>Type Name is required</div>
-            </div>
+        <!-- Error Messages -->
+        <div *ngIf="typeNameInput.touched && typeNameInput.errors" class="text-red-500 text-sm mt-1">
+            <div *ngIf="typeNameInput.errors['required']">Type Name is required</div>
+            <div *ngIf="typeNameInput.errors['pattern']">Type Name must contain only English letters.</div>
         </div>
+    </div>
 
        <div class="mb-5">
             <!-- Role Input -->

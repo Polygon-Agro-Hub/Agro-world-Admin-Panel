@@ -379,7 +379,7 @@ isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01):
       this.personalData.phoneNumber01 === this.personalData.phoneNumber02
     ) {
       this.duplicatePhoneError = true;
-      Swal.fire('Error', 'Company Contact Number - 1 & 2 cannot be the same.', 'error');
+      Swal.fire('Error', 'Mobile Number - 01 and Mobile Number - 02 cannot be the same', 'error');
       return;
     }
     this.selectedPage = page;
@@ -501,7 +501,7 @@ enforceNicLength(event: any) {
       this.personalData.phoneNumber01 === this.personalData.phoneNumber02
     ) {
       this.duplicatePhoneError = true;
-      Swal.fire('Error', 'Company Contact Number - 1 & 2 cannot be the same.', 'error');
+      Swal.fire('Error', 'Mobile Number - 01 and Mobile Number - 02 cannot be the same', 'error');
       return;
     }
 
@@ -527,7 +527,7 @@ enforceNicLength(event: any) {
 
               Swal.fire(
                 'Success',
-                'Created Distribution Center Head Successfully',
+                'Created Distribution Centre Head Successfully',
                 'success'
               ).then(() => {
                 this.location.back();

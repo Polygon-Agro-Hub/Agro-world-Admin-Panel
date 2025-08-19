@@ -17,9 +17,10 @@
               {{ package?.displayName }}
             </h2>
             <h2 class="text-2xl font-bold px-5 dark:text-textDark">-</h2>
-            <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
-              Rs {{ (package?.productPrice || 0).toFixed(2) }}
-            </h2>
+           <h2 class="text-2xl font-normal text-[#00957D] dark:text-textDark">
+  Rs. {{ package?.productPrice | number:'1.2-2' }}
+</h2>
+
           </div>
           <div class="flex flex-col pt-2">
             <div class="text-[#0D9488]" [class.text-green-500]="package?.status === 'Enabled'"
@@ -92,33 +93,34 @@
           </h3>
 
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-900 dark:text-white">
-              <thead class=" text-gray-700  dark:bg-gray-700" style="color: #8492A3;font-size: 16px;">
-                <tr>
-                  <th scope="col" class="px-6 py-3">Product Type</th>
-                  <th scope="col" class="px-6 py-3">Product</th>
-                  <th scope="col" class="px-6 py-3">Qty (kg)</th>
-                  <th scope="col" class="px-6 py-3">Price (Rs)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of packageItems" class="bg-white dark:bg-gray-800 dark:border-gray-700">
-                  <td class="px-6 py-4">{{ item.productType }}</td>
-                  <td class="px-6 py-4">{{ item.productName }}</td>
-                  <td class="px-6 py-4">{{ (item.quantity || 0).toFixed(2) }}</td>
-                  <td class="px-6 py-4">{{ formatCurrency(item.price) }}</td>
-                </tr>
-              </tbody>
-            </table>
+           <table class="w-full text-sm text-left text-gray-900 dark:text-white">
+  <thead class="text-gray-700 dark:bg-gray-700" style="color: #8492A3; font-size: 16px; border-bottom: 2px solid #F3F4F6;">
+    <tr>
+      <th scope="col" class="px-8 py-3">Product Type</th>
+      <th scope="col" class="px-8 py-3">Product</th>
+      <th scope="col" class="px-4 py-3 text-right">Qty (kg)</th>
+      <th scope="col" class="px-8 py-3 text-right">Price (Rs)</th>
+    </tr>
+  </thead>
+  <tbody >
+    <tr *ngFor="let item of packageItems" class="bg-white dark:bg-gray-800 dark:border-gray-700">
+      <td class="px-8 py-4">{{ item.productType }}</td>
+      <td class="px-8 py-4">{{ item.productName }}</td>
+      <td class="px-8 py-4 text-right">{{ (item.quantity || 0).toFixed(2) }}</td>
+      <td class="px-8 py-4 text-right">{{ formatCurrency(item.price) }}</td>
+    </tr>
+  </tbody>
+</table>
           </div>
 
-          <div class="grid grid-cols-2 gap-4 px-6 py-4 mt-4">
-            <div class="text-sm text-[#3980C0] font-medium">Counted Total For Today</div>
-            <div class="text-sm text-[#00957D] font-medium text-right">
-              Rs.{{ (package?.totalPrice || 0).toFixed(2) }}
-            </div>
-          </div>
-        </div>
+      <div class="grid grid-cols-2 gap-5 px-6 py-4 mt-4 border-t-2 border-[#F3F4F6]">
+  <div class="text-sm text-[#3980C0] font-medium">Counted Total For Today</div>
+  <div class="text-sm text-[#00957D] font-medium text-right pr-2">
+    Rs.{{ package?.totalPrice | number:'1.2-2' }}
+  </div>
+</div>
+
+
       </div>
     </div>
   </div>

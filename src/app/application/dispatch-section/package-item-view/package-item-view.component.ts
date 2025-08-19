@@ -132,29 +132,31 @@ export class PackageItemViewComponent implements OnInit {
     );
   }
   
-  getAllProducts() {
-    this.isLoading = true;
+getAllProducts() {
+  this.isLoading = true;
 
-    this.dispatchService.getAllProducts().subscribe(
-      (response) => {
-        console.log(response);
+  this.dispatchService.getAllProducts().subscribe(
+    (response) => {
+      console.log(response);
 
-        this.productItemsArr = response.items
+      // Sort products alphabetically by productName
+      this.productItemsArr = response.items.sort((a: ProductItems, b: ProductItems) => 
+        a.productName.localeCompare(b.productName)
+      );
 
-        this.isLoading = false;
+      this.isLoading = false;
 
-        console.log('prodcut array', this.productItemsArr);
-      },
-      (error) => {
-        console.error('Error fetching package items:', error);
-        if (error.status === 401) {
-          // Handle unauthorized error if needed
-        }
-        this.isLoading = false;
+      console.log('product array', this.productItemsArr);
+    },
+    (error) => {
+      console.error('Error fetching package items:', error);
+      if (error.status === 401) {
+        // Handle unauthorized error if needed
       }
-    );
-  }
-
+      this.isLoading = false;
+    }
+  );
+}
   onCheckboxChange(item: packageItems, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.packedStatus = isChecked ? 1 : 0;
@@ -202,7 +204,7 @@ export class PackageItemViewComponent implements OnInit {
       (res) => {
         this.isLoading = false;
         console.log('Updated successfully:', res);
-        Swal.fire('Success', 'Product Updated Successfully', 'success');
+        Swal.fire('Success', 'Order dispatched successfully!', 'success');
         this.router.navigate(['/dispatch/salesdash-orders']);
       },
       (err) => {
@@ -339,20 +341,9 @@ export class PackageItemViewComponent implements OnInit {
     );
   }
 
-  onCancelPopup() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the edited data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/dispatch/salesdash-orders']);
-      }
-    })
-  };
+onCancelPopup() {
+  this.router.navigate(['/dispatch/salesdash-orders']);
+}
 
 
 

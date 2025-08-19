@@ -1,0 +1,29 @@
+/* In your component's CSS file (e.g., your-component.component.css) */
+.italic-placeholder {
+  font-style: italic;
+}
+
+input::placeholder {
+  font-style: italic;
+}
+
+ .italic-placeholder {
+    font-style: italic;
+  }
+
+    select.italic-placeholder option[disabled][selected] {
+    font-style: italic !important;
+    color: #6b7280; /* Optional: subtle gray for placeholder effect */
+  }
+
+   .ng-select .ng-placeholder {
+    font-style: italic !important;
+  }
+  .ng-select .ng-dropdown-panel {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+  }
+  .ng-select .ng-dropdown-panel .ng-option-disabled {
+    color: #9ca3af;
+    cursor: not-allowed;
+  }

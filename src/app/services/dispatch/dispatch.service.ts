@@ -288,6 +288,15 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
+  getMarketPlacePreMadePackagesItems(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
+    let url = `${this.apiUrl}dispatch/marketplace-premade-package-items/${id}`;
+
+    return this.http.get<any>(url, { headers });
+  }
 
 }

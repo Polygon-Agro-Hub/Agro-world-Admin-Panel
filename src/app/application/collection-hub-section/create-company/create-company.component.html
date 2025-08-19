@@ -580,7 +580,8 @@
   </div>
 </div>
 
-        <div class="pb-6">
+        <!-- In Edit Company Details section -->
+<div class="pb-6">
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Company Email Address*
   </label>
@@ -594,7 +595,9 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
   <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-red-500 text-sm mt-1">
     <div *ngIf="email.errors?.['required']">Email is required.</div>
-    <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+  </div>
+  <div *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm mt-1">
+    {{ emailValidationMessage }}
   </div>
 </div>
 

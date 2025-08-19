@@ -1050,55 +1050,65 @@ getCompanyData() {
 
 
   updateCompanyData() {
-    if (this.itemId) {
-      this.isLoading = true;
-
-      const formData = new FormData();
-
-      Object.entries(this.companyData).forEach(([key, value]) => {
-        if (
-          key !== 'logoFile' &&
-          key !== 'faviconFile' &&
-          value !== null &&
-          value !== undefined
-        ) {
-          formData.append(key, String(value));
-        }
-      });
-
-      if (this.companyData.logoFile) {
-        formData.append('logo', this.companyData.logoFile);
-      }
-
-      if (this.companyData.faviconFile) {
-        formData.append('favicon', this.companyData.faviconFile);
-      }
-
-      this.collectionCenterSrv
-        .updateCompany(this.companyData, this.itemId)
-        .subscribe(
-          (response) => {
-            this.isLoading = false;
-            Swal.fire('Success', 'Company Updated Successfully', 'success');
-            if (this.companyType === 'distribution') {
-              this.router.navigate(['/distribution-hub/action/view-companies']);
-            } else {
-              this.router.navigate(['/collection-hub/manage-company']);
-            }
-          },
-          (error) => {
-            this.isLoading = false;
-            Swal.fire(
-              'Error',
-              'Failed to update company. Please try again.',
-              'error'
-            );
-          }
-        );
-    } else {
-      Swal.fire('Error', 'No company ID found for update', 'error');
-    }
+  // Validate email format
+  if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Email',
+      text: this.emailValidationMessage || 'Please enter a valid email address',
+    });
+    return;
   }
+
+  if (this.itemId) {
+    this.isLoading = true;
+
+    const formData = new FormData();
+
+    Object.entries(this.companyData).forEach(([key, value]) => {
+      if (
+        key !== 'logoFile' &&
+        key !== 'faviconFile' &&
+        value !== null &&
+        value !== undefined
+      ) {
+        formData.append(key, String(value));
+      }
+    });
+
+    if (this.companyData.logoFile) {
+      formData.append('logo', this.companyData.logoFile);
+    }
+
+    if (this.companyData.faviconFile) {
+      formData.append('favicon', this.companyData.faviconFile);
+    }
+
+    this.collectionCenterSrv
+      .updateCompany(this.companyData, this.itemId)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          Swal.fire('Success', 'Company Updated Successfully', 'success');
+          if (this.companyType === 'distribution') {
+            this.router.navigate(['/distribution-hub/action/view-companies']);
+          } else {
+            this.router.navigate(['/collection-hub/manage-company']);
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          Swal.fire(
+            'Error',
+            'Failed to update company. Please try again.',
+            'error'
+          );
+        }
+      );
+  } else {
+    Swal.fire('Error', 'No company ID found for update', 'error');
+  }
+}
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
 

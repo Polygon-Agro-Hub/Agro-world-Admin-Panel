@@ -299,4 +299,30 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
+  getMarketPlaceCustomePackages(page: number, limit: number, selectedStatus: string = '', date: string, search: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('selectedStatus', selectedStatus, 'date', date, 'search', search)
+
+
+    let url = `${this.apiUrl}dispatch/marketplace-custome-package?page=${page}&limit=${limit}`;
+
+    if (selectedStatus) {
+      url += `&selectedStatus=${selectedStatus}`;
+    }
+
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+
+    if (search) {
+      url += `&search=${search}`;
+    }
+    return this.http.get<any>(url, { headers });
+  }
+
 }

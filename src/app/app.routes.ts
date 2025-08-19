@@ -167,6 +167,7 @@ import { TestingComponent } from './application/collection-hub-section/testing/t
 import { CenterCollectionExpenceComponent } from './application/collection-hub-section/center-collection-expence/center-collection-expence.component';
 import { DispatchMarketplaceComponent } from './application/dispatch-section/market-place-dispatch/dispatch-marketplace/dispatch-marketplace.component';
 import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
+import { DispachPackagesComponent } from './application/dispatch-section/dispatch-items/dispach-packages/dispach-packages.component';
 
 export const routes: Routes = [
   {
@@ -787,6 +788,10 @@ export const routes: Routes = [
           {
             path: 'view-premade-packages/:id/:inv',
             component: ViewPremadePackagesComponent,
+          },
+          {
+            path: 'dispatch-package/:id',
+            component: DispachPackagesComponent,
           },
         ],
       },

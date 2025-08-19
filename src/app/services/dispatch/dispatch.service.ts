@@ -325,4 +325,15 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
+    getPackageItemsForDispatch(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}dispatch/get-package-for-dispatch/${id}`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
 }

@@ -117,7 +117,11 @@
           </tr>
         </thead>
         <tbody class="bg-white  dark:bg-tileBlack">
-          <tr *ngFor="let item of feedbacks; let i = index" class="border-b border-gray-200">
+          <tr *ngFor="let item of feedbacks | paginate:{
+            itemsPerPage: itemsPerPage,
+                currentPage: page,
+                totalItems: totalItems
+          }; let i = index" class="border-b border-gray-200">
             <td class="px-6 py-4 dark:text-white text-gray-900 text-sm">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, PLATFORM_ID,Inject } from '@angular/core';
 import { OptOutFeedbacksService } from '../../../services/plant-care/opt-out-feedbacks.service';
 import { HttpClient } from '@angular/common/http';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
@@ -8,6 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-opt-out-feedbacks',
@@ -21,7 +22,11 @@ import { TokenService } from '../../../services/token/services/token.service';
   templateUrl: './opt-out-feedbacks.component.html',
   styleUrl: './opt-out-feedbacks.component.css',
 })
-export class OptOutFeedbacksComponent {
+export class OptOutFeedbacksComponent implements OnDestroy {
+  isDarkMode = false;
+  private darkModeMediaQuery!: MediaQueryList;
+  private darkModeListener!: (e: MediaQueryListEvent) => void;
+
   feedbacks: FeedbacksData[] = [];
   total!: number;
   deleteCount!: number;
@@ -41,7 +46,8 @@ export class OptOutFeedbacksComponent {
     private plantcareService: OptOutFeedbacksService,
     private router: Router,
     public permissionService: PermissionService,
-         public tokenService: TokenService
+         public tokenService: TokenService,
+         @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
@@ -75,9 +81,58 @@ export class OptOutFeedbacksComponent {
   }
 
   ngOnInit() {
+    this.setupDarkModeDetection();
     this.fetchAllFeedbacks();
     this.loadFeedbackData();
   }
+
+  private setupDarkModeDetection() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      this.isDarkMode = this.darkModeMediaQuery.matches;
+      
+      this.darkModeListener = (e: MediaQueryListEvent) => {
+        this.isDarkMode = e.matches;
+        this.updateChartTheme();
+      };
+      
+      this.darkModeMediaQuery.addEventListener('change', this.darkModeListener);
+    }
+  }
+
+  private updateChartTheme() {
+    this.chartOptions = {
+      ...this.chartOptions,
+      theme: this.isDarkMode ? 'dark2' : 'light1',
+      backgroundColor: this.isDarkMode ? '#1e1e1e' : '#ffffff',
+      axisX: {
+        labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
+        lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+        tickColor: this.isDarkMode ? '#444444' : '#d3d3d3'
+      },
+      axisY: {
+        labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
+        lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+        tickColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+        gridColor: this.isDarkMode ? '#444444' : '#f0f0f0'
+      },
+      toolTip: {
+        backgroundColor: this.isDarkMode ? '#2d2d2d' : '#ffffff',
+        borderColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+        fontColor: this.isDarkMode ? '#ffffff' : '#333333'
+      }
+    };
+
+    // Force chart re-render by updating the reference
+    this.chartOptions = {...this.chartOptions};
+  }
+
+ngOnDestroy() {
+    if (isPlatformBrowser(this.platformId) && this.darkModeMediaQuery && this.darkModeListener) {
+      this.darkModeMediaQuery.removeEventListener('change', this.darkModeListener);
+    }
+  }
+
 
   getColor(orderNumber: number): string {
     const colors = [
@@ -100,7 +155,6 @@ export class OptOutFeedbacksComponent {
       next: (response) => {
         if (response && response.feedbacks && response.feedbacks.length > 0) {
           this.feedbackData = response.feedbacks;
-
           this.maxFeedbackCount = Math.max(
             ...this.feedbackData.map((f) => f.feedbackCount)
           );
@@ -111,16 +165,36 @@ export class OptOutFeedbacksComponent {
             .map((feedback) => ({
               label: `${feedback.orderNumber}`,
               y: feedback.feedbackCount,
-              color: this.getColor(feedback.orderNumber),
+              color: this.getColor(feedback.orderNumber), // Keep your custom colors
             }));
 
           this.chartOptions = {
             ...this.chartOptions,
+            theme: this.isDarkMode ? 'dark2' : 'light1',
+            backgroundColor: this.isDarkMode ? '#1e1e1e' : '#ffffff',
+            axisX: {
+              labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
+              lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+              tickColor: this.isDarkMode ? '#444444' : '#d3d3d3'
+            },
+            axisY: {
+              labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
+              lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+              tickColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+              gridColor: this.isDarkMode ? '#444444' : '#f0f0f0',
+              includeZero: true,
+            },
+            toolTip: {
+              backgroundColor: this.isDarkMode ? '#2d2d2d' : '#ffffff',
+              borderColor: this.isDarkMode ? '#444444' : '#d3d3d3',
+              fontColor: this.isDarkMode ? '#ffffff' : '#333333'
+            },
             data: [
               {
                 type: 'bar',
                 indexLabel: '{y}',
                 yValueFormatString: '#,###',
+                indexLabelFontColor: this.isDarkMode ? '#ffffff' : '#333333',
                 dataPoints: dataPoints,
               },
             ],
@@ -130,6 +204,7 @@ export class OptOutFeedbacksComponent {
       error: () => {},
     });
   }
+
 
   getBarWidth(feedbackCount: number): number {
     return (feedbackCount / this.maxFeedbackCount) * 100;

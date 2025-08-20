@@ -270,13 +270,9 @@ export class ViewCropGroupComponent {
     });
   }
 
-  backCreate(): void {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      this.router.navigate(['/plant-care/action']);
-    }
-  }
+ backCreate(): void {
+  this.router.navigate(['/plant-care/action']);
+}
 
   add(): void {
     this.router.navigate(['/plant-care/action/create-crop-group']);

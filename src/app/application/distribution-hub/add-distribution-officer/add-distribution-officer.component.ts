@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
 interface Bank {
   ID: number;
   name: string;
@@ -112,7 +113,8 @@ export class AddDistributionOfficerComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     private distributionHubSrv: DistributionHubService,
     private location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private emailValidationService: EmailvalidationsService
   ) { }
 
   ngOnInit(): void {
@@ -271,6 +273,11 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
+
+    if (fieldName === 'email' && this.personalData.email) {
+    // This will trigger the error message display in template
+    this.isValidEmail(this.personalData.email);
+  }
   }
 
   validateConfirmAccNumber(): void {
@@ -368,9 +375,9 @@ isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01):
   }
 
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+  return this.emailValidationService.isEmailValid(email);
+}
+
 
   onCancel() {
     Swal.fire({
@@ -711,6 +718,9 @@ loadBranches() {
   );
 }
 
+getEmailErrorMessage(email: string): string | null {
+  return this.emailValidationService.getErrorMessage(email);
+}
 
 
 }

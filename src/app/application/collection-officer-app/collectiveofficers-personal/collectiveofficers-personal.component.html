@@ -366,15 +366,15 @@
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
-          <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-            (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" (blur)="onBlur('email')"
-            placeholder="example@domain.com"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
-            Please enter a valid email in the format: example{{ '@' }}domain.com
-          </span>
-        </div>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
+  <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+    (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" (blur)="onBlur('email')"
+    placeholder="example@domain.com"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
+    {{ getEmailErrorMessage(personalData.email) }}
+  </span>
+</div>
       </div>
 
       <div class="flex justify-end">
@@ -493,7 +493,7 @@
           Account Number*
         </label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
-          (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('accNumber')"
+          (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('accNumber')"(ngModelChange)="validateAccNumber()"
           (blur)="onBlur('accNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
@@ -506,7 +506,7 @@
           Confirm Account Number*
         </label>
         <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
-          (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('confirmAccNumber')"
+          (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('confirmAccNumber')"(ngModelChange)="validateConfirmAccNumber()" 
           (blur)="onBlur('confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 

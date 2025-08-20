@@ -31,19 +31,18 @@
         </div>
 
         <div>
-          <!-- Email Input -->
-          <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">Email <span
-              class="text-[#2E2E2E]">*</span></label>
-          <input id="mail" name="mail" formControlName="mail"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-            (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
-          <div *ngIf="
-      userForm.get('mail')?.invalid &&
-      (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)
-    " class="text-red-500 text-sm mt-1">
-            {{ getErrorMessage("mail") }}
-          </div>
-        </div>
+  <!-- Email Input -->
+  <label for="mail" class="block text-sm font-medium text-textLight dark:text-textDark">
+    Email <span class="text-[#2E2E2E]">*</span>
+  </label>
+  <input id="mail" name="mail" formControlName="mail"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    (keydown)="preventLeadingSpace($event, 'mail')" (input)="formatTextInput('mail')" />
+  <div *ngIf="userForm.get('mail')?.invalid && (userForm.get('mail')?.dirty || userForm.get('mail')?.touched)" 
+       class="text-red-500 text-sm mt-1">
+    {{ getErrorMessage("mail") }}
+  </div>
+</div>
 
         <div>
           <!-- Role Input -->
@@ -112,9 +111,9 @@
       <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()">
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="createAdmin()" [disabled]="userForm.invalid">
         Save
-        <!-- [disabled]="userForm.invalid" -->
+        
       </button>
     </div>
   </div>
@@ -198,7 +197,7 @@
       <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)">
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="updateAdmin(this.itemId)" [disabled]="userForm.invalid">
         Save
       </button>
     </div>

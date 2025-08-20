@@ -157,17 +157,30 @@ back(): void {
     );
   }
   emailValidator(): (control: AbstractControl) => ValidationErrors | null {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value: string = control.value;
-      if (!value) return null;
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value;
+    if (!value) return null;
 
-      // Stricter email regex
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      const valid = emailRegex.test(value);
+    // Comprehensive email regex pattern
+    const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
+    
+    // Check for common invalid patterns
+    if (value.includes('..')) {
+      return { invalidEmail: 'Email cannot contain consecutive dots' };
+    }
+    if (value.startsWith('.') || value.endsWith('.')) {
+      return { invalidEmail: 'Email cannot start or end with a dot' };
+    }
+    if (/[!#$%^&*()=<>?\/\\]/.test(value)) {
+      return { invalidEmail: 'Email contains invalid special characters' };
+    }
+    if (!emailRegex.test(value)) {
+      return { invalidEmail: 'Please enter a valid email in the format: example@domain.com' };
+    }
 
-      return !valid ? { invalidEmail: true } : null;
-    };
-  }
+    return null;
+  };
+}
 
   singleWordValidator(control: AbstractControl): ValidationErrors | null {
     const hasSpace = /\s/.test(control.value);
@@ -216,21 +229,25 @@ back(): void {
     const control = this.userForm.get(controlName);
 
     if (control?.hasError('required')) {
-      switch (controlName) {
-        case 'userName':
-          return 'Username is required';
-        case 'mail':
-          return 'Email is required';
-        case 'password':
-          return 'Password is required';
-        case 'role':
-          return 'Department is required';
-        case 'position':
-          return 'Position is required';
-        default:
-          return 'This field is required';
-      }
+    switch (controlName) {
+      case 'userName':
+        return 'Username is required';
+      case 'mail':
+        return 'Email is required';
+      case 'password':
+        return 'Password is required';
+      case 'role':
+        return 'Department is required';
+      case 'position':
+        return 'Position is required';
+      default:
+        return 'This field is required';
     }
+  }
+
+  if (control?.hasError('invalidEmail')) {
+    return control.getError('invalidEmail'); // This will return our specific message
+  }
 
     if (control?.hasError('email')) {
       return 'Invalid email format !(example@gmail.com)';

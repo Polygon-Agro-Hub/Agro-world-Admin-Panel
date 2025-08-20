@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
 interface Bank {
   ID: number;
   name: string;
@@ -112,7 +113,8 @@ export class AddDistributionOfficerComponent implements OnInit {
     private collectionCenterSrv: CollectionCenterService,
     private distributionHubSrv: DistributionHubService,
     private location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private emailValidationService: EmailvalidationsService
   ) { }
 
   ngOnInit(): void {
@@ -158,14 +160,20 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.router.navigate([path]);
   }
   // Capitalize first letter and remove invalid characters for name fields
-capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'|'accHolderName'): void {
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
   let value = this.personalData[field] || '';
-  // Remove non-English letters and spaces
+
+  // Remove non-English letters/spaces
   value = value.replace(/[^A-Za-z ]/g, '');
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
   // Capitalize first letter
   if (value.length > 0) {
     value = value.charAt(0).toUpperCase() + value.slice(1);
   }
+
   this.personalData[field] = value;
 }
 
@@ -265,6 +273,11 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
+
+    if (fieldName === 'email' && this.personalData.email) {
+    // This will trigger the error message display in template
+    this.isValidEmail(this.personalData.email);
+  }
   }
 
   validateConfirmAccNumber(): void {
@@ -277,6 +290,18 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
       this.confirmAccountNumberError = false;
     }
   }
+
+  validateAccNumber(): void {
+  
+
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
@@ -350,9 +375,9 @@ isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01):
   }
 
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+  return this.emailValidationService.isEmailValid(email);
+}
+
 
   onCancel() {
     Swal.fire({
@@ -662,6 +687,15 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
 }
 
 
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+
+
   capitalizeV(): void {
   if (this.personalData.nic) {
     this.personalData.nic = this.personalData.nic.replace(/v/g, 'V');
@@ -684,6 +718,9 @@ loadBranches() {
   );
 }
 
+getEmailErrorMessage(email: string): string | null {
+  return this.emailValidationService.getErrorMessage(email);
+}
 
 
 }

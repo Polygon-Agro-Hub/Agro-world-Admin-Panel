@@ -217,25 +217,21 @@
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email <span
-              class="text-[#2E2E2E]">*</span></label>
-          <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-            (keydown)="validateEmailInput($event, 'email')" (input)="validateEmailOnInput()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #emailInput="ngModel" required />
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email <span
+      class="text-[#2E2E2E]">*</span></label>
+  <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+    (blur)="validateEmailOnBlur()"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #emailInput="ngModel" required />
 
-          <div *ngIf="emailInput.touched && !personalData.email" class="text-red-500 text-sm mt-1">
-            <div>Email is required</div>
-          </div>
+  <div *ngIf="emailInput.touched && !personalData.email" class="text-red-500 text-sm mt-1">
+    <div>Email is required</div>
+  </div>
 
-          <div *ngIf="emailInput.touched && personalData.email && !isValidEmail(personalData.email)"
-            class="text-red-600 text-sm">
-            Please enter a valid email format ( example{{ '@' }}domain.com).
-            <br>• No consecutive dots allowed
-            <br>• Cannot start or end with dots
-            <br>• Only letters, numbers, dots, hyphens, and underscores allowed
-          </div>
-        </div>
+  <div *ngIf="emailInput.touched && personalData.email && emailValidationError" class="text-red-600 text-sm">
+    {{ emailValidationError }}
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -359,7 +355,7 @@
             class="text-[#2E2E2E]">*</span></label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)" />
+          #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"(ngModelChange)="validateAccNumber()" />
         <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
           <div>Account Number is required</div>
         </div>

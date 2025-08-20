@@ -52,6 +52,7 @@ export class CreateSalesAgentsComponent implements OnInit {
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   itemId: number | null = null;
   officerId: number | null = null;
+  emailError: string = '';
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -341,6 +342,13 @@ onCancel() {
   onBlur(fieldName: keyof Personal): void {
     this.touchedFields[fieldName] = true;
 
+    if (fieldName === 'email') {
+    if (this.personalData.email) {
+      this.personalData.email = this.personalData.email.trim();
+      this.isValidEmail(this.personalData.email);
+    }
+  }
+
     // Trim leading spaces
     if (this.personalData[fieldName]) {
       this.personalData[fieldName] = (
@@ -370,7 +378,17 @@ onCancel() {
     }
   }
 
+  validateAccNumber(): void {
+    
 
+    // Check if account numbers match
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
 
   isValidPhoneNumber(phone: string): boolean {
     const phoneRegex = /^7\d{8}$/; // Allows only 9-digit numbers
@@ -380,38 +398,58 @@ onCancel() {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-
-
-    if (!email || email.length === 0) return false;
-
-
-    if (email.includes('..')) return false;
-
-    if (email.startsWith('.')) return false;
-
-
-    const atIndex = email.indexOf('@');
-    if (atIndex > 0 && email.charAt(atIndex - 1) === '.') return false;
-
-
-    if (atIndex < email.length - 1 && email.charAt(atIndex + 1) === '.') return false;
-
-
-    const localPart = email.substring(0, atIndex);
-    const domainPart = email.substring(atIndex + 1);
-
-
-    const localPartRegex = /^[a-zA-Z0-9._-]+$/;
-    if (!localPartRegex.test(localPart)) return false;
-
-
-    const domainPartRegex = /^[a-zA-Z0-9.-]+$/;
-    if (!domainPartRegex.test(domainPart)) return false;
-
-
-    return emailRegex.test(email);
+  if (!email) {
+    this.emailError = 'Email is required.';
+    return false;
   }
+
+  // Check for consecutive dots
+  if (email.includes('..')) {
+    this.emailError = 'Email cannot contain consecutive dots (..)';
+    return false;
+  }
+
+  // Check for leading dot
+  if (email.startsWith('.')) {
+    this.emailError = 'Email cannot start with a dot';
+    return false;
+  }
+
+  // Check for trailing dot
+  if (email.endsWith('.')) {
+    this.emailError = 'Email cannot end with a dot';
+    return false;
+  }
+
+  // Check for dot right before @
+  if (email.includes('.@')) {
+    this.emailError = 'Email cannot have a dot right before the @ symbol';
+    return false;
+  }
+
+  // Check for dot right after @
+  if (email.includes('@.')) {
+    this.emailError = 'Email cannot have a dot right after the @ symbol';
+    return false;
+  }
+
+  // Check for invalid characters (but allow +)
+  const invalidChars = /[!#$%^&*()=<>?\/\\]/;
+  if (invalidChars.test(email)) {
+    this.emailError = 'Email contains invalid special characters (only +, -, _, and . are allowed)';
+    return false;
+  }
+
+  // Check basic format (allowing + in the local part)
+  const emailRegex = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    this.emailError = 'Please enter a valid email in the format: example@domain.com or user+tag@domain.com';
+    return false;
+  }
+
+  this.emailError = '';
+  return true;
+}
 
   isValidNIC(nic: string): boolean {
     // 12 digits only (new format)
@@ -521,7 +559,7 @@ onCancel() {
   }
 
 onSubmit() {
-  // Mark all fields as touched to trigger validation
+  // Mark all fields as touched
   this.touchedFields = {
     empType: true,
     firstName: true,
@@ -542,96 +580,74 @@ onSubmit() {
     branchName: true,
   };
 
-  // Check if the form is valid
-  if (!this.checkSubmitValidity()) {
-    const missingFields: string[] = [];
+  const missingFields: string[] = [];
 
-    // Regular expressions for validation
-    const englishNamePattern = /^[A-Z][a-zA-Z\s]*$/;
-    const phonePattern = /^7\d{8}$/;
-    const emailPattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-    const nicPattern = /(^\d{12}$)|(^\d{9}[V]$)/;
-    const accountPattern = /^[a-zA-Z0-9]+$/;
+  // Validation patterns
+  const englishNamePattern = /^[A-Z][a-zA-Z\s]*$/;
+  const phonePattern = /^7\d{8}$/;
+  const nicPattern = /(^\d{12}$)|(^\d{9}[V]$)/;
+  const accountPattern = /^[a-zA-Z0-9]+$/;
 
-    // Validate each field and add error messages
-    if (!this.personalData.empType) {
-      missingFields.push('Staff Employee Type');
-    }
-    if (!this.personalData.firstName) {
-      missingFields.push('First Name');
-    } else if (!englishNamePattern.test(this.personalData.firstName)) {
-      missingFields.push('First Name - Must start with a capital letter and contain only English letters');
-    }
-    if (!this.personalData.lastName) {
-      missingFields.push('Last Name');
-    } else if (!englishNamePattern.test(this.personalData.lastName)) {
-      missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
-    }
-    if (!this.personalData.phoneNumber1) {
-      missingFields.push('Contact Number 1');
-    } else if (!phonePattern.test(this.personalData.phoneNumber1)) {
-      missingFields.push('Contact Number 1 - Must be 9 digits starting with 7');
-    }
-    if (this.personalData.phoneNumber2 && !phonePattern.test(this.personalData.phoneNumber2)) {
+  // Field Validations
+  if (!this.personalData.empType) missingFields.push('Staff Employee Type');
+
+  if (!this.personalData.firstName) missingFields.push('First Name');
+  else if (!englishNamePattern.test(this.personalData.firstName))
+    missingFields.push('First Name - Must start with a capital letter and contain only English letters');
+
+  if (!this.personalData.lastName) missingFields.push('Last Name');
+  else if (!englishNamePattern.test(this.personalData.lastName))
+    missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
+
+  if (!this.personalData.phoneNumber1) missingFields.push('Contact Number 1');
+  else if (!phonePattern.test(this.personalData.phoneNumber1))
+    missingFields.push('Contact Number 1 - Must be 9 digits starting with 7');
+
+  if (this.personalData.phoneNumber2) {
+    if (!phonePattern.test(this.personalData.phoneNumber2))
       missingFields.push('Contact Number 2 - Must be 9 digits starting with 7');
-    }
-    if (this.personalData.phoneNumber2 && this.personalData.phoneNumber1 === this.personalData.phoneNumber2) {
+    if (this.personalData.phoneNumber1 === this.personalData.phoneNumber2)
       missingFields.push('Contact Number 2 - Cannot be the same as Contact Number 1');
-    }
-    if (!this.personalData.email) {
-      missingFields.push('Email');
-    } else if (!this.isValidEmail(this.personalData.email)) {
-      missingFields.push('Email - Invalid format (e.g., example@domain.com)');
-    }
-    if (!this.personalData.nic) {
-      missingFields.push('NIC');
-    } else if (!nicPattern.test(this.personalData.nic)) {
-      missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
-    }
-    if (!this.personalData.houseNumber) {
-      missingFields.push('House Number');
-    }
-    if (!this.personalData.streetName) {
-      missingFields.push('Street Name');
-    }
-    if (!this.personalData.city) {
-      missingFields.push('City');
-    }
-    if (!this.personalData.district) {
-      missingFields.push('District');
-    }
-    if (!this.personalData.province) {
-      missingFields.push('Province');
-    }
-    if (!this.personalData.accHolderName) {
-      missingFields.push('Account Holder Name');
-    } else if (!this.isValidName(this.personalData.accHolderName)) {
-      missingFields.push('Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed');
-    }
-    if (!this.personalData.accNumber) {
-      missingFields.push('Account Number');
-    } else if (!accountPattern.test(this.personalData.accNumber)) {
-      missingFields.push('Account Number - Only alphanumeric characters allowed');
-    }
-    if (!this.personalData.confirmAccNumber) {
-      missingFields.push('Confirm Account Number');
-    } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
-      missingFields.push('Confirm Account Number - Must match Account Number');
-    } else if (!accountPattern.test(this.personalData.confirmAccNumber)) {
-      missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
-    }
-    if (!this.personalData.bankName) {
-      missingFields.push('Bank Name');
-    }
-    if (!this.personalData.branchName) {
-      missingFields.push('Branch Name');
-    }
+  }
 
-    // Display popup with missing/invalid fields
+  if (!this.personalData.email) missingFields.push('Email');
+  else if (!this.isValidEmail(this.personalData.email))
+    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+
+  if (!this.personalData.nic) missingFields.push('NIC');
+  else if (!nicPattern.test(this.personalData.nic))
+    missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
+
+  if (!this.personalData.houseNumber) missingFields.push('House Number');
+  if (!this.personalData.streetName) missingFields.push('Street Name');
+  if (!this.personalData.city) missingFields.push('City');
+  if (!this.personalData.district) missingFields.push('District');
+  if (!this.personalData.province) missingFields.push('Province');
+
+  if (!this.personalData.accHolderName) missingFields.push('Account Holder Name');
+  else if (!this.isValidName(this.personalData.accHolderName))
+    missingFields.push('Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed');
+
+  if (!this.personalData.accNumber) missingFields.push('Account Number');
+  else if (!accountPattern.test(this.personalData.accNumber))
+    missingFields.push('Account Number - Only alphanumeric characters allowed');
+
+  if (!this.personalData.confirmAccNumber) missingFields.push('Confirm Account Number');
+  else if (this.personalData.accNumber !== this.personalData.confirmAccNumber)
+    missingFields.push('Confirm Account Number - Must match Account Number');
+  else if (!accountPattern.test(this.personalData.confirmAccNumber))
+    missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
+
+  if (!this.personalData.bankName) missingFields.push('Bank Name');
+  if (!this.personalData.branchName) missingFields.push('Branch Name');
+
+ 
+
+
+  // Show errors if any
+  if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
+    missingFields.forEach(field => errorMessage += `<li>${field}</li>`);
     errorMessage += '</ul></div>';
 
     Swal.fire({
@@ -648,7 +664,7 @@ onSubmit() {
     return;
   }
 
-  // If form is valid, proceed with submission
+  // Confirm submission if valid
   Swal.fire({
     title: 'Are you sure?',
     text: 'Do you want to create the Sales Agent?',
@@ -660,25 +676,18 @@ onSubmit() {
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
-      this.salesAgentService
-        .createSalesAgent(this.personalData, this.selectedImage)
+      this.salesAgentService.createSalesAgent(this.personalData, this.selectedImage)
         .subscribe(
           (res: any) => {
             this.isLoading = false;
             this.officerId = res.officerId;
             this.errorMessage = '';
-
-            Swal.fire(
-              'Success',
-              'Sales Agent Profile Created Successfully',
-              'success'
-            );
+            Swal.fire('Success', 'Sales Agent Profile Created Successfully', 'success');
             this.navigatePath('/steckholders/action/sales-agents');
           },
           (error: any) => {
             this.isLoading = false;
-            this.errorMessage =
-              error.error.error || 'An unexpected error occurred';
+            this.errorMessage = error.error.error || 'An unexpected error occurred';
             Swal.fire('Error', this.errorMessage, 'error');
           }
         );
@@ -687,6 +696,8 @@ onSubmit() {
     }
   });
 }
+
+
 
   
   navigatePath(path: string) {
@@ -894,95 +905,32 @@ blockLeadingSpace(event: KeyboardEvent) {
   }
 
   validateEmailInput(event: KeyboardEvent, fieldName: string): void {
-    // Allow navigation and control keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-    ];
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
+    'Tab', 'Home', 'End'
+  ];
 
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-
-
-    const currentValue =
-      (this.personalData[fieldName as keyof Personal] as string) || '';
-
-
-    if (event.key === ' ') {
-      event.preventDefault();
-      return;
-    }
-
-
-    if (event.key === '.' && currentValue.length === 0) {
-      event.preventDefault();
-      return;
-    }
-
-
-    if (event.key === '.' && currentValue.endsWith('.')) {
-      event.preventDefault();
-      return;
-    }
-
-
-    const atIndex = currentValue.indexOf('@');
-    if (event.key === '.' && atIndex !== -1) {
-
-      const cursorPosition = currentValue.length;
-      if (cursorPosition === atIndex + 1) {
-        event.preventDefault();
-        return;
-      }
-    }
-
-
-    if (event.key === '@' && currentValue.endsWith('.')) {
-      event.preventDefault();
-      return;
-    }
-
-
-    const emailPattern = /^[a-zA-Z0-9._@-]$/;
-    if (!emailPattern.test(event.key)) {
-      event.preventDefault();
-      return;
-    }
-
-
-    if (event.key === '@' && currentValue.includes('@')) {
-      event.preventDefault();
-      return;
-    }
+  if (allowedKeys.includes(event.key)) {
+    return;
   }
+
+  // Allow only typical email characters
+  const allowedChars = /^[a-zA-Z0-9@._+-]$/;
+  if (!allowedChars.test(event.key)) {
+    event.preventDefault();
+  }
+}
 
   validateEmailOnInput(): void {
-    if (this.personalData.email) {
-      this.personalData.email = this.personalData.email
-        .replace(/\s/g, '')
-        .replace(/\.{2,}/g, '.')
-        .replace(/^\./, '')
-        .replace(/\.@/, '@');
-
-
-      this.personalData.email = this.personalData.email.replace(/[^a-zA-Z0-9._@-]/g, '');
-
-      // Ensure only one @ symbol
-      const atCount = (this.personalData.email.match(/@/g) || []).length;
-      if (atCount > 1) {
-        const firstAtIndex = this.personalData.email.indexOf('@');
-        this.personalData.email =
-          this.personalData.email.substring(0, firstAtIndex + 1) +
-          this.personalData.email.substring(firstAtIndex + 1).replace(/@/g, '');
-      }
-    }
+  if (this.personalData.email) {
+    // Trim whitespace
+    this.personalData.email = this.personalData.email.trim();
+    
+    // Validate the email
+    this.isValidEmail(this.personalData.email);
   }
+}
 
   validateAddressInput(event: KeyboardEvent, fieldName: string): void {
     // Allow navigation and control keys

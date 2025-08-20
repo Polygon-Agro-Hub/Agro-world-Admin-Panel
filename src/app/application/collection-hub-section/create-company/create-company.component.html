@@ -162,16 +162,15 @@
           </div>
         </div>
         <div class="pb-6">
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
-            Address *</label>
-          <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
-            (keydown)="handleInputWithSpaceTrimming($event, 'email')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
-          <span *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm">
-            Enter a valid email address.
-          </span>
-        </div>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email Address *</label>
+  <input id="email" name="email" [(ngModel)]="companyData.email" (blur)="onBlur('email')" type="email"
+    (keydown)="handleInputWithSpaceTrimming($event, 'email')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">Email is required.</span>
+  <span *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm">
+    {{ emailValidationMessage }}
+  </span>
+</div>
       </div>
 
 
@@ -212,38 +211,55 @@
 
         </div>
 
-        <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Account Number *
-          </label>
-          <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
-            (keydown)="allowOnlyDigitsForAccountNumber($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
+    
 
-          </div>
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
-            Account Number is required.
-          </span>
+      <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Account Number <span class="text-[#2E2E2E]">*</span>
+        </label>
+        <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')" (ngModelChange)="validateAccNumber()"
+                 (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')" #accNumberInput="ngModel" required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <!-- <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          Account Number is required.
+        </span> -->
+        <div *ngIf="accNumberInput.touched && !companyData.accNumber" class="text-red-500 text-sm mt-1">
+          <div>Account Number is required</div>
         </div>
-
-        <div class="pb-6">
-          <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number *
-          </label>
-          <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
-            (blur)="onBlur('confirmAccNumber')" (keydown)="allowOnlyDigitsForAccountNumber($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
-
-          </div>
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
-            Confirm Account Number is required.
-          </span>
-          <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
-            Account Numbers do not match.
-          </span>
+        <div *ngIf="accNumberInput.touched && companyData.accNumber && accNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
         </div>
+      </div>
+
+       <div class="pb-6">
+        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+        </label>
+        <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
+          (blur)="onBlur('confirmAccNumber')"   (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+          #confirmAccNumberInput="ngModel" required (ngModelChange)="validateConfirmAccNumber()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <!-- Required validation message -->
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Confirm Account Number is required.
+        </span>
+
+        <!-- Mismatch validation message -->
+        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Account Numbers do not match.
+        </span>
+
+        <span
+          *ngIf="confirmAccNumberInput.touched && companyData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </span>
+      </div>
+
+      
 
         <div class="pb-6">
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
@@ -581,7 +597,8 @@
   </div>
 </div>
 
-        <div class="pb-6">
+        <!-- In Edit Company Details section -->
+<div class="pb-6">
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Company Email Address*
   </label>
@@ -595,7 +612,9 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
   <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-red-500 text-sm mt-1">
     <div *ngIf="email.errors?.['required']">Email is required.</div>
-    <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+  </div>
+  <div *ngIf="companyData.email && !isValidEmail(companyData.email)" class="text-red-600 text-sm mt-1">
+    {{ emailValidationMessage }}
   </div>
 </div>
 
@@ -642,22 +661,9 @@
           </div>
         </div>
 
-        <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Account Number
-          </label>
-          <input type="text" id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
-            (keydown)="allowOnlyDigitsForAccountNumber($event)" (blur)="validateConfirmAccNumber()"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="accountNumberError" class="text-red-600 text-sm mt-1">
-            Only digits are allowed in account number. Letters and special characters are not permitted.
-          </div>
-          <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
-            Account Number is required.
-          </span>
-        </div>
+      
 
-        <div class="pb-6">
+        <!-- <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Confirm Account Number
           </label>
@@ -673,7 +679,48 @@
           <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
             Account Numbers do not match.
           </span>
+        </div> -->
+
+     
+
+       <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #accNumberInput="ngModel" required pattern="^[0-9]+$"  (keydown)="allowOnlyDigitsForAccountNumber($event,'accNumber')"(ngModelChange)="validateAccNumber()" />
+        <div *ngIf="accNumberInput.touched && !companyData.accNumber" class="text-red-500 text-sm mt-1">
+          <div>Account Number is required</div>
         </div>
+        <div *ngIf="accNumberInput.touched && companyData.accNumber && accNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </div>
+      </div>
+
+      <div class="pb-6">
+        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+        </label>
+        <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
+          [(ngModel)]="companyData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
+         (keydown)="allowOnlyDigitsForAccountNumber($event, 'confirmAccNumber')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Confirm Account Number is required.
+        </span>
+
+        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+          Account Numbers do not match.
+        </span>
+
+        <span
+          *ngIf="confirmAccNumberInput.touched && this.companyData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </span>
+      </div>
 
         <div class="pb-6">
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
@@ -739,7 +786,7 @@
       </p-dropdown>
 
       <input id="oicConNum1" name="oicConNum1" [(ngModel)]="companyData.oicConNum1" type="tel"
-        pattern="^[0-9]{9}$" required #oicConNum1="ngModel" (keydown)="allowOnlyDigitsForAccountNumber($event)"
+        pattern="^[0-9]{9}$" required #oicConNum1="ngModel" (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum1')"
         (blur)="validateContactNumbers()" maxlength="9"
         class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
@@ -782,7 +829,7 @@
 
     <!-- Always editable, show '--' as placeholder -->
     <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="tel"
-      pattern="^[0-9]{9}$" #oicConNum2="ngModel" (keydown)="allowOnlyDigitsForAccountNumber($event)"
+      pattern="^[0-9]{9}$" #oicConNum2="ngModel" (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum2')"
       (blur)="validateContactNumbers()" maxlength="9"
       placeholder="--"
       class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />

@@ -285,12 +285,37 @@ getAllProducts() {
     }
   }
 
-  validateQuantity() {
-    if (this.quantity === null || this.quantity < 1) {
-      this.quantity = 1;
+validateQuantity(): void {
+  if (this.quantity !== null && this.quantity !== undefined) {
+    // Match numbers with up to 3 decimal places
+    const regex = /^\d{0,3}(\.\d{0,3})?$/;
+
+    if (!regex.test(this.quantity.toString())) {
+      // Trim to 3 decimals if user types more
+      this.quantity = parseFloat(parseFloat(this.quantity.toString()).toFixed(3));
     }
-    this.calculateTotal();
   }
+}
+blockInvalidDecimal($event: KeyboardEvent) {
+  const input = $event.target as HTMLInputElement;
+  const value = input.value;
+
+  // Allow navigation / control keys
+  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes($event.key)) {
+    return;
+  }
+
+  // If there's a decimal point already
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+
+    // Block typing more than 3 digits after decimal
+    if (decimalPart && decimalPart.length >= 3) {
+      $event.preventDefault();
+    }
+  }
+}
+
 
   blockInvalidKeys(event: KeyboardEvent) {
     // Prevent entering minus sign, 'e' or other invalid characters

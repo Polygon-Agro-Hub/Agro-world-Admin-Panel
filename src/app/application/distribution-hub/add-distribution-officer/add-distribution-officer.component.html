@@ -305,16 +305,21 @@
 
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
-          <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"   (keydown)="blockLeadingSpace($event, 'nic')" (blur)="onBlur('email') "
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
-            Please enter a valid email in the format: example&#64;domain.com
-          </span>
-          <span *ngIf="isFieldInvalid('email') && !personalData.email" class="text-red-600 text-sm">
-            Email is a required field.
-          </span>
-        </div>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
+  <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"   
+         (keydown)="blockLeadingSpace($event, 'nic')" (blur)="onBlur('email')"
+         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  
+  <!-- Show detailed error messages from service -->
+  <span *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)" 
+        class="text-red-600 text-sm">
+    {{ getEmailErrorMessage(personalData.email) }}
+  </span>
+  
+  <span *ngIf="isFieldInvalid('email') && !personalData.email" class="text-red-600 text-sm">
+    Email is a required field.
+  </span>
+</div>
       </div>
 
       <div class="flex justify-end my-10 ml-10 mr-0">
@@ -342,13 +347,16 @@
           <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
             [(ngModel)]="personalData.houseNumber"
              (keydown)="blockLeadingSpace($event, 'houseNumber')"
+             (input)="capitalizeWhileTyping('houseNumber')"
+             
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('houseNumber')" class="text-red-600 text-sm">House Number is required.</span>
         </div>
 
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
-          <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"  (keydown)="blockLeadingSpace($event, 'streetName')"
+          <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"  (keydown)="blockLeadingSpace($event, 'streetName')
+          "  (input)="capitalizeWhileTyping('streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is required.</span>
         </div>
@@ -361,6 +369,7 @@
   name="city"
   [(ngModel)]="personalData.city"
   (keydown)="blockLeadingSpace($event, 'city')"
+  (input)="capitalizeWhileTyping('city')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
 />
 
@@ -459,38 +468,49 @@
   </div>
 
 
-      
-
-      <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Account Number*
-        </label>
-        <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"  (keydown)="blockLeadingSpace($event, 'accNumber')"
-          (blur)="onBlur('accNumber')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
-          Account Number is required.
-        </span>
+       <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"(ngModelChange)="validateAccNumber()" />
+        <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
+          <div>Account Number is required</div>
+        </div>
+        <div *ngIf="accNumberInput.touched && personalData.accNumber && accNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </div>
       </div>
 
-      <div class="pb-6">
+
+ 
+
+       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number*
+          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input id="confirmAccNumber" name="confirmAccNumber" type="number" [(ngModel)]="personalData.confirmAccNumber"  (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
-          (blur)="onBlur('confirmAccNumber')"
+        <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
+          [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
+          (keypress)="allowOnlyNumbers($event)"
+          (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-        <!-- Required validation message -->
         <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
           Confirm Account Number is required.
         </span>
 
-        <!-- Mismatch validation message -->
         <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
           Account Numbers do not match.
         </span>
+
+        <span
+          *ngIf="confirmAccNumberInput.touched && this.personalData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+          class="text-red-500 text-sm mt-1">
+          <div>Account Number cannot contain special characters</div>
+        </span>
       </div>
+
 
 <div class="pb-6">
   <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">

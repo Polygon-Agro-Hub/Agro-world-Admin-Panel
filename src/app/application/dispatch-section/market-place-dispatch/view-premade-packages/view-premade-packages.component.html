@@ -81,7 +81,9 @@
                             class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
                             <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
 
-                            <button class="w-6 h-6 mr-3" [disabled]="packageObj.additionalData.packStatus === 'Unknown'"
+                            <button 
+                                (click)="navigateDispatchAdditionalItems(packageObj.additionalData.orderId)"
+                                class="w-6 h-6 mr-3" [disabled]="packageObj.additionalData.packStatus === 'Unknown'"
                                 [ngClass]="{
                               'text-gray-300 cursor-not-allowed': packageObj.additionalData.packStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': packageObj.additionalData.packStatus === 'Opened',

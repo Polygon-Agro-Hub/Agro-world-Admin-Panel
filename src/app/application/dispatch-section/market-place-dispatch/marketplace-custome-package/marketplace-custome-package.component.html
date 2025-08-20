@@ -120,7 +120,9 @@
                     <td
                         class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
                         <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
-                        <button class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
+                        <button 
+                        (click)="navigateDispatchAdditionalItems(item.processOrderId)"
+                        class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.additionalItemsStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': item.additionalItemsStatus === 'Opened',
                               'text-green-500 hover:text-green-700': item.additionalItemsStatus === 'Completed',

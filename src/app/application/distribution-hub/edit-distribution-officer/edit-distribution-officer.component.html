@@ -507,28 +507,37 @@
 
 
         <div>
-          <label
-            for="email"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >Email*</label
-          >
-         <input
-  type="email"
-  id="email"
-  name="email"
-  [(ngModel)]="personalData.email"
-  (blur)="onBlur('email')"
-  (keydown)="blockLeadingSpace($event, 'email')"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-/>
+  <label
+    for="email"
+    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+    >Email*</label
+  >
+  <input
+    type="email"
+    id="email"
+    name="email"
+    [(ngModel)]="personalData.email"
+    (blur)="onBlur('email')"
+    (keydown)="blockLeadingSpace($event, 'email')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
 
-            <span *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
-              Please enter a valid email in the format: example&#64;domain.com
-            </span>
-            <span *ngIf="isFieldInvalid('email') && !personalData.email" class="text-red-600 text-sm">
-              Email is a required field.
-            </span>
-        </div>
+  <!-- Show specific error message from service -->
+  <span 
+    *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)" 
+    class="text-red-600 text-sm"
+  >
+    {{ getEmailErrorMessage(personalData.email) }}
+  </span>
+  
+  <!-- Required field error -->
+  <span 
+    *ngIf="isFieldInvalid('email') && !personalData.email" 
+    class="text-red-600 text-sm"
+  >
+    {{ emailValidationService.validationMessages.required }}
+  </span>
+</div>
       </div>
 
       <div class="flex justify-end m-10">

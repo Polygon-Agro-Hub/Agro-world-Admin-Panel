@@ -1,6 +1,4 @@
 
-
-
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
@@ -12,6 +10,7 @@ import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
 interface Bank {
   ID: number;
   name: string;
@@ -123,7 +122,8 @@ bankTouched: any;
     private distributionHubSrv: DistributionHubService,
     private route: ActivatedRoute,
     private location: Location,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public emailValidationService: EmailvalidationsService
   ) {}
 
   ngOnInit(): void {
@@ -502,9 +502,12 @@ checkDuplicatePhoneNumbers(): void {
   }
 
   isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+  return this.emailValidationService.isEmailValid(email);
+}
+
+getEmailErrorMessage(email: string): string | null {
+  return this.emailValidationService.getErrorMessage(email);
+}
 
   onCancel() {
     Swal.fire({
@@ -547,7 +550,10 @@ checkDuplicatePhoneNumbers(): void {
     this.personalData.phoneCode01
   );
 
-  const isEmailValid = this.isValidEmail(this.personalData.email);
+  const isEmailValid = this.personalData.email 
+    ? this.emailValidationService.isEmailValid(this.personalData.email)
+    : false;
+
   const isLanguagesSelected = !!this.personalData.languages;
   const isCompanySelected = !!this.personalData.companyId;
   const isJobRoleSelected = !!this.personalData.jobRole;

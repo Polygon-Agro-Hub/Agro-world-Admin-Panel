@@ -89,7 +89,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
+          <!-- <tr
             *ngFor="
               let task of taskList
                 | paginate
@@ -99,6 +99,9 @@
                       totalItems: totalItems
                     }
             "
+          > -->
+          <tr
+            *ngFor="let task of taskList"
           >
             <td
               *ngIf="
@@ -337,7 +340,7 @@
           </tr>
         </tbody>
       </table>
-      <pagination-controls
+      <!-- <pagination-controls
         (pageChange)="onPageChange($event)"
         [responsive]="true"
         [previousLabel]="'Previous'"
@@ -346,7 +349,7 @@
         [screenReaderPageLabel]="'page'"
         [screenReaderCurrentLabel]="'Youre on page'"
       >
-      </pagination-controls>
+      </pagination-controls> -->
     </div>
   </div>
 </div>

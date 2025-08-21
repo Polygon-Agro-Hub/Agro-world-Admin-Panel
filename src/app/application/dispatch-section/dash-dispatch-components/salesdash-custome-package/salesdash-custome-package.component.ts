@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-salesdash-custome-package',
   standalone: true,
@@ -49,7 +49,26 @@ export class SalesdashCustomePackageComponent implements OnInit {
     console.log('Initializing with date:', this.dateFilter);
     this.getSelectedPackages();
   }
-
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    // keep default button styling
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(["/dispatch/salesdash-orders"]);
+    }
+  });
+}
   getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
     this.isLoading = true;
     const formattedDate = this.formatDateForAPI(this.dateFilter);

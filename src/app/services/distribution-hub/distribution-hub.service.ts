@@ -141,4 +141,17 @@ export class DistributionHubService {
       { headers }
     );
   }
+
+  getAllDistributionCenterByCompany(companyId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(
+      `${this.apiUrl}distribution/get-all-distribution-center-by-company/${companyId}`,
+      {
+        headers,
+      }
+    );
+  }
 }

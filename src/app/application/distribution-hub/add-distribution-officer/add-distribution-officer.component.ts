@@ -58,6 +58,8 @@ export class AddDistributionOfficerComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   lastID!: string;
   empType!: string;
+  companyOptions: any[] = [];
+  centerOptions: any[] = [];
 
   languagesRequired: boolean = false;
 
@@ -196,6 +198,28 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
     event.preventDefault();
   }
 }
+
+getAllDistributionCetnter(id: number) {
+    this.loaded = false;
+    this.personalData.centerId = '';
+    this.distributionHubSrv.getAllDistributionCenterByCompany(id).subscribe(
+      (res) => {
+        this.distributionCenterData = res;
+        // Convert to dropdown options format
+        this.centerOptions = this.distributionCenterData.map(center => ({
+          label: center.centerName,
+          value: center.id
+        }));
+        this.loaded = true;
+      },
+      (error) => {
+        this.distributionCenterData = [];
+        this.centerOptions = [];
+        this.loaded = true;
+      }
+    );
+  }
+
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
@@ -621,6 +645,10 @@ enforceNicLength(event: any) {
   getAllCompanies() {
     this.distributionHubSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
+      this.companyOptions = this.CompanyData.map(company => ({
+        label: company.companyNameEnglish,
+        value: company.id
+      }));
     });
   }
 
@@ -737,7 +765,7 @@ class Personal {
   [key: string]: any;
   jobRole: string = 'Distribution Center Head';
   empId!: string;
-  centerId!: number;
+  centerId!: number | string;
   irmId!: number;
   empType!: string;
   firstNameEnglish!: string;

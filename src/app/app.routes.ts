@@ -468,6 +468,11 @@ export const routes: Routes = [
               },
 
               {
+                    path: 'add-distribution-0fficer',
+                    component: AddDistributionOfficerComponent,
+                  },
+
+              {
                 path: 'farmers',
                 children: [
                   {
@@ -500,6 +505,7 @@ export const routes: Routes = [
                     canActivate: [PermissionGuard],
                     data: { permission: 'Bulk onboarding plan care users' },
                   },
+                  
                 ],
               },
 

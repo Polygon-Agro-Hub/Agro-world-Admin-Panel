@@ -34,6 +34,37 @@
       <div class="h-[20px]"></div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+       
+        <div>
+          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Company Name
+          </label>
+          <div class="relative">
+            <input
+              id="centerId"
+              name="centerId"
+              readonly
+              [value]="companyName"
+               (keydown)="blockLeadingSpace($event, 'nic')"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+            />
+          </div>
+        </div>
+
+         <div>
+          <!-- <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
+          <div class="flex mt-1">
+            <span
+              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+              <p *ngIf="personalData.jobRole === 'Distribution Center Head'">
+                DCH
+              </p>
+            </span>
+            <input type="text" [value]="lastID" name="empId"
+              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              disabled />
+          </div> -->
+        </div>
 
         <div>
           <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -86,20 +117,6 @@
           <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">
             Please select at least one preferred language.
           </p>
-        </div>
-
-        <div>
-          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name
-          </label>
-          <div class="relative">
-            <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
-            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
-            (onChange)="getAllDistributionCetnter(personalData.companyId)" (onBlur)="onBlur('companyId')"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
-          </p-dropdown>
-          </div>
         </div>
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'">

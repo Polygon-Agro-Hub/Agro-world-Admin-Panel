@@ -1,3 +1,4 @@
+
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -23,99 +24,108 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
     LoadingSpinnerComponent
   ],
   templateUrl: './salesdash-custome-package.component.html',
-  styleUrl: './salesdash-custome-package.component.css'
+  styleUrls: ['./salesdash-custome-package.component.css']
 })
 export class SalesdashCustomePackageComponent implements OnInit {
-
   totalItemssl: number = 0;
   pagesl: number = 1;
   statussl = ['Pending', 'Completed', 'Opened'];
-  selectedStatussl: any = '';
-  datesl: Date = new Date();
+  selectedStatussl: string = '';
+  dateFilter: Date | null = new Date(); // Initialize with current date
   searchsl: string = '';
   hasDataCustom = false;
   selectdPackage: SelectdPackage[] = [];
   itemsPerPagesl: number = 10;
   isLoading: boolean = false;
 
-
-
-
-  ngOnInit(): void {
-    this.getSelectedPackages();
-  }
-
   constructor(
     private dispatchService: DispatchService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService,
-  ) { }
+    public permissionService: PermissionService
+  ) {}
+
+  ngOnInit(): void {
+    console.log('Initializing with date:', this.dateFilter);
+    this.getSelectedPackages();
+  }
 
   getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
     this.isLoading = true;
+    const formattedDate = this.formatDateForAPI(this.dateFilter);
+    console.log('Fetching packages with:', { pagesl, limitsl, status: this.selectedStatussl, date: this.dateFilter, formattedDate, search: this.searchsl.trim() });
 
     this.dispatchService
       .getSelectedPackages(
         pagesl,
         limitsl,
         this.selectedStatussl,
-        this.formatDateForAPI(this.datesl), // Convert Date to string
+        formattedDate,
         this.searchsl.trim()
       )
-      .subscribe(
-        (response) => {
-          console.log('response', response);
+      .subscribe({
+        next: (response) => {
+          console.log('API Response:', response);
 
-          this.selectdPackage = response.items.map((item: { scheduleDate: string; }) => {
-            return {
-              ...item,
-              scheduleDateFormattedSL: this.formatDate(item.scheduleDate)
-            };
-          });
-          this.totalItemssl = response.total;
+          if (response && response.items) {
+            this.selectdPackage = response.items.map((item: any) => ({
+              id: item.id,
+              orderId: item.orderId,
+              processOrderId: item.processOrderId,
+              invNo: item.invNo,
+              sheduleDate: item.sheduleDate, // backend field
+              orderAdditionalCount: item.orderAdditionalCount,
+              additionalPrice: item.additionalPrice,
+              totalAdditionalItems: item.totalAdditionalItems,
+              packedAdditionalItems: item.packedAdditionalItems,
+              additionalItemsStatus: item.additionalItemsStatus,
+              scheduleDateFormattedSL: this.formatDate(item.sheduleDate) // formatted for UI
+            }));
+            this.totalItemssl = response.total || response.totalCount || 0;
+            this.hasDataCustom = this.totalItemssl > 0;
+          } else {
+            const allPackages = Array.isArray(response) ? response : [];
+            this.selectdPackage = allPackages.map((item: any) => ({
+              id: item.id,
+              orderId: item.orderId,
+              processOrderId: item.processOrderId,
+              invNo: item.invNo,
+              sheduleDate: item.sheduleDate,
+              orderAdditionalCount: item.orderAdditionalCount,
+              additionalPrice: item.additionalPrice,
+              totalAdditionalItems: item.totalAdditionalItems,
+              packedAdditionalItems: item.packedAdditionalItems,
+              additionalItemsStatus: item.additionalItemsStatus,
+              scheduleDateFormattedSL: this.formatDate(item.sheduleDate)
+            }));
+            this.totalItemssl = this.selectdPackage.length;
+            this.hasDataCustom = this.totalItemssl > 0;
+          }
 
-          // Add hasData logic for custom packages
-          this.hasDataCustom = response.items && response.items.length > 0;
-
-          console.log(this.selectdPackage)
+          console.log('Processed Packages:', this.selectdPackage);
           this.isLoading = false;
         },
-        (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
-          if (error.status === 401) {
-          }
-          this.hasDataCustom = false; // Set to false on error
+        error: (error) => {
+          console.error('Error fetching packages:', error);
+          this.selectdPackage = [];
+          this.totalItemssl = 0;
+          this.hasDataCustom = false;
           this.isLoading = false;
         }
-      );
+      });
   }
 
   private formatDateForAPI(date: Date | null): string {
-    if (!date) return '';
-    // Format as YYYY-MM-DD (ISO date string format)
-    return date.toISOString().split('T')[0];
-  }
-
-
-  applyStatussl() {
-    this.getSelectedPackages();
-  }
-
-  applysearchsl() {
-    this.getSelectedPackages();
-
-  }
-
-  clearSearchsl(): void {
-    this.searchsl = '';
-    this.getSelectedPackages();
-  }
-
-  onPageChangesl(event: number) {
-    this.pagesl = event;
-    this.getSelectedPackages(this.pagesl, this.itemsPerPagesl);
-
+    if (!date || isNaN(date.getTime())) {
+      console.log('Invalid or null date, returning empty string');
+      return ''; // Return empty string to fetch all packages
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formatted = `${year}-${month}-${day}`;
+    console.log('Formatted date for API:', formatted);
+    return formatted;
   }
 
   private formatDate(dateString: string): string {
@@ -124,25 +134,62 @@ export class SalesdashCustomePackageComponent implements OnInit {
     return new DatePipe('en-US').transform(date, 'd MMM, yyyy') || '';
   }
 
-  navigateToCustomAdditionalItemView(id: number, invNo: string, total: number, fullTotal: number | string) {
-    this.router.navigate(['/dispatch/custom-additional-items'], {
-      queryParams: { id, invNo, total, fullTotal },
-    });
+  onDateFilterClear(): void {
+    console.log('Date filter cleared');
+    this.dateFilter = null;
+    this.pagesl = 1;
+    this.getSelectedPackages();
   }
 
+  onFilterChange(): void {
+    console.log('Date filter changed:', this.dateFilter, 'Event:', event);
+    this.pagesl = 1;
+    this.getSelectedPackages();
+  }
 
+  applyStatussl(): void {
+    console.log('Applying status:', this.selectedStatussl);
+    this.pagesl = 1;
+    this.getSelectedPackages();
+  }
+
+  applySearchsl(): void {
+    console.log('Applying search:', this.searchsl);
+    this.pagesl = 1;
+    this.getSelectedPackages();
+  }
+
+  clearSearchsl(): void {
+    console.log('Clearing search');
+    this.searchsl = '';
+    this.pagesl = 1;
+    this.getSelectedPackages();
+  }
+
+  onPageChangesl(event: number): void {
+    console.log('Page changed:', event);
+    this.pagesl = event;
+    this.getSelectedPackages(this.pagesl, this.itemsPerPagesl);
+  }
+
+  navigateToCustomAdditionalItemView(id: number, invNo: string, total: number, fullTotal: number | string): void {
+    console.log('Navigating to custom additional items:', { id, invNo, total, fullTotal });
+    this.router.navigate(['/dispatch/custom-additional-items'], {
+      queryParams: { id, invNo, total, fullTotal }
+    });
+  }
 }
-
 
 interface SelectdPackage {
   id: number;
   orderId: number;
   processOrderId: number;
   invNo: string;
-  sheduleDate: Date;
+  sheduleDate: string; // backend spelling
   orderAdditionalCount: number;
   additionalPrice: number;
   totalAdditionalItems: number;
   packedAdditionalItems: number;
   additionalItemsStatus: string;
+  scheduleDateFormattedSL?: string; // for UI
 }

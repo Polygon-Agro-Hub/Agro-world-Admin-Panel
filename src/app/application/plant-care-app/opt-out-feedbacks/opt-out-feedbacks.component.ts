@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, PLATFORM_ID,Inject, ViewChild } from '@angular/core';
+import { Component, OnDestroy, PLATFORM_ID, Inject, ViewChild } from '@angular/core';
 import { OptOutFeedbacksService } from '../../../services/plant-care/opt-out-feedbacks.service';
 import { HttpClient } from '@angular/common/http';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
@@ -10,6 +10,8 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import { TokenService } from '../../../services/token/services/token.service';
 import { isPlatformBrowser } from '@angular/common';
 import { CanvasJSChart } from '@canvasjs/angular-charts';
+import { ThemeService } from '../../../services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-opt-out-feedbacks',
@@ -25,8 +27,8 @@ import { CanvasJSChart } from '@canvasjs/angular-charts';
 })
 export class OptOutFeedbacksComponent implements OnDestroy {
   isDarkMode = false;
-  private darkModeMediaQuery!: MediaQueryList;
-  private darkModeListener!: (e: MediaQueryListEvent) => void;
+  private themeSubscription!: Subscription;
+  private storageEventSubscription!: Subscription;
 
   feedbacks: FeedbacksData[] = [];
   total!: number;
@@ -42,14 +44,15 @@ export class OptOutFeedbacksComponent implements OnDestroy {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   hasData: boolean = true;
-@ViewChild('chartContainer') chartContainer!: CanvasJSChart;
+  @ViewChild('chartContainer') chartContainer!: CanvasJSChart;
 
   constructor(
     private plantcareService: OptOutFeedbacksService,
     private router: Router,
     public permissionService: PermissionService,
-         public tokenService: TokenService,
-         @Inject(PLATFORM_ID) private platformId: any
+    public tokenService: TokenService,
+    @Inject(PLATFORM_ID) private platformId: any,
+    private themeService: ThemeService
   ) {}
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
@@ -83,68 +86,120 @@ export class OptOutFeedbacksComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    this.setupDarkModeDetection();
+    this.setupThemeDetection();
+    this.setupLocalStorageListener();
     this.fetchAllFeedbacks();
     this.loadFeedbackData();
   }
 
-  private setupDarkModeDetection() {
+  private setupThemeDetection() {
     if (isPlatformBrowser(this.platformId)) {
-      this.darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      this.isDarkMode = this.darkModeMediaQuery.matches;
-      
-      this.darkModeListener = (e: MediaQueryListEvent) => {
-        this.isDarkMode = e.matches;
+      // Subscribe to theme changes from ThemeService
+      this.themeSubscription = this.themeService.themeChanged$.subscribe((theme: string) => {
+        this.isDarkMode = theme === 'dark';
         this.updateChartTheme();
-      };
+      });
+
+      // Initialize with current theme
+      this.isDarkMode = this.themeService.isDarkTheme();
+      console.log(this.isDarkMode,'------dark mode status------');
       
-      this.darkModeMediaQuery.addEventListener('change', this.darkModeListener);
+      this.updateChartTheme();
+    }
+  }
+
+  private setupLocalStorageListener() {
+    if (isPlatformBrowser(this.platformId)) {
+      // Listen for storage events (changes to localStorage from other tabs/windows)
+      this.storageEventSubscription = new Subscription(() => {
+        window.removeEventListener('storage', this.storageEventListener);
+      });
+      
+      window.addEventListener('storage', this.storageEventListener);
+    }
+  }
+
+  private storageEventListener = (event: StorageEvent) => {
+    if (event.key === 'theme' || event.key === 'isDarkMode') {
+      // Check if the theme was changed in localStorage
+      this.checkDarkModeFromLocalStorage();
+    }
+  };
+
+  private checkDarkModeFromLocalStorage() {
+    if (isPlatformBrowser(this.platformId)) {
+      // Check localStorage directly for theme preference
+      const storedTheme = localStorage.getItem('theme');
+      const storedDarkMode = localStorage.getItem('isDarkMode');
+      
+      // Determine if dark mode is enabled
+      const newDarkMode = storedTheme === 'dark' || storedDarkMode === 'true';
+      
+      // Only update if the value has changed
+      if (newDarkMode !== this.isDarkMode) {
+        this.isDarkMode = newDarkMode;
+        this.updateChartTheme();
+      }
     }
   }
 
   private updateChartTheme() {
-  this.chartOptions = {
-    ...this.chartOptions,
-    theme: this.isDarkMode ? 'dark2' : 'light1',
-    backgroundColor: this.isDarkMode ? '#1e1e1e' : '#ffffff',
-    axisX: {
-      labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
-      lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      tickColor: this.isDarkMode ? '#444444' : '#d3d3d3'
-    },
-    axisY: {
-      labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
-      lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      tickColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      gridColor: this.isDarkMode ? '#444444' : '#f0f0f0',
-      includeZero: true,
-    },
-    toolTip: {
-      backgroundColor: this.isDarkMode ? '#2d2d2d' : '#ffffff',
-      borderColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      fontColor: this.isDarkMode ? '#ffffff' : '#333333'
-    }
-  };
+    const isDark = this.isDarkMode;
+    
+    this.chartOptions = {
+      ...this.chartOptions,
+      theme: isDark ? 'dark2' : 'light1',
+      backgroundColor: isDark ? '#1e1e1e' : '#ffffff',
+      axisX: {
+        labelFontColor: isDark ? '#ffffff' : '#666666',
+        lineColor: isDark ? '#444444' : '#d3d3d3',
+        tickColor: isDark ? '#444444' : '#d3d3d3',
+        titleFontColor: isDark ? '#ffffff' : '#333333'
+      },
+      axisY: {
+        labelFontColor: isDark ? '#ffffff' : '#666666',
+        lineColor: isDark ? '#444444' : '#d3d3d3',
+        tickColor: isDark ? '#444444' : '#d3d3d3',
+        gridColor: isDark ? '#444444' : '#f0f0f0',
+        titleFontColor: isDark ? '#ffffff' : '#333333',
+        includeZero: true,
+      },
+      toolTip: {
+        backgroundColor: isDark ? '#2d2d2d' : '#ffffff',
+        borderColor: isDark ? '#444444' : '#d3d3d3',
+        fontColor: isDark ? '#ffffff' : '#333333'
+      },
+      legend: {
+        fontColor: isDark ? '#ffffff' : '#333333'
+      }
+    };
 
-  // Force chart re-render
-  this.renderChart();
-}
-
-private renderChart() {
-  // Use setTimeout to ensure the chart re-renders in the next tick
-  setTimeout(() => {
-    if (this.chartContainer && this.chartContainer.chart) {
-      this.chartContainer.chart.render();
-    }
-  });
-}
-
-ngOnDestroy() {
-    if (isPlatformBrowser(this.platformId) && this.darkModeMediaQuery && this.darkModeListener) {
-      this.darkModeMediaQuery.removeEventListener('change', this.darkModeListener);
-    }
+    // Force chart re-render
+    this.renderChart();
   }
 
+  private renderChart() {
+    // Use setTimeout to ensure the chart re-renders in the next tick
+    setTimeout(() => {
+      if (this.chartContainer && this.chartContainer.chart) {
+        this.chartContainer.chart.render();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+    
+    if (this.storageEventSubscription) {
+      this.storageEventSubscription.unsubscribe();
+    }
+    
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('storage', this.storageEventListener);
+    }
+  }
 
   getColor(orderNumber: number): string {
     const colors = [
@@ -163,73 +218,79 @@ ngOnDestroy() {
   }
 
   loadFeedbackData() {
-  this.plantcareService.getAllFeedbackListForBarChart().subscribe({
-    next: (response) => {
-      if (response && response.feedbacks && response.feedbacks.length > 0) {
-        this.feedbackData = response.feedbacks;
-        this.maxFeedbackCount = Math.max(
-          ...this.feedbackData.map((f) => f.feedbackCount)
-        );
+    this.plantcareService.getAllFeedbackListForBarChart().subscribe({
+      next: (response) => {
+        if (response && response.feedbacks && response.feedbacks.length > 0) {
+          this.feedbackData = response.feedbacks;
+          this.maxFeedbackCount = Math.max(
+            ...this.feedbackData.map((f) => f.feedbackCount)
+          );
 
-        this.updateChartData(); // Separate method for updating chart data
-      }
-    },
-    error: () => {},
-  });
-}
-
-private updateChartData() {
-  const dataPoints = this.feedbackData
-    .slice()
-    .reverse()
-    .map((feedback) => ({
-      label: `${feedback.orderNumber}`,
-      y: feedback.feedbackCount,
-      color: this.getColor(feedback.orderNumber),
-    }));
-
-  this.chartOptions = {
-    ...this.chartOptions,
-    data: [
-      {
-        type: 'bar',
-        indexLabel: '{y}',
-        yValueFormatString: '#,###',
-        indexLabelFontColor: this.isDarkMode ? '#ffffff' : '#333333',
-        dataPoints: dataPoints,
+          this.updateChartData(); // Separate method for updating chart data
+        }
       },
-    ],
-  };
+      error: () => {},
+    });
+  }
 
-  this.applyCurrentTheme(); // Apply current theme settings
-  this.renderChart();
-}
+  private updateChartData() {
+    const dataPoints = this.feedbackData
+      .slice()
+      .reverse()
+      .map((feedback) => ({
+        label: `${feedback.orderNumber}`,
+        y: feedback.feedbackCount,
+        color: this.getColor(feedback.orderNumber),
+      }));
 
-private applyCurrentTheme() {
-  this.chartOptions = {
-    ...this.chartOptions,
-    theme: this.isDarkMode ? 'dark2' : 'light1',
-    backgroundColor: this.isDarkMode ? '#1e1e1e' : '#ffffff',
-    axisX: {
-      labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
-      lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      tickColor: this.isDarkMode ? '#444444' : '#d3d3d3'
-    },
-    axisY: {
-      labelFontColor: this.isDarkMode ? '#ffffff' : '#666666',
-      lineColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      tickColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      gridColor: this.isDarkMode ? '#444444' : '#f0f0f0',
-      includeZero: true,
-    },
-    toolTip: {
-      backgroundColor: this.isDarkMode ? '#2d2d2d' : '#ffffff',
-      borderColor: this.isDarkMode ? '#444444' : '#d3d3d3',
-      fontColor: this.isDarkMode ? '#ffffff' : '#333333'
-    }
-  };
-}
+    this.chartOptions = {
+      ...this.chartOptions,
+      data: [
+        {
+          type: 'bar',
+          indexLabel: '{y}',
+          yValueFormatString: '#,###',
+          indexLabelFontColor: this.isDarkMode ? '#ffffff' : '#333333',
+          dataPoints: dataPoints,
+        },
+      ],
+    };
 
+    this.applyCurrentTheme(); // Apply current theme settings
+    this.renderChart();
+  }
+
+  private applyCurrentTheme() {
+    const isDark = this.themeService.isDarkTheme();
+    
+    this.chartOptions = {
+      ...this.chartOptions,
+      theme: isDark ? 'dark2' : 'light1',
+      backgroundColor: isDark ? '#1e1e1e' : '#ffffff',
+      axisX: {
+        labelFontColor: isDark ? '#ffffff' : '#666666',
+        lineColor: isDark ? '#444444' : '#d3d3d3',
+        tickColor: isDark ? '#444444' : '#d3d3d3',
+        titleFontColor: isDark ? '#ffffff' : '#333333'
+      },
+      axisY: {
+        labelFontColor: isDark ? '#ffffff' : '#666666',
+        lineColor: isDark ? '#444444' : '#d3d3d3',
+        tickColor: isDark ? '#444444' : '#d3d3d3',
+        gridColor: isDark ? '#444444' : '#f0f0f0',
+        titleFontColor: isDark ? '#ffffff' : '#333333',
+        includeZero: true,
+      },
+      toolTip: {
+        backgroundColor: isDark ? '#2d2d2d' : '#ffffff',
+        borderColor: isDark ? '#444444' : '#d3d3d3',
+        fontColor: isDark ? '#ffffff' : '#333333'
+      },
+      legend: {
+        fontColor: isDark ? '#ffffff' : '#333333'
+      }
+    };
+  }
 
   getBarWidth(feedbackCount: number): number {
     return (feedbackCount / this.maxFeedbackCount) * 100;
@@ -243,8 +304,24 @@ private applyCurrentTheme() {
   chartOptions: any = {
     license: true,
     animationEnabled: true,
+    theme: 'light1', // Will be updated in ngOnInit
+    backgroundColor: '#ffffff', // Will be updated in ngOnInit
     axisY: {
       includeZero: true,
+      labelFontColor: '#666666', // Will be updated in ngOnInit
+      lineColor: '#d3d3d3', // Will be updated in ngOnInit
+      tickColor: '#d3d3d3', // Will be updated in ngOnInit
+      gridColor: '#f0f0f0', // Will be updated in ngOnInit
+    },
+    axisX: {
+      labelFontColor: '#666666', // Will be updated in ngOnInit
+      lineColor: '#d3d3d3', // Will be updated in ngOnInit
+      tickColor: '#d3d3d3', // Will be updated in ngOnInit
+    },
+    toolTip: {
+      backgroundColor: '#ffffff', // Will be updated in ngOnInit
+      borderColor: '#d3d3d3', // Will be updated in ngOnInit
+      fontColor: '#333333' // Will be updated in ngOnInit
     },
     data: [
       {

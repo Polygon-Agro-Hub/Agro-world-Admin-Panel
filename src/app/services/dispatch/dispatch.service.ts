@@ -325,7 +325,7 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
-    getPackageItemsForDispatch(id: number, orderId:number): Observable<any> {
+  getPackageItemsForDispatch(id: number, orderId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -336,13 +336,37 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
-    dispatchPackageItemData(array: any): Observable<any> {
+  dispatchPackageItemData(array: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
     const url = `${this.apiUrl}dispatch/dispatch-package`;
+
+    // Send the array as a named field in the body
+    return this.http.patch<any>(url, array, { headers });
+  }
+
+
+    getAdditionalItemsForDispatch(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}dispatch/get-additional-items-for-dispatch/${id}`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
+    dispatchAdditionalItemData(array: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}dispatch/dispatch-additional-items`;
 
     // Send the array as a named field in the body
     return this.http.patch<any>(url, array, { headers });

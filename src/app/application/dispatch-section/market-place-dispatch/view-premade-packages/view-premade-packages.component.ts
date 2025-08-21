@@ -50,6 +50,10 @@ export class ViewPremadePackagesComponent implements OnInit {
     this.router.navigate([`/dispatch/dispatch-package/${id}/${this.orderId}`])
   }
 
+  navigateDispatchAdditionalItems(id: number) {
+    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`])
+  }
+
 
 }
 

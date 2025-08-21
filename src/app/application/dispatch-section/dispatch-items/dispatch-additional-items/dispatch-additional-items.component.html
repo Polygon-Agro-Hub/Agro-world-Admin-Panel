@@ -1,8 +1,3 @@
-<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-
-<app-count-down *ngIf="showCountdown" [duration]="30" (completed)="onTimerCompleted()"
-    (cancelled)="onTimerCancelled()"></app-count-down>
-
 <div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
     <div>
 
@@ -11,12 +6,13 @@
                 <!-- <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
             {{orderInv}}</span></h1> -->
                 <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
-                        {{ invNo }}</span></h1>
+                        {{orderDetails.invNo}}</span></h1>
             </div>
 
             <div class="">
                 <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
-                <h2 class="  text-[#212121] dark:text-white">{{ name }} : Rs.{{fullTotal | number: '1.2-2'}}</h2>
+                <h2 class="  text-[#212121] dark:text-white"> Custom Pack : Rs.{{orderDetails.additionalPrice | number:
+                    '1.2-2'}}</h2>
             </div>
         </div>
 
@@ -30,7 +26,7 @@
                         </th>
                         <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             ITEM
-                            ({{total === 0 ? '0' : total < 10 ? '0' + total : total}})</th>
+                            <!-- ({{total === 0 ? '0' : total < 10 ? '0'+ total : total}})</th> -->09
                         <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             QUANTITY
                         </th>
@@ -47,29 +43,28 @@
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 ">
 
-                    <tr *ngFor=" let item of packageItemsArr">
+                    <tr *ngFor=" let item of packageArr">
                         <td class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
                             <div>
-                                <button
-                                    (click)="openPopUp(item.productId, item.displayName, item.quantity, item.price)"><i
-                                        class="fa-solid fa-square-minus text-[red] text-lg"></i></button>
+                                <!-- (click)="openPopUp(item.productId, item.displayName, item.quantity, item.price)" -->
+                                <button (click)="openPopUp(item)">
+                                    <i class="fa-solid fa-square-minus text-[red] text-lg"></i>
+                                </button>
                             </div>
 
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-white text-left">
-                            {{ item.displayName || 'N/A' }}
+                            {{ item.displayName || ' - ' }}
                         </td>
 
                         <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
-                            {{ item.quantity != null ? item.quantity : '0' }}
+                            {{ item.qty }}
                         </td>
 
                         <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
-                            {{ (item.quantity != null && item.quantity < 1) ? 'g' : 'kg' }} </td>
+                            {{ item.unit }} 
+                        </td>
 
-                                <!-- <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#212121] dark:text-gray-300">
-              Rs. {{ item.discountedPrice != null ? item.discountedPrice : '0.00' }}
-            </td> -->
 
                         <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
                             Rs. {{ item.discountedPrice != null ? (item.discountedPrice | number:'1.2-2') : '0.00' }}
@@ -80,7 +75,7 @@
                             Rs. {{ item.price != null ? (item.price | number:'1.2-2') : '0.00' }}
                         </td>
                         <td class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 ">
-                            <input type="checkbox" [checked]="item.packedStatus === 1"
+                            <input type="checkbox" [checked]="item.isPacked === 1"
                                 (change)="onCheckboxChange(item, $event)"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </td>
@@ -112,7 +107,14 @@
     </div>
 </div>
 
+<!-- countdown component -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
+<app-count-down *ngIf="showCountdown" [duration]="30" (completed)="onTimerCompleted()"
+    (cancelled)="onTimerCancelled()"></app-count-down>
+
+
+<!-- replace popup -->
 <div *ngIf="isPopupOpen" class="fixed inset-0 z-50 flex items-center bg-black bg-opacity-50">
     <div
         class="max-w-5xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto max-h-[800px] ml-80 mt-[-10]">
@@ -122,12 +124,11 @@
         <div class="flex justify-center mt-4 mb-10">
             <div class="border-2 border-dashed border-red-400 rounded-md p-4 text-center w-1/2">
                 <p class="text-sm text-[#8492A3] dark:text-gray-200">Selected product</p>
-<p class="font-normal text-[#000000] dark:text-white mt-1">
-  {{ this.previousDisplayName }} - 
-  {{ previousQuantity || 0 }}{{ previousQuantity != null && previousQuantity < 1 ? 'g' : 'kg' }} - 
-  Rs. {{ previousPrice | number:'1.2-2' }}
-</p>
-
+                <p class="font-normal text-[#000000] dark:text-white mt-1">
+                    {{selectProduct.displayName}} -
+                    {{'1.0'}}kg - Rs.
+                    {{ selectProduct.qty | number:'1.2-2' }}
+                </p>
 
                 <p class="text-sm text-[#8492A3] dark:text-gray-200 mt-2">Relevant Product Type :</p>
                 <p class="font-normal text-[#000000] dark:text-white mt-1">Up Country Vegetable</p>
@@ -142,29 +143,17 @@
             <!-- Product Name Dropdown -->
             <div class="w-1/3">
                 <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">PRODUCT NAME</label>
-                     <p-dropdown
-  [options]="productItemsArr"
-  [(ngModel)]="selectedProductId"
-  optionLabel="productName"
-  optionValue="id"
-  placeholder="--Product Name--"
-  [filter]="true"
-  filterBy="productName"
-  [showClear]="true"
-  (onChange)="onProductChange()"
-  appendTo="body"
-    panelStyleClass="dropdown-up"
-  styleClass="dropdown-up w-full border rounded-lg text-gray-700 dark:text-white dark:bg-gray-700"
-  [disabled]="!productItemsArr.length"
->
-  <ng-template let-option pTemplate="item">
-    <div [class.opacity-50]="productIdsArr.includes(option.id)">
-      {{ option.productName }}
-    </div>
-  </ng-template>
-</p-dropdown>
+                <!-- <select
+                    class="w-full border rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 italic-placeholder"
+                    [(ngModel)]="newProductObj" > 
+                    <option [ngValue]="null" disabled selected>--Product Name--</option>
+                    <option *ngFor="let product of productArr" [ngValue]="product"
+                        [disabled]="product.isExcluded">
+                        {{ product.displayName }}
+                    </option>
+                </select> -->
             </div>
-
+            <!-- (change)="onProductChange()" -->
 
 
 
@@ -174,38 +163,30 @@
                     <label class="block text-sm text-center font-medium text-gray-500 dark:text-gray-300 mb-2">
                         QUANTITY (KG)
                     </label>
-                  <input 
-  type="number"
-  placeholder="--Qty in kg--"
-  class="border text-center rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700"
-  [(ngModel)]="quantity" 
-  (input)="validateQuantity()" 
-  (keydown)="blockInvalidKeys($event)"
-   (keydown)="blockInvalidDecimal($event)" 
-  min="1"
-  step="0.001"  
-/>
+                    <!-- <input type="number" placeholder="--Qty in kg--"
+                        class="border text-center rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700"
+                        [(ngModel)]="quantity" (input)="validateQuantity()" (keydown)="blockInvalidKeys($event)" min="1"
+                        step="0.01" style="::placeholder { font-style: italic; }" /> -->
+                </div>
 
-                  </div>
-                  
 
                 <!-- Unit Price -->
                 <div class="w-1/3">
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">UNIT PRICE
                         (RS.)</label>
                     <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
-                        {{ unitPrice != null ? 'Rs. ' + (unitPrice | number:'1.2-2') : '----' }}
+                        <!-- {{ unitPrice != null ? 'Rs. ' + (unitPrice | number:'1.2-2') : '----' }} -->
                     </span>
 
                 </div>
 
-             <div class="w-1/3">
-  <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">TOTAL (RS.)</label>
-  <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
-    {{ (quantity != null && unitPrice != null) ? 'Rs. ' + (quantity * unitPrice | number:'1.2-2') : '----' }}
-  </span>
-</div>
-
+                <!-- Total -->
+                <div class="w-1/3">
+                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">TOTAL (RS.)</label>
+                    <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
+                        <!-- {{ totalPrice != null ? 'Rs. ' + (totalPrice | number:'1.2-2') : '----' }} -->
+                    </span>
+                </div>
             </div>
 
 
@@ -219,14 +200,14 @@
                 class="px-5 py-2  bg-[#74788D] text-[#D3D3D3] rounded-md hover:bg-gray-500">
                 Cancel
             </button>
-            <button (click)="replaceProduct()" [disabled]="!selectedProductId || !quantity"
+            <!-- <button (click)="replaceProduct()" [disabled]="!selectedProductId || !quantity"
                 class="px-5 py-2 bg-[#C1C1C1] rounded-md text-[#FFFFFF]"
                 [class.bg-[#C1C1C1]]="!selectedProductId || !quantity"
                 [class.cursor-not-allowed]="!selectedProductId || !quantity"
                 [class.bg-[#3980C0]]="selectedProductId && quantity"
                 [class.hover:bg-[#3980C0]]="selectedProductId && quantity" [class.text-white]="true">
                 Update
-            </button>
+            </button> -->
         </div>
     </div>
 </div>

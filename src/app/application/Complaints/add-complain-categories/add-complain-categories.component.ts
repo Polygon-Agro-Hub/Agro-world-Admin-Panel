@@ -76,6 +76,10 @@ export class AddComplainCategoriesComponent implements OnInit {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/complaints']);
@@ -92,6 +96,10 @@ export class AddComplainCategoriesComponent implements OnInit {
         showCancelButton: true,
         confirmButtonText: "Yes, Cancel",
         cancelButtonText: "No, Keep Editing",
+          customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
       }).then((result) => {
         if (result.isConfirmed) {
           this.router.navigate(["/complaints"]);

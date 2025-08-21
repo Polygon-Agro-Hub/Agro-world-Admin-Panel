@@ -114,12 +114,8 @@ export class MarketplaceCustomePackageComponent {
     this.router.navigate([`/dispatch/view-premade-packages/${id}/${invNo}`])
   }
 
-  navigateToAdditionalItemView(id: number, invNo: string, total: number, name: string, fullTotal: number | string) {
-    console.log(id, invNo, name, total);
-    this.router.navigate(['/dispatch/additional-items'], {
-      queryParams: { id, invNo, name, total, fullTotal },
-    });
-
+ navigateDispatchAdditionalItems(id: number) {
+    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`])
   }
 }
 

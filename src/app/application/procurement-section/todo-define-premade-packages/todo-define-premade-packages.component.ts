@@ -7,6 +7,7 @@ import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface AdditionalItem {
   id: number;
@@ -58,7 +59,7 @@ interface PackageItem {
 @Component({
   selector: 'app-todo-define-premade-packages',
   standalone: true,
-  imports: [ CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [ CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule ],
   templateUrl: './todo-define-premade-packages.component.html',
   styleUrl: './todo-define-premade-packages.component.css',
 })

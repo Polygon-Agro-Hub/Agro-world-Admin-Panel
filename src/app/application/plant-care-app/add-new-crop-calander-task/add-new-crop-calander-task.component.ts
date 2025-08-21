@@ -66,7 +66,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       taskDescriptionEnglish: ['', [Validators.required]],
       taskDescriptionSinhala: ['', [Validators.required]],
       taskDescriptionTamil: ['', [Validators.required]],
-      reqImages: ['', [Validators.required]],
+      reqImages: ['', ],
       imageLink: ['',],
       videoLinkEnglish: [''],
   videoLinkSinhala: [''],
@@ -206,74 +206,187 @@ blockZeroValue(event: Event) {
 
 
 onSubmit() {
-    console.log('onsubmit:', this.cropId, this.indexId, this.userId);
+  console.log('onsubmit:', this.cropId, this.indexId, this.userId);
 
-    if (
-      !this.cropTaskObj.startingDate ||
-      !this.cropTaskObj.taskTypeEnglish ||
-      !this.cropTaskObj.taskTypeSinhala ||
-      !this.cropTaskObj.taskTypeTamil ||
-      !this.cropTaskObj.taskCategoryEnglish ||
-      !this.cropTaskObj.taskCategorySinhala ||
-      !this.cropTaskObj.taskCategoryTamil ||
-      !this.cropTaskObj.taskEnglish ||
-      !this.cropTaskObj.taskSinhala ||
-      !this.cropTaskObj.taskTamil ||
-      !this.cropTaskObj.taskDescriptionEnglish ||
-      !this.cropTaskObj.taskDescriptionSinhala ||
-      !this.cropTaskObj.taskDescriptionTamil ||
-      !this.cropTaskObj.reqImages ||
-      (this.requireImageLink === 'yes' && !this.cropTaskObj.imageLink)
-    ) {
-      this.taskForm.markAllAsTouched();
-      console.log('failed');
-      Swal.fire({
-        icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please fill in all required fields before submitting.',
-      });
-      return;
-    }
+  // Array to store missing or invalid field messages
+  const missingFields: string[] = [];
 
-    if (this.userId == 'null') {
-      this.isLoading = true;
-      console.log('no user', this.userId);
-      this.cropCalendarService
-        .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
-        .subscribe((res) => {
-          this.isLoading = false;
-          if (res) {
-            Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
-            // Navigate to the previous page
-            this.location.back();
-          } else {
-            Swal.fire('Error', 'Error occurred in adding task!', 'error');
-          }
-        });
-    } else {
-      this.isLoading = true;
-      console.log('has user', this.userId);
-      this.cropCalendarService
-        .createNewCropTaskU(
-          this.cropId,
-          this.indexId,
-          this.userId,
-          this.cropTaskObj,
-          this.onCulscropID
-        )
-        .subscribe((res) => {
-          this.isLoading = false;
-          if (res) {
-            Swal.fire('Success', 'New Crop Calendar Task Added!', 'success');
-            // Navigate to the previous page
-            this.location.back();
-          } else {
-            Swal.fire('Error', 'Error occurred in adding task!', 'error');
-          }
-        });
-    }
+  // Validate form fields
+  // if (this.taskForm.get('cropId')?.invalid) {
+  //   missingFields.push('Crop ID is required');
+  // }
+
+  // if (this.taskForm.get('startingDate')?.invalid) {
+  //   missingFields.push('Starting Date is required');
+  // }
+
+  if (this.taskForm.get('taskTypeEnglish')?.invalid) {
+    missingFields.push('Task Type (English) is required');
   }
 
+  if (this.taskForm.get('taskTypeSinhala')?.invalid) {
+    missingFields.push('Task Type (Sinhala) is required');
+  }
+
+  if (this.taskForm.get('taskTypeTamil')?.invalid) {
+    missingFields.push('Task Type (Tamil) is required');
+  }
+
+  if (this.taskForm.get('taskCategoryEnglish')?.invalid) {
+    missingFields.push('Task Category (English) is required');
+  }
+
+  if (this.taskForm.get('taskCategorySinhala')?.invalid) {
+    missingFields.push('Task Category (Sinhala) is required');
+  }
+
+  if (this.taskForm.get('taskCategoryTamil')?.invalid) {
+    missingFields.push('Task Category (Tamil) is required');
+  }
+
+  if (this.taskForm.get('taskEnglish')?.invalid) {
+    missingFields.push('Task (English) is required');
+  }
+
+  if (this.taskForm.get('taskSinhala')?.invalid) {
+    missingFields.push('Task (Sinhala) is required');
+  }
+
+  if (this.taskForm.get('taskTamil')?.invalid) {
+    missingFields.push('Task (Tamil) is required');
+  }
+
+  if (this.taskForm.get('taskDescriptionEnglish')?.invalid) {
+    missingFields.push('Task Description (English) is required');
+  }
+
+  if (this.taskForm.get('taskDescriptionSinhala')?.invalid) {
+    missingFields.push('Task Description (Sinhala) is required');
+  }
+
+  if (this.taskForm.get('taskDescriptionTamil')?.invalid) {
+    missingFields.push('Task Description (Tamil) is required');
+  }
+
+  if (this.taskForm.get('reqImages')?.invalid) {
+    missingFields.push('Require Images is required');
+  }
+
+
+
+// Validate imageLink and images fields based on requireImageLink
+if (this.requireImageLink === 'yes') {
+  if (this.taskForm.get('imageLink')?.invalid) {
+    missingFields.push('Image Link is required when Require Images is set to Yes');
+  }
+  if (this.taskForm.get('images')?.invalid) {
+    missingFields.push('Images are required when Require Images is set to Yes');
+  }
+}
+  // If there are validation errors, show popup and stop submission
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+
+    // Mark all fields as touched to show real-time errors
+    this.taskForm.markAllAsTouched();
+    return;
+  }
+
+  // If valid, proceed with submission
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to add this new crop calendar task?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, add it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      if (this.userId === 'null') {
+        console.log('no user', this.userId);
+        this.cropCalendarService
+          .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
+          .subscribe({
+            next: (res) => {
+              this.isLoading = false;
+              if (res) {
+                Swal.fire('Success', 'New Crop Calendar Task Added!', 'success').then(() => {
+                  this.location.back();
+                });
+              } else {
+                Swal.fire('Error', 'Error occurred in adding task!', 'error');
+              }
+            },
+            error: (error) => {
+              this.isLoading = false;
+              let errorMessage = 'There was an error adding the crop calendar task.';
+              if (error.error?.error) {
+                errorMessage = error.error.error;
+              } else if (error.error?.message) {
+                errorMessage = error.error.message;
+              } else if (error.status === 400) {
+                errorMessage = 'Invalid data sent to server. Please check your inputs.';
+              }
+              Swal.fire('Error', errorMessage, 'error');
+            },
+          });
+      } else {
+        console.log('has user', this.userId);
+        this.cropCalendarService
+          .createNewCropTaskU(this.cropId, this.indexId, this.userId, this.cropTaskObj, this.onCulscropID)
+          .subscribe({
+            next: (res) => {
+              this.isLoading = false;
+              if (res) {
+                Swal.fire('Success', 'New Crop Calendar Task Added!', 'success').then(() => {
+                  this.location.back();
+                });
+              } else {
+                Swal.fire('Error', 'Error occurred in adding task!', 'error');
+              }
+            },
+            error: (error) => {
+              this.isLoading = false;
+              let errorMessage = 'There was an error adding the crop calendar task.';
+              if (error.error?.error) {
+                errorMessage = error.error.error;
+              } else if (error.error?.message) {
+                errorMessage = error.error.message;
+              } else if (error.status === 400) {
+                errorMessage = 'Invalid data sent to server. Please check your inputs.';
+              }
+              Swal.fire('Error', errorMessage, 'error');
+            },
+          });
+      }
+    } else {
+      this.isLoading = false;
+    }
+  });
+}
 
 
 onCancel() {

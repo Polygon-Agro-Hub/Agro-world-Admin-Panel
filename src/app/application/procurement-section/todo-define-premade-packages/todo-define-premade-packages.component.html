@@ -80,31 +80,16 @@
               <div class="w-8 text-sm text-gray-700 dark:text-gray-300">
                 {{ item.productTypeShortCode }}
               </div>
-             <p-dropdown
-  [options]="marketplaceItems"
-  [(ngModel)]="item.productId"
-  optionLabel="displayName"
-  optionValue="id"
-  placeholder="--Select Product--"
-  (onChange)="calculatePrice(item)"
-  appendTo="body"
-    panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom"
-  styleClass="rounded-xl flex-1 text-sm border"
-  [ngClass]="{
-    'border-red-500 bg-red-50 text-red-600': item.isExcluded,
-    'dark:text-white dark:border-gray-600 dark:bg-gray-800': !item.isExcluded
-  }"
-    [filter]="true"
-    [filterPlaceholder]="'Search product...'"
+              <select class="rounded-xl flex-1 px-4 py-4 border text-sm" [ngClass]="{
+          'border-red-500 bg-red-50 text-red-600': item.isExcluded,
+          'dark:text-white dark:border-gray-600 dark:bg-gray-800': !item.isExcluded
+        }" [(ngModel)]="item.productId" (change)="calculatePrice(item)">
 
->
-  <!-- Custom option template -->
-  <ng-template let-product pTemplate="item">
-    <div [class.opacity-50]="product.isExcluded">
-      {{ product.displayName }}
-    </div>
-  </ng-template>
-</p-dropdown>
+                <option [ngValue]="null">--Select Product--</option>
+                <option *ngFor="let product of marketplaceItems" [ngValue]="product.id" [disabled]="product.isExcluded">
+                  {{ product.displayName }}
+                </option>
+              </select>
 
               <!-- <select class="rounded-xl flex-1 px-4 py-4 text-sm" [class.border-red-500]="item.isExcluded"
                 [class.bg-red-50]="item.isExcluded" [class.text-red-600]="item.isExcluded" [(ngModel)]="item.productId"

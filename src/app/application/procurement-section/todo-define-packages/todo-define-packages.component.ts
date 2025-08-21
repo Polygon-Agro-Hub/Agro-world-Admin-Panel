@@ -79,18 +79,20 @@ export class TodoDefinePackagesComponent implements OnInit {
           console.log('API Response:', response);
 
           if (response && response.data) {
-            this.orders = response.data.filter(
-              (order: { packingStatus: string }) =>
-                order.packingStatus === 'Todo'
-            );
+            this.orders = response.data
+            // .filter(
+            //   (order: { packingStatus: string }) =>
+            //     order.packingStatus === 'Todo'
+            // );
             console.log('Filtered Orders:', this.orders);
             this.totalItems = response.total || response.totalCount || 0;
             this.hasData = response.total === 0 ? false : true;
           } else {
             const allOrders = Array.isArray(response) ? response : [];
-            this.orders = allOrders.filter(
-              (order) => order.packingStatus === 'Todo'
-            );
+            this.orders = allOrders
+            // .filter(
+            //   (order) => order.packingStatus === 'Todo'
+            // );
             this.totalItems = this.orders.length;
           }
 

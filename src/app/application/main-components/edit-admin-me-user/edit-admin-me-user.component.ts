@@ -90,6 +90,35 @@ export class EditAdminMeUserComponent implements OnInit {
     return hasSpace ? { singleWord: true } : null;
   }
 
+
+  // Prevent spaces in the password input while typing
+onKeyDownPassword(event: KeyboardEvent): void {
+  if (event.key === ' ') {
+    event.preventDefault();
+  }
+}
+
+// Handle pasting to remove spaces
+onPastePassword(event: ClipboardEvent): void {
+  const pastedText = event.clipboardData?.getData('text') || '';
+  if (pastedText.includes(' ')) {
+    event.preventDefault();
+    const trimmedText = pastedText.replace(/\s/g, '');
+    const input = event.target as HTMLInputElement;
+    input.value = trimmedText;
+    this.changePasswordForm.get('newPassword')?.setValue(trimmedText);
+  }
+}
+
+// Trim spaces on input change
+onInputPassword(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const trimmedValue = input.value.replace(/\s/g, '');
+  if (input.value !== trimmedValue) {
+    input.value = trimmedValue;
+    this.changePasswordForm.get('newPassword')?.setValue(trimmedValue);
+  }
+}
   passwordValidator(): ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
       const value: string = control.value;

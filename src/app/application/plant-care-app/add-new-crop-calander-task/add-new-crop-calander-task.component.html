@@ -434,7 +434,7 @@
               for="image"
               class="whitespace-nowrap mr-4 text-sm font-medium text-textLight dark:text-textDark"
             >
-              Add No. of Images Required<span style="color: #2e2e2e">*</span>
+              Add No. of Images Required
             </label>
 
             <input
@@ -452,15 +452,7 @@
             />
           </div>
 
-          <div
-            *ngIf="
-              taskForm.get('images')?.touched &&
-              taskForm.get('images')?.hasError('required')
-            "
-            class="text-red-500 text-sm mt-1"
-          >
-            Number of images is required.
-          </div>
+     
 
           <div
             *ngIf="
@@ -525,7 +517,7 @@
           "
           class="text-red-500 text-sm mt-1"
         >
-          Image Link is required.
+          Image Link is required when "Want to Add Images?" is Yes.
         </div>
       </div>
 

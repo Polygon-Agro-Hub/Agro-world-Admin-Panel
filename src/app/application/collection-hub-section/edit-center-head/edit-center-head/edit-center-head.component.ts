@@ -8,6 +8,7 @@ import { CollectionCenterService } from '../../../../services/collection-center/
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { EmailvalidationsService } from '../../../../services/email-validation/emailvalidations.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -33,11 +34,13 @@ interface BranchesData {
     CommonModule,
     FormsModule,
     LoadingSpinnerComponent,
+    DropdownModule
   ],
   templateUrl: './edit-center-head.component.html',
   styleUrl: './edit-center-head.component.css',
 })
 export class EditCenterHeadComponent {
+  districtOptions: any[] = [];
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
@@ -109,6 +112,12 @@ export class EditCenterHeadComponent {
     this.loadBanks();
     this.loadBranches();
     this.itemId = this.route.snapshot.params['id'];
+
+    this.districtOptions = this.districts.map(district => ({
+    label: district.name,
+    value: district.name,
+    province: district.province
+  }));
 
     if (this.itemId) {
       this.isLoading = true;
@@ -432,24 +441,17 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   // Navigate to the requested page
   this.selectedPage = page;
 }
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
-    } else {
-      if (selected) {
-        this.personalData.province = selected.province;
-      }
-    }
+  updateProvince(event: any): void {
+  const selectedDistrict = event.value;
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
+  if (selected) {
+    this.personalData.province = selected.province;
+  } else {
+    this.personalData.province = '';
   }
+}
 
   onBankChange() {
     if (this.selectedBankId) {

@@ -77,6 +77,7 @@ export class CreateCenterHeadComponent implements OnInit {
   errorMessage: string = '';
   emailErrorMessage: string = '';
   isEmailTouched: boolean = false;
+  districtOptions: any[] = [];
 
   allowedPrefixes = ['70', '71', '72', '75', '76', '77', '78'];
   isPhoneInvalidMap: { [key: string]: boolean } = {
@@ -160,6 +161,12 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
+
+    this.districtOptions = this.districts.map(district => ({
+    label: district.name,
+    value: district.name,
+    province: district.province
+  }));
   }
 
   getFlagUrl(code: string): string {
@@ -527,20 +534,19 @@ blockNonNumbers(event: KeyboardEvent) {
     this.selectedPage = page;
   }
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
+  updateProvince(event: any): void {
+  const selectedDistrict = event.value;
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
+  if (this.itemId === null) {
+    if (selected) {
+      this.personalData.province = selected.province;
+    } else {
+      this.personalData.province = '';
     }
   }
+}
 
   onBankChange() {
     if (this.selectedBankId) {

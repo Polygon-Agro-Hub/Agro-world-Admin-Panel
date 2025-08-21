@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface OrderDetailItem {
   packageId: number;
@@ -54,6 +55,7 @@ export class DefinePackageViewComponent implements OnInit {
 
   constructor(
     private marketplaceService: MarketPlaceService,
+    private router: Router,
     private route: ActivatedRoute
   ) {}
 
@@ -388,9 +390,11 @@ onCancel() {
         confirmButtonColor: '#3085d6',
       }).then((result) => {
         this.isLoading = false;
-        if (result.isConfirmed) {
-          this.goBack();
-        }
+       this.isLoading = false;
+if (result.isConfirmed) {
+  this.router.navigate(['/market/action/view-packages-list']);
+}
+
       });
     } catch (error) {
       this.isLoading = false;

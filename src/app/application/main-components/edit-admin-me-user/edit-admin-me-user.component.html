@@ -195,6 +195,9 @@
                     id="current-password"
                     formControlName="currentPassword"
                     name="current-password"
+                         (keydown)="onKeyDownPassword($event)"
+      (paste)="onPastePassword($event)"
+      (input)="onInputPassword($event)"
                     class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                   />
                   <i
@@ -236,6 +239,9 @@
                     id="new-password"
                     formControlName="newPassword"
                     name="new-password"
+                    (keydown)="onKeyDownPassword($event)"
+      (paste)="onPastePassword($event)"
+      (input)="onInputPassword($event)"
                     class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                   />
                   <i
@@ -277,6 +283,9 @@
                     id="confirm-password"
                     formControlName="confirmPassword"
                     name="confirm-password"
+                         (keydown)="onKeyDownPassword($event)"
+      (paste)="onPastePassword($event)"
+      (input)="onInputPassword($event)"
                     class="w-full border-none rounded-none focus:outline-none focus:border-none bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                   />
                   <i

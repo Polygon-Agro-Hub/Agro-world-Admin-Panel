@@ -223,7 +223,10 @@ onCancel() {
     text: 'You may lose the added data after canceling!',
     showCancelButton: true,
     confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
+    cancelButtonText: 'No, Keep Editing',      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
         this.location.back();
@@ -240,6 +243,10 @@ back(): void {
     showCancelButton: true,
     confirmButtonText: 'Yes, Go Back',
     cancelButtonText: 'No, Stay Here',
+          customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
         this.location.back();

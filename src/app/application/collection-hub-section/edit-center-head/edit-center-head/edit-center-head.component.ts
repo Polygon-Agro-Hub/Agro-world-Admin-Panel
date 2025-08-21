@@ -496,6 +496,16 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
   }
 
+    validateAccNumber(): void {
+   
+    if (this.personalData.accNumber && this.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
 onSubmit() {
   const missingFields: string[] = [];
 

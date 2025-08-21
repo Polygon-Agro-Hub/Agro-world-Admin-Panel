@@ -168,6 +168,7 @@ import { CenterCollectionExpenceComponent } from './application/collection-hub-s
 import { DispatchMarketplaceComponent } from './application/dispatch-section/market-place-dispatch/dispatch-marketplace/dispatch-marketplace.component';
 import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
 import { DispachPackagesComponent } from './application/dispatch-section/dispatch-items/dispach-packages/dispach-packages.component';
+import { DispatchAdditionalItemsComponent } from './application/dispatch-section/dispatch-items/dispatch-additional-items/dispatch-additional-items.component';
 
 export const routes: Routes = [
   {
@@ -793,6 +794,10 @@ export const routes: Routes = [
             path: 'dispatch-package/:id/:orderId',
             component: DispachPackagesComponent,
           },
+          {
+            path: 'dispatch-additional-items/:id',
+            component: DispatchAdditionalItemsComponent,
+          }
         ],
       },
 

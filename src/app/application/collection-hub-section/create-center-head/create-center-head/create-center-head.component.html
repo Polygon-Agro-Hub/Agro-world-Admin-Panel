@@ -86,34 +86,38 @@
           </div> -->
         <!-- </div> -->
   
-        <div class='mb-4 w-1/2'>
-          <div>
-            <label
-              for="centerId"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
-              Company Name *
-            </label>
-            <select
-              (blur)="onBlur('companyId')"
-              id="centerId"
-              [(ngModel)]="personalData.companyId"
-              name="centerId"
-              
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option
-                *ngFor="let center of CompanyData"
-                [value]="center.id"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-              >
-                {{ center.companyNameEnglish }}
-              </option>
-            </select>
-            <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm"
-              >Company Name is required.</span
-            >
-          </div>
+ <div class="mb-4 w-1/2">
+  <label
+    for="companyId"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+  >
+    Company Name *
+  </label>
+
+  <div class="relative">
+    <p-dropdown
+      [options]="CompanyData"
+      [(ngModel)]="personalData.companyId"
+      optionLabel="companyNameEnglish"
+      optionValue="id"
+      [filter]="true"
+      filterPlaceholder="Search company..."
+      (onBlur)="onBlur('companyId')"
+      placeholder="Select Company"
+      class="w-full mt-1 p-dropdown-custom"
+    >
+    </p-dropdown>
+
+    <!-- Error message right below the dropdown -->
+    <span
+      *ngIf="isFieldInvalid('companyId')"
+      class="text-red-600 text-sm mt-1 block"
+    >
+      Company Name is required.
+    </span>
+  </div>
+
+
         </div>
       </div> 
 

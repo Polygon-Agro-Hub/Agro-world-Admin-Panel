@@ -80,7 +80,7 @@
               <div class="w-8 text-sm text-gray-700 dark:text-gray-300">
                 {{ item.productTypeShortCode }}
               </div>
-              <select class="rounded-xl flex-1 px-4 py-4 border text-sm" [ngClass]="{
+              <!-- <select class="rounded-xl flex-1 px-4 py-4 border text-sm" [ngClass]="{
           'border-red-500 bg-red-50 text-red-600': item.isExcluded,
           'dark:text-white dark:border-gray-600 dark:bg-gray-800': !item.isExcluded
         }" [(ngModel)]="item.productId" (change)="calculatePrice(item)">
@@ -89,8 +89,25 @@
                 <option *ngFor="let product of marketplaceItems" [ngValue]="product.id" [disabled]="product.isExcluded">
                   {{ product.displayName }}
                 </option>
-              </select>
-
+              </select> -->
+<div class="flex items-center">
+  <p-dropdown
+    class="p-dropdown-custom rounded-xl flex-1 px-4 py-2 text-sm"
+    [ngClass]="{
+      'border-red-500  text-red-600': item.isExcluded,
+      'border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white': !item.isExcluded
+    }"
+    [(ngModel)]="item.productId"
+    (onChange)="calculatePrice(item)"
+    [options]="marketplaceItems"
+    optionLabel="displayName"
+    optionValue="id"
+    optionDisabled="isExcluded"
+    [filter]="true"
+    filterBy="displayName"
+    placeholder="--Select Product--">
+  </p-dropdown>
+</div>
               <!-- <select class="rounded-xl flex-1 px-4 py-4 text-sm" [class.border-red-500]="item.isExcluded"
                 [class.bg-red-50]="item.isExcluded" [class.text-red-600]="item.isExcluded" [(ngModel)]="item.productId"
                 (change)="calculatePrice(item)">

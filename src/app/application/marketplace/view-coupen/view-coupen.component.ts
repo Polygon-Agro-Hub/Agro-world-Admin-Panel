@@ -68,7 +68,8 @@ export class ViewCoupenComponent implements OnInit {
           this.coupenObj = res.items;
           this.totalItems = res.total;
           this.hasData = res.items.length > 0;
-          this.checkDelete = this.coupenObj.length > 0;
+         this.checkDelete = false; // always unchecked after fetch
+
           this.isLoading = false;
         },
         (error) => {

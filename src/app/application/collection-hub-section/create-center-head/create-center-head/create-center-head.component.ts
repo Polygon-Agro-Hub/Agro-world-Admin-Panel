@@ -407,11 +407,17 @@ blockNonNumbers(event: KeyboardEvent) {
 }
 
   
-  getAllCompanies() {
-    this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
+getAllCompanies() {
+  this.collectionCenterSrv.getAllCompanyList().subscribe({
+    next: (res) => {
+      console.log('API Response:', res);
       this.CompanyData = res;
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Error fetching companies:', error);
+    }
+  });
+}
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -1032,7 +1038,10 @@ navigateToPage(page: 'pageOne' | 'pageTwo'): void {
       this.emailErrorMessage = '';
     }
   }
+
 }
+
+
 
 class Personal {
   jobRole: string = 'Collection Center Head';

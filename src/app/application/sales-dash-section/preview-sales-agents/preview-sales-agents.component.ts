@@ -8,9 +8,16 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
+  name: string;
+}
+
+interface PhoneCode {
+  code: string;
+  dialCode: string;
   name: string;
 }
 
@@ -32,6 +39,7 @@ interface BranchesData {
     HttpClientModule,
     CommonModule,
     FormsModule,
+    DropdownModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './preview-sales-agents.component.html',
@@ -93,6 +101,14 @@ export class PreviewSalesAgentsComponent implements OnInit {
     { name: 'Trincomalee', province: 'Eastern' },
     { name: 'Vavuniya', province: 'Northern' },
   ];
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -103,6 +119,11 @@ export class PreviewSalesAgentsComponent implements OnInit {
     private collectionOfficerService: CollectionOfficerService,
     private salesAgentService: SalesAgentsService
   ) {}
+
+  
+ getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
 
   ngOnInit(): void {
     this.loadBanks();

@@ -104,22 +104,31 @@
   
   
   
-          <div class="mb-4">
-            <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Name
-            </label>
-            <select id="centerId" [(ngModel)]="personalData.companyId" name="centerId"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500"
-              #companyIdInput="ngModel" required>
-              <option *ngFor="let center of CompanyData" [value]="center.id"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                {{ center.companyNameEnglish }}
-              </option>
-            </select>
-            <div *ngIf="companyIdInput.touched && !personalData.companyId" class="text-red-500 text-sm mt-1">
-              <div>Company Name is required</div>
-            </div>
-          </div>
+     <div class="mb-4">
+  <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Company Name
+  </label>
+
+  <p-dropdown
+    id="centerId"
+    [(ngModel)]="personalData.companyId"
+    [options]="CompanyData"
+    optionLabel="companyNameEnglish"
+    optionValue="id"
+    [filter]="true"
+    filterPlaceholder="Search company..."
+    placeholder="Select Company"
+    class="mt-1 p-dropdown-custom w-full text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+    #companyIdInput="ngModel"
+    required
+  >
+  </p-dropdown>
+
+  <div *ngIf="companyIdInput.touched && !personalData.companyId" class="text-red-500 text-sm mt-1">
+    Company Name is required
+  </div>
+</div>
+
 
           <!-- <div class='mb-4'>
             <div>

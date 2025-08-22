@@ -43,17 +43,11 @@
             [src]="selectedImage"
             alt="Profile Picture"
           />
-
-          <span
-            (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer"
-          >
-            <img
-              src="../../../assets/images/editIcon.png"
-              alt="Edit Icon"
-              class="w-12 h-12"
-            />
+ <span (click)="triggerFileInput($event)"
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+            <i class="fa-solid fa-pen text-lg text-white"></i>
           </span>
+
         </div>
       </div>
 
@@ -586,7 +580,7 @@
             for="phoneNumber01"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Phone Number - 1 *
+            Mobile Number - 01*
           </label>
           <div class="mt-1 flex">
             <p-dropdown
@@ -651,15 +645,18 @@
           </div>
           <div *ngIf="contact01.touched">
             <div *ngIf="!personalData.phoneNumber01" class="text-red-500 text-sm mt-1">
-                Phone Number - 1 is required.
+               Mobile Number - 01 is required.
             </div>
             <div *ngIf="personalData.phoneNumber01 && contact01.invalid && !isPhoneInvalidMap['phone01']" 
                 class="text-red-500 text-sm mt-1">
-                Phone Number must be exactly 9 digits.
+                Mobile Number - 01 must be exactly 9 digits.
             </div>
+                     <div *ngIf="isDuplicatePhone()" class="text-red-500 text-sm mt-1">
+    Mobile Number - 01 and Mobile Number - 02 cannot be the same.
+  </div>
   
             <div *ngIf="isPhoneInvalidMap['phone01'] && personalData.phoneNumber01 " class="text-red-500 text-sm mt-1">
-              Please enter a valid mobile number (format: +947XXXXXXXX)
+              Please enter a valid Mobile Number - 01 (format: +947XXXXXXXX)
               </div>
         </div>
         </div>
@@ -719,7 +716,7 @@
             for="phoNumTwo"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Phone Number - 2
+           Mobile Number - 02
           </label>
           <div class="mt-1 flex">
             <p-dropdown
@@ -773,17 +770,17 @@
             </div>
           </div>
           <div *ngIf="contact02.touched">
-            <div *ngIf="personalData.phoneNumber02 && personalData.phoneNumber01 === personalData.phoneNumber02 && !isPhoneInvalidMap['phone02'] && !contact02.invalid" class="text-red-500 text-sm mt-1">
-              Phone Number - 2 should be different from Phone Number - 1.
-            </div>
+            <div *ngIf="isDuplicatePhone()" class="text-red-500 text-sm mt-1">
+    Mobile Number - 01 and Mobile Number - 02 cannot be the same.
+  </div>
             
             <div *ngIf="personalData.phoneNumber02 && contact02.invalid && !isPhoneInvalidMap['phone02']"
                 class="text-red-500 text-sm mt-1">
-                Phone Number must be exactly 9 digits.
+                Mobile Number must be exactly 9 digits.
             </div>
   
             <div *ngIf="isPhoneInvalidMap['phone02'] && personalData.phoneNumber02 " class="text-red-500 text-sm mt-1">
-              Please enter a valid mobile number (format: +947XXXXXXXX)
+              Please enter a valid Mobile Number  (format: +947XXXXXXXX)
               </div>
         </div>
         </div>
@@ -794,21 +791,24 @@
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >NIC Number *</label
           >
-          <input
-            id="nic"
-            name="nic"
-            [(ngModel)]="personalData.nic"
-            #nicInput="ngModel"
-            required
-            pattern="^(\d{9}V|\d{12})$"
-            (input)="onTrimInput($event, personalData, 'nic')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+ <input
+  id="nic"
+  name="nic"
+  [(ngModel)]="personalData.nic"
+  #nicInput="ngModel"
+  required
+  (input)="validateNIC($event)"
+  pattern="^(\d{9}V|\d{12})$"
+  maxlength="12"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
+
           <div *ngIf="nicInput.touched && (nicInput.errors?.['required'] || !personalData.nic)"  class="text-red-500 text-sm mt-1">
             NIC Number is required
           </div>
           <div *ngIf="nicInput.touched && nicInput.errors?.['pattern'] && personalData.nic" class="text-red-500 text-sm mt-1">
-            Please enter a valid NIC Number(e.g., 123456789V or 200012345678)
+            Please enter a valid NIC number (12 digits or 10 digits followed by 'V').
         </div>
         </div>
 
@@ -830,9 +830,7 @@
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />  
 
-  <div *ngIf="emailInput.touched && (emailInput.errors?.['required'] || !personalData.email)"  class="text-red-500 text-sm mt-1">
-    Email Address is required
-  </div>
+
   
   <div *ngIf="isEmailTouched && emailErrorMessage" class="text-red-500 text-sm mt-1">
     {{ emailErrorMessage }}
@@ -875,16 +873,22 @@
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >House / Plot Number *</label
           >
-          <input
-            (blur)="onBlur('houseNumber')"
-            id="houseNumber"
-            name="houseNumber"
-            [(ngModel)]="personalData.houseNumber"
-            #houseNumberInput="ngModel"
-            required
-            (input)="onTrimInput($event, personalData, 'houseNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+         <input
+  (blur)="onBlur('houseNumber')"
+  id="houseNumber"
+  name="houseNumber"
+  [(ngModel)]="personalData.houseNumber"
+  #houseNumberInput="ngModel"
+  required
+  (input)="
+    onTrimInput($event, personalData, 'houseNumber');
+    personalData.houseNumber = personalData.houseNumber
+      ? personalData.houseNumber.charAt(0).toUpperCase() + personalData.houseNumber.slice(1)
+      : '';
+  "
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
           <div *ngIf="houseNumberInput.touched && (houseNumberInput.errors?.['required'] || !personalData.houseNumber)"  class="text-red-500 text-sm mt-1">
             House Number is required
           </div>
@@ -909,7 +913,13 @@
             [(ngModel)]="personalData.streetName"
             #streetNameInput="ngModel"
             required
-            (input)="onTrimInput($event, personalData, 'streetName')"
+             (input)="
+    onTrimInput($event, personalData, 'streetName');
+    personalData.streetName = personalData.streetName
+      ? personalData.streetName.charAt(0).toUpperCase() + personalData.streetName.slice(1)
+      : '';
+  "
+        
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div *ngIf="streetNameInput.touched && (streetNameInput.errors?.['required'] || !personalData.streetName)"  class="text-red-500 text-sm mt-1">
@@ -929,15 +939,21 @@
             >City *</label
           >
           <input
-            (blur)="onBlur('city')"
-            id="city"
-            name="city"
-            [(ngModel)]="personalData.city"
-            #cityInput="ngModel"
-            required
-            (input)="onTrimInput($event, personalData, 'city')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+  (blur)="onBlur('city')"
+  id="city"
+  name="city"
+  [(ngModel)]="personalData.city"
+  #cityInput="ngModel"
+  required
+  (input)="
+    onTrimInput($event, personalData, 'city');
+    personalData.city = personalData.city
+      ? personalData.city.charAt(0).toUpperCase() + personalData.city.slice(1)
+      : '';
+  "
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
           <div *ngIf="cityInput.touched && (cityInput.errors?.['required'] || !personalData.city)"  class="text-red-500 text-sm mt-1">
             City is required
           </div>

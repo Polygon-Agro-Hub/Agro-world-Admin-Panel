@@ -14,7 +14,11 @@ interface Bank {
   ID: number;
   name: string;
 }
-
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
 interface Branch {
   bankID: number;
   ID: number;
@@ -96,7 +100,14 @@ export class EditCenterHeadComponent {
     { name: 'Trincomalee', province: 'Eastern' },
     { name: 'Vavuniya', province: 'Northern' },
   ];
-
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+  ];
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -173,7 +184,93 @@ export class EditCenterHeadComponent {
     this.getAllCompanies();
   }
 
-  
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
+
+    validateNIC(event: any) {
+    let value: string = event.target.value.toUpperCase();
+
+    // Remove all characters except digits and 'V'
+    value = value.replace(/[^0-9V]/g, '');
+
+    // If more than 12 digits, truncate digits
+    if (value.length > 12) {
+      // Keep last character if it's 'V'
+      const lastChar = value[value.length - 1] === 'V' ? 'V' : '';
+      const digitsOnly = value.replace(/V/g, '').slice(0, 12);
+      value = digitsOnly + lastChar;
+    }
+
+    // Ensure only one 'V' at the end
+    if (value.includes('V') && value[value.length - 1] !== 'V') {
+      value = value.replace(/V/g, '') + 'V';
+    }
+
+    this.personalData.nic = value;
+    event.target.value = value;
+  }
+
+  restrictInput(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    const inputChar = event.key.toUpperCase();
+
+    // Allow control keys
+    if (event.ctrlKey || event.metaKey || event.key.length > 1) {
+      return true;
+    }
+
+    // Allow digits if total digits < 12
+    const digitsCount = currentValue.replace(/[^0-9]/g, '').length;
+    if (/[0-9]/.test(inputChar) && digitsCount < 12) {
+      return true;
+    }
+
+    // Allow 'V' only if not already present
+    if (inputChar === 'V' && !currentValue.toUpperCase().includes('V')) {
+      return true;
+    }
+
+    event.preventDefault();
+    return false;
+  }
+
+allowOnlyNumbers(event: KeyboardEvent) {
+  const charCode = event.key.charCodeAt(0);
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
+limitPhoneLength(event: Event, maxLength: number, field: 'phoneNumber01' | 'phoneNumber02') {
+  const input = event.target as HTMLInputElement;
+  if (input.value.length > maxLength) {
+    input.value = input.value.slice(0, maxLength);
+    this.personalData[field] = input.value;
+  }
+}
+// Validate if the number starts with 7 and has 9 digits
+isValidPhone(phone: string | undefined): boolean {
+  if (!phone) return false;
+  const regex = /^7\d{8}$/; // starts with 7 + 8 digits = 9 digits
+  return regex.test(phone);
+}
+
+// Optional: real-time input correction
+validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
+  const phone = this.personalData[field];
+  if (!phone) return;
+
+  // Remove any non-digit characters
+  this.personalData[field] = phone.replace(/\D/g, '');
+
+  // Limit to 9 digits
+  if (this.personalData[field].length > 9) {
+    this.personalData[field] = this.personalData[field].slice(0, 9);
+  }
+}
+
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -250,6 +347,24 @@ export class EditCenterHeadComponent {
       reader.readAsDataURL(file);
     }
   }
+
+  formatNIC() {
+  let val = this.personalData.nic.toUpperCase();
+
+  if (val.length <= 10) {
+    // 10-digit NIC: allow only 9 digits + V at the end
+    val = val.replace(/[^0-9V]/g, '');
+    if (val.length === 10) {
+      val = val.slice(0, 9) + (val[9] === 'V' ? 'V' : '');
+    }
+  } else {
+    // 12-digit NIC: allow only numbers, max 12 digits
+    val = val.replace(/[^0-9]/g, '').slice(0, 12);
+  }
+
+  this.personalData.nic = val;
+}
+
 
   triggerFileInput(event: Event): void {
     event.preventDefault();

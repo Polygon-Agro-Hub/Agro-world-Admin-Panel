@@ -169,6 +169,8 @@ import { DispatchMarketplaceComponent } from './application/dispatch-section/mar
 import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
 import { DispachPackagesComponent } from './application/dispatch-section/dispatch-items/dispach-packages/dispach-packages.component';
 import { DispatchAdditionalItemsComponent } from './application/dispatch-section/dispatch-items/dispatch-additional-items/dispatch-additional-items.component';
+import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
+import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
 
 export const routes: Routes = [
   {
@@ -466,6 +468,24 @@ export const routes: Routes = [
                 path: '',
                 component: SteckholdersComponent,
               },
+              {
+                path: 'view-distribution-officers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewDistributionOfficerComponent,
+                  },
+                  {
+                    path: 'create-distribution-officer',
+                    component: CreateDistributionOfficerComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'add-distribution-0fficer',
+                component: AddDistributionOfficerComponent,
+              },
 
               {
                 path: 'farmers',
@@ -713,13 +733,12 @@ export const routes: Routes = [
           },
           {
             path: 'center-collection-expense/:id',
-            component: CenterCollectionExpenceComponent
+            component: CenterCollectionExpenceComponent,
           },
           {
             path: 'view-center-officers',
-            component: ViewCollectiveOfficerComponent
-          }
-
+            component: ViewCollectiveOfficerComponent,
+          },
         ],
       },
 
@@ -734,8 +753,6 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
           },
-
-
 
           {
             path: 'define-packages',
@@ -797,7 +814,7 @@ export const routes: Routes = [
           {
             path: 'dispatch-additional-items/:id',
             component: DispatchAdditionalItemsComponent,
-          }
+          },
         ],
       },
 
@@ -1098,4 +1115,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

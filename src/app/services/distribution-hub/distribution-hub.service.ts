@@ -290,4 +290,51 @@ export class DistributionHubService {
     return this.http.get<any>(url, { headers });
   }
 
+  createDistributionOfficer(person: any, selectedImage: any): Observable<any> {
+    const formData = new FormData();
+    formData.append("officerData", JSON.stringify(person)); // Attach officer data as a string
+
+    if (selectedImage) {
+      formData.append('file', selectedImage); // Attach the file (ensure the key matches the expected field name on the backend)
+    }
+
+
+    // No need to set Content-Type headers manually; Angular will handle it for FormData
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(
+      `${this.apiUrl}distribution/create-distribution-officer`,
+      formData,
+      {
+        headers,
+      }
+    );
+  }
+
+  getAllManagerList(companyId: any, centerId: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('This is company Id', companyId);
+    return this.http.get(
+      `${this.apiUrl}distribution/get-all-distribution-manager-list/${companyId}/${centerId}`,
+      {
+        headers,
+      }
+    );
+  }
+
+  getForCreateId(role: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}distribution/get-last-emp-id/${role}`, {
+      headers,
+    });
+  }
+
 }

@@ -129,7 +129,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     });
 
   }
-
+isExcluded(product: MarketplaceItem): boolean {
+  return product.isExcluded;
+}
   onSelectionChange() {
     console.log('Selected option:', this.selectedOption);
     // Add any additional logic here

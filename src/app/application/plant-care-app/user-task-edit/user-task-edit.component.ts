@@ -322,15 +322,19 @@ updateTask() {
     return d.toISOString().split('T')[0];
   }
 
-  onKeyDown(event: KeyboardEvent, fieldValue: string): void {
-    // Block space key only at the beginning of input
-    if (
-      (event.code === 'Space' || event.key === ' ') &&
-      fieldValue.length === 0
-    ) {
-      event.preventDefault();
-    }
+onKeyDown(event: KeyboardEvent, fieldValue: string): void {
+  // Block space at the very beginning
+  if ((event.key === ' ' || event.code === 'Space') && fieldValue.length === 0) {
+    event.preventDefault();
   }
+
+  // Block if cursor is at index 0 and tries to type space
+  const input = event.target as HTMLInputElement;
+  if ((event.key === ' ' || event.code === 'Space') && input.selectionStart === 0) {
+    event.preventDefault();
+  }
+}
+
 
   validateEnglishInput(event: any) {
     const englishRegex = /^[a-zA-Z\s.,!?'"-]*$/;

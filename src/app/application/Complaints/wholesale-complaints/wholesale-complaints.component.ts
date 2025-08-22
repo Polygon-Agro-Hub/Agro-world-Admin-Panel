@@ -25,7 +25,8 @@ interface Complaint {
 
 interface DropdownOption {
   label: string;
-  value: string | null; // Allow null for clearer type safety
+  value: string | null;
+  isExcluded?: boolean; // Added for exclusion styling
 }
 
 interface ApiResponse {
@@ -60,19 +61,21 @@ export class WholesaleComplaintsComponent implements OnInit {
   messageContent = '';
   selectedComplaint = {} as Complaint;
 
-  // filters + pagination
+  // Filters + pagination
   searchText = '';
-  rpst: string | null = null; // Explicitly allow null
+  rpst: string | null = null;
   filterComCategory: string | null = null;
   filterStatus: string | null = null;
   totalItems = 0;
   itemsPerPage = 10;
   page = 1;
 
-  // dropdown data
+  hasData: boolean = false;
+
+  // Dropdown data
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: '' }, // Keep empty string for "No"
+    { label: 'No', value: 'No' },
   ];
   comCategories: DropdownOption[] = [];
   status: DropdownOption[] = [];
@@ -93,9 +96,9 @@ export class WholesaleComplaintsComponent implements OnInit {
 
     this.complaintsService.fetchWholesaleComplaints().subscribe({
       next: (resp: ApiResponse) => {
-        console.log('res', resp)
-        this.complaints = resp.data.map(item => {
-          const complaint: Complaint = {
+        console.log('ApiResponse', resp);
+        this.complaints = resp.data
+          .map(item => ({
             id: item.id.toString(),
             refNo: item.refNo,
             complainCategory: item.categoryEnglish,
@@ -104,13 +107,10 @@ export class WholesaleComplaintsComponent implements OnInit {
             contactNumber: item.ContactNumber,
             createdAt: this.formatDate(item.createdAt),
             status: this.normalizeStatus(item.status, item.createdAt),
-            reply: item.reply || undefined, // Ensure reply is undefined if empty
+            reply: item.reply || undefined,
             complain: item.complain,
-          };
-          // Debug reply values
-          console.log(`Complaint ID: ${complaint.id}, Reply:`, complaint.reply);
-          return complaint;
-        });
+          }))
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.comCategories = Array.from(
@@ -120,7 +120,7 @@ export class WholesaleComplaintsComponent implements OnInit {
           new Set(this.complaints.map(c => c.status))
         ).map(st => ({ label: st, value: st }));
         this.isLoading = false;
-        // Debug initial filter state
+        this.hasData = this.complaints.length > 0;
         console.log('Initial filtered complaints:', this.filteredComplaints.length);
       },
       error: (err) => {
@@ -134,7 +134,7 @@ export class WholesaleComplaintsComponent implements OnInit {
         } else {
           alert('Failed to load wholesale complaints. Please try again later.');
         }
-      }
+      },
     });
   }
 
@@ -153,15 +153,12 @@ export class WholesaleComplaintsComponent implements OnInit {
         } else {
           console.error('Category fetch error', err);
         }
-      }
+      },
     });
   }
 
   private formatDate(dateString: string): string {
-    return (
-      this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') ||
-      ''
-    );
+    return this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') || '';
   }
 
   private normalizeStatus(status: string | null | undefined, createdAt: string): string {
@@ -176,35 +173,39 @@ export class WholesaleComplaintsComponent implements OnInit {
   }
 
   applyFilters(): void {
-    console.log('Applying filters with rpst:', this.rpst); // Debug rpst value
+    console.log('Applying filters with rpst:', this.rpst);
     const txt = this.searchText.trim().toLowerCase();
 
-    this.filteredComplaints = this.complaints.filter(item => {
-      const matchesSearch = !txt || [
-        item.refNo,
-        item.complainCategory,
-        item.firstName,
-        item.lastName,
-        item.contactNumber
-      ].some(field => field?.toLowerCase().includes(txt));
+    this.filteredComplaints = this.complaints
+      .filter(item => {
+        const matchesSearch = !txt || [
+          item.refNo,
+          item.complainCategory,
+          item.firstName,
+          item.lastName,
+          item.contactNumber,
+        ].some(field => field?.toLowerCase().includes(txt));
 
-      // Handle reply filter explicitly
-      const matchesReply = this.rpst === null || // No filter applied
-        (this.rpst === 'Yes' ? !!item.reply : item.reply === undefined || item.reply === '');
+        const matchesReply =
+          this.rpst === null ? true :
+          this.rpst === 'Yes' ? !!item.reply :
+          !item.reply; // Simplified logic for No reply
 
-      const matchesCat =
-        !this.filterComCategory || item.complainCategory === this.filterComCategory;
+        const matchesCat =
+          !this.filterComCategory || item.complainCategory === this.filterComCategory;
 
-      const matchesStat =
-        !this.filterStatus || item.status === this.filterStatus;
+        const matchesStat =
+          !this.filterStatus || item.status === this.filterStatus;
 
-      console.log(`Complaint ID: ${item.id}, Matches Reply: ${matchesReply}, Reply Value:`, item.reply); // Debug each complaint
-      return matchesSearch && matchesReply && matchesCat && matchesStat;
-    });
+        console.log(`Complaint ID: ${item.id}, Matches Reply: ${matchesReply}, Reply Value:`, item.reply);
+        return matchesSearch && matchesReply && matchesCat && matchesStat;
+      })
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
 
     this.totalItems = this.filteredComplaints.length;
     this.page = 1;
-    console.log('Filtered complaints count:', this.totalItems); // Debug final count
+    this.hasData = this.filteredComplaints.length > 0;
+    console.log('Filtered complaints count:', this.totalItems);
   }
 
   searchComplain(): void {
@@ -214,14 +215,14 @@ export class WholesaleComplaintsComponent implements OnInit {
 
   clearSearch(): void {
     this.searchText = '';
-    this.rpst = null; // Reset reply status filter
+    this.rpst = null;
     this.filterComCategory = null;
     this.filterStatus = null;
     this.applyFilters();
   }
 
   regStatusFil(): void {
-    console.log('Reply Status Filter Changed, rpst:', this.rpst); // Debug rpst change
+    console.log('Reply Status Filter Changed, rpst:', this.rpst);
     this.applyFilters();
   }
 
@@ -264,7 +265,7 @@ export class WholesaleComplaintsComponent implements OnInit {
         error: (err) => {
           alert('Failed to submit reply. Please try again.');
           console.error('Reply submission error', err);
-        }
+        },
       });
     }
   }

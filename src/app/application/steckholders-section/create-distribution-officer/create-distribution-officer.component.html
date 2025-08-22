@@ -103,11 +103,11 @@
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Collection Centre Name*
+            Distribution Centre Name*
           </label>
           <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!loaded"
-            placeholder="Select a collection centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
+            placeholder="Select a distribution centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
             panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
             (onChange)="changeCenter($event)"> >
           </p-dropdown>
@@ -126,18 +126,18 @@
               <option disabled class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 -- select --
               </option>
-              <option value="Collection Centre Manager"
+              <option value="Distribution Center Manager"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                Collection Centre Manager
+                Distribution Center Manager
               </option>
-              <option value="Collection Officer"
+              <option value="Distribution Officer"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                Collection Officer
+                Distribution Officer
               </option>
-              <option value="Customer Officer"
+              <!-- <option value="Customer Officer"
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 Customer Officer
-              </option>
+              </option> -->
             </select>
             <i
               class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
@@ -165,7 +165,7 @@
           </div>
         </div> -->
 
-        <div *ngIf="personalData.jobRole === 'Collection Officer'">
+        <div *ngIf="personalData.jobRole === 'Distribution Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Manager Name*
           </label>

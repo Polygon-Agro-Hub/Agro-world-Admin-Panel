@@ -8,7 +8,7 @@
     <div>
         <div class="flex justify-between items-center mb-5">
             <h4 class="text-xl font-normal text-[#292929] dark:text-textDark">
-               Invoice No : <span class="font-semibold">{{invNo}}</span>
+                Invoice No : <span class="font-semibold">{{invNo}}</span>
             </h4>
         </div>
 
@@ -34,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of packageObj.packageData">
+                    <tr *ngFor="let item of packageObj.packageData; let i=index;">
                         <td class="py-3 text-[#000000] dark:text-textDark text-left">
                             {{item.name}}
                         </td>
@@ -45,12 +45,11 @@
 
                         <td
                             class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
-                            <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo,
-                            item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
+                            <!-- (click)="navigateDispatchItems(item.packageId)" -->
+                            <!-- (click)="checkLastOrderStatus(true,false,i)" -->
 
-                            <button class="w-6 h-6 mr-3" 
-                            (click)="navigateDispatchItems(item.packageId)"
-                            [disabled]="item.packStatus === 'Unknown'" [ngClass]="{
+                            <button class="w-6 h-6 mr-3" (click)="checkLastOrderStatus(item.packageId,true,false,i)"
+                                [disabled]="item.packStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.packStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': item.packStatus === 'Opened',
                               'text-green-500 hover:text-green-700': item.packStatus === 'Completed',
@@ -81,8 +80,7 @@
                             class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
                             <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
 
-                            <button 
-                                (click)="navigateDispatchAdditionalItems(packageObj.additionalData.orderId)"
+                            <button (click)="navigateDispatchAdditionalItems(packageObj.additionalData.orderId)"
                                 class="w-6 h-6 mr-3" [disabled]="packageObj.additionalData.packStatus === 'Unknown'"
                                 [ngClass]="{
                               'text-gray-300 cursor-not-allowed': packageObj.additionalData.packStatus === 'Unknown',

@@ -1,23 +1,37 @@
 ::ng-deep .p-dropdown-custom .p-dropdown {
-  width: 800px; /* or any width you want */
-  min-width: 250px; /* optional */
-  max-width: 800px; /* optional */
+  width: 800px;
+  min-width: 250px;
+  max-width: 3600px;
   height: 47px;
   padding: 0.5rem;
-  border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  background-color: #f9fafb;
   display: flex;
   align-items: center;
   position: relative;
+  border: none; /* Remove default border to prevent double borders */
 }
 
-::ng-deep .dark .p-dropdown-custom .p-dropdown {
+/* Apply border and background for excluded state */
+::ng-deep .p-dropdown-custom.border-red-500 .p-dropdown {
+  border: 1px solid #ef4444;
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+/* Apply border and background for non-excluded state */
+::ng-deep .p-dropdown-custom:not(.border-red-500) .p-dropdown {
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+}
+
+/* Dark mode for non-excluded state */
+::ng-deep .dark .p-dropdown-custom:not(.border-red-500) .p-dropdown {
+  border: 1px solid #6b7280;
   background-color: #374151;
-  border-color: #6b7280;
   color: #f9fafb;
 }
 
+/* Dropdown label */
 ::ng-deep .p-dropdown-custom .p-dropdown .p-dropdown-label {
   padding: 0;
   line-height: 1.5;
@@ -27,36 +41,45 @@
   white-space: nowrap;
 }
 
+/* Dropdown panel */
 ::ng-deep .p-dropdown-panel {
   z-index: 1000 !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  background-color: white;
   margin-top: 2px;
 }
 
-::ng-deep .dark .p-dropdown-panel {
+/* Dropdown panel border for excluded state */
+::ng-deep .p-dropdown-custom.border-red-500 .p-dropdown-panel {
+  border: 1px solid #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Dropdown panel for non-excluded state */
+::ng-deep .p-dropdown-custom:not(.border-red-500) .p-dropdown-panel {
+  border: 1px solid #d1d5db;
+  background-color: white;
+}
+
+/* Dark mode for dropdown panel */
+::ng-deep .dark .p-dropdown-custom:not(.border-red-500) .p-dropdown-panel {
+  border: 1px solid #6b7280;
   background-color: #374151;
-  border-color: #6b7280;
-  
 }
 
-::ng-deep .custom-dropdown-panel {
-  max-height: 200px;
-  overflow: hidden; /* Remove duplicate scrollbar */
-}
-
+/* Dropdown items wrapper */
 ::ng-deep .p-dropdown-items-wrapper {
   max-height: 200px;
-  overflow-y: auto; /* Keep only this scrollbar */
+  overflow-y: auto;
 }
 
+/* Dropdown items */
 ::ng-deep .p-dropdown-items {
   padding: 0;
   overflow: visible;
 }
 
+/* Individual dropdown item */
 ::ng-deep .p-dropdown-item {
   padding: 0.5rem 0.75rem;
   border: none;
@@ -68,37 +91,55 @@
   white-space: nowrap;
 }
 
+/* Dark mode for dropdown items */
 ::ng-deep .dark .p-dropdown-item {
   color: #f9fafb;
 }
 
+/* Excluded state for dropdown items */
+::ng-deep .p-dropdown-custom.border-red-500 .p-dropdown-item {
+  color: #dc2626;
+}
+
+/* Hover state for dropdown items */
 ::ng-deep .p-dropdown-item:hover {
   background-color: #f3f4f6;
 }
 
+/* Dark mode hover state */
 ::ng-deep .dark .p-dropdown-item:hover {
   background-color: #4b5563;
 }
 
+/* Highlighted dropdown item */
 ::ng-deep .p-dropdown-item.p-highlight {
   background-color: #dbeafe;
   color: #1e40af;
 }
 
+/* Dark mode highlighted dropdown item */
 ::ng-deep .dark .p-dropdown-item.p-highlight {
   background-color: #1e40af;
   color: white;
 }
 
+/* Filter container */
 ::ng-deep .p-dropdown-filter-container {
   padding: 0.5rem;
   border-bottom: 1px solid #e5e7eb;
 }
 
+/* Dark mode filter container */
 ::ng-deep .dark .p-dropdown-filter-container {
-  border-bottom-color: #6b7280;
+  border-bottom: 1px solid #6b7280;
 }
 
+/* Excluded state for filter container */
+::ng-deep .p-dropdown-custom.border-red-500 .p-dropdown-filter-container {
+  border-bottom: 1px solid #ef4444;
+}
+
+/* Filter input */
 ::ng-deep .p-dropdown-filter {
   padding: 0.375rem 0.75rem;
   width: 100%;
@@ -106,8 +147,16 @@
   border-radius: 0.375rem;
 }
 
+/* Dark mode filter input */
 ::ng-deep .dark .p-dropdown-filter {
-  border-color: #6b7280;
+  border: 1px solid #6b7280;
   background-color: #4b5563;
   color: #f9fafb;
+}
+
+/* Excluded state for filter input */
+::ng-deep .p-dropdown-custom.border-red-500 .p-dropdown-filter {
+  border: 1px solid #ef4444;
+  background-color: #fef2f2;
+  color: #dc2626;
 }

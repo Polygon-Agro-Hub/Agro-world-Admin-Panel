@@ -31,11 +31,14 @@ export class DispachPackagesComponent implements OnInit {
   showCountdown: boolean = false;
 
   isPopupOpen: boolean = false;
+  isLastOrder: boolean = false;
 
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id']
     this.orderId = this.route.snapshot.params['orderId']
+    this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
+
     this.fetchData();
   }
 
@@ -66,7 +69,11 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   saveCheckedItems() {
+    if(this.isLastOrder){
     this.showCountdown = true;
+    }else{
+      this.executeApiCall();
+    }
   }
 
   onTimerCompleted() {

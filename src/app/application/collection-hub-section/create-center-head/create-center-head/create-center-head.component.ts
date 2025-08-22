@@ -173,6 +173,14 @@ isSpecialCharErrorMap: { [key: string]: boolean } = {
     return `https://flagcdn.com/24x18/${code}.png`;
   }
 
+isDuplicatePhone(): boolean {
+  return (
+    !!this.personalData.phoneNumber01 && // ensures it's truthy
+    !!this.personalData.phoneNumber02 &&
+    this.personalData.phoneNumber01 === this.personalData.phoneNumber02
+  );
+}
+
 
 
 back(): void {
@@ -265,6 +273,58 @@ validateNameInput(input: string, fieldName: string): void {
   this.isLeadingSpaceErrorMap[fieldName] = false;
   this.isSpecialCharErrorMap[fieldName] = false;
 }
+
+  validateNIC(event: any) {
+    let value: string = event.target.value.toUpperCase();
+
+    // Remove all characters except digits and 'V'
+    value = value.replace(/[^0-9V]/g, '');
+
+    // If more than 12 digits, truncate digits
+    if (value.length > 12) {
+      // Keep last character if it's 'V'
+      const lastChar = value[value.length - 1] === 'V' ? 'V' : '';
+      const digitsOnly = value.replace(/V/g, '').slice(0, 12);
+      value = digitsOnly + lastChar;
+    }
+
+    // Ensure only one 'V' at the end
+    if (value.includes('V') && value[value.length - 1] !== 'V') {
+      value = value.replace(/V/g, '') + 'V';
+    }
+
+    this.personalData.nic = value;
+    event.target.value = value;
+  }
+
+  restrictInput(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    const inputChar = event.key.toUpperCase();
+
+    // Allow control keys
+    if (event.ctrlKey || event.metaKey || event.key.length > 1) {
+      return true;
+    }
+
+    // Allow digits if total digits < 12
+    const digitsCount = currentValue.replace(/[^0-9]/g, '').length;
+    if (/[0-9]/.test(inputChar) && digitsCount < 12) {
+      return true;
+    }
+
+    // Allow 'V' only if not already present
+    if (inputChar === 'V' && !currentValue.toUpperCase().includes('V')) {
+      return true;
+    }
+
+    event.preventDefault();
+    return false;
+  }
+
+
+// Template validation
+
 
 // Input handler method - similar to your phone input approach
 onNameInput(event: Event, fieldName: string): void {
@@ -407,11 +467,17 @@ blockNonNumbers(event: KeyboardEvent) {
 }
 
   
-  getAllCompanies() {
-    this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
+getAllCompanies() {
+  this.collectionCenterSrv.getAllCompanyList().subscribe({
+    next: (res) => {
+      console.log('API Response:', res);
       this.CompanyData = res;
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Error fetching companies:', error);
+    }
+  });
+}
 
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
@@ -1032,7 +1098,10 @@ navigateToPage(page: 'pageOne' | 'pageTwo'): void {
       this.emailErrorMessage = '';
     }
   }
+
 }
+
+
 
 class Personal {
   jobRole: string = 'Collection Center Head';

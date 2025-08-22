@@ -11,7 +11,10 @@ import Swal from 'sweetalert2';
 interface DeliveryCharge {
   id: number;
   city: string;
+  district: string;
+  province: string;
   charge: number;
+  userName:string;
 }
 
 interface ApiResponse {
@@ -96,8 +99,8 @@ export class ViewDeliveryChargesComponent implements OnInit {
       this.deliveryChargeService.getAllDeliveryCharges().subscribe({
         next: (dbData: any[]) => {
           const excelData = [
-            ['City Name', 'Charge (Rs.)'],
-            ...dbData.map((item) => [item.city || item.cityName, item.charge]),
+            ['Province', 'District', 'City', 'Charge'],
+            ...dbData.map((item) => [item.province, item.district, item.city, item.charge]),
           ];
 
           const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(excelData);

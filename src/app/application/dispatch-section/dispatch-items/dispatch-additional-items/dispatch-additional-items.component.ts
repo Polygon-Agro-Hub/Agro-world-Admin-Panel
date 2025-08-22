@@ -87,7 +87,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       price: item.price,
 
     }));
-    this.dispatchService.dispatchPackageItemData(updatedData).subscribe(
+    this.dispatchService.dispatchAdditionalItemData(updatedData).subscribe(
       (res) => {
         this.isLoading = false;
         if (res.status) {

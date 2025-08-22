@@ -12,7 +12,7 @@ import { ViewSendToDispatchComponent } from '../view-send-to-dispatch/view-send-
     CommonModule,
     HttpClientModule,
     TodoDefinePackagesComponent,
-    CompletedDefinePackageComponent,
+    // CompletedDefinePackageComponent,
     ViewSendToDispatchComponent,
   ],
   templateUrl: './define-packages.component.html',
@@ -26,11 +26,12 @@ export class DefinePackagesComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const tab = params['tab'];
-      if (tab === 'completed') {
-        this.activeTab = 'completed'
-      } else if (tab === 'sent') {
+      // if (tab === 'completed') {
+      //   this.activeTab = 'completed'
+      // } else
+      if (tab === 'sent') {
         this.activeTab = 'sent'
-      }else {
+      } else {
         this.activeTab = 'todo'
       }
     });
@@ -49,4 +50,3 @@ export class DefinePackagesComponent implements OnInit {
   }
 }
 
-  

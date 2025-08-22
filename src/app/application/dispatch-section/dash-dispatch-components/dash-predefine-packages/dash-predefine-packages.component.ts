@@ -1,13 +1,14 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
 import { DispatchService } from '../../../../services/dispatch/dispatch.service';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
-import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
@@ -15,16 +16,15 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
   standalone: true,
   imports: [CommonModule, FormsModule, CalendarModule, NgxPaginationModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './dash-predefine-packages.component.html',
-  styleUrl: './dash-predefine-packages.component.css'
+  styleUrls: ['./dash-predefine-packages.component.css']
 })
 export class DashPredefinePackagesComponent implements OnInit {
-
   premadePackages: PremadePackages[] = [];
   search: string = '';
   isLoading = false;
   status = ['Pending', 'Completed', 'Opened'];
-  selectedStatus: any = '';
-
+  selectedStatus: string = '';
+  dateFilter: Date | null = new Date(); // Initialize with current date for initial filter
   itemsPerPage: number = 10;
   totalItems: number = 0;
   page: number = 1;
@@ -32,100 +32,130 @@ export class DashPredefinePackagesComponent implements OnInit {
   hasData = false;
   hasDataCustom = false;
 
-  date: Date = new Date(); // Initialize with current date
-
-
-  ngOnInit(): void {
-    this.getPreMadePackages();
-
-  }
-
   constructor(
     private dispatchService: DispatchService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService,
-  ) { }
+    public permissionService: PermissionService
+  ) {}
+
+  ngOnInit(): void {
+    console.log('Initializing with date:', this.dateFilter);
+    this.getPreMadePackages(); // Fetch packages for current date on init
+  }
 
   getPreMadePackages(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
+    const formattedDate = this.formatDateForAPI(this.dateFilter);
+    console.log('Fetching packages with:', { page, limit, status: this.selectedStatus, date: this.dateFilter, formattedDate, search: this.search.trim() });
 
     this.dispatchService
       .getPreMadePackages(
         page,
         limit,
         this.selectedStatus,
-        this.formatDateForAPI(this.date), // Convert Date to string
+        formattedDate,
         this.search.trim()
       )
-      .subscribe(
-        (response) => {
-          // Add fullTotal to each item
-          this.premadePackages = response.items
-          this.totalItems = response.total;
+      .subscribe({
+        next: (response) => {
+          console.log('API Response:', response);
 
-          this.hasData = response.items && response.items.length > 0;
-          console.log(this.premadePackages);
+          if (response && response.items) {
+            this.premadePackages = response.items;
+            this.totalItems = response.total || response.totalCount || 0;
+            this.hasData = response.total === 0 ? false : true;
+          } else {
+            const allPackages = Array.isArray(response) ? response : [];
+            this.premadePackages = allPackages;
+            this.totalItems = this.premadePackages.length;
+            this.hasData = this.premadePackages.length === 0 ? false : true;
+          }
+
+          console.log('Processed Packages:', this.premadePackages);
           this.isLoading = false;
         },
-        (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
-          if (error.status === 401) {
-          }
-          this.hasData = false; // Set to false on error
+        error: (error) => {
+          console.error('Error fetching packages:', error);
+          this.premadePackages = [];
+          this.totalItems = 0;
+          this.hasData = false;
           this.isLoading = false;
         }
-      );
+      });
   }
 
   private formatDateForAPI(date: Date | null): string {
-    if (!date) return '';
-    // Format as YYYY-MM-DD (ISO date string format)
-    return date.toISOString().split('T')[0];
+    if (!date || isNaN(date.getTime())) {
+      console.log('Invalid or null date, returning empty string');
+      return ''; // Return empty string to fetch all packages
+    }
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formatted = `${year}-${month}-${day}`;
+    console.log('Formatted date for API:', formatted);
+    return formatted;
   }
 
-  applysearch() {
+  onDateFilterClear(): void {
+    console.log('Date filter cleared');
+    this.dateFilter = null; // Clear UI date picker to show placeholder
+    this.page = 1;
+    this.getPreMadePackages(); // Fetch all packages (no date filter)
+  }
+
+  onFilterChange(): void {
+    console.log('Date filter changed:', this.dateFilter, 'Event:', event);
+    this.page = 1;
     this.getPreMadePackages();
-
   }
-  clearSearch() {
+
+
+
+  applySearch(): void {
+    console.log('Applying search:', this.search);
+    this.page = 1;
+    this.getPreMadePackages();
+  }
+
+  clearSearch(): void {
+    console.log('Clearing search');
     this.search = '';
+    this.page = 1;
     this.getPreMadePackages();
   }
 
-  onPageChange(event: number) {
+  applyStatus(): void {
+    console.log('Applying status:', this.selectedStatus);
+    this.page = 1;
+    this.getPreMadePackages();
+  }
+
+  onPageChange(event: number): void {
+    console.log('Page changed:', event);
     this.page = event;
     this.getPreMadePackages(this.page, this.itemsPerPage);
-
   }
 
-
-  applyStatus() {
-    this.getPreMadePackages();
-  }
-
-  calculateTotPrice(num1: string, num2: string) {
+  calculateTotPrice(num1: string, num2: string): number {
     return parseFloat(num1) + parseFloat(num2);
   }
 
-  navigateToPackageItemView(id: number, invNo: string, total: number, name: string, fullTotal: string | number) {
-    console.log(id, invNo, name, total);
-    // this.router.navigate(['/dispatch/package-items']);
+  navigateToPackageItemView(id: number, invNo: string, total: number, name: string, fullTotal: string | number): void {
+    console.log('Navigating to package items:', { id, invNo, name, total, fullTotal });
     this.router.navigate(['/dispatch/package-items'], {
-      queryParams: { id, invNo, name, total, fullTotal },
+      queryParams: { id, invNo, name, total, fullTotal }
     });
   }
 
-  navigateToAdditionalItemView(id: number, invNo: string, total: number, name: string, fullTotal: number | string) {
-    console.log(id, invNo, name, total);
+  navigateToAdditionalItemView(id: number, invNo: string, total: number, name: string, fullTotal: number | string): void {
+    console.log('Navigating to additional items:', { id, invNo, name, total, fullTotal });
     this.router.navigate(['/dispatch/additional-items'], {
-      queryParams: { id, invNo, name, total, fullTotal },
+      queryParams: { id, invNo, name, total, fullTotal }
     });
-
   }
-
 }
-
 
 interface PremadePackages {
   orderId: number;
@@ -136,11 +166,10 @@ interface PremadePackages {
   sheduleDate: Date;
   invNo: string;
   hasData: boolean;
-  packageStatus: string
-
-  totcount: number
-  packCount: number
-  orderAdditionalCount: number
-  additionalPrice: string
+  packageStatus: string;
+  totcount: number;
+  packCount: number;
+  orderAdditionalCount: number;
+  additionalPrice: string;
   additionalItemsStatus: string;
 }

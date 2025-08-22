@@ -46,12 +46,39 @@ export class ViewPremadePackagesComponent implements OnInit {
     )
   }
 
-  navigateDispatchItems(id: number) {
-    this.router.navigate([`/dispatch/dispatch-package/${id}/${this.orderId}`])
+  navigateDispatchItems(id: number, status: boolean = false) {
+    this.router.navigate([`/dispatch/dispatch-package/${id}/${this.orderId}`], {
+    queryParams: { status: status }
+  })
   }
 
   navigateDispatchAdditionalItems(id: number) {
-    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`])
+  this.router.navigate([`/dispatch/dispatch-additional-items/${id}`]);
+}
+
+  checkLastOrderStatus(id:number, checkArraay: boolean = false, checkAdditional: boolean = false, arrayIndex: number = 0) {
+    let allPackagesCompleted = true;
+    let additionalItemsCompleted = true;
+
+    if (checkArraay) {
+      // Filter out the package at arrayIndex and check all others
+      allPackagesCompleted = this.packageObj.packageData
+        .filter((pkg, index) => index !== arrayIndex) 
+        .every(pkg => pkg.packStatus === 'Completed');
+    }
+
+    if (this.packageObj.additionalData &&
+      this.packageObj.additionalData.packStatus !== null && checkAdditional) {
+      additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
+    }
+
+    const finalStatus = allPackagesCompleted && additionalItemsCompleted;
+
+    console.log('All packages completed (excluding index', arrayIndex, '):', allPackagesCompleted);
+    console.log('Additional items completed:', additionalItemsCompleted);
+    console.log('Composite status:', finalStatus);
+
+    this.navigateDispatchItems(id,finalStatus)
   }
 
 

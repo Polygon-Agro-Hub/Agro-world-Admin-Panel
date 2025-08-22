@@ -470,17 +470,22 @@ export const routes: Routes = [
               },
               {
                 path: 'view-distribution-officers',
-                component: ViewDistributionOfficerComponent,
-              },
-              {
-                path: 'create-distribution-officer',
-                component: CreateDistributionOfficerComponent,
+                children: [
+                  {
+                    path: '',
+                    component: ViewDistributionOfficerComponent,
+                  },
+                  {
+                    path: 'create-distribution-officer',
+                    component: CreateDistributionOfficerComponent,
+                  },
+                ],
               },
 
               {
-                    path: 'add-distribution-0fficer',
-                    component: AddDistributionOfficerComponent,
-                  },
+                path: 'add-distribution-0fficer',
+                component: AddDistributionOfficerComponent,
+              },
 
               {
                 path: 'farmers',
@@ -515,7 +520,6 @@ export const routes: Routes = [
                     canActivate: [PermissionGuard],
                     data: { permission: 'Bulk onboarding plan care users' },
                   },
-                  
                 ],
               },
 
@@ -729,13 +733,12 @@ export const routes: Routes = [
           },
           {
             path: 'center-collection-expense/:id',
-            component: CenterCollectionExpenceComponent
+            component: CenterCollectionExpenceComponent,
           },
           {
             path: 'view-center-officers',
-            component: ViewCollectiveOfficerComponent
-          }
-
+            component: ViewCollectiveOfficerComponent,
+          },
         ],
       },
 
@@ -750,8 +753,6 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
           },
-
-
 
           {
             path: 'define-packages',
@@ -813,7 +814,7 @@ export const routes: Routes = [
           {
             path: 'dispatch-additional-items/:id',
             component: DispatchAdditionalItemsComponent,
-          }
+          },
         ],
       },
 
@@ -1114,4 +1115,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -103,11 +103,11 @@
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Collection Centre Name*
+            Distribution Centre Name*
           </label>
           <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!loaded"
-            placeholder="Select a collection centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
+            placeholder="Select a distribution centre" (onBlur)="onBlur('centerId')" styleClass="w-full mt-1"
             panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
             (onChange)="changeCenter($event)"> >
           </p-dropdown>

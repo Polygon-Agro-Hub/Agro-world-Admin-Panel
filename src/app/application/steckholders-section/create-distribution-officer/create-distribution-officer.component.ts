@@ -175,7 +175,7 @@ back(): void {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/steckholders/action/collective-officer']);
+      this.router.navigate(['/steckholders/action/view-distribution-officers']);
     }
   });
 }

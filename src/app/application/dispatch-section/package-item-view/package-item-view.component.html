@@ -2,7 +2,13 @@
 
 <app-count-down *ngIf="showCountdown" [duration]="30" (completed)="onTimerCompleted()"
     (cancelled)="onTimerCancelled()"></app-count-down>
-
+<button
+   (click)="back()"
+    class="text-textLight dark:text-textDark mb-2"
+  >
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
 <div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
     <div>
 
@@ -82,7 +88,7 @@
                         <td class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 ">
                             <input type="checkbox" [checked]="item.packedStatus === 1"
                                 (change)="onCheckboxChange(item, $event)"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded cursor-pointer focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </td>
                     </tr>
                 </tbody>

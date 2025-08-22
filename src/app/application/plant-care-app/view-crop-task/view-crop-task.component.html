@@ -77,7 +77,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
+          <!-- <tr
             *ngFor="
               let task of cropTask
                 | paginate
@@ -86,6 +86,12 @@
                       currentPage: page,
                       totalItems: totalItems
                     }
+            "
+          > -->
+
+          <tr
+            *ngFor="
+              let task of cropTask
             "
           >
             <td 
@@ -232,7 +238,7 @@
         </tbody>
       </table>
     </div>
-    <pagination-controls
+    <!-- <pagination-controls
       (pageChange)="onPageChange($event)"
       [responsive]="true"
       [previousLabel]="'Previous'"
@@ -241,6 +247,6 @@
       [screenReaderPageLabel]="'page'"
       [screenReaderCurrentLabel]="'Youre on page'"
     >
-    </pagination-controls>
+    </pagination-controls> -->
   </div>
 </div>

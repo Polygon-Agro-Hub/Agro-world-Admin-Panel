@@ -947,19 +947,23 @@
           >
             District *
           </label>
-          <select
-            (blur)="onBlur('district')"
-            id="district"
-            name="district"
-            [(ngModel)]="personalData.district"
-            (change)="updateProvince($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          >
-            <option value="" disabled selected>Select a district</option>
-            <option *ngFor="let district of districts" [value]="district.name">
-              {{ district.name }}
-            </option>
-          </select>
+          
+<p-dropdown
+  id="district"
+  name="district"
+  [(ngModel)]="personalData.district"
+  [options]="districtOptions"
+  optionLabel="label"
+  optionValue="value"
+  [filter]="true"
+  filterBy="label"
+  [showClear]="false"
+  placeholder="Select a district"
+  (onChange)="updateProvince($event)"
+  (onBlur)="onBlur('district')"
+  panelStyleClass="custom-dropdown-panel" class="block w-full p-dropdown-custom"
+  [class.border-red-500]="isFieldInvalid('district')">
+</p-dropdown>
           <span *ngIf="isFieldInvalid('district')" class="text-red-600 text-sm"
             >District is required.</span
           >

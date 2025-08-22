@@ -403,6 +403,7 @@
       (blur)="onBlur('phoneNumber01')"
       (input)="checkDuplicatePhoneNumbers()"
       maxlength="9"
+       type="number"
       placeholder="Enter your phone number"
       class="block w-full p-2 border rounded-r-md"
     />
@@ -451,7 +452,7 @@
     <input
       id="phoneNumber02"
       name="phoneNumber02"
-      type="text"
+      type="number"
       [(ngModel)]="personalData.phoneNumber02"
       (input)="checkDuplicatePhoneNumbers()"
       maxlength="9"

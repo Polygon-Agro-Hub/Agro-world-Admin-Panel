@@ -113,6 +113,6 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
 }
 
 navigateToAddDistribution(): void {
-    this.router.navigate(['/steckholders/action/add-distribution-0fficer']);
+    this.router.navigate(['/steckholders/action/create-distribution-officer']);
   }
 }

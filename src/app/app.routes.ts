@@ -169,6 +169,7 @@ import { DispatchMarketplaceComponent } from './application/dispatch-section/mar
 import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
 import { DispachPackagesComponent } from './application/dispatch-section/dispatch-items/dispach-packages/dispach-packages.component';
 import { DispatchAdditionalItemsComponent } from './application/dispatch-section/dispatch-items/dispatch-additional-items/dispatch-additional-items.component';
+import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
 
 export const routes: Routes = [
   {
@@ -465,6 +466,11 @@ export const routes: Routes = [
               {
                 path: '',
                 component: SteckholdersComponent,
+              },
+
+              {
+                path: 'create-distribution-officer',
+                component: CreateDistributionOfficerComponent,
               },
 
               {

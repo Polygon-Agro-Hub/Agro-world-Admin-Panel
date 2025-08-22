@@ -12,7 +12,7 @@ import { ViewSendToDispatchComponent } from '../view-send-to-dispatch/view-send-
     CommonModule,
     HttpClientModule,
     TodoDefinePackagesComponent,
-    CompletedDefinePackageComponent,
+    // CompletedDefinePackageComponent,
     ViewSendToDispatchComponent,
   ],
   templateUrl: './define-packages.component.html',

@@ -108,97 +108,97 @@ export class AddDestributionCenterComponent implements OnInit {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
   private initializeForm() {
-    this.distributionForm = this.fb.group(
-      {
-        name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
-        company: ['', Validators.required],
-        contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-        contact1Code: ['+94', Validators.required],
-        contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-        contact2Code: ['+94'],
-        latitude: [
-          '',
-          [
-            Validators.required,
-            this.numericDecimalValidator
-          ],
+  this.distributionForm = this.fb.group(
+    {
+      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      company: ['', Validators.required],
+      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      contact1Code: ['+94', Validators.required],
+      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
+      contact2Code: ['+94'],
+      latitude: [
+        '',
+        [
+          Validators.required,
+          this.latitudeRangeValidator // New range validator
         ],
-        longitude: [
-          '',
-          [
-            Validators.required,
-            this.numericDecimalValidator
-          ],
+      ],
+      longitude: [
+        '',
+        [
+          Validators.required,
+          this.longitudeRangeValidator // New range validator
         ],
-        email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
-        country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
-        province: ['', Validators.required],
-        district: ['', Validators.required],
-        city: ['', Validators.required],
-        regCode: ['', Validators.required], // Remove disabled: true
-      },
-      { validator: this.contactNumbersMatchValidator }
-    );
+      ],
+      email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
+      country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
+      province: ['', Validators.required],
+      district: ['', Validators.required],
+      city: ['', Validators.required],
+      regCode: ['', Validators.required],
+    },
+    { validator: this.contactNumbersMatchValidator }
+  );
 
-    // Watch province changes to update districts
-    this.distributionForm
-      .get('province')
-      ?.valueChanges.subscribe((province) => {
-        if (!this.updatingDropdowns && province) {
+  // Watch province changes to update districts
+  this.distributionForm
+    .get('province')
+    ?.valueChanges.subscribe((province) => {
+      if (!this.updatingDropdowns && province) {
+        this.updatingDropdowns = true;
+        this.distributionForm.get('district')?.setValue('');
+        this.updatingDropdowns = false;
+      }
+    });
+
+  // Watch district changes to update province
+  this.distributionForm
+    .get('district')
+    ?.valueChanges.subscribe((district) => {
+      if (!this.updatingDropdowns && district) {
+        const matchingProvince = this.findProvinceByDistrict(district);
+        if (matchingProvince) {
           this.updatingDropdowns = true;
-          this.distributionForm.get('district')?.setValue('');
+          this.distributionForm.get('province')?.setValue(matchingProvince);
           this.updatingDropdowns = false;
         }
-      });
+      }
+    });
 
-    // Watch district changes to update province
-    this.distributionForm
-      .get('district')
-      ?.valueChanges.subscribe((district) => {
-        if (!this.updatingDropdowns && district) {
-          const matchingProvince = this.findProvinceByDistrict(district);
-          if (matchingProvince) {
-            this.updatingDropdowns = true;
-            this.distributionForm.get('province')?.setValue(matchingProvince);
-            this.updatingDropdowns = false;
-          }
+  // Watch contact number changes to validate duplicates
+  this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  // Optimize name validation with debounce
+  this.distributionForm
+    .get('name')
+    ?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((value) => {
+        if (value && value.length >= 3) {
+          return this.distributionService.checkDistributionCentreNameExists(
+            value
+          );
         }
-      });
-
-    // Watch contact number changes to validate duplicates
-    this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    // Optimize name validation with debounce
-    this.distributionForm
-      .get('name')
-      ?.valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap((value) => {
-          if (value && value.length >= 3) {
-            return this.distributionService.checkDistributionCentreNameExists(
-              value
-            );
-          }
-          return of({ exists: false });
-        })
-      )
-      .subscribe();
-  }
+        return of({ exists: false });
+      })
+    )
+    .subscribe();
+}
 
   private englishLettersOnlyValidator(control: AbstractControl) {
     if (!control.value) return null;
@@ -301,37 +301,43 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   getFieldError(fieldName: string): string {
-    const field = this.distributionForm.get(fieldName);
+  const field = this.distributionForm.get(fieldName);
 
-    if (!field?.errors) return '';
+  if (!field?.errors) return '';
 
-    if (field.errors['required']) {
-      return `${this.getFieldLabel(fieldName)} is required`;
-    }
-    if (field.errors['email'] || field.errors['customEmail']) {
-    // Use custom email validation message
+  if (field.errors['required']) {
+    return `${this.getFieldLabel(fieldName)} is required`;
+  }
+  if (field.errors['email'] || field.errors['customEmail']) {
     return field.errors['customEmail'] || 'Please enter a valid email';
   }
-    if (field.errors['pattern']) {
-      if (fieldName.includes('contact')) {
-        return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
-      }
+  if (field.errors['pattern']) {
+    if (fieldName.includes('contact')) {
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
     }
-    if (field.errors['numericDecimal']) {
-      return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
-    }
-    if (field.errors['englishLettersOnly']) {
-      return 'Centre Name should contain only English letters and spaces';
-    }
-    if (field.errors['sameContactNumbers']) {
-      return 'Contact Number 02 must be different from Contact Number 01';
-    }
-    if (field.errors['nameExists']) {
-      return 'Distribution Centre Name already exists';
-    }
-
-    return '';
   }
+  if (field.errors['numericDecimal']) {
+    return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
+  }
+  if (field.errors['englishLettersOnly']) {
+    return 'Centre Name should contain only English letters and spaces';
+  }
+  if (field.errors['sameContactNumbers']) {
+    return 'Contact Number 02 must be different from Contact Number 01';
+  }
+  if (field.errors['nameExists']) {
+    return 'Distribution Centre Name already exists';
+  }
+  // Add the new validation errors
+  if (field.errors['latitudeRange']) {
+    return 'Latitude must be between -90 and 90';
+  }
+  if (field.errors['longitudeRange']) {
+    return 'Longitude must be between -180 and 180';
+  }
+
+  return '';
+}
 
   onInputChange(event: any, fieldType: string) {
     const target = event.target as HTMLInputElement;
@@ -655,6 +661,40 @@ onCancel() {
   const validation = this.emailValidationService.validateEmail(control.value);
   return validation.isValid ? null : { customEmail: validation.errorMessage };
 }
+
+private latitudeRangeValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  if (!numericDecimal.test(control.value)) {
+    return { numericDecimal: true };
+  }
+  
+  const value = parseFloat(control.value);
+  if (value < -90 || value > 90) {
+    return { latitudeRange: true };
+  }
+  
+  return null;
+}
+
+private longitudeRangeValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  if (!numericDecimal.test(control.value)) {
+    return { numericDecimal: true };
+  }
+  
+  const value = parseFloat(control.value);
+  if (value < -180 || value > 180) {
+    return { longitudeRange: true };
+  }
+  
+  return null;
+}
+
+
 }
 
 class CompanyList {

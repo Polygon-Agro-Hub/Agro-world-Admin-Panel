@@ -52,24 +52,27 @@ export class ViewPremadePackagesComponent implements OnInit {
   })
   }
 
-  navigateDispatchAdditionalItems(id: number) {
-  this.router.navigate([`/dispatch/dispatch-additional-items/${id}`]);
+  navigateDispatchAdditionalItems(id: number, status:boolean) {
+  this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
+    queryParams: { status: status }
+  })
 }
 
-  checkLastOrderStatus(id:number, checkArraay: boolean = false, checkAdditional: boolean = false, arrayIndex: number = 0) {
+  checkPackageLastOrderStatus(id:number, arrayIndex: number = 0) {
     let allPackagesCompleted = true;
     let additionalItemsCompleted = true;
 
-    if (checkArraay) {
       // Filter out the package at arrayIndex and check all others
       allPackagesCompleted = this.packageObj.packageData
         .filter((pkg, index) => index !== arrayIndex) 
         .every(pkg => pkg.packStatus === 'Completed');
-    }
+    
 
     if (this.packageObj.additionalData &&
-      this.packageObj.additionalData.packStatus !== null && checkAdditional) {
+      this.packageObj.additionalData.packStatus !== null ) {
       additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
+      console.log("additional hit->",additionalItemsCompleted);
+      
     }
 
     const finalStatus = allPackagesCompleted && additionalItemsCompleted;
@@ -81,6 +84,29 @@ export class ViewPremadePackagesComponent implements OnInit {
     this.navigateDispatchItems(id,finalStatus)
   }
 
+  checkAdditionalLastOrderStatus(id:number) {
+    let allPackagesCompleted = true;
+    let additionalItemsCompleted = true;
+
+      // Filter out the package at arrayIndex and check all others
+      allPackagesCompleted = this.packageObj.packageData
+        .every(pkg => pkg.packStatus === 'Completed');
+    
+    if (this.packageObj.additionalData &&
+      this.packageObj.additionalData.packStatus !== null ) {
+      additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
+      console.log("additional hit->",additionalItemsCompleted);
+      
+    }
+
+    const finalStatus = allPackagesCompleted && additionalItemsCompleted;
+
+    console.log('All packages completed (excluding index', '):', allPackagesCompleted);
+    console.log('Additional items completed:', additionalItemsCompleted);
+    console.log('Composite status:', finalStatus);
+
+    this.navigateDispatchAdditionalItems(id,finalStatus)
+  }
 
 }
 

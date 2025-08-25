@@ -97,7 +97,7 @@ export class DispachPackagesComponent implements OnInit {
       price: item.price,
 
     }));
-    this.dispatchService.dispatchPackageItemData(updatedData).subscribe(
+    this.dispatchService.dispatchPackageItemData(updatedData, this.orderId, this.isLastOrder).subscribe(
       (res) => {
         this.isLoading = false;
         if (res.status) {

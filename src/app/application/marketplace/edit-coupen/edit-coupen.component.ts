@@ -152,52 +152,60 @@ export class EditCoupenComponent {
   // Reset validation messages
   this.checkPrecentageValueMessage = '';
   this.checkfixAmountValueMessage = '';
- const missingFields = [];
+  
+  const validationErrors = [];
+  
   // Validate required fields
-  if (!this.coupenObj.code) missingFields.push('Code');
-  if (!this.coupenObj.startDate) missingFields.push('Start Date');
-  if (!this.coupenObj.endDate) missingFields.push('End Date');
-  if (!this.coupenObj.type) missingFields.push('Type');
-
-  if (missingFields.length > 0) {
-    Swal.fire(
-      'Warning',
-      `Please fill in the following required field(s): ${missingFields.join(', ')}`,
-      'warning'
-    );
-    return;
-  }
+  if (!this.coupenObj.code) validationErrors.push('Code');
+  if (!this.coupenObj.startDate) validationErrors.push('Start Date');
+  if (!this.coupenObj.endDate) validationErrors.push('End Date');
+  if (!this.coupenObj.type) validationErrors.push('Type');
 
   // Validate type-specific fields
   if (this.coupenObj.type === 'Percentage') {
     if (this.coupenObj.percentage == null || isNaN(this.coupenObj.percentage)) {
-      this.checkPrecentageValueMessage = 'Percentage value is required';
-      Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
-      return;
+      validationErrors.push('Discount Percentage is required');
     } else if (this.coupenObj.percentage < 0 || this.coupenObj.percentage > 100) {
-      this.checkPrecentageValue(this.coupenObj.percentage);
-      Swal.fire('Warning', 'Please enter a valid percentage (0-100)', 'warning');
-      return;
+      validationErrors.push('Percentage must be between 0 and 100');
     }
   }
 
   if (this.coupenObj.type === 'Fixed Amount') {
     if (this.coupenObj.fixDiscount == null || isNaN(this.coupenObj.fixDiscount)) {
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-      Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
-      return;
+      validationErrors.push('Discount Amount is required');
     } else if (this.coupenObj.fixDiscount < 0) {
-      this.checkFixAmountValue(this.coupenObj.fixDiscount);
-      Swal.fire('Warning', 'Please enter a valid discount amount', 'warning');
-      return;
+      validationErrors.push('Discount Amount cannot be negative');
     }
   }
 
   if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-    Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
+    validationErrors.push('Price Limit is required when "Set Price Limit" is checked');
+  }
+
+  // Show validation errors if any
+  if (validationErrors.length > 0) {
+    // Create HTML list of errors
+    const errorList = validationErrors.map(error => `<li>${error}</li>`).join('');
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Validation Errors',
+      html: `
+        <div class="text-left">
+          <p>Please fix the following errors:</p>
+          <ul class="list-disc pl-5 mt-2">${errorList}</ul>
+        </div>
+      `,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
     return;
   }
 
+  // If no validation errors, proceed with API call
   // Prepare the data for API call
   const payload = {
     ...this.coupenObj,

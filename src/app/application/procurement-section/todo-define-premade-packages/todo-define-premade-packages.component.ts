@@ -508,10 +508,10 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   closeAddNewItemPopUp() {
-    this.isNewAddPopUp = false;
-    this.selectPackageId = '';
-
-  }
+  this.isNewAddPopUp = false;
+  this.selectPackageId = '';
+  this.selectCategoryId = ''; // Add this line to clear the dropdown
+}
 
   addNewItems() {
     // Find the order detail that matches the selected packageId
@@ -623,6 +623,11 @@ isExcluded(product: MarketplaceItem): boolean {
     // For now, just calling ngOnInit as in your original code
     this.ngOnInit();
   }
+
+  onCancelClick() {
+  this.selectCategoryId = ''; // Clear the dropdown selection
+  this.closeAddNewItemPopUp(); // Close the popup
+}
 
 
 }

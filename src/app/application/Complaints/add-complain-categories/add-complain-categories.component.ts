@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
 import Swal from 'sweetalert2';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+
 @Component({
   selector: 'app-add-complain-categories',
   standalone: true,
-  imports: [CommonModule, FormsModule,DropdownModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './add-complain-categories.component.html',
   styleUrl: './add-complain-categories.component.css'
 })
@@ -16,7 +17,6 @@ export class AddComplainCategoriesComponent implements OnInit {
   roleArr: Roles[] = [];
   appsArr: Apps[] = [];
   complainObj: ComplainCategory = new ComplainCategory();
-
 
   constructor(
     private router: Router,
@@ -31,101 +31,173 @@ export class AddComplainCategoriesComponent implements OnInit {
     this.complaintSrv.getAdminComplainCategoryForCreate().subscribe(
       (res) => {
         console.log(res);
-        
         this.roleArr = res.adminRoles;
         this.appsArr = res.systemApps;
-
       }
     )
   }
 
-  onSubmit() {
+  validateForm(): string[] {
+    const errors: string[] = [];
     const c = this.complainObj;
-    if (
-      !c.appId || !c.roleId || 
-      !c.categoryEnglish || !c.categorySinhala || !c.categoryTamil
-    ) {
-      Swal.fire('Warning', 'Fill all required fields!', 'warning');
+
+    if (!c.roleId || c.roleId === 0) {
+      errors.push('Complaint Assignee Admin Category is required');
+    }
+    if (!c.appId || c.appId === 0) {
+      errors.push('Displaying Application is required');
+    }
+    if (!c.categoryEnglish || c.categoryEnglish.trim() === '') {
+      errors.push('Category name in English is required');
+    }
+    if (!c.categorySinhala || c.categorySinhala.trim() === '') {
+      errors.push('Category name in Sinhala is required');
+    }
+    if (!c.categoryTamil || c.categoryTamil.trim() === '') {
+      errors.push('Category name in Tamil is required');
+    }
+
+    return errors;
+  }
+
+  onSubmit() {
+    const validationErrors = this.validateForm();
+    
+    if (validationErrors.length > 0) {
+      // Create HTML list of errors
+      const errorList = validationErrors.map(error => `<li class="text-left">${error}</li>`).join('');
+      const errorHtml = `<ul class="text-left list-disc pl-5">${errorList}</ul>`;
+      
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Error',
+        html: `Please fix the following errors: ${errorHtml}`,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
+        }
+      });
       return;
     }
   
-    this.complaintSrv.AddNewComplainCategory(c).subscribe(
+    this.complaintSrv.AddNewComplainCategory(this.complainObj).subscribe(
       (res) => {
         if (res.status) {
-          Swal.fire("Success", 'Complaint category created successfully!', 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Complaint category created successfully!',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
+            }
+          });
           this.router.navigate(['/complaints/manage-applications']);
         } else {
           if (res.message === 'Category already added') {
-            Swal.fire("Info", 'This complaint category already exists.', 'info');
+            Swal.fire({
+              icon: 'info',
+              title: 'Info',
+              text: 'This complaint category already exists.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
+              }
+            });
           } else {
-            Swal.fire("Error", 'Error occurred while creating complaint category!', 'error');
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error occurred while creating complaint category!',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
+              }
+            });
           }
         }
       },
       (err) => {
-        Swal.fire("Error", 'Already added this category!', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Already added this category!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
+          }
+        });
       }
     );
   }
   
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/complaints']);
-    }
-  });
-}
-
-
-    onCancel() {
-      Swal.fire({
-        icon: "warning",
-        title: "Are you sure?",
-        text: "You may lose the added data after canceling!",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Cancel",
-        cancelButtonText: "No, Keep Editing",
-          customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(["/complaints"]);
-        }
-      });
-    }
-
-blockLeadingSpace(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
-  // Block space key if cursor is at position 0 (start)
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg mr-2',
+        cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/complaints']);
+      }
+    });
   }
-}
 
-validateEnglish(): void {
-  let value = this.complainObj.categoryEnglish || '';
-  
-  // Remove all characters except English letters and spaces
-  value = value.replace(/[^A-Za-z ]+/g, '');
+  onCancel() {
+    Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You may lose the added data after canceling!",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Cancel",
+      cancelButtonText: "No, Keep Editing",
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg mr-2',
+        cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(["/complaints"]);
+      }
+    });
+  }
 
-  // Also remove leading spaces just in case (e.g., from paste)
-  value = value.replace(/^\s+/, '');
+  blockLeadingSpace(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    // Block space key if cursor is at position 0 (start)
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
+  }
 
-  this.complainObj.categoryEnglish = value;
-}
+  validateEnglish(): void {
+    let value = this.complainObj.categoryEnglish || '';
+    
+    // Remove all characters except English letters and spaces
+    value = value.replace(/[^A-Za-z ]+/g, '');
+
+    // Also remove leading spaces just in case (e.g., from paste)
+    value = value.replace(/^\s+/, '');
+
+    this.complainObj.categoryEnglish = value;
+  }
 
   allowOnlySinhala(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -139,7 +211,7 @@ validateEnglish(): void {
     }
   }
 
-allowOnlyTamil(event: KeyboardEvent): void {
+  allowOnlyTamil(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
     if (char === ' ' && input.selectionStart === 0) {
@@ -154,7 +226,6 @@ allowOnlyTamil(event: KeyboardEvent): void {
   navigationPath(path: string) {
     this.router.navigate([path])
   }
-
 }
 
 class Roles {

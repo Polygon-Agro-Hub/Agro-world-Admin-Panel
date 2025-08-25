@@ -336,12 +336,24 @@ private downloadAggregatedReport(aggregatedData: any[]) {
 
   const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
 
-  // Create a Blob from the aggregated data
-  const worksheet = XLSX.utils.json_to_sheet(aggregatedData.map(item => ({
+  // Sort the aggregated data by Crop (A-Z) and then by Variety (A-Z)
+  const sortedData = aggregatedData.sort((a, b) => {
+    // First sort by crop name
+    const cropComparison = a.cropNameEnglish.localeCompare(b.cropNameEnglish);
+    if (cropComparison !== 0) {
+      return cropComparison;
+    }
+    
+    // If crops are the same, sort by variety name
+    return a.varietyNameEnglish.localeCompare(b.varietyNameEnglish);
+  });
+
+  // Create a Blob from the sorted aggregated data
+  const worksheet = XLSX.utils.json_to_sheet(sortedData.map(item => ({
     'Crop': item.cropNameEnglish,
     'Variety': item.varietyNameEnglish,
     'Quantity (kg)': item.quantity,
-    'Ordered On': this.formatDateForExcel(item.createdAt), // Use createdAt instead of OrderDate
+    'Ordered On': this.formatDateForExcel(item.createdAt),
     'Scheduled Date': this.formatDateForExcel(item.sheduleDate),
     'To Collection Centre': this.formatDateForExcel(item.toCollectionCentre),
     'To Dispatch Centre': this.formatDateForExcel(item.toDispatchCenter)

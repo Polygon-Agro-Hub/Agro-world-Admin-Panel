@@ -695,10 +695,14 @@ export class FinalinvoiceService {
       ]);
     }
 
-    grandTotalBody.push([
-      'Coupon Discount',
-      `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`
-    ]);
+    // Add coupon discount only if it has a value greater than 0
+    const couponValue = parseNum(invoice.billingInfo.couponValue);
+    if (couponValue > 0) {
+      grandTotalBody.push([
+        'Coupon Discount',
+        `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`
+      ]);
+    }
 
     // Calculate final grand total
     const familyPackTotal = invoice.familyPackItems?.reduce(
@@ -715,7 +719,8 @@ export class FinalinvoiceService {
       ? parseNum(invoice.deliveryFee) 
       : 0;
 
-    const discountTotal = parseNum(invoice.discount) + parseNum(invoice.billingInfo.couponValue);
+    // Update discount calculation to only include coupon if it exists
+    const discountTotal = parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee = (invoice.additionalItems && invoice.additionalItems.length > 0 && 
                       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) ? 180 : 0;

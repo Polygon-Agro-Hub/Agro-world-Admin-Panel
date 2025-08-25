@@ -52,14 +52,14 @@
     </div>
 
     <div class="flex space-x-2">
-      <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm" (click)="ngOnInit()">
-        Clear
-      </button>
-      <button class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm" [disabled]="!isWithinLimit"
-        [class.opacity-50]="!isWithinLimit" [class.cursor-not-allowed]="!isWithinLimit" (click)="onComplete()">
-        Complete
-      </button>
-    </div>
+  <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm" (click)="confirmClear()">
+    Clear
+  </button>
+  <button class="px-4 py-2 bg-[#3980C0] text-white rounded text-sm" [disabled]="!isWithinLimit"
+    [class.opacity-50]="!isWithinLimit" [class.cursor-not-allowed]="!isWithinLimit" (click)="confirmComplete()">
+    Complete
+  </button>
+</div>
   </div>
   <span *ngFor="let package of orderdetailsArr">
     <div class="p-10 space-y-4">

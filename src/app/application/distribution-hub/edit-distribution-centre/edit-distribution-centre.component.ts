@@ -341,14 +341,16 @@ getFlagUrl(countryCode: string): string {
         '',
         [
           Validators.required,
-          this.numericDecimalValidator
+          this.numericDecimalValidator,
+          this.latitudeRangeValidator
         ],
       ],
       longitude: [
         '',
         [
           Validators.required,
-          this.numericDecimalValidator
+          this.numericDecimalValidator,
+          this.longitudeRangeValidator
         ],
       ],
       email: ['', [
@@ -869,43 +871,52 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
 
   // Fixed getFieldError method to handle all error types properly
   getFieldError(fieldName: string): string {
-    const field = this.distributionForm.get(fieldName);
+  const field = this.distributionForm.get(fieldName);
 
-    if (!field?.errors) return '';
+  if (!field?.errors) return '';
 
-    // Handle required validation first
-    if (field.errors['required']) {
-      return `${this.getFieldLabel(fieldName)} is required`;
-    }
-
-    if (field.errors['customEmail']) {
-  return field.errors['customEmail']; // Return the specific error message from service
-}
-
-    if (field.errors['pattern']) {
-      if (fieldName.includes('contact')) {
-        return 'Phone number must be exactly 9 digits';
-      }
-    }
-
-    if (field.errors['numericDecimal']) {
-      return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
-    }
-
-    if (field.errors['englishLettersOnly']) {
-      return 'Centre Name should contain only English letters and spaces';
-    }
-
-    if (field.errors['sameContactNumbers']) {
-      return 'Contact Number 02 must be different from Contact Number 01';
-    }
-
-    if (field.errors['nameExists']) {
-      return 'Distribution Centre Name already exists';
-    }
-
-    return '';
+  // Handle required validation first
+  if (field.errors['required']) {
+    return `${this.getFieldLabel(fieldName)} is required`;
   }
+
+  // Add these new error handlers for coordinate ranges
+  if (field.errors['latitudeRange']) {
+    return 'Latitude must be between -90 and 90';
+  }
+
+  if (field.errors['longitudeRange']) {
+    return 'Longitude must be between -180 and 180';
+  }
+
+  if (field.errors['customEmail']) {
+    return field.errors['customEmail']; // Return the specific error message from service
+  }
+
+  if (field.errors['pattern']) {
+    if (fieldName.includes('contact')) {
+      return 'Phone number must be exactly 9 digits';
+    }
+  }
+
+  if (field.errors['numericDecimal']) {
+    return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
+  }
+
+  if (field.errors['englishLettersOnly']) {
+    return 'Centre Name should contain only English letters and spaces';
+  }
+
+  if (field.errors['sameContactNumbers']) {
+    return 'Contact Number 02 must be different from Contact Number 01';
+  }
+
+  if (field.errors['nameExists']) {
+    return 'Distribution Centre Name already exists';
+  }
+
+  return '';
+}
 
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
@@ -1009,6 +1020,33 @@ private customEmailValidator(control: AbstractControl): ValidationErrors | null 
   
   return null;
 }
+
+private latitudeRangeValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  
+  const numericValue = parseFloat(control.value);
+  if (isNaN(numericValue)) return { numericDecimal: true };
+  
+  if (numericValue < -90 || numericValue > 90) {
+    return { latitudeRange: true };
+  }
+  
+  return null;
+}
+
+private longitudeRangeValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  
+  const numericValue = parseFloat(control.value);
+  if (isNaN(numericValue)) return { numericDecimal: true };
+  
+  if (numericValue < -180 || numericValue > 180) {
+    return { longitudeRange: true };
+  }
+  
+  return null;
+}
+
 }
 
 class CompanyList {

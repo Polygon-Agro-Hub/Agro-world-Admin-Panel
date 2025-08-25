@@ -740,14 +740,14 @@ export class FinalinvoiceService {
     (doc as any).autoTable({
       startY: yPosition,
       body: grandTotalBody,
-      margin: { left: 10, right: 10 },
+      margin: { left: 15, right: 15 },
       columnStyles: {
         0: { cellWidth: 'auto', halign: 'left' },
         1: { cellWidth: 'auto', halign: 'right' },
       },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        cellPadding: { top: 4, right: 0, bottom: 4, left: 0 },
         lineColor: [255, 255, 255],
         lineWidth: 0,
       },

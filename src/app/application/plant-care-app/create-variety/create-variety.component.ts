@@ -304,125 +304,127 @@ export class CreateVarietyComponent implements OnInit {
 }
 
   onSubmit() {
-    const cropValues = this.cropForm.value;
-    if (
-      !cropValues.groupId ||
-      !cropValues.varietyNameEnglish ||
-      !cropValues.varietyNameSinhala ||
-      !cropValues.varietyNameTamil ||
-      !cropValues.descriptionEnglish ||
-      !cropValues.descriptionSinhala ||
-      !cropValues.descriptionTamil ||
-      !cropValues.bgColor
-    ) {
-      Swal.fire('warning', 'Please fill all input feilds', 'warning');
-      return;
+  // Mark all form controls as touched to trigger validation
+  Object.keys(this.cropForm.controls).forEach(key => {
+    this.cropForm.get(key)?.markAsTouched();
+  });
+
+  // Check if form is invalid
+  if (this.cropForm.invalid || !this.selectedFile) {
+    let errorMessages = [];
+
+    // Check each field for errors
+    if (this.cropForm.get('groupId')?.hasError('required')) {
+      errorMessages.push('Crop name is required');
+    }
+
+    if (this.cropForm.get('varietyNameEnglish')?.hasError('required')) {
+      errorMessages.push('English variety name is required');
+    } else if (this.cropForm.get('varietyNameEnglish')?.hasError('pattern')) {
+      errorMessages.push('English variety name cannot be only numbers');
+    }
+
+    if (this.cropForm.get('varietyNameSinhala')?.hasError('required')) {
+      errorMessages.push('Sinhala variety name is required');
+    } else if (this.cropForm.get('varietyNameSinhala')?.hasError('pattern')) {
+      errorMessages.push('Sinhala variety name cannot be only numbers');
+    }
+
+    if (this.cropForm.get('varietyNameTamil')?.hasError('required')) {
+      errorMessages.push('Tamil variety name is required');
+    } else if (this.cropForm.get('varietyNameTamil')?.hasError('pattern')) {
+      errorMessages.push('Tamil variety name cannot be only numbers');
+    }
+
+    if (this.cropForm.get('descriptionEnglish')?.hasError('required')) {
+      errorMessages.push('English description is required');
+    } else if (this.cropForm.get('descriptionEnglish')?.hasError('minlength')) {
+      errorMessages.push('English description must be at least 10 characters');
+    }
+
+    if (this.cropForm.get('descriptionSinhala')?.hasError('required')) {
+      errorMessages.push('Sinhala description is required');
+    } else if (this.cropForm.get('descriptionSinhala')?.hasError('minlength')) {
+      errorMessages.push('Sinhala description must be at least 10 characters');
+    }
+
+    if (this.cropForm.get('descriptionTamil')?.hasError('required')) {
+      errorMessages.push('Tamil description is required');
+    } else if (this.cropForm.get('descriptionTamil')?.hasError('minlength')) {
+      errorMessages.push('Tamil description must be at least 10 characters');
+    }
+
+    if (this.cropForm.get('bgColor')?.hasError('required')) {
+      errorMessages.push('Background color is required');
     }
 
     if (!this.selectedFile) {
-      Swal.fire('Error', 'Please select an image file.', 'error');
-      return;
+      errorMessages.push('Please select an image file');
     }
 
-    if (this.cropForm.invalid) {
-      let errorMessages = [];
-
-      if (this.cropForm.controls['groupId'].hasError('required')) {
-        errorMessages.push('Group ID is required.');
-      }
-      if (this.cropForm.controls['varietyNameEnglish'].hasError('required')) {
-        errorMessages.push('Variety name is required.');
-      } else if (
-        this.cropForm.controls['varietyNameEnglish'].hasError('pattern')
-      ) {
-        errorMessages.push(
-          'Variety name cannot be only numbers and special characters are not allowed'
-        );
-      }
-
-      if (this.cropForm.controls['varietyNameSinhala'].hasError('required')) {
-        errorMessages.push('Sinhala variety name is required.');
-      } else if (
-        this.cropForm.controls['varietyNameSinhala'].hasError('pattern')
-      ) {
-        errorMessages.push(
-          'Variety name cannot be only numbers and only Sinhala characters and numbers are allowed'
-        );
-      }
-
-      if (this.cropForm.controls['varietyNameTamil'].hasError('required')) {
-        errorMessages.push('Tamil variety name is required.');
-      } else if (
-        this.cropForm.controls['varietyNameTamil'].hasError('pattern')
-      ) {
-        errorMessages.push(
-          'Variety name cannot be only numbers and only tamil characters and numbers are allowed'
-        );
-      }
-
-      if (this.cropForm.controls['bgColor'].hasError('required')) {
-        errorMessages.push('Background color is required.');
-      }
-
-      if (!this.selectedFile) {
-        errorMessages.push('Please select an image file.');
-      }
-
-      if (errorMessages.length > 0) {
-        Swal.fire({
-          title: 'Validation Errors',
-          html: `<ul style="text-align: center; padding: 0; list-style: none;">
-                    ${errorMessages
-              .map(
-                (msg) => `<li style="margin-bottom: 5px;">${msg}</li>`
-              )
-              .join('')}
-                 </ul>`,
-          icon: 'warning',
-          confirmButtonText: 'OK',
-        });
-        return;
-      }
-    }
-
-    this.isLoading = true;
-    const formData = new FormData();
-
-    Object.keys(this.cropForm.value).forEach((key) => {
-      if (key !== 'image') {
-        formData.append(key, this.cropForm.get(key)?.value);
-      }
-    });
-    formData.append('image', this.selectedFile);
-
-    this.cropCalendarService.createCropVariety(formData).subscribe({
-      next: (response: any) => {
-        if (response.status) {
-          this.isLoading = false;
-          Swal.fire({
-            title: 'Success',
-            text: response.message || 'Crop variety created successfully!',
-            icon: 'success',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            this.router.navigate(['/plant-care/action/view-crop-group']);
-          });
-        } else {
-          this.isLoading = false;
-          Swal.fire('Unsuccess', response.message, 'error');
-        }
-      },
-      error: (error) => {
-        this.isLoading = false;
-        Swal.fire(
-          'Error',
-          error.error?.message ||
-          'An error occurred while creating the crop variety.',
-          'error'
-        );
+    // Show SweetAlert with all validation errors
+    Swal.fire({
+      title: 'Validation Errors',
+      html: `<div style="text-align: left;">
+        <p>Please fix the following issues:</p>
+        <ul>
+          ${errorMessages.map(msg => `<li>${msg}</li>`).join('')}
+        </ul>
+      </div>`,
+      icon: 'warning',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
     });
+    
+    return;
   }
+
+  // If form is valid, proceed with submission
+  this.isLoading = true;
+  const formData = new FormData();
+
+  Object.keys(this.cropForm.value).forEach((key) => {
+    if (key !== 'image') {
+      formData.append(key, this.cropForm.get(key)?.value);
+    }
+  });
+  formData.append('image', this.selectedFile);
+
+  this.cropCalendarService.createCropVariety(formData).subscribe({
+    next: (response: any) => {
+      if (response.status) {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Success',
+          text: response.message || 'Crop variety created successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        }).then(() => {
+          this.router.navigate(['/plant-care/action/view-crop-group']);
+        });
+      } else {
+        this.isLoading = false;
+        Swal.fire('Unsuccess', response.message, 'error');
+      }
+    },
+    error: (error) => {
+      this.isLoading = false;
+      Swal.fire(
+        'Error',
+        error.error?.message ||
+        'An error occurred while creating the crop variety.',
+        'error'
+      );
+    },
+  });
+}
 
   onCancel() {
     Swal.fire({
@@ -636,58 +638,70 @@ export class CreateVarietyComponent implements OnInit {
   }
 
   updateNews() {
-    const token = this.tokenService.getToken();
-
-    if (!token) return;
-
-    if (!this.newsItems || this.newsItems.length === 0) return;
-
-    const newsItem = this.newsItems[0];
-
-    const formData = new FormData();
-    formData.append('varietyNameEnglish', newsItem.varietyNameEnglish || '');
-    formData.append('varietyNameSinhala', newsItem.varietyNameSinhala || '');
-    formData.append('varietyNameTamil', newsItem.varietyNameTamil || '');
-    formData.append('descriptionEnglish', newsItem.descriptionEnglish || '');
-    formData.append('descriptionSinhala', newsItem.descriptionSinhala || '');
-    formData.append('descriptionTamil', newsItem.descriptionTamil || '');
-    formData.append('bgColor', newsItem.bgColor || '');
-
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    this.isLoading = true;
-    this.http
-      .put(
-        `${environment.API_URL}crop-calendar/update-crop-variety/${this.itemId}`,
-        formData,
-        { headers }
-      )
-      .subscribe(
-        (res: any) => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Variety updated successfully!',
-          });
-          this.router.navigate(['/plant-care/action/view-crop-group']);
-        },
-        () => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Unsuccessful',
-            text: 'Error updating news',
-          });
-        }
-      );
+  // Validate the form first
+  if (!this.validateEditForm()) {
+    return;
   }
+
+  const token = this.tokenService.getToken();
+  if (!token) return;
+
+  if (!this.newsItems || this.newsItems.length === 0) return;
+
+  const newsItem = this.newsItems[0];
+
+  const formData = new FormData();
+  formData.append('varietyNameEnglish', newsItem.varietyNameEnglish || '');
+  formData.append('varietyNameSinhala', newsItem.varietyNameSinhala || '');
+  formData.append('varietyNameTamil', newsItem.varietyNameTamil || '');
+  formData.append('descriptionEnglish', newsItem.descriptionEnglish || '');
+  formData.append('descriptionSinhala', newsItem.descriptionSinhala || '');
+  formData.append('descriptionTamil', newsItem.descriptionTamil || '');
+  formData.append('bgColor', newsItem.bgColor || '');
+
+  if (this.selectedFile) {
+    formData.append('image', this.selectedFile);
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.isLoading = true;
+  this.http
+    .put(
+      `${environment.API_URL}crop-calendar/update-crop-variety/${this.itemId}`,
+      formData,
+      { headers }
+    )
+    .subscribe(
+      (res: any) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Variety updated successfully!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        this.router.navigate(['/plant-care/action/view-crop-group']);
+      },
+      () => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Unsuccessful',
+          text: 'Error updating news',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      }
+    );
+}
 
   
   back(): void {
@@ -728,6 +742,73 @@ export class CreateVarietyComponent implements OnInit {
   });
 }
 
+validateEditForm(): boolean {
+  let errorMessages = [];
+  const newsItem = this.newsItems[0];
 
+  // Check each field for errors
+  if (!newsItem.varietyNameEnglish) {
+    errorMessages.push('English variety name is required');
+  } else if (/^\d+$/.test(newsItem.varietyNameEnglish)) {
+    errorMessages.push('English variety name cannot be only numbers');
+  }
+
+  if (!newsItem.varietyNameSinhala) {
+    errorMessages.push('Sinhala variety name is required');
+  } else if (/^\d+$/.test(newsItem.varietyNameSinhala)) {
+    errorMessages.push('Sinhala variety name cannot be only numbers');
+  }
+
+  if (!newsItem.varietyNameTamil) {
+    errorMessages.push('Tamil variety name is required');
+  } else if (/^\d+$/.test(newsItem.varietyNameTamil)) {
+    errorMessages.push('Tamil variety name cannot be only numbers');
+  }
+
+  if (!newsItem.descriptionEnglish) {
+    errorMessages.push('English description is required');
+  } else if (newsItem.descriptionEnglish.length < 10) {
+    errorMessages.push('English description must be at least 10 characters');
+  }
+
+  if (!newsItem.descriptionSinhala) {
+    errorMessages.push('Sinhala description is required');
+  } else if (newsItem.descriptionSinhala.length < 10) {
+    errorMessages.push('Sinhala description must be at least 10 characters');
+  }
+
+  if (!newsItem.descriptionTamil) {
+    errorMessages.push('Tamil description is required');
+  } else if (newsItem.descriptionTamil.length < 10) {
+    errorMessages.push('Tamil description must be at least 10 characters');
+  }
+
+  if (!newsItem.bgColor) {
+    errorMessages.push('Background color is required');
+  }
+
+  // If there are errors, show SweetAlert
+  if (errorMessages.length > 0) {
+    Swal.fire({
+      title: 'Validation Errors',
+      html: `<div style="text-align: left;">
+        <p>Please fix the following issues:</p>
+        <ul>
+          ${errorMessages.map(msg => `<li>${msg}</li>`).join('')}
+        </ul>
+      </div>`,
+      icon: 'warning',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    
+    return false;
+  }
+  
+  return true;
+}
  
 }

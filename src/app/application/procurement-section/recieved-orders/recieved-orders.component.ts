@@ -25,6 +25,11 @@ interface PurchaseReport {
   createdAt: Date;
 }
 
+interface FilterType {
+  display: string;
+  value: string;
+}
+
 @Component({
   selector: 'app-recieved-orders',
   standalone: true,
@@ -49,13 +54,21 @@ export class RecievedOrdersComponent {
   itemsPerPage: number = 10;
   purchaseReport: PurchaseReport[] = [];
   filterType: string = '';
-  date: string = ''; // will hold formatted date string like 'yyyy-MM-dd'
+  date: string = '';
   isDownloading = false;
-filterApplied = false;
+  filterApplied = false;
+  
   // For popup filter UI
   showFilterPopup = false;
-  filterTypeTemp = '';
-  dateTemp: Date | null = null; // <-- Use Date object here
+  selectedFilterType: FilterType | null = null;
+  dateTemp: Date | null = null;
+
+  // Available filter types
+  filterTypes: FilterType[] = [
+    { display: 'Scheduled Date', value: 'scheduleDate' },
+    { display: 'To Collection Centre', value: 'toCollectionCenter' },
+    { display: 'To Dispatch Centre', value: 'toDispatchCenter' }
+  ];
 
   constructor(
     private procumentService: ProcumentsService,
@@ -70,6 +83,11 @@ filterApplied = false;
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
+
+    // Reset to page 1 when searching or filtering
+    if (this.search || this.filterType) {
+      page = 1;
+    }
 
     this.procumentService
       .getRecievedOrdersQuantity(page, limit, this.filterType, this.date, this.search)
@@ -86,8 +104,9 @@ filterApplied = false;
           this.isLoading = false;
         },
         (error) => {
-          console.error('Error fetching ongoing cultivations:', error);
+          console.error('Error fetching received orders:', error);
           this.isLoading = false;
+          Swal.fire('Error', 'Failed to load orders data', 'error');
         }
       );
   }
@@ -105,22 +124,27 @@ filterApplied = false;
 
   clearSearch(): void {
     this.search = '';
+    this.page = 1; // Reset to first page when clearing search
     this.fetchAllPurchaseReport();
   }
 
   clearFilter(): void {
     this.filterType = '';
     this.date = '';
+    this.selectedFilterType = null;
+    this.filterApplied = false;
+    this.page = 1; // Reset to first page when clearing filter
     this.fetchAllPurchaseReport();
   }
 
   applysearch() {
-    if (!this.search || this.search.trimStart() === '') {
-      console.warn('Search is empty or starts only with space(s)');
+    if (!this.search || this.search.trim() === '') {
+      Swal.fire('Info', 'Please enter a search term', 'info');
       return;
     }
 
-    this.search = this.search.trimStart(); // Remove leading spaces
+    this.search = this.search.trim();
+    this.page = 1; // Reset to first page when searching
     this.fetchAllPurchaseReport();
   }
 
@@ -132,36 +156,47 @@ filterApplied = false;
   toggleFilterPopup() {
     this.showFilterPopup = !this.showFilterPopup;
     if (this.showFilterPopup) {
-      this.filterTypeTemp = this.filterType;
-
+      // If we already have a filter applied, pre-select it
+      if (this.filterType && this.selectedFilterType === null) {
+        this.selectedFilterType = this.filterTypes.find(
+          filter => filter.value === this.filterType
+        ) || null;
+      }
+      
       // Convert string date to Date object for p-calendar
       this.dateTemp = this.date ? new Date(this.date) : null;
     }
   }
 
-applyFilter() {
-  if (!this.dateTemp) {
-    Swal.fire('Error', 'Please select a date', 'error');
-    return;
+  applyFilter() {
+    if (!this.dateTemp || !this.selectedFilterType) {
+      Swal.fire('Error', 'Please select both filter type and date', 'error');
+      return;
+    }
+
+    this.filterType = this.selectedFilterType.value;
+    this.date = formatDate(this.dateTemp, 'yyyy-MM-dd', 'en-US');
+    this.page = 1; // Reset to first page when applying filter
+
+    this.showFilterPopup = false;
+    this.filterApplied = true;
+    this.fetchAllPurchaseReport();
   }
 
-  // You no longer need filterTypeTemp
-  this.filterType = 'Schedule Date';
+  cancelFilter() {
+    this.showFilterPopup = false;
+    this.dateTemp = null;
+  }
 
-  // Convert Date object to string in yyyy-MM-dd format for API
-  this.date = formatDate(this.dateTemp, 'yyyy-MM-dd', 'en-US');
-
-  this.showFilterPopup = false;
-  this.filterApplied = true; // Add this to hide the Filter By button
-  this.fetchAllPurchaseReport();
-}
-
- cancelFilter() {
-  this.showFilterPopup = false;
-  this.filterApplied = false;
-  this.dateTemp = null; // Optional: clear date input
-}
-
+  getDisplayFilterType(): string {
+    if (this.selectedFilterType) {
+      return this.selectedFilterType.display;
+    }
+    
+    // Fallback for existing filterType value
+    const foundFilter = this.filterTypes.find(filter => filter.value === this.filterType);
+    return foundFilter ? foundFilter.display : this.filterType;
+  }
 
   downloadTemplate1() {
     this.isDownloading = true;
@@ -177,7 +212,7 @@ applyFilter() {
     }
 
     if (this.search) {
-      queryParams.push(`search=${this.search}`);
+      queryParams.push(`search=${encodeURIComponent(this.search)}`);
     }
 
     const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
@@ -186,6 +221,9 @@ applyFilter() {
 
     fetch(apiUrl, {
       method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.tokenService.getToken()}`
+      }
     })
       .then((response) => {
         if (response.ok) {
@@ -205,6 +243,9 @@ applyFilter() {
         }
         if (this.date) {
           filename += `_${this.date}`;
+        }
+        if (this.search) {
+          filename += `_search_${this.search.substring(0, 10)}`;
         }
 
         filename += '.xlsx';
@@ -230,4 +271,3 @@ applyFilter() {
       });
   }
 }
-

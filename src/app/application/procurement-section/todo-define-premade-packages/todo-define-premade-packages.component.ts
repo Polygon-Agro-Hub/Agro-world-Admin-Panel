@@ -411,7 +411,7 @@ isExcluded(product: MarketplaceItem): boolean {
 
     console.log('odarray', this.orderdetailsArr)
 
-    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
+    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
 
       (res) => {
 

@@ -518,35 +518,48 @@ back(): void {
   }
 
   updateRegCode() {
-    console.log('update reg code');
-    const province = this.distributionForm.get('province')?.value;
-    const district = this.distributionForm.get('district')?.value;
-    const city = this.distributionForm.get('city')?.value;
+  console.log('update reg code');
+  const province = this.distributionForm.get('province')?.value;
+  const district = this.distributionForm.get('district')?.value;
+  const city = this.distributionForm.get('city')?.value;
 
-    console.log('province', province, 'district', district, 'city', city);
+  console.log('province', province, 'district', district, 'city', city);
 
-    if (province && district && city) {
-      this.isLoadingregcode = true;
-      this.distributionService
-        .generateRegCode(province, district, city)
-        .subscribe({
-          next: (response) => {
-            this.distributionForm.patchValue({ regCode: response.regCode });
-            this.isLoadingregcode = false;
-          },
-          error: (error) => {
-            console.error('Error generating reg code:', error);
-            // Fallback to manual generation if API fails
-            const regCode = `${province.slice(0, 2).toUpperCase()}${district
-              .slice(0, 1)
-              .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
-            console.log('regCode fallback', regCode);
-            this.distributionForm.patchValue({ regCode });
-            this.isLoadingregcode = false;
+  if (province && district && city) {
+    this.isLoadingregcode = true;
+    this.distributionService
+      .generateRegCode(province, district, city)
+      .subscribe({
+        next: (response) => {
+          let regCode = response.regCode;
+          
+          // Ensure the regCode starts with 'D'
+          if (!regCode.startsWith('D')) {
+            regCode = 'D' + regCode;
           }
-        });
-    }
+          
+          this.distributionForm.patchValue({ regCode });
+          this.isLoadingregcode = false;
+        },
+        error: (error) => {
+          console.error('Error generating reg code:', error);
+          // Fallback to manual generation if API fails
+          let regCode = `${province.slice(0, 2).toUpperCase()}${district
+            .slice(0, 1)
+            .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
+          
+          // Ensure the regCode starts with 'D'
+          if (!regCode.startsWith('D')) {
+            regCode = 'D' + regCode;
+          }
+          
+          console.log('regCode fallback', regCode);
+          this.distributionForm.patchValue({ regCode });
+          this.isLoadingregcode = false;
+        }
+      });
   }
+}
 
   fetchDistributionCenterById(id: number) {
     console.log('Fetching distribution center with ID:', id);

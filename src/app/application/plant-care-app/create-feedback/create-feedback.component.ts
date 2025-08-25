@@ -52,6 +52,14 @@ export class CreateFeedbackComponent {
     feedbackTamil: '',
   };
 
+  // Track field validation states
+  validationErrors = {
+    orderNumber: '',
+    feedbackEnglish: '',
+    feedbackSinahala: '',
+    feedbackTamil: ''
+  };
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -66,19 +74,106 @@ export class CreateFeedbackComponent {
     this.getAllFeedbacks();
   }
 
-  
+  // Validate all fields
+  validateForm(): boolean {
+    let isValid = true;
+    this.validationErrors = {
+      orderNumber: '',
+      feedbackEnglish: '',
+      feedbackSinahala: '',
+      feedbackTamil: ''
+    };
 
+    // Validate orderNumber
+    if (!this.feedback.orderNumber) {
+      this.validationErrors.orderNumber = 'Index number is required';
+      isValid = false;
+    }
+
+    // Validate feedbackEnglish
+    if (!this.feedback.feedbackEnglish) {
+      this.validationErrors.feedbackEnglish = 'English feedback is required';
+      isValid = false;
+    } else if (!this.isValidEnglishText(this.feedback.feedbackEnglish)) {
+      this.validationErrors.feedbackEnglish = 'English feedback contains invalid characters';
+      isValid = false;
+    }
+
+    // Validate feedbackSinahala
+    if (!this.feedback.feedbackSinahala) {
+      this.validationErrors.feedbackSinahala = 'Sinhala feedback is required';
+      isValid = false;
+    } else if (!this.isValidSinhalaText(this.feedback.feedbackSinahala)) {
+      this.validationErrors.feedbackSinahala = 'Sinhala feedback contains invalid characters';
+      isValid = false;
+    }
+
+    // Validate feedbackTamil
+    if (!this.feedback.feedbackTamil) {
+      this.validationErrors.feedbackTamil = 'Tamil feedback is required';
+      isValid = false;
+    } else if (!this.isValidTamilText(this.feedback.feedbackTamil)) {
+      this.validationErrors.feedbackTamil = 'Tamil feedback contains invalid characters';
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  // Helper validation methods
+  isValidEnglishText(text: string): boolean {
+    const englishAlphanumericRegex = /^[a-zA-Z0-9\s.,!?()-]*$/;
+    return englishAlphanumericRegex.test(text);
+  }
+
+  isValidSinhalaText(text: string): boolean {
+    const sinhalaAlphanumericRegex = /^[\u0D80-\u0DFF0-9\s.,!?()-]*$/;
+    return sinhalaAlphanumericRegex.test(text);
+  }
+
+  isValidTamilText(text: string): boolean {
+    const tamilAlphanumericRegex = /^[\u0B80-\u0BFF0-9\s.,!?()-]*$/;
+    return tamilAlphanumericRegex.test(text);
+  }
+
+  // Show validation errors in SweetAlert
+  showValidationErrors(): void {
+    let errorMessage = '<div style="text-align: left;">Please fix the following errors:<ul style="margin-top: 10px;">';
+    
+    if (this.validationErrors.orderNumber) {
+      errorMessage += `<li>${this.validationErrors.orderNumber}</li>`;
+    }
+    if (this.validationErrors.feedbackEnglish) {
+      errorMessage += `<li>${this.validationErrors.feedbackEnglish}</li>`;
+    }
+    if (this.validationErrors.feedbackSinahala) {
+      errorMessage += `<li>${this.validationErrors.feedbackSinahala}</li>`;
+    }
+    if (this.validationErrors.feedbackTamil) {
+      errorMessage += `<li>${this.validationErrors.feedbackTamil}</li>`;
+    }
+    
+    errorMessage += '</ul></div>';
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+  }
   
   onSubmit() {
-    if (
-      !this.feedback.orderNumber ||
-      !this.feedback.feedbackEnglish ||
-      !this.feedback.feedbackSinahala ||
-      !this.feedback.feedbackTamil
-    ) {
-      Swal.fire('Warning', 'Please fill all fields', 'warning');
+    // Validate form
+    if (!this.validateForm()) {
+      this.showValidationErrors();
       return;
     }
+    
     if (this.feedback.orderNumber === 11) {
       Swal.fire(
         'Warning',
@@ -87,6 +182,7 @@ export class CreateFeedbackComponent {
       );
       return;
     }
+    
     this.isLoading = true;
     const feedbackData = {
       orderNumber: this.feedback.orderNumber,
@@ -94,6 +190,7 @@ export class CreateFeedbackComponent {
       feedbackSinahala: this.feedback.feedbackSinahala,
       feedbackTamil: this.feedback.feedbackTamil,
     };
+    
     this.plantcareUsersService.createFeedback(feedbackData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
@@ -119,6 +216,7 @@ export class CreateFeedbackComponent {
     });
   }
 
+  // The rest of your methods remain the same...
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -127,10 +225,10 @@ export class CreateFeedbackComponent {
       showCancelButton: true,
       confirmButtonText: 'Yes, Go Back',
       cancelButtonText: 'No, Stay Here',
-       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.router.navigate(['/plant-care/action/opt-out-feedbacks']);
@@ -146,18 +244,17 @@ export class CreateFeedbackComponent {
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
-       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
-             this.router.navigate(['/plant-care/action/opt-out-feedbacks']);
-
-  
+        this.router.navigate(['/plant-care/action/opt-out-feedbacks']);
       }
     });
   }
+  
   loadNextNumber() {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -323,8 +420,6 @@ export class CreateFeedbackComponent {
     // Trigger input event for Angular form validation
     target.dispatchEvent(new Event('input', { bubbles: true }));
   }
-
-
 
   getAllFeedbacks() {
     const token = this.tokenService.getToken();

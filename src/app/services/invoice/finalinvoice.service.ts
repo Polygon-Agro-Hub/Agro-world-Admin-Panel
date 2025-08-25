@@ -527,7 +527,7 @@ export class FinalinvoiceService {
 
       const addTitle = hasFamilyPacks 
         ? `Additional Items (${invoice.additionalItems.length} Items)`
-        : `Custom Items (${invoice.additionalItems.length} Items)`;
+        : `Your Selected Items (${invoice.additionalItems.length} Items)`;
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');

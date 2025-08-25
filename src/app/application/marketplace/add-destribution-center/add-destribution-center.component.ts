@@ -402,35 +402,37 @@ export class AddDestributionCenterComponent implements OnInit {
 
 
   // Updated updateRegCode method to handle real-time updates
-  updateRegCode() {
-    const province = this.distributionForm.get('province')?.value;
-    const district = this.distributionForm.get('district')?.value;
-    const city = this.distributionForm.get('city')?.value;
+  // Updated updateRegCode method to handle real-time updates and prepend "D"
+updateRegCode() {
+  const province = this.distributionForm.get('province')?.value;
+  const district = this.distributionForm.get('district')?.value;
+  const city = this.distributionForm.get('city')?.value;
 
-    if (province && district && city && city.trim().length > 0) {
-      // Use API call for reg code generation if available
-      this.isLoadingregcode = true;
-      this.distributionService
-        .generateRegCode(province, district, city.trim())
-        .subscribe({
-          next: (response) => {
-            this.distributionForm.patchValue({ regCode: response.regCode });
-            this.isLoadingregcode = false;
-          },
-          error: (error) => {
-            // Fallback to local generation if API fails
-            const regCode = `${province.slice(0, 2).toUpperCase()}${district
-              .slice(0, 1)
-              .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
-            this.distributionForm.patchValue({ regCode });
-            this.isLoadingregcode = false;
-          }
-        });
-    } else {
-      // Clear reg code if required fields are empty
-      this.distributionForm.patchValue({ regCode: '' });
-    }
+  if (province && district && city && city.trim().length > 0) {
+    // Use API call for reg code generation if available
+    this.isLoadingregcode = true;
+    this.distributionService
+      .generateRegCode(province, district, city.trim())
+      .subscribe({
+        next: (response) => {
+          // Prepend "D" to the reg code from API
+          this.distributionForm.patchValue({ regCode: `D${response.regCode}` });
+          this.isLoadingregcode = false;
+        },
+        error: (error) => {
+          // Fallback to local generation if API fails - prepend "D"
+          const regCode = `D${province.slice(0, 2).toUpperCase()}${district
+            .slice(0, 1)
+            .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
+          this.distributionForm.patchValue({ regCode });
+          this.isLoadingregcode = false;
+        }
+      });
+  } else {
+    // Clear reg code if required fields are empty
+    this.distributionForm.patchValue({ regCode: '' });
   }
+}
 
   // Updated onProvinceChange method
   onProvinceChange() {

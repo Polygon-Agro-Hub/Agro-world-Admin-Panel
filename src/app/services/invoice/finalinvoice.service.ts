@@ -249,8 +249,8 @@ export class FinalinvoiceService {
     doc.text('Polygon Agro Holdings (Private) Ltd', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('No. 614, Nawam Mawatha, Colombo 02', 15, 30);
-    doc.text('Contact No: +94 112 700 900', 15, 35);
+    doc.text('No. 42/46, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text('Contact No: +94 770 111 999', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
     // Bill To section

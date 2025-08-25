@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CalendarModule } from 'primeng/calendar';
+import * as XLSX from 'xlsx';
 
 interface PurchaseReport {
   id: number;
@@ -198,76 +199,204 @@ export class RecievedOrdersComponent {
     return foundFilter ? foundFilter.display : this.filterType;
   }
 
+  // downloadTemplate1() {
+  //   this.isDownloading = true;
+
+  //   let queryParams = [];
+
+  //   if (this.filterType) {
+  //     queryParams.push(`filterType=${this.filterType}`);
+  //   }
+
+  //   if (this.date) {
+  //     queryParams.push(`date=${this.date}`);
+  //   }
+
+  //   if (this.search) {
+  //     queryParams.push(`search=${encodeURIComponent(this.search)}`);
+  //   }
+
+  //   const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+  //   const apiUrl = `${environment.API_URL}procument/download-order-quantity-report${queryString}`;
+
+  //   fetch(apiUrl, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Authorization': `Bearer ${this.tokenService.getToken()}`
+  //     }
+  //   })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         return response.blob();
+  //       } else {
+  //         throw new Error('Failed to download the file');
+  //       }
+  //     })
+  //     .then((blob) => {
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.href = url;
+
+  //       let filename = 'Procument_Items_Report';
+  //       if (this.filterType) {
+  //         filename += `_${this.filterType}`;
+  //       }
+  //       if (this.date) {
+  //         filename += `_${this.date}`;
+  //       }
+  //       if (this.search) {
+  //         filename += `_search_${this.search.substring(0, 10)}`;
+  //       }
+
+  //       filename += '.xlsx';
+
+  //       a.download = filename;
+  //       a.click();
+  //       window.URL.revokeObjectURL(url);
+
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Downloaded',
+  //         text: 'Please check your downloads folder',
+  //       });
+  //       this.isDownloading = false;
+  //     })
+  //     .catch((error) => {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Download Failed',
+  //         text: error.message,
+  //       });
+  //       this.isDownloading = false;
+  //     });
+  // }
+
   downloadTemplate1() {
-    this.isDownloading = true;
+  this.isDownloading = true;
 
-    let queryParams = [];
-
-    if (this.filterType) {
-      queryParams.push(`filterType=${this.filterType}`);
-    }
-
-    if (this.date) {
-      queryParams.push(`date=${this.date}`);
-    }
-
-    if (this.search) {
-      queryParams.push(`search=${encodeURIComponent(this.search)}`);
-    }
-
-    const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-
-    const apiUrl = `${environment.API_URL}procument/download-order-quantity-report${queryString}`;
-
-    fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.tokenService.getToken()}`
+  // Get all data without pagination for aggregation
+  this.procumentService
+    .getRecievedOrdersQuantity(1, 10000, this.filterType, this.date, this.search)
+    .subscribe(
+      (response) => {
+        // Aggregate the data
+        const aggregatedData = this.aggregatePurchaseData(response.items);
+        
+        // Now proceed with download using the aggregated data
+        this.downloadAggregatedReport(aggregatedData);
+      },
+      (error) => {
+        console.error('Error fetching data for download:', error);
+        this.isDownloading = false;
+        Swal.fire('Error', 'Failed to prepare data for download', 'error');
       }
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.blob();
-        } else {
-          throw new Error('Failed to download the file');
-        }
-      })
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
+    );
+}
 
-        let filename = 'Procument_Items_Report';
-        if (this.filterType) {
-          filename += `_${this.filterType}`;
-        }
-        if (this.date) {
-          filename += `_${this.date}`;
-        }
-        if (this.search) {
-          filename += `_search_${this.search.substring(0, 10)}`;
-        }
-
-        filename += '.xlsx';
-
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Downloaded',
-          text: 'Please check your downloads folder',
-        });
-        this.isDownloading = false;
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Download Failed',
-          text: error.message,
-        });
-        this.isDownloading = false;
+private aggregatePurchaseData(items: any[]): any[] {
+  const aggregationMap = new Map();
+  
+  items.forEach(item => {
+    // Create a unique key based on crop, variety, order date, and schedule date
+    const key = `${item.cropNameEnglish}_${item.varietyNameEnglish}_${item.OrderDate}_${item.scheduleDate}`;
+    
+    if (aggregationMap.has(key)) {
+      // If the key exists, add the quantity to the existing entry
+      const existingItem = aggregationMap.get(key);
+      existingItem.quantity += item.quantity;
+    } else {
+      // If the key doesn't exist, create a new entry
+      aggregationMap.set(key, {
+        ...item,
+        // Make sure to clone the object to avoid reference issues
+        quantity: item.quantity
       });
+    }
+  });
+  
+  // Convert the map back to an array
+  return Array.from(aggregationMap.values());
+}
+
+private downloadAggregatedReport(aggregatedData: any[]) {
+  let queryParams = [];
+
+  if (this.filterType) {
+    queryParams.push(`filterType=${this.filterType}`);
   }
+
+  if (this.date) {
+    queryParams.push(`date=${this.date}`);
+  }
+
+  if (this.search) {
+    queryParams.push(`search=${encodeURIComponent(this.search)}`);
+  }
+
+  const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+  // Create a Blob from the aggregated data
+  const worksheet = XLSX.utils.json_to_sheet(aggregatedData.map(item => ({
+    'Crop': item.cropNameEnglish,
+    'Variety': item.varietyNameEnglish,
+    'Quantity (kg)': item.quantity,
+    'Ordered On': this.formatDateForExcel(item.createdAt), // Use createdAt instead of OrderDate
+    'Scheduled Date': this.formatDateForExcel(item.sheduleDate),
+    'To Collection Centre': this.formatDateForExcel(item.toCollectionCentre),
+    'To Dispatch Centre': this.formatDateForExcel(item.toDispatchCenter)
+  })));
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Procurement Report');
+  
+  // Generate Excel file
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  this.saveAsExcelFile(excelBuffer, 'Procument_Items_Report');
+}
+
+private formatDateForExcel(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return new DatePipe('en-US').transform(date, 'yyyy-MM-dd') || '';
+}
+
+private saveAsExcelFile(buffer: any, fileName: string): void {
+  const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+  let finalFileName = fileName;
+  if (this.filterType) {
+    finalFileName += `_${this.filterType}`;
+  }
+  if (this.date) {
+    finalFileName += `_${this.date}`;
+  }
+  if (this.search) {
+    finalFileName += `_search_${this.search.substring(0, 10)}`;
+  }
+  finalFileName += '.xlsx';
+
+  // For browsers that support the download attribute
+  const link = document.createElement('a');
+  if (link.download !== undefined) {
+    const url = URL.createObjectURL(data);
+    link.setAttribute('href', url);
+    link.setAttribute('download', finalFileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Downloaded',
+      text: 'Please check your downloads folder',
+    });
+  } else {
+    // Fallback for older browsers
+    window.open(URL.createObjectURL(data));
+  }
+  
+  this.isDownloading = false;
+}
 }

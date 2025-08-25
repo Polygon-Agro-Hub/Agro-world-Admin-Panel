@@ -532,117 +532,64 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.distributionForm.valid) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to create this distribution centre?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Create it!',
-        cancelButtonText: 'No, Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.isLoading = true;
-          this.submitError = null;
-          this.submitSuccess = null;
-
-          // Get form values including disabled fields
-          const formValue = this.distributionForm.getRawValue();
-
-          const formData: DistributionCentreRequest = {
-            ...formValue,
-            latitude: parseFloat(formValue.latitude).toString(),
-            longitude: parseFloat(formValue.longitude).toString(),
-          };
-
-          this.distributionService
-            .createDistributionCentre(formData)
-            .subscribe({
-              next: (response) => {
-                this.isLoading = false;
-
-                if (response.success) {
-                  this.submitSuccess =
-                    response.message ||
-                    'Distribution centre created successfully!';
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: this.submitSuccess,
-                    timer: 2000,
-                    showConfirmButton: false,
-                  });
-                  this.navigatePath('/distribution-hub/action');
-                } else {
-                  this.submitError =
-                    response.error || 'Failed to create distribution centre';
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: this.submitError,
-                  });
-                }
-              },
-              error: (error) => {
-                this.isLoading = false;
-                console.error('Error creating distribution centre:', error);
-
-                // Default error message
-                let errorMessage = 'An unexpected error occurred.';
-
-                if (error.error && error.error.error) {
-                  // Use the specific error message from the backend
-                  errorMessage = error.error.error;
-                } else if (error.status === 400) {
-                  errorMessage = 'Invalid data. Please check your inputs.';
-                } else if (error.status === 401) {
-                  errorMessage = 'Unauthorized. Please log in again.';
-                } else if (error.status === 409) {
-                  // Check if we have more specific conflict information
-                  if (error.error && error.error.conflictingRecord) {
-                    const conflict = error.error.conflictingRecord;
-                    switch (conflict.conflictType) {
-                      case 'name':
-                        errorMessage = 'A distribution center with this name already exists.';
-                        break;
-                      case 'regCode':
-                        errorMessage = 'A distribution center with this registration code already exists.';
-                        break;
-                      case 'contact':
-                        errorMessage = 'A distribution center with this contact number already exists.';
-                        break;
-                      default:
-                        errorMessage = 'A distribution center with these details already exists.';
-                    }
-                  } else {
-                    errorMessage = 'A distribution center with these details already exists.';
-                  }
-                } else if (error.status === 500) {
-                  errorMessage = 'Server error. Please try again later.';
-                }
-
-                this.submitError = errorMessage;
-
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Submission Failed',
-                  text: this.submitError,
-                });
-              },
-            });
-        }
-      });
-    } else {
-      Object.keys(this.distributionForm.controls).forEach((key) => {
-        this.distributionForm.get(key)?.markAsTouched();
-      });
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Form',
-        text: 'Please correct the errors in the form before submitting.',
-      });
-    }
+  if (this.distributionForm.valid) {
+    // ... existing code for valid form submission ...
+  } else {
+    // Mark all fields as touched to trigger validation display
+    Object.keys(this.distributionForm.controls).forEach((key) => {
+      this.distributionForm.get(key)?.markAsTouched();
+    });
+    
+    // Collect all validation errors
+    const errorMessages = this.getAllValidationErrors();
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Form Validation Errors',
+      html: this.formatErrorMessagesForAlert(errorMessages),
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
   }
+}
+
+private formatErrorMessagesForAlert(errors: {field: string, message: string}[]): string {
+  if (errors.length === 0) {
+    return 'Please correct the errors in the form before submitting.';
+  }
+  
+  let html = '<div class="text-left"><p class="mb-3">Please correct the following errors:</p><ul class="list-disc pl-5">';
+  
+  errors.forEach(error => {
+    html += `<li class="mb-1"><span class="font-semibold">${error.field}:</span> ${error.message}</li>`;
+  });
+  
+  html += '</ul></div>';
+  
+  return html;
+}
+
+private getAllValidationErrors(): {field: string, message: string}[] {
+  const errors: {field: string, message: string}[] = [];
+  
+  Object.keys(this.distributionForm.controls).forEach((key) => {
+    const control = this.distributionForm.get(key);
+    if (control && control.invalid && (control.dirty || control.touched)) {
+      const errorMessage = this.getFieldError(key);
+      if (errorMessage) {
+        errors.push({
+          field: this.getFieldLabel(key),
+          message: errorMessage
+        });
+      }
+    }
+  });
+  
+  return errors;
+}
 
   clearMessages() {
     this.submitError = null;

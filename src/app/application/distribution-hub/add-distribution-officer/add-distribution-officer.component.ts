@@ -1,6 +1,3 @@
-  // Capitalize first letter and remove invalid characters for name fields
-
-
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -13,18 +10,22 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
+
 interface Bank {
   ID: number;
   name: string;
 }
+
 interface Branch {
   bankID: number;
   ID: number;
   name: string;
 }
+
 interface BranchesData {
   [key: string]: Branch[];
 }
+
 @Component({
   selector: 'app-add-distribution-officer',
   standalone: true,
@@ -142,6 +143,7 @@ export class AddDistributionOfficerComponent implements OnInit {
       this.EpmloyeIdCreate();
     }
   }
+
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -160,46 +162,46 @@ export class AddDistributionOfficerComponent implements OnInit {
       }
     });
   }
-  
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
   // Capitalize first letter and remove invalid characters for name fields
-capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
-  let value = this.personalData[field] || '';
+  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
+    let value = this.personalData[field] || '';
 
-  // Remove non-English letters/spaces
-  value = value.replace(/[^A-Za-z ]/g, '');
+    // Remove non-English letters/spaces
+    value = value.replace(/[^A-Za-z ]/g, '');
 
-  // Remove leading spaces
-  value = value.replace(/^\s+/, '');
+    // Remove leading spaces
+    value = value.replace(/^\s+/, '');
 
-  // Capitalize first letter
-  if (value.length > 0) {
-    value = value.charAt(0).toUpperCase() + value.slice(1);
+    // Capitalize first letter
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    this.personalData[field] = value;
   }
 
-  this.personalData[field] = value;
-}
+  blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
+    const allowed = /^[A-Za-z ]$/;
+    const input = this.personalData[field] || '';
 
-blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
-  const allowed = /^[A-Za-z ]$/;
-  const input = this.personalData[field] || '';
+    // Block if key is invalid
+    if (!allowed.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
 
-  // Block if key is invalid
-  if (!allowed.test(event.key)) {
-    event.preventDefault();
-    return;
+    // Block first character as space
+    if (input.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
   }
 
-  // Block first character as space
-  if (input.length === 0 && event.key === ' ') {
-    event.preventDefault();
-  }
-}
-
-getAllDistributionCetnter(id: number) {
+  getAllDistributionCetnter(id: number) {
     this.loaded = false;
     this.personalData.centerId = '';
     this.distributionHubSrv.getAllDistributionCenterByCompany(id).subscribe(
@@ -305,7 +307,7 @@ getAllDistributionCetnter(id: number) {
     if (fieldName === 'email' && this.personalData.email) {
     // This will trigger the error message display in template
     this.isValidEmail(this.personalData.email);
-  }
+    }
   }
 
   validateConfirmAccNumber(): void {
@@ -320,8 +322,6 @@ getAllDistributionCetnter(id: number) {
   }
 
   validateAccNumber(): void {
-  
-
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.personalData.accNumber !== this.personalData.confirmAccNumber;
@@ -329,7 +329,6 @@ getAllDistributionCetnter(id: number) {
       this.confirmAccountNumberError = false;
     }
   }
-
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
@@ -387,15 +386,13 @@ getAllDistributionCetnter(id: number) {
       });
   }
 
-isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01): boolean {
-  if (!phone || !code) return false;
+  isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01): boolean {
+    if (!phone || !code) return false;
 
-  const fullNumber = `${code}${phone}`;
-  const mobilePattern = /^\+947\d{8}$/; // Sri Lanka +947XXXXXXXX
-  return mobilePattern.test(fullNumber); // true if valid
-}
-
-
+    const fullNumber = `${code}${phone}`;
+    const mobilePattern = /^\+947\d{8}$/; // Sri Lanka +947XXXXXXXX
+    return mobilePattern.test(fullNumber); // true if valid
+  }
 
   isValidNIC(nic: string): boolean {
     const nicRegex = /^(?:\d{12}|\d{9}[a-zA-Z])$/;
@@ -403,9 +400,8 @@ isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01):
   }
 
   isValidEmail(email: string): boolean {
-  return this.emailValidationService.isEmailValid(email);
-}
-
+    return this.emailValidationService.isEmailValid(email);
+  }
 
   onCancel() {
     Swal.fire({
@@ -427,49 +423,158 @@ isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01):
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    // Validate duplicate phone numbers before navigating
-    this.duplicatePhoneError = false;
-    if (
-      this.personalData.phoneNumber01 &&
-      this.personalData.phoneNumber02 &&
-      this.personalData.phoneCode01 === this.personalData.phoneCode02 &&
-      this.personalData.phoneNumber01 === this.personalData.phoneNumber02
-    ) {
-      this.duplicatePhoneError = true;
-      Swal.fire('Error', 'Mobile Number - 01 and Mobile Number - 02 cannot be the same', 'error');
-      return;
+    // Validate pageOne before navigating to pageTwo
+    if (page === 'pageTwo') {
+      const validation = this.validatePageOne();
+      
+      if (!validation.isValid) {
+        this.showValidationErrors(validation.errors);
+        return;
+      }
     }
+    
     this.selectedPage = page;
   }
 
-  checkFormValidity(): boolean {
-    const namePattern = /^[A-Za-z ]+$/;
-
-    const isFirstNameValid =
-      !!this.personalData.firstNameEnglish &&
-      namePattern.test(this.personalData.firstNameEnglish);
-
-    const isLastNameValid =
-      !!this.personalData.lastNameEnglish &&
-      namePattern.test(this.personalData.lastNameEnglish); // Optional: apply pattern here too
-
-    const isPhoneNumberValid = this.isValidPhoneNumber(this.personalData.phoneNumber01);
-    const isEmailValid = this.isValidEmail(this.personalData.email);
-    const isLanguagesSelected = !!this.personalData.languages;
-    const isJobRoleSelected = !!this.personalData.jobRole;
-    const isNicSelected = !!this.personalData.nic;
-
-    return (
-      isFirstNameValid &&
-      isLastNameValid &&
-      isPhoneNumberValid &&
-      isEmailValid &&
-      isLanguagesSelected &&
-      isJobRoleSelected &&
-      isNicSelected
-    );
+  // Add this method to validate all fields on pageOne
+  validatePageOne(): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+    
+    // Employee type validation
+    if (!this.isEmpTypeSelected()) {
+      errors.push('Please select an employee type');
+    }
+    
+    // Languages validation
+    if (!this.isAtLeastOneLanguageSelected()) {
+      errors.push('Please select at least one preferred language');
+    }
+    
+    // Name validation
+    const namePattern = /^[A-Z][a-zA-Z ]*$/;
+    if (!this.personalData.firstNameEnglish || !namePattern.test(this.personalData.firstNameEnglish)) {
+      errors.push('First Name is required and must start with a capital letter');
+    }
+    
+    if (!this.personalData.lastNameEnglish || !namePattern.test(this.personalData.lastNameEnglish)) {
+      errors.push('Last Name is required and must start with a capital letter');
+    }
+    
+    // Phone validation
+    if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+      errors.push('Mobile Number - 1 is required and must be valid');
+    }
+    
+    // NIC validation
+    if (!this.personalData.nic || !this.isValidNIC(this.personalData.nic)) {
+      errors.push('NIC is required and must be valid (12 digits or 10 digits followed by V)');
+    }
+    
+    // Email validation
+    if (!this.personalData.email || !this.isValidEmail(this.personalData.email)) {
+      errors.push('Email is required and must be valid');
+    }
+    
+    // Duplicate phone check
+    if (this.duplicatePhoneError) {
+      errors.push('Mobile Number - 01 and Mobile Number - 02 cannot be the same');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
   }
 
+  // Add this method to validate all fields on pageTwo
+  validatePageTwo(): { isValid: boolean; errors: string[] } {
+    const errors: string[] = [];
+    
+    // Address validation
+    if (!this.personalData.houseNumber) {
+      errors.push('House Number is required');
+    }
+    
+    if (!this.personalData.streetName) {
+      errors.push('Street Name is required');
+    }
+    
+    if (!this.personalData.city) {
+      errors.push('City is required');
+    }
+    
+    if (!this.personalData.district) {
+      errors.push('District is required');
+    }
+    
+    // Bank details validation
+    const namePattern = /^([A-Z][a-z]*)( [A-Z][a-z]*)*$/;
+    if (!this.personalData.accHolderName || !namePattern.test(this.personalData.accHolderName)) {
+      errors.push('Account Holder\'s Name is required and must be valid');
+    }
+    
+    if (!this.personalData.accNumber) {
+      errors.push('Account Number is required');
+    }
+    
+    if (!this.personalData.confirmAccNumber) {
+      errors.push('Confirm Account Number is required');
+    }
+    
+    if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+      errors.push('Account Numbers do not match');
+    }
+    
+    if (!this.personalData.bankName) {
+      errors.push('Bank Name is required');
+    }
+    
+    if (!this.personalData.branchName) {
+      errors.push('Branch Name is required');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  }
+
+  // Add this method to show validation errors in SweetAlert
+  showValidationErrors(errors: string[]): void {
+    let errorMessage = '<ul style="text-align: left; margin-left: 20px;">';
+    errors.forEach(error => {
+      errorMessage += `<li>• ${error}</li>`;
+    });
+    errorMessage += '</ul>';
+    
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      html: `Please fix the following issues: ${errorMessage}`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+  }
+
+  // Add this method to mark all fields as touched
+  markAllFieldsAsTouched(): void {
+    const fields: (keyof Personal)[] = [
+      'firstNameEnglish', 'lastNameEnglish', 'phoneNumber01', 'phoneNumber02', 
+      'nic', 'email', 'houseNumber', 'streetName', 'city', 'district',
+      'accHolderName', 'accNumber', 'confirmAccNumber'
+    ];
+    
+    fields.forEach(field => {
+      this.touchedFields[field] = true;
+    });
+    
+    // Also mark checkboxes/radio as touched
+    this.touchedFields['empType'] = true;
+    this.touchedFields['languages'] = true;
+  }
 
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
@@ -485,54 +590,58 @@ isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01):
     }
   }
 
- onBankChange() {
-  if (this.selectedBankId) {
-    // Get branches for this bank, default to empty array
-    const bankBranches = this.allBranches[this.selectedBankId.toString()] || [];
+  onBankChange() {
+    if (this.selectedBankId) {
+      // Get branches for this bank, default to empty array
+      const bankBranches = this.allBranches[this.selectedBankId.toString()] || [];
 
-    // Sort alphabetically by branch name
-    this.branches = bankBranches.slice().sort((a, b) => a.name.localeCompare(b.name));
+      // Sort alphabetically by branch name
+      this.branches = bankBranches.slice().sort((a, b) => a.name.localeCompare(b.name));
 
-    const selectedBank = this.banks.find(
-      (bank) => bank.ID === this.selectedBankId
-    );
-    if (selectedBank) {
-      this.personalData.bankName = selectedBank.name;
-      this.invalidFields.delete('bankName');
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
+      if (selectedBank) {
+        this.personalData.bankName = selectedBank.name;
+        this.invalidFields.delete('bankName');
+      }
+      
+      this.selectedBranchId = null;
+      this.personalData.branchName = '';
+    } else {
+      this.branches = [];
+      this.personalData.bankName = '';
     }
-    
-    this.selectedBranchId = null;
-    this.personalData.branchName = '';
-  } else {
-    this.branches = [];
-    this.personalData.bankName = '';
   }
-}
-// Prevent entering more than 12 characters for NIC
-blockNicInput(event: KeyboardEvent) {
-  const value = this.personalData.nic || '';
 
-  // Allow control keys
-  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
-  if (allowedKeys.includes(event.key)) return;
+  // Prevent entering more than 12 characters for NIC
+  blockNicInput(event: KeyboardEvent) {
+    const value = this.personalData.nic || '';
 
-  // Block input if already 12 characters
-  if (value.length >= 12) {
-    event.preventDefault();
+    // Allow control keys
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    if (allowedKeys.includes(event.key)) return;
+
+    // Block input if already 12 characters
+    if (value.length >= 12) {
+      event.preventDefault();
+    }
   }
-}
 
-// Trim NIC input after paste/autofill
-enforceNicLength(event: any) {
-  const value = event.target.value || '';
-  if (value.length > 12) {
-    this.personalData.nic = value.slice(0, 12);
+  // Trim NIC input after paste/autofill
+  enforceNicLength(event: any) {
+    const value = event.target.value || '';
+    if (value.length > 12) {
+      this.personalData.nic = value.slice(0, 12);
+    }
   }
-}
 
-// Capitalize 'v' to 'V' for 10-digit NIC
-
-
+  // Capitalize 'v' to 'V' for 10-digit NIC
+  capitalizeV(): void {
+    if (this.personalData.nic) {
+      this.personalData.nic = this.personalData.nic.replace(/v/g, 'V');
+    }
+  }
 
   onBranchChange() {
     if (this.selectedBranchId) {
@@ -549,6 +658,15 @@ enforceNicLength(event: any) {
   }
 
   onSubmit() {
+    // Validate pageTwo before submitting
+    this.markAllFieldsAsTouched();
+    const validation = this.validatePageTwo();
+    
+    if (!validation.isValid) {
+      this.showValidationErrors(validation.errors);
+      return;
+    }
+
     // Duplicate check for phone numbers
     this.duplicatePhoneError = false;
     if (
@@ -677,30 +795,30 @@ enforceNicLength(event: any) {
   }
 
   blockPhoneLength(event: KeyboardEvent, value: string) {
-  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
 
-  // Allow navigation keys
-  if (allowedKeys.includes(event.key)) return;
+    // Allow navigation keys
+    if (allowedKeys.includes(event.key)) return;
 
-  // Block non-numeric keys
-  if (!/^[0-9]$/.test(event.key)) {
-    event.preventDefault();
-    return;
+    // Block non-numeric keys
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Block input if already 9 digits
+    if (value && value.length >= 9) {
+      event.preventDefault();
+    }
   }
 
-  // Block input if already 9 digits
-  if (value && value.length >= 9) {
-    event.preventDefault();
+  // Trim input to 9 digits after input (for paste or autofill)
+  enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
+    const value = event.target.value || '';
+    if (value.length > 9) {
+      this.personalData[field] = value.slice(0, 9);
+    }
   }
-}
-
-// Trim input to 9 digits after input (for paste or autofill)
-enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
-  const value = event.target.value || '';
-  if (value.length > 9) {
-    this.personalData[field] = value.slice(0, 9);
-  }
-}
 
   checkDuplicatePhoneNumbers(): void {
     const phone1 = this.personalData.phoneNumber01 || '';
@@ -714,14 +832,13 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
   }
 
   blockLeadingSpace(event: KeyboardEvent, field: string) {
-  const value = this.personalData[field] || '';
+    const value = this.personalData[field] || '';
 
-  // If the first character is empty and user presses space, block it
-  if (value.length === 0 && event.key === ' ') {
-    event.preventDefault();
+    // If the first character is empty and user presses space, block it
+    if (value.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
   }
-}
-
 
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
@@ -730,35 +847,25 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
     }
   }
 
-
-
-  capitalizeV(): void {
-  if (this.personalData.nic) {
-    this.personalData.nic = this.personalData.nic.replace(/v/g, 'V');
-  }
-}
-
-loadBranches() {
-  this.http.get<BranchesData>('assets/json/branches.json').subscribe(
-    (data) => {
-      this.allBranches = data; // store all branches
-      // If you want to populate initial branches for selected bank:
-      if (this.selectedBankId) {
-        this.branches = (data[this.selectedBankId.toString()] || []).slice()
-          .sort((a, b) => a.name.localeCompare(b.name));
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      (data) => {
+        this.allBranches = data; // store all branches
+        // If you want to populate initial branches for selected bank:
+        if (this.selectedBankId) {
+          this.branches = (data[this.selectedBankId.toString()] || []).slice()
+            .sort((a, b) => a.name.localeCompare(b.name));
+        }
+      },
+      (error) => {
+        console.error('Failed to load branches', error);
       }
-    },
-    (error) => {
-      console.error('Failed to load branches', error);
-    }
-  );
-}
+    );
+  }
 
-getEmailErrorMessage(email: string): string | null {
-  return this.emailValidationService.getErrorMessage(email);
-}
-
-
+  getEmailErrorMessage(email: string): string | null {
+    return this.emailValidationService.getErrorMessage(email);
+  }
 }
 
 class Personal {

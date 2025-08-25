@@ -634,13 +634,13 @@ export class CreateCropCalenderComponent implements OnInit {
     private cropCalendarService: CropCalendarService
   ) {
     this.cropForm = this.fb.group({
-      groupId: [''],
-      varietyId: [''],
-      cultivationMethod: ['', Validators.required],
-      natureOfCultivation: ['', Validators.required],
-      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1)]],
-      suitableAreas: ['', Validators.required],
-    });
+  groupId: ['', Validators.required], // Add Validators.required
+  varietyId: ['', Validators.required], // Add Validators.required
+  cultivationMethod: ['', Validators.required],
+  natureOfCultivation: ['', Validators.required],
+  cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1)]],
+  suitableAreas: ['', Validators.required],
+});
   }
 
   back(): void {
@@ -883,22 +883,24 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 
   private getMissingFields(): string[] {
-    const missingFields: string[] = [];
-    const controls = this.cropForm.controls;
-    const fieldLabels: { [key: string]: string } = {
-      cultivationMethod: 'Cultivation Method',
-      natureOfCultivation: 'Nature of Cultivation',
-      cropDuration: 'Crop Duration',
-      suitableAreas: 'Suitable Areas',
-    };
+  const missingFields: string[] = [];
+  const controls = this.cropForm.controls;
+  const fieldLabels: { [key: string]: string } = {
+    groupId: 'Crop Name', // Add this
+    varietyId: 'Variety Name', // Add this
+    cultivationMethod: 'Cultivation Method',
+    natureOfCultivation: 'Nature of Cultivation',
+    cropDuration: 'Crop Duration',
+    suitableAreas: 'Suitable Areas',
+  };
 
-    for (const controlName in controls) {
-      if (controls[controlName].invalid && fieldLabels[controlName]) {
-        missingFields.push(fieldLabels[controlName]);
-      }
+  for (const controlName in controls) {
+    if (controls[controlName].invalid && fieldLabels[controlName]) {
+      missingFields.push(fieldLabels[controlName]);
     }
-    return missingFields;
   }
+  return missingFields;
+}
 
   private getFirstInvalidField(): string | null {
     const controls = this.cropForm.controls;

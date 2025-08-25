@@ -43,7 +43,7 @@
                 <tbody class="bg-white dark:bg-gray-800 ">
 
                     <tr *ngFor=" let item of packageArr">
-                         <td class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
+                        <td class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
                             <div>
                                 <!-- (click)="openPopUp(item.productId, item.displayName, item.quantity, item.price)" -->
                                 <button (click)="openPopUp(item)">
@@ -106,14 +106,14 @@
 </div>
 
 <!-- countdown component -->
- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <app-count-down *ngIf="showCountdown" [duration]="30" (completed)="onTimerCompleted()"
     (cancelled)="onTimerCancelled()"></app-count-down>
 
 
 <!-- replace popup -->
- <div *ngIf="isPopupOpen" class="fixed inset-0 z-50 flex items-center bg-black bg-opacity-50">
+<div *ngIf="isPopupOpen" class="fixed inset-0 z-50 flex items-center bg-black bg-opacity-50">
     <div
         class="max-w-5xl w-full mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-y-auto max-h-[800px] ml-80 mt-[-10]">
         <!-- Title -->
@@ -141,17 +141,17 @@
             <!-- Product Name Dropdown -->
             <div class="w-1/3">
                 <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">PRODUCT NAME</label>
+                <!-- Change your dropdown to use [ngValue] properly -->
                 <select
                     class="w-full border rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 italic-placeholder"
-                    [(ngModel)]="newProductObj" > 
+                    [(ngModel)]="newProductObj" name="newProductObj" (change)="onProductChange()">
                     <option [ngValue]="null" disabled selected>--Product Name--</option>
-                    <option *ngFor="let product of productArr" [ngValue]="product"
-                        [disabled]="product.isExcluded">
+                    <option *ngFor="let product of productArr" [ngValue]="product" [disabled]="product.isExcluded">
                         {{ product.displayName }}
                     </option>
                 </select>
             </div>
-<!-- (change)="onProductChange()" -->
+            <!-- (change)="onProductChange()" -->
 
 
 
@@ -161,10 +161,11 @@
                     <label class="block text-sm text-center font-medium text-gray-500 dark:text-gray-300 mb-2">
                         QUANTITY (KG)
                     </label>
-                    <!-- <input type="number" placeholder="--Qty in kg--"
+                    <!-- Add null check and proper binding -->
+                    <input type="number" placeholder="--Qty in kg--"
                         class="border text-center rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700"
-                        [(ngModel)]="quantity" (input)="validateQuantity()" (keydown)="blockInvalidKeys($event)" min="1"
-                        step="0.01" style="::placeholder { font-style: italic; }" /> -->
+                        [ngModel]="newProductObj?.qty" (ngModelChange)="updateQuantity($event)" min="0.001" step="0.001"
+                        [disabled]="!newProductObj" style="::placeholder { font-style: italic; }" />
                 </div>
 
 
@@ -173,7 +174,7 @@
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">UNIT PRICE
                         (RS.)</label>
                     <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
-                        <!-- {{ unitPrice != null ? 'Rs. ' + (unitPrice | number:'1.2-2') : '----' }} -->
+                        {{ newProductObj?.discountedPrice | number:'1.2-2' }}
                     </span>
 
                 </div>
@@ -182,7 +183,7 @@
                 <div class="w-1/3">
                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">TOTAL (RS.)</label>
                     <span class="block py-2 px-3 rounded-lg text-[#212121] dark:text-white dark:bg-gray-700">
-                        <!-- {{ totalPrice != null ? 'Rs. ' + (totalPrice | number:'1.2-2') : '----' }} -->
+                        Rs.{{ newProductObj?.price | number:'1.2-2' }}
                     </span>
                 </div>
             </div>
@@ -198,14 +199,14 @@
                 class="px-5 py-2  bg-[#74788D] text-[#D3D3D3] rounded-md hover:bg-gray-500">
                 Cancel
             </button>
-            <!-- <button (click)="replaceProduct()" [disabled]="!selectedProductId || !quantity"
+            <button (click)="replaceProduct()" [disabled]="newProductObj === null "
                 class="px-5 py-2 bg-[#C1C1C1] rounded-md text-[#FFFFFF]"
-                [class.bg-[#C1C1C1]]="!selectedProductId || !quantity"
-                [class.cursor-not-allowed]="!selectedProductId || !quantity"
-                [class.bg-[#3980C0]]="selectedProductId && quantity"
-                [class.hover:bg-[#3980C0]]="selectedProductId && quantity" [class.text-white]="true">
+                [class.bg-[#C1C1C1]]="newProductObj === null"
+                [class.cursor-not-allowed]="newProductObj === null"
+                [class.bg-[#3980C0]]="newProductObj !== null"
+                [class.hover:bg-[#3980C0]]="newProductObj !== null" [class.text-white]="true">
                 Update
-            </button> -->
+            </button>
         </div>
     </div>
 </div>

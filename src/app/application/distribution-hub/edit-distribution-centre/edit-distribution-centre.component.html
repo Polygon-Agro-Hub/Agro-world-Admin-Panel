@@ -251,13 +251,9 @@
         Cancel
       </button>
       <button type="submit"
-        class="px-4 min-w-30 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#D3D3D3]"
-        [ngClass]="{
-          'bg-gray-400 text-gray-700 cursor-not-allowed': distributionForm.invalid || isLoading,
-          'bg-[#3980C0] text-white hover:bg-[#2e66a0]': distributionForm.valid && !isLoading
-        }" [disabled]="distributionForm.invalid || isLoading">
-        Save
-      </button>
+    class="px-4 min-w-30 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2e66a0] focus:outline-none focus:ring-2 focus:ring-blue-500">
+    Save
+  </button>
     </div>
   </form>
 </div>

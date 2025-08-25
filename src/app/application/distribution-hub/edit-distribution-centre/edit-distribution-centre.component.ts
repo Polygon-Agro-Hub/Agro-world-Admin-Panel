@@ -671,125 +671,178 @@ back(): void {
   }
 
   updateDistributionCentre() {
-  if (this.distributionForm.valid) {
-    if (!this.companyList || this.companyList.length === 0) {
-      this.showErrorAlert(
-        'Company list not loaded. Please wait or refresh the page.'
-      );
-      return;
-    }
+  // Remove the form.valid check and always allow submission
+  if (!this.companyList || this.companyList.length === 0) {
+    this.showErrorAlert(
+      'Company list not loaded. Please wait or refresh the page.'
+    );
+    return;
+  }
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to update this distribution centre?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Update it!',
-      cancelButtonText: 'No, Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-
-        const companyId = Number(this.distributionForm.value.company);
-        const selectedCompany = this.companyList.find(
-          (company) => Number(company.id) === companyId
-        );
-
-        if (!selectedCompany) {
-          this.isLoading = false;
-          this.showErrorAlert('Selected company not found');
-          return;
-        }
-
-        const updateData = {
-          name: this.distributionForm.value.name,
-          contact1Code: this.distributionForm.value.contact1Code,
-          contact1: this.distributionForm.value.contact1,
-          contact2Code: this.distributionForm.value.contact2Code,
-          contact2: this.distributionForm.value.contact2,
-          city: this.distributionForm.value.city,
-          district: this.distributionForm.value.district,
-          province: this.distributionForm.value.province,
-          country: this.distributionForm.value.country,
-          regCode: this.distributionForm.value.regCode,
-          longitude: parseFloat(this.distributionForm.value.longitude).toString(),
-          latitude: parseFloat(this.distributionForm.value.latitude).toString(),
-          email: this.distributionForm.value.email,
-          company: companyId
-        };
-
-        const id = this.route.snapshot.params['id'];
-
-        this.distributionService
-          .updateDistributionCentreDetails(id, updateData)
-          .subscribe({
-            next: (response) => {
-              this.isLoading = false;
-              if (response.success) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Success!',
-                  text: 'Distribution centre updated successfully!',
-                }).then(() => {
-                  this.router.navigate(['/distribution-hub/action/view-destribition-center']);
-                });
-              } else {
-                this.showErrorAlert(response.error || 'Update failed');
-              }
-            },
-            error: (error) => {
-              this.isLoading = false;
-              console.error('Update error:', error);
-
-              let errorMessage = 'Update failed. Please try again.';
-              
-              if (error.error) {
-                // Handle validation errors
-                if (error.status === 400 && error.error.error) {
-                  errorMessage = error.error.error;
-                }
-                // Handle conflict errors
-                else if (error.status === 409) {
-                  if (error.error.conflictingRecord) {
-                    const conflict = error.error.conflictingRecord;
-                    switch (conflict.conflictType) {
-                      case 'name':
-                        errorMessage = 'A distribution center with this name already exists.';
-                        break;
-                      case 'regCode':
-                        errorMessage = 'A distribution center with this registration code already exists.';
-                        break;
-                      case 'contact':
-                        errorMessage = 'A distribution center with this contact number already exists.';
-                        break;
-                      default:
-                        errorMessage = error.error.error || 'A distribution center with these details already exists.';
-                    }
-                  } else {
-                    errorMessage = error.error.error || 'A distribution center with these details already exists.';
-                  }
-                }
-                // Handle other errors
-                else if (error.error.message) {
-                  errorMessage = error.error.message;
-                }
-              }
-
-              this.showErrorAlert(errorMessage);
-            },
-          });
-      }
-    });
-  } else {
+  // Check if form is invalid and show validation errors
+  if (this.distributionForm.invalid) {
     // Mark all fields as touched to show validation errors
     this.markFormGroupTouched(this.distributionForm);
-
+    
+    // Collect all validation errors
+    const errorMessages = this.getAllValidationErrors();
+    
     Swal.fire({
-      icon: 'warning',
-      title: 'Invalid Form',
-      text: 'Please correct the errors in the form before submitting.',
+      icon: 'error',
+      title: 'Form Validation Failed',
+      html: this.formatErrorMessagesForAlert(errorMessages),
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      }
     });
+    return;
   }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to update this distribution centre?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Update it!',
+    cancelButtonText: 'No, Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+
+      const companyId = Number(this.distributionForm.value.company);
+      const selectedCompany = this.companyList.find(
+        (company) => Number(company.id) === companyId
+      );
+
+      if (!selectedCompany) {
+        this.isLoading = false;
+        this.showErrorAlert('Selected company not found');
+        return;
+      }
+
+      const updateData = {
+        name: this.distributionForm.value.name,
+        contact1Code: this.distributionForm.value.contact1Code,
+        contact1: this.distributionForm.value.contact1,
+        contact2Code: this.distributionForm.value.contact2Code,
+        contact2: this.distributionForm.value.contact2,
+        city: this.distributionForm.value.city,
+        district: this.distributionForm.value.district,
+        province: this.distributionForm.value.province,
+        country: this.distributionForm.value.country,
+        regCode: this.distributionForm.value.regCode,
+        longitude: parseFloat(this.distributionForm.value.longitude).toString(),
+        latitude: parseFloat(this.distributionForm.value.latitude).toString(),
+        email: this.distributionForm.value.email,
+        company: companyId
+      };
+
+      const id = this.route.snapshot.params['id'];
+
+      this.distributionService
+        .updateDistributionCentreDetails(id, updateData)
+        .subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            if (response.success) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Distribution centre updated successfully!',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                }
+              }).then(() => {
+                this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+              });
+            } else {
+              this.showErrorAlert(response.error || 'Update failed');
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Update error:', error);
+
+            let errorMessage = 'Update failed. Please try again.';
+            
+            if (error.error) {
+              // Handle validation errors
+              if (error.status === 400 && error.error.error) {
+                errorMessage = error.error.error;
+              }
+              // Handle conflict errors
+              else if (error.status === 409) {
+                if (error.error.conflictingRecord) {
+                  const conflict = error.error.conflictingRecord;
+                  switch (conflict.conflictType) {
+                    case 'name':
+                      errorMessage = 'A distribution center with this name already exists.';
+                      break;
+                    case 'regCode':
+                      errorMessage = 'A distribution center with this registration code already exists.';
+                      break;
+                    case 'contact':
+                      errorMessage = 'A distribution center with this contact number already exists.';
+                      break;
+                    default:
+                      errorMessage = error.error.error || 'A distribution center with these details already exists.';
+                  }
+                } else {
+                  errorMessage = error.error.error || 'A distribution center with these details already exists.';
+                }
+              }
+              // Handle other errors
+              else if (error.error.message) {
+                errorMessage = error.error.message;
+              }
+            }
+
+            this.showErrorAlert(errorMessage);
+          },
+        });
+    }
+  });
+}
+
+// Add these helper methods to collect and format validation errors
+private getAllValidationErrors(): { field: string; error: string }[] {
+  const errors: { field: string; error: string }[] = [];
+  
+  Object.keys(this.distributionForm.controls).forEach(key => {
+    const control = this.distributionForm.get(key);
+    if (control && control.invalid && control.errors) {
+      const errorMessage = this.getFieldError(key);
+      if (errorMessage) {
+        errors.push({
+          field: this.getFieldLabel(key),
+          error: errorMessage
+        });
+      }
+    }
+  });
+  
+  return errors;
+}
+
+private formatErrorMessagesForAlert(errors: { field: string; error: string }[]): string {
+  if (errors.length === 0) {
+    return 'Please correct the form errors.';
+  }
+  
+  let html = '<div class="text-left">';
+  html += '<p class="mb-3 font-semibold">Please correct the following errors:</p>';
+  html += '<ul class="list-disc pl-5 space-y-1">';
+  
+  errors.forEach(error => {
+    html += `<li><span class="font-medium">${error.field}:</span> ${error.error}</li>`;
+  });
+  
+  html += '</ul></div>';
+  return html;
 }
 
   private markFormGroupTouched(formGroup: FormGroup) {

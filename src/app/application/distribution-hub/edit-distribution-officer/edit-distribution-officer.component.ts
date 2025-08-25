@@ -530,14 +530,69 @@ getEmailErrorMessage(email: string): string | null {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    // Block navigation if duplicate phone numbers
-    this.checkDuplicatePhoneNumbers();
-    if (this.duplicatePhoneError) {
-      Swal.fire('Error', "Company Mobile Number - 1 and Mobile Number - 2 can't be the same", 'error');
-      return;
-    }
-    this.selectedPage = page;
+  // Block navigation if duplicate phone numbers
+  this.checkDuplicatePhoneNumbers();
+  if (this.duplicatePhoneError) {
+    Swal.fire('Error', "Company Mobile Number - 1 and Mobile Number - 2 can't be the same", 'error');
+    return;
   }
+  
+  // Check if form is valid and show errors if not
+  if (!this.checkFormValidity()) {
+    const errors = this.getFormValidationErrors();
+    this.showValidationErrors(errors);
+    return;
+  }
+  
+  this.selectedPage = page;
+}
+
+getFormValidationErrors(): string[] {
+  const errors: string[] = [];
+  const namePattern = /^[A-Za-z ]+$/;
+
+  // First Name validation
+  if (!this.personalData.firstNameEnglish || !namePattern.test(this.personalData.firstNameEnglish)) {
+    errors.push('First Name is required and should contain only letters');
+  }
+
+  // Last Name validation
+  if (!this.personalData.lastNameEnglish || !namePattern.test(this.personalData.lastNameEnglish)) {
+    errors.push('Last Name is required and should contain only letters');
+  }
+
+  // Phone Number validation
+  if (!this.isValidPhoneNumber(this.personalData.phoneNumber01, this.personalData.phoneCode01)) {
+    errors.push('Mobile Number - 1 is required and should be valid');
+  }
+
+  // Email validation
+  if (!this.personalData.email || !this.isValidEmail(this.personalData.email)) {
+    errors.push('Email is required and should be valid');
+  }
+
+  // Languages validation
+  if (!this.personalData.languages) {
+    errors.push('At least one language must be selected');
+  }
+
+  // Company validation
+  if (!this.personalData.companyId) {
+    errors.push('Company Name is required');
+  }
+
+  // Job Role validation
+  if (!this.personalData.jobRole) {
+    errors.push('Job Role is required');
+  }
+
+  // NIC validation
+  if (!this.personalData.nic || !this.isValidNIC(this.personalData.nic)) {
+    errors.push('NIC is required and should be valid');
+  }
+
+  return errors;
+}
 
   checkFormValidity(): boolean {
   const namePattern = /^[A-Za-z ]+$/;
@@ -650,67 +705,127 @@ onBankChange() {
   }
 
   onSubmit() {
-    this.checkDuplicatePhoneNumbers();
-    if (this.duplicatePhoneError) {
-      Swal.fire('Error', "Company Phone Number - 1 and 2 can't be the same", 'error');
-      return;
-    }
-    if (
-      !this.personalData.confirmAccNumber ||
-      this.personalData.confirmAccNumber.toString().trim() === '' ||
-      !this.checkSubmitValidity()
-    ) {
-      Swal.fire('Error', 'Please fill the confirm account number', 'error');
-      return;
-    }
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to update the Distribution Centre Head?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, update it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        const updateData = {
-          ...this.personalData,
-          empId: 'DCH' + this.personalData.empId,
-          image: this.selectedImage,
-        };
+  this.checkDuplicatePhoneNumbers();
+  if (this.duplicatePhoneError) {
+    Swal.fire('Error', "Company Phone Number - 1 and 2 can't be the same", 'error');
+    return;
+  }
+  
+  // Check if form is valid and show errors if not
+  if (!this.checkSubmitValidity()) {
+    const errors = this.getSubmitValidationErrors();
+    this.showValidationErrors(errors);
+    return;
+  }
+  
+  if (
+    !this.personalData.confirmAccNumber ||
+    this.personalData.confirmAccNumber.toString().trim() === '' ||
+    !this.checkSubmitValidity()
+  ) {
+    Swal.fire('Error', 'Please fill the confirm account number', 'error');
+    return;
+  }
+  
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to update the Distribution Centre Head?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      const updateData = {
+        ...this.personalData,
+        empId: 'DCH' + this.personalData.empId,
+        image: this.selectedImage,
+      };
 
-        this.distributionHubSrv
-          .updateDistributionHeadDetails(this.itemId!, updateData)
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.errorMessage = '';
+      this.distributionHubSrv
+        .updateDistributionHeadDetails(this.itemId!, updateData)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.errorMessage = '';
 
-              Swal.fire(
-                'Success',
-                'Updated Distribution Centre Head Successfully',
-                'success'
-              ).then(() => {
-                this.location.back();
-              });
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
-              Swal.fire('Error', this.errorMessage, 'error');
-            }
-          );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
-          () => {
-            this.location.back();
+            Swal.fire(
+              'Success',
+              'Updated Distribution Centre Head Successfully',
+              'success'
+            ).then(() => {
+              this.location.back();
+            });
+          },
+          (error: any) => {
+            this.isLoading = false;
+            this.errorMessage =
+              error.error.error || 'An unexpected error occurred';
+            Swal.fire('Error', this.errorMessage, 'error');
           }
         );
-      }
-    });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
+        () => {
+          this.location.back();
+        }
+      );
+    }
+  });
+}
+
+getSubmitValidationErrors(): string[] {
+  const errors: string[] = [];
+  
+  // Basic address validation
+  if (!this.personalData.houseNumber) {
+    errors.push('House Number is required');
   }
+  
+  if (!this.personalData.streetName) {
+    errors.push('Street Name is required');
+  }
+  
+  if (!this.personalData.city) {
+    errors.push('City is required');
+  }
+  
+  if (!this.personalData.district) {
+    errors.push('District is required');
+  }
+
+  // For companyId === 1, validate bank details
+  if (this.personalData.companyId === '1') {
+    if (!this.personalData.confirmAccNumber || this.personalData.confirmAccNumber.toString().trim() === '') {
+      errors.push('Confirm Account Number is required');
+    }
+
+    const accNumbersMatch = this.personalData.accNumber.toString() === this.personalData.confirmAccNumber.toString();
+    if (!accNumbersMatch) {
+      errors.push('Account Numbers do not match');
+    }
+
+    if (!this.personalData.accHolderName || !/^[A-Za-z ]+$/.test(this.personalData.accHolderName)) {
+      errors.push('Account Holder Name is required and should contain only letters');
+    }
+
+    if (!this.personalData.accNumber) {
+      errors.push('Account Number is required');
+    }
+
+    if (!this.personalData.bankName) {
+      errors.push('Bank Name is required');
+    }
+
+    if (!this.personalData.branchName) {
+      errors.push('Branch Name is required');
+    }
+  }
+
+  return errors;
+}
 
   checkSubmitValidity(): boolean {
     // Basic address validation
@@ -793,6 +908,25 @@ onBankChange() {
       (error) => {}
     );
   }
+
+  showValidationErrors(errors: string[]): void {
+  let errorMessage = '<ul style="text-align: left; margin-left: 20px;">';
+  errors.forEach(error => {
+    errorMessage += `<li>${error}</li>`;
+  });
+  errorMessage += '</ul>';
+  
+  Swal.fire({
+    icon: 'error',
+    title: 'Validation Errors',
+    html: errorMessage,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+}
+  
 }
 
 class Personal {

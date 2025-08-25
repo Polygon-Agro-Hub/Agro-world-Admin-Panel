@@ -547,13 +547,12 @@
           Cancel
         </button>
         <button
-          (click)="nextFormCreate('pageTwo')"
-          type="button"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-          [disabled]="!checkFormValidity()"
-        >
-          Next
-        </button>
+  (click)="nextFormCreate('pageTwo')"
+  type="button"
+  class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+>
+  Next
+</button>
       </div>
     </div>
   </div>
@@ -870,14 +869,12 @@
         Back
       </button>
       <button
-        type="submit"
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        [class.opacity-50]="!checkSubmitValidity()"
-        [disabled]="!checkSubmitValidity()"
-        (click)="onSubmit()"
-      >
-        Update
-      </button>
+  type="submit"
+  class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+  (click)="onSubmit()"
+>
+  Update
+</button>
     </div>
   </div>
 </div>

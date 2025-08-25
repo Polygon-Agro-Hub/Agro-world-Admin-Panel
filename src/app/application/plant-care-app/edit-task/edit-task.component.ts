@@ -242,63 +242,48 @@ export class EditTaskComponent implements OnInit {
   }
 
   updateTask() {
-    this.formSubmitted = true;
+  this.formSubmitted = true;
 
-    // Update taskItems with form values
-    this.taskItems = {
-      ...this.taskItems,
-      ...this.taskForm.value,
-    };
+  // Mark all form controls as touched to trigger validation messages
+  Object.keys(this.taskForm.controls).forEach(key => {
+    this.taskForm.get(key)?.markAsTouched();
+  });
 
+  // Check if the form is invalid
+  if (this.taskForm.invalid) {
     // Array to store missing or invalid field messages
     const missingFields: string[] = [];
 
-    // Validate form fields
-    if (!this.taskItems.startingDate) {
-      missingFields.push('Starting Date is required');
-    }
-    if (!this.taskItems.taskTypeEnglish) {
-      missingFields.push('Task Type (English) is required');
-    }
-    if (!this.taskItems.taskTypeSinhala) {
-      missingFields.push('Task Type (Sinhala) is required');
-    }
-    if (!this.taskItems.taskTypeTamil) {
-      missingFields.push('Task Type (Tamil) is required');
-    }
-    if (!this.taskItems.taskCategoryEnglish) {
-      missingFields.push('Task Category (English) is required');
-    }
-    if (!this.taskItems.taskCategorySinhala) {
-      missingFields.push('Task Category (Sinhala) is required');
-    }
-    if (!this.taskItems.taskCategoryTamil) {
-      missingFields.push('Task Category (Tamil) is required');
-    }
-    if (!this.taskItems.taskEnglish) {
-      missingFields.push('Task (English) is required');
-    }
-    if (!this.taskItems.taskSinhala) {
-      missingFields.push('Task (Sinhala) is required');
-    }
-    if (!this.taskItems.taskTamil) {
-      missingFields.push('Task (Tamil) is required');
-    }
-    if (!this.taskItems.taskDescriptionEnglish) {
-      missingFields.push('Task Description (English) is required');
-    }
-    if (!this.taskItems.taskDescriptionSinhala) {
-      missingFields.push('Task Description (Sinhala) is required');
-    }
-    if (!this.taskItems.taskDescriptionTamil) {
-      missingFields.push('Task Description (Tamil) is required');
-    }
-    if (this.taskItems.reqImages === null || this.taskItems.reqImages === undefined) {
-      missingFields.push('Required Images is required');
-    }
-    if (this.taskForm.get('hasImageLink')?.value && !this.taskItems.imageLink) {
-      missingFields.push('Image Link is required when Require Images is set to Yes');
-    }
+    // Check each form control for errors
+    Object.keys(this.taskForm.controls).forEach(key => {
+      const control = this.taskForm.get(key);
+      if (control?.invalid) {
+        let fieldName = key;
+        let errorMessage = '';
+        
+        // Customize field names
+        if (key.includes('English')) fieldName = key.replace('English', ' (English)');
+        if (key.includes('Sinhala')) fieldName = key.replace('Sinhala', ' (Sinhala)');
+        if (key.includes('Tamil')) fieldName = key.replace('Tamil', ' (Tamil)');
+        if (key === 'reqImages') fieldName = 'Required Images';
+        if (key === 'imageLink') fieldName = 'Image Link';
+        
+        // Specific error messages
+        if (control.errors?.['required']) {
+          errorMessage = `${fieldName} is required`;
+        } else if (control.errors?.['pattern']) {
+          if (key === 'reqImages') {
+            errorMessage = 'Required Images must be a valid number (no leading zeros or decimals)';
+          } else {
+            errorMessage = `${fieldName} has an invalid format`;
+          }
+        } else {
+          errorMessage = `${fieldName} is invalid`;
+        }
+        
+        missingFields.push(errorMessage);
+      }
+    });
 
     // If there are validation errors, show popup and stop submission
     if (missingFields.length > 0) {
@@ -322,86 +307,166 @@ export class EditTaskComponent implements OnInit {
 
       return;
     }
+  }
 
-    // Confirm update
-    const token = this.tokenService.getToken();
-    if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Authentication token not found',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
+  // Update taskItems with form values
+  this.taskItems = {
+    ...this.taskItems,
+    ...this.taskForm.value,
+  };
+
+  // Array to store missing or invalid field messages
+  const missingFields: string[] = [];
+
+  // Validate form fields
+  if (!this.taskItems.startingDate) {
+    missingFields.push('Starting Date is required');
+  }
+  if (!this.taskItems.taskTypeEnglish) {
+    missingFields.push('Task Type (English) is required');
+  }
+  if (!this.taskItems.taskTypeSinhala) {
+    missingFields.push('Task Type (Sinhala) is required');
+  }
+  if (!this.taskItems.taskTypeTamil) {
+    missingFields.push('Task Type (Tamil) is required');
+  }
+  if (!this.taskItems.taskCategoryEnglish) {
+    missingFields.push('Task Category (English) is required');
+  }
+  if (!this.taskItems.taskCategorySinhala) {
+    missingFields.push('Task Category (Sinhala) is required');
+  }
+  if (!this.taskItems.taskCategoryTamil) {
+    missingFields.push('Task Category (Tamil) is required');
+  }
+  if (!this.taskItems.taskEnglish) {
+    missingFields.push('Task (English) is required');
+  }
+  if (!this.taskItems.taskSinhala) {
+    missingFields.push('Task (Sinhala) is required');
+  }
+  if (!this.taskItems.taskTamil) {
+    missingFields.push('Task (Tamil) is required');
+  }
+  if (!this.taskItems.taskDescriptionEnglish) {
+    missingFields.push('Task Description (English) is required');
+  }
+  if (!this.taskItems.taskDescriptionSinhala) {
+    missingFields.push('Task Description (Sinhala) is required');
+  }
+  if (!this.taskItems.taskDescriptionTamil) {
+    missingFields.push('Task Description (Tamil) is required');
+  }
+  if (this.taskItems.reqImages === null || this.taskItems.reqImages === undefined) {
+    missingFields.push('Required Images is required');
+  }
+  if (this.taskForm.get('hasImageLink')?.value && !this.taskItems.imageLink) {
+    missingFields.push('Image Link is required when Require Images is set to Yes');
+  }
+
+  // If there are validation errors, show popup and stop submission
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to update this crop task?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, update it!',
-      cancelButtonText: 'Cancel',
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+
+    return;
+  }
+
+  // Confirm update
+  const token = this.tokenService.getToken();
+  if (!token) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Authentication token not found',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-
-        // Prepare task data
-        const taskData = {
-          ...this.taskItems,
-          imageLink: this.taskForm.get('hasImageLink')?.value ? this.taskItems.imageLink : null,
-        };
-
-        this.taskService.updateUserCropTask(this.itemId, taskData).subscribe({
-          next: (res: any) => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Task updated successfully!',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-            }).then(() => {
-              this.location.back();
-            });
-            this.formSubmitted = false;
-          },
-          error: (error) => {
-            let errorMessage = 'There was an error updating the crop task.';
-            if (error.error?.error) {
-              errorMessage = error.error.error;
-            } else if (error.error?.message) {
-              errorMessage = error.error.message;
-            } else if (error.status === 400) {
-              errorMessage = 'Invalid data sent to server. Please check your inputs.';
-            }
-            Swal.fire({
-              icon: 'error',
-              title: 'Unsuccessful',
-              text: errorMessage,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-            });
-            this.formSubmitted = false;
-          },
-        });
-      }
     });
+    return;
   }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to update this crop task?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      // Prepare task data
+      const taskData = {
+        ...this.taskItems,
+        imageLink: this.taskForm.get('hasImageLink')?.value ? this.taskItems.imageLink : null,
+      };
+
+      this.taskService.updateUserCropTask(this.itemId, taskData).subscribe({
+        next: (res: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Task updated successfully!',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          }).then(() => {
+            this.location.back();
+          });
+          this.formSubmitted = false;
+        },
+        error: (error) => {
+          let errorMessage = 'There was an error updating the crop task.';
+          if (error.error?.error) {
+            errorMessage = error.error.error;
+          } else if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.status === 400) {
+            errorMessage = 'Invalid data sent to server. Please check your inputs.';
+          }
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsuccessful',
+            text: errorMessage,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
+          this.formSubmitted = false;
+        },
+      });
+    }
+  });
+}
 
    onImageLinkChange() {
     if (!this.taskForm.get('hasImageLink')?.value) {

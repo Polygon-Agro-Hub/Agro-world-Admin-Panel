@@ -329,14 +329,14 @@ export class AgroWorldCentersComponent {
   isAgroworldPresent(item: any): boolean {
     return (
       item.companies?.some(
-        (company: any) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+        (company: any) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
       ) ?? false
     );
   }
 
   navigateAddTarget(item: CollectionCenter) {
     const agroworldCompany = item.companies.find(
-      (company: Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+      (company: Company) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
     );
 
     if (!agroworldCompany) {

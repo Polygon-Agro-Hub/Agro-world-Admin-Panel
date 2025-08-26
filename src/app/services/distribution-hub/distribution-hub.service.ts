@@ -337,4 +337,34 @@ export class DistributionHubService {
     });
   }
 
+    getAssignForCityes(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}distribution/get-all-assigning-cities`, {
+      headers,
+    });
+  }
+
+  AssigCityToDistributedCenter(data:any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}distribution/assign-city-to-distributed-center`, data, {
+      headers,
+    });
+  }
+
+  removeAssigCityToDistributedCenter(data:any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(`${this.apiUrl}distribution/remove-assign-city-to-distributed-center`, data, {
+      headers,
+    });
+  }
+
 }

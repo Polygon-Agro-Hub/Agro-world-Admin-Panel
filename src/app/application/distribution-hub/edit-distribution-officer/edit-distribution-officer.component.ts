@@ -488,9 +488,13 @@ checkDuplicatePhoneNumbers(): void {
   const phone1 = `${this.personalData.phoneCode01 || ''}${this.personalData.phoneNumber01 || ''}`.trim();
   const phone2 = `${this.personalData.phoneCode02 || ''}${this.personalData.phoneNumber02 || ''}`.trim();
 
-  // Only check if both have values
+  // Only check for duplicates if both numbers exist and are valid format
   if (phone1 && phone2 && phone1 === phone2) {
-    this.duplicatePhoneError = true;
+    // Additional check: only show duplicate error if both numbers are in valid format
+    const isPhone1Valid = this.isValidPhoneNumber(this.personalData.phoneNumber01, this.personalData.phoneCode01);
+    const isPhone2Valid = this.isValidPhoneNumber(this.personalData.phoneNumber02, this.personalData.phoneCode02);
+    
+    this.duplicatePhoneError = isPhone1Valid && isPhone2Valid;
   } else {
     this.duplicatePhoneError = false;
   }
@@ -926,6 +930,27 @@ getSubmitValidationErrors(): string[] {
     },
   });
 }
+
+getPhoneNumber02ErrorType(): string | null {
+  // Return null if no error
+  if (!this.personalData.phoneNumber02) {
+    return null;
+  }
+  
+  // Check for duplicate error first (highest priority for styling)
+  if (this.duplicatePhoneError && this.personalData.phoneNumber01 && this.personalData.phoneNumber02) {
+    return 'duplicate';
+  }
+  
+  // Check for invalid format
+  if (!this.isValidPhoneNumber(this.personalData.phoneNumber02, this.personalData.phoneCode02)) {
+    return 'invalid';
+  }
+  
+  return null;
+}
+
+
   
 }
 

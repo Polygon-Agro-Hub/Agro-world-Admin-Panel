@@ -381,6 +381,7 @@
 </div>
 
 
+<!-- Mobile Number - 1 -->
 <div>
   <label for="phoneNumber01" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
    Mobile Number - 1*
@@ -403,38 +404,37 @@
       (blur)="onBlur('phoneNumber01')"
       (input)="checkDuplicatePhoneNumbers()"
       maxlength="9"
-       type="number"
+      type="number"
       placeholder="Enter your phone number"
       class="block w-full p-2 border rounded-r-md"
     />
   </div>
 
+  <!-- Single error message container with priority logic -->
   <div class="flex flex-col mt-1">
+    <!-- Priority 1: Required field error -->
     <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01" class="text-red-600 text-sm">
       Mobile Number - 1 is a required field.
     </span>
-
-    <span *ngIf="personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01, personalData.phoneCode01)" class="text-red-600 text-sm">
+    
+    <!-- Priority 2: Invalid format error (only if field has value and is not required error) -->
+    <span *ngIf="personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01, personalData.phoneCode01) && !duplicatePhoneError" class="text-red-600 text-sm">
       Please enter a valid mobile number (format: +947XXXXXXXX)
     </span>
 
-    <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
-     Mobile Number - 01 and Mobile Number - 02 cannot be the same
+    <!-- Priority 3: Duplicate phone error (only if both numbers are valid format) -->
+    <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02" class="text-red-600 text-sm">
+      Mobile Number - 01 and Mobile Number - 02 cannot be the same
     </span>
   </div>
 </div>
 
-
-
- <div>
-  <label
-    for="phoneNumber02"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
+<!-- Mobile Number - 2 -->
+<div>
+  <label for="phoneNumber02" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
     Mobile Number - 2
   </label>
 
-  <!-- Flex row for code + input -->
   <div class="mt-1 flex">
     <select
       id="phoneNumber02Code"
@@ -458,20 +458,23 @@
       maxlength="9"
       class="block w-full p-2 border rounded-r-md"
       [ngClass]="{ 
-        'border-red-500': duplicatePhoneError || (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02)),
-        'border-gray-300': !duplicatePhoneError && (!personalData.phoneNumber02 || isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02))
+        'border-red-500': getPhoneNumber02ErrorType() !== null,
+        'border-gray-300': getPhoneNumber02ErrorType() === null
       }"
       placeholder="Enter your phone number"
     />
   </div>
 
-  <!-- Error messages BELOW the flex row -->
+  <!-- Single error message container with priority logic -->
   <div class="flex flex-col mt-1">
-    <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02)" class="text-red-600 text-sm">
+    <!-- Priority 1: Invalid format error (only if field has value and not duplicate error) -->
+    <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02) && !duplicatePhoneError" class="text-red-600 text-sm">
       Please enter a valid mobile number (format: +947XXXXXXXX)
     </span>
-    <span *ngIf="duplicatePhoneError" class="text-red-600 text-sm">
-  Mobile Number - 01 and Mobile Number - 02 cannot be the same
+    
+    <!-- Priority 2: Duplicate phone error (only show on phone 2 if both numbers exist) -->
+    <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02" class="text-red-600 text-sm">
+      Mobile Number - 01 and Mobile Number - 02 cannot be the same
     </span>
   </div>
 </div>

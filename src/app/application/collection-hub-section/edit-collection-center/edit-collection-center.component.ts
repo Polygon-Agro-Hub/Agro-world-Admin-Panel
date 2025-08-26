@@ -488,16 +488,15 @@ onSubmit() {
         if (res?.status) {
           this.centerFetchData = res.results;
           
-          // Set the province selection
-          this.selectProvince = this.centerFetchData.province;
-          
-          // Load districts for the selected province
-          const filteredProvince = this.ProvinceData.find(
-            (item) => item.province === this.selectProvince
-          );
-          
-          if (filteredProvince) {
-            this.selectedDistrict = filteredProvince.district;
+          // Load districts for the selected province (if province exists)
+          if (this.centerFetchData.province) {
+            const filteredProvince = this.ProvinceData.find(
+              (item) => item.province === this.centerFetchData.province
+            );
+            
+            if (filteredProvince) {
+              this.selectedDistrict = filteredProvince.district;
+            }
           }
           
           this.existRegCode = this.centerFetchData.regCode;
@@ -576,18 +575,15 @@ onSubmit() {
   }
 
   onProvinceChange() {
-  console.log('Province changed to:', this.selectProvince);
+  console.log('Province changed to:', this.centerFetchData.province);
   
   // Clear district selection when province changes
   this.centerFetchData.district = '';
   this.selectedDistrict = [];
   
-  // Update the province in centerFetchData
-  this.centerFetchData.province = this.selectProvince;
-  
   // Find districts for the selected province
   const filteredProvince = this.ProvinceData.find(
-    (item) => item.province === this.selectProvince
+    (item) => item.province === this.centerFetchData.province
   );
   
   if (filteredProvince) {

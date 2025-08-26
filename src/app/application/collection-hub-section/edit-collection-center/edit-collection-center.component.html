@@ -399,7 +399,7 @@
   <p-dropdown
     id="province"
     name="province"
-    [(ngModel)]="selectProvince"
+    [(ngModel)]="centerFetchData.province"
     (onChange)="onProvinceChange()"
     [options]="ProvinceData"
     optionLabel="province"
@@ -410,12 +410,13 @@
     [showClear]="true"
     [autoDisplayFirst]="false"
     #provinceInput="ngModel"
+    required
     styleClass="w-full mt-1" 
     panelStyleClass="custom-dropdown-panel" 
     class="mt-1 block w-full p-dropdown-custom"
   ></p-dropdown>
   <div
-    *ngIf="!selectProvince"
+    *ngIf="provinceInput.touched && !centerFetchData.province"
     class="text-red-500 text-sm mt-1"
   >
     <div>Province is required</div>
@@ -443,14 +444,15 @@
     [showClear]="true"
     [autoDisplayFirst]="false"
     #districtInput="ngModel"
+    required
     [style]="{ 'min-height': '38px' }"
     styleClass="w-full mt-1" 
     panelStyleClass="custom-dropdown-panel" 
     class="mt-1 block w-full p-dropdown-custom"
-    [disabled]="!selectProvince"
+    [disabled]="!centerFetchData.province"
   ></p-dropdown>
   <div
-    *ngIf="!centerFetchData.district"
+    *ngIf="districtInput.touched && !centerFetchData.district"
     class="text-red-500 text-sm mt-1"
   >
     <div>District is required</div>

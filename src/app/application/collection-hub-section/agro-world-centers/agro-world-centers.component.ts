@@ -23,6 +23,7 @@ interface CollectionCenter {
   street: string;
   district: string;
   province: string;
+  city: string;
   companies: Company[];
 }
 

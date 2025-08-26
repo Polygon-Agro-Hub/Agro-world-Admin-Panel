@@ -234,32 +234,46 @@ export class EditCollectionCenterComponent implements OnInit {
   }
 
   onBuildingNumberInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const rawValue = inputElement.value;
-    const trimmedValue = rawValue.replace(/^\s+/, '');
-
-    if (rawValue !== trimmedValue) {
-      inputElement.value = trimmedValue; // Update input field
-    }
-
-    this.centerFetchData.buildingNumber = trimmedValue;
-
-    console.log('Building Number:', this.centerFetchData.buildingNumber);
+  const inputElement = event.target as HTMLInputElement;
+  let rawValue = inputElement.value;
+  const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+  if (rawValue !== trimmedValue) {
+    rawValue = trimmedValue; // Remove leading spaces
   }
+  
+  // Capitalize first letter
+  if (rawValue.length > 0) {
+    this.centerFetchData.buildingNumber = 
+      rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
+  } else {
+    this.centerFetchData.buildingNumber = '';
+  }
+  
+  // Update input field value
+  inputElement.value = this.centerFetchData.buildingNumber;
+}
 
   onStreetNameInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const rawValue = inputElement.value;
-    const trimmedValue = rawValue.replace(/^\s+/, '');
-
-    if (rawValue !== trimmedValue) {
-      inputElement.value = trimmedValue; // Update input field
-    }
-
-    this.centerFetchData.street = trimmedValue;
-
-    console.log('Building Number:', this.centerFetchData.street);
+  const inputElement = event.target as HTMLInputElement;
+  let rawValue = inputElement.value;
+  const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+  if (rawValue !== trimmedValue) {
+    rawValue = trimmedValue; // Remove leading spaces
   }
+  
+  // Capitalize first letter
+  if (rawValue.length > 0) {
+    this.centerFetchData.street = 
+      rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
+  } else {
+    this.centerFetchData.street = '';
+  }
+  
+  // Update input field value
+  inputElement.value = this.centerFetchData.street;
+}
 
   // onStreetNameChange(value: string): void {
   //   this.centerFetchData.street = value.replace(/^\s+/, '');
@@ -593,19 +607,28 @@ onSubmit() {
   }
 
   onCityInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const rawValue = inputElement.value;
-    const trimmedValue = rawValue.replace(/^\s+/, '');
-
-    if (rawValue !== trimmedValue) {
-      inputElement.value = trimmedValue; // visually remove leading spaces
-    }
-
-    this.centerFetchData.city = trimmedValue;
-
-    // Now call your original logic
-    this.onCityChange();
+  const inputElement = event.target as HTMLInputElement;
+  let rawValue = inputElement.value;
+  const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+  if (rawValue !== trimmedValue) {
+    rawValue = trimmedValue; // Remove leading spaces
   }
+  
+  // Capitalize first letter
+  if (rawValue.length > 0) {
+    this.centerFetchData.city = 
+      rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
+  } else {
+    this.centerFetchData.city = '';
+  }
+  
+  // Update input field value
+  inputElement.value = this.centerFetchData.city;
+  
+  // Call the original logic for reg code generation
+  this.onCityChange();
+}
 
   onCityChange() {
     const selectedProvince = this.centerFetchData.province;

@@ -548,7 +548,7 @@
       <div>
         <div class="pb-6">
           <label for="regNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Registration Number of the Company*
+            Registration Number of the Company *
           </label>
           <input [(ngModel)]="companyData.regNumber" id="regNumber" name="regNumber" required #regNumber="ngModel"
             (keydown)="handleInputWithSpaceTrimming($event, 'regNumber')" (blur)="onBlur('regNumber')"
@@ -625,7 +625,7 @@
         <!-- In Edit Company Details section -->
         <div class="pb-6">
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Email Address*
+            Company Email Address *
           </label>
           <input id="email" name="email" [(ngModel)]="companyData.email" #email="ngModel" type="email" required
             (keydown)="handleInputWithSpaceTrimming($event, 'email')" (blur)="onBlur('email')"
@@ -672,7 +672,7 @@
         <!-- Updated Account Holder Name and Account Number fields for EDIT section (Page Two) -->
         <div class="pb-6">
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
-            Holder's Name</label>
+            Holder's Name *</label>
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
             (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -745,7 +745,7 @@
 
         <div class="pb-6">
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
-            Bank Name
+            Bank Name *
           </label>
           <p-dropdown id="bankDropdown" [(ngModel)]="selectedBankId" (onChange)="onBankChange()" [options]="banks"
             optionLabel="name" optionValue="ID" [filter]="true" filterBy="name" placeholder="Select a bank"
@@ -760,7 +760,7 @@
 
         <div class="pb-6">
           <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
-            Branch Name
+            Branch Name *
           </label>
           <p-dropdown id="branchDropdown" [(ngModel)]="selectedBranchId" (onChange)="onBranchChange()"
             [options]="branches" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
@@ -785,7 +785,7 @@
           <!-- Contact Number 1 -->
           <div class="flex-1">
             <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Contact Number - 1*
+              Company Contact Number - 1 *
             </label>
             <div class="mt-1 flex">
               <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
@@ -971,8 +971,7 @@
     </h2>
     <div>
       <div class="pb-6">
-        <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
-          Holder’s Name</label>
+        <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s Name *</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
           (keydown)="allowOnlyValidNameCharacters($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />

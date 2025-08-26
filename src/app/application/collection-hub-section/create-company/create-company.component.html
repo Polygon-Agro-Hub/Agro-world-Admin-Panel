@@ -284,7 +284,7 @@
 
         <div class="pb-6">
           <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
-            Bank Name*
+            Bank Name *
           </label>
           <p-dropdown id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" #bankDropdown="ngModel"
             [options]="banks" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"
@@ -303,7 +303,7 @@
 
         <div class="pb-6">
           <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1">
-            Branch Name*
+            Branch Name *
           </label>
           <p-dropdown [(ngModel)]="selectedBranchId" name="branchDropdown" #branchDropdown="ngModel" (onChange)="onBranchChange()"
             [options]="branches" optionLabel="name" optionValue="ID" [filter]="true" filterBy="name"

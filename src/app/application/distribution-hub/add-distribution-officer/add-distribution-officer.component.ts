@@ -821,15 +821,21 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   checkDuplicatePhoneNumbers(): void {
-    const phone1 = this.personalData.phoneNumber01 || '';
-    const phone2 = this.personalData.phoneNumber02 || '';
-    // Show error if both numbers are filled and equal, regardless of codes
-    if (phone1 && phone2 && phone1 === phone2) {
-      this.duplicatePhoneError = true;
-    } else {
-      this.duplicatePhoneError = false;
-    }
+  const phone1 = this.personalData.phoneNumber01?.trim() || '';
+  const phone2 = this.personalData.phoneNumber02?.trim() || '';
+  const code1 = this.personalData.phoneCode01;
+  const code2 = this.personalData.phoneCode02;
+  
+  // Only show duplicate error if:
+  // 1. Both phone numbers exist and are not empty
+  // 2. Phone codes are the same
+  // 3. Phone numbers are exactly the same
+  if (phone1 && phone2 && code1 === code2 && phone1 === phone2) {
+    this.duplicatePhoneError = true;
+  } else {
+    this.duplicatePhoneError = false;
   }
+}
 
   blockLeadingSpace(event: KeyboardEvent, field: string) {
     const value = this.personalData[field] || '';
@@ -866,6 +872,30 @@ export class AddDistributionOfficerComponent implements OnInit {
   getEmailErrorMessage(email: string): string | null {
     return this.emailValidationService.getErrorMessage(email);
   }
+
+  getPhoneValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
+  const phoneValue = this.personalData[field];
+  const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
+  
+  // Priority 1: Check if field is required and empty (for phoneNumber01 only)
+  if (field === 'phoneNumber01') {
+    if (this.touchedFields[field] && !phoneValue) {
+      return 'Mobile Number - 1 is required.';
+    }
+  }
+  
+  // Priority 2: Check for duplicate phone numbers (only if both numbers exist)
+  if (phoneValue && this.duplicatePhoneError) {
+    return 'Mobile Number - 01 and Mobile Number - 02 cannot be the same.';
+  }
+  
+  // Priority 3: Check format validation (only if phone number exists)
+  if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
+  }
+  
+  return null;
+}
 }
 
 class Personal {

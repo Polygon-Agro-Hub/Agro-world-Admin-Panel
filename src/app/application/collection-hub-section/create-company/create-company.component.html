@@ -784,92 +784,81 @@
           <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
         <div class="flex gap-6">
-          <!-- Contact Number 1 -->
-          <div class="flex-1">
-            <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Contact Number - 1 *
-            </label>
-            <div class="mt-1 flex">
-              <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
-                optionValue="dialCode"
-                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                [style]="{ width: '140px' }">
-                <ng-template let-country pTemplate="item">
-                  <div class="flex items-center gap-2">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-                <ng-template let-country pTemplate="selectedItem">
-                  <div class="flex items-center gap-2" *ngIf="country">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
-
-              <input id="oicConNum1" name="oicConNum1" [(ngModel)]="companyData.oicConNum1" type="tel"
-                pattern="^[0-9]{9}$" required #oicConNum1="ngModel"
-                (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum1')" (blur)="validateContactNumbers()"
-                maxlength="9"
-                class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-
-            <div class="mt-1 text-sm text-red-500" *ngIf="oicConNum1.invalid && oicConNum1.touched">
-              <div *ngIf="oicConNum1.errors?.['required']">Contact Number 1 is required.</div>
-              <div class="mt-1">
-                <div *ngIf="isInvalidMobileNumber('oicConNum1')" class="text-red-500 text-sm">
-                  Please enter a valid mobile number (format: +947XXXXXXXX)
-                </div>
-              </div>
-            </div>
-            <div class="mt-1 text-sm text-red-500" *ngIf="contactNumberError1">{{ contactNumberError1 }}</div>
-
+  <!-- Contact Number 1 -->
+  <div class="flex-1">
+    <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+      Company Contact Number - 1 *
+    </label>
+    <div class="mt-1 flex">
+      <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+        [style]="{ width: '140px' }">
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
           </div>
-
-          <!-- Contact Number 2 -->
-          <div class="flex-1">
-            <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Contact Number - 2
-            </label>
-            <div class="mt-1 flex">
-              <p-dropdown [(ngModel)]="companyData.oicConCode2" [options]="countries" optionLabel="dialCode"
-                optionValue="dialCode"
-                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                [style]="{ width: '140px' }">
-                <ng-template let-country pTemplate="item">
-                  <div class="flex items-center gap-2">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-                <ng-template let-country pTemplate="selectedItem">
-                  <div class="flex items-center gap-2" *ngIf="country">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
-
-              <!-- Always editable, show '--' as placeholder -->
-              <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="tel"
-                pattern="^[0-9]{9}$" #oicConNum2="ngModel"
-                (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum2')" (blur)="validateContactNumbers()"
-                maxlength="9" placeholder="--"
-                class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-
-            <!-- Validation/Error messages -->
-            <div *ngIf="isInvalidMobileNumber('oicConNum2')" class="text-red-500 text-sm mt-1">
-              Please enter a valid mobile number (format: +947XXXXXXXX)
-            </div>
-            <div class="mt-1 text-sm text-red-500" *ngIf="contactNumberError2">{{ contactNumberError2 }}</div>
-            <div class="mt-1 text-sm text-red-500" *ngIf="sameNumberError">Contact number 2 cannot be the same as
-              Contact number 1.</div>
+        </ng-template>
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
           </div>
+        </ng-template>
+      </p-dropdown>
 
+      <input id="oicConNum1" name="oicConNum1" [(ngModel)]="companyData.oicConNum1" type="tel"
+        pattern="^[0-9]{9}$" required #oicConNum1="ngModel"
+        (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum1')" (blur)="validateContactNumbers()"
+        maxlength="9"
+        class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+    </div>
 
-        </div>
+    <!-- Single validation message for Contact Number 1 -->
+    <div class="mt-1 text-sm text-red-500" *ngIf="getContactNumber1ErrorMessage()">
+      {{ getContactNumber1ErrorMessage() }}
+    </div>
+  </div>
+
+  <!-- Contact Number 2 -->
+  <div class="flex-1">
+    <label for="oicConNum2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+      Company Contact Number - 2
+    </label>
+    <div class="mt-1 flex">
+      <p-dropdown [(ngModel)]="companyData.oicConCode2" [options]="countries" optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+        [style]="{ width: '140px' }">
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <!-- Always editable, show '--' as placeholder -->
+      <input id="oicConNum2" name="oicConNum2" [(ngModel)]="companyData.oicConNum2" type="tel"
+        pattern="^[0-9]{9}$" #oicConNum2="ngModel"
+        (keydown)="allowOnlyDigitsForAccountNumber($event,'oicConNum2')" (blur)="validateContactNumbers()"
+        maxlength="9" placeholder="--"
+        class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+    </div>
+
+    <!-- Single validation message for Contact Number 2 -->
+    <div class="mt-1 text-sm text-red-500" *ngIf="getContactNumber2ErrorMessage()">
+      {{ getContactNumber2ErrorMessage() }}
+    </div>
+  </div>
+</div>
 
 
       </div>

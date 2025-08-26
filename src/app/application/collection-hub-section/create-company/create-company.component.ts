@@ -49,7 +49,7 @@ interface BranchesData {
 export class CreateCompanyComponent implements OnInit {
   companyData: Company = new Company();
   userForm: FormGroup;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   itemId: number | null = null;
   touchedFields: { [key in keyof Company]?: boolean } = {};
   banks: Bank[] = [];
@@ -156,13 +156,15 @@ isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
   const code = numberField === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
   const number = numberField === 'oicConNum1' ? this.companyData.oicConNum1 : this.companyData.oicConNum2;
 
-  // Skip validation if fields are empty
-  if (!code || !number) return false;
+  // Skip validation if fields are empty or number is not 9 digits
+  if (!code || !number || number.toString().length !== 9) {
+    return false;
+  }
 
   // Combine code + number
   const fullNumber = `${code}${number}`;
 
-  // Validate: +947XXXXXXXX
+  // Validate: +947XXXXXXXX (Sri Lankan mobile format)
   const mobilePattern = /^\+947\d{8}$/;
   return !mobilePattern.test(fullNumber);
 }
@@ -1028,20 +1030,22 @@ getCompanyData() {
   this.contactNumberError2 = false;
   this.sameNumberError = false;
 
-  // Validate number 1 length (only if field has content)
-  if (num1.length > 0) {
-    this.contactNumberError1 = num1.length !== 9;
+  // Validate number 1 - only check length if there's content
+  if (num1.length > 0 && num1.length !== 9) {
+    this.contactNumberError1 = true;
   }
 
-  // Validate number 2 length (only if field has content)
-  if (num2.length > 0) {
-    this.contactNumberError2 = num2.length !== 9;
+  // Validate number 2 - only check length if there's content
+  if (num2.length > 0 && num2.length !== 9) {
+    this.contactNumberError2 = true;
   }
 
-  // Check for duplicate numbers only if both numbers are valid (9 digits each)
+  // Check for duplicate numbers ONLY if both numbers are complete and valid
   if (
     num1.length === 9 &&
     num2.length === 9 &&
+    !this.contactNumberError1 &&
+    !this.contactNumberError2 &&
     this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
     this.companyData.oicConCode1 === this.companyData.oicConCode2
   ) {

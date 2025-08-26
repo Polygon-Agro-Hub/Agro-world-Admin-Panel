@@ -1011,26 +1011,33 @@ getCompanyData() {
 
   
 
-  validateContactNumbers() {
-  // Check individual number length validation (already present)
-  this.contactNumberError1 =
-    this.companyData.oicConNum1?.length > 0 &&
-    this.companyData.oicConNum1?.length !== 9;
+  validateContactNumbers(): void {
+  const num1 = this.companyData.oicConNum1?.toString() || '';
+  const num2 = this.companyData.oicConNum2?.toString() || '';
 
-  this.contactNumberError2 =
-    this.companyData.oicConNum2?.length > 0 &&
-    this.companyData.oicConNum2?.length !== 9;
+  // Reset all error flags first
+  this.contactNumberError1 = false;
+  this.contactNumberError2 = false;
+  this.sameNumberError = false;
 
-  // Check if both numbers are the same (only if both are non-empty)
+  // Validate number 1 length (only if field has content)
+  if (num1.length > 0) {
+    this.contactNumberError1 = num1.length !== 9;
+  }
+
+  // Validate number 2 length (only if field has content)
+  if (num2.length > 0) {
+    this.contactNumberError2 = num2.length !== 9;
+  }
+
+  // Check for duplicate numbers only if both numbers are valid (9 digits each)
   if (
-    this.companyData.oicConNum1 &&
-    this.companyData.oicConNum2 &&
+    num1.length === 9 &&
+    num2.length === 9 &&
     this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-    this.companyData.oicConCode1 === this.companyData.oicConCode2 // also check country code
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
   ) {
     this.sameNumberError = true;
-  } else {
-    this.sameNumberError = false;
   }
 }
 
@@ -1464,6 +1471,54 @@ allowOnlyValidNameCharacters(event: KeyboardEvent): void {
   trimLeadingSpaces(value: string): string {
   return value ? value.replace(/^\s+/, '') : value;
 }
+
+getContactNumber1ErrorMessage(): string {
+  const num1 = this.companyData.oicConNum1?.toString() || '';
+  
+  // Priority 1: Required validation
+  if (!num1) {
+    return 'Contact Number 1 is required.';
+  }
+  
+  // Priority 2: Format validation
+  if (this.isInvalidMobileNumber('oicConNum1')) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+  }
+  
+  // Priority 3: Length validation
+  if (this.contactNumberError1) {
+    return 'Contact number must be exactly 9 digits.';
+  }
+  
+  return '';
+}
+
+getContactNumber2ErrorMessage(): string {
+  const num2 = this.companyData.oicConNum2?.toString() || '';
+  
+  // If no value, no error (this field is optional)
+  if (!num2) {
+    return '';
+  }
+  
+  // Priority 1: Format validation
+  if (this.isInvalidMobileNumber('oicConNum2')) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+  }
+  
+  // Priority 2: Length validation
+  if (this.contactNumberError2) {
+    return 'Contact number must be exactly 9 digits.';
+  }
+  
+  // Priority 3: Duplicate validation
+  if (this.sameNumberError) {
+    return 'Contact number 2 cannot be the same as Contact number 1.';
+  }
+  
+  return '';
+}
+
 }
 
 // Updated Company class to match the JSON response structure

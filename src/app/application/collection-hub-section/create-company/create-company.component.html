@@ -337,106 +337,112 @@
 
         <div class="flex gap-5">
           <div class="w-1/2">
-            <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Contact Number - 1 *
-            </label>
-            <div class="mt-1">
-              <div class="flex">
-                <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
-                  optionValue="dialCode"
-                  styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                  [style]="{ width: '140px' }">
+  <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Company Contact Number - 1 *
+  </label>
+  <div class="mt-1">
+    <div class="flex">
+      <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+        [style]="{ width: '140px' }">
 
-                  <!-- Dropdown items -->
-                  <ng-template let-country pTemplate="item">
-                    <div class="flex items-center gap-2">
-                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                      <span>{{ country.dialCode }}</span>
-                    </div>
-                  </ng-template>
-
-                  <!-- Selected item -->
-                  <ng-template let-country pTemplate="selectedItem">
-                    <div class="flex items-center gap-2" *ngIf="country">
-                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                      <span>{{ country.dialCode }}</span>
-                    </div>
-                  </ng-template>
-                </p-dropdown>
-
-                <input id="phoneNumber01" name="oicConNum1" type="tel" inputmode="numeric" pattern="^[0-9]{9}$"
-                  maxlength="9" required placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1"
-                  #oicConNum1Ref="ngModel" (blur)="validateContactNumbers()"
-                  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-              </div>
-
-              <!-- Error messages -->
-              <div class="mt-1">
-                <!-- Required -->
-                <div *ngIf="oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched" class="text-red-500 text-sm">
-                  Contact Number 1 is required.
-                </div>
-
-                <!-- Error messages -->
-                <div class="mt-1">
-                  <div *ngIf="isInvalidMobileNumber('oicConNum1')" class="text-red-500 text-sm">
-                    Please enter a valid mobile number (format: +947XXXXXXXX)
-                  </div>
-                </div>
-
-
-                <!-- Custom length check -->
-                <div *ngIf="contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm">
-                  Contact number must be exactly 9 digits.
-                </div>
-              </div>
-            </div>
+        <!-- Dropdown items -->
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
           </div>
+        </ng-template>
+
+        <!-- Selected item -->
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <input id="phoneNumber01" name="oicConNum1" type="tel" inputmode="numeric" pattern="^[0-9]{9}$"
+        maxlength="9" required placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1"
+        #oicConNum1Ref="ngModel" (blur)="validateContactNumbers()"
+        class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+    </div>
+
+    <!-- Single error message container with priority logic -->
+    <div class="mt-1">
+      <!-- Required validation (highest priority) -->
+      <div *ngIf="oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched" class="text-red-500 text-sm">
+        Contact Number 1 is required.
+      </div>
+      
+      <!-- Format validation (second priority) - only show if field has value and is not required error -->
+      <div *ngIf="!oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched && isInvalidMobileNumber('oicConNum1')" class="text-red-500 text-sm">
+        Please enter a valid mobile number (format: +947XXXXXXXX)
+      </div>
+      
+      <!-- Length validation (third priority) - only show if no other errors -->
+      <div *ngIf="!oicConNum1Ref.errors?.['required'] && !isInvalidMobileNumber('oicConNum1') && contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm">
+        Contact number must be exactly 9 digits.
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
           <div class="w-1/2">
-            <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Company Contact Number - 2
-            </label>
-            <div class="mt-1">
-              <div class="flex">
-                <p-dropdown [(ngModel)]="companyData.oicConCode2" [options]="countries" optionLabel="dialCode"
-                  optionValue="dialCode"
-                  styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                  [style]="{ width: '140px' }">
-                  <!-- Dropdown items -->
-                  <ng-template let-country pTemplate="item">
-                    <div class="flex items-center gap-2">
-                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                      <span>{{ country.dialCode }}</span>
-                    </div>
-                  </ng-template>
-
-                  <!-- Selected item -->
-                  <ng-template let-country pTemplate="selectedItem">
-                    <div class="flex items-center gap-2" *ngIf="country">
-                      <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                      <span>{{ country.dialCode }}</span>
-                    </div>
-                  </ng-template>
-                </p-dropdown>
-                <input id="phoneNumber02" name="oicConNum2" type="tel" inputmode="numeric" pattern="[0-9]*"
-                  maxlength="9" (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum2')"
-                  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                  placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
-              </div>
-              <!-- Error messages outside the flex container -->
-              <div class="mt-1">
-                <div *ngIf="isInvalidMobileNumber('oicConNum2')" class="text-red-500 text-sm">
-                  Please enter a valid mobile number (format: +947XXXXXXXX)
-                </div>
-              </div>
-              <div *ngIf="sameNumberError" class="text-red-500 text-sm">
-                Contact number 2 cannot be the same as Contact number 1.
-              </div>
-            </div>
+  <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Company Contact Number - 2
+  </label>
+  <div class="mt-1">
+    <div class="flex">
+      <p-dropdown [(ngModel)]="companyData.oicConCode2" [options]="countries" optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+        [style]="{ width: '140px' }">
+        <!-- Dropdown items -->
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
           </div>
+        </ng-template>
+
+        <!-- Selected item -->
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <input id="phoneNumber02" name="oicConNum2" type="tel" inputmode="numeric" pattern="[0-9]*"
+        maxlength="9" (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum2')"
+        class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum2" (blur)="validateContactNumbers()" />
+    </div>
+    
+    <!-- Single error message container with priority logic -->
+    <div class="mt-1">
+      <!-- Format validation (highest priority for optional field) -->
+      <div *ngIf="companyData.oicConNum2 && isInvalidMobileNumber('oicConNum2')" class="text-red-500 text-sm">
+        Please enter a valid mobile number (format: +947XXXXXXXX)
+      </div>
+      
+      <!-- Length validation (second priority) - only show if format is valid -->
+      <div *ngIf="companyData.oicConNum2 && !isInvalidMobileNumber('oicConNum2') && contactNumberError2" class="text-red-500 text-sm">
+        Contact number must be exactly 9 digits.
+      </div>
+      
+      <!-- Duplicate validation (lowest priority) - only show if no other errors -->
+      <div *ngIf="!isInvalidMobileNumber('oicConNum2') && !contactNumberError2 && sameNumberError" class="text-red-500 text-sm">
+        Contact number 2 cannot be the same as Contact number 1.
+      </div>
+    </div>
+  </div>
+</div>
         </div>
       </div>
 

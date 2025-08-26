@@ -177,7 +177,7 @@
                 {{ order.total | number : "1.2-2" }}
               </td>
               <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-                {{order.firstName}} {{order.lastName}}
+                {{ order.userName === null ? '--': order.userName }}
               </td>
               <td
                 class="px-4 py-3 text-center text-[#000000] dark:text-textDark"

@@ -20,7 +20,8 @@ export class DispachPackagesComponent implements OnInit {
   packageArr: PakageItem[] = [];
   productArr: MarketPlaceItems[] = [];
   selectProduct!: PakageItem;
-  newProductObj!: MarketPlaceItems;
+  // In your component class, add proper initialization:
+  newProductObj: MarketPlaceItems | null = null;
   packageId!: number;
   orderId!: number;
 
@@ -69,9 +70,9 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   saveCheckedItems() {
-    if(this.isLastOrder){
-    this.showCountdown = true;
-    }else{
+    if (this.isLastOrder) {
+      this.showCountdown = true;
+    } else {
       this.executeApiCall();
     }
   }
@@ -96,7 +97,7 @@ export class DispachPackagesComponent implements OnInit {
       price: item.price,
 
     }));
-    this.dispatchService.dispatchPackageItemData(updatedData).subscribe(
+    this.dispatchService.dispatchPackageItemData(updatedData, this.orderId, this.isLastOrder).subscribe(
       (res) => {
         this.isLoading = false;
         if (res.status) {
@@ -145,7 +146,47 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   replaceProduct() {
+    this.dispatchService.replaceDispatchPackageItemsData(this.selectProduct, this.newProductObj).subscribe(
+      (res) => {
+        this.isLoading = false;
+        if (res.status) {
+          Swal.fire('Success', res.message, 'success');
+          // this.router.navigate(['/dispatch/salesdash-orders']);
+          this.isPopupOpen = false;
+          this.newProductObj = null;
+          this.fetchData();
+        } else {
+          Swal.fire('Error', res.message, 'error');
 
+        }
+
+      },
+      (err) => {
+        console.error('Update failed:', err);
+        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+      }
+    );
+  }
+
+  cangeReplacePrice() {
+  if (this.newProductObj) {
+    this.newProductObj.price = this.newProductObj.discountedPrice * (this.newProductObj.qty);
+  }
+}
+
+  onProductChange(): void {
+    if (this.newProductObj) {
+      // Reset quantity and recalculate price
+      this.newProductObj.qty = this.newProductObj.startValue;
+      this.cangeReplacePrice();
+    }
+  }
+
+  updateQuantity(newQty: number): void {
+    if (this.newProductObj) {
+      this.newProductObj.qty = newQty;
+      this.cangeReplacePrice();
+    }
   }
 }
 
@@ -169,4 +210,18 @@ interface MarketPlaceItems {
   startValue: number
   changeby: number
   isExcluded: Boolean
+
+  price: number;
+  qty: number;
+}
+
+interface ReplaceItem {
+  id: number
+  varietyId: number;
+  normalPrice: number
+  discountedPrice: number
+  unitType: number
+  price: number;
+  qty: number;
+
 }

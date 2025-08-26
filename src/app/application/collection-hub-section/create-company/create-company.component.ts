@@ -527,6 +527,9 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
   async onLogoChange(event: Event): Promise<void> {
   const input = event.target as HTMLInputElement;
+  // Reset size error when a new file is selected
+  this.logoSizeError = false;
+  
   if (input.files && input.files[0]) {
     const file = input.files[0];
     const maxSize = 1024 * 1024; // 1MB
@@ -544,7 +547,6 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
     try {
       this.isLoading = true;
-      this.logoSizeError = false;
       const compressedFile = await this.compressImage(file, 800, 800, 0.7);
       this.selectedLogoFile = compressedFile;
       this.companyData.logoFile = compressedFile;
@@ -553,6 +555,8 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
       reader.onload = (e) => {
         this.companyData.logo = e.target?.result as string;
         this.isLoading = false;
+        // Mark the field as touched to show validation if needed
+        this.touchedFields['logo'] = true;
       };
       reader.readAsDataURL(this.selectedLogoFile);
     } catch (error) {
@@ -565,6 +569,9 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
   // Updated onFaviconChange method
   async onFaviconChange(event: Event): Promise<void> {
   const input = event.target as HTMLInputElement;
+  // Reset size error when a new file is selected
+  this.faviconSizeError = false;
+  
   if (input.files && input.files[0]) {
     const file = input.files[0];
     const maxSize = 1024 * 1024; // 1MB
@@ -582,7 +589,6 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
     try {
       this.isLoading = true;
-      this.faviconSizeError = false;
       const compressedFile = await this.compressImage(file, 800, 800, 0.7);
       this.selectedFaviconFile = compressedFile;
       this.companyData.faviconFile = compressedFile;
@@ -591,6 +597,8 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
       reader.onload = (e) => {
         this.companyData.favicon = e.target?.result as string;
         this.isLoading = false;
+        // Mark the field as touched to show validation if needed
+        this.touchedFields['favicon'] = true;
       };
       reader.readAsDataURL(this.selectedFaviconFile);
     } catch (error) {

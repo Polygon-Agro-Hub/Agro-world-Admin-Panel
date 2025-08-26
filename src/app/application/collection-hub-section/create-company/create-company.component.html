@@ -475,74 +475,76 @@
       </h2>
 
       <div class="flex justify-between items-center mb-8">
-        <!-- Logo Section -->
-        <div class="flex items-center">
-          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-            Company Logo *
-          </label>
-          <div class="relative ml-5">
-            <label for="logoUploadEdit" class="cursor-pointer">
-              <div
-                class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-                [ngClass]="{'border-red-500': isFieldInvalid('logo')}">
-                <div *ngIf="!companyData.logo" class="text-center">
-                  <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                </div>
-                <img *ngIf="companyData.logo" [src]="companyData.logo" alt="Current logo"
-                  class="w-full h-full object-cover rounded-lg" />
-                <button *ngIf="companyData.logo" (click)="removeLogo($event)" type="button"
-                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
-                  ×
-                </button>
-              </div>
-            </label>
-            <input type="file" id="logoUploadEdit" name="logoUploadEdit" accept="image/*"
-              (change)="onLogoChange($event)" class="hidden" />
+  <!-- Logo Section -->
+  <div class="flex items-center">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      Company Logo *
+    </label>
+    <div class="relative ml-5">
+      <label for="logoUploadEdit" class="cursor-pointer">
+        <div
+          class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
+          [ngClass]="{'border-red-500': isFieldInvalid('logo') || logoSizeError}">
+          <div *ngIf="!companyData.logo" class="text-center">
+            <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
           </div>
-          <div class="ml-3">
-            <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm block">Logo is required.</span>
-            <span *ngIf="logoSizeError" class="text-red-600 text-sm block">Image must be less than 1MB</span>
-          </div>
+          <img *ngIf="companyData.logo" [src]="companyData.logo" alt="Current logo"
+            class="w-full h-full object-cover rounded-lg" />
+          <button *ngIf="companyData.logo" (click)="removeLogo($event)" type="button"
+            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
+            ×
+          </button>
         </div>
+      </label>
+      <input type="file" id="logoUploadEdit" name="logoUploadEdit" accept="image/*"
+        (change)="onLogoChange($event)" class="hidden" />
+    </div>
+    <div class="ml-3">
+      <!-- Show size error first, then required validation -->
+      <span *ngIf="logoSizeError" class="text-red-600 text-sm block">Image must be less than 1MB</span>
+      <span *ngIf="!logoSizeError && isFieldInvalid('logo')" class="text-red-600 text-sm block">Logo is required.</span>
+    </div>
+  </div>
 
-        <!-- Favicon Section -->
-        <div class="flex items-center">
-          <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-            Company Favicon *
-          </label>
-          <div class="relative ml-5">
-            <label for="faviconUploadEdit" class="cursor-pointer">
-              <div
-                class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-                [ngClass]="{'border-red-500': isFieldInvalid('favicon')}">
-                <div *ngIf="!companyData.favicon" class="text-center">
-                  <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                </div>
-                <img *ngIf="companyData.favicon" [src]="companyData.favicon" alt="Current favicon"
-                  class="w-full h-full object-cover rounded-lg" />
-                <button *ngIf="companyData.favicon" (click)="removeFavicon($event)" type="button"
-                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
-                  ×
-                </button>
-              </div>
-            </label>
-            <input type="file" id="faviconUploadEdit" name="faviconUploadEdit" accept="image/*,.ico"
-              (change)="onFaviconChange($event)" class="hidden" />
+  <!-- Favicon Section -->
+  <div class="flex items-center">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      Company Favicon *
+    </label>
+    <div class="relative ml-5">
+      <label for="faviconUploadEdit" class="cursor-pointer">
+        <div
+          class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
+          [ngClass]="{'border-red-500': isFieldInvalid('favicon') || faviconSizeError}">
+          <div *ngIf="!companyData.favicon" class="text-center">
+            <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
           </div>
-          <div class="ml-3">
-            <span *ngIf="isFieldInvalid('favicon')" class="text-red-600 text-sm block">Favicon is required.</span>
-            <span *ngIf="faviconSizeError" class="text-red-600 text-sm block">Image must be less than 1MB</span>
-          </div>
+          <img *ngIf="companyData.favicon" [src]="companyData.favicon" alt="Current favicon"
+            class="w-full h-full object-cover rounded-lg" />
+          <button *ngIf="companyData.favicon" (click)="removeFavicon($event)" type="button"
+            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
+            ×
+          </button>
         </div>
-      </div>
+      </label>
+      <input type="file" id="faviconUploadEdit" name="faviconUploadEdit" accept="image/*,.ico"
+        (change)="onFaviconChange($event)" class="hidden" />
+    </div>
+    <div class="ml-3">
+      <!-- Show size error first, then required validation -->
+      <span *ngIf="faviconSizeError" class="text-red-600 text-sm block">Image must be less than 1MB</span>
+      <span *ngIf="!faviconSizeError && isFieldInvalid('favicon')" class="text-red-600 text-sm block">Favicon is required.</span>
+    </div>
+  </div>
+</div>
 
       <hr class="my-5" />
       <div>

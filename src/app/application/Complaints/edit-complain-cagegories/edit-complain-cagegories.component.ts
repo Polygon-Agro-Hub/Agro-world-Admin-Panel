@@ -103,25 +103,59 @@ allowOnlyTamil(event: KeyboardEvent): void {
 
 
   onSubmit() {
-    console.log('Edit Obj->',this.complainObj);
-    
-    if (this.complainObj.appId === 0 || this.complainObj.appId === 0 || !this.complainObj.categoryEnglish || !this.complainObj.categorySinhala || !this.complainObj.categoryTamil || !this.complainObj.id) {
-      Swal.fire('Warning', 'Fill all required feilds!', 'warning')
-      return;
-    }
-    this.complaintSrv.EditComplainCategory(this.complainObj).subscribe(
-      (res) => {
-        if (res.status) {
-          Swal.fire("Success", 'Edit complain category success!', 'success')
-          this.router.navigate(['/complaints/manage-applications'])
-        } else {
-          Swal.fire("Error", 'Error Occur creaating complain category!', 'error')
-
-        }
-
-      }
-    )
+  console.log('Edit Obj->', this.complainObj);
+  
+  // Check for validation errors
+  const errors: string[] = [];
+  
+  if (!this.complainObj.roleId) {
+    errors.push('Complain Assignee Admin Category is required');
   }
+  
+  if (!this.complainObj.categoryEnglish || this.complainObj.categoryEnglish.trim() === '') {
+    errors.push('Category name in English is required');
+  }
+  
+  if (!this.complainObj.categorySinhala || this.complainObj.categorySinhala.trim() === '') {
+    errors.push('Category name in Sinhala is required');
+  }
+  
+  if (!this.complainObj.categoryTamil || this.complainObj.categoryTamil.trim() === '') {
+    errors.push('Category name in Tamil is required');
+  }
+  
+  if (!this.complainObj.appId || this.complainObj.appId === 0) {
+    errors.push('Displaying application is required');
+  }
+  
+  // If there are validation errors, show them in a SweetAlert
+  if (errors.length > 0) {
+    const errorMessage = errors.join('<br>');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Validation Error',
+      html: `Please fix the following issues:<br><br>${errorMessage}`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+  
+  // If no validation errors, proceed with the API call
+  this.complaintSrv.EditComplainCategory(this.complainObj).subscribe(
+    (res) => {
+      if (res.status) {
+        Swal.fire("Success", 'Edit complain category success!', 'success')
+        this.router.navigate(['/complaints/manage-applications'])
+      } else {
+        Swal.fire("Error", 'Error Occur creaating complain category!', 'error')
+      }
+    }
+  )
+}
 
    back(): void {
     Swal.fire({

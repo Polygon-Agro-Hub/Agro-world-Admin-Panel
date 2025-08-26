@@ -249,8 +249,8 @@ export class FinalinvoiceService {
     doc.text('Polygon Agro Holdings (Private) Ltd', 15, 25);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text('No. 614, Nawam Mawatha, Colombo 02', 15, 30);
-    doc.text('Contact No: +94 112 700 900', 15, 35);
+    doc.text('No. 42/46, Nawam Mawatha, Colombo 02.', 15, 30);
+    doc.text('Contact No: +94 770 111 999', 15, 35);
     doc.text('Email Address: info@polygon.lk', 15, 40);
 
     // Bill To section
@@ -527,7 +527,7 @@ export class FinalinvoiceService {
 
       const addTitle = hasFamilyPacks 
         ? `Additional Items (${invoice.additionalItems.length} Items)`
-        : `Custom Items (${invoice.additionalItems.length} Items)`;
+        : `Your Selected Items (${invoice.additionalItems.length} Items)`;
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
@@ -695,10 +695,14 @@ export class FinalinvoiceService {
       ]);
     }
 
-    grandTotalBody.push([
-      'Coupon Discount',
-      `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`
-    ]);
+    // Add coupon discount only if it has a value greater than 0
+    const couponValue = parseNum(invoice.billingInfo.couponValue);
+    if (couponValue > 0) {
+      grandTotalBody.push([
+        'Coupon Discount',
+        `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`
+      ]);
+    }
 
     // Calculate final grand total
     const familyPackTotal = invoice.familyPackItems?.reduce(
@@ -715,7 +719,8 @@ export class FinalinvoiceService {
       ? parseNum(invoice.deliveryFee) 
       : 0;
 
-    const discountTotal = parseNum(invoice.discount) + parseNum(invoice.billingInfo.couponValue);
+    // Update discount calculation to only include coupon if it exists
+    const discountTotal = parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee = (invoice.additionalItems && invoice.additionalItems.length > 0 && 
                       (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) ? 180 : 0;
@@ -747,7 +752,7 @@ export class FinalinvoiceService {
       },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        cellPadding: { top: 4, right: 0, bottom: 4, left: 0 },
         lineColor: [255, 255, 255],
         lineWidth: 0,
       },

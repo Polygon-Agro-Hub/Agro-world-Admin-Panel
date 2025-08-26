@@ -60,7 +60,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
 
 
   onCancel() {
-
+    this.location.back()
   }
 
   saveCheckedItems() {
@@ -123,20 +123,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       this.validationFailedMessage = '';
     }
     // console.log(this.packageItemsArr);
-  }
-
-  openPopUp(item: PakageItem) {
-    this.isPopupOpen = true;
-    this.selectProduct = item;
-    // this.newProductObj.displayName = item.displayName;
-    // this.newProductObj.id = item.
-  }
-  onCancelPopup() {
-    this.isPopupOpen = false;
-  }
-
-  replaceProduct() {
-
   }
 
 }

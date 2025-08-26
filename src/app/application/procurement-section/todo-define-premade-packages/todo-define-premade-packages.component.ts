@@ -411,7 +411,7 @@ isExcluded(product: MarketplaceItem): boolean {
 
     console.log('odarray', this.orderdetailsArr)
 
-    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
+    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
 
       (res) => {
 
@@ -508,10 +508,10 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   closeAddNewItemPopUp() {
-    this.isNewAddPopUp = false;
-    this.selectPackageId = '';
-
-  }
+  this.isNewAddPopUp = false;
+  this.selectPackageId = '';
+  this.selectCategoryId = ''; // Add this line to clear the dropdown
+}
 
   addNewItems() {
     // Find the order detail that matches the selected packageId
@@ -578,6 +578,56 @@ isExcluded(product: MarketplaceItem): boolean {
       queryParams: { tab: 'completed' }
     });
   }
+
+   confirmClear() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will clear all your changes. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3980C0',
+      cancelButtonColor: '#74788D',
+      confirmButtonText: 'Yes, clear it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clearForm();
+      }
+    });
+  }
+
+  confirmComplete() {
+    // Only show confirmation if within limit
+    if (!this.isWithinLimit) {
+      return;
+    }
+    
+    Swal.fire({
+      title: 'Complete Order',
+      text: 'Are you sure you want to complete this order?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3980C0',
+      cancelButtonColor: '#74788D',
+      confirmButtonText: 'Yes, complete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.onComplete();
+      }
+    });
+  }
+
+  clearForm() {
+    // Implement your clear logic here
+    // For now, just calling ngOnInit as in your original code
+    this.ngOnInit();
+  }
+
+  onCancelClick() {
+  this.selectCategoryId = ''; // Clear the dropdown selection
+  this.closeAddNewItemPopUp(); // Close the popup
+}
 
 
 }

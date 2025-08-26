@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { NgxColorsModule } from 'ngx-colors';
@@ -33,6 +33,10 @@ interface NewsItem {
   styleUrl: './create-crop-group.component.css',
 })
 export class CreateCropGroupComponent {
+  @ViewChild('cropForm') cropForm!: NgForm;
+  
+  imageTouched = false;
+  
   // Allow only English letters and spaces (no leading space)
   allowOnlyEnglish(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -45,21 +49,20 @@ export class CreateCropGroupComponent {
       event.preventDefault();
     }
   }
-capitalizeFirstLetter(event: Event) {
-  const input = event.target as HTMLInputElement;
-  if (input.value.length > 0) {
-    const capitalized = input.value.charAt(0).toUpperCase() + input.value.slice(1);
-    const cursorPos = input.selectionStart || 0;
+  
+  capitalizeFirstLetter(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > 0) {
+      const capitalized = input.value.charAt(0).toUpperCase() + input.value.slice(1);
+      const cursorPos = input.selectionStart || 0;
 
-    this.cropGroup.cropNameEnglish = capitalized;
-    input.value = capitalized;
+      this.cropGroup.cropNameEnglish = capitalized;
+      input.value = capitalized;
 
-    // Restore cursor position to avoid jumpiness
-    input.setSelectionRange(cursorPos, cursorPos);
+      // Restore cursor position to avoid jumpiness
+      input.setSelectionRange(cursorPos, cursorPos);
+    }
   }
-}
-
-
 
   // Allow only Tamil letters (Unicode range: 0B80–0BFF) and spaces (no leading space)
   allowOnlyTamil(event: KeyboardEvent): void {
@@ -86,6 +89,7 @@ capitalizeFirstLetter(event: Event) {
       event.preventDefault();
     }
   }
+  
   cropGroup = {
     cropNameEnglish: '',
     cropNameSinahala: '',
@@ -142,6 +146,7 @@ capitalizeFirstLetter(event: Event) {
   }
 
   onFileSelected(event: any): void {
+    this.imageTouched = true;
     const file: File = event.target.files[0];
 
     if (file) {
@@ -169,53 +174,66 @@ capitalizeFirstLetter(event: Event) {
   }
 
   onSubmit() {
+    // Mark all fields as touched to trigger validation messages
+    if (this.cropForm) {
+      Object.keys(this.cropForm.controls).forEach(key => {
+        this.cropForm.controls[key].markAsTouched();
+      });
+    }
+    this.imageTouched = true;
+
+    // Collect all validation errors
+    const errors: string[] = [];
+
     if (!this.cropGroup.cropNameEnglish) {
-      Swal.fire('Warning', 'Please fill the Crop Name in English', 'warning');
-      return;
+      errors.push('Please fill the Crop Name in English');
     }
 
     if (!this.cropGroup.cropNameSinahala) {
-      Swal.fire('Warning', 'Please fill the Crop Name in Sinhala', 'warning');
-      return;
+      errors.push('Please fill the Crop Name in Sinhala');
     }
 
     if (!this.cropGroup.cropNameTamil) {
-      Swal.fire('Warning', 'Please fill the Crop Name in Tamil', 'warning');
-      return;
+      errors.push('Please fill the Crop Name in Tamil');
     }
 
     if (!this.cropGroup.parentCategory) {
-      Swal.fire('Warning', 'Please select a Parent Category', 'warning');
-      return;
+      errors.push('Please select a Parent Category');
     }
 
     if (!this.cropGroup.bgColor) {
-      Swal.fire('Warning', 'Please choose a Background Color', 'warning');
-      return;
+      errors.push('Please choose a Background Color');
     }
 
     const onlyNumbersPattern = /^[0-9]+$/;
 
     if (onlyNumbersPattern.test(this.cropGroup.cropNameEnglish)) {
-      Swal.fire('Warning', "crop name can't be only numbers", 'warning');
-      return;
+      errors.push("Crop name can't be only numbers (English)");
     }
 
     if (onlyNumbersPattern.test(this.cropGroup.cropNameSinahala)) {
-      Swal.fire('Warning', "crop name can't be only numbers", 'warning');
-      return;
+      errors.push("Crop name can't be only numbers (Sinhala)");
     }
 
     if (onlyNumbersPattern.test(this.cropGroup.cropNameTamil)) {
-      Swal.fire('Warning', "crop name can't be only numbers", 'warning');
-      return;
+      errors.push("Crop name can't be only numbers (Tamil)");
     }
 
     if (!this.selectedFile) {
+      errors.push('Please select an image file');
+    }
+
+    // If there are validation errors, show them in SweetAlert
+    if (errors.length > 0) {
       Swal.fire({
         icon: 'warning',
-        title: 'Invalid File Type',
-        text: 'Please select an image file.',
+        title: 'Validation Errors',
+        html: errors.join('<br>'),
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
       });
       return;
     }
@@ -228,7 +246,12 @@ capitalizeFirstLetter(event: Event) {
     formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
     formData.append('category', this.cropGroup.parentCategory);
     formData.append('bgColor', this.cropGroup.bgColor);
-    formData.append('image', this.selectedFile);
+    
+    // Add the file only if it exists
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+    
     formData.append('fileName', this.selectedFileName);
 
     this.cropCalendarService.createCropGroup(formData).subscribe({
@@ -236,15 +259,39 @@ capitalizeFirstLetter(event: Event) {
         this.isLoading = false;
         if (response.status) {
           this.isLoading = false;
-          Swal.fire('Success', response.message, 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: response.message,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
           this.router.navigate(['/plant-care/action/view-crop-group']);
         } else {
-          Swal.fire('Unsuccess', response.message, 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Unsuccess',
+            text: response.message,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
         }
       },
       error: (error) => {
         this.isLoading = false;
-        Swal.fire('Error', 'Something went wrong!', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Something went wrong!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
       },
     });
   }
@@ -265,6 +312,7 @@ capitalizeFirstLetter(event: Event) {
       if (result.isConfirmed) {
         this.selectedFile = null;
         this.selectedImage = null;
+        this.imageTouched = false;
         this.cropGroup = {
           cropNameEnglish: '',
           cropNameSinahala: '',
@@ -291,6 +339,7 @@ capitalizeFirstLetter(event: Event) {
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
+    this.imageTouched = true;
     const fileInput = document.getElementById('imageUpload') as HTMLElement;
     fileInput.click();
   }
@@ -300,22 +349,75 @@ capitalizeFirstLetter(event: Event) {
   }
 
   updateNews() {
-    if (
-      !this.newsItems[0].cropNameEnglish ||
-      !this.newsItems[0].cropNameSinhala ||
-      !this.newsItems[0].cropNameTamil ||
-      !this.newsItems[0].bgColor
-    ) {
-      Swal.fire('warning', 'pleace fill all input feilds', 'warning');
+    // Mark all fields as touched to trigger validation messages
+    if (this.cropForm) {
+      Object.keys(this.cropForm.controls).forEach(key => {
+        this.cropForm.controls[key].markAsTouched();
+      });
+    }
+
+    // Collect all validation errors
+    const errors: string[] = [];
+
+    if (!this.newsItems[0].cropNameEnglish) {
+      errors.push('Please fill the Crop Name in English');
+    }
+
+    if (!this.newsItems[0].cropNameSinhala) {
+      errors.push('Please fill the Crop Name in Sinhala');
+    }
+
+    if (!this.newsItems[0].cropNameTamil) {
+      errors.push('Please fill the Crop Name in Tamil');
+    }
+
+    if (!this.newsItems[0].category) {
+      errors.push('Please select a Parent Category');
+    }
+
+    if (!this.newsItems[0].bgColor) {
+      errors.push('Please choose a Background Color');
+    }
+
+    // If there are validation errors, show them in SweetAlert
+    if (errors.length > 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Errors',
+        html: errors.join('<br>'),
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
       return;
     }
 
     const token = this.tokenService.getToken();
     if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Authentication token not found',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
       return;
     }
 
     if (!this.newsItems || this.newsItems.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No crop group data found',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
       return;
     }
 
@@ -328,6 +430,7 @@ capitalizeFirstLetter(event: Event) {
     formData.append('category', newsItem.category || '');
     formData.append('bgColor', newsItem.bgColor || '');
 
+    // Add the file only if it exists
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
@@ -352,11 +455,23 @@ capitalizeFirstLetter(event: Event) {
               icon: 'success',
               title: 'Success',
               text: 'Crop Group Updated Successful!',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
             });
             this.router.navigate(['/plant-care/action/view-crop-group']);
           } else {
             this.isLoading = false;
-            Swal.fire('Unsuccess', res.message, 'error');
+            Swal.fire({
+              icon: 'error',
+              title: 'Unsuccess',
+              text: res.message,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
           }
         },
         (error) => {
@@ -364,7 +479,11 @@ capitalizeFirstLetter(event: Event) {
           Swal.fire({
             icon: 'error',
             title: 'Unsuccessful',
-            text: 'Error updating news',
+            text: 'Error updating crop group',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
           });
         }
       );
@@ -380,47 +499,41 @@ capitalizeFirstLetter(event: Event) {
     return true;
   }
 
-
-
   backCreate(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-          customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-       this.location.back();
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+            customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+         this.location.back();
+      }
+    });
+  }
 
- backEdit(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-          customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.location.back();
-    }
-  });
-}
-
-
-
-
+  backEdit(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+            customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
 }

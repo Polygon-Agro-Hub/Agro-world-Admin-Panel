@@ -336,7 +336,7 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
-  dispatchPackageItemData(array: any): Observable<any> {
+  dispatchPackageItemData(array: any, orderId:number, isLastOrder:boolean = false): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -345,11 +345,11 @@ export class DispatchService {
     const url = `${this.apiUrl}dispatch/dispatch-package`;
 
     // Send the array as a named field in the body
-    return this.http.patch<any>(url, array, { headers });
+    return this.http.patch<any>(url, {array, orderId, isLastOrder}, { headers });
   }
 
 
-    getAdditionalItemsForDispatch(id: number): Observable<any> {
+  getAdditionalItemsForDispatch(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -360,7 +360,7 @@ export class DispatchService {
     return this.http.get<any>(url, { headers });
   }
 
-    dispatchAdditionalItemData(array: any): Observable<any> {
+  dispatchAdditionalItemData(array: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -370,6 +370,18 @@ export class DispatchService {
 
     // Send the array as a named field in the body
     return this.http.patch<any>(url, array, { headers });
+  }
+
+  replaceDispatchPackageItemsData(oldItem:any, newItem:any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}dispatch/replace-dispatch-package-items`;
+
+    // Send the array as a named field in the body
+    return this.http.patch<any>(url, {oldItem, newItem}, { headers });
   }
 
 }

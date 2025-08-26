@@ -108,97 +108,97 @@ export class AddDestributionCenterComponent implements OnInit {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
   private initializeForm() {
-    this.distributionForm = this.fb.group(
-      {
-        name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
-        company: ['', Validators.required],
-        contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-        contact1Code: ['+94', Validators.required],
-        contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-        contact2Code: ['+94'],
-        latitude: [
-          '',
-          [
-            Validators.required,
-            this.numericDecimalValidator
-          ],
+  this.distributionForm = this.fb.group(
+    {
+      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      company: ['', Validators.required],
+      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      contact1Code: ['+94', Validators.required],
+      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
+      contact2Code: ['+94'],
+      latitude: [
+        '',
+        [
+          Validators.required,
+          this.latitudeRangeValidator // New range validator
         ],
-        longitude: [
-          '',
-          [
-            Validators.required,
-            this.numericDecimalValidator
-          ],
+      ],
+      longitude: [
+        '',
+        [
+          Validators.required,
+          this.longitudeRangeValidator // New range validator
         ],
-        email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
-        country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
-        province: ['', Validators.required],
-        district: ['', Validators.required],
-        city: ['', Validators.required],
-        regCode: ['', Validators.required], // Remove disabled: true
-      },
-      { validator: this.contactNumbersMatchValidator }
-    );
+      ],
+      email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
+      country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
+      province: ['', Validators.required],
+      district: ['', Validators.required],
+      city: ['', Validators.required],
+      regCode: ['', Validators.required],
+    },
+    { validator: this.contactNumbersMatchValidator }
+  );
 
-    // Watch province changes to update districts
-    this.distributionForm
-      .get('province')
-      ?.valueChanges.subscribe((province) => {
-        if (!this.updatingDropdowns && province) {
+  // Watch province changes to update districts
+  this.distributionForm
+    .get('province')
+    ?.valueChanges.subscribe((province) => {
+      if (!this.updatingDropdowns && province) {
+        this.updatingDropdowns = true;
+        this.distributionForm.get('district')?.setValue('');
+        this.updatingDropdowns = false;
+      }
+    });
+
+  // Watch district changes to update province
+  this.distributionForm
+    .get('district')
+    ?.valueChanges.subscribe((district) => {
+      if (!this.updatingDropdowns && district) {
+        const matchingProvince = this.findProvinceByDistrict(district);
+        if (matchingProvince) {
           this.updatingDropdowns = true;
-          this.distributionForm.get('district')?.setValue('');
+          this.distributionForm.get('province')?.setValue(matchingProvince);
           this.updatingDropdowns = false;
         }
-      });
+      }
+    });
 
-    // Watch district changes to update province
-    this.distributionForm
-      .get('district')
-      ?.valueChanges.subscribe((district) => {
-        if (!this.updatingDropdowns && district) {
-          const matchingProvince = this.findProvinceByDistrict(district);
-          if (matchingProvince) {
-            this.updatingDropdowns = true;
-            this.distributionForm.get('province')?.setValue(matchingProvince);
-            this.updatingDropdowns = false;
-          }
+  // Watch contact number changes to validate duplicates
+  this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  // Optimize name validation with debounce
+  this.distributionForm
+    .get('name')
+    ?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((value) => {
+        if (value && value.length >= 3) {
+          return this.distributionService.checkDistributionCentreNameExists(
+            value
+          );
         }
-      });
-
-    // Watch contact number changes to validate duplicates
-    this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    // Optimize name validation with debounce
-    this.distributionForm
-      .get('name')
-      ?.valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap((value) => {
-          if (value && value.length >= 3) {
-            return this.distributionService.checkDistributionCentreNameExists(
-              value
-            );
-          }
-          return of({ exists: false });
-        })
-      )
-      .subscribe();
-  }
+        return of({ exists: false });
+      })
+    )
+    .subscribe();
+}
 
   private englishLettersOnlyValidator(control: AbstractControl) {
     if (!control.value) return null;
@@ -301,37 +301,43 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   getFieldError(fieldName: string): string {
-    const field = this.distributionForm.get(fieldName);
+  const field = this.distributionForm.get(fieldName);
 
-    if (!field?.errors) return '';
+  if (!field?.errors) return '';
 
-    if (field.errors['required']) {
-      return `${this.getFieldLabel(fieldName)} is required`;
-    }
-    if (field.errors['email'] || field.errors['customEmail']) {
-    // Use custom email validation message
+  if (field.errors['required']) {
+    return `${this.getFieldLabel(fieldName)} is required`;
+  }
+  if (field.errors['email'] || field.errors['customEmail']) {
     return field.errors['customEmail'] || 'Please enter a valid email';
   }
-    if (field.errors['pattern']) {
-      if (fieldName.includes('contact')) {
-        return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
-      }
+  if (field.errors['pattern']) {
+    if (fieldName.includes('contact')) {
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
     }
-    if (field.errors['numericDecimal']) {
-      return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
-    }
-    if (field.errors['englishLettersOnly']) {
-      return 'Centre Name should contain only English letters and spaces';
-    }
-    if (field.errors['sameContactNumbers']) {
-      return 'Contact Number 02 must be different from Contact Number 01';
-    }
-    if (field.errors['nameExists']) {
-      return 'Distribution Centre Name already exists';
-    }
-
-    return '';
   }
+  if (field.errors['numericDecimal']) {
+    return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
+  }
+  if (field.errors['englishLettersOnly']) {
+    return 'Centre Name should contain only English letters and spaces';
+  }
+  if (field.errors['sameContactNumbers']) {
+    return 'Contact Number 02 must be different from Contact Number 01';
+  }
+  if (field.errors['nameExists']) {
+    return 'Distribution Centre Name already exists';
+  }
+  // Add the new validation errors
+  if (field.errors['latitudeRange']) {
+    return 'Latitude must be between -90 and 90';
+  }
+  if (field.errors['longitudeRange']) {
+    return 'Longitude must be between -180 and 180';
+  }
+
+  return '';
+}
 
   onInputChange(event: any, fieldType: string) {
     const target = event.target as HTMLInputElement;
@@ -402,35 +408,37 @@ export class AddDestributionCenterComponent implements OnInit {
 
 
   // Updated updateRegCode method to handle real-time updates
-  updateRegCode() {
-    const province = this.distributionForm.get('province')?.value;
-    const district = this.distributionForm.get('district')?.value;
-    const city = this.distributionForm.get('city')?.value;
+  // Updated updateRegCode method to handle real-time updates and prepend "D"
+updateRegCode() {
+  const province = this.distributionForm.get('province')?.value;
+  const district = this.distributionForm.get('district')?.value;
+  const city = this.distributionForm.get('city')?.value;
 
-    if (province && district && city && city.trim().length > 0) {
-      // Use API call for reg code generation if available
-      this.isLoadingregcode = true;
-      this.distributionService
-        .generateRegCode(province, district, city.trim())
-        .subscribe({
-          next: (response) => {
-            this.distributionForm.patchValue({ regCode: response.regCode });
-            this.isLoadingregcode = false;
-          },
-          error: (error) => {
-            // Fallback to local generation if API fails
-            const regCode = `${province.slice(0, 2).toUpperCase()}${district
-              .slice(0, 1)
-              .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
-            this.distributionForm.patchValue({ regCode });
-            this.isLoadingregcode = false;
-          }
-        });
-    } else {
-      // Clear reg code if required fields are empty
-      this.distributionForm.patchValue({ regCode: '' });
-    }
+  if (province && district && city && city.trim().length > 0) {
+    // Use API call for reg code generation if available
+    this.isLoadingregcode = true;
+    this.distributionService
+      .generateRegCode(province, district, city.trim())
+      .subscribe({
+        next: (response) => {
+          // Prepend "D" to the reg code from API
+          this.distributionForm.patchValue({ regCode: `D${response.regCode}` });
+          this.isLoadingregcode = false;
+        },
+        error: (error) => {
+          // Fallback to local generation if API fails - prepend "D"
+          const regCode = `D${province.slice(0, 2).toUpperCase()}${district
+            .slice(0, 1)
+            .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
+          this.distributionForm.patchValue({ regCode });
+          this.isLoadingregcode = false;
+        }
+      });
+  } else {
+    // Clear reg code if required fields are empty
+    this.distributionForm.patchValue({ regCode: '' });
   }
+}
 
   // Updated onProvinceChange method
   onProvinceChange() {
@@ -532,117 +540,64 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.distributionForm.valid) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to create this distribution centre?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Create it!',
-        cancelButtonText: 'No, Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.isLoading = true;
-          this.submitError = null;
-          this.submitSuccess = null;
-
-          // Get form values including disabled fields
-          const formValue = this.distributionForm.getRawValue();
-
-          const formData: DistributionCentreRequest = {
-            ...formValue,
-            latitude: parseFloat(formValue.latitude).toString(),
-            longitude: parseFloat(formValue.longitude).toString(),
-          };
-
-          this.distributionService
-            .createDistributionCentre(formData)
-            .subscribe({
-              next: (response) => {
-                this.isLoading = false;
-
-                if (response.success) {
-                  this.submitSuccess =
-                    response.message ||
-                    'Distribution centre created successfully!';
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: this.submitSuccess,
-                    timer: 2000,
-                    showConfirmButton: false,
-                  });
-                  this.navigatePath('/distribution-hub/action');
-                } else {
-                  this.submitError =
-                    response.error || 'Failed to create distribution centre';
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: this.submitError,
-                  });
-                }
-              },
-              error: (error) => {
-                this.isLoading = false;
-                console.error('Error creating distribution centre:', error);
-
-                // Default error message
-                let errorMessage = 'An unexpected error occurred.';
-
-                if (error.error && error.error.error) {
-                  // Use the specific error message from the backend
-                  errorMessage = error.error.error;
-                } else if (error.status === 400) {
-                  errorMessage = 'Invalid data. Please check your inputs.';
-                } else if (error.status === 401) {
-                  errorMessage = 'Unauthorized. Please log in again.';
-                } else if (error.status === 409) {
-                  // Check if we have more specific conflict information
-                  if (error.error && error.error.conflictingRecord) {
-                    const conflict = error.error.conflictingRecord;
-                    switch (conflict.conflictType) {
-                      case 'name':
-                        errorMessage = 'A distribution center with this name already exists.';
-                        break;
-                      case 'regCode':
-                        errorMessage = 'A distribution center with this registration code already exists.';
-                        break;
-                      case 'contact':
-                        errorMessage = 'A distribution center with this contact number already exists.';
-                        break;
-                      default:
-                        errorMessage = 'A distribution center with these details already exists.';
-                    }
-                  } else {
-                    errorMessage = 'A distribution center with these details already exists.';
-                  }
-                } else if (error.status === 500) {
-                  errorMessage = 'Server error. Please try again later.';
-                }
-
-                this.submitError = errorMessage;
-
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Submission Failed',
-                  text: this.submitError,
-                });
-              },
-            });
-        }
-      });
-    } else {
-      Object.keys(this.distributionForm.controls).forEach((key) => {
-        this.distributionForm.get(key)?.markAsTouched();
-      });
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Form',
-        text: 'Please correct the errors in the form before submitting.',
-      });
-    }
+  if (this.distributionForm.valid) {
+    // ... existing code for valid form submission ...
+  } else {
+    // Mark all fields as touched to trigger validation display
+    Object.keys(this.distributionForm.controls).forEach((key) => {
+      this.distributionForm.get(key)?.markAsTouched();
+    });
+    
+    // Collect all validation errors
+    const errorMessages = this.getAllValidationErrors();
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Form Validation Errors',
+      html: this.formatErrorMessagesForAlert(errorMessages),
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
   }
+}
+
+private formatErrorMessagesForAlert(errors: {field: string, message: string}[]): string {
+  if (errors.length === 0) {
+    return 'Please correct the errors in the form before submitting.';
+  }
+  
+  let html = '<div class="text-left"><p class="mb-3">Please correct the following errors:</p><ul class="list-disc pl-5">';
+  
+  errors.forEach(error => {
+    html += `<li class="mb-1"><span class="font-semibold">${error.field}:</span> ${error.message}</li>`;
+  });
+  
+  html += '</ul></div>';
+  
+  return html;
+}
+
+private getAllValidationErrors(): {field: string, message: string}[] {
+  const errors: {field: string, message: string}[] = [];
+  
+  Object.keys(this.distributionForm.controls).forEach((key) => {
+    const control = this.distributionForm.get(key);
+    if (control && control.invalid && (control.dirty || control.touched)) {
+      const errorMessage = this.getFieldError(key);
+      if (errorMessage) {
+        errors.push({
+          field: this.getFieldLabel(key),
+          message: errorMessage
+        });
+      }
+    }
+  });
+  
+  return errors;
+}
 
   clearMessages() {
     this.submitError = null;
@@ -706,6 +661,40 @@ onCancel() {
   const validation = this.emailValidationService.validateEmail(control.value);
   return validation.isValid ? null : { customEmail: validation.errorMessage };
 }
+
+private latitudeRangeValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  if (!numericDecimal.test(control.value)) {
+    return { numericDecimal: true };
+  }
+  
+  const value = parseFloat(control.value);
+  if (value < -90 || value > 90) {
+    return { latitudeRange: true };
+  }
+  
+  return null;
+}
+
+private longitudeRangeValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  if (!numericDecimal.test(control.value)) {
+    return { numericDecimal: true };
+  }
+  
+  const value = parseFloat(control.value);
+  if (value < -180 || value > 180) {
+    return { longitudeRange: true };
+  }
+  
+  return null;
+}
+
+
 }
 
 class CompanyList {

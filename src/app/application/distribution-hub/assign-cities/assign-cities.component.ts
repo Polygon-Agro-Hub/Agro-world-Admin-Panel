@@ -70,8 +70,7 @@ export class AssignCitiesComponent implements OnInit {
     this.isLoading = true;
     this.hasData = false;
     
-    // In a real application, you would pass the selected district to the API
-    this.distributionHubSrv.getAssignForCityes().subscribe(
+    this.distributionHubSrv.getAssignForCityes(this.selectProvince, this.selectDistrict).subscribe(
       (res) => {
         console.log(res);
         this.citiesArr = res.cities;
@@ -79,7 +78,6 @@ export class AssignCitiesComponent implements OnInit {
         this.isLoading = false;
         this.hasData = true;
         
-        // Initialize assignments based on ownCityId
         this.initializeAssignments();
       },
       (error) => {
@@ -103,19 +101,15 @@ export class AssignCitiesComponent implements OnInit {
   }
 
   onDistrictChange(): void {
-    // You can add logic here if needed when district changes
   }
 
   initializeAssignments(): void {
-    // Clear any existing assignments
     this.assignments.clear();
     
-    // Initialize with no assignments first
     this.citiesArr.forEach(city => {
       this.assignments.set(city.id, -1);
     });
     
-    // Set assignments based on ownCityId
     this.centersArr.forEach(center => {
       if (center.ownCityId) {
         const cityId = parseInt(center.ownCityId, 10);
@@ -134,7 +128,6 @@ export class AssignCitiesComponent implements OnInit {
 
   isToggleDisabled(cityId: number, centerId: number): boolean {
     const assignedCenterId = this.assignments.get(cityId);
-    // Disable if another center is already selected for this city
     return assignedCenterId !== -1 && assignedCenterId !== centerId;
   }
 
@@ -143,11 +136,9 @@ export class AssignCitiesComponent implements OnInit {
     const previousCenterId = this.assignments.get(cityId);
     
     if (isChecked) {
-      // Assign this center to the city
       this.assignments.set(cityId, centerId);
       this.saveAssignment(cityId, centerId);
     } else {
-      // Remove assignment
       this.assignments.set(cityId, -1);
       this.removeAssignment(cityId, previousCenterId as any);
     }
@@ -170,7 +161,6 @@ export class AssignCitiesComponent implements OnInit {
       (error) => {
         this.isLoading = false;
         Swal.fire('Error', 'Failed to assign city to center', 'error');
-        // Revert the assignment in UI if API call fails
         this.assignments.set(cityId, -1);
       }
     );
@@ -191,7 +181,6 @@ export class AssignCitiesComponent implements OnInit {
       (error) => {
         this.isLoading = false;
         Swal.fire('Error', 'Failed to remove city from center', 'error');
-        // Revert the removal in UI if API call fails
         this.assignments.set(cityId, centerId);
       }
     );

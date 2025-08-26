@@ -8,7 +8,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg gap-y-2">
     <h2 class="font-semibold dark:text-white">Assign Cities to Centre</h2>
-    <div class="flex flex-row justify-between items-center gap-x-16 mt-4">
+    <div class="flex flex-row justify-between items-center gap-x-16 mt-4 px-10">
         <!-- Province Selector -->
         <div class="w-2/5">
             <label for="province"
@@ -41,15 +41,16 @@
 
 <div class="h-[20px]"></div>
 
-<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg" *ngIf="hasData && citiesArr.length > 0 && centersArr.length > 0">
-    <div class="overflow-x-auto">
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+    <div *ngIf="hasData && citiesArr.length > 0 && centersArr.length > 0" class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
                     <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
                         Cities
                     </th>
-                    <th *ngFor="let center of centersArr" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    <th *ngFor="let center of centersArr"
+                        class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
                         {{ center.regCode }}
                     </th>
                 </tr>
@@ -61,12 +62,11 @@
                     </td>
                     <td *ngFor="let center of centersArr" class="px-4 py-3 text-center">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" 
-                                   [checked]="isCityAssignedToCenter(city.id, center.id)"
-                                   (change)="toggleAssignment(city.id, center.id, $event)"
-                                   [disabled]="isToggleDisabled(city.id, center.id)"
-                                   class="sr-only peer">
-                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+                            <input type="checkbox" [checked]="isCityAssignedToCenter(city.id, center.id)"
+                                (change)="toggleAssignment(city.id, center.id, $event)"
+                                [disabled]="isToggleDisabled(city.id, center.id)" class="sr-only peer">
+                            <div
+                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
                             </div>
                         </label>
                     </td>
@@ -74,9 +74,16 @@
             </tbody>
         </table>
     </div>
-</div>
 
-<!-- No Data Message -->
-<div *ngIf="hasData && (citiesArr.length === 0 || centersArr.length === 0)" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg text-center">
-    <p class="text-textLight dark:text-textDark">No data available for the selected district.</p>
+    <div *ngIf="!selectDistrict || !selectProvince || !hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--Please select the province and district first--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="hasData && (citiesArr.length === 0 || centersArr.length === 0)"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No data available for the selected district--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
 </div>

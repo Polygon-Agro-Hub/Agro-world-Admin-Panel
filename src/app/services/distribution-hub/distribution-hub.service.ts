@@ -337,12 +337,12 @@ export class DistributionHubService {
     });
   }
 
-    getAssignForCityes(): Observable<any> {
+    getAssignForCityes(province:string, district:string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}distribution/get-all-assigning-cities`, {
+    return this.http.get(`${this.apiUrl}distribution/get-all-assigning-cities/${province}/${district}`, {
       headers,
     });
   }

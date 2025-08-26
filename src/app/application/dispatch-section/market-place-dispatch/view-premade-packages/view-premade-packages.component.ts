@@ -46,9 +46,9 @@ export class ViewPremadePackagesComponent implements OnInit {
     )
   }
 
-  navigateDispatchItems(id: number, status: boolean = false) {
+  navigateDispatchItems(id: number, status: boolean = false, price: number, packageName: string) {
     this.router.navigate([`/dispatch/dispatch-package/${id}/${this.orderId}`], {
-    queryParams: { status: status }
+    queryParams: { status: status, price: price , invNo: this.invNo, packageName: packageName }
   })
   }
 
@@ -58,7 +58,7 @@ export class ViewPremadePackagesComponent implements OnInit {
   })
 }
 
-  checkPackageLastOrderStatus(id:number, arrayIndex: number = 0) {
+  checkPackageLastOrderStatus(id:number, arrayIndex: number = 0, price: number, packageName: string = '') {
     let allPackagesCompleted = true;
     let additionalItemsCompleted = true;
 
@@ -81,7 +81,7 @@ export class ViewPremadePackagesComponent implements OnInit {
     console.log('Additional items completed:', additionalItemsCompleted);
     console.log('Composite status:', finalStatus);
 
-    this.navigateDispatchItems(id,finalStatus)
+    this.navigateDispatchItems(id,finalStatus, price, packageName)
   }
 
   checkAdditionalLastOrderStatus(id:number) {

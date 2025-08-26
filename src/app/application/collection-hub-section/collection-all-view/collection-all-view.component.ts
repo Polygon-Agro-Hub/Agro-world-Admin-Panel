@@ -23,6 +23,7 @@ interface CollectionCenter {
   street: string;
   district: string;
   province: string;
+  city: string;
   companies: Company[];
 }
 
@@ -166,6 +167,8 @@ export class CollectionAllViewComponent implements OnInit {
       .getAllCollectionCenterPage(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
+          console.log("Data", response);
+
           this.isLoading = false;
           this.collectionObj = response.items;
           this.hasData = this.collectionObj.length > 0;

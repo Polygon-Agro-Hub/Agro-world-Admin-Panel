@@ -98,13 +98,14 @@
 
           <div class="flex flex-col w-full">
             <input
-              type="number"
-              [(ngModel)]="centerFetchData.contact02"
-              id="contact02"
-              name="contact02"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              [disabled]="true"
-            />
+  type="text"
+  [ngModel]="formatContactNumber(centerFetchData.contact02)"
+  (ngModelChange)="onContact02Change($event)"
+  id="contact02"
+  name="contact02"
+  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  [disabled]="true"
+/>
           </div>
         </div>
       </div>

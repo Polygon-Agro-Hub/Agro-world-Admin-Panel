@@ -331,6 +331,24 @@ export class PreviewCollectionCenterComponent implements OnInit {
         );
     }
   }
+
+  formatContactNumber(value: number | null): string {
+  // Handle null, undefined, 0, and NaN cases
+  if (value === null || value === undefined || value === 0 || isNaN(value)) {
+    return '-';
+  }
+  return value.toString();
+}
+
+onContact02Change(value: string) {
+  if (value === '-' || value === '') {
+    this.centerFetchData.contact02 = null;
+  } else {
+    const parsedValue = parseInt(value, 10);
+    this.centerFetchData.contact02 = isNaN(parsedValue) ? null : parsedValue;
+  }
+}
+
 }
 
 class CollectionCenter {
@@ -338,7 +356,7 @@ class CollectionCenter {
   centerName!: string;
   contact01!: number;
   code1!: string;
-  contact02!: number;
+  contact02!: number | null;
   code2!: string;
   buildingNumber!: string;
   street!: string;

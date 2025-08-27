@@ -3,11 +3,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressComponent } from '../progress/progress.component';
+import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
 
 @Component({
   selector: 'app-main-dashboard-layout',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, ProgressComponent],
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    ProgressComponent,
+    OutOfDeliveryComponent,
+  ],
   templateUrl: './main-dashboard-layout.component.html',
   styleUrl: './main-dashboard-layout.component.css',
 })
@@ -21,6 +27,8 @@ export class MainDashboardLayoutComponent implements OnInit {
       const tab = params['tab'];
       if (tab === 'Progress') {
         this.activeTab = 'Progress';
+      } else if (tab === 'Out for Delivery') {
+        this.activeTab = 'Out for Delivery';
       }
     });
   }

@@ -127,13 +127,13 @@ export class ViewPlantcareUsersComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
- fetchAllPlantCareUsers(
+  fetchAllPlantCareUsers(
     page: number = 1,
     limit: number = this.itemsPerPage,
     search: string = this.searchNIC,
@@ -172,7 +172,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);
   }
 
-searchPlantCareUsers() {
+  searchPlantCareUsers() {
     this.searchNIC = this.searchNIC.trim(); // Trim leading/trailing spaces
     if (!this.searchNIC) {
       Swal.fire('Info', 'Please enter a valid NIC number.', 'info');
@@ -286,5 +286,33 @@ searchPlantCareUsers() {
 
   bulkUpload(): void {
     this.router.navigate(['/steckholders/action/farmers/upload-farmers']);
+  }
+
+  downloadTemplate(): void {
+    // Define the headers for the CSV
+    const headers = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
+
+    // Create CSV content with headers only
+    const csvContent = headers.map(header => `"${header}"`).join(',') + '\n';
+
+    // Create a Blob object with the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    // Create a download link
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    // Set the link attributes
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bulk_onboarding_template.csv');
+    link.style.visibility = 'hidden';
+
+    // Append link to the body, click it, and remove it
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Revoke the object URL to free up memory
+    URL.revokeObjectURL(url);
   }
 }

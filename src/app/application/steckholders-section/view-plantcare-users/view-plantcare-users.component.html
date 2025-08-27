@@ -26,6 +26,15 @@
     <i class="fa-solid fa-file-import pr-4"></i>
     Bulk Upload
   </button>
+
+   <button *ngIf="
+      permissionService.hasPermission('Bulk onboarding plan care users') ||
+      tokenService.getUserDetails().role === '1'
+    " class="text-[#3980C0] text-lg flex items-center mb-5"
+    (click)="downloadTemplate()">
+    <i class="fa-solid fa-download mr-3"></i>
+    <span class="underline">Download Template</span>
+  </button>
 </div>
 
 <div *ngIf="

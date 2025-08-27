@@ -816,10 +816,10 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetNa
   }
 
   isValidName(name: string): boolean {
-    // Allows letters, spaces, hyphens, and apostrophes
-    const namePattern = /^[A-Za-z\s'-]+$/;
-    return namePattern.test(name);
-  }
+  // Allows letters, spaces, and apostrophes only (no hyphens)
+  const namePattern = /^[A-Za-z\s']+$/;
+  return namePattern.test(name);
+}
 
   isFormValid(): boolean {
   // Check all required fields
@@ -889,8 +889,14 @@ validateEnglishNameInput(event: KeyboardEvent): void {
     return;
   }
 
-  // Allow only English letters, space, hyphen, apostrophe
-  const englishNamePattern = /^[a-zA-Z\s'-]$/;
+  // Block hyphen (-) character
+  if (event.key === '-') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only English letters, space, apostrophe (no hyphen)
+  const englishNamePattern = /^[a-zA-Z\s']$/;
   
   if (!englishNamePattern.test(event.key)) {
     event.preventDefault();
@@ -899,22 +905,22 @@ validateEnglishNameInput(event: KeyboardEvent): void {
 
 formatEnglishName(fieldName: keyof Personal): void {
   if (this.personalData[fieldName]) {
-    // Remove any non-English characters that might have been pasted
+    // Remove any non-English characters and hyphens that might have been pasted
     let value = (this.personalData[fieldName] as string)
-      .replace(/[^a-zA-Z\s'-]/g, '') // Remove non-English characters
+      .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
       .replace(/\s+/g, ' ') // Replace multiple spaces with single space
       .trim();
 
     // Capitalize first letter of each word
-    value = value.replace(/(^|\s|-|')[a-z]/g, (char) => char.toUpperCase());
+    value = value.replace(/(^|\s|')[a-z]/g, (char) => char.toUpperCase());
 
     (this.personalData[fieldName] as string) = value;
   }
 }
 
 isValidEnglishName(name: string): boolean {
-  // Allows only English letters, spaces, hyphens, and apostrophes
-  const englishNamePattern = /^[a-zA-Z\s'-]+$/;
+  // Allows only English letters, spaces, and apostrophes (no hyphens)
+  const englishNamePattern = /^[a-zA-Z\s']+$/;
   return englishNamePattern.test(name);
 }
 
@@ -923,8 +929,8 @@ handleNamePaste(event: ClipboardEvent): void {
   const clipboardData = event.clipboardData || (window as any).clipboardData;
   const pastedText = clipboardData.getData('text');
   
-  // Filter out non-English characters
-  const cleanText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
+  // Filter out non-English characters and hyphens
+  const cleanText = pastedText.replace(/[^a-zA-Z\s']/g, '');
   
   // Insert the cleaned text at cursor position
   const target = event.target as HTMLInputElement;

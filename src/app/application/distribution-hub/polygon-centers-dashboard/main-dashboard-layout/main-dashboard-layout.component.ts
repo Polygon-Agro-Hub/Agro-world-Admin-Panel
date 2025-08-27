@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressComponent } from '../progress/progress.component';
 import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
+import { OfficersComponent } from '../officers/officers.component';
 
 @Component({
   selector: 'app-main-dashboard-layout',
@@ -13,6 +14,7 @@ import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.compo
     HttpClientModule,
     ProgressComponent,
     OutOfDeliveryComponent,
+    OfficersComponent,
   ],
   templateUrl: './main-dashboard-layout.component.html',
   styleUrl: './main-dashboard-layout.component.css',
@@ -29,6 +31,8 @@ export class MainDashboardLayoutComponent implements OnInit {
         this.activeTab = 'Progress';
       } else if (tab === 'Out for Delivery') {
         this.activeTab = 'Out for Delivery';
+      } else if (tab === 'Officers') {
+        this.activeTab = 'Officers';
       }
     });
   }

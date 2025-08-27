@@ -1,12 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { CommonModule } from '@angular/common';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-progress',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    LoadingSpinnerComponent,
+    CalendarModule,
+    DropdownModule,
+    NgxPaginationModule,
+  ],
   templateUrl: './progress.component.html',
-  styleUrl: './progress.component.css'
+  styleUrl: './progress.component.css',
 })
-export class ProgressComponent {
+export class ProgressComponent implements OnInit {
+  isLoading = false;
+  hasData: boolean = false;
 
+  ngOnInit(): void {}
 }

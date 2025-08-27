@@ -347,6 +347,12 @@ export class ViewPolygonCentersComponent implements OnInit {
 
   viewDistributionCenter(id: number): void {
     this.router.navigate([
+      `/distribution-hub/action/view-distribution-centre/${id}`,
+    ]);
+  }
+
+  viewDistributionCenterDashboard(id: number): void {
+    this.router.navigate([
       `/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`,
     ]);
   }

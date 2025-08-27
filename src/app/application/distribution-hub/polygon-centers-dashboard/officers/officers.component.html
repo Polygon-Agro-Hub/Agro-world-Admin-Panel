@@ -1,9 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div *ngIf="!isLoading" class="overflow-x-auto">
   <div>
-    <div
-      class="pt-5  pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack "
-    >
+    <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           WPCK-02 Kollupitiya Central
@@ -97,8 +95,8 @@
         </div>
       </div>
     </div>
-    <div class="w-full overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 border-2 border-gray-200 rounded-2xl">
+    <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
+      <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             <th
@@ -184,17 +182,13 @@
               982500078V
             </td>
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              <button
-                class="text-[#000] hover:text-[#83aefd] text-2xl"
-              >
+              <button class="text-[#000] hover:text-[#83aefd] text-2xl">
                 <i class="fa-regular fa-file dark:text-[#fff]"></i>
               </button>
             </td>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                class="text-blue-400 hover:text-blue-700"
-              >
+              <button class="text-blue-400 hover:text-blue-700">
                 <svg
                   fill="currentColor"
                   viewBox="0 0 32 32"
@@ -208,10 +202,7 @@
                 </svg>
               </button>
 
-              <button
-                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                
-              >
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
                 <svg
                   fill="currentColor"
                   viewBox="0 0 32 32"
@@ -226,9 +217,7 @@
               </button>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                class="text-red-500 hover:text-red-700"
-              >
+              <button class="text-red-500 hover:text-red-700">
                 <svg
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
@@ -281,4 +270,3 @@
     </div>
   </div>
 </div>
-

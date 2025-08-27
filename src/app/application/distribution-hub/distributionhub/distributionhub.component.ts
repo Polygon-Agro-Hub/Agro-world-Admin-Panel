@@ -77,39 +77,19 @@ navigateToCreateNews(): void {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);
   }
 
-  manageCalendar(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
-
-  createCropGroup(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
-
-  viewCropGroup(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
+  
 
   createVariety(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
 
-  publicForum(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
-
-  ongoingCultivation(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
-
-  assets(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
-
-  feedBack(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
-
+  
   viewPolygon(): void {
     this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
+  }
+
+  assignCities(){
+    this.router.navigate(['/distribution-hub/action/assign-cities']);
+
   }
 }

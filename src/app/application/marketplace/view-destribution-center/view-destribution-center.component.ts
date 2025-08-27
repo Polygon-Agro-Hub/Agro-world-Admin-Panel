@@ -34,6 +34,7 @@ interface DistributionCenter {
   email: string;
   company?: string; // Changed from companyId to string to match API
   companyId?: number; // Keep this if you still need it elsewhere
+  regCode: string;
 }
 
 @Component({
@@ -107,6 +108,7 @@ export class ViewDestributionCenterComponent implements OnInit {
     this.distributionForm = this.fb.group({
       name: ['', Validators.required],
       company: ['', Validators.required],
+      regCode: ['', Validators.required],
       officerInCharge: ['', Validators.required],
       contact1Code: ['+94', Validators.required],
       contact1: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]],
@@ -189,6 +191,7 @@ export class ViewDestributionCenterComponent implements OnInit {
     this.distributionForm.patchValue({
       name: data.centerName,
       company: matchingCompany ? matchingCompany.id : null, // Use the ID if found
+      regCode: data.regCode, // Add this line
       officerInCharge: data.officerName,
       contact1Code: data.code1,
       contact1: data.contact01,

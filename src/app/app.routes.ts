@@ -171,6 +171,7 @@ import { DispachPackagesComponent } from './application/dispatch-section/dispatc
 import { DispatchAdditionalItemsComponent } from './application/dispatch-section/dispatch-items/dispatch-additional-items/dispatch-additional-items.component';
 import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
 import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
+import { AssignCitiesComponent } from './application/distribution-hub/assign-cities/assign-cities.component';
 
 export const routes: Routes = [
   {
@@ -1101,6 +1102,10 @@ export const routes: Routes = [
               {
                 path: 'view-head-portal/:id',
                 component: ViewHeadPortalComponent,
+              },
+              {
+                path: 'assign-cities',
+                component: AssignCitiesComponent,
               },
             ],
           },

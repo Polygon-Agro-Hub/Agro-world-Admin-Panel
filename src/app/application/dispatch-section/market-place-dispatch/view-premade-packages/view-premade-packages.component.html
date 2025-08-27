@@ -48,7 +48,7 @@
                             <!-- (click)="navigateDispatchItems(item.packageId)" -->
                             <!-- (click)="checkLastOrderStatus(true,false,i)" -->
 
-                            <button class="w-6 h-6 mr-3" (click)="checkPackageLastOrderStatus(item.packageId,i)"
+                            <button class="w-6 h-6 mr-3" (click)="checkPackageLastOrderStatus(item.packageId,i, item.price, item.name)"
                                 [disabled]="item.packStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.packStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': item.packStatus === 'Opened',

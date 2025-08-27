@@ -24,6 +24,9 @@ export class DispachPackagesComponent implements OnInit {
   newProductObj: MarketPlaceItems | null = null;
   packageId!: number;
   orderId!: number;
+  invNo: string = '';
+  price: number = 0;
+  packageName: string = '';
 
   isLoading: boolean = true;
   validationFailedMessage: string = '';
@@ -39,6 +42,9 @@ export class DispachPackagesComponent implements OnInit {
     this.packageId = this.route.snapshot.params['id']
     this.orderId = this.route.snapshot.params['orderId']
     this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
+    this.price = this.route.snapshot.queryParams['price'];
+    this.invNo = this.route.snapshot.queryParams['invNo'];
+    this.packageName = this.route.snapshot.queryParams['packageName'];
 
     this.fetchData();
   }

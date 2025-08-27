@@ -618,28 +618,37 @@ isFieldInvalid(field: string): boolean {
   ];
 
   trimBuildingNumber(): void {
-    const control = this.collectionCenterForm.get('buildingNumber');
-    if (control) {
-      const value = control.value || '';
-      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-    }
+  const control = this.collectionCenterForm.get('buildingNumber');
+  if (control) {
+    let value = control.value || '';
+    value = value.replace(/^\s+/, '');
+    // Capitalize first letter
+    value = this.capitalizeFirstLetter(value);
+    control.setValue(value, { emitEvent: false });
   }
+}
 
   trimCity(): void {
-    const control = this.collectionCenterForm.get('buildingNumber');
-    if (control) {
-      const value = control.value || '';
-      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-    }
+  const control = this.collectionCenterForm.get('city');
+  if (control) {
+    let value = control.value || '';
+    value = value.replace(/^\s+/, '');
+    // Capitalize first letter
+    value = this.capitalizeFirstLetter(value);
+    control.setValue(value, { emitEvent: false });
   }
+}
 
   trimStreetName(): void {
-    const control = this.collectionCenterForm.get('street');
-    if (control) {
-      const value = control.value || '';
-      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-    }
+  const control = this.collectionCenterForm.get('street');
+  if (control) {
+    let value = control.value || '';
+    value = value.replace(/^\s+/, '');
+    // Capitalize first letter
+    value = this.capitalizeFirstLetter(value);
+    control.setValue(value, { emitEvent: false });
   }
+}
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -675,6 +684,11 @@ isFieldInvalid(field: string): boolean {
     // If you're storing it separately too
     this.centerData.centerName = capitalizedInput;
   }
+
+  capitalizeFirstLetter(input: string): string {
+  if (!input) return '';
+  return input.charAt(0).toUpperCase() + input.slice(1);
+}
 }
 
 class CollectionCenter {

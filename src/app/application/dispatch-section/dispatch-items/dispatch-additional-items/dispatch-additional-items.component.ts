@@ -28,9 +28,13 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   validationFailedMessage: string = '';
   validationSuccessMessage: string = '';
 
+  isLastOrder: boolean = false;
+
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id'];
+    this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
+
     this.fetchData();
 
   }
@@ -64,7 +68,11 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   }
 
   saveCheckedItems() {
-    this.showCountdown = true;
+    if (this.isLastOrder) {
+      this.showCountdown = true;
+    } else {
+      this.executeApiCall();
+    }
   }
 
   onTimerCompleted() {
@@ -87,7 +95,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       price: item.price,
 
     }));
-    this.dispatchService.dispatchAdditionalItemData(updatedData).subscribe(
+    this.dispatchService.dispatchAdditionalItemData(updatedData, this.packageId, this.isLastOrder).subscribe(
       (res) => {
         this.isLoading = false;
         if (res.status) {

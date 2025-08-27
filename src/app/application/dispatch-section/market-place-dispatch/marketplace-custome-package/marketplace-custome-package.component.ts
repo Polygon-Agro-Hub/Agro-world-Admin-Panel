@@ -110,12 +110,10 @@ export class MarketplaceCustomePackageComponent {
     return parseFloat(num1) + parseFloat(num2);
   }
 
-  navigateToPackageView(id: number, invNo: string) {
-    this.router.navigate([`/dispatch/view-premade-packages/${id}/${invNo}`])
-  }
-
  navigateDispatchAdditionalItems(id: number) {
-    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`])
+    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
+    queryParams: { status: true }
+  })
   }
 }
 

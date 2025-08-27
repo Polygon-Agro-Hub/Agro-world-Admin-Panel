@@ -184,7 +184,7 @@
             *ngIf="collectionCenterForm.get('contact01')?.errors?.['required']"
             class="text-red-500 text-sm mt-1"
           >
-            Phone Number - 1 is required.
+            Contact Number 01 is required.
           </div>
       
           <div
@@ -301,8 +301,9 @@
       <div>
         <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building
           Number *</label>
-        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" (input)="trimBuildingNumber()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" 
+       (input)="trimBuildingNumber()"
+       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('buildingNumber')?.invalid &&
             (collectionCenterForm.get('buildingNumber')?.dirty ||
@@ -315,8 +316,9 @@
       <!-- Street Name -->
       <div>
         <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
-        <input formControlName="street" id="street" name="street" (input)="trimStreetName()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="street" id="street" name="street" 
+       (input)="trimStreetName()"
+       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('street')?.invalid &&
             (collectionCenterForm.get('street')?.dirty ||
@@ -330,8 +332,9 @@
 
       <div>
         <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
-        <input formControlName="city" id="city" name="city" (input)="trimBuildingNumber()" (input)="onProvinceChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="city" id="city" name="city" 
+       (input)="trimCity()"
+       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('city')?.invalid &&
             (collectionCenterForm.get('city')?.dirty ||
@@ -404,7 +407,7 @@
       </div> -->
 
       <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Reg Code *</label>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Reg Code</label>
         <div class="relative">
           <input formControlName="regCode" id="regCode" name="regCode" [value]="isLoadingregcode ? 'Loading...' : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

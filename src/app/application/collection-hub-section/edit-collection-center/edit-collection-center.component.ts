@@ -234,32 +234,46 @@ export class EditCollectionCenterComponent implements OnInit {
   }
 
   onBuildingNumberInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const rawValue = inputElement.value;
-    const trimmedValue = rawValue.replace(/^\s+/, '');
-
-    if (rawValue !== trimmedValue) {
-      inputElement.value = trimmedValue; // Update input field
-    }
-
-    this.centerFetchData.buildingNumber = trimmedValue;
-
-    console.log('Building Number:', this.centerFetchData.buildingNumber);
+  const inputElement = event.target as HTMLInputElement;
+  let rawValue = inputElement.value;
+  const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+  if (rawValue !== trimmedValue) {
+    rawValue = trimmedValue; // Remove leading spaces
   }
+  
+  // Capitalize first letter
+  if (rawValue.length > 0) {
+    this.centerFetchData.buildingNumber = 
+      rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
+  } else {
+    this.centerFetchData.buildingNumber = '';
+  }
+  
+  // Update input field value
+  inputElement.value = this.centerFetchData.buildingNumber;
+}
 
   onStreetNameInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const rawValue = inputElement.value;
-    const trimmedValue = rawValue.replace(/^\s+/, '');
-
-    if (rawValue !== trimmedValue) {
-      inputElement.value = trimmedValue; // Update input field
-    }
-
-    this.centerFetchData.street = trimmedValue;
-
-    console.log('Building Number:', this.centerFetchData.street);
+  const inputElement = event.target as HTMLInputElement;
+  let rawValue = inputElement.value;
+  const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+  if (rawValue !== trimmedValue) {
+    rawValue = trimmedValue; // Remove leading spaces
   }
+  
+  // Capitalize first letter
+  if (rawValue.length > 0) {
+    this.centerFetchData.street = 
+      rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
+  } else {
+    this.centerFetchData.street = '';
+  }
+  
+  // Update input field value
+  inputElement.value = this.centerFetchData.street;
+}
 
   // onStreetNameChange(value: string): void {
   //   this.centerFetchData.street = value.replace(/^\s+/, '');
@@ -466,27 +480,40 @@ onSubmit() {
   }
 
   fetchCollectionCenter() {
-    this.isLoading = true;
-    this.collectionCenterService
-      .getCenterById(this.collectionCenterID)
-      .subscribe(
-        (res) => {
-          if (res?.status) {
-            this.centerFetchData = res.results;
-            this.selectProvince = this.centerFetchData.province;
-            this.existRegCode = this.centerFetchData.regCode;
-            this.updateSelectedCompanies();
-            this.onProvinceChange();
-            this.isLoading = false;
-          } else {
-            this.isLoading = false;
-            Swal.fire('Sorry', 'Centre Data not available', 'warning');
-            this.router.navigate(['/collection-hub/view-collection-centers']);
+  this.isLoading = true;
+  this.collectionCenterService
+    .getCenterById(this.collectionCenterID)
+    .subscribe(
+      (res) => {
+        if (res?.status) {
+          this.centerFetchData = res.results;
+          
+          // Load districts for the selected province (if province exists)
+          if (this.centerFetchData.province) {
+            const filteredProvince = this.ProvinceData.find(
+              (item) => item.province === this.centerFetchData.province
+            );
+            
+            if (filteredProvince) {
+              this.selectedDistrict = filteredProvince.district;
+            }
           }
-        },
-        () => {}
-      );
-  }
+          
+          this.existRegCode = this.centerFetchData.regCode;
+          this.updateSelectedCompanies();
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+          Swal.fire('Sorry', 'Centre Data not available', 'warning');
+          this.router.navigate(['/collection-hub/view-collection-centers']);
+        }
+      },
+      (error) => {
+        this.isLoading = false;
+        console.error('Error fetching collection center:', error);
+      }
+    );
+}
 
   updateSelectedCompanies() {
     if (this.centerFetchData.companies) {
@@ -548,81 +575,82 @@ onSubmit() {
   }
 
   onProvinceChange() {
-    const selectedProvince = this.centerFetchData.province;
-    const selectedDistrict = this.centerFetchData.district;
-    const selectedCity = this.centerFetchData.city;
-
-    const filteredProvince = this.ProvinceData.filter(
-      (item) => item.province === this.selectProvince
-    );
-    this.centerFetchData.province = this.selectProvince;
-
-    if (filteredProvince.length > 0) {
-      this.selectedDistrict = filteredProvince[0].district;
-    } else {
-      this.selectedDistrict = [];
-    }
-
-    if (selectedProvince && selectedDistrict && selectedCity) {
-      this.collectionCenterService
-        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(
-          (response) => {
-            this.centerFetchData.regCode = response.regCode;
-          },
-          () => {}
-        );
-    }
+  console.log('Province changed to:', this.centerFetchData.province);
+  
+  // Clear district selection when province changes
+  this.centerFetchData.district = '';
+  this.selectedDistrict = [];
+  
+  // Find districts for the selected province
+  const filteredProvince = this.ProvinceData.find(
+    (item) => item.province === this.centerFetchData.province
+  );
+  
+  if (filteredProvince) {
+    this.selectedDistrict = filteredProvince.district;
   }
+  
+  // Generate reg code if all required fields are present
+  this.generateRegCodeIfReady();
+}
 
   onDistrictChange() {
-    const selectedProvince = this.centerFetchData.province;
-    const selectedDistrict = this.centerFetchData.district;
-    const selectedCity = this.centerFetchData.city;
-
-    if (selectedProvince && selectedDistrict && selectedCity) {
-      this.collectionCenterService
-        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(
-          (response) => {
-            this.centerFetchData.regCode = response.regCode;
-          },
-          () => {}
-        );
-    }
-  }
+  console.log('District changed to:', this.centerFetchData.district);
+  
+  // Generate reg code if all required fields are present
+  this.generateRegCodeIfReady();
+}
 
   onCityInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const rawValue = inputElement.value;
-    const trimmedValue = rawValue.replace(/^\s+/, '');
-
-    if (rawValue !== trimmedValue) {
-      inputElement.value = trimmedValue; // visually remove leading spaces
-    }
-
-    this.centerFetchData.city = trimmedValue;
-
-    // Now call your original logic
-    this.onCityChange();
+  const inputElement = event.target as HTMLInputElement;
+  let rawValue = inputElement.value;
+  const trimmedValue = rawValue.replace(/^\s+/, '');
+  
+  if (rawValue !== trimmedValue) {
+    rawValue = trimmedValue; // Remove leading spaces
   }
+  
+  // Capitalize first letter
+  if (rawValue.length > 0) {
+    this.centerFetchData.city = 
+      rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
+  } else {
+    this.centerFetchData.city = '';
+  }
+  
+  // Update input field value
+  inputElement.value = this.centerFetchData.city;
+  
+  // Call the original logic for reg code generation
+  this.onCityChange();
+}
 
   onCityChange() {
-    const selectedProvince = this.centerFetchData.province;
-    const selectedDistrict = this.centerFetchData.district;
-    const selectedCity = this.centerFetchData.city;
+  console.log('City changed to:', this.centerFetchData.city);
+  
+  // Generate reg code if all required fields are present
+  this.generateRegCodeIfReady();
+}
 
-    if (selectedProvince && selectedDistrict && selectedCity) {
-      this.collectionCenterService
-        .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
-        .subscribe(
-          (response) => {
-            this.centerFetchData.regCode = response.regCode;
-          },
-          () => {}
-        );
-    }
+// Helper method to generate reg code only when all required fields are present
+private generateRegCodeIfReady() {
+  const selectedProvince = this.centerFetchData.province;
+  const selectedDistrict = this.centerFetchData.district;
+  const selectedCity = this.centerFetchData.city;
+
+  if (selectedProvince && selectedDistrict && selectedCity) {
+    this.collectionCenterService
+      .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
+      .subscribe(
+        (response) => {
+          this.centerFetchData.regCode = response.regCode;
+        },
+        (error) => {
+          console.error('Error generating reg code:', error);
+        }
+      );
   }
+}
 }
 
 class CollectionCenter {

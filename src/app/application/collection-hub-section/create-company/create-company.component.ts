@@ -156,13 +156,15 @@ isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
   const code = numberField === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
   const number = numberField === 'oicConNum1' ? this.companyData.oicConNum1 : this.companyData.oicConNum2;
 
-  // Skip validation if fields are empty
-  if (!code || !number) return false;
+  // Skip validation if fields are empty or number is not 9 digits
+  if (!code || !number || number.toString().length !== 9) {
+    return false;
+  }
 
   // Combine code + number
   const fullNumber = `${code}${number}`;
 
-  // Validate: +947XXXXXXXX
+  // Validate: +947XXXXXXXX (Sri Lankan mobile format)
   const mobilePattern = /^\+947\d{8}$/;
   return !mobilePattern.test(fullNumber);
 }
@@ -527,6 +529,9 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
   async onLogoChange(event: Event): Promise<void> {
   const input = event.target as HTMLInputElement;
+  // Reset size error when a new file is selected
+  this.logoSizeError = false;
+  
   if (input.files && input.files[0]) {
     const file = input.files[0];
     const maxSize = 1024 * 1024; // 1MB
@@ -544,7 +549,6 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
     try {
       this.isLoading = true;
-      this.logoSizeError = false;
       const compressedFile = await this.compressImage(file, 800, 800, 0.7);
       this.selectedLogoFile = compressedFile;
       this.companyData.logoFile = compressedFile;
@@ -553,6 +557,8 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
       reader.onload = (e) => {
         this.companyData.logo = e.target?.result as string;
         this.isLoading = false;
+        // Mark the field as touched to show validation if needed
+        this.touchedFields['logo'] = true;
       };
       reader.readAsDataURL(this.selectedLogoFile);
     } catch (error) {
@@ -565,6 +571,9 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
   // Updated onFaviconChange method
   async onFaviconChange(event: Event): Promise<void> {
   const input = event.target as HTMLInputElement;
+  // Reset size error when a new file is selected
+  this.faviconSizeError = false;
+  
   if (input.files && input.files[0]) {
     const file = input.files[0];
     const maxSize = 1024 * 1024; // 1MB
@@ -582,7 +591,6 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
 
     try {
       this.isLoading = true;
-      this.faviconSizeError = false;
       const compressedFile = await this.compressImage(file, 800, 800, 0.7);
       this.selectedFaviconFile = compressedFile;
       this.companyData.faviconFile = compressedFile;
@@ -591,6 +599,8 @@ allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'conf
       reader.onload = (e) => {
         this.companyData.favicon = e.target?.result as string;
         this.isLoading = false;
+        // Mark the field as touched to show validation if needed
+        this.touchedFields['favicon'] = true;
       };
       reader.readAsDataURL(this.selectedFaviconFile);
     } catch (error) {
@@ -1011,26 +1021,35 @@ getCompanyData() {
 
   
 
-  validateContactNumbers() {
-  // Check individual number length validation (already present)
-  this.contactNumberError1 =
-    this.companyData.oicConNum1?.length > 0 &&
-    this.companyData.oicConNum1?.length !== 9;
+  validateContactNumbers(): void {
+  const num1 = this.companyData.oicConNum1?.toString() || '';
+  const num2 = this.companyData.oicConNum2?.toString() || '';
 
-  this.contactNumberError2 =
-    this.companyData.oicConNum2?.length > 0 &&
-    this.companyData.oicConNum2?.length !== 9;
+  // Reset all error flags first
+  this.contactNumberError1 = false;
+  this.contactNumberError2 = false;
+  this.sameNumberError = false;
 
-  // Check if both numbers are the same (only if both are non-empty)
+  // Validate number 1 - only check length if there's content
+  if (num1.length > 0 && num1.length !== 9) {
+    this.contactNumberError1 = true;
+  }
+
+  // Validate number 2 - only check length if there's content
+  if (num2.length > 0 && num2.length !== 9) {
+    this.contactNumberError2 = true;
+  }
+
+  // Check for duplicate numbers ONLY if both numbers are complete and valid
   if (
-    this.companyData.oicConNum1 &&
-    this.companyData.oicConNum2 &&
+    num1.length === 9 &&
+    num2.length === 9 &&
+    !this.contactNumberError1 &&
+    !this.contactNumberError2 &&
     this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-    this.companyData.oicConCode1 === this.companyData.oicConCode2 // also check country code
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
   ) {
     this.sameNumberError = true;
-  } else {
-    this.sameNumberError = false;
   }
 }
 
@@ -1464,6 +1483,54 @@ allowOnlyValidNameCharacters(event: KeyboardEvent): void {
   trimLeadingSpaces(value: string): string {
   return value ? value.replace(/^\s+/, '') : value;
 }
+
+getContactNumber1ErrorMessage(): string {
+  const num1 = this.companyData.oicConNum1?.toString() || '';
+  
+  // Priority 1: Required validation
+  if (!num1) {
+    return 'Contact Number 1 is required.';
+  }
+  
+  // Priority 2: Format validation
+  if (this.isInvalidMobileNumber('oicConNum1')) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+  }
+  
+  // Priority 3: Length validation
+  if (this.contactNumberError1) {
+    return 'Contact number must be exactly 9 digits.';
+  }
+  
+  return '';
+}
+
+getContactNumber2ErrorMessage(): string {
+  const num2 = this.companyData.oicConNum2?.toString() || '';
+  
+  // If no value, no error (this field is optional)
+  if (!num2) {
+    return '';
+  }
+  
+  // Priority 1: Format validation
+  if (this.isInvalidMobileNumber('oicConNum2')) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+  }
+  
+  // Priority 2: Length validation
+  if (this.contactNumberError2) {
+    return 'Contact number must be exactly 9 digits.';
+  }
+  
+  // Priority 3: Duplicate validation
+  if (this.sameNumberError) {
+    return 'Contact number 2 cannot be the same as Contact number 1.';
+  }
+  
+  return '';
+}
+
 }
 
 // Updated Company class to match the JSON response structure

@@ -23,6 +23,7 @@ interface CollectionCenter {
   street: string;
   district: string;
   province: string;
+  city: string;
   companies: Company[];
 }
 
@@ -166,6 +167,8 @@ export class AgroWorldCentersComponent {
       .getAllCollectionCenterPageAW(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
+          console.log("Data",response);
+
           this.isLoading = false;
           this.collectionObj = response.items;
           this.hasData = this.collectionObj.length > 0;
@@ -326,14 +329,14 @@ export class AgroWorldCentersComponent {
   isAgroworldPresent(item: any): boolean {
     return (
       item.companies?.some(
-        (company: any) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+        (company: any) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
       ) ?? false
     );
   }
 
   navigateAddTarget(item: CollectionCenter) {
     const agroworldCompany = item.companies.find(
-      (company: Company) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+      (company: Company) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
     );
 
     if (!agroworldCompany) {

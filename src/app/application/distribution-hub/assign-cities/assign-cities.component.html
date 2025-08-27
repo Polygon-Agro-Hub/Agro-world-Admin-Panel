@@ -1,0 +1,88 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button onclick="history.back()" class="ml-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+<div class="h-[20px]"></div>
+
+
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg gap-y-2">
+    <h2 class="font-semibold dark:text-white">Assign Cities to Centre</h2>
+    <div class="flex flex-row justify-between items-center gap-x-16 mt-4 px-10">
+        <!-- Province Selector -->
+        <div class="w-2/5">
+            <label for="province"
+                class="block mb-2 text-sm font-medium text-textLight dark:text-textDark">Province</label>
+            <select id="province" [(ngModel)]="selectProvince" name="selectProvince" (change)="onProvinceChange()"
+                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400">
+                <option value="" selected>Choose a province</option>
+                <option *ngFor="let province of provinces" [value]="province">{{ province }}</option>
+            </select>
+        </div>
+
+        <!-- District Selector -->
+        <div class="w-2/5">
+            <label for="district"
+                class="block mb-2 text-sm font-medium text-textLight dark:text-textDark">District</label>
+            <select id="district" [(ngModel)]="selectDistrict" name="selectDistrict"
+                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400"
+                [disabled]="!selectProvince">
+                <option value="" selected>Choose a district</option>
+                <option *ngFor="let district of filteredDistricts" [value]="district.name">{{ district.name }}</option>
+            </select>
+        </div>
+
+        <div class="w-1/5 self-end">
+            <button (click)="fetchData()" class="bg-[#3980C0] text-white text-lg px-4 py-2 rounded-md"
+                [disabled]="!selectProvince || !selectDistrict">Go</button>
+        </div>
+    </div>
+</div>
+
+<div class="h-[20px]"></div>
+
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+    <div *ngIf="hasData && citiesArr.length > 0 && centersArr.length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 table-auto">
+            <thead>
+                <tr>
+                    <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                    </th>
+                    <th *ngFor="let center of centersArr"
+                        class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+                        {{ center.regCode }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let city of citiesArr">
+                    <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                        {{ city.city }}
+                    </td>
+                    <td *ngFor="let center of centersArr" class="px-4 py-3 text-center">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" [checked]="isCityAssignedToCenter(city.id, center.id)"
+                                (change)="toggleAssignment(city.id, center.id, $event)"
+                                [disabled]="isToggleDisabled(city.id, center.id)" class="sr-only peer">
+                            <div
+                                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+                            </div>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="!selectDistrict || !selectProvince || !hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--Please select the province and district first--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+
+    <!-- No Data Message -->
+    <div *ngIf="hasData && (citiesArr.length === 0 || centersArr.length === 0)"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No data available for the selected district--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+</div>

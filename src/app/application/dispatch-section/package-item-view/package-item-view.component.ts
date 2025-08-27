@@ -387,7 +387,14 @@ blockInvalidDecimal($event: KeyboardEvent) {
   }
 
 onCancelPopup() {
-  this.router.navigate(['/dispatch/salesdash-orders']);
+  // Clear all form data
+  this.selectedProductId = null;
+  this.quantity = null;
+  this.unitPrice = null;
+  this.totalPrice = null;
+  
+  // Close the popup
+  this.isPopupOpen = false;
 }
 
 

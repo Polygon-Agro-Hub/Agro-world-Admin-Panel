@@ -499,13 +499,10 @@ back(): void {
   const isOldFormat = /^[0-9]{9}V$/.test(cleanNIC);
   const isNewFormat = /^[0-9]{12}$/.test(cleanNIC);
 
-  if (!isOldFormat && !isNewFormat) {
-    this.nicError = true;
-    return false;
-  }
-
-  this.nicError = false;
-  return true;
+  // Set the error flag based on validation
+  this.nicError = !(isOldFormat || isNewFormat);
+  
+  return !this.nicError;
 }
 
 
@@ -794,6 +791,11 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetNa
     if (this.personalData.nic.endsWith('v')) {
       this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
     }
+    
+    // Validate after formatting
+    this.validateNIC();
+  } else {
+    this.nicError = false;
   }
 }
 

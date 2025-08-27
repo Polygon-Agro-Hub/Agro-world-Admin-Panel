@@ -138,9 +138,9 @@
               <option value="+31">🇳🇱 +31</option>
             </select>
             <input id="phoneNumber1" name="phoneNumber1" type="text" [(ngModel)]="personalData.phoneNumber1"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="7XXXXXXXX" #phoneNumber1Input="ngModel" required minlength="9" maxlength="9"
-              (keypress)="allowOnlyNumbers($event)" pattern="^7\d{8}$" />
+  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  placeholder="7XXXXXXXX" #phoneNumber1Input="ngModel" required minlength="9" maxlength="9"
+  (keypress)="allowOnlyNumbers($event)" pattern="^7\d{8}$" />
           </div>
 
           <!-- Required Validation -->

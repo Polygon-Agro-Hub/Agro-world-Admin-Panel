@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressComponent } from '../progress/progress.component';
 import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
 import { OfficersComponent } from '../officers/officers.component';
+import { OfficerTargetComponent } from "../officer-target/officer-target.component";
 
 @Component({
   selector: 'app-main-dashboard-layout',
@@ -15,7 +16,8 @@ import { OfficersComponent } from '../officers/officers.component';
     ProgressComponent,
     OutOfDeliveryComponent,
     OfficersComponent,
-  ],
+    OfficerTargetComponent
+],
   templateUrl: './main-dashboard-layout.component.html',
   styleUrl: './main-dashboard-layout.component.css',
 })
@@ -33,6 +35,8 @@ export class MainDashboardLayoutComponent implements OnInit {
         this.activeTab = 'Out for Delivery';
       } else if (tab === 'Officers') {
         this.activeTab = 'Officers';
+      } else if (tab === 'Officer Target') {
+        this.activeTab = 'Officer Target';
       }
     });
   }

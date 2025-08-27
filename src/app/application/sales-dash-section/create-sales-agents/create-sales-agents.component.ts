@@ -736,9 +736,9 @@ onSubmit() {
     return;
   }
 
-  // For account holder name, only allow English letters, spaces, hyphens, and apostrophes
+  // For account holder name, only allow English letters, spaces, and apostrophes (NO HYPHENS)
   if (fieldName === 'accHolderName') {
-    const allowedPattern = /^[a-zA-Z\s'-]$/;
+    const allowedPattern = /^[a-zA-Z\s']$/; // Removed hyphen from allowed characters
     if (!allowedPattern.test(event.key)) {
       event.preventDefault();
     }
@@ -855,8 +855,8 @@ blockLeadingSpace(event: KeyboardEvent) {
 }
 
   isValidName(name: string): boolean {
-  // Allows only English letters, spaces, hyphens, and apostrophes
-  const namePattern = /^[A-Za-z\s'-]+$/;
+  // Allows only English letters, spaces, and apostrophes (NO HYPHENS)
+  const namePattern = /^[A-Za-z\s']+$/; // Removed hyphen from pattern
   return namePattern.test(name) && !/\d/.test(name); // Also check for numbers
 }
 

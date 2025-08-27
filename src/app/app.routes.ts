@@ -172,6 +172,7 @@ import { DispatchAdditionalItemsComponent } from './application/dispatch-section
 import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
 import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
 import { AssignCitiesComponent } from './application/distribution-hub/assign-cities/assign-cities.component';
+import { MainDashboardLayoutComponent } from './application/distribution-hub/polygon-centers-dashboard/main-dashboard-layout/main-dashboard-layout.component';
 
 export const routes: Routes = [
   {
@@ -1089,7 +1090,16 @@ export const routes: Routes = [
               },
               {
                 path: 'view-polygon-centers',
-                component: ViewPolygonCentersComponent,
+                children: [
+                  {
+                    path: '',
+                    component: ViewPolygonCentersComponent,
+                  },
+                  {
+                    path: 'distribution-center-dashboard/:id',
+                    component: MainDashboardLayoutComponent
+                  }
+                ]
               },
               {
                 path: 'view-distribution-centre/:id',

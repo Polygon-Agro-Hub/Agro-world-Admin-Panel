@@ -176,8 +176,6 @@ export class ViewPublicForumComponent implements OnInit {
             if (res) {
               Swal.fire('Deleted!', 'The post has been deleted.', 'success');
               this.isPopupVisible = false;
-              // this.isPopupVisible = false;
-
               this.fetchPostAllReply(this.postId);
               this.loadPosts();
               this.getCount();
@@ -197,6 +195,9 @@ export class ViewPublicForumComponent implements OnInit {
             this.isLoading = false;
           }
         );
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Handle cancel button click - reload the page
+        location.reload();
       }
     });
   }

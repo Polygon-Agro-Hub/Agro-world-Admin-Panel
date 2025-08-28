@@ -46,6 +46,10 @@ export class ViewPackageListComponent implements OnInit {
   ];
   selectedStatus: any;
   searchtext: string = '';
+
+  isPopupVisible: boolean = false;
+  popUpStatus: string = '';
+  popUpId!:number;
   
 
   constructor(
@@ -228,5 +232,26 @@ onSearch() {
     } else {
       this.fetchAllPackages();
     }
+  }
+
+  disablePopup(pkg:any){
+    this.isPopupVisible= true;
+    this.popUpStatus = pkg.status === 'Enabled' ? 'Disabled' : 'Enabled';
+    this.popUpId = pkg.id;
+  }
+
+  changeStatus(){
+    this.viewPackagesList.changePackageStatus({id:this.popUpId, status:this.popUpStatus}).subscribe(
+      (res)=>{
+        if(res.status){
+          Swal.fire('Success', 'Package status updated successfully', 'success');
+          this.isPopupVisible = false;
+          this.popUpStatus = '';
+          this.fetchAllPackages();
+        }else{
+          Swal.fire('Error', 'Failed to update package status', 'error');
+        }
+      }
+    )
   }
 }

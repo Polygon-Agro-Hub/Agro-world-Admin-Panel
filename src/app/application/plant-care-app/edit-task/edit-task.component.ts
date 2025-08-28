@@ -319,9 +319,9 @@ export class EditTaskComponent implements OnInit {
   const missingFields: string[] = [];
 
   // Validate form fields
-  if (!this.taskItems.startingDate) {
-    missingFields.push('Starting Date is required');
-  }
+  // if (!this.taskItems.startingDate) {
+  //   missingFields.push('Starting Date is required');
+  // }
   if (!this.taskItems.taskTypeEnglish) {
     missingFields.push('Task Type (English) is required');
   }
@@ -428,7 +428,7 @@ export class EditTaskComponent implements OnInit {
         imageLink: this.taskForm.get('hasImageLink')?.value ? this.taskItems.imageLink : null,
       };
 
-      this.taskService.updateUserCropTask(this.itemId, taskData).subscribe({
+      this.taskService.updateCropTask(this.itemId, taskData).subscribe({
         next: (res: any) => {
           Swal.fire({
             icon: 'success',

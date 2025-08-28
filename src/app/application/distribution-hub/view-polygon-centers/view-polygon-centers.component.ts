@@ -351,11 +351,14 @@ export class ViewPolygonCentersComponent implements OnInit {
     ]);
   }
 
-  viewDistributionCenterDashboard(id: number): void {
-    this.router.navigate([
-      `/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`,
-    ]);
-  }
+ viewDistributionCenterDashboard(id: number, name: string, regCode: string): void {
+  this.router.navigate(
+    [`/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`],
+    {
+      queryParams: { name, regCode }
+    }
+  );
+}
 
   onSearchKeydown(event: KeyboardEvent): void {
     if (event.key === ' ' || event.keyCode === 32) {

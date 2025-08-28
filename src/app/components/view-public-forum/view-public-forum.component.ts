@@ -240,6 +240,9 @@ export class ViewPublicForumComponent implements OnInit {
             this.isLoading = false;
           }
         );
+      }else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Handle cancel button click - reload the page
+        location.reload();
       }
     });
   }

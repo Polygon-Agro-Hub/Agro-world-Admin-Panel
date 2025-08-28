@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PublicForumService } from '../../services/plant-care/public-forum.service';
@@ -43,6 +43,7 @@ export class ViewPublicForumComponent implements OnInit {
   selectPostId!: number;
   isLoading = false;
   isLoadingpop = false;
+  activeDeleteMenu: number | null = null;
 
   constructor(
     private psotService: PublicforumService,
@@ -111,8 +112,12 @@ export class ViewPublicForumComponent implements OnInit {
     });
   }
 
-  toggleDeleteButton() {
-    this.isDeleteVisible = !this.isDeleteVisible;
+  toggleDeleteButton(postId: number): void {
+    if (this.activeDeleteMenu === postId) {
+      this.activeDeleteMenu = null;
+    } else {
+      this.activeDeleteMenu = postId;
+    }
   }
 
   openPopup(id: number) {
@@ -159,6 +164,7 @@ export class ViewPublicForumComponent implements OnInit {
 
   deletePost(id: number) {
     this.isLoading = true;
+    this.activeDeleteMenu = null;
 
     Swal.fire({
       title: 'Are you sure?',
@@ -289,6 +295,14 @@ export class ViewPublicForumComponent implements OnInit {
 
     input.value = trimmed; // Update input display
     this.replyMessage = trimmed; // Update model
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.relative.flex.flex-col')) {
+      this.activeDeleteMenu = null;
+    }
   }
 
 }

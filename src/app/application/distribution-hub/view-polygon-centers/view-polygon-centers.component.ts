@@ -351,6 +351,12 @@ export class ViewPolygonCentersComponent implements OnInit {
     ]);
   }
 
+  viewDistributionCenterDashboard(id: number): void {
+    this.router.navigate([
+      `/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`,
+    ]);
+  }
+
   onSearchKeydown(event: KeyboardEvent): void {
     if (event.key === ' ' || event.keyCode === 32) {
       const input = event.target as HTMLInputElement;

@@ -138,9 +138,9 @@
               <option value="+31">🇳🇱 +31</option>
             </select>
             <input id="phoneNumber1" name="phoneNumber1" type="text" [(ngModel)]="personalData.phoneNumber1"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="7XXXXXXXX" #phoneNumber1Input="ngModel" required minlength="9" maxlength="9"
-              (keypress)="allowOnlyNumbers($event)" pattern="^7\d{8}$" />
+  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  placeholder="7XXXXXXXX" #phoneNumber1Input="ngModel" required minlength="9" maxlength="9"
+  (keypress)="allowOnlyNumbers($event)" pattern="^7\d{8}$" />
           </div>
 
           <!-- Required Validation -->
@@ -199,22 +199,22 @@
         </div>
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number <span
-              class="text-[#2E2E2E]">*</span></label>
-          <input id="nic" name="nic" [(ngModel)]="personalData.nic"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #nicInput="ngModel" required (keydown)="validateNICInput($event)" (input)="formatNIC()" />
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number <span
+      class="text-[#2E2E2E]">*</span></label>
+  <input id="nic" name="nic" [(ngModel)]="personalData.nic"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #nicInput="ngModel" required (keydown)="validateNICInput($event)" (input)="formatNIC()" />
 
-          <!-- Required Validation -->
-          <div *ngIf="nicInput.touched && !personalData.nic" class="text-red-500 text-sm mt-1">
-            <div>NIC Number is required</div>
-          </div>
+  <!-- Required Validation -->
+  <div *ngIf="nicInput.touched && !personalData.nic" class="text-red-500 text-sm mt-1">
+    <div>NIC Number is required</div>
+  </div>
 
-          <!-- Pattern Validation -->
-          <div *ngIf="nicInput.touched && nicInput.errors?.['pattern'] || nicError" class="text-red-500 text-sm mt-1">
-  Please enter a valid NIC number (12 digits or 10 digits followed by 'V').
+  <!-- Pattern Validation -->
+  <div *ngIf="(nicInput.touched || nicInput.dirty) && personalData.nic && nicError" class="text-red-500 text-sm mt-1">
+    Please enter a valid NIC number (12 digits or 10 digits followed by 'V').
+  </div>
 </div>
-        </div>
 
         <div>
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email <span

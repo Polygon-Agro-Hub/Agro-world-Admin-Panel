@@ -499,13 +499,10 @@ back(): void {
   const isOldFormat = /^[0-9]{9}V$/.test(cleanNIC);
   const isNewFormat = /^[0-9]{12}$/.test(cleanNIC);
 
-  if (!isOldFormat && !isNewFormat) {
-    this.nicError = true;
-    return false;
-  }
-
-  this.nicError = false;
-  return true;
+  // Set the error flag based on validation
+  this.nicError = !(isOldFormat || isNewFormat);
+  
+  return !this.nicError;
 }
 
 
@@ -514,10 +511,11 @@ onSubmit() {
   const missingFields: string[] = [];
 
   // Regular expressions
-  const phonePattern = /^[0-9]{9}$/; // 9 digits only
-  const accountPattern = /^[a-zA-Z0-9]+$/; // alphanumeric only
+  const phonePattern = /^7\d{8}$/; // 9 digits starting with 7
+  const accountPattern = /^[0-9]+$/; // numbers only
   const englishNamePattern = /^[A-Z][a-zA-Z\s]*$/;
-  const nicPattern = /(^\d{12}$)|(^\d{9}[V]$)/;
+  const nicPattern = /(^\d{12}$)|(^\d{9}[Vv]$)/i;
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   // Employee type
   if (!this.empType) {
@@ -540,18 +538,18 @@ onSubmit() {
 
   // Phone Number 1
   if (!this.personalData.phoneNumber1) {
-    missingFields.push('Contact Number 1');
+    missingFields.push('Mobile Number - 1');
   } else if (!phonePattern.test(this.personalData.phoneNumber1)) {
-    missingFields.push('Contact Number 1 - Must be 9 digits');
+    missingFields.push('Mobile Number - 1 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)');
   }
 
   // Phone Number 2 (optional)
-  if (this.personalData.phoneNumber2) {
+  if (this.personalData.phoneNumber2 && this.personalData.phoneNumber2.trim() !== '') {
     if (!phonePattern.test(this.personalData.phoneNumber2)) {
-      missingFields.push('Contact Number 2 - Must be 9 digits');
+      missingFields.push('Mobile Number - 2 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)');
     }
     if (this.personalData.phoneNumber1 === this.personalData.phoneNumber2) {
-      missingFields.push('Contact Number 2 - Cannot be the same as Contact Number 1');
+      missingFields.push('Mobile Number - 2 - Cannot be the same as Mobile Number - 1');
     }
   }
 
@@ -564,17 +562,27 @@ onSubmit() {
 
   // NIC
   if (!this.personalData.nic) {
-    missingFields.push('NIC');
+    missingFields.push('NIC Number');
   } else if (!nicPattern.test(this.personalData.nic)) {
-    missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
+    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
   }
 
-  // Address
-  if (!this.personalData.houseNumber) missingFields.push('House Number');
-  if (!this.personalData.streetName) missingFields.push('Street Name');
-  if (!this.personalData.city) missingFields.push('City');
-  if (!this.personalData.province) missingFields.push('Province');
-  if (!this.personalData.district) missingFields.push('District');
+  // Address fields
+  if (!this.personalData.houseNumber) {
+    missingFields.push('House/Plot Number');
+  }
+
+  if (!this.personalData.streetName) {
+    missingFields.push('Street Name');
+  }
+
+  if (!this.personalData.city) {
+    missingFields.push('City');
+  }
+
+  if (!this.personalData.district) {
+    missingFields.push('District');
+  }
 
   // Account Holder Name
   if (!this.personalData.accHolderName) {
@@ -587,21 +595,26 @@ onSubmit() {
   if (!this.personalData.accNumber) {
     missingFields.push('Account Number');
   } else if (!accountPattern.test(this.personalData.accNumber)) {
-    missingFields.push('Account Number - Only alphanumeric characters allowed');
+    missingFields.push('Account Number - Only numbers allowed');
   }
 
   // Confirm Account Number
   if (!this.confirmAccNumber) {
     missingFields.push('Confirm Account Number');
+  } else if (!accountPattern.test(this.confirmAccNumber)) {
+    missingFields.push('Confirm Account Number - Only numbers allowed');
   } else if (this.personalData.accNumber !== this.confirmAccNumber) {
     missingFields.push('Confirm Account Number - Must match Account Number');
-  } else if (!accountPattern.test(this.confirmAccNumber)) {
-    missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
   }
 
   // Bank details
-  if (!this.personalData.bankName) missingFields.push('Bank Name');
-  if (!this.personalData.branchName) missingFields.push('Branch Name');
+  if (!this.personalData.bankName) {
+    missingFields.push('Bank Name');
+  }
+
+  if (!this.personalData.branchName) {
+    missingFields.push('Branch Name');
+  }
 
   // If any errors, show them in SweetAlert and stop
   if (missingFields.length > 0) {
@@ -622,7 +635,7 @@ onSubmit() {
         htmlContainer: 'text-left',
       },
     });
-    return;
+    return; // This stops the form submission
   }
 
   // If valid, proceed with confirmation
@@ -778,6 +791,11 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetNa
     if (this.personalData.nic.endsWith('v')) {
       this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
     }
+    
+    // Validate after formatting
+    this.validateNIC();
+  } else {
+    this.nicError = false;
   }
 }
 
@@ -798,10 +816,10 @@ capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetNa
   }
 
   isValidName(name: string): boolean {
-    // Allows letters, spaces, hyphens, and apostrophes
-    const namePattern = /^[A-Za-z\s'-]+$/;
-    return namePattern.test(name);
-  }
+  // Allows letters, spaces, and apostrophes only (no hyphens)
+  const namePattern = /^[A-Za-z\s']+$/;
+  return namePattern.test(name);
+}
 
   isFormValid(): boolean {
   // Check all required fields
@@ -871,8 +889,14 @@ validateEnglishNameInput(event: KeyboardEvent): void {
     return;
   }
 
-  // Allow only English letters, space, hyphen, apostrophe
-  const englishNamePattern = /^[a-zA-Z\s'-]$/;
+  // Block hyphen (-) character
+  if (event.key === '-') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only English letters, space, apostrophe (no hyphen)
+  const englishNamePattern = /^[a-zA-Z\s']$/;
   
   if (!englishNamePattern.test(event.key)) {
     event.preventDefault();
@@ -881,22 +905,22 @@ validateEnglishNameInput(event: KeyboardEvent): void {
 
 formatEnglishName(fieldName: keyof Personal): void {
   if (this.personalData[fieldName]) {
-    // Remove any non-English characters that might have been pasted
+    // Remove any non-English characters and hyphens that might have been pasted
     let value = (this.personalData[fieldName] as string)
-      .replace(/[^a-zA-Z\s'-]/g, '') // Remove non-English characters
+      .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
       .replace(/\s+/g, ' ') // Replace multiple spaces with single space
       .trim();
 
     // Capitalize first letter of each word
-    value = value.replace(/(^|\s|-|')[a-z]/g, (char) => char.toUpperCase());
+    value = value.replace(/(^|\s|')[a-z]/g, (char) => char.toUpperCase());
 
     (this.personalData[fieldName] as string) = value;
   }
 }
 
 isValidEnglishName(name: string): boolean {
-  // Allows only English letters, spaces, hyphens, and apostrophes
-  const englishNamePattern = /^[a-zA-Z\s'-]+$/;
+  // Allows only English letters, spaces, and apostrophes (no hyphens)
+  const englishNamePattern = /^[a-zA-Z\s']+$/;
   return englishNamePattern.test(name);
 }
 
@@ -905,8 +929,8 @@ handleNamePaste(event: ClipboardEvent): void {
   const clipboardData = event.clipboardData || (window as any).clipboardData;
   const pastedText = clipboardData.getData('text');
   
-  // Filter out non-English characters
-  const cleanText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
+  // Filter out non-English characters and hyphens
+  const cleanText = pastedText.replace(/[^a-zA-Z\s']/g, '');
   
   // Insert the cleaned text at cursor position
   const target = event.target as HTMLInputElement;
@@ -978,7 +1002,10 @@ validateAddressInput(event: KeyboardEvent): void {
   }
 }
 
-
+validatePhoneNumber(phoneNumber: string): boolean {
+  const phonePattern = /^7\d{8}$/;
+  return phonePattern.test(phoneNumber);
+}
 
 }
 

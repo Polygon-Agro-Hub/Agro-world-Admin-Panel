@@ -315,6 +315,10 @@ export class ViewPublicForumComponent implements OnInit {
       this.activeDeleteMenu = commentId;
     }
   }
+
+  hasReplies(chatId: number): boolean {
+  return this.countReply && this.countReply.some(i => i.chatId === chatId);
+}
 }
 
 class PublicForum {

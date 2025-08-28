@@ -93,8 +93,9 @@
             class="flex border-b-2 border-[#0075FF] text-[#0075FF]"
           >
             <div *ngFor="let i of countReply">
-              <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }}</p>
-            </div>
+  <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }}</p>
+</div>
+<p *ngIf="!hasReplies(postRcord.id)">0</p>
             <button class="ml-2" (click)="openPopup(postRcord.id)">
               Replies
             </button>

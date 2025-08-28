@@ -51,7 +51,7 @@ export class ViewPublicForumComponent implements OnInit {
     private publicForumSrv: PublicForumService,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) { }
+  ) {}
 
   sendMessage(id: number) {
     if (!this.replyMessage.trim()) {
@@ -158,7 +158,7 @@ export class ViewPublicForumComponent implements OnInit {
             return reply;
           });
         },
-        (error) => { }
+        (error) => {}
       );
   }
 
@@ -246,7 +246,7 @@ export class ViewPublicForumComponent implements OnInit {
             this.isLoading = false;
           }
         );
-      }else if (result.dismiss === Swal.DismissReason.cancel) {
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Handle cancel button click - reload the page
         location.reload();
       }
@@ -300,11 +300,21 @@ export class ViewPublicForumComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.relative.flex.flex-col')) {
+    if (
+      !target.closest('.relative.flex.flex-col') &&
+      !target.closest('.relative.flex.justify-center.items-center.mx-5')
+    ) {
       this.activeDeleteMenu = null;
     }
   }
 
+  toggleDeleteMenu(commentId: number): void {
+    if (this.activeDeleteMenu === commentId) {
+      this.activeDeleteMenu = null;
+    } else {
+      this.activeDeleteMenu = commentId;
+    }
+  }
 }
 
 class PublicForum {
@@ -314,9 +324,9 @@ class PublicForum {
   lastName!: string;
   createdAt!: string;
   timeAgo?: string;
-  replyStaffId!:number | null
-  staffFirstName!:string
-  staffLastName!:string
+  replyStaffId!: number | null;
+  staffFirstName!: string;
+  staffLastName!: string;
 }
 
 class ReplyCount {

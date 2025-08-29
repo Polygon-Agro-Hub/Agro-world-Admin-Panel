@@ -1401,6 +1401,11 @@ export class UpdateDistributionOfficerComponent {
 
     return 'Please enter a valid email in the format: example@domain.com';
   }
+
+  openResetPasswordModal() {
+throw new Error('Method not implemented.');
+}
+
 }
 
 class Personal {

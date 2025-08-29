@@ -35,7 +35,7 @@ export class DestributionService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     const token = this.tokenService.getToken();
@@ -216,5 +216,12 @@ export class DestributionService {
       )}`,
       { headers: this.getHeaders() }
     );
+  }
+
+  getCenterTargetDetails(): Observable<ApiResponse> {
+    const url = `${this.apiUrl}distribution/get-center-target`;
+    return this.http.get<ApiResponse>(url, {
+      headers: this.getHeaders(),
+    });
   }
 }

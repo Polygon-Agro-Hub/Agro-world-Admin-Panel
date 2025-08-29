@@ -45,7 +45,7 @@
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
-      <app-progress *ngIf="activeTab === 'Progress'"></app-progress>
+      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress'" />
       <app-out-of-delivery *ngIf="activeTab === 'Out for Delivery'"></app-out-of-delivery>
       <app-officers *ngIf="activeTab === 'Officers'"></app-officers>
       <app-officer-target *ngIf="activeTab === 'Officer Target'"></app-officer-target>

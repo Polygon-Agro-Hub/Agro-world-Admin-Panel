@@ -17,31 +17,55 @@ import { OfficerTargetComponent } from "../officer-target/officer-target.compone
     OutOfDeliveryComponent,
     OfficersComponent,
     OfficerTargetComponent
-],
+  ],
   templateUrl: './main-dashboard-layout.component.html',
   styleUrl: './main-dashboard-layout.component.css',
 })
 export class MainDashboardLayoutComponent implements OnInit {
   activeTab: string = 'Progress';
+  centerObj: CenterDetails = {
+    centerId: '',
+    centerName: '',
+    centerRegCode: ''
+  };
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const tab = params['tab'];
-      if (tab === 'Progress') {
-        this.activeTab = 'Progress';
-      } else if (tab === 'Out for Delivery') {
-        this.activeTab = 'Out for Delivery';
-      } else if (tab === 'Officers') {
-        this.activeTab = 'Officers';
-      } else if (tab === 'Officer Target') {
-        this.activeTab = 'Officer Target';
-      }
+    // Get route parameters and query parameters
+    this.route.params.subscribe(params => {
+      this.centerObj.centerId = params['id'];
     });
+
+    this.route.queryParams.subscribe(params => {
+      // Set tab based on query parameter
+      const tab = params['tab'];
+      if (tab && ['Progress', 'Out for Delivery', 'Officers', 'Officer Target'].includes(tab)) {
+        this.activeTab = tab;
+      }
+      
+      // Set center details from query params
+      this.centerObj.centerName = params['name'] || '';
+      this.centerObj.centerRegCode = params['regCode'] || '';
+    });
+
+    console.log("Center Object:", this.centerObj);
   }
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    
+    // Update URL with tab query parameter without reloading
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: tab },
+      queryParamsHandling: 'merge'
+    });
   }
+}
+
+interface CenterDetails {
+  centerId: string;
+  centerName: string;
+  centerRegCode: string;
 }

@@ -3,6 +3,7 @@ import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
+import { formatDate } from '@angular/common';
 
 export interface DistributionCentreRequest {
   name: string;
@@ -218,8 +219,21 @@ export class DestributionService {
     );
   }
 
-  getCenterTargetDetails(): Observable<ApiResponse> {
-    const url = `${this.apiUrl}distribution/get-center-target`;
+  getCenterTargetDetails(id:number, status: string = '', date: string = '', searchText: string = ''): Observable<ApiResponse> {
+    let url = `${this.apiUrl}distribution/get-center-target?id=${id}`;
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
+      url += `&date=${date}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
     return this.http.get<ApiResponse>(url, {
       headers: this.getHeaders(),
     });

@@ -7,6 +7,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { DestributionService } from '../../../../services/destribution-service/destribution-service.service';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-progress',
@@ -21,6 +22,7 @@ import { FormsModule } from '@angular/forms';
   ],
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.css',
+  providers: [DatePipe] // Add DatePipe to providers
 })
 export class ProgressComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
@@ -29,6 +31,8 @@ export class ProgressComponent implements OnChanges {
   targetArr!: Target[];
   targetCount: number = 0;
   selectedStatus: string = '';
+  selectedDate: Date | null = null; // Change type to Date | null
+  searchText: string = '';
 
   statusOptions = [
     { label: 'Pending', value: 'Pending' },
@@ -39,6 +43,7 @@ export class ProgressComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
+    private datePipe: DatePipe // Inject DatePipe
     // public tokenService: TokenService,
     // public permissionService: PermissionService
   ) { }
@@ -50,12 +55,25 @@ export class ProgressComponent implements OnChanges {
   }
 
   fetchData() {
-    this.DestributionSrv.getCenterTargetDetails().subscribe(
+    console.log(this.selectedDate);
+    
+    // Format the date for the API call
+    let formattedDate = '';
+    if (this.selectedDate) {
+      formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
+    }
+    
+    this.DestributionSrv.getCenterTargetDetails(this.centerObj.centerId, this.selectedStatus, formattedDate, this.searchText).subscribe(
       (res) => {
         this.targetArr = res.data;
         this.targetCount = res.data.length || 0;
       }
     )
+  }
+
+  clearDate() {
+    this.selectedDate = null;
+    this.fetchData();
   }
 
   isToday(dateString: string): boolean {
@@ -80,11 +98,21 @@ export class ProgressComponent implements OnChanges {
 
   changeStatus(){
     console.log(this.selectedStatus);
-    
+    this.fetchData();
+  }
+
+  clearSearch(){
+    this.searchText = '';
+    this.fetchData();
+  }
+
+  onSearch(){
+    this.fetchData();
   }
 }
+
 interface CenterDetails {
-  centerId: string;
+  centerId: number;
   centerName: string;
   centerRegCode: string;
 }

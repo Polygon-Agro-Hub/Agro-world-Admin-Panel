@@ -404,4 +404,5 @@ class DistributionCentre {
   latitude!: string;
   longitude!: string;
   companyName!: string;
+  companyCenerId!:number;
 }

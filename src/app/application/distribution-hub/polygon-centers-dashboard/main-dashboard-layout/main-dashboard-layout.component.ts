@@ -24,7 +24,7 @@ import { OfficerTargetComponent } from "../officer-target/officer-target.compone
 export class MainDashboardLayoutComponent implements OnInit {
   activeTab: string = 'Progress';
   centerObj: CenterDetails = {
-    centerId: '',
+    centerId: 0,
     centerName: '',
     centerRegCode: ''
   };
@@ -65,7 +65,7 @@ export class MainDashboardLayoutComponent implements OnInit {
 }
 
 interface CenterDetails {
-  centerId: string;
+  centerId: number;
   centerName: string;
   centerRegCode: string;
 }

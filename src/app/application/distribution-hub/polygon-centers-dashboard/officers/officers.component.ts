@@ -6,6 +6,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { DestributionService } from '../../../../services/destribution-service/destribution-service.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-officers',
@@ -16,6 +17,7 @@ import { DestributionService } from '../../../../services/destribution-service/d
     CalendarModule,
     DropdownModule,
     NgxPaginationModule,
+    FormsModule
   ],
   templateUrl: './officers.component.html',
   styleUrl: './officers.component.css',
@@ -26,6 +28,9 @@ export class OfficersComponent implements OnChanges {
   hasData: boolean = false;
   officersArr!: Officeres[];
   officerCount : number = 0;
+  selectRole:string = '';
+  selectStatus:string = '';
+  searchText: string = '';
 
   constructor(
     private router: Router,
@@ -41,14 +46,7 @@ export class OfficersComponent implements OnChanges {
   }
 
   fetchData() {
-
-    // Format the date for the API call
-    // let formattedDate = '';
-    // if (this.selectedDate) {
-    //   formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-    // }
-
-    this.DestributionSrv.getDistributedCenterOfficers(this.centerObj.centerId).subscribe(
+    this.DestributionSrv.getDistributedCenterOfficers(this.centerObj.centerId, this.selectRole, this.selectStatus, this.searchText).subscribe(
       (res) => {
         // this.targetArr = res.data;
         // this.targetCount = res.data.length || 0;
@@ -57,6 +55,15 @@ export class OfficersComponent implements OnChanges {
         this.officerCount = res.data?.length || 0;
       }
     )
+  }
+
+  onSearch(){
+    this.fetchData()
+  }
+
+  offSearch(){
+    this.searchText = '';
+    this.fetchData()
   }
 
 

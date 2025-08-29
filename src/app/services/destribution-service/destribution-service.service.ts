@@ -240,22 +240,21 @@ export class DestributionService {
   }
 
 
-  getDistributedCenterOfficers(id:number, status: string = '', searchText: string = ''): Observable<ApiResponse> {
+  getDistributedCenterOfficers(id:number, role: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
     let url = `${this.apiUrl}distribution/get-distribution-officers?id=${id}`;
-    // if (status) {
-    //   url += `&status=${status}`;
-    // }
+    if (status) {
+      url += `&status=${status}`;
+    }
 
-    // if (date) {
-    //   //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
-    //   url += `&date=${date}`;
-    // }
+    if (role) {
+      url += `&date=${role}`;
+    }
 
-    // if (searchText) {
-    //   url += `&searchText=${searchText}`;
-    // }
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
 
-    return this.http.get<ApiResponse>(url, {
+    return this.http.get<any>(url, {
       headers: this.getHeaders(),
     });
   }

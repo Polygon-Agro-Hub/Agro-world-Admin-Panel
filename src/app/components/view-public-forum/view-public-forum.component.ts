@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PublicForumService } from '../../services/plant-care/public-forum.service';
@@ -43,6 +43,7 @@ export class ViewPublicForumComponent implements OnInit {
   selectPostId!: number;
   isLoading = false;
   isLoadingpop = false;
+  activeDeleteMenu: number | null = null;
 
   constructor(
     private psotService: PublicforumService,
@@ -50,7 +51,7 @@ export class ViewPublicForumComponent implements OnInit {
     private publicForumSrv: PublicForumService,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) { }
+  ) {}
 
   sendMessage(id: number) {
     if (!this.replyMessage.trim()) {
@@ -111,8 +112,12 @@ export class ViewPublicForumComponent implements OnInit {
     });
   }
 
-  toggleDeleteButton() {
-    this.isDeleteVisible = !this.isDeleteVisible;
+  toggleDeleteButton(postId: number): void {
+    if (this.activeDeleteMenu === postId) {
+      this.activeDeleteMenu = null;
+    } else {
+      this.activeDeleteMenu = postId;
+    }
   }
 
   openPopup(id: number) {
@@ -153,12 +158,13 @@ export class ViewPublicForumComponent implements OnInit {
             return reply;
           });
         },
-        (error) => { }
+        (error) => {}
       );
   }
 
   deletePost(id: number) {
     this.isLoading = true;
+    this.activeDeleteMenu = null;
 
     Swal.fire({
       title: 'Are you sure?',
@@ -176,8 +182,6 @@ export class ViewPublicForumComponent implements OnInit {
             if (res) {
               Swal.fire('Deleted!', 'The post has been deleted.', 'success');
               this.isPopupVisible = false;
-              // this.isPopupVisible = false;
-
               this.fetchPostAllReply(this.postId);
               this.loadPosts();
               this.getCount();
@@ -197,6 +201,9 @@ export class ViewPublicForumComponent implements OnInit {
             this.isLoading = false;
           }
         );
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Handle cancel button click - reload the page
+        location.reload();
       }
     });
   }
@@ -239,6 +246,9 @@ export class ViewPublicForumComponent implements OnInit {
             this.isLoading = false;
           }
         );
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Handle cancel button click - reload the page
+        location.reload();
       }
     });
   }
@@ -287,6 +297,28 @@ export class ViewPublicForumComponent implements OnInit {
     this.replyMessage = trimmed; // Update model
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (
+      !target.closest('.relative.flex.flex-col') &&
+      !target.closest('.relative.flex.justify-center.items-center.mx-5')
+    ) {
+      this.activeDeleteMenu = null;
+    }
+  }
+
+  toggleDeleteMenu(commentId: number): void {
+    if (this.activeDeleteMenu === commentId) {
+      this.activeDeleteMenu = null;
+    } else {
+      this.activeDeleteMenu = commentId;
+    }
+  }
+
+  hasReplies(chatId: number): boolean {
+  return this.countReply && this.countReply.some(i => i.chatId === chatId);
+}
 }
 
 class PublicForum {
@@ -296,9 +328,9 @@ class PublicForum {
   lastName!: string;
   createdAt!: string;
   timeAgo?: string;
-  replyStaffId!:number | null
-  staffFirstName!:string
-  staffLastName!:string
+  replyStaffId!: number | null;
+  staffFirstName!: string;
+  staffLastName!: string;
 }
 
 class ReplyCount {

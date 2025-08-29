@@ -155,3 +155,11 @@
     color: #8B8B8B;
     /* gray-300 */
 }
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.1rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.1rem !important;
+}

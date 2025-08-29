@@ -290,23 +290,23 @@
           <td class="py-3 dark:text-textDark text-center">
             <span
               *ngIf="item.reply === null"
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              class="px-4 py-3 text-center text-textLight dark:text-textDark italic opacity-60"
               >No</span
             >
             <span
               *ngIf="item.reply != null"
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              class="px-4 py-3 text-center text-textLight dark:text-textDark underline"
               >Yes</span
             >
           </td>
           <td class="py-3 dark:text-textDark text-center">
             <div *ngIf="item.reply === null">
               <button
-                disabled
-                class="w-5 h-5 text-blue-100"
-              >
-                <i class="fa-solid fa-file-export"></i>
-              </button>
+    disabled
+    class="w-5 h-5 text-blue-100"
+>
+    <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block opacity-50 grayscale" />
+</button>
             </div>
 
             <div *ngIf="item.reply != null">
@@ -314,7 +314,7 @@
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="fetchComplain(item.id, item.language === 'Sinhala' ? item.officerNameSinhala : item.language === 'Tamil' ? item.officerNameTamil : item.officerName, item.language)"
               >
-                <i class="fa-solid fa-file-export"></i>
+                <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
               </button>
             </div>
           </td>

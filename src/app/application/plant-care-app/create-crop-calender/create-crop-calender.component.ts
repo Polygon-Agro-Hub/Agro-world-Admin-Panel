@@ -709,6 +709,18 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
+  cultivationMethodOptions = [
+  { label: 'Open Field', value: 'Open Field' },
+  { label: 'Protected Field', value: 'Protected Field' }
+];
+
+
+  natureOptions = [
+  { label: 'Conventional Farming', value: 'Conventional Farming' },
+  { label: 'GAP Farming', value: 'GAP Farming' },
+  { label: 'Organic Farming', value: 'Organic Farming' }
+];
+
   isFieldInvalid(field: string): boolean {
     const control = this.cropForm.get(field);
     return control ? control.invalid && (control.dirty || control.touched) : false;

@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="this.itemId == null">
-  <button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="back()" class=" text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -16,7 +16,7 @@
       <!-- Crop Name -->
       <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
         <div>
-          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark">Crop Name*</label>
+          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark">Crop Name *</label>
           <select id="groupId" formControlName="groupId"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
             <option value="">Select a crop</option>
@@ -39,7 +39,7 @@
 
         <div>
           <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety
-            Name By English*</label>
+            Name By English *</label>
           <input type="text" id="varietyNameEnglish" formControlName="varietyNameEnglish"
             (input)="onVarietyNameInput($event, 'english')"
             (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)"
@@ -61,7 +61,7 @@
 
         <div class="md:col-span-2 my-3">
           <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
-            English)*</label>
+            English) *</label>
           <textarea id="descriptionEnglish" formControlName="descriptionEnglish"
             (input)="onDescriptionInput($event, 'english')"
             (keypress)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)"
@@ -82,7 +82,7 @@
 
         <div>
           <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety
-            Name By Sinhala*</label>
+            Name By Sinhala *</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             (input)="onVarietyNameInput($event, 'sinhala')"
             (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
@@ -104,7 +104,7 @@
 
         <div class="md:col-span-2 my-3">
           <label for="descriptionSinhala"
-            class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala)*</label>
+            class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
             (input)="onDescriptionInput($event, 'sinhala')"
             (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
@@ -126,7 +126,7 @@
 
         <div>
           <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
-            By Tamil*</label>
+            By Tamil *</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
             (input)="onVarietyNameInput($event, 'tamil')" (paste)="validateTamilPaste($event)"
             (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
@@ -148,7 +148,7 @@
 
         <div class="md:col-span-2 my-3">
           <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-            (in Tamil)*</label>
+            (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
             (input)="onDescriptionInput($event, 'tamil')" (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
             (paste)="validateTamilPaste($event)" name="descriptionTamil" rows="3"
@@ -171,7 +171,7 @@
 
         <!-- Button -->
         <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
-          Add Image*
+          Add Image *
           <span
             class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
             <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
@@ -187,7 +187,7 @@
 
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
-          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color*</label>
+          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
           <ngx-colors ngx-colors-trigger formControlName="bgColor" (colorChange)="onColorChange($event)"
             style="display: inline-block; margin: 5px">
           </ngx-colors>
@@ -218,7 +218,7 @@
 </div>
 
 <div *ngIf="this.itemId != null">
-  <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="backEdit()" class=" text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -248,7 +248,7 @@
 
       <div>
         <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
-          By English</label>
+          By English *</label>
         <input type="text" id="varietyNameEnglish" [(ngModel)]="newsItems[0].varietyNameEnglish"
   (input)="onEditVarietyNameInput($event, 'english')"
   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
@@ -268,7 +268,7 @@
 
       <div class="md:col-span-2 my-3">
         <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
-          English)</label>
+          English) *</label>
         <textarea id="descriptionEnglish" name="descriptionEnglish" rows="3"
   [(ngModel)]="newsItems[0].descriptionEnglish"
   (input)="onEditDescriptionInput($event, 'english')"
@@ -285,7 +285,7 @@
 
       <div>
         <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
-          By Sinhala</label>
+          By Sinhala *</label>
         <input type="text" id="varietyNameSinhala" [(ngModel)]="newsItems[0].varietyNameSinhala"
   (input)="onEditVarietyNameInput($event, 'sinhala')"
   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
@@ -293,7 +293,7 @@
         <div *ngIf="
             verietySinNameInput.touched && !newsItems[0].varietyNameSinhala
           " class="text-red-500 text-sm mt-1">
-          <div>Sinhala Veriety name is required</div>
+          <div>Sinhala Variety name is required</div>
         </div>
 
         <!-- Error: Pattern Validation -->
@@ -307,7 +307,7 @@
 
       <div class="md:col-span-2 my-3">
         <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Description
-          (in Sinhala)</label>
+          (in Sinhala) *</label>
         <textarea id="descriptionSinhala" name="descriptionSinhala" rows="3"
   [(ngModel)]="newsItems[0].descriptionSinhala"
   (input)="onEditDescriptionInput($event, 'sinhala')"
@@ -316,7 +316,7 @@
         <div *ngIf="
             verietyDisSinNameInput.touched && !newsItems[0].descriptionSinhala
           " class="text-red-500 text-sm mt-1">
-          <div>Sinhala Veriety Discrtiption is required</div>
+          <div>Sinhala Variety Discrtiption is required</div>
         </div>
       </div>
 
@@ -324,13 +324,13 @@
 
       <div>
         <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name By
-          Tamil</label>
+          Tamil *</label>
         <input type="varietyNameTamil" id="varietyNameTamil" [(ngModel)]="newsItems[0].varietyNameTamil"
   (input)="onEditVarietyNameInput($event, 'tamil')"
   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
   #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
         <div *ngIf="cropTamilNameInput.touched && !newsItems[0].varietyNameTamil" class="text-red-500 text-sm mt-1">
-          <div>Tamil Veriety name is required</div>
+          <div>Tamil Variety name is required</div>
         </div>
 
         <!-- Error: Pattern Validation -->
@@ -345,13 +345,13 @@
 
     <div class="md:col-span-2 my-3">
       <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
-        Tamil)</label>
+        Tamil) *</label>
       <textarea id="descriptionTamil" name="descriptionTamil" rows="3" [(ngModel)]="newsItems[0].descriptionTamil"
   (input)="onEditDescriptionInput($event, 'tamil')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   #VerietyDisTamilInput="ngModel" required></textarea>
       <div *ngIf="VerietyDisTamilInput.touched && !newsItems[0].descriptionTamil" class="text-red-500 text-sm mt-1">
-        <div>Tamil Veriety Discription is required</div>
+        <div>Tamil Variety Discription is required</div>
       </div>
     </div>
 
@@ -362,7 +362,7 @@
 
     <!-- Button -->
     <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
-      Add Image
+      Add Image *
       <span
         class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
         <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
@@ -378,7 +378,7 @@
 
     <!-- Add Background Color -->
     <div class="flex items-center space-x-4">
-      <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color</label>
+      <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
       <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
         style="display: inline-block; margin: 5px" #bgColorInput="ngModel">
       </ngx-colors>

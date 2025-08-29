@@ -258,4 +258,25 @@ export class DestributionService {
       headers: this.getHeaders(),
     });
   }
+
+
+  getCenterOutForDlvryOrders(id:number, date: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
+    let url = `${this.apiUrl}distribution/get-center-out-for-dlvry-orders?id=${id}`;
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
+      url += `&date=${date}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<ApiResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
 }

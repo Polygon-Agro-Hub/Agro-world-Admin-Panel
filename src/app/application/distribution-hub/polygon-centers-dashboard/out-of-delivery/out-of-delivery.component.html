@@ -4,13 +4,13 @@
     <div class="pt-5 pb-2 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          WPCK-02 Kollupitiya Central
+          {{centerObj.centerRegCode}} {{centerObj.centerName}}
         </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All (05)
+            All ({{orderCount | number :'2.0'}})
           </h2>
         </div>
 
@@ -151,26 +151,26 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-200" *ngFor="let item of orderArr; let i = index">
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              01
+              {{i + 1 | number :'2.0'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              2506200010
+              {{item.invNo}}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              Hashan Alvis
+              {{item.firstNameEnglish}} {{item.lastNameEnglish  }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               Today 8-12 AM
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              10.00 AM
+              {{item.outDlvrDate | date:'shortTime'}}
             </td>
             <td class="px-4 py-3 text-center">
-              <span class="text-[#FF0000] font-medium"> Late </span>
-              <span class="text-[#415CFF] font-medium"> On Time </span>
+              <span *ngIf="item.outDlvrStatus ==='Late'" class="text-[#FF0000] font-medium"> Late </span>
+              <span *ngIf="item.outDlvrStatus ==='On Time'" class="text-[#415CFF] font-medium"> On Time </span>
             </td>
           </tr>
           <tr>

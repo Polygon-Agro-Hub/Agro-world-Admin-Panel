@@ -874,7 +874,7 @@ export class UpdateDistributionOfficerComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
+        this.navigatePath('/steckholders/action/view-distribution-officers');
       }
     });
   }

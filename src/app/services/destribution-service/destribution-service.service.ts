@@ -238,4 +238,25 @@ export class DestributionService {
       headers: this.getHeaders(),
     });
   }
+
+
+  getDistributedCenterOfficers(id:number, status: string = '', searchText: string = ''): Observable<ApiResponse> {
+    let url = `${this.apiUrl}distribution/get-distribution-officers?id=${id}`;
+    // if (status) {
+    //   url += `&status=${status}`;
+    // }
+
+    // if (date) {
+    //   //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
+    //   url += `&date=${date}`;
+    // }
+
+    // if (searchText) {
+    //   url += `&searchText=${searchText}`;
+    // }
+
+    return this.http.get<ApiResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
 }

@@ -9,7 +9,7 @@ import { CropCalendarService } from '../../../services/plant-care/crop-calendar.
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
-
+import { DropdownModule } from 'primeng/dropdown';
 interface NewsItem {
   id: number;
   cropNameEnglish: string;
@@ -26,6 +26,7 @@ interface NewsItem {
   imports: [
     CommonModule,
     FormsModule,
+      DropdownModule,
     LoadingSpinnerComponent,
     NgxColorsModule,
   ],
@@ -98,7 +99,7 @@ export class CreateCropGroupComponent {
     bgColor: '',
     fileName: '',
   };
-  categories = ['Fruit', 'Grain', 'Mushrooms', 'Vegetables'];
+
   imagePreview: string | ArrayBuffer | null = null;
   isLoading = false;
   selectedFileName: string = '';
@@ -119,6 +120,11 @@ export class CreateCropGroupComponent {
     private tokenService: TokenService,
      private location: Location,
   ) {}
+categories = [
+  { label: 'Vegetables', value: 'Vegetables' },
+  { label: 'Fruits', value: 'Fruits' },
+  { label: 'Grains', value: 'Grains' }
+];
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {

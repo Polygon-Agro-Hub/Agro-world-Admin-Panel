@@ -442,7 +442,7 @@ export class CreateVarietyComponent implements OnInit {
       if (result.isConfirmed) {
         this.selectedFile = null;
         this.selectedImage = null;
-        this.router.navigate(['plant-care/action']);
+        this.router.navigate(['plant-care/action/view-crop-group']);
       }
     });
   }
@@ -718,7 +718,7 @@ export class CreateVarietyComponent implements OnInit {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/action']);
+      this.router.navigate(['/plant-care/action/view-crop-group']);
     }
   });
 }

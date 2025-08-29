@@ -2,7 +2,7 @@
 
 <!-- Creating Area -->
 <div *ngIf="this.itemId==null">
-  <button (click)="backCreate()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="backCreate()" class=" text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -15,7 +15,7 @@
       <!-- Crop Name -->
       <div>
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By English*
+          Crop Name By English *
         </label>
         <input
           type="text"
@@ -44,7 +44,7 @@
       <!-- Crop Name Sinhala -->
       <div>
         <label for="cropNameSin" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By Sinhala*
+          Crop Name By Sinhala *
         </label>
         <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -67,7 +67,7 @@
       <!-- Crop Name Tamil -->
       <div>
         <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By Tamil*
+          Crop Name By Tamil *
         </label>
         <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -89,14 +89,24 @@
 
       <!-- Select Parent Category -->
       <div>
-        <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent
-          Category*</label>
-        <select id="parentCategory" [(ngModel)]="cropGroup.parentCategory" name="parentCategory"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #parentCategoryInput="ngModel" required>
-          <option value="" disabled>Select Category</option>
-          <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-        </select>
+        <label for="parentCategory" class="block text-sm font-medium mb-1 text-gray-700 dark:text-textDark">Select Parent
+          Category *</label>
+       <p-dropdown
+  id="parentCategory"
+  [(ngModel)]="cropGroup.parentCategory"
+  [options]="categories"
+  placeholder="Select Category"
+  [filter]="true"
+  showClear="true"
+  [ngClass]="{
+    'border-red-500':
+      !cropGroup.parentCategory && parentCategoryInput?.touched
+  }"
+  class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md  py-2 shadow-sm"
+  #parentCategoryInput="ngModel"
+>
+</p-dropdown>
+
         
         <!-- Validation Error -->
         <div *ngIf="parentCategoryInput.touched && parentCategoryInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -109,7 +119,7 @@
 
       <!-- Button -->
       <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
-        Add Image*
+        Add Image *
         <span
           class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
           <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
@@ -130,7 +140,7 @@
 
       <!-- Add Background Color -->
       <div class="flex items-center space-x-4">
-        <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color*</label>
+        <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
         <ngx-colors ngx-colors-trigger [(ngModel)]="cropGroup.bgColor" (colorChange)="onColorChange($event)"
           style="display: inline-block; margin:5px;" #bgColorInput="ngModel" required>
         </ngx-colors>
@@ -154,7 +164,7 @@
 
 <!-- Editing Area -->
 <div *ngIf="this.itemId!=null">
-  <button (click)="backCreate()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="backCreate()" class=" text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -168,7 +178,7 @@
         <!-- Crop Name -->
         <div>
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Crop Name By English*
+            Crop Name By English *
           </label>
           <input
             type="text"
@@ -197,7 +207,7 @@
         <!-- Crop Name Sinhala -->
         <div>
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
-            Sinhala*</label>
+            Sinhala *</label>
           <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark" 
             required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$"  (keydown)="allowOnlySinhala($event)" />
@@ -216,7 +226,7 @@
         <!-- Crop Name Tamil -->
         <div>
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
-            Tamil*</label>
+            Tamil *</label>
           <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required #cropNameTamilInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" (keydown)="allowOnlyTamil($event)"/>
@@ -234,14 +244,24 @@
 
         <!-- Select Parent Category -->
         <div>
-          <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent
-            Category*</label>
-          <select id="parentCategory" [(ngModel)]="newsItems[0].category" name="parentCategory" #categoryInput="ngModel"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required>
-            <option value="" disabled>Select Category</option>
-            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-          </select>
+          <label for="parentCategory" class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Select Parent
+            Category *</label>
+     <p-dropdown
+  id="parentCategory"
+  [(ngModel)]="newsItems[0].category"
+  [options]="categories"
+  placeholder="Select Category"
+  optionLabel="label"
+  optionValue="value"
+  [filter]="true"
+  showClear="true"
+  class="w-full mt-1  py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  [ngClass]="{'border-red-500': !newsItems[0].category && categoryInput?.touched}"
+  #categoryInput="ngModel"
+  required
+>
+</p-dropdown>
+
           
           <!-- Validation Error -->
           <div *ngIf="categoryInput.touched && categoryInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -254,7 +274,7 @@
 
         <!-- Button -->
         <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
-          Add Image*
+          Add Image *
           <span
             class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
             <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
@@ -271,7 +291,7 @@
 
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
-          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color*</label>
+          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
           <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
             style="display: inline-block; margin:5px;" #bgColorInputEdit="ngModel" required>
           </ngx-colors>

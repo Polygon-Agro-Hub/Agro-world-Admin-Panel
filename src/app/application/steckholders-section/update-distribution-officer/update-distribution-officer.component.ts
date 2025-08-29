@@ -29,6 +29,22 @@ interface PhoneCode {
   name: string;
 }
 
+interface DistributionOfficers {
+  id: number;
+  image: string;
+  firstNameEnglish: string;
+  lastNameEnglish: string;
+  phoneNumber01: string;
+  companyNameEnglish: string;
+  empId: any;
+  nic: string;
+  status: string;
+  claimStatus: number;
+  jobRole: string;
+  created_at: string;
+  centerName: string;
+}
+
 @Component({
   selector: 'app-update-distribution-officer',
   standalone: true,
@@ -45,7 +61,7 @@ interface PhoneCode {
 })
 export class UpdateDistributionOfficerComponent {
   userForm: FormGroup = new FormGroup({});
-
+page: number = 1;
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
@@ -66,6 +82,11 @@ export class UpdateDistributionOfficerComponent {
   initiateId!: string;
   errorMessage: string = '';
   img!: string;
+  isPopupVisible = false;
+  selectStatus: string = '';
+  statusFilter: any = '';
+  role: any = '';
+  totalItems: number = 0;
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -84,6 +105,12 @@ export class UpdateDistributionOfficerComponent {
   branchOptions: any[] = [];
   districtOptions: any[] = [];
   invalidFields: Set<string> = new Set();
+  itemsPerPage: number = 10;
+  selectCenterStatus: string = '';
+  centerId: number | null = null;
+  searchNIC: string = '';
+  hasData: boolean = false;
+  distributionOfficers: DistributionOfficers[] = [];
 
   // Remove the redundant `district` array
   // Keep only the `districts` array
@@ -244,7 +271,9 @@ export class UpdateDistributionOfficerComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/view-distribution-officers']);
+        this.router.navigate([
+          '/steckholders/action/view-distribution-officers',
+        ]);
       }
     });
   }
@@ -1300,7 +1329,9 @@ export class UpdateDistributionOfficerComponent {
                 'Distribution Officer Updated Successfully',
                 'success'
               );
-              this.navigatePath('/steckholders/action/view-distribution-officers');
+              this.navigatePath(
+                '/steckholders/action/view-distribution-officers'
+              );
             },
             (error: any) => {
               this.isLoading = false;
@@ -1402,10 +1433,147 @@ export class UpdateDistributionOfficerComponent {
     return 'Please enter a valid email in the format: example@domain.com';
   }
 
-  openResetPasswordModal() {
-throw new Error('Method not implemented.');
+  openPopup(item: any) {
+  const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+
+  // Dynamic message based on status
+  let message = '';
+  if (item.status === 'Rejected') {
+    message = 'Are you sure you want to approve this distribution officer?';
+  } else if (item.status === 'Not Approved') {
+    message = 'Are you sure you want to approve this distribution officer?';
+  }
+
+  const tableHtml = `
+    <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
+      <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
+      <div>
+        <p class="text-center dark:text-white">${message}</p>
+      </div>
+      <div class="flex justify-center mt-4">
+        ${showApproveButton ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>' : ''}
+      </div>
+    </div>
+  `;
+
+  Swal.fire({
+    html: tableHtml,
+    showConfirmButton: false,
+    width: 'auto',
+    background: 'transparent',
+    backdrop: 'rgba(0, 0, 0, 0.5)',
+    grow: 'row',
+    showClass: { popup: 'animate__animated animate__fadeIn' },
+    hideClass: { popup: 'animate__animated animate__fadeOut' },
+    didOpen: () => {
+      if (showApproveButton) {
+        document
+          .getElementById('approveButton')
+          ?.addEventListener('click', () => {
+            Swal.close();
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            this.distributionOfficerServ.ChangeStatus(item.id, 'Approved').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'The Collection Officer was approved successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                  this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              },
+              () => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while approving. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                });
+              }
+            );
+          });
+      }
+    },
+  });
 }
 
+fetchAllDistributionOfficer(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    centerStatus: string = this.selectCenterStatus,
+    status: string = this.selectStatus
+  ) {
+    this.isLoading = true;
+    this.route.queryParams.subscribe((params) => {
+      this.centerId = params['id'] ? +params['id'] : null;
+    });
+
+    if (this.centerId === null) {
+      this.distributionOfficerServ
+        .fetchAllDistributionOfficers(
+          page,
+          limit,
+          centerStatus,
+          status,
+          this.searchNIC,
+          this.statusFilter?.id,
+          this.role?.jobRole,
+        )
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            if (response.total > 0) {
+              this.hasData = true
+            } else {
+              this.hasData = false
+            }
+            this.distributionOfficers = response.items;
+            this.totalItems = response.total;
+          },
+          (error) => {
+            this.isLoading = false;
+          }
+        );
+    } else {
+      this.distributionOfficerServ
+        .fetchAllDistributionOfficercenter(
+          page,
+          limit,
+          centerStatus,
+          status,
+          this.searchNIC,
+          this.statusFilter?.id,
+          this.role?.jobRole,
+          this.centerId ? this.centerId : ''
+        )
+        .subscribe(
+          (response) => {
+            this.isLoading = false;
+            this.distributionOfficers = response.items;
+            this.totalItems = response.total;
+            this.hasData = response.total > 0;
+          },
+          (error) => {
+            this.isLoading = false;
+          }
+        );
+    }
+  }
 }
 
 class Personal {

@@ -289,11 +289,11 @@ export class ViewDistributionOfficerComponent {
   // Dynamic message based on status
   let message = '';
   if (item.status === 'Approved') {
-    message = 'Are you sure you want to reject this collection officer?';
+    message = 'Are you sure you want to reject this distribution officer?';
   } else if (item.status === 'Rejected') {
-    message = 'Are you sure you want to approve this collection officer?';
+    message = 'Are you sure you want to approve this distribution officer?';
   } else if (item.status === 'Not Approved') {
-    message = 'Are you sure you want to approve or reject this collection officer?';
+    message = 'Are you sure you want to approve or reject this distribution officer?';
   }
 
   const tableHtml = `

@@ -476,12 +476,12 @@
                   class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Approve collection officer'
+                      'Approve distribution officer'
                     ) || tokenService.getUserDetails().role === '1'
                   "
                   (click)="
                     permissionService.hasPermission(
-                      'Approve collection officer'
+                      'Approve distribution officer'
                     ) || tokenService.getUserDetails().role === '1'
                       ? openPopup(item)
                       : null
@@ -528,7 +528,7 @@
 
             <td
               *ngIf="
-                permissionService.hasPermission('Manage DIO / DBM / DCM') ||
+                permissionService.hasPermission('Manage DIO / DCM') ||
                 tokenService.getUserDetails().role === '1'
               "
               class="py-3 text-center"

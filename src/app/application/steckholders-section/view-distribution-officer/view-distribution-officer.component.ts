@@ -559,6 +559,12 @@ export class ViewDistributionOfficerComponent {
     this.selectStatus = '';
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
   }
+
+  updateDistributionOfficer(id: number) {
+    this.navigatePath(
+      `/steckholders/action/view-distribution-officers/update-distribution-officer/${id}`
+    );
+  }
 }
 
 class Company {

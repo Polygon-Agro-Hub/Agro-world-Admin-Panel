@@ -122,7 +122,7 @@
       </button>
       <button
         type="submit"
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md cursor-pointer"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md cursor-pointer hover:bg-[#88c6fc]"
         (click)="updateMeAdmin()"
       >
         Save
@@ -322,7 +322,7 @@
             >
               <button
                 [disabled]="changePasswordForm.invalid"
-                class="px-4 py-2 bg-[#3980C0] text-white rounded-md cursor-pointer hover:bg-[#73C011] focus:outline-none focus:ring focus:ring-green-200"
+                class="px-4 py-2 bg-[#3980C0] text-white rounded-md cursor-pointer hover:bg-[#88c6fc] focus:outline-none focus:ring focus:ring-green-200"
                 (click)="savePasswordChanges()"
               >
                 Save

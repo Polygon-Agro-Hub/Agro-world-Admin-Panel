@@ -164,42 +164,17 @@ export class BannerListComponent {
 }
 
   cancelUploadRetail(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'Your selected image and data will be lost!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-         customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.bannerName = '';
-      this.selectedFile = null;
-      this.selectedRetailImageUrl = null;
-      this.ViewRetailAddBanner = false;
-    }
-  });
+  this.bannerName = '';
+  this.selectedFile = null;
+  this.selectedRetailImageUrl = null;
+  this.ViewRetailAddBanner = false;
 }
-  cancelUploadWholesale(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'Your selected image and data will be lost!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-  }).then((result) => {
-    if (result.isConfirmed) {
-   this.bannerNameWholesale = '';
-    this.selectedFileWholesale = null;
-    this.selectedWholesaleImageUrl = null;
-    this.ViewWholesaleAddBanner = false;
-    }
-  });
+
+cancelUploadWholesale(): void {
+  this.bannerNameWholesale = '';
+  this.selectedFileWholesale = null;
+  this.selectedWholesaleImageUrl = null;
+  this.ViewWholesaleAddBanner = false;
 }
 
 

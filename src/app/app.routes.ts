@@ -173,6 +173,7 @@ import { CreateDistributionOfficerComponent } from './application/steckholders-s
 import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
 import { AssignCitiesComponent } from './application/distribution-hub/assign-cities/assign-cities.component';
 import { MainDashboardLayoutComponent } from './application/distribution-hub/polygon-centers-dashboard/main-dashboard-layout/main-dashboard-layout.component';
+import { UpdateDistributionOfficerComponent } from './application/steckholders-section/update-distribution-officer/update-distribution-officer.component';
 
 export const routes: Routes = [
   {
@@ -481,6 +482,10 @@ export const routes: Routes = [
                     path: 'create-distribution-officer',
                     component: CreateDistributionOfficerComponent,
                   },
+                  {
+                    path: 'update-distribution-officer/:id',
+                    component: UpdateDistributionOfficerComponent,
+                  }
                 ],
               },
 

@@ -367,4 +367,36 @@ export class DistributionHubService {
     });
   }
 
+  getOfficerReportById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}distribution/officer-details-monthly/${id}`, {
+      headers,
+    });
+  }
+
+  editDistributionOfficer(
+    person: any,
+    id: number,
+    selectedImage: any
+  ): Observable<any> {
+    const formData = new FormData();
+    formData.append('officerData', JSON.stringify(person)); // Attach officer data as a string
+    if (selectedImage) {
+      formData.append('file', selectedImage); // Attach the file (ensure the key matches the expected field name on the backend)
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.put(
+      `${this.apiUrl}distribution/update-distribution-officer-details/${id}`,
+      formData,
+      {
+        headers,
+      }
+    );
+  }
+
 }

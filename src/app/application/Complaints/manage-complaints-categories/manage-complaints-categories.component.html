@@ -35,7 +35,7 @@
             <tr class="border-b-2 border-[#A4A4A4]">
                 <td class="px-6 py-2 dark:text-white text-[#5C5C5C] text-[16px]">No</td>
                 <td class="px-6 py-2 dark:text-white text-[#5C5C5C] text-[16px]">Category Name</td>
-                <td class="px-6 py-2 dark:text-white text-[#5C5C5C]  text-[16px]">User Name</td>
+                <td class="px-6 py-2 dark:text-white text-[#5C5C5C]  text-[16px]">Last Modified By</td>
                 <td class="px-10 py-2 dark:text-white text-[#5C5C5C] text-[16px]"></td>
             </tr>
             <tbody>
@@ -44,7 +44,7 @@
                     <td class="px-6 py-2 dark:text-white text-[16px]">{{item.categoryEnglish}}</td>
                     <td class="px-6 py-2 dark:text-white text-[16px]">{{item.role}}</td>
                     <td class="px-10 py-2">
-                        <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0] text-[16px]"
+                        <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0] text-[16px] hover:text-[#87c6fd] cursor-pointer"
                             (click)="editComplain(item.id)"></i>
                     </td>
                 </tr>

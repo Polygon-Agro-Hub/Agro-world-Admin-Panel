@@ -46,10 +46,9 @@
   background-color: #374151;
   border-color: #6b7280;
 }
-
 ::ng-deep .custom-dropdown-panel {
-  max-height: 200px;
-  overflow: hidden;
+  max-height: 300px; /* or more depending on number of items */
+  overflow-y: auto;  /* allow vertical scrolling */
 }
 
 ::ng-deep .p-dropdown-items-wrapper {

@@ -14,6 +14,7 @@ class CropTask {
   taskIndex: string = '';
   days: string = '';
   startingDate: string = ''; // Added missing property
+  hasVideoLink: string = ''; // Added
   taskTypeEnglish: string = '';
   taskTypeSinhala: string = '';
   taskTypeTamil: string = '';
@@ -73,28 +74,48 @@ export class EditTaskComponent implements OnInit {
       reqImages: ['0', [Validators.pattern(/^(0|[1-9][0-9]*)$/)]],
       hasImageLink: [false],
       imageLink: [''],
+      hasVideoLink: [false], // Added
       videoLinkEnglish: [''],
       videoLinkSinhala: [''],
       videoLinkTamil: [''],
     });
   }
 
-  ngOnInit() {
+ngOnInit() {
     this.itemId = this.route.snapshot.params['id'];
     this.getTaskById(this.itemId);
 
-    // Update imageLink validation based on hasImageLink
+    // Update imageLink validation
     this.taskForm.get('hasImageLink')?.valueChanges.subscribe((hasImageLink) => {
       const imageLinkControl = this.taskForm.get('imageLink');
       if (hasImageLink) {
         imageLinkControl?.setValidators([Validators.required]);
+        imageLinkControl?.setValue(this.taskItems.imageLink || '');
       } else {
         imageLinkControl?.clearValidators();
+        imageLinkControl?.setValue('');
       }
       imageLinkControl?.updateValueAndValidity();
     });
-  }
 
+    // Update video link validation and restore fetched values
+    this.taskForm.get('hasVideoLink')?.valueChanges.subscribe((hasVideoLink) => {
+      const videoFields = ['videoLinkEnglish', 'videoLinkSinhala', 'videoLinkTamil'];
+      videoFields.forEach((field) => {
+        const control = this.taskForm.get(field);
+        if (hasVideoLink) {
+          control?.setValidators([Validators.required]);
+          // Restore fetched value from taskItems
+          const taskItemField = field as keyof CropTask;
+          control?.setValue(this.taskItems[taskItemField] || '');
+        } else {
+          control?.clearValidators();
+          control?.setValue('');
+        }
+        control?.updateValueAndValidity();
+      });
+    });
+  }
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
   }
@@ -163,7 +184,7 @@ export class EditTaskComponent implements OnInit {
     }
   }
 
-  getTaskById(id: string) {
+ getTaskById(id: string) {
     this.taskService.getCropTaskBycropId(id).subscribe(
       (data) => {
         this.taskItems = data;
@@ -183,6 +204,7 @@ export class EditTaskComponent implements OnInit {
           reqImages: this.taskItems.reqImages || '0',
           hasImageLink: !!this.taskItems.imageLink,
           imageLink: this.taskItems.imageLink,
+          hasVideoLink: !!(this.taskItems.videoLinkEnglish || this.taskItems.videoLinkSinhala || this.taskItems.videoLinkTamil),
           videoLinkEnglish: this.taskItems.videoLinkEnglish,
           videoLinkSinhala: this.taskItems.videoLinkSinhala,
           videoLinkTamil: this.taskItems.videoLinkTamil,
@@ -202,7 +224,6 @@ export class EditTaskComponent implements OnInit {
       }
     );
   }
-
   onCancel() {
     Swal.fire({
       icon: 'warning',
@@ -241,73 +262,70 @@ export class EditTaskComponent implements OnInit {
     });
   }
 
-  updateTask() {
-  this.formSubmitted = true;
+ updateTask() {
+    this.formSubmitted = true;
 
-  // Mark all form controls as touched to trigger validation messages
-  Object.keys(this.taskForm.controls).forEach(key => {
-    this.taskForm.get(key)?.markAsTouched();
-  });
-
-  // Check if the form is invalid
-  if (this.taskForm.invalid) {
-    // Array to store missing or invalid field messages
-    const missingFields: string[] = [];
-
-    // Check each form control for errors
+    // Mark all form controls as touched
     Object.keys(this.taskForm.controls).forEach(key => {
-      const control = this.taskForm.get(key);
-      if (control?.invalid) {
-        let fieldName = key;
-        let errorMessage = '';
-        
-        // Customize field names
-        if (key.includes('English')) fieldName = key.replace('English', ' (English)');
-        if (key.includes('Sinhala')) fieldName = key.replace('Sinhala', ' (Sinhala)');
-        if (key.includes('Tamil')) fieldName = key.replace('Tamil', ' (Tamil)');
-        if (key === 'reqImages') fieldName = 'Required Images';
-        if (key === 'imageLink') fieldName = 'Image Link';
-        
-        // Specific error messages
-        if (control.errors?.['required']) {
-          errorMessage = `${fieldName} is required`;
-        } else if (control.errors?.['pattern']) {
-          if (key === 'reqImages') {
-            errorMessage = 'Required Images must be a valid number (no leading zeros or decimals)';
-          } else {
-            errorMessage = `${fieldName} has an invalid format`;
-          }
-        } else {
-          errorMessage = `${fieldName} is invalid`;
-        }
-        
-        missingFields.push(errorMessage);
-      }
+      this.taskForm.get(key)?.markAsTouched();
     });
 
-    // If there are validation errors, show popup and stop submission
-    if (missingFields.length > 0) {
-      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-      missingFields.forEach((field) => {
-        errorMessage += `<li>${field}</li>`;
-      });
-      errorMessage += '</ul></div>';
+    // Check form validity
+    if (this.taskForm.invalid) {
+      const missingFields: string[] = [];
+      Object.keys(this.taskForm.controls).forEach(key => {
+        const control = this.taskForm.get(key);
+        if (control?.invalid) {
+          let fieldName = key;
+          if (key.includes('English')) fieldName = key.replace('English', ' (English)');
+          if (key.includes('Sinhala')) fieldName = key.replace('Sinhala', ' (Sinhala)');
+          if (key.includes('Tamil')) fieldName = key.replace('Tamil', ' (Tamil)');
+          if (key === 'reqImages') fieldName = 'Required Images';
+          if (key === 'imageLink') fieldName = 'Image Link';
+          if (key === 'videoLinkEnglish') fieldName = 'Video Link (English)';
+          if (key === 'videoLinkSinhala') fieldName = 'Video Link (Sinhala)';
+          if (key === 'videoLinkTamil') fieldName = 'Video Link (Tamil)';
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing or Invalid Information',
-        html: errorMessage,
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-          htmlContainer: 'text-left',
-        },
+          const errorMessage = control.errors?.['required']
+            ? `${fieldName} is required`
+            : control.errors?.['pattern']
+              ? `${fieldName} has an invalid format`
+              : `${fieldName} is invalid`;
+          missingFields.push(errorMessage);
+        }
       });
 
-      return;
+      if (missingFields.length > 0) {
+        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        missingFields.forEach((field) => {
+          errorMessage += `<li>${field}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
     }
-  }
+
+    // Update taskItems with form values
+    this.taskItems = {
+      ...this.taskItems,
+      ...this.taskForm.value,
+      imageLink: this.taskForm.get('hasImageLink')?.value ? this.taskForm.get('imageLink')?.value : null,
+      videoLinkEnglish: this.taskForm.get('hasVideoLink')?.value ? this.taskForm.get('videoLinkEnglish')?.value : null,
+      videoLinkSinhala: this.taskForm.get('hasVideoLink')?.value ? this.taskForm.get('videoLinkSinhala')?.value : null,
+      videoLinkTamil: this.taskForm.get('hasVideoLink')?.value ? this.taskForm.get('videoLinkTamil')?.value : null,
+    };
 
   // Update taskItems with form values
   this.taskItems = {
@@ -474,6 +492,21 @@ export class EditTaskComponent implements OnInit {
   }
   }
 
+// Dynamically handle video link validators
+onVideoLinkChange() {
+  const hasVideo = this.taskForm.get('hasVideoLink')?.value;
+  const videoFields = ['videoLinkEnglish', 'videoLinkSinhala', 'videoLinkTamil'];
+  videoFields.forEach((field) => {
+    const control = this.taskForm.get(field);
+    if (hasVideo) {
+      control?.setValidators([Validators.required]);
+    } else {
+      control?.clearValidators();
+      control?.setValue('');
+    }
+    control?.updateValueAndValidity();
+  });
+}
 
 
   // Format date to YYYY-MM-DD

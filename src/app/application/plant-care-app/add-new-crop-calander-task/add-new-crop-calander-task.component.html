@@ -46,7 +46,7 @@
           <label
             for="taskEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task<span style="color: #2e2e2e">*</span>
+            >Task *
           </label>
 
           <input
@@ -74,7 +74,7 @@
           <label
             for="taskTypeEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task Type<span style="color: #2e2e2e">*</span>
+            >Task Type *
           </label>
           <input
             formControlName="taskTypeEnglish"
@@ -100,7 +100,7 @@
           <label
             for="taskCategoryEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task Category<span style="color: #2e2e2e">*</span>
+            >Task Category *
           </label>
           <input
             formControlName="taskCategoryEnglish"
@@ -127,7 +127,7 @@
           <label
             for="taskDescriptionEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
-            >Task Description<span style="color: #2e2e2e">*</span>
+            >Task Description *
           </label>
           <textarea
             rows="5"
@@ -159,7 +159,7 @@
             for="taskSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task in Sinhala<span style="color: #2e2e2e">*</span>
+            Task in Sinhala *
           </label>
           <input
             formControlName="taskSinhala"
@@ -186,7 +186,7 @@
             for="taskTypeSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type in Sinhala<span style="color: #2e2e2e">*</span>
+            Task Type in Sinhala *
           </label>
           <input
             formControlName="taskTypeSinhala"
@@ -213,7 +213,7 @@
             for="taskCategorySinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category in Sinhala<span style="color: #2e2e2e">*</span>
+            Task Category in Sinhala *
           </label>
           <input
             formControlName="taskCategorySinhala"
@@ -240,7 +240,7 @@
             for="taskDescriptionSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description in Sinhala<span style="color: #2e2e2e">*</span>
+            Task Description in Sinhala *
           </label>
           <textarea
             formControlName="taskDescriptionSinhala"
@@ -270,7 +270,7 @@
             for="taskTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task in Tamil<span style="color: #2e2e2e">*</span>
+            Task in Tamil *
           </label>
           <input
             formControlName="taskTamil"
@@ -297,7 +297,7 @@
             for="taskTypeTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type in Tamil<span style="color: #2e2e2e">*</span>
+            Task Type in Tamil *
           </label>
           <input
             formControlName="taskTypeTamil"
@@ -324,7 +324,7 @@
             for="taskCategoryTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category in Tamil<span style="color: #2e2e2e">*</span>
+            Task Category in Tamil *
           </label>
           <input
             formControlName="taskCategoryTamil"
@@ -351,7 +351,7 @@
             for="taskDescriptionTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description in Tamil<span style="color: #2e2e2e">*</span>
+            Task Description in Tamil *
           </label>
           <textarea
             formControlName="taskDescriptionTamil"
@@ -381,7 +381,7 @@
               for="startingDate"
               class="whitespace-nowrap mr-6 text-sm font-medium text-textLight dark:text-textDark"
             >
-              Add Days<span style="color: #2e2e2e">*</span>
+              Add Days *
             </label>
 
             <input
@@ -469,7 +469,7 @@
       <div class="flex items-center md:col-span-2 my-3 px-12">
         <label
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Want to Add Images?<span style="color: #2e2e2e">*</span>
+          >Want to Add Images? *
         </label>
         <div class="mt-1 ml-6">
           <label class="inline-flex items-center">
@@ -500,7 +500,7 @@
         <label
           for="imageLink"
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Image Link<span style="color: #2e2e2e">*</span>
+          >Link for Images *
         </label>
         <input
           min="0"
@@ -521,59 +521,102 @@
         </div>
       </div>
 
-      <div class="md:col-span-2 my-3 px-12">
-        <label
-          for="videoLinkEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link English
-        </label>
-        <input
-          min="0"
-          formControlName="videoLinkEnglish"
-          id="videoLinkEnglish"
-          [(ngModel)]="cropTaskObj.videoLinkEnglish"
-          name="videoLinkEnglish"
-          rows="3"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-      </div>
+      <!-- Want to Add Videos? -->
+<div class="flex items-center md:col-span-2 my-3 px-12">
+<label class="block text-sm font-medium text-textLight dark:text-textDark">
+    Want to Add Videos? *
+  </label>
+  <div class="mt-1 ml-7">
+    <label class="inline-flex items-center">
+      <input
+        type="radio"
+        formControlName="requireVideoLink"
+        value="yes"
+        class="form-radio"
+      />
+      <span class="ml-2 dark:text-textDark">Yes</span>
+    </label>
+    <label class="inline-flex items-center ml-32">
+      <input
+        type="radio"
+        formControlName="requireVideoLink"
+        value="no"
+        class="form-radio"
+      />
+      <span class="ml-2 dark:text-textDark">No</span>
+    </label>
+  </div>
+</div>
 
-      <div class="md:col-span-2 my-3 px-12">
-        <label
-          for="videoLinkSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
+<div *ngIf="taskForm.get('requireVideoLink')?.value === 'yes'">
+  <div class="md:col-span-2 my-3 px-12">
+    <label for="videoLinkEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
+      Video Link English *
+    </label>
+    <input
+      type="text"
+      id="videoLinkEnglish"
+      [(ngModel)]="cropTaskObj.videoLinkEnglish"
+      name="videoLinkEnglish"
+      formControlName="videoLinkEnglish"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    />
+      <div
+          *ngIf="
+            taskForm.get('videoLinkEnglish')?.touched && !this.cropTaskObj.videoLinkEnglish
+          "
+          class="text-red-500 text-sm mt-1"
         >
-          Video Link Sinhala
-        </label>
-        <input
-          min="0"
-          formControlName="videoLinkSinhala"
-          id="videoLinkSinhala"
-          [(ngModel)]="cropTaskObj.videoLinkSinhala"
-          name="videoLinkSinhala"
-          rows="3"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-      </div>
+        Video Link English is required when "Want to Add Videos?" is Yes
+        </div>
+  </div>
 
-      <div class="md:col-span-2 my-3 px-12">
-        <label
-          for="videoLinkTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
+  <div class="md:col-span-2 my-3 px-12">
+    <label for="videoLinkSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
+      Video Link Sinhala *
+    </label>
+    <input
+      type="text"
+      id="videoLinkSinhala"
+      [(ngModel)]="cropTaskObj.videoLinkSinhala"
+      name="videoLinkSinhala"
+      formControlName="videoLinkSinhala"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    />
+      <div
+          *ngIf="
+            taskForm.get('videoLinkSinhala')?.touched && !this.cropTaskObj.videoLinkSinhala
+          "
+          class="text-red-500 text-sm mt-1"
         >
-          Video Link Tamil
-        </label>
-        <input
-          min="0"
-          formControlName="videoLinkTamil"
-          id="videoLinkTamil"
-          [(ngModel)]="cropTaskObj.videoLinkTamil"
-          name="videoLinkTamil"
-          rows="3"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-      </div>
+         Video Link Sinhala is required when "Want to Add Videos?" is Yes
+        </div>
+  </div>
+
+  <div class="md:col-span-2 my-3 px-12">
+    <label for="videoLinkTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
+      Video Link Tamil *
+    </label>
+    <input
+      type="text"
+      id="videoLinkTamil"
+      [(ngModel)]="cropTaskObj.videoLinkTamil"
+      name="videoLinkTamil"
+      formControlName="videoLinkTamil"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    />
+      <div
+          *ngIf="
+            taskForm.get('videoLinkTamil')?.touched && !this.cropTaskObj.videoLinkTamil
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Video Link Tamil is required when "Want to Add Videos?" is Yes
+        </div>
+  </div>
+</div>
+
+
 
       <div class="flex justify-end mt-6 px-12">
         <button

@@ -11,12 +11,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
 import Swal from 'sweetalert2';
 import {FormControl } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface PhoneCode {
-  value: string;
-  label: string;
-}
+  code: string;
+  dialCode: string;
+  name: string;
 
+}
 interface DistributionCenter {
   id: number;
   centerName: string;
@@ -40,7 +42,7 @@ interface DistributionCenter {
 @Component({
   selector: 'app-view-destribution-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule,  DropdownModule ,LoadingSpinnerComponent],
   templateUrl: './view-destribution-center.component.html',
   styleUrl: './view-destribution-center.component.css',
 })
@@ -56,12 +58,6 @@ export class ViewDestributionCenterComponent implements OnInit {
  form = new FormGroup({
     company: new FormControl(null),
   });
-  phoneCodes: PhoneCode[] = [
-    { value: '+94', label: '+94 (SL)' },
-    { value: '+91', label: '+91 (India)' },
-    { value: '+1', label: '+1 (USA)' },
-    { value: '+44', label: '+44 (UK)' },
-  ];
 
   provinces: string[] = [
     'Central',
@@ -74,6 +70,21 @@ export class ViewDestributionCenterComponent implements OnInit {
     'Uva',
     'Sabaragamuwa',
   ];
+
+      countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
+
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
 
   districtsMap: { [key: string]: string[] } = {
     Central: ['Kandy', 'Matale', 'Nuwara Eliya'],

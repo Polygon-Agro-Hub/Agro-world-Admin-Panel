@@ -56,7 +56,7 @@
             for="taskEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task English<span style="color: #2E2E2E">*</span>
+            Task English *
           </label>
           <input
             type="text"
@@ -78,7 +78,7 @@
             for="taskTypeEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type<span style="color: #2E2E2E">*</span>
+            Task Type *
           </label>
           <input
             type="text"
@@ -100,7 +100,7 @@
             for="taskCategoryEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category<span style="color: #2E2E2E">*</span>
+            Task Category *
           </label>
           <input
             type="text"
@@ -122,7 +122,7 @@
             for="taskDescriptionEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description<span style="color: #2E2E2E">*</span>
+            Task Description *
           </label>
           <input
             type="text"
@@ -147,7 +147,7 @@
             for="taskSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Sinhala<span style="color: #2E2E2E">*</span>
+            Task Sinhala *
           </label>
           <input
             type="text"
@@ -168,7 +168,7 @@
             for="taskTypeSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type<span style="color: #2E2E2E">*</span>
+            Task Type *
           </label>
           <input
             type="text"
@@ -189,7 +189,7 @@
             for="taskCategorySinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category<span style="color: #2E2E2E">*</span>
+            Task Category *
           </label>
           <input
             type="text"
@@ -210,7 +210,7 @@
             for="taskDescriptionSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description<span style="color: #2E2E2E">*</span>
+            Task Description *
           </label>
           <input
             type="text"
@@ -234,7 +234,7 @@
             for="taskTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Tamil<span style="color: #2E2E2E">*</span>
+            Task Tamil *
           </label>
           <input
             type="text"
@@ -255,7 +255,7 @@
             for="taskTypeTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type<span style="color: #2E2E2E">*</span>
+            Task Type *
           </label>
           <input
             type="text"
@@ -276,7 +276,7 @@
             for="taskCategoryTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category<span style="color: #2E2E2E">*</span>
+            Task Category *
           </label>
           <input
             type="text"
@@ -297,7 +297,7 @@
             for="taskDescriptionTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description<span style="color: #2E2E2E">*</span>
+            Task Description *
           </label>
           <input
             type="text"
@@ -345,7 +345,7 @@
 
       <div class="mb-4">
         <label class="block text-sm font-medium text-textLight dark:text-textDark">
-          Has Image Link?
+        Want to Add Images *
         </label>
         <div class="mt-1">
           <label class="inline-flex items-center">
@@ -374,7 +374,7 @@
           for="imageLink"
           class="block text-sm font-medium text-textLight dark:text-textDark"
         >
-          Image Link<span style="color: #2E2E2E">*</span>
+         Link for Images *
         </label>
         <input
           type="text"
@@ -389,49 +389,94 @@
           Image Link is required when "Has Image Link" is set to Yes.
         </div>
       </div>
+<!-- Want to Add Videos -->
+<div class="mb-4">
+  <label class="block text-sm font-medium text-textLight dark:text-textDark">
+    Want to Add Videos *
+  </label>
+  <div class="mt-1">
+    <label class="inline-flex items-center">
+      <input
+        type="radio"
+        formControlName="hasVideoLink"
+        [value]="true"
+      />
+      <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
+    </label>
+    <label class="inline-flex items-center ml-6">
+      <input
+        type="radio"
+        formControlName="hasVideoLink"
+        [value]="false"
+      />
+      <span class="ml-2 text-textLight dark:text-textDark">No</span>
+    </label>
+  </div>
+</div>
 
-      <div class="mb-4">
-        <label
-          for="videoLinkEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link English
-        </label>
-        <input
-          type="text"
-          id="videoLinkEnglish"
-          formControlName="videoLinkEnglish"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
-      <div class="mb-4">
-        <label
-          for="videoLinkSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link Sinhala
-        </label>
-        <input
-          type="text"
-          id="videoLinkSinhala"
-          formControlName="videoLinkSinhala"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
-      <div class="mb-4">
-        <label
-          for="videoLinkTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link Tamil
-        </label>
-        <input
-          type="text"
-          id="videoLinkTamil"
-          formControlName="videoLinkTamil"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
+<!-- Video Links -->
+<div *ngIf="taskForm.get('hasVideoLink')?.value">
+  <div class="mb-4">
+    <label
+      for="videoLinkEnglish"
+      class="block text-sm font-medium text-textLight dark:text-textDark"
+    >
+      Video Link English *
+    </label>
+    <input
+      type="text"
+      id="videoLinkEnglish"
+      formControlName="videoLinkEnglish"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    />
+    <div
+      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkEnglish')?.touched && taskForm.get('videoLinkEnglish')?.hasError('required')"
+      class="text-red-500 text-sm mt-1"
+    >
+      Video Link (English) is required when "Want to Add Videos" is set to Yes.
+    </div>
+  </div>
+  <div class="mb-4">
+    <label
+      for="videoLinkSinhala"
+      class="block text-sm font-medium text-textLight dark:text-textDark"
+    >
+      Video Link Sinhala *
+    </label>
+    <input
+      type="text"
+      id="videoLinkSinhala"
+      formControlName="videoLinkSinhala"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    />
+    <div
+      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkSinhala')?.touched && taskForm.get('videoLinkSinhala')?.hasError('required')"
+      class="text-red-500 text-sm mt-1"
+    >
+      Video Link (Sinhala) is required when "Want to Add Videos" is set to Yes.
+    </div>
+  </div>
+  <div class="mb-4">
+    <label
+      for="videoLinkTamil"
+      class="block text-sm font-medium text-textLight dark:text-textDark"
+    >
+      Video Link Tamil *
+    </label>
+    <input
+      type="text"
+      id="videoLinkTamil"
+      formControlName="videoLinkTamil"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    />
+    <div
+      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkTamil')?.touched && taskForm.get('videoLinkTamil')?.hasError('required')"
+      class="text-red-500 text-sm mt-1"
+    >
+      Video Link (Tamil) is required when "Want to Add Videos" is set to Yes.
+    </div>
+  </div>
+</div>
       <div class="flex justify-end mt-6">
         <div class="w-[20px]"></div>
          <button type="button" (click)="onCancel()"

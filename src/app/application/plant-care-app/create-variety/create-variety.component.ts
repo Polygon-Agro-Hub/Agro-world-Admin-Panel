@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { MatSelectModule } from '@angular/material/select';
 import { TokenService } from '../../../services/token/services/token.service';
-
+import { DropdownModule } from 'primeng/dropdown';
 interface NewsItem {
   varietyNameEnglish: string;
   varietyNameSinhala: string;
@@ -38,6 +38,7 @@ interface NewsItem {
     LoadingSpinnerComponent,
     NgxColorsModule,
     MatSelectModule,
+    DropdownModule,
     ReactiveFormsModule,
   ],
   templateUrl: './create-variety.component.html',

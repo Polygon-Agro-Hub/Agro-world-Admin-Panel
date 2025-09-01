@@ -209,7 +209,7 @@ private formatLocalDate(date: Date): string {
 
   closePopup() {
     this.isPopupVisible = false;
-    this.fetchAllNews();
+    // this.fetchAllNews();
   }
   back(): void {
   Swal.fire({

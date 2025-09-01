@@ -71,6 +71,11 @@ export class CreateSalesAgentsComponent implements OnInit {
   errorMessage: string = '';
   isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
   isSpecialCharErrorMap: { [key: string]: boolean } = {};
+
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
+
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -98,6 +103,17 @@ export class CreateSalesAgentsComponent implements OnInit {
     { name: 'Trincomalee', province: 'Eastern' },
     { name: 'Vavuniya', province: 'Northern' },
   ];
+
+  countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -1007,4 +1023,10 @@ class Personal {
 class Company {
   id!: number;
   companyNameEnglish!: string;
+}
+
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
 }

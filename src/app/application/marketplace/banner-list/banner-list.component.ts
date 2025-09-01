@@ -524,27 +524,43 @@ export class BannerListComponent {
     }
 
     this.marketPlaceSrv.uploadRetailBanner(formData).subscribe({
-      next: (response) => {
-        Swal.fire('Success', 'Banner uploaded successfully!', 'success');
-        this.ViewRetailAddBanner = false;
-        this.getAllFeedbacks();
-        this.isLoading = false;
-        this.bannerName = '';
-        this.selectedFile = null;
-        this.selectedRetailImageUrl = null;
-        this.indexRetail = 0;
-      },
-      error: (err) => {
-        console.error(err);
-        Swal.fire('Error', 'Failed to upload banner.', 'error');
-        this.ViewRetailAddBanner = false;
-        this.getAllFeedbacks();
-        this.isLoading = false;
-        this.bannerName = '';
-        this.selectedFile = null;
-        this.selectedRetailImageUrl = null;
-      },
+  next: (response) => {
+    Swal.fire({
+      title: 'Success',
+      text: 'Banner uploaded successfully!',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
     });
+    this.ViewRetailAddBanner = false;
+    this.getAllFeedbacks();
+    this.isLoading = false;
+    this.bannerName = '';
+    this.selectedFile = null;
+    this.selectedRetailImageUrl = null;
+    this.indexRetail = 0;
+  },
+  error: (err) => {
+    console.error(err);
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to upload banner.',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
+    this.ViewRetailAddBanner = false;
+    this.getAllFeedbacks();
+    this.isLoading = false;
+    this.bannerName = '';
+    this.selectedFile = null;
+    this.selectedRetailImageUrl = null;
+  },
+});
   }
 
   uploadBannerWholesale() {
@@ -576,27 +592,43 @@ export class BannerListComponent {
     }
 
     this.marketPlaceSrv.uploadRetailBannerWholesale(formData).subscribe({
-      next: (response) => {
-        Swal.fire('Success', 'Banner uploaded successfully!', 'success');
-        this.ViewWholesaleAddBanner = false;
-        this.getAllFeedbacksWhole();
-        this.isLoading = false;
-        this.bannerNameWholesale = '';
-        this.selectedFileWholesale = null;
-        this.selectedWholesaleImageUrl = null;
-        this.indexWholesale = 0;
-      },
-      error: (err) => {
-        console.error(err);
-        Swal.fire('Error', 'Failed to upload banner.', 'error');
-        this.ViewWholesaleAddBanner = false;
-        this.getAllFeedbacksWhole();
-        this.isLoading = false;
-        this.bannerNameWholesale = '';
-        this.selectedFileWholesale = null;
-        this.selectedWholesaleImageUrl = null;
-      },
+  next: (response) => {
+    Swal.fire({
+      title: 'Success',
+      text: 'Banner uploaded successfully!',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
     });
+    this.ViewWholesaleAddBanner = false;
+    this.getAllFeedbacksWhole();
+    this.isLoading = false;
+    this.bannerNameWholesale = '';
+    this.selectedFileWholesale = null;
+    this.selectedWholesaleImageUrl = null;
+    this.indexWholesale = 0;
+  },
+  error: (err) => {
+    console.error(err);
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to upload banner.',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
+    this.ViewWholesaleAddBanner = false;
+    this.getAllFeedbacksWhole();
+    this.isLoading = false;
+    this.bannerNameWholesale = '';
+    this.selectedFileWholesale = null;
+    this.selectedWholesaleImageUrl = null;
+  },
+});
   }
 
   getAllFeedbacks() {

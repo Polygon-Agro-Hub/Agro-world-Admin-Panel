@@ -279,4 +279,12 @@ export class DestributionService {
       headers: this.getHeaders(),
     });
   }
+
+  getDailyOfficerDistributedTarget(id:number): Observable<any> {
+    let url = `${this.apiUrl}distribution/officer-daily-distribution-target/${id}`;
+    
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
 }

@@ -21,6 +21,12 @@ interface Branch {
   name: string;
 }
 
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
+
 interface BranchesData {
   [key: string]: Branch[];
 }
@@ -72,6 +78,15 @@ throw new Error('Method not implemented.');
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   nicError: boolean = false;
+
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+  ];
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -156,6 +171,10 @@ throw new Error('Method not implemented.');
         },
       });
     }
+  }
+
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
   isValidEmail(email: string): boolean {

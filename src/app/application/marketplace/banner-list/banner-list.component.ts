@@ -79,106 +79,100 @@ export class BannerListComponent {
     this.getAllFeedbacksWhole();
   }
 
-
-
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-         customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-     this.router.navigate(['/market/action']);
-    }
-  });
-}
-
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/market/action']);
+      }
+    });
+  }
 
   toogleRetail(isRetail: boolean) {
     this.isRetail = isRetail;
   }
 
   addBannerRetail(): void {
-  this.isLoading = true;
-  const token = this.tokenService.getToken();
-  if (!token) {
-    this.isLoading = false;
-    return;
+    this.isLoading = true;
+    const token = this.tokenService.getToken();
+    if (!token) {
+      this.isLoading = false;
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http
+      .get<any>(
+        `${environment.API_URL}market-place/next-reatil-banner-number`,
+        { headers }
+      )
+      .subscribe(
+        (data) => {
+          this.isLoading = false;
+          this.indexRetail = data.nextOrderNumber;
+          this.ViewRetailAddBanner = true;
+        },
+        () => {
+          this.isLoading = false;
+        }
+      );
   }
-  
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-  
-  this.http
-    .get<any>(
-      `${environment.API_URL}market-place/next-reatil-banner-number`,
-      { headers }
-    )
-    .subscribe(
-      (data) => {
-        this.isLoading = false;
-        this.indexRetail = data.nextOrderNumber;
-        this.ViewRetailAddBanner = true;
-      },
-      () => {
-        this.isLoading = false;
-      }
-    );
-}
 
   addBannerWholesale(): void {
-  this.isLoading = true;
-  const token = this.tokenService.getToken();
-  if (!token) {
-    this.isLoading = false;
-    return;
+    this.isLoading = true;
+    const token = this.tokenService.getToken();
+    if (!token) {
+      this.isLoading = false;
+      return;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http
+      .get<any>(
+        `${environment.API_URL}market-place/next-wholesale-banner-number`,
+        { headers }
+      )
+      .subscribe(
+        (data) => {
+          this.isLoading = false;
+          this.indexWholesale = data.nextOrderNumber;
+          this.ViewWholesaleAddBanner = true;
+        },
+        () => {
+          this.isLoading = false;
+        }
+      );
   }
-  
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-  
-  this.http
-    .get<any>(
-      `${environment.API_URL}market-place/next-wholesale-banner-number`,
-      { headers }
-    )
-    .subscribe(
-      (data) => {
-        this.isLoading = false;
-        this.indexWholesale = data.nextOrderNumber;
-        this.ViewWholesaleAddBanner = true;
-      },
-      () => {
-        this.isLoading = false;
-      }
-    );
-}
 
   cancelUploadRetail(): void {
-  this.bannerName = '';
-  this.selectedFile = null;
-  this.selectedRetailImageUrl = null;
-  this.ViewRetailAddBanner = false;
-}
+    this.bannerName = '';
+    this.selectedFile = null;
+    this.selectedRetailImageUrl = null;
+    this.ViewRetailAddBanner = false;
+  }
 
-cancelUploadWholesale(): void {
-  this.bannerNameWholesale = '';
-  this.selectedFileWholesale = null;
-  this.selectedWholesaleImageUrl = null;
-  this.ViewWholesaleAddBanner = false;
-}
-
-
-
+  cancelUploadWholesale(): void {
+    this.bannerNameWholesale = '';
+    this.selectedFileWholesale = null;
+    this.selectedWholesaleImageUrl = null;
+    this.ViewWholesaleAddBanner = false;
+  }
 
   loadNextNumberRetail() {
     const token = this.tokenService.getToken();
@@ -249,51 +243,51 @@ cancelUploadWholesale(): void {
   // }
 
   onFileSelectedWholesale(event: Event): void {
-  const input = event.target as HTMLInputElement | null;
+    const input = event.target as HTMLInputElement | null;
 
-  if (input && input.files && input.files[0]) {
-    const file = input.files[0];
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
+    if (input && input.files && input.files[0]) {
+      const file = input.files[0];
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
 
-    img.onload = () => {
-      const width = img.width;
-      const height = img.height;
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
 
-      URL.revokeObjectURL(objectUrl); // Cleanup memory
+        URL.revokeObjectURL(objectUrl); // Cleanup memory
 
-      // Allow 1200×450
-      const isValidSize = (width === 1200 && height === 450);
+        // Allow 1200×450
+        const isValidSize = width === 1200 && height === 450;
 
-      if (isValidSize) {
-        this.selectedFileWholesale = file;
-        this.previewImage(file);
-      } else {
+        if (isValidSize) {
+          this.selectedFileWholesale = file;
+          this.previewImage(file);
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Image Dimensions',
+            text: 'Please select an Image with dimensions 1200 × 450 px',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d33',
+          });
+          input.value = ''; // Clear file input
+        }
+      };
+
+      img.onerror = () => {
         Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Image Dimensions',
-          text: 'Please select an Image with dimensions 1200 × 450 px',
-          confirmButtonText: 'OK',
+          icon: 'error',
+          title: 'Invalid File',
+          text: 'Could not load the selected image. Please choose a valid image file.',
           confirmButtonColor: '#d33',
         });
-        input.value = ''; // Clear file input
-      }
-    };
+        URL.revokeObjectURL(objectUrl);
+        input.value = '';
+      };
 
-    img.onerror = () => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid File',
-        text: 'Could not load the selected image. Please choose a valid image file.',
-        confirmButtonColor: '#d33',
-      });
-      URL.revokeObjectURL(objectUrl);
-      input.value = '';
-    };
-
-    img.src = objectUrl;
+      img.src = objectUrl;
+    }
   }
-}
 
   onDragLeave(event: DragEvent): void {
     event.preventDefault();
@@ -301,60 +295,60 @@ cancelUploadWholesale(): void {
   }
 
   onDropWholesale(event: DragEvent): void {
-  event.preventDefault();
-  this.isDragOver = false;
+    event.preventDefault();
+    this.isDragOver = false;
 
-  if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-    const file = event.dataTransfer.files[0];
-    
-    if (!file.type.startsWith('image/')) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid File',
-        text: 'Please drop an image file (JPEG/PNG)',
-        confirmButtonColor: '#d33',
-      });
-      return;
-    }
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
 
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
-
-    img.onload = () => {
-      const width = img.width;
-      const height = img.height;
-      URL.revokeObjectURL(objectUrl); // Cleanup memory
-
-      // Check dimensions (1200×450)
-      const isValidSize = (width === 1200 && height === 450);
-
-      if (isValidSize) {
-        this.selectedFileWholesale = file;
-        this.previewImage(file);
-      } else {
+      if (!file.type.startsWith('image/')) {
         Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Image Dimensions',
-          text: 'Please drop an image with dimensions 1200 × 450 px',
-          confirmButtonText: 'OK',
+          icon: 'error',
+          title: 'Invalid File',
+          text: 'Please drop an image file (JPEG/PNG)',
           confirmButtonColor: '#d33',
         });
+        return;
       }
-    };
 
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Image',
-        text: 'Could not load the dropped image',
-        confirmButtonColor: '#d33',
-      });
-    };
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
 
-    img.src = objectUrl;
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+        URL.revokeObjectURL(objectUrl); // Cleanup memory
+
+        // Check dimensions (1200×450)
+        const isValidSize = width === 1200 && height === 450;
+
+        if (isValidSize) {
+          this.selectedFileWholesale = file;
+          this.previewImage(file);
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Image Dimensions',
+            text: 'Please drop an image with dimensions 1200 × 450 px',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d33',
+          });
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image',
+          text: 'Could not load the dropped image',
+          confirmButtonColor: '#d33',
+        });
+      };
+
+      img.src = objectUrl;
+    }
   }
-}
 
   previewImage(file: File): void {
     const reader = new FileReader();
@@ -380,51 +374,51 @@ cancelUploadWholesale(): void {
   // }
 
   onFileSelectedRetail(event: Event): void {
-  const input = event.target as HTMLInputElement | null;
+    const input = event.target as HTMLInputElement | null;
 
-  if (input && input.files && input.files[0]) {
-    const file = input.files[0];
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
+    if (input && input.files && input.files[0]) {
+      const file = input.files[0];
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
 
-    img.onload = () => {
-      const width = img.width;
-      const height = img.height;
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
 
-      URL.revokeObjectURL(objectUrl); // Cleanup memory
+        URL.revokeObjectURL(objectUrl); // Cleanup memory
 
-      // Allow 1200×450
-      const isValidSize = (width === 1200 && height === 450);
+        // Allow 1200×450
+        const isValidSize = width === 1200 && height === 450;
 
-      if (isValidSize) {
-        this.selectedFile = file;
-        this.previewImageRetail(file);
-      } else {
+        if (isValidSize) {
+          this.selectedFile = file;
+          this.previewImageRetail(file);
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Image Dimensions',
+            text: 'Please select an Image with dimensions 1200 × 450 px',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d33',
+          });
+          input.value = ''; // Clear file input
+        }
+      };
+
+      img.onerror = () => {
         Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Image Dimensions',
-          text: 'Please select an Image with dimensions 1200 × 450 px',
-          confirmButtonText: 'OK',
+          icon: 'error',
+          title: 'Invalid File',
+          text: 'Could not load the selected image. Please choose a valid image file.',
           confirmButtonColor: '#d33',
         });
-        input.value = ''; // Clear file input
-      }
-    };
+        URL.revokeObjectURL(objectUrl);
+        input.value = '';
+      };
 
-    img.onerror = () => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid File',
-        text: 'Could not load the selected image. Please choose a valid image file.',
-        confirmButtonColor: '#d33',
-      });
-      URL.revokeObjectURL(objectUrl);
-      input.value = '';
-    };
-
-    img.src = objectUrl;
+      img.src = objectUrl;
+    }
   }
-}
 
   onDragLeaveRetail(event: DragEvent): void {
     event.preventDefault();
@@ -432,60 +426,60 @@ cancelUploadWholesale(): void {
   }
 
   onDropRetail(event: DragEvent): void {
-  event.preventDefault();
-  this.isDragOverReatil = false;
+    event.preventDefault();
+    this.isDragOverReatil = false;
 
-  if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-    const file = event.dataTransfer.files[0];
-    
-    if (!file.type.startsWith('image/')) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid File',
-        text: 'Please drop an image file (JPEG/PNG)',
-        confirmButtonColor: '#d33',
-      });
-      return;
-    }
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
 
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
-
-    img.onload = () => {
-      const width = img.width;
-      const height = img.height;
-      URL.revokeObjectURL(objectUrl); // Cleanup memory
-
-      // Check dimensions (1200×450)
-      const isValidSize = (width === 1200 && height === 450);
-
-      if (isValidSize) {
-        this.selectedFile = file;
-        this.previewImageRetail(file);
-      } else {
+      if (!file.type.startsWith('image/')) {
         Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Image Dimensions',
-          text: 'Please drop an image with dimensions 1200 × 450 px',
-          confirmButtonText: 'OK',
+          icon: 'error',
+          title: 'Invalid File',
+          text: 'Please drop an image file (JPEG/PNG)',
           confirmButtonColor: '#d33',
         });
+        return;
       }
-    };
 
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Image',
-        text: 'Could not load the dropped image',
-        confirmButtonColor: '#d33',
-      });
-    };
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
 
-    img.src = objectUrl;
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+        URL.revokeObjectURL(objectUrl); // Cleanup memory
+
+        // Check dimensions (1200×450)
+        const isValidSize = width === 1200 && height === 450;
+
+        if (isValidSize) {
+          this.selectedFile = file;
+          this.previewImageRetail(file);
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Image Dimensions',
+            text: 'Please drop an image with dimensions 1200 × 450 px',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d33',
+          });
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Image',
+          text: 'Could not load the dropped image',
+          confirmButtonColor: '#d33',
+        });
+      };
+
+      img.src = objectUrl;
+    }
   }
-}
 
   previewImageRetail(file: File): void {
     const reader = new FileReader();
@@ -501,109 +495,109 @@ cancelUploadWholesale(): void {
   }
 
   uploadBanner() {
-  this.isLoading = true;
-  this.bannerName = this.bannerName.trim();
-  
-  // Check for empty fields and collect their names
-  const emptyFields = [];
-  if (!this.bannerName) emptyFields.push('Banner Name');
-  if (!this.selectedFile) emptyFields.push('Image');
+    this.isLoading = true;
+    this.bannerName = this.bannerName.trim();
 
-  if (emptyFields.length > 0) {
-    this.isLoading = false;
-    Swal.fire(
-      'Missing Data',
-      `Please provide: ${emptyFields.join(', ')}`,
-      'warning'
-    );
-    return;
-  }
+    // Check for empty fields and collect their names
+    const emptyFields = [];
+    if (!this.bannerName) emptyFields.push('Banner Name');
+    if (!this.selectedFile) emptyFields.push('Image');
 
-  // Create form data only if we have all required fields
-  const formData = new FormData();
-  formData.append('index', this.indexRetail.toString());
-  formData.append('name', this.bannerName);
-  
-  // TypeScript now knows selectedFile can't be null here because of our validation
-  if (this.selectedFile) {
-    formData.append('image', this.selectedFile);
-  }
-
-  this.marketPlaceSrv.uploadRetailBanner(formData).subscribe({
-    next: (response) => {
-      Swal.fire('Success', 'Banner uploaded successfully!', 'success');
-      this.ViewRetailAddBanner = false;
-      this.getAllFeedbacks();
+    if (emptyFields.length > 0) {
       this.isLoading = false;
-      this.bannerName = '';
-      this.selectedFile = null;
-      this.selectedRetailImageUrl = null;
-      this.indexRetail = 0;
-    },
-    error: (err) => {
-      console.error(err);
-      Swal.fire('Error', 'Failed to upload banner.', 'error');
-      this.ViewRetailAddBanner = false;
-      this.getAllFeedbacks();
-      this.isLoading = false;
-      this.bannerName = '';
-      this.selectedFile = null;
-      this.selectedRetailImageUrl = null;
-    },
-  });
-}
+      Swal.fire(
+        'Missing Data',
+        `Please provide: ${emptyFields.join(', ')}`,
+        'warning'
+      );
+      return;
+    }
+
+    // Create form data only if we have all required fields
+    const formData = new FormData();
+    formData.append('index', this.indexRetail.toString());
+    formData.append('name', this.bannerName);
+
+    // TypeScript now knows selectedFile can't be null here because of our validation
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.marketPlaceSrv.uploadRetailBanner(formData).subscribe({
+      next: (response) => {
+        Swal.fire('Success', 'Banner uploaded successfully!', 'success');
+        this.ViewRetailAddBanner = false;
+        this.getAllFeedbacks();
+        this.isLoading = false;
+        this.bannerName = '';
+        this.selectedFile = null;
+        this.selectedRetailImageUrl = null;
+        this.indexRetail = 0;
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire('Error', 'Failed to upload banner.', 'error');
+        this.ViewRetailAddBanner = false;
+        this.getAllFeedbacks();
+        this.isLoading = false;
+        this.bannerName = '';
+        this.selectedFile = null;
+        this.selectedRetailImageUrl = null;
+      },
+    });
+  }
 
   uploadBannerWholesale() {
-  this.isLoading = true;
-  this.bannerNameWholesale = this.bannerNameWholesale.trim();
-  
-  // Check for empty fields and collect their names
-  const emptyFields = [];
-  if (!this.bannerNameWholesale) emptyFields.push('Banner Name');
-  if (!this.selectedFileWholesale) emptyFields.push('Image');
+    this.isLoading = true;
+    this.bannerNameWholesale = this.bannerNameWholesale.trim();
 
-  if (emptyFields.length > 0) {
-    this.isLoading = false;
-    Swal.fire(
-      'Missing Data',
-      `Please provide: ${emptyFields.join(', ')}`,
-      'warning'
-    );
-    return;
-  }
+    // Check for empty fields and collect their names
+    const emptyFields = [];
+    if (!this.bannerNameWholesale) emptyFields.push('Banner Name');
+    if (!this.selectedFileWholesale) emptyFields.push('Image');
 
-  const formData = new FormData();
-  formData.append('index', this.indexWholesale.toString());
-  formData.append('name', this.bannerNameWholesale);
-  
-  // TypeScript now knows selectedFileWholesale can't be null here
-  if (this.selectedFileWholesale) {
-    formData.append('image', this.selectedFileWholesale);
-  }
-
-  this.marketPlaceSrv.uploadRetailBannerWholesale(formData).subscribe({
-    next: (response) => {
-      Swal.fire('Success', 'Banner uploaded successfully!', 'success');
-      this.ViewWholesaleAddBanner = false;
-      this.getAllFeedbacksWhole();
+    if (emptyFields.length > 0) {
       this.isLoading = false;
-      this.bannerNameWholesale = '';
-      this.selectedFileWholesale = null;
-      this.selectedWholesaleImageUrl = null;
-      this.indexWholesale = 0;
-    },
-    error: (err) => {
-      console.error(err);
-      Swal.fire('Error', 'Failed to upload banner.', 'error');
-      this.ViewWholesaleAddBanner = false;
-      this.getAllFeedbacksWhole();
-      this.isLoading = false;
-      this.bannerNameWholesale = '';
-      this.selectedFileWholesale = null;
-      this.selectedWholesaleImageUrl = null;
-    },
-  });
-}
+      Swal.fire(
+        'Missing Data',
+        `Please provide: ${emptyFields.join(', ')}`,
+        'warning'
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('index', this.indexWholesale.toString());
+    formData.append('name', this.bannerNameWholesale);
+
+    // TypeScript now knows selectedFileWholesale can't be null here
+    if (this.selectedFileWholesale) {
+      formData.append('image', this.selectedFileWholesale);
+    }
+
+    this.marketPlaceSrv.uploadRetailBannerWholesale(formData).subscribe({
+      next: (response) => {
+        Swal.fire('Success', 'Banner uploaded successfully!', 'success');
+        this.ViewWholesaleAddBanner = false;
+        this.getAllFeedbacksWhole();
+        this.isLoading = false;
+        this.bannerNameWholesale = '';
+        this.selectedFileWholesale = null;
+        this.selectedWholesaleImageUrl = null;
+        this.indexWholesale = 0;
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire('Error', 'Failed to upload banner.', 'error');
+        this.ViewWholesaleAddBanner = false;
+        this.getAllFeedbacksWhole();
+        this.isLoading = false;
+        this.bannerNameWholesale = '';
+        this.selectedFileWholesale = null;
+        this.selectedWholesaleImageUrl = null;
+      },
+    });
+  }
 
   getAllFeedbacks() {
     const token = this.tokenService.getToken();
@@ -740,83 +734,90 @@ cancelUploadWholesale(): void {
   }
 
   deletebannerRetail(feedbackId: number): void {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'This will delete the banner and reorder subsequent banner entries.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.marketPlaceSrv.deleteBannerRetail(feedbackId).subscribe({
-        next: () => {
-          Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
-          // Reset indexes so they'll be fetched fresh next time
-          this.indexRetail = 0;
-          this.indexWholesale = 0;
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-        },
-        error: () => {
-          Swal.fire('Error!', 'Failed to delete Banner.', 'error');
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-        },
-      });
-    }
-  });
-}
-  deletebannerWhole(feedbackId: number): void {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'This will delete the banner and reorder subsequent banner entries.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.marketPlaceSrv.deleteBannerWhole(feedbackId).subscribe({
-        next: () => {
-          Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
-          // After deletion, force a complete refresh of both lists
-          this.getAllFeedbacks();
-          this.getAllFeedbacksWhole();
-          // Reset indexes so they'll be fetched fresh next time
-          this.indexRetail = 0;
-          this.indexWholesale = 0;
-          this.isLoading = false;
-        },
-        error: () => {
-          Swal.fire('Error!', 'Failed to delete Banner.', 'error');
-          this.isLoading = false;
-        },
-      });
-    }
-  });
-}
-
-trimLeadingSpaces(event: any, isRetail: boolean = true): void {
-  const inputValue = event.target.value;
-  if (inputValue.startsWith(' ')) {
-    // If input starts with space, remove leading spaces
-    const trimmedValue = inputValue.trimStart();
-    if (isRetail) {
-      this.bannerName = trimmedValue;
-    } else {
-      this.bannerNameWholesale = trimmedValue;
-    }
-    // Update the input field value
-    event.target.value = trimmedValue;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will delete the banner and reorder subsequent banner entries.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.marketPlaceSrv.deleteBannerRetail(feedbackId).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
+            // Reset indexes so they'll be fetched fresh next time
+            this.indexRetail = 0;
+            this.indexWholesale = 0;
+            this.getAllFeedbacks();
+            this.getAllFeedbacksWhole();
+          },
+          error: () => {
+            Swal.fire('Error!', 'Failed to delete Banner.', 'error');
+            this.getAllFeedbacks();
+            this.getAllFeedbacksWhole();
+          },
+        });
+      }
+    });
   }
-}
+  deletebannerWhole(feedbackId: number): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will delete the banner and reorder subsequent banner entries.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.marketPlaceSrv.deleteBannerWhole(feedbackId).subscribe({
+          next: () => {
+            Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
+            // After deletion, force a complete refresh of both lists
+            this.getAllFeedbacks();
+            this.getAllFeedbacksWhole();
+            // Reset indexes so they'll be fetched fresh next time
+            this.indexRetail = 0;
+            this.indexWholesale = 0;
+            this.isLoading = false;
+          },
+          error: () => {
+            Swal.fire('Error!', 'Failed to delete Banner.', 'error');
+            this.isLoading = false;
+          },
+        });
+      }
+    });
+  }
 
-onBannerNameInput(event: any, isRetail: boolean = true): void {
-  this.trimLeadingSpaces(event, isRetail);
-}
+  trimLeadingSpaces(event: any, isRetail: boolean = true): void {
+    const inputValue = event.target.value;
+    if (inputValue.startsWith(' ')) {
+      // If input starts with space, remove leading spaces
+      const trimmedValue = inputValue.trimStart();
+      if (isRetail) {
+        this.bannerName = trimmedValue;
+      } else {
+        this.bannerNameWholesale = trimmedValue;
+      }
+      // Update the input field value
+      event.target.value = trimmedValue;
+    }
+  }
 
+  onBannerNameInput(event: any, isRetail: boolean = true): void {
+    this.trimLeadingSpaces(event, isRetail);
+  }
 }

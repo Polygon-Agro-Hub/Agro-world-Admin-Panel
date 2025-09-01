@@ -1305,7 +1305,11 @@ onCancel() {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-    this.router.navigate(['/distribution-hub/action/view-companies']);
+      // Navigate back to the previous page
+      window.history.back();
+      
+      // Alternative if you need more control:
+      // this.location.back();
     }
   });
 }

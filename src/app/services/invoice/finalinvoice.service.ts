@@ -526,7 +526,7 @@ export class FinalinvoiceService {
       const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
       const addTitle = hasFamilyPacks 
-        ? `Additional Items (${invoice.additionalItems.length} Items)`
+        ? `Custom Items (${invoice.additionalItems.length} Items)`
         : `Your Selected Items (${invoice.additionalItems.length} Items)`;
 
       doc.setFontSize(9);
@@ -665,7 +665,7 @@ export class FinalinvoiceService {
       );
 
       const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
-      const label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+      const label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
 
       grandTotalBody.push([
         label,

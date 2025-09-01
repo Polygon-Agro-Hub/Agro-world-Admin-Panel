@@ -148,11 +148,27 @@ allowOnlyTamil(event: KeyboardEvent): void {
   this.complaintSrv.EditComplainCategory(this.complainObj).subscribe(
     (res) => {
       if (res.status) {
-        Swal.fire("Success", 'Edit complain category success!', 'success')
-        this.router.navigate(['/complaints/manage-applications'])
-      } else {
-        Swal.fire("Error", 'Error Occur creaating complain category!', 'error')
-      }
+      Swal.fire({
+        title: "Success",
+        text: 'Edit complain category success!',
+        icon: 'success',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      })
+      this.router.navigate(['/complaints/manage-applications'])
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: 'Error Occur creaating complain category!',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      })
+    }
     }
   )
 }

@@ -185,6 +185,7 @@ page: number = 1;
           console.log('Officer data structure:', response.officerData[0]);
 
           // Populate personalData with API response or fallback to defaults
+          this.personalData.id = officerData.id || this.itemId;
           this.personalData.empId = officerData.empId || '';
           this.personalData.jobRole = officerData.jobRole || '';
           this.personalData.firstNameEnglish =

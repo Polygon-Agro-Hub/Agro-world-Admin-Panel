@@ -182,6 +182,7 @@ page: number = 1;
         next: (response: any) => {
           console.log('Officer Data Response:', response); // Debug API response
           const officerData = response.officerData[0];
+          console.log('Officer data structure:', response.officerData[0]);
 
           // Populate personalData with API response or fallback to defaults
           this.personalData.empId = officerData.empId || '';
@@ -216,6 +217,7 @@ page: number = 1;
           this.personalData.empType = officerData.empType || '';
           this.personalData.irmId = officerData.irmId || '';
           this.personalData.image = officerData.image || '';
+          this.personalData.status = officerData.status || '';
 
           this.selectedLanguages = this.personalData.languages
             ? this.personalData.languages.split(',')
@@ -1577,6 +1579,7 @@ fetchAllDistributionOfficer(
 }
 
 class Personal {
+  id!: number;
   jobRole!: string;
   empId!: any;
   centerId!: number;
@@ -1612,6 +1615,7 @@ class Personal {
   bankName!: string;
   branchName!: string;
   confirmPassword!: string; // Confirm password field
+  status!: string;
 }
 
 class CollectionCenter {

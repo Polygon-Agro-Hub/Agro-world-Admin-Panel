@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface Bank {
@@ -167,7 +167,8 @@ page: number = 1;
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private distributionOfficerServ: DistributionHubService
+    private distributionOfficerServ: DistributionHubService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -274,9 +275,10 @@ page: number = 1;
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate([
-          '/steckholders/action/view-distribution-officers',
-        ]);
+        // this.router.navigate([
+        //   '/steckholders/action/view-distribution-officers',
+        // ]);
+        this.location.back();
       }
     });
   }
@@ -1332,9 +1334,10 @@ page: number = 1;
                 'Distribution Officer Updated Successfully',
                 'success'
               );
-              this.navigatePath(
-                '/steckholders/action/view-distribution-officers'
-              );
+              // this.navigatePath(
+              //   '/steckholders/action/view-distribution-officers'
+              // );
+              this.location.back();
             },
             (error: any) => {
               this.isLoading = false;

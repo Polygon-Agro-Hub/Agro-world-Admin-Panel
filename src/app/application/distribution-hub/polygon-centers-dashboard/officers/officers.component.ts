@@ -66,6 +66,10 @@ export class OfficersComponent implements OnChanges {
     this.fetchData()
   }
 
+  editDistributionOfficer(id: number){
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/edit-distribution-officer/${id}`]);
+  }
+
 
 }
 

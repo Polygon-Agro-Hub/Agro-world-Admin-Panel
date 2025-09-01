@@ -37,7 +37,7 @@ export class DashPredefinePackagesComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log('Initializing with date:', this.dateFilter);
@@ -142,17 +142,30 @@ export class DashPredefinePackagesComponent implements OnInit {
     return parseFloat(num1) + parseFloat(num2);
   }
 
-  navigateToPackageItemView(id: number, invNo: string, total: number, name: string, fullTotal: string | number): void {
-    console.log('Navigating to package items:', { id, invNo, name, total, fullTotal });
-    this.router.navigate(['/dispatch/package-items'], {
-      queryParams: { id, invNo, name, total, fullTotal }
+  navigateToPackageItemView(item: PremadePackages): void {
+    // this.router.navigate(['/dispatch/package-items'], {
+    //   queryParams: { id, invNo, name, total, fullTotal }
+    // });
+    let status = true;
+    if (item.additionalItemsStatus === 'Opened' || item.additionalItemsStatus === 'Pending') {
+      status = false;
+    }
+
+    this.router.navigate([`/dispatch/dispatch-package/${item.orderPackageId}/${item.processOrderId}`], {
+      queryParams: { status: status, price: item.productPrice, invNo: item.invNo, packageName: item.displayName }
     });
   }
 
-  navigateToAdditionalItemView(id: number, invNo: string, total: number, name: string, fullTotal: number | string): void {
-    console.log('Navigating to additional items:', { id, invNo, name, total, fullTotal });
-    this.router.navigate(['/dispatch/additional-items'], {
-      queryParams: { id, invNo, name, total, fullTotal }
+  navigateToAdditionalItemView(item: PremadePackages): void {
+    // this.router.navigate(['/dispatch/additional-items'], {
+    //   queryParams: { id, invNo, name, total, fullTotal }
+    // });
+    let status = true;
+    if (item.packageStatus === 'Opened' || item.packageStatus === 'Pending') {
+      status = false;
+    }
+    this.router.navigate([`/dispatch/dispatch-additional-items/${item.processOrderId}`], {
+      queryParams: { status: status}
     });
   }
 }

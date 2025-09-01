@@ -78,6 +78,8 @@ export class ManageContentComponent implements OnInit {
   safeHtmlDescriptionSinhala: SafeHtml = '';
   safeHtmlDescriptionTamil: SafeHtml = '';
 
+  selectedNewsItem: NewsItem | null = null;
+
   constructor(
     private newsService: NewsService,
     private http: HttpClient,
@@ -182,35 +184,42 @@ private formatLocalDate(date: Date): string {
       });
   }
 
-  openPopup(id: any) {
-    this.isPopupVisible = true;
-    this.isLoading = true;
-    this.newsService.getNewsById(id).subscribe(
-      (data) => {
-        this.newsItems = data;
+  // Update the openPopup method with proper typing
+openPopup(id: any) {
+  this.isPopupVisible = true;
+  this.isLoading = true;
+  this.newsService.getNewsById(id).subscribe(
+    (data: NewsItem[]) => {
+      // Store the single news item in selectedNewsItem
+      this.selectedNewsItem = data[0];
+      
+      // Add null checks before accessing properties
+      if (this.selectedNewsItem) {
         this.safeHtmlDescriptionEnglish =
           this.sanitizer.bypassSecurityTrustHtml(
-            this.newsItems[0].descriptionEnglish
+            this.selectedNewsItem.descriptionEnglish
           );
         this.safeHtmlDescriptionSinhala =
           this.sanitizer.bypassSecurityTrustHtml(
-            this.newsItems[0].descriptionSinhala
+            this.selectedNewsItem.descriptionSinhala
           );
         this.safeHtmlDescriptionTamil = this.sanitizer.bypassSecurityTrustHtml(
-          this.newsItems[0].descriptionTamil
+          this.selectedNewsItem.descriptionTamil
         );
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isLoading = false;
       }
-    );
-  }
+      
+      this.isLoading = false;
+    },
+    (error) => {
+      this.isLoading = false;
+    }
+  );
+}
 
   closePopup() {
-    this.isPopupVisible = false;
-    // this.fetchAllNews();
-  }
+  this.isPopupVisible = false;
+  this.selectedNewsItem = null; // Clear the selected item
+}
   back(): void {
   Swal.fire({
     icon: 'warning',

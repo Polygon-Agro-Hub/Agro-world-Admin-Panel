@@ -241,28 +241,50 @@ openPopup(id: any) {
 }
 
 
-  updateStatus(id: any) {
-    this.isLoading = true;
-    this.newsService.updateNewsStatus(id).subscribe(
-      (data: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Status updated successfully!',
-        });
-        this.fetchAllNews();
-        this.isLoading = false;
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Unsuccess',
-          text: 'Error updating status',
-        });
-        this.isLoading = false;
-      }
-    );
-  }
+  updateStatus(id: any, currentStatus: string) {
+  // Determine the message and button text based on current status
+  const isDraft = currentStatus === 'Draft';
+  const message = isDraft 
+    ? 'Do you want to publish?' 
+    : 'Do you want to move back to draft?';
+  const confirmButtonText = isDraft ? 'Publish' : 'Draft';
+
+  // Show confirmation dialog
+  Swal.fire({
+    title: 'Confirm Status Change',
+    text: message,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // User confirmed, proceed with status update
+      this.isLoading = true;
+      this.newsService.updateNewsStatus(id).subscribe(
+        (data: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Status updated successfully!',
+          });
+          this.fetchAllNews();
+          this.isLoading = false;
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error updating status',
+          });
+          this.isLoading = false;
+        }
+      );
+    }
+  });
+}
 
   onPageChange(event: number) {
     this.page = event;

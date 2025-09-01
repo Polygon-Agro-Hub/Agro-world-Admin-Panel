@@ -200,38 +200,38 @@
               </td>
               <td class="px-4 py-3 text-green-500 text-center">
                 <div *ngIf="item.status == 'Published'">
-                  <span [class.cursor-pointer]="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                    "
-                    class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                        ? updateStatus(item.id)
-                        : null
-                    ">
-                    {{ item.status }}
-                  </span>
-                </div>
-                <div *ngIf="item.status != 'Published'">
-                  <span [class.cursor-pointer]="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                    " class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                        ? updateStatus(item.id)
-                        : null
-                    ">
-                    {{ item.status }}
-                  </span>
-                </div>
+  <span 
+    [class.cursor-pointer]="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+    "
+    class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
+    (click)="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+        ? updateStatus(item.id, item.status)
+        : null
+    ">
+    {{ item.status }}
+  </span>
+</div>
+
+<div *ngIf="item.status == 'Draft'">
+  <span 
+    [class.cursor-pointer]="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+    "
+    class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
+    (click)="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+        ? updateStatus(item.id, item.status)
+        : null
+    ">
+    {{ item.status }}
+  </span>
+</div>
               </td>
               <td class="px-4 py-3 text-center dark:text-textDark text-centser">
                 {{ item.publishDate | date : "yyyy-MM-dd" }}

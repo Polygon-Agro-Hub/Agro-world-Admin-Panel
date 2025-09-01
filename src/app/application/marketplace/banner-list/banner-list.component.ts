@@ -781,20 +781,36 @@ export class BannerListComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.marketPlaceSrv.deleteBannerRetail(feedbackId).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
-            // Reset indexes so they'll be fetched fresh next time
-            this.indexRetail = 0;
-            this.indexWholesale = 0;
-            this.getAllFeedbacks();
-            this.getAllFeedbacksWhole();
-          },
-          error: () => {
-            Swal.fire('Error!', 'Failed to delete Banner.', 'error');
-            this.getAllFeedbacks();
-            this.getAllFeedbacksWhole();
-          },
-        });
+  next: () => {
+    Swal.fire({
+      title: 'Deleted!',
+      text: 'Banner has been deleted.',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
+    // Reset indexes so they'll be fetched fresh next time
+    this.indexRetail = 0;
+    this.indexWholesale = 0;
+    this.getAllFeedbacks();
+    this.getAllFeedbacksWhole();
+  },
+  error: () => {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to delete Banner.',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
+    this.getAllFeedbacks();
+    this.getAllFeedbacksWhole();
+  },
+});
       }
     });
   }
@@ -814,22 +830,38 @@ export class BannerListComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
-        this.marketPlaceSrv.deleteBannerWhole(feedbackId).subscribe({
-          next: () => {
-            Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
-            // After deletion, force a complete refresh of both lists
-            this.getAllFeedbacks();
-            this.getAllFeedbacksWhole();
-            // Reset indexes so they'll be fetched fresh next time
-            this.indexRetail = 0;
-            this.indexWholesale = 0;
-            this.isLoading = false;
-          },
-          error: () => {
-            Swal.fire('Error!', 'Failed to delete Banner.', 'error');
-            this.isLoading = false;
-          },
-        });
+       this.marketPlaceSrv.deleteBannerWhole(feedbackId).subscribe({
+  next: () => {
+    Swal.fire({
+      title: 'Deleted!',
+      text: 'Banner has been deleted.',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
+    // After deletion, force a complete refresh of both lists
+    this.getAllFeedbacks();
+    this.getAllFeedbacksWhole();
+    // Reset indexes so they'll be fetched fresh next time
+    this.indexRetail = 0;
+    this.indexWholesale = 0;
+    this.isLoading = false;
+  },
+  error: () => {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to delete Banner.',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
+    this.isLoading = false;
+  },
+});
       }
     });
   }

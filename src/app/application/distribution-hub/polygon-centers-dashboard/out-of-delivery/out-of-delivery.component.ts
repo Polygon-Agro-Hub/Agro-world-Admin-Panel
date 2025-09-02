@@ -24,9 +24,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class OutOfDeliveryComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
-  orderArr!: Orders[];
+  orderArr: Orders[] = [];
+  filteredOrders: Orders[] = [];
   orderCount: number = 0;
-  selectDate: string = '';
+  selectDate: Date | null = null;
   selectStatus: string = '';
   searchText: string = '';
 
@@ -35,32 +36,78 @@ export class OutOfDeliveryComponent implements OnChanges {
     { label: 'On Time', value: 'On Time' },
   ]
 
-
-  ngOnChanges(): void {
-    this.fetchData();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['centerObj'] && this.centerObj) {
+      this.fetchData();
+    }
   }
 
-  changeStatus(){
-    console.log(this.selectStatus);
-    this.fetchData();
+  onStatusChange() {
+    this.applyFilters();
+  }
+
+  onDateSelect() {
+    this.applyFilters();
+  }
+
+  onSearch() {
+    this.applyFilters();
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    // First filter by status
+    if (this.selectStatus) {
+      this.filteredOrders = this.orderArr.filter(order => 
+        order.outDlvrStatus === this.selectStatus
+      );
+    } else {
+      this.filteredOrders = [...this.orderArr];
+    }
+
+    // Then filter by search text if provided
+    if (this.searchText) {
+      this.filteredOrders = this.filteredOrders.filter(order => 
+        order.invNo.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
+
+    // Update the count
+    this.orderCount = this.filteredOrders.length;
   }
 
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
-    // private datePipe: DatePipe // Inject DatePipe
-    // public tokenService: TokenService,
-    // public permissionService: PermissionService
   ) { }
 
   fetchData() {
-    this.DestributionSrv.getCenterOutForDlvryOrders(this.centerObj.centerId, this.selectDate, this.selectStatus, this.searchText).subscribe(
+    this.isLoading = true;
+    this.DestributionSrv.getCenterOutForDlvryOrders(
+      this.centerObj.centerId, 
+      this.selectDate ? this.selectDate.toISOString().split('T')[0] : '', 
+      this.selectStatus, 
+      this.searchText
+    ).subscribe(
       (res) => {
-        this.orderArr = res.data
-        this.orderCount = res.data ? res.data.length : 0;
+        this.orderArr = res.data || [];
+        this.filteredOrders = [...this.orderArr];
+        this.orderCount = this.filteredOrders.length;
+        this.hasData = this.filteredOrders.length === 0;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+        this.isLoading = false;
+        this.hasData = true;
       }
-    )
+    );
   }
+  
   isLoading = false;
   hasData: boolean = false;
 }

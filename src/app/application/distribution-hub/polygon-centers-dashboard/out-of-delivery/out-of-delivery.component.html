@@ -31,6 +31,7 @@
               [checkmark]="true"
               [options]="statusOptions"
               [(ngModel)]="selectStatus"
+              (onChange)="onStatusChange()"
               [showClear]="!!selectStatus"
               optionLabel="label"
               optionValue="value"
@@ -50,6 +51,9 @@
               [yearNavigator]="true"
               yearRange="1900:2030"
               iconDisplay="input"
+              [(ngModel)]="selectDate"
+              (onSelect)="onDateSelect()"
+              (onClearClick)="onDateSelect()"
               [style]="{ width: '16rem', height: '2rem' }"
               panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
@@ -69,10 +73,13 @@
             <input
               type="text"
               placeholder="Search by Order ID"
+              [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
             <button
               type="button"
+              (click)="onSearch()"
               class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             >
               <svg
@@ -92,6 +99,7 @@
             </button>
             <button
               type="button"
+              (click)="clearSearch()"
               class="text-gray-500 hover:text-gray-700 focus:outline-none"
             >
               <svg
@@ -154,8 +162,8 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200" *ngFor="let item of orderArr; let i = index">
-          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+        <tbody class="divide-y divide-gray-200" *ngIf="!hasData">
+          <tr *ngFor="let item of filteredOrders; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{i + 1 | number :'2.0'}}
             </td>
@@ -163,7 +171,7 @@
               {{item.invNo}}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{item.firstNameEnglish}} {{item.lastNameEnglish  }}
+              {{item.firstNameEnglish}} {{item.lastNameEnglish}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               Today 8-12 AM
@@ -176,16 +184,11 @@
               <span *ngIf="item.outDlvrStatus ==='On Time'" class="text-[#415CFF] font-medium"> On Time </span>
             </td>
           </tr>
-          <tr>
-            <td
-              colspan="8"
-              class="px-4 py-6 text-center text-textLight dark:text-textDark"
-            ></td>
-          </tr>
         </tbody>
       </table>
-      <div *ngIf="hasData" class="dark:bg-[#262f45]">
-        <pagination-controls
+
+      <div *ngIf="!hasData" class="dark:bg-[#262f45]">
+        <!-- <pagination-controls
           [responsive]="true"
           [previousLabel]="'Previous'"
           [nextLabel]="'Next'"
@@ -193,12 +196,12 @@
           [screenReaderPageLabel]="'page'"
           [screenReaderCurrentLabel]="'Youre on page'"
         >
-        </pagination-controls>
+        </pagination-controls> -->
       </div>
 
       <div
         *ngIf="hasData"
-        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+        class="flex flex-col items-center w-full px-10 py-7 mt-6"
       >
         <p class="text-[#494949] my-6 dark:text-textDark">
           --No Data Available--

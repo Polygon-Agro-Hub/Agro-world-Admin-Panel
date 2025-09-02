@@ -36,6 +36,7 @@ export class DispachPackagesComponent implements OnInit {
 
   isPopupOpen: boolean = false;
   isLastOrder: boolean = false;
+  isAllPacked: boolean = false;
 
 
   ngOnInit(): void {
@@ -76,7 +77,7 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   saveCheckedItems() {
-    if (this.isLastOrder) {
+    if (this.isLastOrder && this.isAllPacked) {
       this.showCountdown = true;
     } else {
       this.executeApiCall();
@@ -130,6 +131,7 @@ export class DispachPackagesComponent implements OnInit {
     item.isPacked = isChecked ? 1 : 0;
 
     const allPacked = this.packageArr.every(i => i.isPacked === 1);
+    this.isAllPacked = allPacked;
 
     if (!allPacked) {
       this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";
@@ -175,10 +177,10 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   cangeReplacePrice() {
-  if (this.newProductObj) {
-    this.newProductObj.price = this.newProductObj.discountedPrice * (this.newProductObj.qty);
+    if (this.newProductObj) {
+      this.newProductObj.price = this.newProductObj.discountedPrice * (this.newProductObj.qty);
+    }
   }
-}
 
   onProductChange(): void {
     if (this.newProductObj) {

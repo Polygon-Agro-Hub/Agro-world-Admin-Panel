@@ -29,6 +29,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   validationSuccessMessage: string = '';
 
   isLastOrder: boolean = false;
+  isAllPacked: boolean = false;
 
 
   ngOnInit(): void {
@@ -68,7 +69,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   }
 
   saveCheckedItems() {
-    if (this.isLastOrder) {
+    if (this.isLastOrder && this.isAllPacked) {
       this.showCountdown = true;
     } else {
       this.executeApiCall();
@@ -122,6 +123,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
     item.isPacked = isChecked ? 1 : 0;
 
     const allPacked = this.packageArr.every(i => i.isPacked === 1);
+    this.isAllPacked = allPacked;
 
     if (!allPacked) {
       this.validationFailedMessage = "Unchecked items remain. Saving now keeps the order in 'Opened' Status.";

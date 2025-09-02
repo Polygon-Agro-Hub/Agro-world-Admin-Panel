@@ -1,96 +1,109 @@
-<div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
-    <div>
+<div>
+    <button (click)="onCancel()" class=" text-textLight dark:text-textDark">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+    </button>
+    <div class="h-[20px]"></div>
 
-        <div class="flex items-center justify-between mb-6 mx-5">
-            <div class="">
-                <!-- <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
+    <div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
+        <div>
+
+            <div class="flex items-center justify-between mb-6 mx-5">
+                <div class="">
+                    <!-- <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
             {{orderInv}}</span></h1> -->
-                <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
-                        {{orderDetails.invNo}}</span></h1>
+                    <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
+                            {{orderDetails.invNo}}</span></h1>
+                </div>
+
+                <div class="">
+                    <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
+                    <h2 class="  text-[#212121] dark:text-white"> Custom Pack : Rs.{{orderDetails.additionalPrice |
+                        number:
+                        '1.2-2'}}</h2>
+                </div>
             </div>
 
-            <div class="">
-                <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
-                <h2 class="  text-[#212121] dark:text-white"> Custom Pack : Rs.{{orderDetails.additionalPrice | number:
-                    '1.2-2'}}</h2>
+            <!-- Items Table -->
+            <div class="mb-8 ">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                    <thead class="">
+                        <tr>
+                            <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                                ITEM
+                                ({{packageArr.length === 0 ? '0' : packageArr.length < 10 ? '0' + packageArr.length :
+                                    packageArr.length}})</th>
+                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                                QUANTITY
+                            </th>
+                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                                UNIT</th>
+                            <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                                UNIT PRICE
+                            </th>
+                            <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                                TOTAL</th>
+                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                                PACKED</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 ">
+
+                        <tr *ngFor=" let item of packageArr">
+                            <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-white text-left">
+                                {{ item.displayName || ' - ' }}
+                            </td>
+
+                            <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
+                                {{ item.qty }}
+                            </td>
+
+                            <td
+                                class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
+                                {{ item.unit }}
+                            </td>
+
+
+                            <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
+                                Rs. {{ item.discountedPrice != null ? (item.discountedPrice | number:'1.2-2') : '0.00'
+                                }}
+                            </td>
+
+
+                            <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
+                                Rs. {{ item.price != null ? (item.price | number:'1.2-2') : '0.00' }}
+                            </td>
+                            <td
+                                class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 cursor-pointer">
+                                <input type="checkbox" [checked]="item.isPacked === 1"
+                                    (change)="onCheckboxChange(item, $event)"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <!-- Items Table -->
-        <div class="mb-8 ">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-                <thead class="">
-                    <tr>
-                        <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            ITEM
-                            ({{packageArr.length === 0 ? '0' : packageArr.length < 10 ? '0'+ packageArr.length : packageArr.length}})</th>
-                        <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            QUANTITY
-                        </th>
-                        <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            UNIT</th>
-                        <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            UNIT PRICE
-                        </th>
-                        <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            TOTAL</th>
-                        <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
-                            PACKED</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-800 ">
+            <div class="border-t border-gray-200 dark:border-gray-600 my-6"></div>
 
-                    <tr *ngFor=" let item of packageArr">
-                        <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-white text-left">
-                            {{ item.displayName || ' - ' }}
-                        </td>
+            <div *ngIf="validationFailedMessage" class="text-[#FA0000] italic font-normal mb-2 text-right">
+                {{ validationFailedMessage }}
+            </div>
 
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
-                            {{ item.qty }}
-                        </td>
+            <div *ngIf="validationSuccessMessage" class="text-[#308233] italic font-normal mb-2 text-right">
+                {{ validationSuccessMessage }}
+            </div>
 
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
-                            {{ item.unit }} 
-                        </td>
-
-
-                        <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
-                            Rs. {{ item.discountedPrice != null ? (item.discountedPrice | number:'1.2-2') : '0.00' }}
-                        </td>
-
-
-                        <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
-                            Rs. {{ item.price != null ? (item.price | number:'1.2-2') : '0.00' }}
-                        </td>
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 ">
-                            <input type="checkbox" [checked]="item.isPacked === 1"
-                                (change)="onCheckboxChange(item, $event)"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="border-t border-gray-200 dark:border-gray-600 my-6"></div>
-
-        <div *ngIf="validationFailedMessage" class="text-[#FA0000] italic font-normal mb-2 text-right">
-            {{ validationFailedMessage }}
-        </div>
-
-        <div *ngIf="validationSuccessMessage" class="text-[#308233] italic font-normal mb-2 text-right">
-            {{ validationSuccessMessage }}
-        </div>
-
-        <div class="flex justify-end space-x-4 mx-5">
-            <button (click)="onCancel()"
-                class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
-                Cancel
-            </button>
-            <button (click)="saveCheckedItems()"
-                class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
-                Save
-            </button>
+            <div class="flex justify-end space-x-4 mx-5">
+                <button (click)="onCancel()"
+                    class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
+                    Cancel
+                </button>
+                <button (click)="saveCheckedItems()"
+                    class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
+                    Save
+                </button>
+            </div>
         </div>
     </div>
 </div>

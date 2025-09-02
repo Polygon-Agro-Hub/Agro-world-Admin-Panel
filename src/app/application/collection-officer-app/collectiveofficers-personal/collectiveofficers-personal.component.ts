@@ -683,7 +683,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
 
     const rolePrefixes: { [key: string]: string } = {
       'Collection Center Head': 'CCH',
-      'Collection Center Manager': 'CCM',
+      'Collection Centre Manager': 'CCM',
       'Customer Officer': 'CUO',
       'Collection Officer': 'COO',
     };
@@ -758,6 +758,17 @@ updateProvince(event: DropdownChangeEvent): void {
       this.personalData[fieldName] = value;
     }
   }
+onLetterKeyPress(event: KeyboardEvent) {
+  const char = event.key;
+  // Allow all letters (\p{L}) and space, block numbers and special characters
+  const regex = /^[\p{L} ]$/u;
+  if (!regex.test(char)) {
+    event.preventDefault(); // block the key
+  }
+}
+
+
+
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -777,21 +788,17 @@ updateProvince(event: DropdownChangeEvent): void {
   }
 
   // Updated formatTamilName function
-  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Allow only Tamil unicode characters and spaces
-      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
-
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      this.personalData[fieldName] = value;
-    }
+formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Allow only Tamil letters (\u0B80-\u0BFF) and spaces
+    value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
+    // Trim spaces and remove multiple consecutive spaces
+    value = value.trim().replace(/\s{2,}/g, ' ');
+    this.personalData[fieldName] = value;
   }
+}
+
 
   // Updated formatAccountHolderName function
   formatAccountHolderName(): void {

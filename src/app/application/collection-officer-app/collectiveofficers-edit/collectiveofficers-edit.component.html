@@ -255,17 +255,17 @@
             Sinhala)*</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             (keydown)="preventLeadingSpace($event, 'firstNameSinhala')"
-            (keypress)="preventInvalidSinhalaCharacters($event)"
+           
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameSinhalaInput="ngModel" (input)="formatSinhalaName('firstNameSinhala')" required />
+            #firstNameSinhalaInput="ngModel"   (keypress)="onLetterKeyPress($event)"/>
           <div *ngIf="firstNameSinhalaInput.touched && !personalData.firstNameSinhala"
             class="text-red-500 text-sm mt-1">
             <div>First Name (in Sinhala) is required</div>
           </div>
-          <span *ngIf="personalData.firstNameSinhala && hasInvalidSinhalaCharacters('firstNameSinhala')"
+          <!-- <span *ngIf="personalData.firstNameSinhala && hasInvalidSinhalaCharacters('firstNameSinhala')"
             class="text-red-600 text-sm">
             First Name should only contain Sinhala letters
-          </span>
+          </span> -->
         </div>
 
         <!-- Last Name (in Sinhala) - Updated with validation call -->
@@ -274,16 +274,16 @@
             Sinhala)</label>
           <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
             (keydown)="preventLeadingSpace($event, 'lastNameSinhala')"
-            (keypress)="preventInvalidSinhalaCharacters($event)"
+             (keypress)="onLetterKeyPress($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameSinhalaInput="ngModel" (input)="formatSinhalaName('lastNameSinhala')" required />
+            #lastNameSinhalaInput="ngModel"  />
           <div *ngIf="lastNameSinhalaInput.touched && !personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Sinhala) is required</div>
           </div>
-          <span *ngIf="personalData.lastNameSinhala && hasInvalidSinhalaCharacters('lastNameSinhala')"
+          <!-- <span *ngIf="personalData.lastNameSinhala && hasInvalidSinhalaCharacters('lastNameSinhala')"
             class="text-red-600 text-sm">
             Last Name should only contain Sinhala letters
-          </span>
+          </span> -->
         </div>
 
         <!-- First Name (in Tamil) - Updated with validation call -->
@@ -291,16 +291,16 @@
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil)*</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
-            (keydown)="preventLeadingSpace($event, 'firstNameTamil')" (keypress)="preventInvalidTamilCharacters($event)"
+            (keydown)="preventLeadingSpace($event, 'firstNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameTamilInput="ngModel" (input)="formatTamilName('firstNameTamil')" required />
+            #firstNameTamilInput="ngModel"  (keypress)="onLetterKeyPress($event)"/>
           <div *ngIf="firstNameTamilInput.touched && !personalData.firstNameTamil" class="text-red-500 text-sm mt-1">
             <div>First Name (in Tamil) is required</div>
           </div>
-          <span *ngIf="personalData.firstNameTamil && hasInvalidTamilCharacters('firstNameTamil')"
+          <!-- <span *ngIf="personalData.firstNameTamil && hasInvalidTamilCharacters('firstNameTamil')"
             class="text-red-600 text-sm">
             First Name should only contain Tamil letters
-          </span>
+          </span> -->
         </div>
 
         <!-- Last Name (in Tamil) - Updated with validation call -->
@@ -308,16 +308,16 @@
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil)</label>
           <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
-            (keydown)="preventLeadingSpace($event, 'lastNameTamil')" (keypress)="preventInvalidTamilCharacters($event)"
+            (keydown)="preventLeadingSpace($event, 'lastNameTamil')" 
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameTamilInput="ngModel" (input)="formatTamilName('lastNameTamil')" required />
+            #lastNameTamilInput="ngModel"  (keypress)="onLetterKeyPress($event)"/>
           <div *ngIf="lastNameTamilInput.touched && !personalData.lastNameTamil" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Tamil) is required</div>
           </div>
-          <span *ngIf="personalData.lastNameTamil && hasInvalidTamilCharacters('lastNameTamil')"
+          <!-- <span *ngIf="personalData.lastNameTamil && hasInvalidTamilCharacters('lastNameTamil')"
             class="text-red-600 text-sm">
             Last Name should only contain Tamil letters
-          </span>
+          </span> -->
         </div>
 
 

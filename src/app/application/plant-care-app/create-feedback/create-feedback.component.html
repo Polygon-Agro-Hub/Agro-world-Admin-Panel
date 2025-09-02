@@ -42,7 +42,7 @@
 
       <div class="pt-3 pb-3">
         <label for="feedbackEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In
-          English)*</label>
+          English) *</label>
         <textarea id="feedbackEnglish" [(ngModel)]="feedback.feedbackEnglish" name="feedbackEnglish"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #feedbackEnglishInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required
@@ -50,7 +50,7 @@
           (keydown)="preventInvalidEnglishAlphanumericCharacters($event)" (paste)="validateEnglishPaste($event)">
          </textarea>
         <div *ngIf="feedbackEnglishInput.touched && !feedback.feedbackEnglish" class="text-red-500 text-sm mt-1">
-          <div>English Feedback is required</div>
+          <div> English Feedback Option is required</div>
         </div>
         <!-- <div *ngIf="feedbackEnglishInput.touched && feedbackEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
@@ -59,7 +59,7 @@
 
       <div class="pt-3 pb-3">
         <label for="feedbackSinahala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In
-          Sinhala)*</label>
+          Sinhala) *</label>
         <textarea id="feedbackSinahala" [(ngModel)]="feedback.feedbackSinahala" name="feedbackSinahala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #feedbackSinahalaInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required
@@ -67,7 +67,7 @@
           (keydown)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)">
         </textarea>
         <div *ngIf="feedbackSinahalaInput.touched && !feedback.feedbackSinahala" class="text-red-500 text-sm mt-1">
-          <div>Sinhala Feedback is required</div>
+          <div>Sinhala Feedback Option is required</div>
         </div>
         <!-- <div *ngIf="feedbackSinahalaInput.touched && feedbackSinahalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>
@@ -76,7 +76,7 @@
 
       <div class="pt-3 pb-3">
         <label for="feedbackTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Option (In
-          Tamil)*</label>
+          Tamil) *</label>
         <textarea id="feedbackTamil" [(ngModel)]="feedback.feedbackTamil" name="feedbackTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #feedbackTamilInput="ngModel" rows="3" pattern="^[a-zA-Z0-9]*$" required
@@ -84,7 +84,7 @@
           (keydown)="preventInvalidTamilAlphanumericCharacters($event)" (paste)="validateTamilPaste($event)">
 </textarea>
         <div *ngIf="feedbackTamilInput.touched && !feedback.feedbackTamil" class="text-red-500 text-sm mt-1">
-          <div>Tamil Feedback is required</div>
+          <div>Tamil Feedback Option is required</div>
         </div>
         <!-- <div *ngIf="feedbackTamilInput.touched && feedbackTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
                     <div>Can not enter special character</div>

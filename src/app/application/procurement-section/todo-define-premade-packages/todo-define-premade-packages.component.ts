@@ -417,7 +417,7 @@ isExcluded(product: MarketplaceItem): boolean {
 
         this.loading = false;
         console.log('Updated successfully:', res);
-        Swal.fire('Success', 'Order has been successfully completed.', 'success');
+        Swal.fire('Success', 'Order has been successfully dispatched.', 'success');
         this.goToCompleteTab()
       },
       (err) => {

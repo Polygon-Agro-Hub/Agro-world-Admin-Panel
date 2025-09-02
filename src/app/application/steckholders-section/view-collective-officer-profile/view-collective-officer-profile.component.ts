@@ -449,10 +449,10 @@ export class ViewCollectiveOfficerProfileComponent {
       case 'Customer Officer':
         this.empHeader = 'CUO';
         break;
-      case 'Collection Center Manager':
+      case 'Collection Centre Manager':
         this.empHeader = 'CCM';
         break;
-      case 'Collection Center Head':
+      case 'Collection Centre Head':
         this.empHeader = 'CCH';
         break;
       case 'Collection Officer':
@@ -464,18 +464,26 @@ export class ViewCollectiveOfficerProfileComponent {
     }
   }
 
-  fetchOfficerById(id: number) {
-    this.isLoading = true;
-    this.collectionService
-      .fetchAllCollectionOfficerProfile(id)
-      .subscribe((res: any) => {
-        this.isLoading = false;
-        this.officerObj = res.officerData.collectionOfficer;
-        this.officerObj.claimStatus =
-          res.officerData.collectionOfficer.claimStatus;
-        this.getRoleHeading();
-      });
-  }
+fetchOfficerById(id: number) {
+  this.isLoading = true;
+  this.collectionService
+    .fetchAllCollectionOfficerProfile(id)
+    .subscribe((res: any) => {
+      this.isLoading = false;
+
+      this.officerObj = res.officerData.collectionOfficer;
+
+      // Replace role name if it's "Collection Center Manager"
+      if (this.officerObj.jobRole === 'Collection Center Manager') {
+  this.officerObj.jobRole = 'Collection Centre Manager';
+}
+
+
+      this.officerObj.claimStatus = this.officerObj.claimStatus; // already exists
+      this.getRoleHeading();
+    });
+}
+
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -609,11 +617,11 @@ export class ViewCollectiveOfficerProfileComponent {
       case 'Customer Officer':
         empType = 'Customer Officer';
         break;
-      case 'Collection Center Manager':
-        empType = 'Collection Center Manager';
+      case 'Collection Centre Manager':
+        empType = 'Collection Centre Manager';
         break;
-      case 'Collection Center Head':
-        empType = 'Collection Center Head';
+      case 'Collection Centre Head':
+        empType = 'Collection Centre Head';
         break;
       case 'Collection Officer':
         empType = 'Collection Officer';

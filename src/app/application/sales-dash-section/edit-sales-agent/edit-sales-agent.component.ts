@@ -799,44 +799,35 @@ onSubmit() {
   }
 }
 
-  validateNameInput(event: KeyboardEvent): void {
-  // Allow navigation and control keys
-  const allowedKeys = [
-    'Backspace',
-    'Delete',
-    'ArrowLeft',
-    'ArrowRight',
-    'Tab',
-    'Home',
-    'End'
-  ];
+validateNameInput(event: KeyboardEvent): void {
+  const allowedKeys = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+  if (allowedKeys.includes(event.key)) return;
 
-  // Allow these special keys
-  if (allowedKeys.includes(event.key)) {
-    return;
-  }
-
-  // Block leading spaces for name fields
   const target = event.target as HTMLInputElement;
   const fieldName = target.getAttribute('name') as keyof Personal;
-  
+
+  // Block leading spaces
   if (['firstName', 'lastName'].includes(fieldName)) {
     const currentValue = this.personalData[fieldName] as string || '';
-    
-    // Block space if field is empty or cursor is at beginning
     if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
       event.preventDefault();
       return;
     }
   }
 
-  // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
-  const allowedPattern = /^[a-zA-Z\s'-]$/;
+  // Block ASCII numbers only
+  if (/[0-9]/.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
 
+  // Allow letters (English, Sinhala, Tamil), spaces, hyphens, apostrophes
+  const allowedPattern = /^[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\s'-]$/;
   if (!allowedPattern.test(event.key)) {
     event.preventDefault();
   }
 }
+
 capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName') {
   let value = this.personalData[field];
 

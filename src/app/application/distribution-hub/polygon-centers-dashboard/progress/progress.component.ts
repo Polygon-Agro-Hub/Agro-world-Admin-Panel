@@ -55,21 +55,28 @@ export class ProgressComponent implements OnChanges {
   }
 
   fetchData() {
-    console.log(this.selectedDate);
-    
-    // Format the date for the API call
-    let formattedDate = '';
-    if (this.selectedDate) {
-      formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-    }
-    
-    this.DestributionSrv.getCenterTargetDetails(this.centerObj.centerId, this.selectedStatus, formattedDate, this.searchText).subscribe(
-      (res) => {
-        this.targetArr = res.data;
-        this.targetCount = res.data.length || 0;
-      }
-    )
+  console.log(this.selectedDate);
+  
+  // Format the date for the API call
+  let formattedDate = '';
+  if (this.selectedDate) {
+    // Use the same format as the backend expects (YYYY-MM-DD)
+    formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
   }
+  
+  this.DestributionSrv.getCenterTargetDetails(
+    this.centerObj.centerId, 
+    this.selectedStatus, 
+    formattedDate, 
+    this.searchText
+  ).subscribe(
+    (res) => {
+      this.targetArr = res.data;
+      this.targetCount = res.data.length || 0;
+      this.hasData = this.targetCount === 0; // Update hasData based on results
+    }
+  )
+}
 
   clearDate() {
     this.selectedDate = null;

@@ -31,12 +31,27 @@
           </div>
 
           <div>
-            <p-calendar id="deliveryDate" placeholder="Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
-              dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030"
-              [(ngModel)]="selectedDate" (change)="fetchData()" iconDisplay="input"
-              [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl ..."
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] ..." [appendTo]="'body'">
-            </p-calendar>
+            <div>
+  <p-calendar 
+    id="deliveryDate" 
+    placeholder="Delivery Date" 
+    [showIcon]="true" 
+    [showClear]="true" 
+    [showButtonBar]="true"
+    dateFormat="yy-mm-dd" 
+    [monthNavigator]="true" 
+    [yearNavigator]="true" 
+    yearRange="1900:2030"
+    [(ngModel)]="selectedDate" 
+    (onSelect)="fetchData()" 
+    (onClearClick)="clearDate()"
+    iconDisplay="input"
+    [style]="{ width: '16rem', height: '2rem' }" 
+    panelStyleClass="calendar-popup-small rounded-xl ..."
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] ..." 
+    [appendTo]="'body'">
+  </p-calendar>
+</div>
 
           </div>
 

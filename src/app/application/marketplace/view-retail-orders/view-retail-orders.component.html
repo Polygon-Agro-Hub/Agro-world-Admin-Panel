@@ -204,11 +204,10 @@
               let i = index
             "
           >
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
-              {{
-                ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, "0")
-              }}
-            </td>
+           <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+  {{ ((page - 1) * itemsPerPage + i + 1).toString().padStart(3, '0') }}
+</td>
+
 
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.invNo }}

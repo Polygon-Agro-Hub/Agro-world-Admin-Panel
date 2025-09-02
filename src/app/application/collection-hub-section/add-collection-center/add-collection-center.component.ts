@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { Country, COUNTRIES } from '../../../../assets/country-data';
-
+import { MultiSelectModule } from 'primeng/multiselect';
 @Component({
   selector: 'app-add-collection-center',
   standalone: true,
@@ -21,6 +21,7 @@ import { Country, COUNTRIES } from '../../../../assets/country-data';
     CommonModule,
     ReactiveFormsModule,
     DropdownModule,
+    MultiSelectModule,
     InputTextModule,
     FormsModule,
   ],
@@ -518,11 +519,23 @@ isFieldInvalid(field: string): boolean {
 }
 
 
-  getAllCompanies() {
-    this.collectionCenterService.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
-    });
-  }
+getAllCompanies() {
+  this.collectionCenterService.getAllCompanyList().subscribe((res) => {
+    console.log('Raw response from service:', res);
+    this.CompanyData = res;
+
+ 
+
+    this.filteredCompanies = this.CompanyData.filter(
+      (item) => item.id != null && item.companyNameEnglish
+    );
+    this.filteredCompanies = this.filteredCompanies.filter(
+      (item, index, self) => index === self.findIndex(i => i.id === item.id)
+    );
+    console.log('Companies for dropdown:', this.filteredCompanies);
+  });
+}
+
 
   noNumbersValidator(control: any) {
     const regex = /^[A-Za-z\s]*$/;

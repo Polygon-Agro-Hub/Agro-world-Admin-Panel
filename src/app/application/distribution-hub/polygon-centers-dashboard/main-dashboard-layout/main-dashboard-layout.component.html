@@ -48,7 +48,7 @@
       <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress'" />
       <app-out-of-delivery [centerObj]="centerObj"  *ngIf="activeTab === 'Out for Delivery'"></app-out-of-delivery>
       <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers'"></app-officers>
-      <app-officer-target *ngIf="activeTab === 'Officer Target'"></app-officer-target>
+      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target'"></app-officer-target>
     </div>
   </div>
 </div>

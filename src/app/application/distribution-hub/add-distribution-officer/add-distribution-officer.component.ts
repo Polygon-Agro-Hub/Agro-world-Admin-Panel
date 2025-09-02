@@ -25,6 +25,12 @@ interface Branch {
 interface BranchesData {
   [key: string]: Branch[];
 }
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
+
 
 @Component({
   selector: 'app-add-distribution-officer',
@@ -72,6 +78,20 @@ export class AddDistributionOfficerComponent implements OnInit {
   distributionHeadData: DistributionHead[] = [];
 
   invalidFields: Set<string> = new Set();
+    countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
+
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },

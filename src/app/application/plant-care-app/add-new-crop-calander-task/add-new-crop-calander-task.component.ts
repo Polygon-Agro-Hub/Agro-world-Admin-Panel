@@ -43,7 +43,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   taskForm: FormGroup;
   cropTaskObj: Croptask = new Croptask();
   requireImageLink: string = 'no';
-
+requireVideoLink  : string = 'no';
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -52,43 +52,68 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
     private location: Location
   ) {
     this.taskForm = this.fb.group({
-      cropId: ['', [Validators.required]],
-      startingDate: ['', [Validators.required]],
-      taskTypeEnglish: ['', [Validators.required]],
-      taskTypeSinhala: ['', [Validators.required]],
-      taskTypeTamil: ['', [Validators.required]],
-      taskCategoryEnglish: ['', [Validators.required]],
-      taskCategorySinhala: ['', [Validators.required]],
-      taskCategoryTamil: ['', [Validators.required]],
-      taskEnglish: ['', [Validators.required]],
-      taskSinhala: ['', [Validators.required]],
-      taskTamil: ['', [Validators.required]],
-      taskDescriptionEnglish: ['', [Validators.required]],
-      taskDescriptionSinhala: ['', [Validators.required]],
-      taskDescriptionTamil: ['', [Validators.required]],
-      reqImages: ['', ],
-      imageLink: ['',],
-      videoLinkEnglish: [''],
+  cropId: ['', [Validators.required]],
+  startingDate: ['', [Validators.required]],
+  taskTypeEnglish: ['', [Validators.required]],
+  taskTypeSinhala: ['', [Validators.required]],
+  taskTypeTamil: ['', [Validators.required]],
+  taskCategoryEnglish: ['', [Validators.required]],
+  taskCategorySinhala: ['', [Validators.required]],
+  taskCategoryTamil: ['', [Validators.required]],
+  taskEnglish: ['', [Validators.required]],
+  taskSinhala: ['', [Validators.required]],
+  taskTamil: ['', [Validators.required]],
+  taskDescriptionEnglish: ['', [Validators.required]],
+  taskDescriptionSinhala: ['', [Validators.required]],
+  taskDescriptionTamil: ['', [Validators.required]],
+  reqImages: ['no', [Validators.required]], // Initialize with 'no'
+  imageLink: [''],
+  requireVideoLink: ['no', [Validators.required]], // Add this
+  videoLinkEnglish: [''],
   videoLinkSinhala: [''],
   videoLinkTamil: [''],
-      images: ['', [Validators.required]],
-    });
-  }
-
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.cultivationId = params['cultivationId']
-        ? +params['cultivationId']
-        : null;
-      this.userName = params['userName'] ? params['userName'] : '';
+  images: [''],
+});}
+ngOnInit(): void {
+  this.route.queryParams.subscribe((params) => {
+    this.cultivationId = params['cultivationId'] ? +params['cultivationId'] : null;
+    this.userName = params['userName'] ? params['userName'] : '';
     console.log('cultivationId', this.cultivationId);
+  });
+  this.cropId = this.route.snapshot.params['cropId'];
+  this.indexId = this.route.snapshot.params['indexId'];
+  this.userId = this.route.snapshot.params['userId'];
+  this.onCulscropID = this.route.snapshot.params['onCulscropID'];
+  console.log('hiiiii', this.onCulscropID);
+
+  // Watch for changes in requireVideoLink
+  this.taskForm.get('requireVideoLink')?.valueChanges.subscribe((value) => {
+    const videoFields = ['videoLinkEnglish', 'videoLinkSinhala', 'videoLinkTamil'];
+    videoFields.forEach((field) => {
+      const control = this.taskForm.get(field);
+      if (value === 'yes') {
+        control?.setValidators([Validators.required]);
+      } else {
+        control?.clearValidators();
+      }
+      control?.updateValueAndValidity();
     });
-    this.cropId = this.route.snapshot.params['cropId'];
-    this.indexId = this.route.snapshot.params['indexId'];
-    this.userId = this.route.snapshot.params['userId'];
-    this.onCulscropID = this.route.snapshot.params['onCulscropID '];
-    console.log('hiiiii', this.onCulscropID);
-  }
+  });
+
+  // Watch for changes in reqImages
+  this.taskForm.get('reqImages')?.valueChanges.subscribe((value) => {
+    const imageFields = ['imageLink', 'images'];
+    imageFields.forEach((field) => {
+      const control = this.taskForm.get(field);
+      if (value === 'yes') {
+        control?.setValidators([Validators.required]);
+      } else {
+        control?.clearValidators();
+      }
+      control?.updateValueAndValidity();
+    });
+  });
+}
 
   selectLanguage(lang: 'english' | 'sinhala' | 'tamil') {
     this.selectedLanguage = lang;
@@ -283,6 +308,19 @@ if (this.requireImageLink === 'yes') {
     missingFields.push('Images are required when Require Images is set to Yes');
   }
 }
+
+if (this.requireVideoLink === 'yes') {
+  if (this.taskForm.get('videoLinkEnglish')?.invalid || !this.cropTaskObj.videoLinkEnglish) {
+    missingFields.push('Video Link English is required when "Want to Add Videos?" is Yes');
+  }
+  if (this.taskForm.get('videoLinkSinhala')?.invalid || !this.cropTaskObj.videoLinkSinhala) {
+    missingFields.push('Video Link Sinhala is required when "Want to Add Videos?" is Yes');
+  }
+  if (this.taskForm.get('videoLinkTamil')?.invalid || !this.cropTaskObj.videoLinkTamil) {
+    missingFields.push('Video Link Tamil is required when "Want to Add Videos?" is Yes');
+  }
+}
+
   // If there are validation errors, show popup and stop submission
   if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';

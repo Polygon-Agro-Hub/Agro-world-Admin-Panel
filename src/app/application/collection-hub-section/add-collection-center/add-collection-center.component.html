@@ -84,19 +84,21 @@
     Companies *
   </label>
 
-  <p-dropdown
-    [options]="CompanyData"
-    [(ngModel)]="selectedCompaniesIds"
-    optionLabel="companyNameEnglish"
-    optionValue="id"
-    [filter]="true"
-    filterPlaceholder="Search company..."
-    [showClear]="true"
-    [virtualScroll]="true"
-    placeholder="Select companies"
-    [styleClass]="'w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
-   >
-  </p-dropdown>
+<p-multiSelect
+  [options]="filteredCompanies"
+  [(ngModel)]="selectedCompaniesIds"
+  optionLabel="companyNameEnglish"
+  optionValue="id"
+  [filter]="true"
+  filterPlaceholder="Search company..."
+  [showClear]="true"
+  placeholder="Select companies"
+  
+  [styleClass]="'w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+>
+</p-multiSelect>
+
+
 
   <div *ngIf="companyTouched && !selectedCompaniesIds.length" class="text-red-500 text-sm mt-1">
     Company is required

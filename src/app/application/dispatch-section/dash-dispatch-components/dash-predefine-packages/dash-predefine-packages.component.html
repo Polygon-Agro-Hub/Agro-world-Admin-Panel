@@ -159,7 +159,7 @@ Completed By                    </th>
 
                         <button class="w-6 h-6 mr-3" 
                         [disabled]="item.packageStatus === 'Unknown'"
-                        (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.totcount, item.displayName, item.productPrice)"
+                        (click)="navigateToPackageItemView(item)"
                         [ngClass]="{
                             'text-gray-100 cursor-not-allowed': item.packageStatus === 'Unknown',
                           'text-yellow-500 hover:text-yellow-700': item.packageStatus === 'Opened',
@@ -183,7 +183,7 @@ Completed By                    </th>
                         <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)" -->
 
                         <button
-                            (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)"
+                            (click)="navigateToAdditionalItemView(item)"
                             class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.additionalItemsStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': item.additionalItemsStatus === 'Opened' && item.orderAdditionalCount > 0,

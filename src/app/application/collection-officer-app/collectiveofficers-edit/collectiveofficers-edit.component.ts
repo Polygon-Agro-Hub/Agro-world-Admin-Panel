@@ -234,6 +234,14 @@ setupDropdownOptions() {
       event.preventDefault();
     }
   }
+onLetterKeyPress(event: KeyboardEvent) {
+  const char = event.key;
+  // Allow all letters (\p{L}) and space, block numbers and special characters
+  const regex = /^[\p{L} ]$/u;
+  if (!regex.test(char)) {
+    event.preventDefault(); // block the key
+  }
+}
 
 
 back(): void {
@@ -796,7 +804,7 @@ onBranchChange(event: DropdownChangeEvent): void {
 
     const rolePrefixes: { [key: string]: string } = {
       'Collection Center Head': 'CCH',
-      'Collection Center Manager': 'CCM',
+      'Collection Centre Manager': 'CCM',
       'Customer Officer': 'CUO',
       'Collection Officer': 'COO',
     };

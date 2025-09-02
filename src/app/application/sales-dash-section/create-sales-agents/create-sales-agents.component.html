@@ -103,7 +103,7 @@ class="text-textLight dark:text-textDark">
             First Name <span class="text-[#2E2E2E]">*</span>
           </label>
           <input id="firstName" [(ngModel)]="personalData.firstName" name="firstName" (blur)="onBlur('firstName')"
-            #firstNameInput="ngModel" (keydown)="validateNameInput($event, 'firstName')"
+            #firstNameInput="ngModel" (keypress)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('firstName')"
               (keydown)="blockLeadingSpace($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -116,9 +116,9 @@ class="text-textLight dark:text-textDark">
             <div *ngIf="personalData.firstName && isLeadingSpaceErrorMap['firstName']" class="text-red-600 text-sm">
               Leading spaces are not allowed.
             </div>
-            <div *ngIf="personalData.firstName && isSpecialCharErrorMap['firstName']" class="text-red-600 text-sm">
+            <!-- <div *ngIf="personalData.firstName && isSpecialCharErrorMap['firstName']" class="text-red-600 text-sm">
               Only English letters allowed and first letter must be capitalized.
-            </div>
+            </div> -->
           </div>
 
         </div>
@@ -127,7 +127,7 @@ class="text-textLight dark:text-textDark">
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name <span
               class="text-[#2E2E2E]">*</span></label>
           <input id="lastName" name="lastName" [(ngModel)]="personalData.lastName" #lastNameInput="ngModel"
-            (blur)="onBlur('lastName')" (keydown)="validateNameInput($event, 'lastName')"
+            (blur)="onBlur('lastName')" (keypress)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('lastName')"
               (keydown)="blockLeadingSpace($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -140,9 +140,9 @@ class="text-textLight dark:text-textDark">
             <div *ngIf="personalData.lastName && isLeadingSpaceErrorMap['lastName']" class="text-red-600 text-sm">
               Leading spaces are not allowed.
             </div>
-            <div *ngIf="personalData.lastName && isSpecialCharErrorMap['lastName']" class="text-red-600 text-sm">
+            <!-- <div *ngIf="personalData.lastName && isSpecialCharErrorMap['lastName']" class="text-red-600 text-sm">
               Only English letters allowed and first letter must be capitalized.
-            </div>
+            </div> -->
           </div>
 
         </div>
@@ -376,7 +376,7 @@ class="text-textLight dark:text-textDark">
     Name <span class="text-[#2E2E2E]">*</span></label>
   <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
     (blur)="onBlur('accHolderName'); capitalizeName('accHolderName')"
-    (keydown)="validateNameInput($event, 'accHolderName')" 
+   (keypress)="validateNameInput($event)"
     (paste)="onPaste($event, 'accHolderName')"
     (input)="capitalizeName('accHolderName')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />

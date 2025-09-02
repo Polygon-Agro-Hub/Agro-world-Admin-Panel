@@ -93,9 +93,17 @@ export class SalesTargetComponent implements OnInit {
   }
 
   blockFirstSpace(event: KeyboardEvent) {
-  const input = (event.target as HTMLInputElement).value;
-  if (event.key === ' ' && input.length === 0) {
-    event.preventDefault(); // Prevent space at the beginning
+ const inputEl = event.target as HTMLInputElement;
+  const cursorPos = inputEl.selectionStart || 0;
+
+  // Prevent space if:
+  // 1. Input is empty (no leading space)
+  // 2. Previous character is space (no consecutive spaces)
+  if (
+    event.key === ' ' &&
+    (cursorPos === 0 || inputEl.value.charAt(cursorPos - 1) === ' ')
+  ) {
+    event.preventDefault();
   }
 }
 

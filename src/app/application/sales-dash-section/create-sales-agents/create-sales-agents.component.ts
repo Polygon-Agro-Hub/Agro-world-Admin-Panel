@@ -707,50 +707,33 @@ onSubmit() {
     this.touchedFields[field] = true;
   }
 
-  validateNameInput(event: KeyboardEvent, fieldName?: string): void {
+validateNameInput(event: KeyboardEvent): void {
   // Allow navigation and control keys
-  const allowedKeys = [
-    'Backspace',
-    'Delete',
-    'ArrowLeft',
-    'ArrowRight',
-    'Tab',
-    'Home',
-    'End',
-    'Spacebar',
-  ];
+  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+  if (allowedKeys.includes(event.key)) return;
 
-  // Allow these special keys
-  if (allowedKeys.includes(event.key)) {
-    return;
+  const target = event.target as HTMLInputElement;
+  const fieldName = target.getAttribute('name') as keyof Personal;
+
+  // Block leading spaces for firstName and lastName
+  if (['firstName', 'lastName'].includes(fieldName)) {
+    const currentValue = this.personalData[fieldName] as string || '';
+    if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+      event.preventDefault();
+      return;
+    }
   }
 
-  // Get the current input value (if fieldName is provided)
-  const currentValue = fieldName
-    ? (this.personalData[fieldName as keyof Personal] as string) || ''
-    : '';
+  // Allow only letters (English, Sinhala, Tamil), spaces, hyphens, apostrophes
+  const allowedPattern = /^[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\s'-]$/;
 
-  // Block space if it's the first character
-  if (event.key === ' ' && currentValue.length === 0) {
+  // Block numbers (English, Sinhala, Tamil) and special characters
+  if (!allowedPattern.test(event.key)) {
     event.preventDefault();
-    return;
-  }
-
-  // For account holder name, only allow English letters, spaces, and apostrophes (NO HYPHENS)
-  if (fieldName === 'accHolderName') {
-    const allowedPattern = /^[a-zA-Z\s']$/; // Removed hyphen from allowed characters
-    if (!allowedPattern.test(event.key)) {
-      event.preventDefault();
-    }
-  } 
-  // For other name fields (first name, last name)
-  else {
-    const allowedPattern = /^[a-zA-Z\s'-]$/;
-    if (!allowedPattern.test(event.key)) {
-      event.preventDefault();
-    }
   }
 }
+
+
 capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName', event?: any) {
   let value = this.personalData[field];
   if (!value) return;

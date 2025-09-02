@@ -173,7 +173,7 @@
     </div>
 
     <div>
-      <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="purchaseReport.length > 0">
         <thead>
           <tr>
             <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
@@ -241,11 +241,11 @@
         </tbody>
       </table>
       
-      <div *ngIf="purchaseReport.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6 ">
-        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div>
-      
+   <!-- No Data Message -->
+  <div *ngIf="purchaseReport.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6 ">
+    <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+  </div>
       <div class="dark:bg-[#262f45] mt-4">
         <pagination-controls 
           (pageChange)="onPageChange($event)" 

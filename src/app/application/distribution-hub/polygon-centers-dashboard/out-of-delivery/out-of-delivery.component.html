@@ -39,10 +39,10 @@
             ></p-dropdown>
           </div>
 
-          <div>
+          <div class="relative">
             <p-calendar
               id="deliveryDate"
-              placeholder="Date"
+              placeholder="Select Date"
               [showIcon]="true"
               [showClear]="true"
               [showButtonBar]="true"
@@ -53,7 +53,7 @@
               iconDisplay="input"
               [(ngModel)]="selectDate"
               (onSelect)="onDateSelect()"
-              (onClearClick)="onDateSelect()"
+              (onClearClick)="clearDate()"
               [style]="{ width: '16rem', height: '2rem' }"
               panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
@@ -188,15 +188,7 @@
       </table>
 
       <div *ngIf="!hasData" class="dark:bg-[#262f45]">
-        <!-- <pagination-controls
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
-        </pagination-controls> -->
+        <!-- pagination controls if needed -->
       </div>
 
       <div

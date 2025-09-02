@@ -59,6 +59,11 @@ export class OutOfDeliveryComponent implements OnChanges {
     this.applyFilters();
   }
 
+  clearDate() {
+    this.selectDate = null;
+    this.fetchData(); // Refetch data without date filter
+  }
+
   applyFilters() {
     // First filter by status
     if (this.selectStatus) {
@@ -76,6 +81,18 @@ export class OutOfDeliveryComponent implements OnChanges {
       );
     }
 
+    // Then filter by date if provided
+    if (this.selectDate) {
+      const selectedDateStr = this.selectDate.toISOString().split('T')[0];
+      this.filteredOrders = this.filteredOrders.filter(order => {
+        if (order.outDlvrDate) {
+          const orderDateStr = new Date(order.outDlvrDate).toISOString().split('T')[0];
+          return orderDateStr === selectedDateStr;
+        }
+        return false;
+      });
+    }
+
     // Update the count
     this.orderCount = this.filteredOrders.length;
   }
@@ -87,10 +104,14 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   fetchData() {
     this.isLoading = true;
+    
+    // Convert date to string format for API call
+    const dateParam = this.selectDate ? this.selectDate.toISOString().split('T')[0] : '';
+    
     this.DestributionSrv.getCenterOutForDlvryOrders(
       this.centerObj.centerId, 
-      this.selectDate ? this.selectDate.toISOString().split('T')[0] : '', 
       this.selectStatus, 
+      dateParam, 
       this.searchText
     ).subscribe(
       (res) => {

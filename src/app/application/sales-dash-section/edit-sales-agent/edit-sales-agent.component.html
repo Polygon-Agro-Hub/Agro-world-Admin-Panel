@@ -260,10 +260,12 @@
   </div>
 </div>
 
-        <div>
+       <div>
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email <span
       class="text-[#2E2E2E]">*</span></label>
   <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+    (keydown)="validateEmailInput($event)"
+    (input)="validateEmailOnInput()"
     (blur)="validateEmailOnBlur()"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #emailInput="ngModel" required />
@@ -372,27 +374,27 @@
         Add Bank Details
       </h2>
       <div class="pb-6">
-        <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-          Name <span class="text-[#2E2E2E]">*</span></label>
-        <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-  (keydown)="validateEnglishNameInput($event)" 
-  (input)="formatEnglishName('accHolderName')"
-  (paste)="handleNamePaste($event)"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #accHolderNameInput="ngModel" required />
-        <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">
-          <div>Account Holder's name is required</div>
-        </div>
-        <div *ngIf="
-            accHolderNameInput.touched &&
-            personalData.accHolderName &&
-            !isValidName(personalData.accHolderName)
-          " class="text-red-500 text-sm mt-1">
-          <div>
-            Please use only letters, spaces, hyphens (-), and apostrophes (')
-          </div>
-        </div>
-      </div>
+  <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
+    Name <span class="text-[#2E2E2E]">*</span></label>
+  <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
+    (keydown)="validateAccountHolderNameInput($event)" 
+    (input)="formatAccountHolderName()"
+    (paste)="handleAccountHolderNamePaste($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #accHolderNameInput="ngModel" required />
+  <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">
+    <div>Account Holder's name is required</div>
+  </div>
+  <div *ngIf="
+      accHolderNameInput.touched &&
+      personalData.accHolderName &&
+      !isValidName(personalData.accHolderName)
+    " class="text-red-500 text-sm mt-1">
+    <div>
+      Please use only letters, spaces, hyphens (-), and apostrophes (')
+    </div>
+  </div>
+</div>
 
       <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span

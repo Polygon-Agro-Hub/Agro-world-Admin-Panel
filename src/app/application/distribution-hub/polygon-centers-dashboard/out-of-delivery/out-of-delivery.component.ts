@@ -6,6 +6,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { DestributionService } from '../../../../services/destribution-service/destribution-service.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-out-of-delivery',
@@ -16,6 +17,7 @@ import { DestributionService } from '../../../../services/destribution-service/d
     CalendarModule,
     DropdownModule,
     NgxPaginationModule,
+    FormsModule
   ],
   templateUrl: './out-of-delivery.component.html',
   styleUrl: './out-of-delivery.component.css',
@@ -28,7 +30,18 @@ export class OutOfDeliveryComponent implements OnChanges {
   selectStatus: string = '';
   searchText: string = '';
 
+  statusOptions = [
+    { label: 'Late', value: 'Late' },
+    { label: 'On Time', value: 'On Time' },
+  ]
+
+
   ngOnChanges(): void {
+    this.fetchData();
+  }
+
+  changeStatus(){
+    console.log(this.selectStatus);
     this.fetchData();
   }
 

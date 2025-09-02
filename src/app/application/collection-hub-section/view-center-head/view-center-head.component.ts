@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import Swal from 'sweetalert2';
-
+import { DropdownModule } from 'primeng/dropdown';
 interface Bank {
   ID: number;
   name: string;
@@ -22,7 +22,11 @@ interface Branch {
 interface BranchesData {
   [key: string]: Branch[];
 }
-
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-view-center-head',
@@ -32,6 +36,7 @@ interface BranchesData {
     HttpClientModule,
     CommonModule,
     FormsModule,
+    DropdownModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './view-center-head.component.html',
@@ -64,7 +69,20 @@ export class ViewCenterHeadComponent {
   invalidFields: Set<string> = new Set();
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
+    countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
 
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },

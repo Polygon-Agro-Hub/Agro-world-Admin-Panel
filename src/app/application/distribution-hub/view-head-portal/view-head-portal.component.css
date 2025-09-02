@@ -1,0 +1,9 @@
+::ng-deep .p-dropdown.p-disabled {
+  opacity: 1 !important;             /* remove grey effect */
+  background-color: inherit !important;
+  color: inherit !important;
+  cursor: default !important;        /* normal arrow, not blocked */
+}
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  display: none !important;  /* hides the arrow */
+}

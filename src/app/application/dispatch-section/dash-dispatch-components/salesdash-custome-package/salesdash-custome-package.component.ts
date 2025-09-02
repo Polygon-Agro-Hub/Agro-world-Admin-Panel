@@ -191,10 +191,13 @@ back(): void {
     this.getSelectedPackages(this.pagesl, this.itemsPerPagesl);
   }
 
-  navigateToCustomAdditionalItemView(id: number, invNo: string, total: number, fullTotal: number | string): void {
-    console.log('Navigating to custom additional items:', { id, invNo, total, fullTotal });
-    this.router.navigate(['/dispatch/custom-additional-items'], {
-      queryParams: { id, invNo, total, fullTotal }
+  navigateToCustomAdditionalItemView(id: number): void {
+    // console.log('Navigating to custom additional items:', { id, invNo, total, fullTotal });
+    // this.router.navigate(['/dispatch/custom-additional-items'], {
+    //   queryParams: { id, invNo, total, fullTotal }
+    // });
+    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
+      queryParams: { status: true}
     });
   }
 }

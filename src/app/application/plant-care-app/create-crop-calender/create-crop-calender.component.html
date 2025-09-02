@@ -53,21 +53,14 @@
             <label for="cultivationMethod" class="block text-sm font-medium text-textLight dark:text-textDark">
               Cultivation Method *
             </label>
-          <p-dropdown
-  formControlName="cultivationMethod"
-  [options]="cultivationMethodOptions"
-  optionLabel="label"
-  optionValue="value"
-  placeholder="Select method"
-  [ngClass]="{
+            <p-dropdown formControlName="cultivationMethod" [options]="cultivationMethodOptions" optionLabel="label"
+              optionValue="value" placeholder="Select method" [ngClass]="{
     'border-red-500':
       cropForm.get('cultivationMethod')?.invalid &&
       (cropForm.get('cultivationMethod')?.dirty ||
         cropForm.get('cultivationMethod')?.touched)
-  }"
-  class="w-full mt-1"
->
-</p-dropdown>
+  }" class="w-full mt-1">
+            </p-dropdown>
 
             <div
               *ngIf="cropForm.get('cultivationMethod')?.invalid && (cropForm.get('cultivationMethod')?.dirty || cropForm.get('cultivationMethod')?.touched)"
@@ -80,21 +73,14 @@
             <label for="natureOfCultivation" class="block text-sm font-medium text-textLight dark:text-textDark">
               Nature of Cultivation *
             </label>
-         <p-dropdown
-  formControlName="natureOfCultivation"
-  [options]="natureOptions"
-  optionLabel="label"
-  optionValue="value"
-  placeholder="Select nature"
-  [ngClass]="{
+            <p-dropdown formControlName="natureOfCultivation" [options]="natureOptions" optionLabel="label"
+              optionValue="value" placeholder="Select nature" [ngClass]="{
     'border-red-500':
       cropForm.get('natureOfCultivation')?.invalid &&
       (cropForm.get('natureOfCultivation')?.dirty ||
         cropForm.get('natureOfCultivation')?.touched)
-  }"
-  class="w-full"
->
-</p-dropdown>
+  }" class="w-full">
+            </p-dropdown>
 
             <div
               *ngIf="cropForm.get('natureOfCultivation')?.invalid && (cropForm.get('natureOfCultivation')?.dirty || cropForm.get('natureOfCultivation')?.touched)"
@@ -126,7 +112,6 @@
               Suitable Areas *
             </label>
             <p-multiSelect id="suitableAreas" formControlName="suitableAreas" [options]="toppingList" optionLabel="name"
-          
               optionValue="name" [filter]="true" filterBy="name" placeholder="Select suitable areas" [showClear]="false"
               class="mt-1 block w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
               [ngClass]="{'border-red-500': cropForm.get('suitableAreas')?.invalid && (cropForm.get('suitableAreas')?.dirty || cropForm.get('suitableAreas')?.touched)}">
@@ -166,26 +151,19 @@
 
     <form [formGroup]="cropForm" (ngSubmit)="updateCropCalendar()">
       <div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-6">
+        
           <div class="my-3">
             <label for="cultivationMethod" class="block text-sm font-medium text-textLight dark:text-textDark">
               Cultivation Method *
             </label>
-          <p-dropdown
-  formControlName="cultivationMethod"
-  [options]="cultivationMethodOptions"
-  optionLabel="label"
-  optionValue="value"
-  placeholder="Select method"
-  [ngClass]="{
+            <p-dropdown formControlName="cultivationMethod" [options]="cultivationMethodOptions" optionLabel="label"
+              optionValue="value" placeholder="Select method" [ngClass]="{
     'border-red-500':
       cropForm.get('cultivationMethod')?.invalid &&
       (cropForm.get('cultivationMethod')?.dirty ||
         cropForm.get('cultivationMethod')?.touched)
-  }"
-  class="w-full mt-1 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md"
->
-</p-dropdown>
+  }" class="w-full mt-1 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md">
+            </p-dropdown>
 
             <div
               *ngIf="cropForm.get('cultivationMethod')?.invalid && (cropForm.get('cultivationMethod')?.dirty || cropForm.get('cultivationMethod')?.touched)"
@@ -198,29 +176,21 @@
             <label for="natureOfCultivation" class="block text-sm font-medium text-textLight dark:text-textDark">
               Nature of Cultivation *
             </label>
-          <p-dropdown
-  formControlName="natureOfCultivation"
-  [options]="natureOptions"
-  optionLabel="label"
-  optionValue="value"
-  placeholder="Select nature"
-  [ngClass]="{
+            <p-dropdown formControlName="natureOfCultivation" [options]="natureOptions" optionLabel="label"
+              optionValue="value" placeholder="Select nature" [ngClass]="{
     'border-red-500':
       cropForm.get('natureOfCultivation')?.invalid &&
       (cropForm.get('natureOfCultivation')?.dirty ||
         cropForm.get('natureOfCultivation')?.touched)
-  }"
-  class="w-full mt-1 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md"
->
-</p-dropdown>
+  }" class="w-full mt-1 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md">
+            </p-dropdown>
 
             <div
               *ngIf="cropForm.get('natureOfCultivation')?.invalid && (cropForm.get('natureOfCultivation')?.dirty || cropForm.get('natureOfCultivation')?.touched)"
               class="text-red-500 text-sm mt-1">
               Nature of cultivation is required
             </div>
-          </div>
-
+      
           <div class="md:col-span-2 my-3">
             <label for="cropDuration" class="block text-sm font-medium text-textLight dark:text-textDark">
               Crop Duration *
@@ -240,44 +210,29 @@
           </div>
 
           <div class="md:col-span-2 my-3 w-full">
-           <label
-    for="suitableAreas"
-    class="block text-sm font-medium text-textLight dark:text-textDark"
-  >
-    Suitable Areas *
-  </label>
+            <label for="suitableAreas" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Suitable Areas *
+            </label>
 
-  <p-multiSelect
-    id="suitableAreas"
-    formControlName="suitableAreas"
-    [options]="toppingList"
-    optionLabel="name"
-    optionValue="name"
-    [filter]="true"
-    filterBy="name"
-    placeholder="Select Suitable Areas"
-    [showClear]="false"
-    defaultLabel="Select Suitable Areas"
-    class="mt-1 block w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-    [ngClass]="{
+            <p-multiSelect id="suitableAreas" formControlName="suitableAreas" [options]="toppingList" optionLabel="name"
+              optionValue="name" [filter]="true" filterBy="name" placeholder="Select Suitable Areas" [showClear]="false"
+              defaultLabel="Select Suitable Areas"
+              class="mt-1 block w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              [ngClass]="{
       'border-red-500':
         cropForm.get('suitableAreas')?.invalid &&
         (cropForm.get('suitableAreas')?.dirty ||
           cropForm.get('suitableAreas')?.touched)
-    }"
-  >
-  </p-multiSelect>
+    }">
+            </p-multiSelect>
 
-  <div
-    *ngIf="
+            <div *ngIf="
       cropForm.get('suitableAreas')?.invalid &&
       (cropForm.get('suitableAreas')?.dirty || cropForm.get('suitableAreas')?.touched)
-    "
-    class="text-red-500 text-sm mt-1"
-  >
-    Suitable areas is required
-  </div>
-           
+    " class="text-red-500 text-sm mt-1">
+              Suitable areas is required
+            </div>
+
           </div>
 
         </div>

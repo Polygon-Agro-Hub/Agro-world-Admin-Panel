@@ -17,18 +17,17 @@
           >Set New Target</label
         >
         <input
-          type="number"
-          id="new-target"
-          placeholder="--Type New Target--"
-          class="border border-gray-300 rounded-lg dark:border-[#AFAFAF] dark:bg-tileBlack dark:text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-
-          [(ngModel)]="newTargetValue"
-          name="newTargetValue"
-          step="1"
-          min="1"
-          (keydown)="preventDecimalInput($event)"
-          (blur)="validateTargetInput()"
-        />
+  type="number"
+  id="new-target"
+  placeholder="--Type New Target--"
+  class="border border-gray-300 rounded-lg dark:border-[#AFAFAF] dark:bg-tileBlack dark:text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+  [(ngModel)]="newTargetValue"
+  name="newTargetValue"
+  step="1"
+  min="1"
+  (keydown)="preventDecimalInput($event); blockFirstSpace($event)"
+  (blur)="validateTargetInput()"
+/>
       </div>
 
       <span class="text-sm pt-3 italic text-[#D70000]">

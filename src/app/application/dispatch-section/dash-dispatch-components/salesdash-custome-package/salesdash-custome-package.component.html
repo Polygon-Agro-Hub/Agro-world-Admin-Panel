@@ -134,7 +134,7 @@
                             
 
                         <button
-                            (click)="navigateToCustomAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.additionalPrice)"
+                            (click)="navigateToCustomAdditionalItemView(item.processOrderId)"
                             class="w-6 h-6 mr-3" [class.text-[#EBC351]]="item.additionalItemsStatus !== 'Unknown'"
                             [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.additionalItemsStatus === 'Unknown',

@@ -16,14 +16,19 @@
       <!-- Crop Name -->
       <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
         <div>
-          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark">Crop Name *</label>
-          <select id="groupId" formControlName="groupId"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-            <option value="">Select a crop</option>
-            <option *ngFor="let group of groupList" [value]="group.id">
-              {{ group.cropNameEnglish }}
-            </option>
-          </select>
+          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark mb-2">Crop Name *</label>
+<p-dropdown
+  [options]="groupList"
+  formControlName="groupId"
+  optionLabel="cropNameEnglish"
+  optionValue="id"
+  [filter]="true"
+  filterPlaceholder="Search crop..."
+  placeholder="Select a crop"
+  [showClear]="true"
+  class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
           <div *ngIf="
               cropForm.get('groupId')!.invalid &&
               (cropForm.get('groupId')!.dirty ||
@@ -91,7 +96,7 @@
           <div *ngIf="
       cropForm.get('varietyNameSinhala')!.invalid &&
       (cropForm.get('varietyNameSinhala')!.dirty ||
-        cropForm.get('varietyNameEnglish')!.touched)
+        cropForm.get('varietyNameSinhala')!.touched)
     " class="text-red-500 text-sm mt-1">
             <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']">
               Sinhala Variety name is required

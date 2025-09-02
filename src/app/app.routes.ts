@@ -1103,6 +1103,10 @@ export const routes: Routes = [
                   {
                     path: 'distribution-center-dashboard/:id',
                     component: MainDashboardLayoutComponent
+                  },
+                  {
+                    path: 'edit-distribution-officer/:id',
+                    component: UpdateDistributionOfficerComponent
                   }
                 ]
               },

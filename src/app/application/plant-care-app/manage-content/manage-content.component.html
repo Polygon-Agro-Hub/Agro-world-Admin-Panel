@@ -20,7 +20,7 @@
         class="flex-1 overflow-y-auto py-4 scrollbar-thin  scrollbar-thumb-[#FACD07]  scrollbar-track-gray-200 dark:scrollbar-thumb-[#FACD07] dark:scrollbar-track-gray-900">
         <!-- Image section -->
         <div class="flex justify-center my-4">
-          <img [src]="newsItems[0].image" alt="Market Price Image" class="w-2/3 h-auto rounded-lg shadow-lg" />
+          <img [src]="selectedNewsItem?.image" alt="Market Price Image" class="w-2/3 h-auto rounded-lg shadow-lg" />
         </div>
 
         <!-- English news section -->
@@ -31,7 +31,7 @@
           <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
           <div class="text-sm mt-2">
             <h3 class="text-md font-semibold mb-2 text-center text-textLight dark:text-textDark ml-2">
-              {{ newsItems[0].titleEnglish }}
+              {{ selectedNewsItem?.titleEnglish }}
             </h3>
             <div [innerHTML]="safeHtmlDescriptionEnglish"
               class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
@@ -46,7 +46,7 @@
           <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
           <div class="text-sm mt-2">
             <h3 class="text-md font-bold mb-2 text-center text-textLight dark:text-textDark ml-2">
-              {{ newsItems[0].titleSinhala }}
+              {{ selectedNewsItem?.titleSinhala }}
             </h3>
             <div [innerHTML]="safeHtmlDescriptionSinhala"
               class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
@@ -61,7 +61,7 @@
           <hr class="border-t-2 border-gray-300 my-4 ml-2 w-[98%]" />
           <div class="text-sm mt-2">
             <h3 class="text-md font-semibold mb-2 text-textLight text-center dark:text-textDark ml-2">
-              {{ newsItems[0].titleTamil }}
+              {{ selectedNewsItem?.titleTamil }}
             </h3>
             <div [innerHTML]="safeHtmlDescriptionTamil"
               class="text-textLight dark:text-textDark text-left ml-2 break-words whitespace-pre-line"></div>
@@ -200,38 +200,38 @@
               </td>
               <td class="px-4 py-3 text-green-500 text-center">
                 <div *ngIf="item.status == 'Published'">
-                  <span [class.cursor-pointer]="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                    "
-                    class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                        ? updateStatus(item.id)
-                        : null
-                    ">
-                    {{ item.status }}
-                  </span>
-                </div>
-                <div *ngIf="item.status != 'Published'">
-                  <span [class.cursor-pointer]="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                    " class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
-                    (click)="
-                      permissionService.hasPermission(
-                        'Change status of the news'
-                      ) || tokenService.getUserDetails().role === '1'
-                        ? updateStatus(item.id)
-                        : null
-                    ">
-                    {{ item.status }}
-                  </span>
-                </div>
+  <span 
+    [class.cursor-pointer]="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+    "
+    class="w-24 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm"
+    (click)="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+        ? updateStatus(item.id, item.status)
+        : null
+    ">
+    {{ item.status }}
+  </span>
+</div>
+
+<div *ngIf="item.status == 'Draft'">
+  <span 
+    [class.cursor-pointer]="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+    "
+    class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm"
+    (click)="
+      permissionService.hasPermission('Change status of the news') || 
+      tokenService.getUserDetails().role === '1'
+        ? updateStatus(item.id, item.status)
+        : null
+    ">
+    {{ item.status }}
+  </span>
+</div>
               </td>
               <td class="px-4 py-3 text-center dark:text-textDark text-centser">
                 {{ item.publishDate | date : "yyyy-MM-dd" }}

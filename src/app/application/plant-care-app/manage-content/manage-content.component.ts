@@ -78,6 +78,8 @@ export class ManageContentComponent implements OnInit {
   safeHtmlDescriptionSinhala: SafeHtml = '';
   safeHtmlDescriptionTamil: SafeHtml = '';
 
+  selectedNewsItem: NewsItem | null = null;
+
   constructor(
     private newsService: NewsService,
     private http: HttpClient,
@@ -182,35 +184,42 @@ private formatLocalDate(date: Date): string {
       });
   }
 
-  openPopup(id: any) {
-    this.isPopupVisible = true;
-    this.isLoading = true;
-    this.newsService.getNewsById(id).subscribe(
-      (data) => {
-        this.newsItems = data;
+  // Update the openPopup method with proper typing
+openPopup(id: any) {
+  this.isPopupVisible = true;
+  this.isLoading = true;
+  this.newsService.getNewsById(id).subscribe(
+    (data: NewsItem[]) => {
+      // Store the single news item in selectedNewsItem
+      this.selectedNewsItem = data[0];
+      
+      // Add null checks before accessing properties
+      if (this.selectedNewsItem) {
         this.safeHtmlDescriptionEnglish =
           this.sanitizer.bypassSecurityTrustHtml(
-            this.newsItems[0].descriptionEnglish
+            this.selectedNewsItem.descriptionEnglish
           );
         this.safeHtmlDescriptionSinhala =
           this.sanitizer.bypassSecurityTrustHtml(
-            this.newsItems[0].descriptionSinhala
+            this.selectedNewsItem.descriptionSinhala
           );
         this.safeHtmlDescriptionTamil = this.sanitizer.bypassSecurityTrustHtml(
-          this.newsItems[0].descriptionTamil
+          this.selectedNewsItem.descriptionTamil
         );
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isLoading = false;
       }
-    );
-  }
+      
+      this.isLoading = false;
+    },
+    (error) => {
+      this.isLoading = false;
+    }
+  );
+}
 
   closePopup() {
-    this.isPopupVisible = false;
-    this.fetchAllNews();
-  }
+  this.isPopupVisible = false;
+  this.selectedNewsItem = null; // Clear the selected item
+}
   back(): void {
   Swal.fire({
     icon: 'warning',
@@ -232,28 +241,50 @@ private formatLocalDate(date: Date): string {
 }
 
 
-  updateStatus(id: any) {
-    this.isLoading = true;
-    this.newsService.updateNewsStatus(id).subscribe(
-      (data: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Status updated successfully!',
-        });
-        this.fetchAllNews();
-        this.isLoading = false;
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Unsuccess',
-          text: 'Error updating status',
-        });
-        this.isLoading = false;
-      }
-    );
-  }
+  updateStatus(id: any, currentStatus: string) {
+  // Determine the message and button text based on current status
+  const isDraft = currentStatus === 'Draft';
+  const message = isDraft 
+    ? 'Do you want to publish?' 
+    : 'Do you want to move back to draft?';
+  const confirmButtonText = isDraft ? 'Publish' : 'Draft';
+
+  // Show confirmation dialog
+  Swal.fire({
+    title: 'Confirm Status Change',
+    text: message,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // User confirmed, proceed with status update
+      this.isLoading = true;
+      this.newsService.updateNewsStatus(id).subscribe(
+        (data: any) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Status updated successfully!',
+          });
+          this.fetchAllNews();
+          this.isLoading = false;
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error updating status',
+          });
+          this.isLoading = false;
+        }
+      );
+    }
+  });
+}
 
   onPageChange(event: number) {
     this.page = event;

@@ -121,9 +121,13 @@ export class SalesTargetComponent implements OnInit {
     ) {
       Swal.fire({
         title: 'Invalid Target',
-        text: 'Target value must be greater than 0. Please enter a valid target.',
+        text: 'Please Add a Target',
         icon: 'error',
         confirmButtonText: 'OK',
+        customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
       });
       this.isLoading = false;
       return; // Exit the function early
@@ -138,6 +142,10 @@ export class SalesTargetComponent implements OnInit {
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'Cancel',
       reverseButtons: true,
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
@@ -289,27 +297,46 @@ export class SalesTargetComponent implements OnInit {
   
 
   preventDecimalInput(event: KeyboardEvent) {
-    const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
-    if (forbiddenKeys.includes(event.key)) {
-      event.preventDefault();
-    }
+  const input = event.target as HTMLInputElement;
+  const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
+  
+  // Prevent decimal and other forbidden characters
+  if (forbiddenKeys.includes(event.key)) {
+    event.preventDefault();
+    return;
   }
+  
+  // Prevent zero as first character
+  if (event.key === '0' && input.value.length === 0) {
+    event.preventDefault();
+  }
+}
 
   validateTargetInput() {
-    // If value is not a number, set to 0
-    if (isNaN(this.newTargetValue)) {
-      this.newTargetValue = '';
-      return;
-    }
-
-    // Round to nearest integer
-    this.newTargetValue = Math.round(this.newTargetValue);
-
-    // Ensure minimum value of 1
-    if (this.newTargetValue < 1) {
-      this.newTargetValue = '';
-    }
+  // If value is not a number, set to empty
+  if (isNaN(this.newTargetValue)) {
+    this.newTargetValue = '';
+    return;
   }
+
+  // Remove leading zeros
+  if (this.newTargetValue.toString().startsWith('0')) {
+    this.newTargetValue = this.newTargetValue.toString().replace(/^0+/, '');
+  }
+
+  // If empty after removing zeros, set to empty
+  if (this.newTargetValue === '') {
+    return;
+  }
+
+  // Round to nearest integer
+  this.newTargetValue = Math.round(this.newTargetValue);
+
+  // Ensure minimum value of 1
+  if (this.newTargetValue < 1) {
+    this.newTargetValue = '';
+  }
+}
 
   // get formControls(): { [key: string]: any } {
   //   return this.targetForm.controls;

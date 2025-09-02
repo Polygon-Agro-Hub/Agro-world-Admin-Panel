@@ -1,3 +1,9 @@
+<button (click)="onCancel()" class="ml-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+<div class="h-[20px]"></div>
+
 <div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
     <div>
 
@@ -72,10 +78,10 @@
                         <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
                             Rs. {{ item.price != null ? (item.price | number:'1.2-2') : '0.00' }}
                         </td>
-                        <td class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 ">
+                        <td class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 cursor-pointer">
                             <input type="checkbox" [checked]="item.isPacked === 1"
                                 (change)="onCheckboxChange(item, $event)"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
                         </td>
                     </tr>
                 </tbody>

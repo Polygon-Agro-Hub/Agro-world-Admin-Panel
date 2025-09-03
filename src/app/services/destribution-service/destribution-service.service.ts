@@ -247,7 +247,7 @@ export class DestributionService {
     }
 
     if (role) {
-      url += `&date=${role}`;
+      url += `&role=${role}`;
     }
 
     if (searchText) {

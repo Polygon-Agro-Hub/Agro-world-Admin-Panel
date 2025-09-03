@@ -38,6 +38,11 @@ export class OfficersComponent implements OnChanges {
     { label: 'Rejected', value: 'Rejected' },
   ]
 
+  roleOptions = [
+    { label: 'Distribution Officer', value: 'Distribution Officer' },
+    { label: 'Distribution Manager', value: 'Distribution Manager' },
+  ]
+
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,

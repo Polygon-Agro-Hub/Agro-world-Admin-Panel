@@ -25,13 +25,13 @@
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="true" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Status"></p-dropdown>
+              [checkmark]="true" [options]="statusOptions" [(ngModel)]="selectStatus" [showClear]="!!selectStatus" optionLabel="label" optionValue="value" placeholder="Status"></p-dropdown>
           </div>
 
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="true" optionLabel="label" optionValue="value" placeholder="Role"></p-dropdown>
+              [checkmark]="true" [(ngModel)]="selectRole" [options]="roleOptions" [showClear]="!!selectRole" optionLabel="label" optionValue="value" placeholder="Role"></p-dropdown>
           </div>
 
           <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">

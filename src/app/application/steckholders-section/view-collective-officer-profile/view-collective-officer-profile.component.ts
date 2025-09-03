@@ -469,6 +469,8 @@ fetchOfficerById(id: number) {
   this.collectionService
     .fetchAllCollectionOfficerProfile(id)
     .subscribe((res: any) => {
+      console.log("this is data", res);
+      
       this.isLoading = false;
 
       this.officerObj = res.officerData.collectionOfficer;
@@ -988,7 +990,7 @@ fetchOfficerById(id: number) {
   isAgroworldCompany(): boolean {
     return (
       this.officerObj.companyNameEnglish?.toLowerCase() ===
-        'agroworld (pvt) ltd' && this.officerObj.status === 'Approved'
+        'polygon holdings private limited' && this.officerObj.status === 'Approved'
     );
   }
 }

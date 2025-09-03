@@ -380,3 +380,177 @@
   max-height: 200px;     /* scrollable area for options */
   overflow-y: auto;
 }
+
+/* -------------------------------
+   PrimeNG MultiSelect Dark Theme with Increased Height
+--------------------------------- */
+
+/* MultiSelect container */
+:host ::ng-deep .p-multiselect {
+  width: 100% !important;
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 0.375rem;
+  min-height: 42px;
+}
+
+:host ::ng-deep .p-multiselect:not(.p-disabled):hover {
+  border-color: #6b7280 !important;
+}
+
+:host ::ng-deep .p-multiselect:not(.p-disabled).p-focus {
+  box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5) !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Label and placeholder */
+:host ::ng-deep .p-multiselect .p-multiselect-label {
+  color: #f9fafb !important;
+  padding: 0.5rem !important;
+}
+
+:host ::ng-deep .p-multiselect .p-multiselect-label.p-placeholder {
+  color: #9ca3af !important;
+}
+
+/* Trigger icon */
+:host ::ng-deep .p-multiselect .p-multiselect-trigger {
+  color: #f9fafb !important;
+}
+
+/* Dropdown panel - INCREASED HEIGHT */
+:host ::ng-deep .p-multiselect-panel {
+  background: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  max-height: 350px !important; /* Increased from default */
+}
+
+/* Header section (contains filter) */
+:host ::ng-deep .p-multiselect-panel .p-multiselect-header {
+  background: #374151 !important;
+  border-bottom: 1px solid #4b5563 !important;
+  padding: 0.5rem !important;
+}
+
+/* Filter input */
+:host ::ng-deep .p-multiselect-filter-container {
+  padding: 0.5rem;
+}
+
+:host ::ng-deep .p-multiselect-filter {
+  width: 100%;
+  padding: 0.5rem;
+  background: #4b5563 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 0.375rem;
+}
+
+:host ::ng-deep .p-multiselect-filter::placeholder {
+  color: #9ca3af;
+}
+
+:host ::ng-deep .p-multiselect-filter:enabled:focus {
+  box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5) !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Close button */
+:host ::ng-deep .p-multiselect-close {
+  color: #f9fafb !important;
+}
+
+/* Items wrapper - INCREASED HEIGHT */
+:host ::ng-deep .p-multiselect-items-wrapper {
+  background: #374151 !important;
+  max-height: 300px !important; /* Increased height for more visible items */
+}
+
+/* Individual items */
+:host ::ng-deep .p-multiselect-item {
+  color: #f9fafb !important;
+  background: #374151 !important;
+  padding: 0.75rem 1rem !important;
+  min-height: 44px; /* Slightly taller items */
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+  background: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+/* Selected/highlighted item */
+:host ::ng-deep .p-multiselect-item.p-highlight {
+  background: #1e40af !important;
+  color: #ffffff !important;
+}
+
+/* Checkbox styling */
+:host ::ng-deep .p-multiselect-item .p-checkbox-box {
+  background: #4b5563 !important;
+  border: 1px solid #4b5563 !important;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+:host ::ng-deep .p-multiselect-item .p-checkbox-box.p-highlight {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+:host ::ng-deep .p-checkbox-icon {
+  color: #ffffff !important;
+  font-size: 14px;
+}
+
+/* Error state */
+:host ::ng-deep .p-multiselect.p-invalid {
+  border-color: #ef4444 !important;
+}
+
+/* Chips/token display for selected items */
+:host ::ng-deep .p-multiselect-token {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  margin: 2px 4px 2px 0;
+}
+
+:host ::ng-deep .p-multiselect-token .p-multiselect-token-icon {
+  color: #ffffff !important;
+  margin-left: 6px;
+}
+
+/* Clear icon */
+:host ::ng-deep .p-multiselect-clear-icon {
+  color: #9ca3af !important;
+}
+
+:host ::ng-deep .p-multiselect-clear-icon:hover {
+  color: #f9fafb !important;
+}
+
+/* Custom scrollbar for the dropdown */
+:host ::ng-deep .p-multiselect-items-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+:host ::ng-deep .p-multiselect-items-wrapper::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+:host ::ng-deep .p-multiselect-items-wrapper::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .p-multiselect-items-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

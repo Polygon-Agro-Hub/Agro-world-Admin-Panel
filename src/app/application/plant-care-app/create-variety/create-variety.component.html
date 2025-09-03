@@ -90,7 +90,7 @@
             Name By Sinhala *</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             (input)="onVarietyNameInput($event, 'sinhala')"
-            (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
+            
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
@@ -112,7 +112,7 @@
             class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
             (input)="onDescriptionInput($event, 'sinhala')"
-            (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
+             (paste)="validateSinhalaPaste($event)"
             name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
@@ -134,7 +134,7 @@
             By Tamil *</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
             (input)="onVarietyNameInput($event, 'tamil')" (paste)="validateTamilPaste($event)"
-            (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
+            
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
@@ -155,7 +155,7 @@
           <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
-            (input)="onDescriptionInput($event, 'tamil')" (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
+            (input)="onDescriptionInput($event, 'tamil')" 
             (paste)="validateTamilPaste($event)" name="descriptionTamil" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="

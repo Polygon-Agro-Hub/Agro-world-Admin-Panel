@@ -156,7 +156,7 @@
             name="firstName"
             (blur)="onBlur('firstName')"
             #firstNameInput="ngModel"
-            (keydown)="validateNameInput($event, 'firstName')"
+            (keydown)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('firstName')"
             (keydown)="blockLeadingSpace($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -187,7 +187,7 @@
               class="text-red-600 text-sm"
             >
               Only English letters allowed and first letter must be capitalized.
-            </div> -->
+            </div> 
           </div>
         </div>
 
@@ -203,7 +203,7 @@
             [(ngModel)]="personalData.lastName"
             #lastNameInput="ngModel"
             (blur)="onBlur('lastName')"
-            (keydown)="validateNameInput($event, 'lastName')"
+            (keydown)="validateNameInput($event)"
             (input)="capitalizeFirstLetter('lastName')"
             (keydown)="blockLeadingSpace($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -232,7 +232,7 @@
               class="text-red-600 text-sm"
             >
               Only English letters allowed and first letter must be capitalized.
-            </div> -->
+            </div>
           </div>
         </div>
 
@@ -625,7 +625,8 @@
           name="accHolderName"
           [(ngModel)]="personalData.accHolderName"
           (blur)="onBlur('accHolderName'); capitalizeName('accHolderName')"
-          (keydown)="validateNameInput($event, 'accHolderName')"
+          (keydown)="validateAccountHolderNameInput($event)"
+          (input)="formatAccountHolderName()"
           (paste)="onPaste($event, 'accHolderName')"
           (input)="capitalizeName('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

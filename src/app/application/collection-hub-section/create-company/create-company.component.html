@@ -121,7 +121,7 @@
 
           <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
             #companyNameEnglish="ngModel" required
-            (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')"
+            (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '')"
             (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
@@ -135,9 +135,9 @@
           </div>
 
           <!-- Language-specific message -->
-          <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
             Only English letters are allowed in this field.
-          </div>
+          </div> -->
         </div>
 
 
@@ -159,9 +159,9 @@
             </div>
           </div>
           <!-- Language-specific message -->
-          <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
             Only Sinhala letters are allowed in this field.
-          </div>
+          </div> -->
         </div>
         <div class="pb-6">
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -178,9 +178,9 @@
             Company Name (in Tamil) is required.
           </span>
           <!-- Language-specific message -->
-          <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
             Only Tamil letters are allowed.
-          </div>
+          </div> -->
         </div>
         <div class="pb-6">
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email Address
@@ -379,7 +379,7 @@
       
       <!-- Format validation (second priority) - only show if field has value and is not required error -->
       <div *ngIf="!oicConNum1Ref.errors?.['required'] && oicConNum1Ref.touched && isInvalidMobileNumber('oicConNum1')" class="text-red-500 text-sm">
-        Please enter a valid mobile number (format: +947XXXXXXXX)
+        Please enter a valid contact number (format: +947XXXXXXXX)
       </div>
       
       <!-- Length validation (third priority) - only show if no other errors -->
@@ -428,7 +428,7 @@
     <div class="mt-1">
       <!-- Format validation (highest priority for optional field) -->
       <div *ngIf="companyData.oicConNum2 && isInvalidMobileNumber('oicConNum2')" class="text-red-500 text-sm">
-        Please enter a valid mobile number (format: +947XXXXXXXX)
+        Please enter a valid contact number (format: +947XXXXXXXX)
       </div>
       
       <!-- Length validation (second priority) - only show if format is valid -->
@@ -438,7 +438,7 @@
       
       <!-- Duplicate validation (lowest priority) - only show if no other errors -->
       <div *ngIf="!isInvalidMobileNumber('oicConNum2') && !contactNumberError2 && sameNumberError" class="text-red-500 text-sm">
-        Contact number 2 cannot be the same as Contact number 1.
+      Contact Number - 1 and Contact Number - 2 cannot be the same.
       </div>
     </div>
   </div>
@@ -567,7 +567,7 @@
           <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
             #companyNameEnglish="ngModel" required
             (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
-            (keydown)="allowOnlyEnglish($event, companyData.companyNameEnglish || '')"
+            (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '')"
             (blur)="onBlur('companyNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
@@ -577,9 +577,9 @@
               Company Name (in English) is required.
             </div>
           </div>
-          <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="englishInputError" class="text-red-600 text-sm mt-1">
             Only English letters are allowed in this field.
-          </div>
+          </div> -->
         </div>
 
         <div class="pb-6">
@@ -599,9 +599,9 @@
               Company Name (in Sinhala) is required.
             </div>
           </div>
-          <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
             Only Sinhala letters are allowed in this field.
-          </div>
+          </div> -->
         </div>
 
         <div class="pb-6">
@@ -619,9 +619,9 @@
               Company Name (in Tamil) is required.
             </div>
           </div>
-          <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
+          <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
             Only Tamil letters are allowed in this field.
-          </div>
+          </div> -->
         </div>
 
         <!-- In Edit Company Details section -->
@@ -792,6 +792,7 @@
     <div class="mt-1 flex">
       <p-dropdown [(ngModel)]="companyData.oicConCode1" [options]="countries" optionLabel="dialCode"
         optionValue="dialCode"
+        (blur)="validateContactNumbers()"
         styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
         [style]="{ width: '140px' }">
         <ng-template let-country pTemplate="item">

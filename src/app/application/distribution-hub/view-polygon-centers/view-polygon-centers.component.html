@@ -205,18 +205,26 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="!hasData" class="flex justify-center items-center py-20 shadow-lg">
-        <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Available--
-        </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div>
+      <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
+        <p class="text-[#494949] dark:text-textDark  mb-4">
+      -- No Data Available --
+    </p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+    
+  </div>
     </div>
-    <div class="dark:bg-[#262f45]">
-      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-        [screenReaderCurrentLabel]="'Youre on page'">
-      </pagination-controls>
-    </div>
+  <!-- Show paginator only if data exists -->
+<div class="dark:bg-[#262f45]" *ngIf="hasData">
+  <pagination-controls
+    (pageChange)="onPageChange($event)"
+    [responsive]="true"
+    [previousLabel]="'Previous'"
+    [nextLabel]="'Next'"
+    [screenReaderPaginationLabel]="'Pagination'"
+    [screenReaderPageLabel]="'page'"
+    [screenReaderCurrentLabel]="'You’re on page'"
+  >
+  </pagination-controls>
+</div>
   </div>
 </div>

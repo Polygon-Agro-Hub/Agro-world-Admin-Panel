@@ -165,7 +165,6 @@
             formControlName="taskSinhala"
             id="taskSinhala"
             [(ngModel)]="cropTaskObj.taskSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             name="taskSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -192,7 +191,6 @@
             formControlName="taskTypeSinhala"
             id="taskTypeSinhala"
             [(ngModel)]="cropTaskObj.taskTypeSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             name="taskTypeSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -219,7 +217,6 @@
             formControlName="taskCategorySinhala"
             id="taskCategorySinhala"
             [(ngModel)]="cropTaskObj.taskCategorySinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             name="taskCategorySinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -246,7 +243,6 @@
             formControlName="taskDescriptionSinhala"
             id="taskDescriptionSinhala"
             [(ngModel)]="cropTaskObj.taskDescriptionSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             name="taskDescriptionSinhala"
             rows="5"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -276,7 +272,6 @@
             formControlName="taskTamil"
             id="taskTamil"
             [(ngModel)]="cropTaskObj.taskTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             name="taskTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -303,7 +298,6 @@
             formControlName="taskTypeTamil"
             id="taskTypeTamil"
             [(ngModel)]="cropTaskObj.taskTypeTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             name="taskTypeTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -330,7 +324,6 @@
             formControlName="taskCategoryTamil"
             id="taskCategoryTamil"
             [(ngModel)]="cropTaskObj.taskCategoryTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             name="taskCategoryTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -356,7 +349,6 @@
           <textarea
             formControlName="taskDescriptionTamil"
             id="taskDescriptionTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             [(ngModel)]="cropTaskObj.taskDescriptionTamil"
             name="taskDescriptionTamil"
             rows="5"
@@ -469,7 +461,7 @@
       <div class="flex items-center md:col-span-2 my-3 px-12">
         <label
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Want to Add Images? *
+          >Want to Add Images? 
         </label>
         <div class="mt-1 ml-6">
           <label class="inline-flex items-center">
@@ -524,7 +516,7 @@
       <!-- Want to Add Videos? -->
 <div class="flex items-center md:col-span-2 my-3 px-12">
 <label class="block text-sm font-medium text-textLight dark:text-textDark">
-    Want to Add Videos? *
+    Want to Add Videos? 
   </label>
   <div class="mt-1 ml-7">
     <label class="inline-flex items-center">

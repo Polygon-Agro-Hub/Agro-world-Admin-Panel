@@ -71,6 +71,11 @@ export class CreateSalesAgentsComponent implements OnInit {
   errorMessage: string = '';
   isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
   isSpecialCharErrorMap: { [key: string]: boolean } = {};
+
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
+
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -98,6 +103,17 @@ export class CreateSalesAgentsComponent implements OnInit {
     { name: 'Trincomalee', province: 'Eastern' },
     { name: 'Vavuniya', province: 'Northern' },
   ];
+
+  countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -957,6 +973,66 @@ blockLeadingSpace(event: KeyboardEvent) {
   // Trigger the capitalize function
   this.capitalizeName(fieldName);
 }
+
+formatAccountHolderName(): void {
+  if (this.personalData.accHolderName) {
+    // Remove leading spaces and any non-English characters and hyphens
+    let value = (this.personalData.accHolderName as string)
+      .replace(/^\s+/, '') // Remove leading spaces
+      .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+
+    // Capitalize first letter of each word
+    value = value.replace(/(^|\s|')[a-z]/g, (char) => char.toUpperCase());
+
+    this.personalData.accHolderName = value;
+  }
+}
+
+validateAccountHolderNameInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
+    'Tab', 'Home', 'End'
+  ];
+
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Get current value and cursor position
+  const target = event.target as HTMLInputElement;
+  const currentValue = target.value || '';
+  const cursorPosition = target.selectionStart || 0;
+
+  // Block leading space - if field is empty or cursor is at beginning
+  if (event.key === ' ') {
+    if (currentValue.length === 0 || cursorPosition === 0) {
+      event.preventDefault();
+      return;
+    }
+    
+    // Also block if current value only contains spaces
+    if (currentValue.trim().length === 0) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  // Block hyphen (-) character
+  if (event.key === '-') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only English letters, space, apostrophe (no hyphen)
+  const englishNamePattern = /^[a-zA-Z\s']$/;
+  
+  if (!englishNamePattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
 }
 
 class Personal {
@@ -990,4 +1066,10 @@ class Personal {
 class Company {
   id!: number;
   companyNameEnglish!: string;
+}
+
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
 }

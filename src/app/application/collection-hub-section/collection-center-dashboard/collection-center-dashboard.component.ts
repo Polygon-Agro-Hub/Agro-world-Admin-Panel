@@ -83,7 +83,7 @@ export class CollectionCenterDashboardComponent {
   }
 
   navigateToTarget() {
-    this.router.navigate(['collection-hub/view-current-centre-target']); // Replace with your actual route
+    this.router.navigate([`collection-hub/view-current-centre-target/${this.centerId}`]); // Replace with your actual route
   }
 
   navigateCollectionExpenses() {

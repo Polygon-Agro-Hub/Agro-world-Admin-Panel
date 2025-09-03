@@ -363,6 +363,7 @@ export class ProcumentsService {
           return {
             invNo: response.data.invNo,
             packages: response.data.packages,
+            additionalItems:response.additionalItems
           };
         } else {
           throw new Error(response.message);

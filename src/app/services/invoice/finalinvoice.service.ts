@@ -523,11 +523,12 @@ export class FinalinvoiceService {
         0
       );
 
-      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
+      const hasFamilyPacks =
+        invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      const addTitle = hasFamilyPacks 
-        ? `Custom Items (${invoice.additionalItems.length} Items)`
-        : `Your Selected Items (${invoice.additionalItems.length} Items)`;
+      const addTitle = hasFamilyPacks
+        ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
+        : ` Custom Items(${invoice.additionalItems.length} Items)`;
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
@@ -614,7 +615,8 @@ export class FinalinvoiceService {
     }
 
     // Grand Total Section
-    const estimatedTotalHeight = 30 + (invoice.familyPackItems?.length || 0) * 5;
+    const estimatedTotalHeight =
+      30 + (invoice.familyPackItems?.length || 0) * 5;
     if (yPosition + estimatedTotalHeight > 250) {
       doc.addPage();
       yPosition = 20;
@@ -643,14 +645,14 @@ export class FinalinvoiceService {
         );
         grandTotalBody.push([
           'Total for Packages',
-          `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`
+          `Rs. ${formatNumberWithCommas(packagesTotal.toFixed(2))}`,
         ]);
       } else {
         // Only one package - show its name
         const pack = invoice.familyPackItems[0];
         grandTotalBody.push([
           pack.name || 'Family Pack',
-          `Rs. ${formatNumberWithCommas(pack.amount)}`
+          `Rs. ${formatNumberWithCommas(pack.amount)}`,
         ]);
       }
     }
@@ -664,12 +666,13 @@ export class FinalinvoiceService {
         0
       );
 
-      const hasFamilyPacks = invoice.familyPackItems && invoice.familyPackItems.length > 0;
-      const label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
+      const hasFamilyPacks =
+        invoice.familyPackItems && invoice.familyPackItems.length > 0;
+      const label = hasFamilyPacks ? ' Your Selected Items' : 'Custom Items';
 
       grandTotalBody.push([
         label,
-        `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`
+        `Rs. ${formatNumberWithCommas(additionalItemsTotal.toFixed(2))}`,
       ]);
     }
 
@@ -677,22 +680,22 @@ export class FinalinvoiceService {
     if (invoice.deliveryMethod !== 'Pickup') {
       grandTotalBody.push([
         'Delivery Fee',
-        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`
+        `Rs. ${formatNumberWithCommas(invoice.deliveryFee)}`,
       ]);
     }
 
     grandTotalBody.push([
       'Discount',
-      `Rs. ${formatNumberWithCommas(invoice.discount)}`
+      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
     ]);
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.additionalItems && invoice.additionalItems.length > 0 && 
-        (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-      grandTotalBody.push([
-        'Service Fee',
-        'Rs. 180.00'
-      ]);
+    if (
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+    ) {
+      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
     // Add coupon discount only if it has a value greater than 0
@@ -700,34 +703,40 @@ export class FinalinvoiceService {
     if (couponValue > 0) {
       grandTotalBody.push([
         'Coupon Discount',
-        `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`
+        `Rs. ${formatNumberWithCommas(invoice.billingInfo.couponValue)}`,
       ]);
     }
 
     // Calculate final grand total
-    const familyPackTotal = invoice.familyPackItems?.reduce(
-      (total, pack) => total + parseNum(pack.amount),
-      0
-    ) || 0;
+    const familyPackTotal =
+      invoice.familyPackItems?.reduce(
+        (total, pack) => total + parseNum(pack.amount),
+        0
+      ) || 0;
 
-    const additionalItemsTotal = invoice.additionalItems?.reduce(
-      (total, item) => total + parseFloat(item.normalPrice || '0'),
-      0
-    ) || 0;
+    const additionalItemsTotal =
+      invoice.additionalItems?.reduce(
+        (total, item) => total + parseFloat(item.normalPrice || '0'),
+        0
+      ) || 0;
 
-    const deliveryFeeTotal = invoice.deliveryMethod !== 'Pickup' 
-      ? parseNum(invoice.deliveryFee) 
-      : 0;
+    const deliveryFeeTotal =
+      invoice.deliveryMethod !== 'Pickup' ? parseNum(invoice.deliveryFee) : 0;
 
     // Update discount calculation to only include coupon if it exists
-    const discountTotal = parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
+    const discountTotal =
+      parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
-    const serviceFee = (invoice.additionalItems && invoice.additionalItems.length > 0 && 
-                      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) ? 180 : 0;
+    const serviceFee =
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+        ? 180
+        : 0;
 
-    const finalGrandTotal = 
-      familyPackTotal + 
-      additionalItemsTotal + 
+    const finalGrandTotal =
+      familyPackTotal +
+      additionalItemsTotal +
       deliveryFeeTotal +
       serviceFee -
       discountTotal;
@@ -841,63 +850,63 @@ export class FinalinvoiceService {
   }
 
   private async getLogoUrl(): Promise<string | null> {
-  try {
-    const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
-    const logoBlob = (await this.http
-      .get(logoPath, { responseType: 'blob' })
-      .toPromise()) as Blob;
+    try {
+      const logoPath = 'assets/images/POLYGON ORIGINAL LOGO.png';
+      const logoBlob = (await this.http
+        .get(logoPath, { responseType: 'blob' })
+        .toPromise()) as Blob;
 
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const originalDataUrl = reader.result as string;
-        
-        // Create an image element to check dimensions
-        const img = new Image();
-        img.src = originalDataUrl;
-        
-        await img.decode(); // Wait for image to load
-        
-        // Create canvas to resize if needed
-        const canvas = document.createElement('canvas');
-        const maxWidth = 200; // Maximum width in pixels
-        const maxHeight = 100; // Maximum height in pixels
-        
-        // Calculate new dimensions maintaining aspect ratio
-        let width = img.width;
-        let height = img.height;
-        
-        if (width > maxWidth) {
-          height = (maxWidth / width) * height;
-          width = maxWidth;
-        }
-        
-        if (height > maxHeight) {
-          width = (maxHeight / height) * width;
-          height = maxHeight;
-        }
-        
-        // Only resize if necessary
-        if (width !== img.width || height !== img.height) {
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          
-          // Convert to PNG with reduced quality (0.9 maintains good quality)
-          const optimizedDataUrl = canvas.toDataURL('image/png', 0.9);
-          resolve(optimizedDataUrl);
-        } else {
-          // Use original if no resizing needed
-          resolve(originalDataUrl);
-        }
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(logoBlob);
-    });
-  } catch (error) {
-    console.error('Error loading logo:', error);
-    return null;
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const originalDataUrl = reader.result as string;
+
+          // Create an image element to check dimensions
+          const img = new Image();
+          img.src = originalDataUrl;
+
+          await img.decode(); // Wait for image to load
+
+          // Create canvas to resize if needed
+          const canvas = document.createElement('canvas');
+          const maxWidth = 200; // Maximum width in pixels
+          const maxHeight = 100; // Maximum height in pixels
+
+          // Calculate new dimensions maintaining aspect ratio
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = (maxWidth / width) * height;
+            width = maxWidth;
+          }
+
+          if (height > maxHeight) {
+            width = (maxHeight / height) * width;
+            height = maxHeight;
+          }
+
+          // Only resize if necessary
+          if (width !== img.width || height !== img.height) {
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+
+            // Convert to PNG with reduced quality (0.9 maintains good quality)
+            const optimizedDataUrl = canvas.toDataURL('image/png', 0.9);
+            resolve(optimizedDataUrl);
+          } else {
+            // Use original if no resizing needed
+            resolve(originalDataUrl);
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(logoBlob);
+      });
+    } catch (error) {
+      console.error('Error loading logo:', error);
+      return null;
+    }
   }
-}
 }

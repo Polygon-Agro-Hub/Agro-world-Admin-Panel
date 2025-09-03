@@ -62,7 +62,6 @@
             type="text"
             id="taskEnglish"
             formControlName="taskEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -84,7 +83,6 @@
             type="text"
             id="taskTypeEnglish"
             formControlName="taskTypeEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -106,7 +104,6 @@
             type="text"
             id="taskCategoryEnglish"
             formControlName="taskCategoryEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -128,7 +125,6 @@
             type="text"
             id="taskDescriptionEnglish"
             formControlName="taskDescriptionEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -153,7 +149,6 @@
             type="text"
             id="taskSinhala"
             formControlName="taskSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -174,7 +169,6 @@
             type="text"
             id="taskTypeSinhala"
             formControlName="taskTypeSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -195,7 +189,6 @@
             type="text"
             id="taskCategorySinhala"
             formControlName="taskCategorySinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -216,7 +209,6 @@
             type="text"
             id="taskDescriptionSinhala"
             formControlName="taskDescriptionSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -240,7 +232,6 @@
             type="text"
             id="taskTamil"
             formControlName="taskTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -261,7 +252,6 @@
             type="text"
             id="taskTypeTamil"
             formControlName="taskTypeTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -282,7 +272,6 @@
             type="text"
             id="taskCategoryTamil"
             formControlName="taskCategoryTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -303,7 +292,6 @@
             type="text"
             id="taskDescriptionTamil"
             formControlName="taskDescriptionTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -345,7 +333,7 @@
 
       <div class="mb-4">
         <label class="block text-sm font-medium text-textLight dark:text-textDark">
-        Want to Add Images *
+        Want to Add Images 
         </label>
         <div class="mt-1">
           <label class="inline-flex items-center">
@@ -392,7 +380,7 @@
 <!-- Want to Add Videos -->
 <div class="mb-4">
   <label class="block text-sm font-medium text-textLight dark:text-textDark">
-    Want to Add Videos *
+    Want to Add Videos 
   </label>
   <div class="mt-1">
     <label class="inline-flex items-center">

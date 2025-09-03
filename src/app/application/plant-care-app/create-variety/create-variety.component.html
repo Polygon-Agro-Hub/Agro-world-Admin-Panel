@@ -58,9 +58,9 @@
             <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['required']">
               English Variety name is required
             </div>
-            <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['pattern']">
+            <!-- <div *ngIf="cropForm.get('varietyNameEnglish')!.errors?.['pattern']">
               Variety name cannot be only numbers.
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -90,7 +90,7 @@
             Name By Sinhala *</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             (input)="onVarietyNameInput($event, 'sinhala')"
-            (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
+            
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
@@ -101,9 +101,9 @@
             <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['required']">
               Sinhala Variety name is required
             </div>
-            <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['pattern']">
+            <!-- <div *ngIf="cropForm.get('varietyNameSinhala')!.errors?.['pattern']">
               Variety Sinhala name cannot be only numbers.
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -112,7 +112,7 @@
             class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
             (input)="onDescriptionInput($event, 'sinhala')"
-            (keypress)="preventInvalidSinhalaAlphanumericCharacters($event)" (paste)="validateSinhalaPaste($event)"
+             (paste)="validateSinhalaPaste($event)"
             name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
@@ -134,7 +134,7 @@
             By Tamil *</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
             (input)="onVarietyNameInput($event, 'tamil')" (paste)="validateTamilPaste($event)"
-            (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
+            
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
@@ -145,9 +145,9 @@
             <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['required']">
               Tamil Variety name is required
             </div>
-            <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['pattern']">
+            <!-- <div *ngIf="cropForm.get('varietyNameTamil')!.errors?.['pattern']">
               Tamil Variety name cannot be only numbers.
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -155,7 +155,7 @@
           <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
-            (input)="onDescriptionInput($event, 'tamil')" (keypress)="preventInvalidTamilAlphanumericCharacters($event)"
+            (input)="onDescriptionInput($event, 'tamil')" 
             (paste)="validateTamilPaste($event)" name="descriptionTamil" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
@@ -263,12 +263,12 @@
         </div>
 
         <!-- Error: Pattern Validation -->
-        <div *ngIf="verityEngNameInput.touched && verityEngNameInput.errors?.['pattern']"
+        <!-- <div *ngIf="verityEngNameInput.touched && verityEngNameInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>
             Variety English name cannot be only numbers.
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="md:col-span-2 my-3">
@@ -302,12 +302,12 @@
         </div>
 
         <!-- Error: Pattern Validation -->
-        <div *ngIf="verietySinNameInput.touched && verietySinNameInput.errors?.['pattern']"
+        <!-- <div *ngIf="verietySinNameInput.touched && verietySinNameInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>
             Variety Sinhala name cannot be only numbers.
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="md:col-span-2 my-3">
@@ -339,12 +339,12 @@
         </div>
 
         <!-- Error: Pattern Validation -->
-        <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']"
+        <!-- <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']"
           class="text-red-500 text-sm mt-1">
           <div>
             Variety Tamil name cannot be only numbers.
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 

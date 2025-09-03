@@ -23,7 +23,7 @@
 
         <div class="flex flex-row items-center justify-between mt-5">
             <div class="flex flex-col justify-between" >
-                <p class="font-semibold text-lg mb-1" *ngIf="hasData">{{targetArr[0].regCode}} Centre Target on {{today}} </p>
+                <p class="font-medium text-lg mb-1" *ngIf="hasData">{{targetArr[0].regCode}} Centre Target on {{today}} </p>
             </div>
             <div class="flex flex-row items-center gap-8 ">
                 <i class="fa-solid fa-list text-2xl ml-8"></i>
@@ -123,19 +123,19 @@
                     <!-- <tr *ngFor="let item of targetArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"> -->
                     <tr *ngFor="let item of targetArr; let i = index">
                         <!--  -->
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold dark:text-gray-300">
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">
                             {{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }} </td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold dark:text-gray-300">
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">
                             {{item.cropNameEnglish}}</td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold dark:text-gray-300">
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">
                             {{item.varietyNameEnglish}}</td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold text-center dark:text-gray-300">
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium text-center dark:text-gray-300">
                             {{item.grade}}</td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold dark:text-gray-300">{{item.target |
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">{{item.target |
                             number: '1.2-2' }}</td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold dark:text-gray-300">{{item.complete |
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">{{item.complete |
                             number: '1.2-2'}}</td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-semibold dark:text-gray-300">
+                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">
                             <div class="flex justify-center">
                               <span *ngIf="item.status === 'Pending'"
                                 class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-2 h-full flex items-center">

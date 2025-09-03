@@ -305,8 +305,6 @@ resetPassword(id: number, data: any): Observable<any> {
   }
 
   createCompany(companyData: any, companyType: string = ''): Observable<any> {
-    console.log(companyData);
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

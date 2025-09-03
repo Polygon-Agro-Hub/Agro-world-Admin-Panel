@@ -19,8 +19,7 @@
           *</label>
         <input type="text" formControlName="name" (input)="onInputChange($event, 'centreName')"
           (blur)="onCentreNameBlur()" [class]="
-      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('name') ? 'border-red-500' : 'border-gray-300')
+      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' 
     " />
         <div *ngIf="isFieldInvalid('name')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("name") }}

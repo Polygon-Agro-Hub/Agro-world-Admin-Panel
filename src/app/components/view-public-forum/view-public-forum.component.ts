@@ -209,49 +209,48 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deleteReply(id: number) {
-    this.isLoading = true;
+  this.isLoading = true;
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this reply message? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.publicForumSrv.deleteReply(id).subscribe(
-          (res: any) => {
-            if (res) {
-              Swal.fire('Deleted!', 'The Reply has been deleted.', 'success');
-              this.isPopupVisible = false;
-              this.fetchPostAllReply(this.postId);
-              this.loadPosts();
-              this.getCount();
-              this.isLoading = false;
-            }
-          },
-          (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the crop calendar.',
-              'error'
-            );
-            this.isPopupVisible = false;
-            this.fetchPostAllReply(this.postId);
-            this.loadPosts();
-            this.getCount();
-            this.isLoading = false;
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this reply message? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.publicForumSrv.deleteReply(id).subscribe(
+        (res: any) => {
+          if (res) {
+            Swal.fire('Deleted!', 'The Reply has been deleted.', 'success')
+              .then(() => {
+                // Refresh the page after the success alert is closed
+                location.reload();
+              });
           }
-        );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Handle cancel button click - reload the page
-        location.reload();
-      }
-    });
-  }
+        },
+        (error) => {
+          Swal.fire(
+            'Error!',
+            'There was an error deleting the crop calendar.',
+            'error'
+          );
+          this.isPopupVisible = false;
+          this.fetchPostAllReply(this.postId);
+          this.loadPosts();
+          this.getCount();
+          this.isLoading = false;
+        }
+      );
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      // Handle cancel button click - reload the page
+      location.reload();
+    }
+  });
+}
 
   getCount() {
     this.publicForumSrv.getreplyCount().subscribe((data: any) => {

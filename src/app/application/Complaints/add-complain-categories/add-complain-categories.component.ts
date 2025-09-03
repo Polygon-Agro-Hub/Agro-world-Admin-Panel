@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +12,7 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './add-complain-categories.component.html',
-  styleUrl: './add-complain-categories.component.css'
+  styleUrls: ['./add-complain-categories.component.css']
 })
 export class AddComplainCategoriesComponent implements OnInit {
   roleArr: Roles[] = [];
@@ -34,7 +35,7 @@ export class AddComplainCategoriesComponent implements OnInit {
         this.roleArr = res.adminRoles;
         this.appsArr = res.systemApps;
       }
-    )
+    );
   }
 
   validateForm(): string[] {
@@ -64,7 +65,6 @@ export class AddComplainCategoriesComponent implements OnInit {
     const validationErrors = this.validateForm();
     
     if (validationErrors.length > 0) {
-      // Create HTML list of errors
       const errorList = validationErrors.map(error => `<li class="text-left">${error}</li>`).join('');
       const errorHtml = `<ul class="text-left list-disc pl-5">${errorList}</ul>`;
       
@@ -181,7 +181,6 @@ export class AddComplainCategoriesComponent implements OnInit {
 
   blockLeadingSpace(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
-    // Block space key if cursor is at position 0 (start)
     if (event.key === ' ' && input.selectionStart === 0) {
       event.preventDefault();
     }
@@ -189,13 +188,8 @@ export class AddComplainCategoriesComponent implements OnInit {
 
   validateEnglish(): void {
     let value = this.complainObj.categoryEnglish || '';
-    
-    // Remove all characters except English letters and spaces
     value = value.replace(/[^A-Za-z ]+/g, '');
-
-    // Also remove leading spaces just in case (e.g., from paste)
     value = value.replace(/^\s+/, '');
-
     this.complainObj.categoryEnglish = value;
   }
 
@@ -223,25 +217,51 @@ export class AddComplainCategoriesComponent implements OnInit {
     }
   }
 
+  isFieldInvalid(field: any): boolean {
+    return field?.invalid && (field?.dirty || field?.touched);
+  }
+
+  markTouched(field: any) {
+    field.control.markAsTouched();
+    field.control.updateValueAndValidity();
+  }
+
+  getErrorMessage(fieldName: string): string {
+    switch (fieldName) {
+      case 'roleId':
+        return 'Complaint Assignee Admin Category is required';
+      case 'appId':
+        return 'Displaying Application is required';
+      case 'categoryEnglish':
+        return 'Category name in English is required';
+      case 'categorySinhala':
+        return 'Category name in Sinhala is required';
+      case 'categoryTamil':
+        return 'Category name in Tamil is required';
+      default:
+        return '';
+    }
+  }
+
   navigationPath(path: string) {
-    this.router.navigate([path])
+    this.router.navigate([path]);
   }
 }
 
 class Roles {
   id!: number;
-  role!: string
+  role!: string;
 }
 
 class Apps {
   id!: number;
-  appName!: string
+  appName!: string;
 }
 
 class ComplainCategory {
   roleId: number = 0;
   appId: number = 0;
-  categoryEnglish!: string
-  categorySinhala!: string
-  categoryTamil!: string
+  categoryEnglish!: string;
+  categorySinhala!: string;
+  categoryTamil!: string;
 }

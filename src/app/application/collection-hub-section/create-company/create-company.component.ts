@@ -275,7 +275,7 @@ back(): void {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-     this.router.navigate(['/distribution-hub/action/view-companies']);
+     window.history.back();
     }
   });
 }

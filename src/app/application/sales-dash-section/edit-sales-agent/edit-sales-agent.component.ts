@@ -21,6 +21,12 @@ interface Branch {
   name: string;
 }
 
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
+
 interface BranchesData {
   [key: string]: Branch[];
 }
@@ -72,6 +78,15 @@ throw new Error('Method not implemented.');
   confirmAccountNumberError: boolean = false;
   confirmAccountNumberRequired: boolean = false;
   nicError: boolean = false;
+
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' }
+  ];
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -158,6 +173,10 @@ throw new Error('Method not implemented.');
     }
   }
 
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
+
   isValidEmail(email: string): boolean {
   if (!email) return false;
   
@@ -210,84 +229,179 @@ throw new Error('Method not implemented.');
 }
 
 
-  validateEmailInput(event: KeyboardEvent, fieldName: string): void {
-    // Allow navigation and control keys
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'ArrowLeft',
-      'ArrowRight',
-      'Tab',
-      'Home',
-      'End',
-    ];
+  
+// Add these updated methods to your component class
 
-    // Allow these special keys
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
+validateEmailInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Tab',
+    'Home',
+    'End',
+  ];
 
-    // Get current value
-    const currentValue =
-      (this.personalData[fieldName as keyof Personal] as string) || '';
+  // Allow these special keys
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
 
-    // Block space completely for email
-    if (event.key === ' ') {
-      event.preventDefault();
-      return;
-    }
+  // Get current value and cursor position
+  const target = event.target as HTMLInputElement;
+  const currentValue = target.value || '';
+  const cursorPosition = target.selectionStart || 0;
 
-    // Block leading dot
-    if (event.key === '.' && currentValue.length === 0) {
-      event.preventDefault();
-      return;
-    }
+  // Block space completely for email (leading, trailing, or anywhere)
+  if (event.key === ' ') {
+    event.preventDefault();
+    return;
+  }
 
-    // Block consecutive dots
-    if (event.key === '.' && currentValue.endsWith('.')) {
-      event.preventDefault();
-      return;
-    }
+  // Block leading dot
+  if (event.key === '.' && (currentValue.length === 0 || cursorPosition === 0)) {
+    event.preventDefault();
+    return;
+  }
 
-    // Block dot immediately before @ or after @
-    const atIndex = currentValue.indexOf('@');
-    if (event.key === '.' && atIndex !== -1) {
-      // Get cursor position (approximation - in real implementation you'd need to track cursor position)
-      const cursorPosition = currentValue.length;
-      if (cursorPosition === atIndex + 1) { // Trying to add dot right after @
-        event.preventDefault();
-        return;
-      }
-    }
+  // Block consecutive dots
+  if (event.key === '.' && currentValue.charAt(cursorPosition - 1) === '.') {
+    event.preventDefault();
+    return;
+  }
 
-    // Block dot at the end if @ exists (to prevent trailing dot before @)
-    if (event.key === '@' && currentValue.endsWith('.')) {
-      event.preventDefault();
-      return;
-    }
-
-    // Allow only valid email characters: letters, numbers, dots, hyphens, underscores, and @
-    const emailPattern = /^[a-zA-Z0-9._@-]$/;
-    if (!emailPattern.test(event.key)) {
-      event.preventDefault();
-      return;
-    }
-
-    // Ensure only one @ symbol
-    if (event.key === '@' && currentValue.includes('@')) {
+  // Block dot immediately after @ or before @
+  const atIndex = currentValue.indexOf('@');
+  if (event.key === '.' && atIndex !== -1) {
+    if (cursorPosition === atIndex + 1) { // Trying to add dot right after @
       event.preventDefault();
       return;
     }
   }
 
+  // Block dot before @ symbol
+  if (event.key === '@' && currentValue.charAt(cursorPosition - 1) === '.') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only valid email characters: letters, numbers, dots, hyphens, underscores, and @
+  const emailPattern = /^[a-zA-Z0-9._@-]$/;
+  if (!emailPattern.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Ensure only one @ symbol
+  if (event.key === '@' && currentValue.includes('@')) {
+    event.preventDefault();
+    return;
+  }
+}
+
   validateEmailOnInput(): void {
   if (this.personalData.email) {
-    // Basic cleanup - remove leading/trailing spaces
-    this.personalData.email = this.personalData.email.trim();
+    // Remove all spaces and trim
+    this.personalData.email = this.personalData.email.replace(/\s/g, '').trim();
     
     // Clear error when user starts correcting
     this.emailValidationError = '';
   }
+}
+
+validateAccountHolderNameInput(event: KeyboardEvent): void {
+  // Allow navigation and control keys
+  const allowedKeys = [
+    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
+    'Tab', 'Home', 'End'
+  ];
+
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Get current value and cursor position
+  const target = event.target as HTMLInputElement;
+  const currentValue = target.value || '';
+  const cursorPosition = target.selectionStart || 0;
+
+  // Block leading space - if field is empty or cursor is at beginning
+  if (event.key === ' ') {
+    if (currentValue.length === 0 || cursorPosition === 0) {
+      event.preventDefault();
+      return;
+    }
+    
+    // Also block if current value only contains spaces
+    if (currentValue.trim().length === 0) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  // Block hyphen (-) character
+  if (event.key === '-') {
+    event.preventDefault();
+    return;
+  }
+
+  // Allow only English letters, space, apostrophe (no hyphen)
+  const englishNamePattern = /^[a-zA-Z\s']$/;
+  
+  if (!englishNamePattern.test(event.key)) {
+    event.preventDefault();
+  }
+}
+
+formatAccountHolderName(): void {
+  if (this.personalData.accHolderName) {
+    // Remove leading spaces and any non-English characters and hyphens
+    let value = (this.personalData.accHolderName as string)
+      .replace(/^\s+/, '') // Remove leading spaces
+      .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+
+    // Capitalize first letter of each word
+    value = value.replace(/(^|\s|')[a-z]/g, (char) => char.toUpperCase());
+
+    this.personalData.accHolderName = value;
+  }
+}
+
+handleAccountHolderNamePaste(event: ClipboardEvent): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData || (window as any).clipboardData;
+  const pastedText = clipboardData.getData('text');
+  
+  // Filter out leading spaces, non-English characters and hyphens
+  const cleanText = pastedText
+    .replace(/^\s+/, '') // Remove leading spaces
+    .replace(/[^a-zA-Z\s']/g, ''); // Remove non-English characters and hyphens
+  
+  // Insert the cleaned text at cursor position
+  const target = event.target as HTMLInputElement;
+  const startPos = target.selectionStart || 0;
+  const endPos = target.selectionEnd || 0;
+  
+  const currentValue = target.value;
+  const beforeCursor = currentValue.substring(0, startPos);
+  const afterCursor = currentValue.substring(endPos);
+  
+  // If inserting at the beginning, don't add leading spaces
+  const newValue = beforeCursor + cleanText + afterCursor;
+  target.value = newValue.replace(/^\s+/, ''); // Remove any leading spaces from final result
+  
+  // Update ngModel
+  this.personalData.accHolderName = target.value;
+  
+  // Move cursor to end of inserted text
+  const newCursorPos = startPos + cleanText.length;
+  setTimeout(() => {
+    target.setSelectionRange(newCursorPos, newCursorPos);
+  });
 }
 
 validateEmailOnBlur(): void {
@@ -685,44 +799,35 @@ onSubmit() {
   }
 }
 
-  validateNameInput(event: KeyboardEvent): void {
-  // Allow navigation and control keys
-  const allowedKeys = [
-    'Backspace',
-    'Delete',
-    'ArrowLeft',
-    'ArrowRight',
-    'Tab',
-    'Home',
-    'End'
-  ];
+validateNameInput(event: KeyboardEvent): void {
+  const allowedKeys = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+  if (allowedKeys.includes(event.key)) return;
 
-  // Allow these special keys
-  if (allowedKeys.includes(event.key)) {
-    return;
-  }
-
-  // Block leading spaces for name fields
   const target = event.target as HTMLInputElement;
   const fieldName = target.getAttribute('name') as keyof Personal;
-  
+
+  // Block leading spaces
   if (['firstName', 'lastName'].includes(fieldName)) {
     const currentValue = this.personalData[fieldName] as string || '';
-    
-    // Block space if field is empty or cursor is at beginning
     if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
       event.preventDefault();
       return;
     }
   }
 
-  // Allow only alphabetic characters (A-Z, a-z), spaces, hyphens, and apostrophes
-  const allowedPattern = /^[a-zA-Z\s'-]$/;
+  // Block ASCII numbers only
+  if (/[0-9]/.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
 
+  // Allow letters (English, Sinhala, Tamil), spaces, hyphens, apostrophes
+  const allowedPattern = /^[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\s'-]$/;
   if (!allowedPattern.test(event.key)) {
     event.preventDefault();
   }
 }
+
 capitalizeFirstLetter(field: 'firstName' | 'lastName' |'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName') {
   let value = this.personalData[field];
 

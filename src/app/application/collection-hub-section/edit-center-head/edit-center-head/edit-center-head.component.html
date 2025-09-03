@@ -369,8 +369,8 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
   </div>
 
 
-<div *ngIf="phoneNumber02Input.touched">
-  <!-- Show format error first -->
+<div *ngIf="phoneNumber02Input.touched && personalData.phoneNumber02">
+  <!-- Show format error only if there's input AND it's invalid -->
   <div *ngIf="!isValidPhone(personalData.phoneNumber02)" class="text-red-500 text-sm mt-1">
     Please enter a valid mobile number (format: +947XXXXXXXX)
   </div>
@@ -381,6 +381,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
     Mobile Number - 02 cannot be the same as Mobile Number - 01
   </div>
 </div>
+
 
 </div>
 
@@ -406,9 +407,15 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
 </div>
 
 <!-- Pattern Validation -->
-<div *ngIf="nicInput.touched && personalData.nic && nicInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+<div *ngIf="
+  nicInput.touched &&
+  personalData.nic &&
+  (personalData.nic.length === 10 || personalData.nic.length === 12) &&
+  nicInput.errors?.['pattern']
+" class="text-red-500 text-sm mt-1">
   Please enter a valid NIC number (12 digits or 10 digits followed by 'V').
 </div>
+
 
           </div>
   

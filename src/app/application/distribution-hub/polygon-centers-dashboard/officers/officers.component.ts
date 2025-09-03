@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
@@ -17,7 +23,7 @@ import { FormsModule } from '@angular/forms';
     CalendarModule,
     DropdownModule,
     NgxPaginationModule,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './officers.component.html',
   styleUrl: './officers.component.css',
@@ -27,50 +33,71 @@ export class OfficersComponent implements OnChanges {
   isLoading = false;
   hasData: boolean = false;
   officersArr!: Officeres[];
-  officerCount : number = 0;
-  selectRole:string = '';
-  selectStatus:string = '';
+  officerCount: number = 0;
+  selectRole: string = '';
+  selectStatus: string = '';
   searchText: string = '';
+
+  statusOptions = [
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Not Approved', value: 'Not Approved' },
+    { label: 'Rejected', value: 'Rejected' },
+  ];
+
+  roleOptions = [
+    { label: 'Distribution Officer', value: 'Distribution Officer' },
+    {
+      label: 'Distribution Center Manager',
+      value: 'Distribution Center Manager',
+    },
+  ];
 
   constructor(
     private router: Router,
-    private DestributionSrv: DestributionService,
-    // private datePipe: DatePipe // Inject DatePipe
-    // public tokenService: TokenService,
-    // public permissionService: PermissionService
-  ) { }
-
+    private DestributionSrv: DestributionService
+  ) {}
 
   ngOnChanges(): void {
-    this.fetchData()
+    this.fetchData();
   }
 
   fetchData() {
-    this.DestributionSrv.getDistributedCenterOfficers(this.centerObj.centerId, this.selectRole, this.selectStatus, this.searchText).subscribe(
-      (res) => {
-        // this.targetArr = res.data;
-        // this.targetCount = res.data.length || 0;
-        console.log("Distributed Center Officers", res);
-        this.officersArr = res.data;
-        this.officerCount = res.data?.length || 0;
-      }
-    )
+    this.DestributionSrv.getDistributedCenterOfficers(
+      this.centerObj.centerId,
+      this.selectRole,
+      this.selectStatus,
+      this.searchText
+    ).subscribe((res) => {
+      // this.targetArr = res.data;
+      // this.targetCount = res.data.length || 0;
+      console.log('Distributed Center Officers', res);
+      this.officersArr = res.data;
+      this.officerCount = res.data?.length || 0;
+    });
   }
 
-  onSearch(){
-    this.fetchData()
+  changeStatus() {
+    this.fetchData();
   }
 
-  offSearch(){
+  changeRole() {
+    this.fetchData();
+  }
+
+  onSearch() {
+    this.fetchData();
+  }
+
+  offSearch() {
     this.searchText = '';
-    this.fetchData()
+    this.fetchData();
   }
 
-  editDistributionOfficer(id: number){
-    this.router.navigate([`/distribution-hub/action/view-polygon-centers/edit-distribution-officer/${id}`]);
+  editDistributionOfficer(id: number) {
+    this.router.navigate([
+      `/distribution-hub/action/view-polygon-centers/edit-distribution-officer/${id}`,
+    ]);
   }
-
-
 }
 
 interface CenterDetails {
@@ -79,15 +106,14 @@ interface CenterDetails {
   centerRegCode: string;
 }
 
-
 class Officeres {
-  id!:number 
-  firstNameEnglish!:string
-  lastNameEnglish!:string 
-  jobRole!:string 
-  empId!:string 
-  status!:string 
-  phoneCode01!:string
-  phoneNumber01!:string 
-  nic!:string
+  id!: number;
+  firstNameEnglish!: string;
+  lastNameEnglish!: string;
+  jobRole!: string;
+  empId!: string;
+  status!: string;
+  phoneCode01!: string;
+  phoneNumber01!: string;
+  nic!: string;
 }

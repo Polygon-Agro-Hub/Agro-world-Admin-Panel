@@ -677,11 +677,11 @@ getAllCompanies() {
       input = input.trimStart();
     }
 
-    // Remove invalid characters (only allow A-Z, a-z, and space)
-    const filteredInput = input.replace(/[^A-Za-z ]/g, '');
-    if (filteredInput !== input) {
-      this.specialCharOrNumberError = true;
-    }
+   
+  const filteredInput = input.replace(/[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g, '');
+  if (filteredInput !== input) {
+    this.specialCharOrNumberError = true;
+  }
 
     // Capitalize the first letter (if input is not empty)
     const capitalizedInput =

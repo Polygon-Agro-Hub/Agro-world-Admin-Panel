@@ -214,12 +214,11 @@ export class EditCollectionCenterComponent implements OnInit {
       input = input.trimStart(); // remove leading space
     }
 
-    // Only allow English letters and spaces
-    const validInput = input.replace(/[^A-Za-z ]/g, '');
-    if (input !== validInput) {
-      this.specialCharOrNumberError = true;
-    }
-
+   // Allow English letters, Sinhala (\u0D80-\u0DFF), Tamil (\u0B80-\u0BFF), and spaces
+  const validInput = input.replace(/[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g, '');
+  if (validInput !== input) {
+    this.specialCharOrNumberError = true;
+  }
     // Capitalize the first letter
     if (validInput.length > 0) {
       validInput.trimStart(); // ensure no leading space

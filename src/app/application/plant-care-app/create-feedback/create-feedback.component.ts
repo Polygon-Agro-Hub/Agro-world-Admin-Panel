@@ -92,7 +92,7 @@ export class CreateFeedbackComponent {
 
     // Validate feedbackEnglish
     if (!this.feedback.feedbackEnglish) {
-      this.validationErrors.feedbackEnglish = 'English feedback is required';
+      this.validationErrors.feedbackEnglish = 'English Feedback Option is required';
       isValid = false;
     } else if (!this.isValidEnglishText(this.feedback.feedbackEnglish)) {
       this.validationErrors.feedbackEnglish = 'English feedback contains invalid characters';
@@ -101,7 +101,7 @@ export class CreateFeedbackComponent {
 
     // Validate feedbackSinahala
     if (!this.feedback.feedbackSinahala) {
-      this.validationErrors.feedbackSinahala = 'Sinhala feedback is required';
+      this.validationErrors.feedbackSinahala = 'Sinhala Feedback Option is required';
       isValid = false;
     } else if (!this.isValidSinhalaText(this.feedback.feedbackSinahala)) {
       this.validationErrors.feedbackSinahala = 'Sinhala feedback contains invalid characters';
@@ -110,7 +110,7 @@ export class CreateFeedbackComponent {
 
     // Validate feedbackTamil
     if (!this.feedback.feedbackTamil) {
-      this.validationErrors.feedbackTamil = 'Tamil feedback is required';
+      this.validationErrors.feedbackTamil = 'Tamil Feedback Option is required';
       isValid = false;
     } else if (!this.isValidTamilText(this.feedback.feedbackTamil)) {
       this.validationErrors.feedbackTamil = 'Tamil feedback contains invalid characters';

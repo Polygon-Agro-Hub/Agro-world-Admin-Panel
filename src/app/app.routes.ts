@@ -669,7 +669,7 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
-            path: 'view-current-centre-target',
+            path: 'view-current-centre-target/:centerId',
             component: ViewCurrentCenterTargetComponent,
           },
           {

@@ -917,6 +917,25 @@ getFlagUrl(countryCode: string): string {
   
   return null;
 }
+
+getPhone1ValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
+  const phoneValue = this.personalData[field];
+  const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
+  
+  // Priority 1: Check if field is required and empty (for phoneNumber01 only)
+  if (field === 'phoneNumber01') {
+    if (this.touchedFields[field] && !phoneValue) {
+      return 'Mobile Number - 1 is required.';
+    }
+  }
+  
+  // Priority 3: Check format validation (only if phone number exists)
+  if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
+  }
+  
+  return null;
+}
 }
 
 class Personal {

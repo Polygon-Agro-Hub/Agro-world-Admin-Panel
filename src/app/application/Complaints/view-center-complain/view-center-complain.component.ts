@@ -151,11 +151,9 @@ export class ViewCenterComplainComponent {
       return;
     }
 
-
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
-
 
     const body = { reply: this.complain.reply };
 
@@ -173,10 +171,16 @@ export class ViewCenterComplainComponent {
             icon: "success",
             title: "Success",
             text: "Reply Sent successfully!",
+          }).then((result) => {
+            // This code executes when the user clicks OK
+            if (result.isConfirmed) {
+              // Redirect to the complaints page
+              this.router.navigate(['/complaints/collection-center-complains']);
+            }
+            this.fetchComplain();
+            this.isLoading = false;
+            this.isPopUpVisible = false;
           });
-          this.fetchComplain();
-          this.isLoading = false;
-          this.isPopUpVisible = false;
         },
         (error) => {
           console.error("Error updating news", error);

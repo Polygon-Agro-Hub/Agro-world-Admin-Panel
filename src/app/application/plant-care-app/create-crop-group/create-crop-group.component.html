@@ -104,6 +104,9 @@
   }"
   class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md  py-2 shadow-sm"
   #parentCategoryInput="ngModel"
+   panelStyleClass="custom-dropdown-panel"
+   styleClass="w-full"
+   class="block w-full p-dropdown-custom"
 >
 </p-dropdown>
 
@@ -258,6 +261,9 @@
   [ngClass]="{'border-red-500': !newsItems[0].category && categoryInput?.touched}"
   #categoryInput="ngModel"
   required
+  panelStyleClass="custom-dropdown-panel"
+   styleClass="w-full"
+   class="block w-full p-dropdown-custom"
 >
 </p-dropdown>
 

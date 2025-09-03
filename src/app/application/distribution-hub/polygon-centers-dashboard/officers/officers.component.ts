@@ -32,6 +32,12 @@ export class OfficersComponent implements OnChanges {
   selectStatus:string = '';
   searchText: string = '';
 
+  statusOptions = [
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Not Approved', value: 'Not Approved' },
+    { label: 'Rejected', value: 'Rejected' },
+  ]
+
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,

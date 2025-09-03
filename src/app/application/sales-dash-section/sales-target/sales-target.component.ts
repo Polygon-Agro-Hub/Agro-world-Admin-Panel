@@ -160,11 +160,15 @@ export class SalesTargetComponent implements OnInit {
           (response) => {
             if (response.status) {
               Swal.fire({
-                title: 'Success!',
-                text: response.message,
-                icon: 'success',
-                confirmButtonText: 'OK',
-              });
+  title: 'Success!',
+  text: response.message,
+  icon: 'success',
+  confirmButtonText: 'OK',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold',
+  },
+});
               this.newTargetValue = 0;
               this.fetchAllSalesAgents();
               this.isLoading = false;

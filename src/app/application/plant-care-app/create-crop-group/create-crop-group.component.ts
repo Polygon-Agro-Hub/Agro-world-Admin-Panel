@@ -213,17 +213,17 @@ categories = [
 
     const onlyNumbersPattern = /^[0-9]+$/;
 
-    if (onlyNumbersPattern.test(this.cropGroup.cropNameEnglish)) {
-      errors.push("Crop name can't be only numbers (English)");
-    }
+    // if (onlyNumbersPattern.test(this.cropGroup.cropNameEnglish)) {
+    //   errors.push("Crop name can't be only numbers (English)");
+    // }
 
-    if (onlyNumbersPattern.test(this.cropGroup.cropNameSinahala)) {
-      errors.push("Crop name can't be only numbers (Sinhala)");
-    }
+    // if (onlyNumbersPattern.test(this.cropGroup.cropNameSinahala)) {
+    //   errors.push("Crop name can't be only numbers (Sinhala)");
+    // }
 
-    if (onlyNumbersPattern.test(this.cropGroup.cropNameTamil)) {
-      errors.push("Crop name can't be only numbers (Tamil)");
-    }
+    // if (onlyNumbersPattern.test(this.cropGroup.cropNameTamil)) {
+    //   errors.push("Crop name can't be only numbers (Tamil)");
+    // }
 
     if (!this.selectedFile) {
       errors.push('Please select an image file');

@@ -250,7 +250,7 @@ export class ViewDistributionOfficerComponent {
             if (data.status) {
               Swal.fire(
                 'Deleted!',
-                'The Collection Officer has been deleted.',
+                'Successfully deleted distribution officer',
                 'success'
               );
               this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);

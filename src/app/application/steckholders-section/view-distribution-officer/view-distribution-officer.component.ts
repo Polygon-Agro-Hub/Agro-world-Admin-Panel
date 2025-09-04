@@ -52,7 +52,6 @@ export class ViewDistributionOfficerComponent {
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Distribution Officer' },
     { id: 2, jobRole: 'Distribution Center Manager' },
-    { id: 3, jobRole: 'Customer Officer' },
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];

@@ -296,7 +296,7 @@
               <input type="tel" id="phoneNumber01" name="phoneNumber01" [(ngModel)]="personalData.phoneNumber01"
                 placeholder="XXXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber01')"
                 (keypress)="preventNonNumeric($event)" (blur)="onBlur('phoneNumber01')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-l-0 ' +
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) ? 'border-red-500' : 'border-gray-300')
         " />
             </div>
@@ -344,7 +344,7 @@
               <input type="tel" id="phoneNumber02" name="phoneNumber02" [(ngModel)]="personalData.phoneNumber02"
                 placeholder="XXXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber02')"
                 (keypress)="preventNonNumeric($event)" (blur)="onBlur('phoneNumber02')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-l-0 ' +
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')
         " />
             </div>

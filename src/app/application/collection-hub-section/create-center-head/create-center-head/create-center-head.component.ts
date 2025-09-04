@@ -206,35 +206,15 @@ back(): void {
 
   // Field configurations
 private fieldConfigs: { [key: string]: FieldConfig } = {
-  'firstNameEnglish': {
-    regex: /[^A-Za-z ]/g,
-    shouldCapitalize: true,
-    dataProperty: 'firstNameEnglish'
+  firstNameEnglish: {
+    dataProperty: 'firstNameEnglish',
+    regex: /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]/g, // remove only numbers & special chars
+    shouldCapitalize: true
   },
-  'lastNameEnglish': {
-    regex: /[^A-Za-z ]/g,
-    shouldCapitalize: true,
-    dataProperty: 'lastNameEnglish'
-  },
-  'firstNameSinhala': {
-    regex: /[^\u0D80-\u0DFF ]/g,
-    shouldCapitalize: false,
-    dataProperty: 'firstNameSinhala'
-  },
-  'lastNameSinhala': {
-    regex: /[^\u0D80-\u0DFF ]/g,
-    shouldCapitalize: false,
-    dataProperty: 'lastNameSinhala'
-  },
-  'firstNameTamil': {
-    regex: /[^\u0B80-\u0BFF ]/g,
-    shouldCapitalize: false,
-    dataProperty: 'firstNameTamil'
-  },
-  'lastNameTamil': {
-    regex: /[^\u0B80-\u0BFF ]/g,
-    shouldCapitalize: false,
-    dataProperty: 'lastNameTamil'
+  lastNameEnglish: {
+    dataProperty: 'lastNameEnglish',
+    regex: /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]/g,
+    shouldCapitalize: true
   }
 };
 

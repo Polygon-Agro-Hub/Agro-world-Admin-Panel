@@ -229,14 +229,14 @@ isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
 
 
 // Method for English name validation (block numbers and special characters)
-allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
+allowOnlyLetters(event: KeyboardEvent, inputValue: string) {
   const char = event.key;
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
   if (allowedKeys.includes(char)) return;
 
-  // Block digits and special characters
-  if (/^[0-9]$/.test(char) || /[^\w\s]/.test(char)) {
+  // ❌ Block numbers (English + Tamil + Sinhala + Arabic + all Unicode digits)
+  if (/\p{Nd}/u.test(char)) {
     event.preventDefault();
     this.englishInputError = true;
     setTimeout(() => {
@@ -245,14 +245,14 @@ allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
     return;
   }
 
-  // Block first space
+  // ❌ Block first space
   if (char === ' ' && inputValue.length === 0) {
     event.preventDefault();
     return;
   }
 
-  // Only allow English letters and spaces
-  if (!/^[a-zA-Z\s]$/.test(char)) {
+  // ❌ Block special characters (anything not a letter or space)
+  if (!/^\p{L}$|^ $/u.test(char)) {
     event.preventDefault();
     this.englishInputError = true;
     setTimeout(() => {
@@ -260,6 +260,7 @@ allowOnlyEnglish(event: KeyboardEvent, inputValue: string) {
     }, 2000);
   }
 }
+
 back(): void {
   Swal.fire({
     icon: 'warning',
@@ -800,7 +801,25 @@ getCompanyData() {
       });
       return;
     }
+ // Validate contact numbers format and collect errors
+  const contactNumberErrors: string[] = [];
 
+  if (this.isInvalidMobileNumber('oicConNum1')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
+  }
+
+  if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
+  }
+
+  if (contactNumberErrors.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Contact Numbers',
+      html: contactNumberErrors.map((msg) => `<p>${msg}</p>`).join(''),
+    });
+    return;
+  }
     if (
       this.companyData.oicConNum1 &&
       this.companyData.oicConNum2 &&
@@ -810,7 +829,7 @@ getCompanyData() {
       Swal.fire({
         icon: 'error',
         title: 'Duplicate Numbers',
-        text: 'Company Contact Number 1 and 2 cannot be the same',
+        text: 'Contact Number - 1 and Contact Number - 2 cannot be the same',
       });
       return;
     }
@@ -1085,6 +1104,38 @@ getCompanyData() {
     return;
   }
 
+   // Validate contact numbers format and collect errors
+  const contactNumberErrors: string[] = [];
+
+  if (this.isInvalidMobileNumber('oicConNum1')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
+  }
+
+  if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
+  }
+  // Check for duplicate contact numbers
+  if (
+    this.companyData.oicConNum1 &&
+    this.companyData.oicConNum2 &&
+    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate Contact Numbers',
+      text: 'Contact Number 2 cannot be the same as Contact Number 1',
+    });
+    return;
+  }
+  if (contactNumberErrors.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Contact Numbers',
+      html: contactNumberErrors.map((msg) => `<p>${msg}</p>`).join(''),
+    });
+    return;
+  }
   if (this.itemId) {
     this.isLoading = true;
 
@@ -1134,6 +1185,8 @@ getCompanyData() {
     Swal.fire('Error', 'No company ID found for update', 'error');
   }
 }
+
+
   onBlur(fieldName: keyof Company): void {
     this.touchedFields[fieldName] = true;
 
@@ -1498,7 +1551,7 @@ getContactNumber1ErrorMessage(): string {
   
   // Priority 2: Format validation
   if (this.isInvalidMobileNumber('oicConNum1')) {
-    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
   }
   
   // Priority 3: Length validation
@@ -1519,7 +1572,7 @@ getContactNumber2ErrorMessage(): string {
   
   // Priority 1: Format validation
   if (this.isInvalidMobileNumber('oicConNum2')) {
-    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
   }
   
   // Priority 2: Length validation

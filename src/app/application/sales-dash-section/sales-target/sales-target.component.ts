@@ -117,85 +117,90 @@ export class SalesTargetComponent implements OnInit {
   }
 
   saveTarget() {
-    this.isLoading = true;
-    // First validate the input
-    this.validateTargetInput();
+  this.isLoading = true;
+  // First validate the input
+  this.validateTargetInput();
 
-    // Check for invalid values (0, empty, or NaN)
-    if (
-      !this.newTargetValue ||
-      this.newTargetValue <= 0 ||
-      isNaN(this.newTargetValue)
-    ) {
-      Swal.fire({
-        title: 'Invalid Target',
-        text: 'Please Add a Target',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-      });
-      this.isLoading = false;
-      return; // Exit the function early
-    }
-
-    // Only proceed with save if value is valid
+  // Check for invalid values (0, empty, or NaN)
+  if (
+    !this.newTargetValue ||
+    this.newTargetValue <= 0 ||
+    isNaN(this.newTargetValue)
+  ) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `Do you want to save the target of ${this.newTargetValue}?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Save it!',
-      cancelButtonText: 'Cancel',
-      reverseButtons: true,
+      title: 'Invalid Target',
+      text: 'Please Add a Target',
+      icon: 'error',
+      confirmButtonText: 'OK',
       customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.isLoading = false;
+    return; // Exit the function early
+  }
+
+  // Only proceed with save if value is valid
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Do you want to save the target of ${this.newTargetValue}?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Save it!',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true,
+    customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
-          (response) => {
-            if (response.status) {
-              Swal.fire({
-                title: 'Success!',
-                text: response.message,
-                icon: 'success',
-                confirmButtonText: 'OK',
-              });
-              this.newTargetValue = 0;
-              this.fetchAllSalesAgents();
-              this.isLoading = false;
-            } else {
-              Swal.fire({
-                title: 'Error!',
-                text: response.message,
-                icon: 'error',
-                confirmButtonText: 'OK',
-              });
-              this.isLoading = false;
-            }
-          },
-          (error) => {
-            console.error('Error saving target:', error);
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
+        (response) => {
+          if (response.status) {
             Swal.fire({
-              title: 'Failed!',
-              text: 'Failed to save target.',
+              title: 'Success!',
+              text: response.message,
+              icon: 'success',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+            // Only reset the value on successful save
+            this.newTargetValue = 0;
+            this.fetchAllSalesAgents();
+            this.isLoading = false;
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: response.message,
               icon: 'error',
               confirmButtonText: 'OK',
             });
             this.isLoading = false;
           }
-        );
-      } else {
-        // Add this else block to clear the input when canceled
-        this.newTargetValue = 0;
-        this.isLoading = false;
-      }
-    });
-  }
+        },
+        (error) => {
+          console.error('Error saving target:', error);
+          Swal.fire({
+            title: 'Failed!',
+            text: 'Failed to save target.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+          this.isLoading = false;
+        }
+      );
+    } else {
+      // REMOVED: this.newTargetValue = 0;
+      // Just set isLoading to false without clearing the input
+      this.isLoading = false;
+    }
+  });
+}
 
   formatAgentCount(): string {
     return this.agentCount < 10 ? '0' + this.agentCount : this.agentCount.toString();

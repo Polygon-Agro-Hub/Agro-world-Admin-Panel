@@ -319,9 +319,9 @@ export class AddDestributionCenterComponent implements OnInit {
   if (field.errors['numericDecimal']) {
     return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
   }
-  if (field.errors['englishLettersOnly']) {
-    return 'Centre Name should contain only English letters and spaces';
-  }
+  // if (field.errors['englishLettersOnly']) {
+  //   return 'Centre Name should contain only English letters and spaces';
+  // }
   if (field.errors['sameContactNumbers']) {
     return 'Contact Number 02 must be different from Contact Number 01';
   }

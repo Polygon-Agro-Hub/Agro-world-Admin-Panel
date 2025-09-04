@@ -27,6 +27,7 @@ export class AssignCenterTargetComponent {
   hasData: boolean = false;
   isLoading = false;
 
+dateError: boolean = false;
   selectDate: Date | null = new Date();
 
   constructor(private TargetSrv: TargetService) {}
@@ -35,12 +36,24 @@ export class AssignCenterTargetComponent {
     this.fetchSavedCenterCrops();
   }
 
-  onDateChange(date: Date | null) {
-    this.selectDate = date;
-    console.log('selectDate:', this.selectDate);
-    this.fetchSavedCenterCrops();
+onDateChange(event: any) {
+  if (!event) {
+    this.selectDate = null; // Clear the date
+    this.dateError = true;
+  } else {
+    this.dateError = false;
+    // your existing logic for fetching data
   }
+}
 
+
+checkDateSelection() {
+  if (!this.selectDate) {
+    this.dateError = true;
+  } else {
+    this.dateError = false;
+  }
+}
   fetchSavedCenterCrops() {
     this.isLoading = true;
   

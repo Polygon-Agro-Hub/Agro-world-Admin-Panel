@@ -205,21 +205,21 @@ getFlagUrl(countryCode: string): string {
     this.personalData[field] = value;
   }
 
-  blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    const allowed = /^[A-Za-z ]$/;
-    const input = this.personalData[field] || '';
+blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  const allowed = /^[A-Za-z ]$/;
+  const input = this.personalData[field] || '';
 
-    // Block if key is invalid
-    if (!allowed.test(event.key)) {
-      event.preventDefault();
-      return;
-    }
-
-    // Block first character as space
-    if (input.length === 0 && event.key === ' ') {
-      event.preventDefault();
-    }
+  // Block if key is invalid
+  if (!allowed.test(event.key)) {
+    event.preventDefault();
+    return;
   }
+
+  // Block first character as space
+  if (input.length === 0 && event.key === ' ') {
+    event.preventDefault();
+  }
+}
 
   getAllDistributionCetnter(id: number) {
     this.loaded = false;
@@ -471,15 +471,9 @@ getFlagUrl(countryCode: string): string {
       errors.push('Please select at least one preferred language');
     }
     
-    // Name validation
-    const namePattern = /^[A-Z][a-zA-Z ]*$/;
-    if (!this.personalData.firstNameEnglish || !namePattern.test(this.personalData.firstNameEnglish)) {
-      errors.push('First Name is required and must start with a capital letter');
-    }
-    
-    if (!this.personalData.lastNameEnglish || !namePattern.test(this.personalData.lastNameEnglish)) {
-      errors.push('Last Name is required and must start with a capital letter');
-    }
+
+
+  
     
     // Phone validation
     if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
@@ -908,6 +902,25 @@ getFlagUrl(countryCode: string): string {
   // Priority 2: Check for duplicate phone numbers (only if both numbers exist)
   if (phoneValue && this.duplicatePhoneError) {
     return 'Mobile Number - 01 and Mobile Number - 02 cannot be the same.';
+  }
+  
+  // Priority 3: Check format validation (only if phone number exists)
+  if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
+  }
+  
+  return null;
+}
+
+getPhone1ValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
+  const phoneValue = this.personalData[field];
+  const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
+  
+  // Priority 1: Check if field is required and empty (for phoneNumber01 only)
+  if (field === 'phoneNumber01') {
+    if (this.touchedFields[field] && !phoneValue) {
+      return 'Mobile Number - 1 is required.';
+    }
   }
   
   // Priority 3: Check format validation (only if phone number exists)

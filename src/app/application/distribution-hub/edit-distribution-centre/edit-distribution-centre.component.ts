@@ -903,9 +903,7 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
     return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
   }
 
-  if (field.errors['englishLettersOnly']) {
-    return 'Centre Name should contain only English letters and spaces';
-  }
+
 
   if (field.errors['sameContactNumbers']) {
     return 'Contact Number 02 must be different from Contact Number 01';
@@ -935,56 +933,65 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
     };
     return labels[fieldName] || fieldName;
   }
-
+blockNumbers(value: string): string {
+  return value.replace(/[0-9]/g, ''); // remove all numbers
+}
   // Input handling methods
-  onInputChange(event: any, fieldType: string) {
-    const target = event.target as HTMLInputElement;
-    let value = target.value;
-    let shouldUpdate = true;
+onInputChange(event: any, fieldType: string) {
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+  let shouldUpdate = true;
 
-    switch (fieldType) {
-      case 'text':
-        if (value.trim() === '' && value.length > 0) {
-          target.value = '';
-          shouldUpdate = false;
-        } else {
-          value = value.trimStart();
-          // Capitalize first letter for centre name
-          if (target.getAttribute('formControlName') === 'name' && value.length > 0) {
-            value = value.charAt(0).toUpperCase() + value.slice(1);
-          }
-        }
-        break;
-      case 'email':
-        // Trim leading spaces for email
+  switch (fieldType) {
+    case 'text':
+      if (value.trim() === '' && value.length > 0) {
+        target.value = '';
+        shouldUpdate = false;
+      } else {
         value = value.trimStart();
-        break;
-      case 'phone':
-        const originalValue = value;
-        value = value.replace(/[^0-9]/g, '');
-        if (originalValue !== value) {
-          target.value = value;
-        }
-        if (value === '' && originalValue.length > 0 && !/[0-9]/.test(originalValue)) {
-          shouldUpdate = false;
-        }
-        break;
-      case 'coordinates':
-        const coordOriginalValue = value;
-        value = value.replace(/[^0-9.-]/g, '');
-        if (coordOriginalValue !== value) {
-          target.value = value;
-        }
-        if (value === '' && coordOriginalValue.length > 0 && !/[0-9.-]/.test(coordOriginalValue)) {
-          shouldUpdate = false;
-        }
-        break;
-    }
 
-    if (shouldUpdate && target.value !== value) {
-      target.value = value;
-    }
+        // ❌ Remove numbers
+        value = value.replace(/[0-9]/g, '');
+
+        // ✅ Capitalize first letter for centre name
+        if (target.getAttribute('formControlName') === 'name' && value.length > 0) {
+          value = value.charAt(0).toUpperCase() + value.slice(1);
+        }
+      }
+      break;
+
+    case 'email':
+      // Trim leading spaces for email
+      value = value.trimStart();
+      break;
+
+    case 'phone':
+      const originalValue = value;
+      value = value.replace(/[^0-9]/g, '');
+      if (originalValue !== value) {
+        target.value = value;
+      }
+      if (value === '' && originalValue.length > 0 && !/[0-9]/.test(originalValue)) {
+        shouldUpdate = false;
+      }
+      break;
+
+    case 'coordinates':
+      const coordOriginalValue = value;
+      value = value.replace(/[^0-9.-]/g, '');
+      if (coordOriginalValue !== value) {
+        target.value = value;
+      }
+      if (value === '' && coordOriginalValue.length > 0 && !/[0-9.-]/.test(coordOriginalValue)) {
+        shouldUpdate = false;
+      }
+      break;
   }
+
+  if (shouldUpdate && target.value !== value) {
+    target.value = value;
+  }
+}
 
   onCityChange() {
     // Update reg code when city changes

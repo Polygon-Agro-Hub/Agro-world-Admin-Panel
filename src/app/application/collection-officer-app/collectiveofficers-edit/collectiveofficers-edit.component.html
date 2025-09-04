@@ -224,10 +224,10 @@
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">
             First Name is a required field
           </span>
-          <span *ngIf="personalData.firstNameEnglish && hasInvalidNameCharacters('firstNameEnglish')"
+          <!-- <span *ngIf="personalData.firstNameEnglish && hasInvalidNameCharacters('firstNameEnglish')"
             class="text-red-600 text-sm">
             First Name should only contain English letters
-          </span>
+          </span> -->
         </div>
 
         <!-- Last Name (in English) - Updated with validation call -->
@@ -243,10 +243,10 @@
           <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">
             Last Name is a required field
           </span>
-          <span *ngIf="personalData.lastNameEnglish && hasInvalidNameCharacters('lastNameEnglish')"
+          <!-- <span *ngIf="personalData.lastNameEnglish && hasInvalidNameCharacters('lastNameEnglish')"
             class="text-red-600 text-sm">
             Last Name should only contain English letters
-          </span>
+          </span> -->
         </div>
 
         <!-- First Name (in Sinhala) - Updated with validation call -->

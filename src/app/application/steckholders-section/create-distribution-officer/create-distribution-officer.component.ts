@@ -1352,7 +1352,7 @@ formatEmail(): void {
 }
 
 class Personal {
-  jobRole: string = 'Distribution Center Manager';
+  jobRole: string = 'Distribution Centre Manager';
   empId!: string;
   centerId!: number | string;
   irmId!: number | string;

@@ -662,16 +662,15 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       reader.readAsDataURL(file);
     }
   }
-
   EpmloyeIdCreate() {
     const currentCompanyId = this.personalData.companyId;
     const currentCenterId = this.personalData.centerId;
-
+  
     this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Center Manager': 'DBM',
+      'Distribution Centre Manager': 'DBM',
       'Distribution Officer': 'DIO',
     };
 

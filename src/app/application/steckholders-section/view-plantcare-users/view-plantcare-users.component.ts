@@ -315,4 +315,10 @@ export class ViewPlantcareUsersComponent implements OnInit {
     // Revoke the object URL to free up memory
     URL.revokeObjectURL(url);
   }
+
+  viewFarmerStaff(id:number, name:string='', phone:string = ''){
+    this.router.navigate([`/steckholders/action/farmers/view-farmer-staff/${id}`],{
+      queryParams:{fname:name, phone:phone}
+    })
+  }
 }

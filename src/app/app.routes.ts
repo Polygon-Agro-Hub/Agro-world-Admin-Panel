@@ -174,6 +174,7 @@ import { MainDashboardLayoutComponent } from './application/distribution-hub/pol
 import { UpdateDistributionOfficerComponent } from './application/steckholders-section/update-distribution-officer/update-distribution-officer.component';
 import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
 import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
+import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
 
 export const routes: Routes = [
   {
@@ -526,6 +527,10 @@ export const routes: Routes = [
                     component: UserBulkUploadComponent,
                     canActivate: [PermissionGuard],
                     data: { permission: 'Bulk onboarding plan care users' },
+                  },
+                  {
+                    path: 'view-farmer-staff/:id',
+                    component: ViewFarmerStaffComponent,
                   },
                 ],
               },

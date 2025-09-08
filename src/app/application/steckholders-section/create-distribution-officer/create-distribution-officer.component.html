@@ -184,8 +184,7 @@
             (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">First Name is a required
-            field</span>
+          <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">First Name (in English) is required</span>
           <span *ngIf="hasInvalidNameCharacters('firstNameEnglish')" class="text-red-600 text-sm">First Name should only
             contain English letters</span>
         </div>
@@ -198,8 +197,7 @@
             (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">Last Name is a required
-            field</span>
+          <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">Last Name (in English) is required</span>
           <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
             contain English letters</span>
         </div>
@@ -212,8 +210,7 @@
             (blur)="onBlur('firstNameSinhala')" (input)="formatSinhalaName('firstNameSinhala')"
             (keypress)="preventNonSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm">First Name is a required
-            field</span>
+          <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm">First Name (in Sinhala) is required</span>
           <span *ngIf="hasInvalidSinhalaCharacters('firstNameSinhala')" class="text-red-600 text-sm">First Name should
             only contain Sinhala letters</span>
         </div>
@@ -226,8 +223,7 @@
             (blur)="onBlur('lastNameSinhala')" (input)="formatSinhalaName('lastNameSinhala')"
             (keypress)="preventNonSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm">Last Name is a required
-            field</span>
+          <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm">Last Name (in Sinhala) is required</span>
           <span *ngIf="hasInvalidSinhalaCharacters('lastNameSinhala')" class="text-red-600 text-sm">Last Name should
             only contain Sinhala letters</span>
         </div>
@@ -240,8 +236,7 @@
             (blur)="onBlur('firstNameTamil')" (input)="formatTamilName('firstNameTamil')"
             (keypress)="preventNonTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm">First Name is a required
-            field</span>
+          <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm">First Name (in Tamil) is required</span>
           <span *ngIf="hasInvalidTamilCharacters('firstNameTamil')" class="text-red-600 text-sm">First Name should only
             contain Tamil letters</span>
         </div>
@@ -254,8 +249,7 @@
             (blur)="onBlur('lastNameTamil')" (input)="formatTamilName('lastNameTamil')"
             (keypress)="preventNonTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm">Last Name is a required
-            field</span>
+          <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm">Last Name (in Tamil) is required</span>
           <span *ngIf="hasInvalidTamilCharacters('lastNameTamil')" class="text-red-600 text-sm">Last Name should only
             contain Tamil letters</span>
         </div>

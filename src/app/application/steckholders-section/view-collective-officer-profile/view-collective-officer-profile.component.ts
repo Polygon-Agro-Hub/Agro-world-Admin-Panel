@@ -411,6 +411,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Swal from 'sweetalert2';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-view-collective-officer-profile',
@@ -436,7 +437,8 @@ export class ViewCollectiveOfficerProfileComponent {
     private route: ActivatedRoute,
     private collectionService: CollectionService,
     private collectionOfficerService: CollectionOfficerService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -487,9 +489,9 @@ fetchOfficerById(id: number) {
 }
 
 
-  navigatePath(path: string) {
-    this.router.navigate([path]);
-  }
+  goBack() {
+  window.history.back();
+}
 
   viewOfficerTarget(officerId: number) {
     this.router.navigate([
@@ -627,6 +629,12 @@ fetchOfficerById(id: number) {
         break;
       case 'Collection Officer':
         empType = 'Collection Officer';
+        break;
+      case 'Distribution Center Manager':
+        empType = 'Distribution Center Manager';
+        break;
+      case 'Distribution Officer':
+        empType = 'Distribution Officer';
         break;
       case 'Driver':
         empType = 'Driver';

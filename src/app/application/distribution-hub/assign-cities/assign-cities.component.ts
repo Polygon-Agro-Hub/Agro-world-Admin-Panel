@@ -67,26 +67,41 @@ export class AssignCitiesComponent implements OnInit {
   }
 
   fetchData() {
-    this.isLoading = true;
-    this.hasData = false;
-    
-    this.distributionHubSrv.getAssignForCityes(this.selectProvince, this.selectDistrict).subscribe(
-      (res) => {
-        console.log(res);
-        this.citiesArr = res.cities;
-        this.centersArr = res.centers;
-        this.isLoading = false;
-        this.hasData = true;
-        
-        this.initializeAssignments();
-      },
-      (error) => {
-        console.error('Error fetching data:', error);
-        this.isLoading = false;
-        this.hasData = false;
-      }
-    );
-  }
+  this.isLoading = true;
+  this.hasData = false;
+  
+  this.distributionHubSrv.getAssignForCityes(this.selectProvince, this.selectDistrict).subscribe(
+    (res) => {
+      console.log(res);
+      this.citiesArr = res.cities;
+      
+      // Filter out duplicate centers by id
+      this.centersArr = this.removeDuplicateCenters(res.centers);
+      
+      this.isLoading = false;
+      this.hasData = true;
+      
+      this.initializeAssignments();
+    },
+    (error) => {
+      console.error('Error fetching data:', error);
+      this.isLoading = false;
+      this.hasData = false;
+    }
+  );
+}
+
+removeDuplicateCenters(centers: Centers[]): Centers[] {
+  const uniqueCenters = new Map<number, Centers>();
+  
+  centers.forEach(center => {
+    if (!uniqueCenters.has(center.id)) {
+      uniqueCenters.set(center.id, center);
+    }
+  });
+  
+  return Array.from(uniqueCenters.values());
+}
 
   onProvinceChange(): void {
     this.selectDistrict = '';
@@ -154,16 +169,32 @@ export class AssignCitiesComponent implements OnInit {
     console.log('Saving assignment:', assignmentToSave);
     
     this.distributionHubSrv.AssigCityToDistributedCenter(assignmentToSave).subscribe(
-      (res) => {
-        this.isLoading = false;
-        Swal.fire('Success', 'City assigned to center successfully!', 'success');
+  (res) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Success',
+      text: 'City assigned to centre successfully!',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire('Error', 'Failed to assign city to center', 'error');
-        this.assignments.set(cityId, -1);
-      }
-    );
+    });
+  },
+  (error) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to assign city to centre',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.assignments.set(cityId, -1);
+  }
+);
   }
 
   removeAssignment(cityId: number, centerId: number): void {
@@ -174,16 +205,32 @@ export class AssignCitiesComponent implements OnInit {
     console.log('Removing assignment:', assignmentToRemove);
     
     this.distributionHubSrv.removeAssigCityToDistributedCenter(assignmentToRemove).subscribe(
-      (res) => {
-        this.isLoading = false;
-        Swal.fire('Success', 'City removed from center successfully!', 'success');
+  (res) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Success',
+      text: 'City removed from centre successfully!',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire('Error', 'Failed to remove city from center', 'error');
-        this.assignments.set(cityId, centerId);
-      }
-    );
+    });
+  },
+  (error) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to remove city from centre',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.assignments.set(cityId, centerId);
+  }
+);
   }
 }
 

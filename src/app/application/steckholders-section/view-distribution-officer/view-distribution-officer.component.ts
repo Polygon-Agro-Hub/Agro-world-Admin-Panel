@@ -51,8 +51,7 @@ export class ViewDistributionOfficerComponent {
   distributionOfficers: DistributionOfficers[] = [];
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Distribution Officer' },
-    { id: 2, jobRole: 'Distribution Center Manager' },
-    { id: 3, jobRole: 'Customer Officer' },
+    { id: 2, jobRole: 'Distribution Centre Manager' },
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
@@ -251,7 +250,7 @@ export class ViewDistributionOfficerComponent {
             if (data.status) {
               Swal.fire(
                 'Deleted!',
-                'The Collection Officer has been deleted.',
+                'Successfully deleted distribution officer',
                 'success'
               );
               this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
@@ -333,7 +332,7 @@ export class ViewDistributionOfficerComponent {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Collection Officer was approved successfully.',
+                      text: 'The Distribution Officer was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
@@ -376,7 +375,7 @@ export class ViewDistributionOfficerComponent {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Collection Officer was rejected successfully.',
+                      text: 'The Distribution Officer was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
                     });

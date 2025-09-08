@@ -67,26 +67,41 @@ export class AssignCitiesComponent implements OnInit {
   }
 
   fetchData() {
-    this.isLoading = true;
-    this.hasData = false;
-    
-    this.distributionHubSrv.getAssignForCityes(this.selectProvince, this.selectDistrict).subscribe(
-      (res) => {
-        console.log(res);
-        this.citiesArr = res.cities;
-        this.centersArr = res.centers;
-        this.isLoading = false;
-        this.hasData = true;
-        
-        this.initializeAssignments();
-      },
-      (error) => {
-        console.error('Error fetching data:', error);
-        this.isLoading = false;
-        this.hasData = false;
-      }
-    );
-  }
+  this.isLoading = true;
+  this.hasData = false;
+  
+  this.distributionHubSrv.getAssignForCityes(this.selectProvince, this.selectDistrict).subscribe(
+    (res) => {
+      console.log(res);
+      this.citiesArr = res.cities;
+      
+      // Filter out duplicate centers by id
+      this.centersArr = this.removeDuplicateCenters(res.centers);
+      
+      this.isLoading = false;
+      this.hasData = true;
+      
+      this.initializeAssignments();
+    },
+    (error) => {
+      console.error('Error fetching data:', error);
+      this.isLoading = false;
+      this.hasData = false;
+    }
+  );
+}
+
+removeDuplicateCenters(centers: Centers[]): Centers[] {
+  const uniqueCenters = new Map<number, Centers>();
+  
+  centers.forEach(center => {
+    if (!uniqueCenters.has(center.id)) {
+      uniqueCenters.set(center.id, center);
+    }
+  });
+  
+  return Array.from(uniqueCenters.values());
+}
 
   onProvinceChange(): void {
     this.selectDistrict = '';

@@ -422,7 +422,7 @@ updateRegCode() {
       .subscribe({
         next: (response) => {
           // Prepend "D" to the reg code from API
-          this.distributionForm.patchValue({ regCode: `D${response.regCode}` });
+          this.distributionForm.patchValue({ regCode: `D-${response.regCode}` });
           this.isLoadingregcode = false;
         },
         error: (error) => {

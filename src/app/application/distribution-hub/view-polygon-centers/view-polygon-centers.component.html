@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -15,13 +15,13 @@
         </h2>
       </div>
       <div class="flex items-center">
-        <div class="mr-5">
+        <!-- <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="companyOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="!!selectCompany" placeholder="Company" [(ngModel)]="selectCompany"
             (onChange)="applyCompanyFilter()"></p-dropdown>
-        </div>
+        </div> -->
 
         <div class="mr-5">
           <p-dropdown
@@ -75,9 +75,9 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
               Centre Name
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap">
+            <!-- <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap">
               Company
-            </th>
+            </th> -->
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
               Province
             </th>
@@ -121,9 +121,9 @@
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.centerName }}
             </td>
-            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+            <!-- <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.companyName }}
-            </td>
+            </td> -->
             <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.province }}
             </td>

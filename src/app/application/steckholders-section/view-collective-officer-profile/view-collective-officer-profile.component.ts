@@ -328,12 +328,12 @@ fetchOfficerById(id: number) {
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
     doc.text(
-      this.officerObj.phoneNumber02
-        ? `${getValueOrNA(this.officerObj.phoneCode02)} ${getValueOrNA(this.officerObj.phoneNumber02)}`
-        : 'N/A',
-      rightColumnX,
-      y + 49
-    );
+  this.officerObj.phoneNumber02
+    ? `${getValueOrNA(this.officerObj.phoneCode02)} ${getValueOrNA(this.officerObj.phoneNumber02)}`
+    : '-',
+  rightColumnX,
+  y + 49
+);
 
     y += 70;
 

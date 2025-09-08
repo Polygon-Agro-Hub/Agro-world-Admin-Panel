@@ -134,36 +134,12 @@
                 class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 Distribution Officer
               </option>
-              <!-- <option value="Customer Officer"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                Customer Officer
-              </option> -->
             </select>
             <i
               class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
           </div>
           <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">Job Role is a required field</span>
         </div>
-
-        <!-- <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
-          <div class="flex mt-1">
-            <span
-              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-              <p *ngIf="personalData.jobRole === 'Collection Center Head'">
-                CCH
-              </p>
-              <p *ngIf="personalData.jobRole === 'Collection Center Manager'">
-                CCM
-              </p>
-              <p *ngIf="personalData.jobRole === 'Collection Officer'">COO</p>
-              <p *ngIf="personalData.jobRole === 'Customer Officer'">CUO</p>
-            </span>
-            <input type="text" [value]="lastID" name="empId"
-              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              disabled />
-          </div>
-        </div> -->
 
         <div *ngIf="personalData.jobRole === 'Distribution Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -176,7 +152,7 @@
           </p-dropdown>
         </div>
 
-
+<br *ngIf="personalData.jobRole !== 'Distribution Officer'">
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in English)*</label>

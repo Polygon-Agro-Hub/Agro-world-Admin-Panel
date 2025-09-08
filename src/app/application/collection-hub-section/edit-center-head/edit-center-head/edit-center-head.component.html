@@ -395,7 +395,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
   #nicInput="ngModel"
   required
   pattern="^(\d{9}V|\d{12})$"
-  (input)="formatNIC()"
+  (input)="formatNIC($event)"
    (input)="validateNIC($event)"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
 />
@@ -407,14 +407,10 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
 </div>
 
 <!-- Pattern Validation -->
-<div *ngIf="
-  nicInput.touched &&
-  personalData.nic &&
-  (personalData.nic.length === 10 || personalData.nic.length === 12) &&
-  nicInput.errors?.['pattern']
-" class="text-red-500 text-sm mt-1">
-  Please enter a valid NIC number (12 digits or 10 digits followed by 'V').
+<div *ngIf="nicInput.touched && isNICInvalid" class="text-red-500 text-sm mt-1">
+  Please enter a valid NIC number (12 digits or 10 digits ending with 'V').
 </div>
+
 
 
           </div>

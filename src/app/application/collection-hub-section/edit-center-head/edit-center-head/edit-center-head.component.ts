@@ -187,6 +187,11 @@ export class EditCenterHeadComponent {
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
+  
+  get isNICInvalid() {
+  const nic = this.personalData.nic;
+  return nic && !/^(\d{9}V|\d{12})$/.test(nic);
+}
 
     validateNIC(event: any) {
     let value: string = event.target.value.toUpperCase();
@@ -211,30 +216,52 @@ export class EditCenterHeadComponent {
     event.target.value = value;
   }
 
-  restrictInput(event: KeyboardEvent) {
-    const input = event.target as HTMLInputElement;
-    const currentValue = input.value;
-    const inputChar = event.key.toUpperCase();
+restrictInput(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value.toUpperCase();
+  const inputChar = event.key.toUpperCase();
 
-    // Allow control keys
-    if (event.ctrlKey || event.metaKey || event.key.length > 1) {
+  // Allow control keys (Backspace, Delete, Arrow keys, Ctrl/Cmd shortcuts)
+  if (event.ctrlKey || event.metaKey || event.key.length > 1) {
+    return true;
+  }
+
+  const digitsOnly = currentValue.replace(/[^0-9]/g, '');
+  const hasV = currentValue.includes('V');
+
+  // If NIC has 'V' (10-char format), block any further input
+  if (hasV) {
+    if (event.key === 'Backspace' || event.key === 'Delete') {
       return true;
     }
-
-    // Allow digits if total digits < 12
-    const digitsCount = currentValue.replace(/[^0-9]/g, '').length;
-    if (/[0-9]/.test(inputChar) && digitsCount < 12) {
-      return true;
-    }
-
-    // Allow 'V' only if not already present
-    if (inputChar === 'V' && !currentValue.toUpperCase().includes('V')) {
-      return true;
-    }
-
     event.preventDefault();
     return false;
   }
+
+  // If NIC is 12 digits (no 'V'), block further input
+  if (!hasV && digitsOnly.length >= 12) {
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+      return true;
+    }
+    event.preventDefault();
+    return false;
+  }
+
+  // Allow digits if under limit
+  if (/[0-9]/.test(inputChar)) {
+    return true;
+  }
+
+  // Allow 'V' only if not present and exactly 9 digits typed
+  if (inputChar === 'V' && !hasV && digitsOnly.length === 9) {
+    return true;
+  }
+
+  // Block all other characters
+  event.preventDefault();
+  return false;
+}
+
 
 allowOnlyNumbers(event: KeyboardEvent) {
   const charCode = event.key.charCodeAt(0);
@@ -348,21 +375,26 @@ validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
     }
   }
 
-  formatNIC() {
-  let val = this.personalData.nic.toUpperCase();
+formatNIC(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
 
-  if (val.length <= 10) {
-    // 10-digit NIC: allow only 9 digits + V at the end
-    val = val.replace(/[^0-9V]/g, '');
-    if (val.length === 10) {
-      val = val.slice(0, 9) + (val[9] === 'V' ? 'V' : '');
-    }
+  // Remove all non-digit/V characters
+  value = value.replace(/[^0-9V]/g, '');
+
+  const hasV = value.includes('V');
+
+  if (hasV) {
+    // Ensure V is at 10th position and no more characters after
+    const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
+    value = digits + 'V';
   } else {
-    // 12-digit NIC: allow only numbers, max 12 digits
-    val = val.replace(/[^0-9]/g, '').slice(0, 12);
+    // If no V, limit digits to 12
+    value = value.slice(0, 12);
   }
 
-  this.personalData.nic = val;
+  input.value = value;
+  this.personalData.nic = value;
 }
 
 

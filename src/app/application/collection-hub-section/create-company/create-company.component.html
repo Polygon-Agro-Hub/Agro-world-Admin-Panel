@@ -147,8 +147,8 @@
           </label>
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
             #companyNameSinhala="ngModel" required
-            (keydown)="allowOnlySinhala($event, companyData.companyNameSinhala || '')"
-            (blur)="onBlur('companyNameSinhala')"
+       (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '')"
+        
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
           <div
@@ -168,7 +168,7 @@
             Company Name (in Tamil) *
           </label>
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
-            #companyNameTamil="ngModel" required (keydown)="allowOnlyTamil($event, companyData.companyNameTamil || '')"
+            #companyNameTamil="ngModel" required  (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '')"
             (blur)="onBlur('companyNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
@@ -589,7 +589,7 @@
           <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
             #companyNameSinhala="ngModel" required
             (keydown)="handleInputWithSpaceTrimming($event, 'companyNameSinhala')"
-            (keydown)="allowOnlySinhala($event, companyData.companyNameSinhala || '')"
+         (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '')"
             (blur)="onBlur('companyNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
@@ -610,7 +610,7 @@
           </label>
           <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
             #companyNameTamil="ngModel" required (keydown)="handleInputWithSpaceTrimming($event, 'companyNameTamil')"
-            (keydown)="allowOnlyTamil($event, companyData.companyNameTamil || '')" (blur)="onBlur('companyNameTamil')"
+           (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '')" (blur)="onBlur('companyNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="companyNameTamil.invalid && (companyNameTamil.dirty || companyNameTamil.touched) && !tamilInputError"

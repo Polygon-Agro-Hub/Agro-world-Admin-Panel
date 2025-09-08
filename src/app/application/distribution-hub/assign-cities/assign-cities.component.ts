@@ -171,11 +171,11 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
     this.distributionHubSrv.AssigCityToDistributedCenter(assignmentToSave).subscribe(
       (res) => {
         this.isLoading = false;
-        Swal.fire('Success', 'City assigned to center successfully!', 'success');
+        Swal.fire('Success', 'City assigned to centre successfully!', 'success');
       },
       (error) => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to assign city to center', 'error');
+        Swal.fire('Error', 'Failed to assign city to centre', 'error');
         this.assignments.set(cityId, -1);
       }
     );
@@ -191,11 +191,11 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
     this.distributionHubSrv.removeAssigCityToDistributedCenter(assignmentToRemove).subscribe(
       (res) => {
         this.isLoading = false;
-        Swal.fire('Success', 'City removed from center successfully!', 'success');
+        Swal.fire('Success', 'City removed from centre successfully!', 'success');
       },
       (error) => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to remove city from center', 'error');
+        Swal.fire('Error', 'Failed to remove city from centre', 'error');
         this.assignments.set(cityId, centerId);
       }
     );

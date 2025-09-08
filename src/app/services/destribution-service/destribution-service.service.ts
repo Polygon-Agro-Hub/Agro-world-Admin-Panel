@@ -287,4 +287,24 @@ export class DestributionService {
       headers: this.getHeaders(),
     });
   }
+
+  getSelectedOfficerTargets(officerId: number, searchText: string = '', status: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    console.log('officerId', officerId )
+    let url = `${this.apiUrl}distribution/get-selected-officer-targets?officerId=${officerId}`;
+  
+    if (searchText) {
+      url += `&searchText=${searchText}`
+  
+    }
+  
+    if (status) {
+      url += `&status=${status}`
+    }
+  
+    return this.http.get<any>(url, { headers });
+  }
 }

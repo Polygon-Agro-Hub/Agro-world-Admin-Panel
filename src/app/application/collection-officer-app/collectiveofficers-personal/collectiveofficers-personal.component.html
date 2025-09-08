@@ -300,7 +300,7 @@
               <input type="tel" id="phoneNumber01" name="phoneNumber01" [(ngModel)]="personalData.phoneNumber01"
                 placeholder="XXXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber01')"
                 (keypress)="preventNonNumeric($event)" (blur)="onBlur('phoneNumber01')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-l-0 ' +
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) ? 'border-red-500' : 'border-gray-300')
         " />
             </div>
@@ -348,7 +348,7 @@
               <input type="tel" id="phoneNumber02" name="phoneNumber02" [(ngModel)]="personalData.phoneNumber02"
                 placeholder="XXXXXXXXX" maxlength="9" (input)="formatPhoneNumber('phoneNumber02')"
                 (keypress)="preventNonNumeric($event)" (blur)="onBlur('phoneNumber02')" [class]="
-          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-l-0 ' +
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')
         " />
             </div>
@@ -366,7 +366,7 @@
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
             (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack h-[6vh]" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
             Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
           </span>

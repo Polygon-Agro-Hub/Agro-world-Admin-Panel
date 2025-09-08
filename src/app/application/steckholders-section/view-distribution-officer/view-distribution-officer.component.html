@@ -119,19 +119,19 @@
         <p class="text-lg mb-2 dark:text-textDark">
           Are you sure you want to Disclaim the officer
         </p>
-        <p class="font-semibold text-lg dark:text-white">
+        <p class="font-normal text-lg dark:text-white">
           "{{ selectedOfficer?.firstNameEnglish }}
           {{ selectedOfficer?.lastNameEnglish }}" (EMP ID -
           {{ selectedOfficer?.empId }})"
           <span class="font-normal dark:text-textDark">from centre</span> <br />
-          <span class="font-semibold text-lg">
+          <span class="font-normal text-lg">
             "{{ selectedOfficer?.centerName }}"?</span
           >
         </p>
 
-        <p class="text-red-500 mb-6 italic">
+        <!-- <p class="text-red-500 mb-6 italic">
           Please note that the officer will no longer be under your monitoring.
-        </p>
+        </p> -->
       </div>
 
       <!-- Buttons -->
@@ -230,7 +230,7 @@
     ></p-dropdown>
   </div>
 
-  <div class="mr-5">
+  <!-- <div class="mr-5">
     <p-dropdown
       styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
       [options]="companyArr"
@@ -241,14 +241,14 @@
       [(ngModel)]="statusFilter"
       (onChange)="applyFilters()"
     ></p-dropdown>
-  </div>
+  </div> -->
 
   <div
   class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
 >
   <input
     type="text"
-    placeholder="Search By First Name, Centre"
+    placeholder="Search by EMP ID, Centre, NIC"
     [(ngModel)]="searchNIC"
     class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
     (keyup.enter)="onSearch()"
@@ -345,7 +345,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Center
+              Centre
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"

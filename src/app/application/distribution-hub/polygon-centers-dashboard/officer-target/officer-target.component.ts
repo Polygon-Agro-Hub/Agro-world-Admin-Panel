@@ -50,6 +50,10 @@ export class OfficerTargetComponent implements OnChanges {
       }
     )
   }
+
+  selectOfficer() {
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`])
+  }
 }
 
 interface CenterDetails {

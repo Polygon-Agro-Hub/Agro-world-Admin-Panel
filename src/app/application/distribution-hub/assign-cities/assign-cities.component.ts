@@ -169,16 +169,32 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
     console.log('Saving assignment:', assignmentToSave);
     
     this.distributionHubSrv.AssigCityToDistributedCenter(assignmentToSave).subscribe(
-      (res) => {
-        this.isLoading = false;
-        Swal.fire('Success', 'City assigned to centre successfully!', 'success');
+  (res) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Success',
+      text: 'City assigned to centre successfully!',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire('Error', 'Failed to assign city to centre', 'error');
-        this.assignments.set(cityId, -1);
-      }
-    );
+    });
+  },
+  (error) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to assign city to centre',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.assignments.set(cityId, -1);
+  }
+);
   }
 
   removeAssignment(cityId: number, centerId: number): void {
@@ -189,16 +205,32 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
     console.log('Removing assignment:', assignmentToRemove);
     
     this.distributionHubSrv.removeAssigCityToDistributedCenter(assignmentToRemove).subscribe(
-      (res) => {
-        this.isLoading = false;
-        Swal.fire('Success', 'City removed from centre successfully!', 'success');
+  (res) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Success',
+      text: 'City removed from centre successfully!',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire('Error', 'Failed to remove city from centre', 'error');
-        this.assignments.set(cityId, centerId);
-      }
-    );
+    });
+  },
+  (error) => {
+    this.isLoading = false;
+    Swal.fire({
+      title: 'Error',
+      text: 'Failed to remove city from centre',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.assignments.set(cityId, centerId);
+  }
+);
   }
 }
 

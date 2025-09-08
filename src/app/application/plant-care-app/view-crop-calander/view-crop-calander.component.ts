@@ -47,10 +47,13 @@ export class ViewCropCalanderComponent implements OnInit {
   hasData: boolean = true;
   searchText: string = '';
   category = [
-    { name: 'Vegetables', value: 'Vegetables' },
-    { name: 'Fruit', value: 'Fruit' },
-    { name: 'Grain', value: 'Grain' },
-    { name: 'Mushrooms', value: 'Mushrooms' },
+    { label: 'Vegetables', value: 'Vegetables' },
+      { label: 'Fruits', value: 'Fruit' },
+      // { label: 'Grains', value: 'Grain' },
+      { label: 'Cereals', value: 'Cereals' },
+      { label: 'Spices', value: 'Spices' },
+      { label: 'Mushrooms', value: 'Mushrooms' },
+      { label: 'Legumes', value: 'Legumes' },
   ];
 
   constructor(

@@ -548,4 +548,46 @@ resetPassword(id: number, data: any): Observable<any> {
 
     return this.http.get(url, { headers, responseType: 'blob' });
   }
+
+  getAllCenterDailyTarget(centerId: number, page: number = 1, limit: number = 10, status: string = '', searchText: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    let url = `${this.apiUrl}auth/get-center-target?centerId=${centerId}&page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  downloadCurrentTargetReport(
+    centerId: number,
+    status: string = '',
+    searchText: string = ''
+  ): Observable<Blob> {
+    let url = `${this.apiUrl}auth/download-current-target-report?centerId=${centerId}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get(url, { headers, responseType: 'blob' });
+  }
 }
+
+

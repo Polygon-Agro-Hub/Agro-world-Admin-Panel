@@ -23,30 +23,34 @@
           />
         </div>
       </div> -->
+<div class="mr-5">
+  <p-calendar
+    id="toDate"
+    [(ngModel)]="selectDate"
+    (onSelect)="onDateChange($event)"
+    (onClear)="onDateChange(null)"
+    (onClose)="checkDateSelection()"
+    [showIcon]="true"
+    [showClear]="true"
+    [showButtonBar]="true"
+    placeholder="Select Date"
+    iconDisplay="input"
+    [style]="{ width: '16rem', height: '2rem' }"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d]
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+    [appendTo]="'body'"
+  ></p-calendar>
 
-      <div class="mr-5">
-        <p-calendar
-  id="toDate"
-  [(ngModel)]="selectDate"
-  (onSelect)="onDateChange($event)"
-  (onClear)="onDateChange($event)"       
-  [showIcon]="true"
-  [showClear]="true"              
-  [showButtonBar]="true"
-  iconDisplay="input"
-  [style]="{ width: '16rem', height: '2rem' }"
-  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   
-                   [&_.p-button:hover]:dark:bg-[#6b7280]"
-  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-  [appendTo]="'body'"
-/>
-      </div>
+  <!-- Validation message -->
+  <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p>
+</div>
+
 
       <div
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
@@ -56,7 +60,7 @@
           (keyup.enter)="onSearch()"
           (keyup.esc)="offSearch()"
           type="text"
-          placeholder="Search by Variety Name"
+          placeholder="Search by Crop / Variety Name"
           class="bg-transparent  outline-none w-full text-textLight dark:text-textDark"
         />
         <button
@@ -215,8 +219,15 @@
           </tr>
         </tbody>
       </table>
+  
     </div>
-
+        <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
+        <p class="text-[#494949] dark:text-textDark  mb-4">
+      -- No Data Available --
+    </p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+    
+  </div>
     <div
       *ngIf="isNew && isDateValid"
       class="flex flex-row justify-center items-center my-7 gap-8"

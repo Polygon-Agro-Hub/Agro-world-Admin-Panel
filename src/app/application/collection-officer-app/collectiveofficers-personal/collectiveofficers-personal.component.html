@@ -182,6 +182,8 @@
             (in English)*</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             (blur)="onBlur('firstNameEnglish')" 
+             (input)="capitalizeNames()"
+             
             (keypress)="preventSpecialCharacters($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">First Name is a required
@@ -196,6 +198,8 @@
             English)</label>
           <input id="lastNameEnglish" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             (blur)="onBlur('lastNameEnglish')" 
+              (input)="capitalizeNames()"
+             
             (keypress)="preventSpecialCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">Last Name is a required

@@ -15,17 +15,24 @@
 
       <!-- Collection Center Name -->
       <div>
-        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre
-          Name *</label>
-        <input formControlName="centerName" id="centerName" name="centerName" (input)="onCenterNameInput($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="
-            collectionCenterForm.get('centerName')?.invalid &&
-            (collectionCenterForm.get('centerName')?.dirty ||
-              collectionCenterForm.get('centerName')?.touched)
-          " class="text-red-500 text-sm mt-1">
-          Centre Name is required
-        </div>
+    <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Name *</label>
+  <input
+    formControlName="centerName"
+    id="centerName"
+    name="centerName"
+    (input)="onCenterNameInput($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  <div
+    *ngIf="
+      (collectionCenterForm.get('centerName')?.dirty ||
+        collectionCenterForm.get('centerName')?.touched) &&
+      collectionCenterForm.get('centerName')?.hasError('required')
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Centre Name is required
+  </div>
         <!-- <div *ngIf="
             collectionCenterForm
               .get('centerName')
@@ -200,7 +207,7 @@
             *ngIf="isPhoneInvalidMap['phone01'] && collectionCenterForm.get('contact01')?.value"
             class="text-red-500 text-sm mt-1"
           >
-          Please enter a valid mobile number (format: +947XXXXXXXX)
+          Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
         </div>
       </div>
@@ -279,8 +286,7 @@
       !isPhoneInvalidMap['phone02'] && !isPhoneInvalidMap['phone02']"
 
     class="text-red-500 text-sm mt-1">
-  Phone Number - 2 should be different from Phone Number - 1.
-</div>
+Contact Number - 1 and Contact Number - 2 cannot be the same</div>
       
           <div
             *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern'] && !isPhoneInvalidMap['phone02']"
@@ -293,7 +299,7 @@
             *ngIf="isPhoneInvalidMap['phone02'] && collectionCenterForm.get('contact02')?.value"
             class="text-red-500 text-sm mt-1"
           >
-          Please enter a valid mobile number (format: +947XXXXXXXX)
+          Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
         </div>
 

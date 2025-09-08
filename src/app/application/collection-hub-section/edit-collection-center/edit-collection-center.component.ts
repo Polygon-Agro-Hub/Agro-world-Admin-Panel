@@ -306,7 +306,7 @@ onSubmit() {
       missingFields.push('Contact Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
     }
     if (this.centerFetchData.contact01 === this.centerFetchData.contact02) {
-      missingFields.push('Contact Number - 2 - Must be different from Contact Number - 1');
+      missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
     }
   }
 

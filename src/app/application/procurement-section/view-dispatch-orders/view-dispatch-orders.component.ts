@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 interface OrderDetailItem {
   packageId: number;
@@ -45,7 +46,7 @@ interface AdditionalItem {
 @Component({
   selector: 'app-view-dispatch-orders',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingSpinnerComponent],
   templateUrl: './view-dispatch-orders.component.html',
   styleUrl: './view-dispatch-orders.component.css',
 })
@@ -61,6 +62,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
   totalPrice = 0;
   orderId!: number;
   isWithinLimit = true;
+  isLoading: boolean = false;
 
   showAdditionalItemsModal = false;
   showExcludedItemsModal = false;
@@ -68,17 +70,17 @@ export class ViewDispatchOrdersComponent implements OnInit {
   constructor(
     private procurementService: ProcumentsService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   goBack() {
     window.history.back();
   }
 
   ngOnInit() {
-    console.log('Component initialized');
+    // console.log('Component initialized');
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Query parameter ID:', id);
+      // console.log('Query parameter ID:', id);
       if (!id) {
         this.error = 'No order ID provided in URL';
         this.loading = false;
@@ -103,11 +105,11 @@ export class ViewDispatchOrdersComponent implements OnInit {
       .getExcludedItems(orderId)
       .subscribe(
         (response) => {
-          console.log('response', response);
-    
+          // console.log('response', response);
+
           this.excludedItemsArr = response;
-          console.log('excludeItemsArr', this.excludedItemsArr)
-    
+          // console.log('excludeItemsArr', this.excludedItemsArr)
+
           this.loading = false;
         },
         (error) => {
@@ -122,7 +124,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
       .subscribe({
         next: (items) => {
           this.packageItems = Array.isArray(items) ? items : [items];
-          console.log('Fetched package items:', this.packageItems);
+          // console.log('Fetched package items:', this.packageItems);
           this.updateProductSelections();
         },
         error: (err) => {
@@ -162,6 +164,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
   }
 
   fetchMarketplaceItems(callback?: () => void) {
+    this.isLoading = true;
     this.procurementService.getAllMarketplaceItems(this.orderId).subscribe({
       next: (data: any) => {
         this.marketplaceItems = data.items.map((item: any) => ({
@@ -171,8 +174,9 @@ export class ViewDispatchOrdersComponent implements OnInit {
           discountedPrice: item.discountedPrice,
           isExcluded: false,
         }));
-        console.log('Fetched marketplace items:', this.marketplaceItems);
+        // console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching marketplace items:', err);
@@ -183,13 +187,17 @@ export class ViewDispatchOrdersComponent implements OnInit {
   }
 
   fetchOrderDetails(id: string) {
-    console.log('Fetching order details for ID:', id);
+    // console.log('Fetching order details for ID:', id);
     this.loading = true;
     this.error = '';
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
+
       next: (response) => {
-        console.log('Full API Response:', response); // Log the full response to check structure
+        // console.log('Full API Response:', response); 
+        this.additionalItems = response.additionalItems
+        console.log("additional Items", this.additionalItems);
+
 
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
@@ -278,10 +286,10 @@ export class ViewDispatchOrdersComponent implements OnInit {
       // Validate if current total is within the allowed limit
       this.isWithinLimit = currentTotal <= allowedLimit;
 
-      console.log('Calculated total price:', this.totalPrice);
-      console.log('Allowed limit:', allowedLimit);
-      console.log('Current total:', currentTotal);
-      console.log('Is within limit:', this.isWithinLimit);
+      // console.log('Calculated total price:', this.totalPrice);
+      // console.log('Allowed limit:', allowedLimit);
+      // console.log('Current total:', currentTotal);
+      // console.log('Is within limit:', this.isWithinLimit);
     } else {
       this.totalPrice = 0;
       this.isWithinLimit = true;
@@ -370,6 +378,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
       .subscribe({
         next: () => {
           this.saveItemsSequentially(items, index + 1);
+
         },
         error: (err) => {
           console.error(`Error saving item ${index}:`, err);
@@ -408,6 +417,8 @@ export class ViewDispatchOrdersComponent implements OnInit {
   }
 
   openAdditionalItemsModal() {
+    console.log("Trigger additional Items");
+
     this.showAdditionalItemsModal = true;
   }
 

@@ -205,21 +205,21 @@ getFlagUrl(countryCode: string): string {
     this.personalData[field] = value;
   }
 
-  blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    const allowed = /^[A-Za-z ]$/;
-    const input = this.personalData[field] || '';
+blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  const allowed = /^[A-Za-z ]$/;
+  const input = this.personalData[field] || '';
 
-    // Block if key is invalid
-    if (!allowed.test(event.key)) {
-      event.preventDefault();
-      return;
-    }
-
-    // Block first character as space
-    if (input.length === 0 && event.key === ' ') {
-      event.preventDefault();
-    }
+  // Block if key is invalid
+  if (!allowed.test(event.key)) {
+    event.preventDefault();
+    return;
   }
+
+  // Block first character as space
+  if (input.length === 0 && event.key === ' ') {
+    event.preventDefault();
+  }
+}
 
   getAllDistributionCetnter(id: number) {
     this.loaded = false;
@@ -471,15 +471,9 @@ getFlagUrl(countryCode: string): string {
       errors.push('Please select at least one preferred language');
     }
     
-    // Name validation
-    const namePattern = /^[A-Z][a-zA-Z ]*$/;
-    if (!this.personalData.firstNameEnglish || !namePattern.test(this.personalData.firstNameEnglish)) {
-      errors.push('First Name is required and must start with a capital letter');
-    }
-    
-    if (!this.personalData.lastNameEnglish || !namePattern.test(this.personalData.lastNameEnglish)) {
-      errors.push('Last Name is required and must start with a capital letter');
-    }
+
+
+  
     
     // Phone validation
     if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {

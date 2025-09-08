@@ -302,8 +302,11 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
 
 blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
   const key = event.key;
-  const allowed = /^[A-Za-z ]$/;
 
+  // Allow only letters and space
+  const allowed = /^[a-zA-Z ]$/;
+
+  // Block if not allowed
   if (!allowed.test(key)) {
     event.preventDefault();
   }
@@ -313,7 +316,6 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
     event.preventDefault();
   }
 }
-
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

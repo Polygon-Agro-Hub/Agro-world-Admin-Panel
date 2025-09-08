@@ -357,13 +357,15 @@ onBranchChange(event: DropdownChangeEvent): void {
       this.selectedBranchId = null;
     }
   }
-  onBlur(fieldName: keyof Personal): void {
-    this.touchedFields[fieldName] = true;
-
-    if (fieldName === 'confirmAccNumber') {
-      this.validateConfirmAccNumber();
-    }
+onBlur(fieldName: keyof Personal): void {
+  this.touchedFields[fieldName] = true;
+  if (fieldName === 'firstNameEnglish' || fieldName === 'lastNameEnglish') {
+    this.formatName(fieldName); // Ensure formatting is applied on blur
   }
+  if (fieldName === 'confirmAccNumber') {
+    this.validateConfirmAccNumber();
+  }
+}
 
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
@@ -389,10 +391,11 @@ onBranchChange(event: DropdownChangeEvent): void {
 
 
   // 6. ADD FIELD VALIDATION METHODS
-  isFieldInvalid(fieldName: string): boolean {
-    return !!this.touchedFields[fieldName as keyof Personal] &&
-      !this.personalData[fieldName as keyof Personal];
-  }
+isFieldInvalid(fieldName: string): boolean {
+  const value = this.personalData[fieldName as keyof Personal];
+  // Show error only if the field is empty
+  return !value || value.trim() === '';
+}
 
 
   isValidEmail(email: string): boolean {
@@ -461,26 +464,26 @@ onBranchChange(event: DropdownChangeEvent): void {
     }
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove only numbers and special characters, allow letters from all languages
+    value = value.replace(/[^A-Za-z\u0D80-\u0DFF\s]/g, ''); // \u0D80-\u0DFF is Tamil Unicode block
 
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
+    // Remove leading spaces
+    value = value.replace(/^\s+/, '');
 
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
+    // Replace multiple spaces with a single space
+    value = value.replace(/\s{2,}/g, ' ');
 
-      // Capitalize first letter and make rest lowercase
-      if (value.length > 0) {
-        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter (only works for English)
+    if (/^[A-Za-z]/.test(value)) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
     }
+
+    this.personalData[fieldName] = value;
   }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -519,24 +522,23 @@ onBranchChange(event: DropdownChangeEvent): void {
   // Add these methods to your component class
 
   // Prevent invalid English characters (only allow letters and spaces)
-  preventInvalidEnglishCharacters(event: KeyboardEvent): void {
-    const char = event.key;
+preventInvalidEnglishCharacters(event: KeyboardEvent): void {
+  const char = event.key;
 
-    // Allow control keys (backspace, delete, tab, escape, enter, etc.)
-    if (event.ctrlKey || event.altKey || event.metaKey ||
-      char === 'Backspace' || char === 'Delete' || char === 'Tab' ||
-      char === 'Escape' || char === 'Enter' || char === 'ArrowLeft' ||
-      char === 'ArrowRight' || char === 'ArrowUp' || char === 'ArrowDown' ||
-      char === 'Home' || char === 'End') {
-      return;
-    }
-
-    // Allow English letters (a-z, A-Z) and space
-    const englishLetterRegex = /^[a-zA-Z\s]$/;
-    if (!englishLetterRegex.test(char)) {
-      event.preventDefault();
-    }
+  // Allow control keys
+  if (event.ctrlKey || event.altKey || event.metaKey ||
+      ['Backspace','Delete','Tab','Escape','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(char)) {
+    return;
   }
+
+  // Block numbers and special characters
+  const regex = /^[^0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]+$/;
+  if (!regex.test(char)) {
+    event.preventDefault();
+  }
+}
+
+
 
   // Prevent invalid Sinhala characters (only allow Sinhala unicode range and spaces)
   preventInvalidSinhalaCharacters(event: KeyboardEvent): void {

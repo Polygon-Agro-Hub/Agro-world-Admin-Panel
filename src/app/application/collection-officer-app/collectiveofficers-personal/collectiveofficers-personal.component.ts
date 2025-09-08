@@ -393,6 +393,27 @@ onSubmit() {
     }
   });
 }
+
+
+// Or combine both into a single function
+capitalizeNames() {
+  if (this.personalData.firstNameEnglish) {
+    this.personalData.firstNameEnglish = 
+      this.personalData.firstNameEnglish.charAt(0).toUpperCase() + 
+      this.personalData.firstNameEnglish.slice(1);
+  }
+  if (this.personalData.lastNameEnglish) {
+    this.personalData.lastNameEnglish = 
+      this.personalData.lastNameEnglish.charAt(0).toUpperCase() + 
+      this.personalData.lastNameEnglish.slice(1);
+  }
+}
+// Prevent spaces anywhere in the input after typing starts
+blockSpaces(event: KeyboardEvent) {
+  if (event.key === ' ') {
+    event.preventDefault(); // stop space character
+  }
+}
 onCancel() {
   Swal.fire({
     icon: 'warning',
@@ -1278,18 +1299,22 @@ formatEmail(): void {
   }
 }
 
-  preventSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
+preventSpecialCharacters(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const char = String.fromCharCode(event.which);
 
-    const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
-    if (!/[a-zA-Z\s]/.test(char)) {
-      event.preventDefault();
-    }
+  // Block space if it's at the start (cursor at position 0)
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
   }
+
+  // Allow only letters (a-z, A-Z) and spaces elsewhere
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
 
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first

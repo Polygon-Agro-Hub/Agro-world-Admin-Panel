@@ -48,9 +48,13 @@ export class ViewCropCalanderComponent implements OnInit {
   searchText: string = '';
   category = [
     { name: 'Vegetables', value: 'Vegetables' },
-    { name: 'Fruit', value: 'Fruit' },
-    { name: 'Grain', value: 'Grain' },
+    { name: 'Fruits', value: 'Fruit' },
+    // { name: 'Grains', value: 'Grain' },
+    { name: 'Cereals', value: 'Cereals' },
+    { name: 'Spices', value: 'Spices' },
     { name: 'Mushrooms', value: 'Mushrooms' },
+    { name: 'Legumes', value: 'Legumes' },
+
   ];
 
   constructor(
@@ -59,7 +63,7 @@ export class ViewCropCalanderComponent implements OnInit {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllCropCalenders();
@@ -70,37 +74,37 @@ export class ViewCropCalanderComponent implements OnInit {
     this.fetchAllCropCalenders();
   }
 
- fetchAllCropCalenders(
-  page: number = 1,
-  limit: number = this.itemsPerPage,
-  search: string = this.searchText,
-  category: string | null = this.selectedCategory
-) {
-  this.page = page;
-  this.isLoading = true;
-  const trimmedSearch = search.trim();
-  // If category is null or empty string, pass empty string to service
-  const categoryParam = category ? category : '';
-  this.cropCalendarService
-    .fetchAllCropCalenders(page, limit, trimmedSearch, categoryParam)
-    .subscribe(
-      (data) => {
-        this.isLoading = false;
-        this.newCropCalender = data.items;
-        this.hasData = this.newCropCalender.length > 0;
-        this.totalItems = data.total;
-      },
-      (error) => {
-        console.error('Error fetching crop calendars:', error);
-        this.isLoading = false;
-        if (error.status === 401) {
-          Swal.fire('Unauthorized', 'Please log in again.', 'error');
-        } else {
-          Swal.fire('Error', 'Failed to fetch crop calendars.', 'error');
+  fetchAllCropCalenders(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchText,
+    category: string | null = this.selectedCategory
+  ) {
+    this.page = page;
+    this.isLoading = true;
+    const trimmedSearch = search.trim();
+    // If category is null or empty string, pass empty string to service
+    const categoryParam = category ? category : '';
+    this.cropCalendarService
+      .fetchAllCropCalenders(page, limit, trimmedSearch, categoryParam)
+      .subscribe(
+        (data) => {
+          this.isLoading = false;
+          this.newCropCalender = data.items;
+          this.hasData = this.newCropCalender.length > 0;
+          this.totalItems = data.total;
+        },
+        (error) => {
+          console.error('Error fetching crop calendars:', error);
+          this.isLoading = false;
+          if (error.status === 401) {
+            Swal.fire('Unauthorized', 'Please log in again.', 'error');
+          } else {
+            Swal.fire('Error', 'Failed to fetch crop calendars.', 'error');
+          }
         }
-      }
-    );
-}
+      );
+  }
   deleteCropCalender(id: any) {
     Swal.fire({
       title: 'Are you sure?',
@@ -147,12 +151,12 @@ export class ViewCropCalanderComponent implements OnInit {
     this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
   }
 
-onSearch() {
-  console.log('Search triggered with text:', this.searchText);
-  this.searchText = this.searchText.trim(); // Trim leading and trailing spaces
-  this.page = 1; // Reset to first page on search
-  this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
-}
+  onSearch() {
+    console.log('Search triggered with text:', this.searchText);
+    this.searchText = this.searchText.trim(); // Trim leading and trailing spaces
+    this.page = 1; // Reset to first page on search
+    this.fetchAllCropCalenders(this.page, this.itemsPerPage, this.searchText);
+  }
 
   offSearch() {
     this.searchText = '';

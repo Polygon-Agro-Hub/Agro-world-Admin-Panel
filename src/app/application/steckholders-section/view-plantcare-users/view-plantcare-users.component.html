@@ -149,6 +149,10 @@
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               <!-- Reduced px-4 to px-3 -->
+              Staff
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+              <!-- Reduced px-4 to px-3 -->
               Status
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
@@ -218,6 +222,10 @@
               <span *ngIf="!item.farmerQr" class="text-textLight dark:text-textDark italic">
                 Unregistered
               </span>
+            </td>
+            <td class="px-3 py-3 text-center">
+              <!-- Reduced px-4 to px-3 -->
+              <button (click)="viewFarmerStaff(item.id, item.firstName + ' ' + item.lastName, item.phoneNumber)"><i class="fa-solid fa-users text-[#3980C0] text-xl"></i></button>
             </td>
 
             <td class="px-3 py-3 text-center">

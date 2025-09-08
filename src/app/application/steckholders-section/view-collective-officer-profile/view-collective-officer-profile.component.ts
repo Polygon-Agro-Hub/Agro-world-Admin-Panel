@@ -562,7 +562,7 @@ fetchOfficerById(id: number) {
     );
 
     // Save PDF
-    const fileName = `Personal_Details_${getValueOrNA(this.officerObj.firstNameEnglish)}.pdf`;
+    const fileName = `${getValueOrNA(this.officerObj.firstNameEnglish)} ${getValueOrNA(this.officerObj.lastNameEnglish)}.pdf`;
     doc.save(fileName);
     this.isGeneratingPDF = false;
   }

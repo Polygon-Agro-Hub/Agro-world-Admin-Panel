@@ -26,7 +26,7 @@ interface NewsItem {
   imports: [
     CommonModule,
     FormsModule,
-      DropdownModule,
+    DropdownModule,
     LoadingSpinnerComponent,
     NgxColorsModule,
   ],
@@ -35,9 +35,9 @@ interface NewsItem {
 })
 export class CreateCropGroupComponent {
   @ViewChild('cropForm') cropForm!: NgForm;
-  
+
   imageTouched = false;
-  
+
   // Allow only English letters and spaces (no leading space)
   allowOnlyEnglish(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -50,7 +50,7 @@ export class CreateCropGroupComponent {
       event.preventDefault();
     }
   }
-  
+
   capitalizeFirstLetter(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.value.length > 0) {
@@ -90,7 +90,7 @@ export class CreateCropGroupComponent {
       event.preventDefault();
     }
   }
-  
+
   cropGroup = {
     cropNameEnglish: '',
     cropNameSinahala: '',
@@ -118,17 +118,17 @@ export class CreateCropGroupComponent {
     private router: Router,
     private cropCalendarService: CropCalendarService,
     private tokenService: TokenService,
-     private location: Location,
-  ) {}
-categories = [
-  { label: 'Vegetables', value: 'Vegetables' },
-  { label: 'Fruits', value: 'Fruits' },
-  { label: 'Grains', value: 'Grains' },
-  { label: 'Cereals', value: 'Cereals' },
-  { label: 'Spices', value: 'Spices' },
-  { label: 'Mushrooms', value: 'Mushrooms' },
-  { label: 'Legumes', value: 'Legumes' },
-];
+    private location: Location,
+  ) { }
+  categories = [
+    { label: 'Vegetables', value: 'Vegetables' },
+    { label: 'Fruits', value: 'Fruit' },
+    // { label: 'Grains', value: 'Grain' },
+    { label: 'Cereals', value: 'Cereals' },
+    { label: 'Spices', value: 'Spices' },
+    { label: 'Mushrooms', value: 'Mushrooms' },
+    { label: 'Legumes', value: 'Legumes' },
+  ];
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -145,12 +145,18 @@ categories = [
               this.selectedImage = response.groups[0].image;
               this.selectedFileName = 'Existing Image';
             }
+
+            // if (!this.newsItems[0].category) {
+            //   this.newsItems[0].category = 'Fruits';
+            // }
             this.isLoading = false;
           },
           error: (error) => {
             this.isLoading = false;
           },
         });
+
+
       }
     });
   }
@@ -256,12 +262,12 @@ categories = [
     formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
     formData.append('category', this.cropGroup.parentCategory);
     formData.append('bgColor', this.cropGroup.bgColor);
-    
+
     // Add the file only if it exists
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-    
+
     formData.append('fileName', this.selectedFileName);
 
     this.cropCalendarService.createCropGroup(formData).subscribe({
@@ -314,10 +320,10 @@ categories = [
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
-            customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.selectedFile = null;
@@ -331,7 +337,7 @@ categories = [
           bgColor: '',
           fileName: '',
         };
-       this.location.back();
+        this.location.back();
       }
     });
   }
@@ -517,13 +523,13 @@ categories = [
       showCancelButton: true,
       confirmButtonText: 'Yes, Go Back',
       cancelButtonText: 'No, Stay Here',
-            customClass: {
+      customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },
     }).then((result) => {
       if (result.isConfirmed) {
-         this.location.back();
+        this.location.back();
       }
     });
   }
@@ -536,7 +542,7 @@ categories = [
       showCancelButton: true,
       confirmButtonText: 'Yes, Go Back',
       cancelButtonText: 'No, Stay Here',
-            customClass: {
+      customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },

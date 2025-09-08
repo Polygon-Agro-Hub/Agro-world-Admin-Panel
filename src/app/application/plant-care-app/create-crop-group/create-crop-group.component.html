@@ -219,8 +219,8 @@
           <label for="parentCategory" class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Select
             Parent
             Category *</label>
-          <p-dropdown id="parentCategory" [(ngModel)]="newsItems[0].category" [options]="categories"
-            placeholder="Select Category" optionLabel="label" optionValue="value" [filter]="true" showClear="true"
+          <p-dropdown id="parentCategory" [(ngModel)]="newsItems[0].category" [options]="categories" name="category"
+            placeholder="Select Category" optionLabel="label" optionValue="value" [filter]="true" showClear="false"
             class="w-full mt-1  py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{'border-red-500': !newsItems[0].category && categoryInput?.touched}" #categoryInput="ngModel"
             required panelStyleClass="custom-dropdown-panel" styleClass="w-full" class="block w-full p-dropdown-custom">

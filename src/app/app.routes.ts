@@ -169,11 +169,11 @@ import { DispatchMarketplaceComponent } from './application/dispatch-section/mar
 import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
 import { DispachPackagesComponent } from './application/dispatch-section/dispatch-items/dispach-packages/dispach-packages.component';
 import { DispatchAdditionalItemsComponent } from './application/dispatch-section/dispatch-items/dispatch-additional-items/dispatch-additional-items.component';
-import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
-import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
 import { AssignCitiesComponent } from './application/distribution-hub/assign-cities/assign-cities.component';
 import { MainDashboardLayoutComponent } from './application/distribution-hub/polygon-centers-dashboard/main-dashboard-layout/main-dashboard-layout.component';
 import { UpdateDistributionOfficerComponent } from './application/steckholders-section/update-distribution-officer/update-distribution-officer.component';
+import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
+import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
 
 export const routes: Routes = [
   {

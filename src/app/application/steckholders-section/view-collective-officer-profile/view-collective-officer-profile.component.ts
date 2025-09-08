@@ -460,6 +460,12 @@ export class ViewCollectiveOfficerProfileComponent {
       case 'Collection Officer':
         this.empHeader = 'COO';
         break;
+      case 'Distribution Center Manager':
+        this.empHeader = 'DCM';
+        break;
+      case 'Distribution Officer':
+        this.empHeader = 'DIO';
+        break;
       case 'Driver':
         this.empHeader = 'DVR';
         break;

@@ -17,19 +17,10 @@
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Crop Name By English *
         </label>
-        <input
-          type="text"
-          id="cropName"
-          name="cropName"
-          [(ngModel)]="cropGroup.cropNameEnglish"
-          #cropEngNameInput="ngModel"
-          (input)="capitalizeFirstLetter($event)"
-          
-          pattern="^(?!\d+$)[a-zA-Z\s]*$"
-          required
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-        />
-        
+        <input type="text" id="cropName" name="cropName" [(ngModel)]="cropGroup.cropNameEnglish"
+          #cropEngNameInput="ngModel" (input)="capitalizeFirstLetter($event)" pattern="^(?!\d+$)[a-zA-Z\s]*$" required
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark" />
+
         <!-- Validation Errors -->
         <div *ngIf="cropEngNameInput.touched">
           <div *ngIf="cropEngNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -48,11 +39,8 @@
         </label>
         <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropSinNameInput="ngModel"
-          pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$"
-          
-          required />
-        
+          #cropSinNameInput="ngModel" pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$" required />
+
         <!-- Validation Errors -->
         <div *ngIf="cropSinNameInput.touched">
           <div *ngIf="cropSinNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -71,11 +59,8 @@
         </label>
         <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropTamilNameInput="ngModel"
-          pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$"
-          
-          required />
-        
+          #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$" required />
+
         <!-- Validation Errors -->
         <div *ngIf="cropTamilNameInput.touched">
           <div *ngIf="cropTamilNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -89,30 +74,22 @@
 
       <!-- Select Parent Category -->
       <div>
-        <label for="parentCategory" class="block text-sm font-medium mb-1 text-gray-700 dark:text-textDark">Select Parent
+        <label for="parentCategory" class="block text-sm font-medium mb-1 text-gray-700 dark:text-textDark">Select
+          Parent
           Category *</label>
-       <p-dropdown
-  id="parentCategory"
-  [(ngModel)]="cropGroup.parentCategory"
-  [options]="categories"
-  placeholder="Select Category"
-  [filter]="true"
-  showClear="true"
-  [ngClass]="{
+        <p-dropdown id="parentCategory" [(ngModel)]="cropGroup.parentCategory" [options]="categories"
+          placeholder="Select Category" [filter]="true" showClear="true" [ngClass]="{
     'border-red-500':
       !cropGroup.parentCategory && parentCategoryInput?.touched
-  }"
-  class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md  py-2 shadow-sm"
-  #parentCategoryInput="ngModel"
-   panelStyleClass="custom-dropdown-panel"
-   styleClass="w-full"
-   class="block w-full p-dropdown-custom"
->
-</p-dropdown>
+  }" class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md  py-2 shadow-sm"
+          #parentCategoryInput="ngModel" panelStyleClass="custom-dropdown-panel" styleClass="w-full"
+          class="block w-full p-dropdown-custom">
+        </p-dropdown>
 
-        
+
         <!-- Validation Error -->
-        <div *ngIf="parentCategoryInput.touched && parentCategoryInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+        <div *ngIf="parentCategoryInput.touched && parentCategoryInput.errors?.['required']"
+          class="text-red-500 text-sm mt-1">
           Parent Category is required
         </div>
       </div>
@@ -147,7 +124,7 @@
         <ngx-colors ngx-colors-trigger [(ngModel)]="cropGroup.bgColor" (colorChange)="onColorChange($event)"
           style="display: inline-block; margin:5px;" #bgColorInput="ngModel" required>
         </ngx-colors>
-        
+
         <!-- Validation Error -->
         <div *ngIf="bgColorInput.touched && bgColorInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Background Color is required
@@ -183,18 +160,11 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Crop Name By English *
           </label>
-          <input
-            type="text"
-            id="cropNameEnglish"
-            name="cropNameEnglish"
-            [(ngModel)]="newsItems[0].cropNameEnglish"
+          <input type="text" id="cropNameEnglish" name="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish"
             #cropNameEnglishInput="ngModel"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required
-            pattern="^(?!\d+$)[a-zA-Z0-9]*$"
-            (input)="capitalizeFirstLetter($event)"
-          />
-          
+            required pattern="^(?!\d+$)[a-zA-Z0-9]*$" (input)="capitalizeFirstLetter($event)" />
+
           <!-- Validation Errors -->
           <div *ngIf="cropNameEnglishInput.touched">
             <div *ngIf="cropNameEnglishInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -211,9 +181,9 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
             Sinhala *</label>
           <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark" 
-            required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$"   />
-          
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
+
           <!-- Validation Errors -->
           <div *ngIf="cropNameSinhalaInput.touched">
             <div *ngIf="cropNameSinhalaInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -232,7 +202,7 @@
           <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required #cropNameTamilInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
-          
+
           <!-- Validation Errors -->
           <div *ngIf="cropNameTamilInput.touched">
             <div *ngIf="cropNameTamilInput.errors?.['required']" class="text-red-500 text-sm mt-1">
@@ -246,28 +216,17 @@
 
         <!-- Select Parent Category -->
         <div>
-          <label for="parentCategory" class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Select Parent
+          <label for="parentCategory" class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Select
+            Parent
             Category *</label>
-     <p-dropdown
-  id="parentCategory"
-  [(ngModel)]="newsItems[0].category"
-  [options]="categories"
-  placeholder="Select Category"
-  optionLabel="label"
-  optionValue="value"
-  [filter]="true"
-  showClear="true"
-  class="w-full mt-1  py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  [ngClass]="{'border-red-500': !newsItems[0].category && categoryInput?.touched}"
-  #categoryInput="ngModel"
-  required
-  panelStyleClass="custom-dropdown-panel"
-   styleClass="w-full"
-   class="block w-full p-dropdown-custom"
->
-</p-dropdown>
+          <p-dropdown id="parentCategory" [(ngModel)]="newsItems[0].category" [options]="categories"
+            placeholder="Select Category" optionLabel="label" optionValue="value" [filter]="true" showClear="true"
+            class="w-full mt-1  py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [ngClass]="{'border-red-500': !newsItems[0].category && categoryInput?.touched}" #categoryInput="ngModel"
+            required panelStyleClass="custom-dropdown-panel" styleClass="w-full" class="block w-full p-dropdown-custom">
+          </p-dropdown>
 
-          
+
           <!-- Validation Error -->
           <div *ngIf="categoryInput.touched && categoryInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             Parent Category is required
@@ -300,9 +259,10 @@
           <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
             style="display: inline-block; margin:5px;" #bgColorInputEdit="ngModel" required>
           </ngx-colors>
-          
+
           <!-- Validation Error -->
-          <div *ngIf="bgColorInputEdit.touched && bgColorInputEdit.errors?.['required']" class="text-red-500 text-sm mt-1">
+          <div *ngIf="bgColorInputEdit.touched && bgColorInputEdit.errors?.['required']"
+            class="text-red-500 text-sm mt-1">
             Background Color is required
           </div>
         </div>

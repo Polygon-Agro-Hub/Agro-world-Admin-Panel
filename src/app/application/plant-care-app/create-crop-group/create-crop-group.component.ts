@@ -123,7 +123,11 @@ export class CreateCropGroupComponent {
 categories = [
   { label: 'Vegetables', value: 'Vegetables' },
   { label: 'Fruits', value: 'Fruits' },
-  { label: 'Grains', value: 'Grains' }
+  { label: 'Grains', value: 'Grains' },
+  { label: 'Cereals', value: 'Cereals' },
+  { label: 'Spices', value: 'Spices' },
+  { label: 'Mushrooms', value: 'Mushrooms' },
+  { label: 'Legumes', value: 'Legumes' },
 ];
 
   ngOnInit() {

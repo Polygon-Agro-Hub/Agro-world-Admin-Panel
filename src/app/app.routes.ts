@@ -177,7 +177,8 @@ import { CreateDistributionOfficerComponent } from './application/steckholders-s
 import { SelectedOfficerTargetComponent } from './application/distribution-hub/polygon-centers-dashboard/selected-officer-target/selected-officer-target.component';
 import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
 import { ViewExpencesFarmerReportComponent } from './application/collection-hub-section/view-expences-farmer-report/view-expences-farmer-report.component';
-
+import { ViewFarmOwnerComponent } from './application/steckholders-section/view-farm-owner/view-farm-owner.component';
+import { EditUserStaffComponent } from './application/steckholders-section/edit-user-staff/edit-user-staff.component';
 export const routes: Routes = [
   {
     path: '',
@@ -254,7 +255,7 @@ export const routes: Routes = [
                 data: { permission: 'View crop calendar task' },
               },
 
-             
+
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,
@@ -536,6 +537,15 @@ export const routes: Routes = [
                     path: 'view-farmer-staff/:id',
                     component: ViewFarmerStaffComponent,
                   },
+                  {
+                    path: 'view-farmer-owner/:id',
+                    component: ViewFarmOwnerComponent,
+                  },
+                  {
+                    path: 'edit-user-staff/:id',
+                    component: EditUserStaffComponent,
+                  }
+
                 ],
               },
 
@@ -1126,7 +1136,7 @@ export const routes: Routes = [
                     path: 'selected-officer-target',
                     component: SelectedOfficerTargetComponent
                   },
-                  
+
                 ]
               },
               {
@@ -1158,4 +1168,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

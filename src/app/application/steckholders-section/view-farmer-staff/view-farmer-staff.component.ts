@@ -64,6 +64,14 @@ export class ViewFarmerStaffComponent implements OnInit {
     )
   }
 
+viewFarmerStaff(id: number) {
+  this.router.navigate(['/steckholders/action/farmers/view-farmer-owner', id]);
+}
+
+editFarmerStaff(id: number) {
+  this.router.navigate(['/steckholders/action/farmers/edit-user-staff', id]);
+}
+
 }
 
 class Staff {

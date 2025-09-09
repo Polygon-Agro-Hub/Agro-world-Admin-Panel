@@ -173,4 +173,25 @@ export class PlantcareUsersService {
       headers,
     });
   }
+
+  
+  getFarmOwnerById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  const url = `${this.apiUrl}auth/get-farm-owner?id=${id}`;
+
+  return this.http.get(url, { headers });
 }
+
+updateFarmOwner(ownerId: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
+  });
+  return this.http.put(`${this.apiUrl}auth/update-farm-owner/${ownerId}`, data, { headers });
+}
+
+
+}
+

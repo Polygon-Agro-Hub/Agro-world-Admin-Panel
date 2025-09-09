@@ -152,6 +152,11 @@
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
             >
+              No
+            </th>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
+            >
               Crop Name
             </th>
             <th
@@ -179,8 +184,11 @@
         <tbody>
           <tr
             class="border-b border-gray-200 dark:border-[#4B555A]"
-            *ngFor="let item of market"
+            *ngFor="let item of market; let i = index"
           >
+            <td class="py-3 text-left text-textLight dark:text-textDark">
+              {{ (page - 1 + i + 1).toString().padStart(2, "0") }}
+            </td>
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.cropName }}
             </td>

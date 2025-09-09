@@ -154,7 +154,7 @@
     (keypress)="blockInvalidNameInput($event, 'firstNameEnglish')"
     class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
-  <span *ngIf="firstNameEnglishRef.invalid && (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)" class="text-red-600 text-sm">
+  <span *ngIf=" (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)" class="text-red-600 text-sm">
     <ng-container *ngIf="firstNameEnglishRef.errors?.['required']">
       First Name is required.
     </ng-container>

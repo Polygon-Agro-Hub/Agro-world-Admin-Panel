@@ -134,7 +134,14 @@ export class ViewPolygonCentersComponent implements OnInit {
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
   }
-
+  back(): void {
+    this.router.navigate(['/distribution-hub/action/view-destribition-center'], {
+      queryParams: {
+        id: 2,
+        companyName: 'agroworld Distribution (Pvt) Ltd'
+      }
+    });
+  }
   fetchCompanies(): void {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({

@@ -174,6 +174,8 @@ import { MainDashboardLayoutComponent } from './application/distribution-hub/pol
 import { UpdateDistributionOfficerComponent } from './application/steckholders-section/update-distribution-officer/update-distribution-officer.component';
 import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
 import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
+import { SelectedOfficerTargetComponent } from './application/distribution-hub/polygon-centers-dashboard/selected-officer-target/selected-officer-target.component';
+import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
 
 export const routes: Routes = [
   {
@@ -526,6 +528,10 @@ export const routes: Routes = [
                     component: UserBulkUploadComponent,
                     canActivate: [PermissionGuard],
                     data: { permission: 'Bulk onboarding plan care users' },
+                  },
+                  {
+                    path: 'view-farmer-staff/:id',
+                    component: ViewFarmerStaffComponent,
                   },
                 ],
               },
@@ -1107,7 +1113,13 @@ export const routes: Routes = [
                   {
                     path: 'edit-distribution-officer/:id',
                     component: UpdateDistributionOfficerComponent
-                  }
+                  },
+
+                  {
+                    path: 'selected-officer-target',
+                    component: SelectedOfficerTargetComponent
+                  },
+                  
                 ]
               },
               {

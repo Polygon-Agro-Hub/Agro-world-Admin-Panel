@@ -797,8 +797,10 @@
   [(ngModel)]="personalData.nic"
   #nicInput="ngModel"
   required
+    (input)="formatNIC($event)"
   (input)="validateNIC($event)"
-  pattern="^(\d{9}V|\d{12})$"
+pattern="^(\d{9}V|\d{12})$"
+
   maxlength="12"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
 />
@@ -807,9 +809,9 @@
           <div *ngIf="nicInput.touched && (nicInput.errors?.['required'] || !personalData.nic)"  class="text-red-500 text-sm mt-1">
             NIC Number is required
           </div>
-          <div *ngIf="nicInput.touched && nicInput.errors?.['pattern'] && personalData.nic" class="text-red-500 text-sm mt-1">
-            Please enter a valid NIC number (12 digits or 10 digits followed by 'V').
-        </div>
+      <div *ngIf="nicInput.touched && isNICInvalid" class="text-red-500 text-sm mt-1">
+  Please enter a valid NIC number (12 digits or 10 digits ending with 'V').
+</div>
         </div>
 
         <div>

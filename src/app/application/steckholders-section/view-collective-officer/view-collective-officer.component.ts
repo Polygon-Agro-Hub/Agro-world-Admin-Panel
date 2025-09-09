@@ -53,7 +53,7 @@ export class ViewCollectiveOfficerComponent {
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
     { id: 2, jobRole: 'Collection Centre Manager' },
-    { id: 3, jobRole: 'Customer Officer' },
+
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];

@@ -289,7 +289,7 @@ export class EditCoupenComponent {
 
   checkFixAmountValue(num: number) {
   if (num == null || isNaN(num)) {
-    this.checkfixAmountValueMessage = 'Fix amount value is required';
+    this.checkfixAmountValueMessage = '  Discount amount is required';
   } else if (num < 0) {
     this.checkfixAmountValueMessage = 'Cannot be negative number';
   } else {

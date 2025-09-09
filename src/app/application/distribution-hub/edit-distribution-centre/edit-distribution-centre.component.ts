@@ -331,7 +331,7 @@ getFlagUrl(countryCode: string): string {
   // Update initializeForm with enhanced validations
   initializeForm(): void {
     this.distributionForm = this.fb.group({
-      name: ['', [Validators.required, this.englishLettersOnlyValidator]],
+      name: ['', [Validators.required, this.lettersOnlyValidator]], 
       company: ['', Validators.required],
       contact1Code: ['+94', Validators.required],
       contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
@@ -364,6 +364,12 @@ getFlagUrl(countryCode: string): string {
       regCode: ['', Validators.required],
     }, { validators: [this.contactNumbersMatchValidator] }); // Changed from validator to validators
   }
+private lettersOnlyValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  // \p{L} matches any kind of letter in any language, \s allows spaces
+  const lettersOnly = /^[\p{L}\s]+$/u;
+  return lettersOnly.test(control.value) ? null : { lettersOnly: true };
+}
 
   // Add validation methods from add component
   private englishLettersOnlyValidator(control: AbstractControl) {

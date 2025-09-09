@@ -118,7 +118,7 @@
                     this.cropCalendarId,
                     task.taskIndex,
                     this.userId,
-                    this.cultivationId,
+                    task.onCulscropID,
                     this.userName
                   )
                 "
@@ -132,7 +132,7 @@
               {{ task.taskIndex }}
             </td>
             <td class="px-4 py-3 text-textLight dark:text-textDark text-center">
-              {{ task.startingDate | date : "yyyy-MM-dd" }}
+              {{ task.startingDate === null ? '----' : task.startingDate | date : "yyyy-MM-dd" }}
             </td>
             <td class="px-4 py-3 text-textLight dark:text-textDark text-center">
               {{ task.taskEnglish }}

@@ -277,6 +277,33 @@ validateNameInput(input: string, fieldName: string): void {
     event.target.value = value;
   }
 
+formatNIC(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.toUpperCase();
+
+  // Remove all non-digit/V characters
+  value = value.replace(/[^0-9V]/g, '');
+
+  const hasV = value.includes('V');
+
+  if (hasV) {
+    // Keep only 9 digits + V
+    const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
+    value = digits + 'V';
+  } else {
+    // If no V, limit to 12 digits
+    value = value.slice(0, 12);
+  }
+
+  input.value = value;
+  this.personalData.nic = value;
+}
+
+  get isNICInvalid() {
+  const nic = this.personalData.nic;
+  return nic && !/^(\d{9}V|\d{12})$/.test(nic);
+}
+
   restrictInput(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
     const currentValue = input.value;

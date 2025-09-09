@@ -44,7 +44,7 @@ export class PlantcareUsersService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   getAllPlantCareUsers(
     page: number,
@@ -154,6 +154,22 @@ export class PlantcareUsersService {
     });
 
     return this.http.delete(`${this.apiUrl}auth/feedback/${feedbackId}`, {
+      headers,
+    });
+  }
+
+
+  getAllFarmerStaff(id: number, role: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}auth/get-all-farmer-staff?id=${id}`
+    if(role){
+      url+= `&role=${role}`
+    }
+
+    return this.http.get(url, {
       headers,
     });
   }

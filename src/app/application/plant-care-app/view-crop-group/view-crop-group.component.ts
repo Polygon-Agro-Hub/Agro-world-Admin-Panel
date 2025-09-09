@@ -115,9 +115,12 @@ export class ViewCropGroupComponent {
     // Start with default options
     this.categoryOptions = [
       { label: 'Vegetables', value: 'Vegetables' },
-      { label: 'Fruits', value: 'Fruits' },
-      { label: 'Grain', value: 'Grain' },
+      { label: 'Fruits', value: 'Fruit' },
+      // { label: 'Grains', value: 'Grain' },
+      { label: 'Cereals', value: 'Cereals' },
       { label: 'Spices', value: 'Spices' },
+      { label: 'Mushrooms', value: 'Mushrooms' },
+      { label: 'Legumes', value: 'Legumes' },
     ];
 
     // Fetch additional categories from backend
@@ -270,9 +273,9 @@ export class ViewCropGroupComponent {
     });
   }
 
- backCreate(): void {
-  this.router.navigate(['/plant-care/action']);
-}
+  backCreate(): void {
+    this.router.navigate(['/plant-care/action']);
+  }
 
   add(): void {
     this.router.navigate(['/plant-care/action/create-crop-group']);

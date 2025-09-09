@@ -1,0 +1,89 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div class="py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg px-10 min-h-[500px]">
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+        Edit GoViCare Farm Staff
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-11 mb-4 ml-8 mr-8">
+        <!-- First Name -->
+        <!-- First Name -->
+        <div>
+            <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name
+                *</label>
+            <input id="firstName" [(ngModel)]="owner.firstName" name="firstName" #firstNameRef="ngModel"
+                (input)="formatName($event, 'firstName')"  (keydown)="blockInvalidNameInput($event)" (keydown)="blockFirstSpace($event)" required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+            <span class="text-red-600 text-sm"
+                *ngIf="firstNameRef.invalid && (firstNameRef.dirty || firstNameRef.touched)">
+                First Name is required.
+            </span>
+        </div>
+
+        <!-- Last Name -->
+        <div>
+            <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name
+                *</label>
+            <input id="lastName" [(ngModel)]="owner.lastName" name="lastName" #lastNameRef="ngModel"
+                (input)="formatName($event, 'lastName')" (keydown)="blockFirstSpace($event)" required  (keydown)="blockInvalidNameInput($event)"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+            <span class="text-red-600 text-sm"
+                *ngIf="lastNameRef.invalid && (lastNameRef.dirty || lastNameRef.touched)">
+                Last Name is required.
+            </span>
+        </div>
+
+        <!-- Phone Number -->
+        <div>
+            <label class="block text-sm font-medium text-textLight dark:text-textDark">Phone Number *</label>
+            <div class="flex gap-2 mt-1">
+                <select [(ngModel)]="owner.phoneCode" name="phoneCode" #phoneCodeRef="ngModel" required
+                    class="w-20 p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                    <option value="" disabled>Select</option>
+                    <option *ngFor="let code of phoneCodes" [value]="code">{{ code }}</option>
+                </select>
+                <input [(ngModel)]="owner.phoneNumber" name="phoneNumber" #phoneNumberRef="ngModel" required
+                    class="flex-1 p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+            </div>
+            <span class="text-red-600 text-sm"
+                *ngIf="(phoneCodeRef.invalid || phoneNumberRef.invalid) && (phoneCodeRef.dirty || phoneNumberRef.dirty)">
+                Phone Code and Number are required.
+            </span>
+        </div>
+
+        <!-- NIC Number -->
+        <div>
+            <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number
+                *</label>
+            <input id="NICnumber" [(ngModel)]="owner.nic" name="nic" #nicRef="ngModel" required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
+            <span class="text-red-600 text-sm" *ngIf="nicRef.invalid && (nicRef.dirty || nicRef.touched)">
+                NIC Number is required.
+            </span>
+        </div>
+
+        <!-- Role -->
+        <div>
+            <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Role *</label>
+            <select id="role" [(ngModel)]="owner.role" name="role" #roleRef="ngModel" required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                <option value="" disabled>Select Role</option>
+                <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+            <span class="text-red-600 text-sm" *ngIf="roleRef.invalid && (roleRef.dirty || roleRef.touched)">
+                Role is required.
+            </span>
+        </div>
+
+    </div>
+
+    <div class="flex space-x-2 justify-end mb-4 ml-8 mr-8">
+        <button class="px-4 py-2 mt-5 bg-[#74788D] text-white rounded" (click)="back()">Cancel</button>
+        <button class="px-6 py-2 mt-5 bg-[#3980C0] text-white rounded" (click)="save()">Save</button>
+    </div>
+</div>

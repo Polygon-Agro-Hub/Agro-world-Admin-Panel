@@ -1,0 +1,53 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+  
+<div class="py-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg px-10 min-h-[500px]">
+  <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">
+    GoViCare Farm Owner Preview
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-11 mb-4">
+    <!-- First Name -->
+    <div>
+      <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name</label>
+      <input id="firstName" [value]="owner.firstName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+    </div>
+
+    <!-- Last Name -->
+    <div>
+      <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name</label>
+      <input id="lastName" [value]="owner.lastName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+    </div>
+
+    <!-- Mobile Number -->
+    <div>
+      <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Phone Number</label>
+      <input id="phoneNumber" [value]="owner.phoneCode + ' - ' + owner.phoneNumber" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+    </div>
+
+    <!-- NIC Number -->
+    <div>
+      <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number</label>
+      <input id="NICnumber" [value]="owner.nic" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+    </div>
+
+    <!-- Membership -->
+    <div>
+      <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Role</label>
+      <input id="membership" [value]="owner.role || ''" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+    </div>
+
+    <!-- District -->
+    <!-- <div>
+      <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+      <input id="district" [value]="owner.district || ''" class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" readonly />
+    </div> -->
+
+
+  </div>
+</div>

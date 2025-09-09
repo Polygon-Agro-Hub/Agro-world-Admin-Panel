@@ -256,7 +256,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   navigateToFarmerReport(invNo: string) {
-    this.router.navigate([`reports/farmer-report-invoice/${invNo}`]);
+    this.router.navigate([`/collection-hub/farmer-report-invoice/${invNo}`]);
   }
 
   navigateToCenterTarget() {

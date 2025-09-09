@@ -176,6 +176,7 @@ import { ViewDistributionOfficerComponent } from './application/steckholders-sec
 import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
 import { SelectedOfficerTargetComponent } from './application/distribution-hub/polygon-centers-dashboard/selected-officer-target/selected-officer-target.component';
 import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
+import { ViewExpencesFarmerReportComponent } from './application/collection-hub-section/view-expences-farmer-report/view-expences-farmer-report.component';
 
 export const routes: Routes = [
   {
@@ -753,6 +754,10 @@ export const routes: Routes = [
           {
             path: 'view-center-officers',
             component: ViewCollectiveOfficerComponent,
+          },
+          {
+            path: 'farmer-report-invoice/:invNo',
+            component: ViewExpencesFarmerReportComponent,
           },
         ],
       },

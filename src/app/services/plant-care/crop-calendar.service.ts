@@ -48,7 +48,7 @@ export class CropCalendarService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   // Create Crop Calendar
   createCropGroup(formData: FormData): Observable<any> {
@@ -77,7 +77,7 @@ export class CropCalendarService {
     );
   }
 
-createCropCalendar(formData: FormData): Observable<any> {
+  createCropCalendar(formData: FormData): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -89,45 +89,45 @@ createCropCalendar(formData: FormData): Observable<any> {
   }
 
   // Method to check for duplicate crop calendars
-checkDuplicateCropCalendar(
-  varietyId: string,
-  cultivationMethod: string,
-  natureOfCultivation: string,
-  excludeId?: number
-): Observable<{ exists: boolean }> {
-  const token = localStorage.getItem('AdminLoginToken');
-  if (!token) {
-    console.error('No authentication token available');
-    throw new Error('No authentication token available');
+  checkDuplicateCropCalendar(
+    varietyId: string,
+    cultivationMethod: string,
+    natureOfCultivation: string,
+    excludeId?: number
+  ): Observable<{ exists: boolean }> {
+    const token = localStorage.getItem('AdminLoginToken');
+    if (!token) {
+      console.error('No authentication token available');
+      throw new Error('No authentication token available');
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    let params = new HttpParams()
+      .set('varietyId', varietyId || '')
+      .set('cultivationMethod', cultivationMethod)
+      .set('natureOfCultivation', natureOfCultivation);
+
+    if (excludeId) {
+      params = params.set('excludeId', excludeId.toString());
+    }
+
+    console.log('Checking duplicate with params:', {
+      varietyId,
+      cultivationMethod,
+      natureOfCultivation,
+      excludeId,
+    });
+
+    // Proper usage: empty body + options (headers, params)
+    return this.http.post<{ exists: boolean }>(
+      `${this.apiUrl}crop-calendar/check-duplicate-crop-calendar`,
+      {}, // empty POST body
+      { headers, params } // these are options
+    );
   }
-
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-  });
-
-  let params = new HttpParams()
-    .set('varietyId', varietyId || '')
-    .set('cultivationMethod', cultivationMethod)
-    .set('natureOfCultivation', natureOfCultivation);
-
-  if (excludeId) {
-    params = params.set('excludeId', excludeId.toString());
-  }
-
-  console.log('Checking duplicate with params:', {
-    varietyId,
-    cultivationMethod,
-    natureOfCultivation,
-    excludeId,
-  });
-
-  // Proper usage: empty body + options (headers, params)
-  return this.http.post<{ exists: boolean }>(
-    `${this.apiUrl}crop-calendar/check-duplicate-crop-calendar`,
-    {}, // empty POST body
-    { headers, params } // these are options
-  );
-}
 
 
 
@@ -144,7 +144,7 @@ checkDuplicateCropCalendar(
 
   // Update Crop Calendar
 
-updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
+  updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
     if (!this.token) {
       throw new Error('No authentication token available');
     }

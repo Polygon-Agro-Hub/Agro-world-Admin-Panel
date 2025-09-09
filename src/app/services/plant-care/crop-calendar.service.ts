@@ -282,7 +282,7 @@ updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
     );
   }
 
-  getCropTaskBycropId(id: string) {
+  getCropTaskBycropId(id: number | string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -302,7 +302,7 @@ updateCropCalendar(cropId: number, formData: FormData): Observable<any> {
     });
   }
 
-  deleteCropTask(id: string, cropId: string, indexId: string) {
+  deleteCropTask(id: number, cropId: string, indexId: string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

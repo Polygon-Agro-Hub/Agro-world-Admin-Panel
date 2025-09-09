@@ -1,0 +1,163 @@
+<div class="p-6 max-w-3xl mx-auto bg-white dark:bg-tileBlack ">
+  <!-- Index + Days -->
+<div class="flex items-center justify-between mb-6">
+  <!-- Index + Days -->
+  <div class="flex flex-col">
+    <h3 class="flex mb-2 text-gray-700 font-extrabold dark:text-textDark">
+      Index No :
+      <span class="ml-2 font-extrabold">{{ cropTask.taskIndex }}</span>
+    </h3>
+    <h3 class="flex text-gray-700 dark:text-textDark">
+      Days :
+      <span class="ml-2">{{ cropTask.days }}</span>
+    </h3>
+  </div>
+
+  <!-- Close Button -->
+  <img
+    src="assets/icons/close.png"
+    alt="Close"
+     (click)="closePopup()"
+    class="w-6 h-6 -mt-6 cursor-pointer"
+  />
+</div>
+
+  <hr class="border-2 border-gray-300 my-5" />
+  <!-- Language Tabs -->
+  <ul class="flex border-b mb-6">
+    <li
+      class="cursor-pointer py-2 px-4"
+      [class.border-b-2]="selectedLanguage === 'english'"
+      [class.border-[#3980C0]]="selectedLanguage === 'english'"
+      (click)="selectLanguage('english')"
+    >
+      English
+    </li>
+    <li
+      class="cursor-pointer py-2 px-4"
+      [class.border-b-2]="selectedLanguage === 'sinhala'"
+      [class.border-[#3980C0]]="selectedLanguage === 'sinhala'"
+      (click)="selectLanguage('sinhala')"
+    >
+      Sinhala
+    </li>
+    <li
+      class="cursor-pointer py-2 px-4"
+      [class.border-b-2]="selectedLanguage === 'tamil'"
+      [class.border-[#3980C0]]="selectedLanguage === 'tamil'"
+      (click)="selectLanguage('tamil')"
+    >
+      Tamil
+    </li>
+  </ul>
+
+  <!-- Language Sections -->
+  <div *ngIf="selectedLanguage === 'english'">
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task English *</label>
+      <input type="text" [value]="cropTask.taskEnglish" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Type *</label>
+      <input type="text" [value]="cropTask.taskTypeEnglish" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Category *</label>
+      <input type="text" [value]="cropTask.taskCategoryEnglish" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Description *</label>
+      <textarea [value]="cropTask.taskDescriptionEnglish" readonly class="w-full p-2 border rounded-md"></textarea>
+    </div>
+  </div>
+
+  <div *ngIf="selectedLanguage === 'sinhala'">
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Sinhala *</label>
+      <input type="text" [value]="cropTask.taskSinhala" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Type *</label>
+      <input type="text" [value]="cropTask.taskTypeSinhala" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Category *</label>
+      <input type="text" [value]="cropTask.taskCategorySinhala" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Description *</label>
+      <textarea [value]="cropTask.taskDescriptionSinhala" readonly class="w-full p-2 border rounded-md"></textarea>
+    </div>
+  </div>
+
+  <div *ngIf="selectedLanguage === 'tamil'">
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Tamil *</label>
+      <input type="text" [value]="cropTask.taskTamil" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Type *</label>
+      <input type="text" [value]="cropTask.taskTypeTamil" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Category *</label>
+      <input type="text" [value]="cropTask.taskCategoryTamil" readonly class="w-full p-2 border rounded-md" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Task Description *</label>
+      <textarea [value]="cropTask.taskDescriptionTamil" readonly class="w-full p-2 border rounded-md"></textarea>
+    </div>
+  </div>
+
+  <hr class="border-2 border-gray-300 my-8" />
+
+  <!-- Required Images -->
+  <div class="mb-4">
+    <label class="block text-sm font-medium">No. of Required Images</label>
+    <input type="text" [value]="cropTask.reqImages" readonly class="w-full p-2 border rounded-md" />
+  </div>
+
+<!-- Image Link -->
+<div class="mb-4" *ngIf="cropTask.imageLink">
+  <label class="block text-sm font-medium">Link for Images</label>
+  <input 
+    type="text" 
+    [value]="cropTask.imageLink" 
+    readonly 
+    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    (click)="openLink(cropTask.imageLink)" />
+</div>
+
+<!-- Video Links -->
+<div *ngIf="cropTask.videoLinkEnglish" class="mb-4">
+  <label class="block text-sm font-medium">Video Link (English)</label>
+  <input 
+    type="text" 
+    [value]="cropTask.videoLinkEnglish" 
+    readonly 
+    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    (click)="openLink(cropTask.videoLinkEnglish)" />
+</div>
+
+<div *ngIf="cropTask.videoLinkSinhala" class="mb-4">
+  <label class="block text-sm font-medium">Video Link (Sinhala)</label>
+  <input 
+    type="text" 
+    [value]="cropTask.videoLinkSinhala" 
+    readonly 
+    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    (click)="openLink(cropTask.videoLinkSinhala)" />
+</div>
+
+<div *ngIf="cropTask.videoLinkTamil" class="mb-4">
+  <label class="block text-sm font-medium">Video Link (Tamil)</label>
+  <input 
+    type="text" 
+    [value]="cropTask.videoLinkTamil" 
+    readonly 
+    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    (click)="openLink(cropTask.videoLinkTamil)" />
+</div>
+
+
+</div>

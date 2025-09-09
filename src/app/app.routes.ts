@@ -252,6 +252,8 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View crop calendar task' },
               },
+
+             
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,

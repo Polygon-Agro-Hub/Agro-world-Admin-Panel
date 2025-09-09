@@ -282,7 +282,7 @@ export class CropCalendarService {
     );
   }
 
-  getCropTaskBycropId(id: string) {
+  getCropTaskBycropId(id: number | string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -302,7 +302,7 @@ export class CropCalendarService {
     });
   }
 
-  deleteCropTask(id: string, cropId: string, indexId: string) {
+  deleteCropTask(id: number, cropId: string, indexId: string) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

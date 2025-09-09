@@ -11,26 +11,29 @@
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex justify-left items-left mb-2">
-      <h2
-        class="text-2xl font-normal text-left text-textLight dark:text-textDark"
-      >
-        Centre : {{ this.centerName }}
-      </h2>
-    </div>
-    <div class="flex justify-left items-left mb-2">
-      <h2
-        class="text-2xl font-normal text-left text-textLight dark:text-textDark"
-      >
-        Current Market Prices on {{ currentDate }}
-      </h2>
-    </div>
-    <!-- <div class="flex justify-center items-center mb-8">
+    <div class="flex justify-between">
+      <div>
+        <div class="flex justify-left items-left mb-2">
+          <h2
+            class="text-2xl font-normal text-left text-textLight dark:text-textDark"
+          >
+            Centre : {{ this.centerName }}
+          </h2>
+        </div>
+        <div class="flex justify-left items-left mb-2">
+          <h2
+            class="text-2xl font-normal text-left text-textLight dark:text-textDark"
+          >
+            Current Market Prices on {{ currentDate }}
+          </h2>
+        </div>
+      </div>
+      <!-- <div class="flex justify-center items-center mb-8">
         <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
     </div> -->
-
-    <div class="flex flex-row my-5">
       <div>
+        <div class="flex flex-row my-5">
+          <!-- <div>
         <p-dropdown
           styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
           [options]="crops"
@@ -40,96 +43,124 @@
           placeholder="Crop"
           (onChange)="applyFiltersCrop()"
         />
-      </div>
+      </div> -->
+          <div class="flex justify-center items-center">
+            <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+                />
+              </svg>
+            </i>
 
-      <div class="mx-6">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
-          [options]="grades"
-          optionLabel="Vgrade"
-          [(ngModel)]="selectedGrade"
-          [showClear]="true"
-          placeholder="Grade"
-          (onChange)="applyFiltersGrade()"
-        />
-      </div>
+            <p
+              class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
+            >
+              Filter By
+            </p>
+          </div>
 
-      <div
-        class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
-      >
-        <!-- Popover -->
-        <!-- <div
+          <div class="mx-6">
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45]"
+              [options]="grades"
+              optionLabel="Vgrade"
+              [(ngModel)]="selectedGrade"
+              [showClear]="true"
+              placeholder="Grade"
+              (onChange)="applyFiltersGrade()"
+            />
+          </div>
+
+          <div
+            class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+          >
+            <!-- Popover -->
+            <!-- <div
           class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         >
           Search by crop name
         </div> -->
 
-        <!-- Input field -->
-        <input
-          type="text"
-          placeholder="Search by Crop / Variety name"
-          class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
-          [(ngModel)]="searchNIC"
-          (keydown.enter)="searchPlantCareUsers()"
-        />
-
-        <!-- Search button -->
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-          (click)="searchPlantCareUsers()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+            <!-- Input field -->
+            <input
+              type="text"
+              placeholder="Search by Crop / Variety name"
+              class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+              [(ngModel)]="searchNIC"
+              (keydown.enter)="searchPlantCareUsers()"
+              (keydown)="preventLeadingSpace($event)"
             />
-          </svg>
-        </button>
 
-        <!-- Clear button -->
-        <button
-          type="button"
-          (click)="clearSearch()"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+            <!-- Search button -->
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="searchPlantCareUsers()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
+              </svg>
+            </button>
+
+            <!-- Clear button -->
+            <button
+              type="button"
+              (click)="clearSearch()"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-
     <!-- <div *ngIf="!hasData" class="text-center py-8">
     <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
   </div> -->
 
+  <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+
     <div class="overflow-x-auto">
       <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
       <table
+      *ngIf="hasData"
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
       >
         <thead>
           <tr>
+            <th
+              class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
+            >
+              No
+            </th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
             >
@@ -143,29 +174,32 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
             >
-              Qulity
+              Grade
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
             >
-              Price ( per 1 Kg )
+              Average Price (Rs.)
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center text-lg"
             >
-              Updated Price ( per 1 Kg )
+              Price (Rs.)
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
             class="border-b border-gray-200 dark:border-[#4B555A]"
-            *ngFor="let item of market"
+            *ngFor="let item of market; let i = index"
           >
+            <td class="py-3 text-left text-textLight dark:text-textDark">
+              {{ (page - 1 + i + 1).toString().padStart(2, "0") }}
+            </td>
             <td class="py-3 text-textLight dark:text-textDark">
               {{ item.cropName }}
             </td>
-            <td class="px-8 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.varietyName }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">

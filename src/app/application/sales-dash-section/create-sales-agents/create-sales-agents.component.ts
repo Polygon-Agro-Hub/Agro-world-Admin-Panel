@@ -607,13 +607,13 @@ onSubmit() {
   // Field Validations
   if (!this.personalData.empType) missingFields.push('Staff Employee Type');
 
-  if (!this.personalData.firstName) missingFields.push('First Name');
-  else if (!englishNamePattern.test(this.personalData.firstName))
-    missingFields.push('First Name - Must start with a capital letter and contain only English letters');
+  // if (!this.personalData.firstName) missingFields.push('First Name');
+  // else if (!englishNamePattern.test(this.personalData.firstName))
+  //   missingFields.push('First Name - Must start with a capital letter and contain only English letters');
 
-  if (!this.personalData.lastName) missingFields.push('Last Name');
-  else if (!englishNamePattern.test(this.personalData.lastName))
-    missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
+  // if (!this.personalData.lastName) missingFields.push('Last Name');
+  // else if (!englishNamePattern.test(this.personalData.lastName))
+  //   missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
 
   if (!this.personalData.phoneNumber1) missingFields.push('Contact Number 1');
   else if (!phonePattern.test(this.personalData.phoneNumber1))

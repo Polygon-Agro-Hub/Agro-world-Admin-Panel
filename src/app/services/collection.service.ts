@@ -293,5 +293,18 @@ export class CollectionService {
     return this.http.get<any>(url, { headers });
   }
 
+  getFarmerReportInvoice(invNo: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/get-farmer-report-invoice-details/${invNo}`
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+
 
 }

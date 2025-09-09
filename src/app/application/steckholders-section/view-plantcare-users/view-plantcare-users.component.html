@@ -27,11 +27,10 @@
     Bulk Upload
   </button>
 
-   <button *ngIf="
+  <button *ngIf="
       permissionService.hasPermission('Bulk onboarding plan care users') ||
       tokenService.getUserDetails().role === '1'
-    " class="text-[#3980C0] text-lg flex items-center mb-5"
-    (click)="downloadTemplate()">
+    " class="text-[#3980C0] text-lg flex items-center mb-5" (click)="downloadTemplate()">
     <i class="fa-solid fa-download mr-3"></i>
     <span class="underline">Download Template</span>
   </button>
@@ -225,7 +224,8 @@
             </td>
             <td class="px-3 py-3 text-center">
               <!-- Reduced px-4 to px-3 -->
-              <button (click)="viewFarmerStaff(item.id, item.firstName + ' ' + item.lastName, item.phoneNumber)"><i class="fa-solid fa-users text-[#3980C0] text-xl"></i></button>
+              <button (click)="viewFarmerStaff(item.id, item.firstName + ' ' + item.lastName, item.phoneNumber)"><i
+                  class="fa-solid fa-users text-[#3980C0] text-xl"></i></button>
             </td>
 
             <td class="px-3 py-3 text-center">

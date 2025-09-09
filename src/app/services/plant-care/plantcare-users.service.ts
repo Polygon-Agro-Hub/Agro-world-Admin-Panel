@@ -107,6 +107,8 @@ export class PlantcareUsersService {
   // }
 
   uploadUserXlsxFile(formData: FormData): Observable<any> {
+    console.log(formData);
+    
     return this.http
       .post(`${this.apiUrl}auth/upload-user-xlsx`, formData, {
         responseType: "json",

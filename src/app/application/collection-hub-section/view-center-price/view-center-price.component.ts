@@ -36,6 +36,7 @@ export class ViewCenterPriceComponent {
   page: number = 1;
   totalItems: number = 0;
   searchNIC: string = '';
+  search: string = '';
 
   constructor(
     private router: Router,
@@ -131,6 +132,15 @@ export class ViewCenterPriceComponent {
 get hasData(): boolean {
   return this.market && this.market.length > 0;
 }
+
+preventLeadingSpace(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+  }
+}
+
+
 }
 
 

@@ -127,6 +127,10 @@ export class ViewCenterPriceComponent {
     back(): void {
   this.location.back();
 }
+
+get hasData(): boolean {
+  return this.market && this.market.length > 0;
+}
 }
 
 

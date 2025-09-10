@@ -935,6 +935,12 @@
       </div>
 
       <div class="pb-6">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance officer</label>
+        <input id="email" name="email" [(ngModel)]="companyData.foName" [disabled]="true" type="email"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+
+      <div class="pb-6">
         <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Company Contact Number - 1
         </label>

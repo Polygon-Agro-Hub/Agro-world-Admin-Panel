@@ -176,6 +176,7 @@ import { ViewDistributionOfficerComponent } from './application/steckholders-sec
 import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
 import { SelectedOfficerTargetComponent } from './application/distribution-hub/polygon-centers-dashboard/selected-officer-target/selected-officer-target.component';
 import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
+import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
 
 export const routes: Routes = [
   {
@@ -253,7 +254,7 @@ export const routes: Routes = [
                 data: { permission: 'View crop calendar task' },
               },
 
-             
+
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,
@@ -298,6 +299,10 @@ export const routes: Routes = [
               {
                 path: 'report-farmer-list',
                 component: ReportsFarmerListComponent,
+              },
+              {
+                path: 'Farmers-farms-list',
+                component: FarmerListFarmersFarmsComponent,
               },
               {
                 path: 'report-farmer-current-assert/:userId/:name',
@@ -1121,7 +1126,7 @@ export const routes: Routes = [
                     path: 'selected-officer-target',
                     component: SelectedOfficerTargetComponent
                   },
-                  
+
                 ]
               },
               {
@@ -1153,4 +1158,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

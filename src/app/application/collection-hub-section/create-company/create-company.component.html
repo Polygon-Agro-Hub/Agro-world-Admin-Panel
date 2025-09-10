@@ -119,11 +119,11 @@
             Company Name (in English) *
           </label>
 
-          <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
-            #companyNameEnglish="ngModel" required
-            (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '')"
-            (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="companyNameEnglish" name="companyNameEnglish" 
+  [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required
+  (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '', 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Required message -->
           <div
@@ -145,11 +145,10 @@
           <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Name (in Sinhala) *
           </label>
-          <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
-            #companyNameSinhala="ngModel" required
-       (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '')"
-        
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="companyNameSinhala" name="companyNameSinhala" 
+  [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
+  (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '', 'companyNameSinhala')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
           <div
             *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
@@ -167,10 +166,11 @@
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Name (in Tamil) *
           </label>
-          <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
-            #companyNameTamil="ngModel" required  (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '')"
-            (blur)="onBlur('companyNameTamil')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="companyNameTamil" name="companyNameTamil" 
+  [(ngModel)]="companyData.companyNameTamil" #companyNameTamil="ngModel" required
+  (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '', 'companyNameTamil')"
+  (blur)="onBlur('companyNameTamil')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
           <span
             *ngIf="companyNameTamil.invalid && (companyNameTamil.dirty || companyNameTamil.touched) && !tamilInputError"
@@ -196,7 +196,7 @@
       </div>
 
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end">
         <button type="button" (click)="onCancel()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
@@ -448,7 +448,7 @@
 
 
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end mt-5">
         <button (click)="nextFormCreate('pageOne')" type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
@@ -564,12 +564,11 @@
           <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Name (in English) *
           </label>
-          <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
-            #companyNameEnglish="ngModel" required
-            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
-            (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '')"
-            (blur)="onBlur('companyNameEnglish')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="companyNameEnglish" name="companyNameEnglish" 
+  [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required
+  (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '', 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError"
             class="text-red-600 text-sm mt-1">
@@ -586,12 +585,10 @@
           <label for="companyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Name (in Sinhala) *
           </label>
-          <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
-            #companyNameSinhala="ngModel" required
-            (keydown)="handleInputWithSpaceTrimming($event, 'companyNameSinhala')"
-         (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '')"
-            (blur)="onBlur('companyNameSinhala')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="companyNameSinhala" name="companyNameSinhala" 
+  [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
+  (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '', 'companyNameSinhala')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
             class="text-red-600 text-sm mt-1">
@@ -608,10 +605,11 @@
           <label for="companyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Name (in Tamil) *
           </label>
-          <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
-            #companyNameTamil="ngModel" required (keydown)="handleInputWithSpaceTrimming($event, 'companyNameTamil')"
-           (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '')" (blur)="onBlur('companyNameTamil')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="companyNameTamil" name="companyNameTamil" 
+  [(ngModel)]="companyData.companyNameTamil" #companyNameTamil="ngModel" required
+  (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '', 'companyNameTamil')"
+  (blur)="onBlur('companyNameTamil')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="companyNameTamil.invalid && (companyNameTamil.dirty || companyNameTamil.touched) && !tamilInputError"
             class="text-red-600 text-sm mt-1">
@@ -640,21 +638,21 @@
           </div>
         </div>
 
-        <div class="pb-6">
+        <!-- <div class="pb-6">
 
 
 
-        </div>
+        </div> -->
 
 
-        <div class="pb-6">
+        <!-- <div class="pb-6">
 
 
-        </div>
+        </div> -->
       </div>
 
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end">
         <button type="button" (click)="onCancel()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
@@ -864,7 +862,7 @@
 
       </div>
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end mt-5">
         <button (click)="nextFormCreate('pageOne')" type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
@@ -933,6 +931,12 @@
         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Email
           Address</label>
         <input id="email" name="email" [(ngModel)]="companyData.email" [disabled]="true" type="email"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+
+      <div class="pb-6">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance officer</label>
+        <input id="email" name="email" [(ngModel)]="companyData.foName" [disabled]="true" type="email"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 

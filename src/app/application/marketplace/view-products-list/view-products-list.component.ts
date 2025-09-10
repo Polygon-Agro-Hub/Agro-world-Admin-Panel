@@ -36,6 +36,7 @@ export class ViewProductsListComponent {
     { name: '%, Actual', value: 'D&AP' },
     { name: 'Actual, Sale', value: 'AP&SP' },
     { name: '%, Actual, Sale', value: 'AP&SP&D' },
+    { name: 'No Discount', value: 'No' },
   ];
   selectedDisplayType: any = null;
 

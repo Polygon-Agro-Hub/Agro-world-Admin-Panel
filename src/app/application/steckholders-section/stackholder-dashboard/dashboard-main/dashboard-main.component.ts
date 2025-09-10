@@ -110,6 +110,11 @@ export class DashboardMainComponent implements OnInit {
           day: 'numeric',
         });
 
+        // Generate filename with today's date only
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+        const fileName = `${formattedDate}.pdf`;
+
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(colors.black);
@@ -466,7 +471,8 @@ export class DashboardMainComponent implements OnInit {
           `Today: ${this.salesAgentRowData.newSalesAgents}`
         );
 
-        doc.save('dashboard-report.pdf');
+        // Use the generated filename with today's date only
+        doc.save(fileName);
       } catch {}
     };
 

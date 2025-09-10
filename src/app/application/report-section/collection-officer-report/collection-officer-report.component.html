@@ -6,11 +6,8 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
@@ -21,71 +18,32 @@
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
-              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-            />
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
           </svg>
         </i>
         <p class="text-gray-500 mr-5">Filter By</p>
         <div class="mr-5">
-     <p-dropdown
-  styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
-  [options]="centers"
-  [(ngModel)]="selectedCenter"
-  optionLabel="id"
-  [showClear]="true"
-  placeholder=" Center"
-  (onChange)="applyFilters()"
-/>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
+            [options]="centers" [(ngModel)]="selectedCenter" optionLabel="centerName" optionValue="centerName" [showClear]="true" placeholder=" Center"
+            (onChange)="applyFilters()" name="selectedCenter"/>
 
         </div>
-        <div
-          class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
-        >
-          <input
-            type="text"
-            placeholder="Search by NIC"
-            class="bg-transparent outline-none w-full text-gray-600"
-            [(ngModel)]="searchNIC"
-            (keydown.enter)="searchCultivations()"
-          />
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchCultivations()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
+        <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
+          <input type="text" placeholder="Search by NIC" class="bg-transparent outline-none w-full text-gray-600"
+            [(ngModel)]="searchNIC" (keydown.enter)="searchCultivations()" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="searchCultivations()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-          <button
-            (click)="clearSearch()"
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <button (click)="clearSearch()" type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -97,78 +55,55 @@
         <table class="min-w-full divide-y divide-gray-200 table-auto">
           <thead>
             <tr>
-              <th
-                class="py-3 pr-4 font-normal text-gray-500 dark:text-textDark text-left"
-              >
-              EMP ID
+              <th class="py-3 pr-4 font-normal text-gray-500 dark:text-textDark text-left">
+                EMP ID
               </th>
-              <th
-                class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left w-32 whitespace-nowrap"
-              >
+              <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left w-32 whitespace-nowrap">
                 Officer Name
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start">
                 Company
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start w-32 whitespace-nowrap"
-              >  Centre Name
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-start w-32 whitespace-nowrap">
+                Centre Name
               </th>
-              
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-              >
+
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 Phone
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 NIC
               </th>
-              <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-              >
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 District
               </th>
-              <th
-                *ngIf="
+              <th *ngIf="
                   permissionService.hasPermission(
                     'Collection Officer Monthly Report'
                   ) || tokenService.getUserDetails().role === '1'
-                "
-                class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
-              >
+                " class="py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 <span class="block">Monthly</span>
                 <span class="block">Report</span>
               </th>
-              <th
-                *ngIf="
+              <th *ngIf="
                   permissionService.hasPermission(
                     'Collection Officer Daily Report'
                   ) || tokenService.getUserDetails().role === '1'
-                "
-                class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
-              >
+                " class="py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 <span class="block">Daily</span>
                 <span class="block">Report</span>
               </th>
-              <th
-                *ngIf="
+              <th *ngIf="
                   permissionService.hasPermission(
                     'Collection Officer Farmer Report'
                   ) || tokenService.getUserDetails().role === '1'
-                "
-                class="py-3 font-normal text-gray-500 dark:text-textDark text-center"
-              >
+                " class="py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 Farmers
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="
+            <tr *ngFor="
                 let item of ongoingCultivation
                   | paginate
                     : {
@@ -176,8 +111,7 @@
                         currentPage: page,
                         totalItems: totalItems
                       }
-              "
-            >
+              ">
               <td class="py-3 text-gray-500 dark:text-textDark text-left">
                 {{ item.empId }}
               </td>
@@ -185,109 +119,65 @@
                 {{ item.firstNameEnglish }}
               </td>
               <td
-                class="py-3 px-4 text-gray-500 dark:text-textDark text-start whitespace-nowrap overflow-hidden text-ellipsis"
-              >
+                class="py-3 px-4 text-gray-500 dark:text-textDark text-start whitespace-nowrap overflow-hidden text-ellipsis">
                 {{ item.companyNameEnglish }}
               </td>
-              <td
-                class="px-4 py-3 text-gray-500 dark:text-textDark text-start  whitespace-nowrap"
-              >
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-start  whitespace-nowrap">
                 {{ item.centerName }}
               </td>
-              <td
-                class="px-4 py-3 text-gray-500 dark:text-textDark text-center whitespace-nowrap"
-              >
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center whitespace-nowrap">
                 {{ item.phoneCode01 }} {{ item.phoneNumber01 }}
               </td>
-              <td
-                class="px-4 py-3 text-gray-500 dark:text-textDark text-center"
-              >
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                 {{ item.nic }}
               </td>
-              <td
-                class="px-4 py-3 text-gray-500 dark:text-textDark text-center"
-              >
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                 {{ item.district }}
               </td>
-            <!-- Monthly Report -->
-<td
-  *ngIf="
+              <!-- Monthly Report -->
+              <td *ngIf="
     permissionService.hasPermission('Collection Officer Monthly Report') ||
     tokenService.getUserDetails().role === '1'
-  "
-  class="px-4 py-3 text-center"
->
-  <button
-    class="w-6 h-6 mr-3 hover:opacity-80"
-    (click)="navigateToMonthlyReport(item.id)"
-  >
-    <img
-      src="assets/icons/orderdetails.png"
-      alt="Monthly Report"
-      class="w-5 h-5 mx-auto"
-    />
-  </button>
-</td>
+  " class="px-4 py-3 text-center">
+                <button class="w-6 h-6 mr-3 hover:opacity-80" (click)="navigateToMonthlyReport(item.id)">
+                  <img src="assets/icons/orderdetails.png" alt="Monthly Report" class="w-5 h-5 mx-auto" />
+                </button>
+              </td>
 
-<!-- Daily Report -->
-<td
-  *ngIf="
+              <!-- Daily Report -->
+              <td *ngIf="
     permissionService.hasPermission('Collection Officer Daily Report') ||
     tokenService.getUserDetails().role === '1'
-  "
-  class="px-4 py-3 text-center"
->
-  <button
-    class="w-6 h-6 mr-3 hover:opacity-80"
-    (click)="navigateToReport(item.id, item.firstNameEnglish)"
-  >
-    <img
-      src="assets/icons/orderdetails.png"
-      alt="Daily Report"
-      class="w-5 h-5 mx-auto"
-    />
-  </button>
-</td>
+  " class="px-4 py-3 text-center">
+                <button class="w-6 h-6 mr-3 hover:opacity-80"
+                  (click)="navigateToReport(item.id, item.firstNameEnglish)">
+                  <img src="assets/icons/orderdetails.png" alt="Daily Report" class="w-5 h-5 mx-auto" />
+                </button>
+              </td>
 
-<!-- Farmer Report -->
-<td
-  *ngIf="
+              <!-- Farmer Report -->
+              <td *ngIf="
     permissionService.hasPermission('Collection Officer Farmer Report') ||
     tokenService.getUserDetails().role === '1'
-  "
-  class="px-4 py-3 text-center"
->
-  <button
-    class="w-6 h-6 mr-3 hover:opacity-80"
-    (click)="navigateToPaymentSlipReport(
+  " class="px-4 py-3 text-center">
+                <button class="w-6 h-6 mr-3 hover:opacity-80" (click)="navigateToPaymentSlipReport(
       item.id,
       item.firstNameEnglish,
       item.lastNameEnglish,
       item.QRcode,
       item.empId
-    )"
-  >
-    <img
-      src="assets/icons/orderdetails.png"
-      alt="Farmer Report"
-      class="w-5 h-5 mx-auto"
-    />
-  </button>
-</td>
+    )">
+                  <img src="assets/icons/orderdetails.png" alt="Farmer Report" class="w-5 h-5 mx-auto" />
+                </button>
+              </td>
 
             </tr>
           </tbody>
         </table>
         <div class="dark:bg-[#262f45]">
-          <pagination-controls
-            (pageChange)="onPageChange($event)"
-            [responsive]="true"
-            [previousLabel]="'Previous'"
-            [nextLabel]="'Next'"
-            [screenReaderPaginationLabel]="'Pagination'"
-            [screenReaderPageLabel]="'page'"
-            [screenReaderCurrentLabel]="'Youre on page'"
-          >
+          <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+            [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+            [screenReaderCurrentLabel]="'Youre on page'">
           </pagination-controls>
         </div>
       </div>

@@ -13,7 +13,7 @@
 
 
 
-  <ul class="sidenav-nav flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <ul class="sidenav-nav flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <li *ngFor="let item of navData" class="sidenav-nav-li" [class.active]="isParentActive(item)">
       <a 
          [routerLink]="item.children ? null : item.RouterLink" 

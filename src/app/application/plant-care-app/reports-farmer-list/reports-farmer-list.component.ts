@@ -149,7 +149,7 @@ export class ReportsFarmerListComponent {
     );
   }
 
-   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
+  preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
     const input = event.target as HTMLInputElement;
     if (event.key === ' ' && (input.selectionStart === 0 || !input.value.trim())) {
       event.preventDefault();
@@ -167,6 +167,16 @@ export class ReportsFarmerListComponent {
     this.navigatePath(
       `/plant-care/action/report-farmer-current-assert/${id}/${userName}`
     );
+  }
+
+  viewFarms(id: number, firstName: string, lastName: string) {
+    this.router.navigate(['/plant-care/action/Farmers-farms-list'], {
+      queryParams: {
+        userId: id,
+        firstName: firstName,
+        lastName: lastName
+      }
+    });
   }
 
   navigatePath(path: string) {

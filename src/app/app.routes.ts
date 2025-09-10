@@ -178,7 +178,8 @@ import { SelectedOfficerTargetComponent } from './application/distribution-hub/p
 import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
 import { ViewExpencesFarmerReportComponent } from './application/collection-hub-section/view-expences-farmer-report/view-expences-farmer-report.component';
 import { ViewFarmOwnerComponent } from './application/steckholders-section/view-farm-owner/view-farm-owner.component';
-import { EditUserStaffComponent } from './application/steckholders-section/edit-user-staff/edit-user-staff.component';
+import { EditUserStaffComponent } from './application/steckholders-section/edit-user-staff/edit-user-staff.component';import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -300,6 +301,10 @@ export const routes: Routes = [
               {
                 path: 'report-farmer-list',
                 component: ReportsFarmerListComponent,
+              },
+              {
+                path: 'Farmers-farms-list',
+                component: FarmerListFarmersFarmsComponent,
               },
               {
                 path: 'report-farmer-current-assert/:userId/:name',

@@ -251,11 +251,14 @@ getFlagUrl(countryCode: string): string {
   }
 
   initializeProvinceOptions() {
-    this.provinceOptions = this.provinces.map(province => ({
-      label: province,
-      value: province
-    }));
-  }
+  // Sort provinces alphabetically A to Z
+  const sortedProvinces = this.provinces.sort((a, b) => a.localeCompare(b));
+  
+  this.provinceOptions = sortedProvinces.map(province => ({
+    label: province,
+    value: province
+  }));
+}
 
   private findProvinceByDistrict(district: string): string | null {
     for (const province in this.districtsMap) {

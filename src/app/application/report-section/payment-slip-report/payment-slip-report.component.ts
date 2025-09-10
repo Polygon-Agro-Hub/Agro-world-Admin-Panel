@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {  Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { PaymentSlipReportService } from '../../../services/reports/payment-slip-report.service';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -24,7 +24,7 @@ export class PaymentSlipReportComponent {
   isLoading = false;
   createdDate: string = new Date().toISOString().split('T')[0];
   isTableVisible: boolean = true;
-  hasData: boolean = true; 
+  hasData: boolean = true;
   searchNIC: string = '';
 
   firstName: string = '';
@@ -36,7 +36,7 @@ export class PaymentSlipReportComponent {
     private paymentSlipReportService: PaymentSlipReportService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const today = new Date();
@@ -47,7 +47,7 @@ export class PaymentSlipReportComponent {
       this.lastName = params['lastName'] ? params['lastName'] : '';
       this.QRcode = params['QRcode'] ? params['QRcode'] : '';
       this.empId = params['empId'] ? params['empId'] : '';
-      
+
     });
     this.loadPayments();
   }
@@ -55,11 +55,16 @@ export class PaymentSlipReportComponent {
   loadPayments(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     this.payments = []; // Reset payments array
-    this.total = 0;  
-    this.isTableVisible = false; 
-  
+    this.total = 0;
+    this.isTableVisible = false;
+
+    let formattedDate = '';
+    if (this.createdDate) {
+      formattedDate = this.convertToISO(this.createdDate);
+    }
+
     this.paymentSlipReportService
-      .getPaymentSlipReport(page, limit ,this.officerId, this.createdDate, this.searchNIC)
+      .getPaymentSlipReport(page, limit, this.officerId, formattedDate, this.searchNIC)
       .subscribe(
         (response) => {
           console.log(response);
@@ -73,7 +78,7 @@ export class PaymentSlipReportComponent {
         }
       );
 
-   
+
   }
 
 
@@ -87,25 +92,48 @@ export class PaymentSlipReportComponent {
   }
 
   onDateChange(): void {
-    this.payments = []; 
+    this.payments = [];
     this.total = 0;
-    this.isTableVisible = false; 
+    this.isTableVisible = false;
     setTimeout(() => {
       this.loadPayments();
     }, 1000);
-}
+  }
 
 
 
-searchPlantCareUsers() {
-  this.page = 1;
-  this.loadPayments();
-}
+  searchPlantCareUsers() {
+    this.page = 1;
+    this.loadPayments();
+  }
 
-clearSearch(): void {
-  this.searchNIC = '';
-  this.loadPayments();
-}
+  clearSearch(): void {
+    this.searchNIC = '';
+    this.loadPayments();
+  }
+
+  convertToISO(date: any): string {
+    if (date instanceof Date) {
+      // Create UTC date with the same year, month, and day
+      const utcDate = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      ));
+      return utcDate.toISOString();
+    } else if (typeof date === 'string') {
+      const parsedDate = new Date(date);
+      if (!isNaN(parsedDate.getTime())) {
+        const utcDate = new Date(Date.UTC(
+          parsedDate.getFullYear(),
+          parsedDate.getMonth(),
+          parsedDate.getDate()
+        ));
+        return utcDate.toISOString();
+      }
+    }
+    return date;
+  }
 
 
 }

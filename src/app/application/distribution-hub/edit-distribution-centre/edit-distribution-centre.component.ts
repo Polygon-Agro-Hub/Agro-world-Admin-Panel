@@ -749,21 +749,21 @@ back(): void {
       }
 
       const updateData = {
-        name: this.distributionForm.value.name,
-        contact1Code: this.distributionForm.value.contact1Code,
-        contact1: this.distributionForm.value.contact1,
-        contact2Code: this.distributionForm.value.contact2Code,
-        contact2: this.distributionForm.value.contact2,
-        city: this.distributionForm.value.city,
-        district: this.distributionForm.value.district,
-        province: this.distributionForm.value.province,
-        country: this.distributionForm.value.country,
-        regCode: this.distributionForm.value.regCode,
-        longitude: parseFloat(this.distributionForm.value.longitude).toString(),
-        latitude: parseFloat(this.distributionForm.value.latitude).toString(),
-        email: this.distributionForm.value.email,
-        company: companyId
-      };
+    centerName: this.distributionForm.value.name, // Map to centerName
+    code1: this.distributionForm.value.contact1Code, // Map to code1
+    contact01: this.distributionForm.value.contact1, // Map to contact01
+    code2: this.distributionForm.value.contact2Code || '', // Map to code2
+    contact02: this.distributionForm.value.contact2 || '', // Map to contact02
+    city: this.distributionForm.value.city,
+    district: this.distributionForm.value.district,
+    province: this.distributionForm.value.province,
+    country: this.distributionForm.value.country,
+    regCode: this.distributionForm.value.regCode,
+    longitude: parseFloat(this.distributionForm.value.longitude).toString(),
+    latitude: parseFloat(this.distributionForm.value.latitude).toString(),
+    email: this.distributionForm.value.email,
+    companyId: companyId // Send companyId instead of company
+  };
 
       const id = this.route.snapshot.params['id'];
 

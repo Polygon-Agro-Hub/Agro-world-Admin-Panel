@@ -47,6 +47,7 @@
           [showButtonBar]="true"
           iconDisplay="input"
           appendTo="body"
+          [maxDate]="todayDate"
           [style]="{ width: '31rem', height: '2rem' }"
           panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
@@ -92,11 +93,11 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-6">
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">From</p>
-          <p class="dark:text-textDark text-gray-800">: {{ fromDate }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(fromDate) | date : 'yyyy-mm-dd' }}</p>
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">To</p>
-          <p class="dark:text-textDark text-gray-800">: {{ toDate }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(toDate) | date : 'yyyy-mm-dd' }}</p>
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>
@@ -116,7 +117,7 @@
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Weight</p>
-          <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }} Kg</p>
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Farmers</p>
@@ -137,7 +138,7 @@
           <tbody>
             <tr *ngFor="let report of dailyReports">
               <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.date | date: 'yyyy-MM-dd' }}</td>
-              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }}</td>
+              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }} Kg</td>
               <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalPayments }}</td>
             </tr>
           </tbody>

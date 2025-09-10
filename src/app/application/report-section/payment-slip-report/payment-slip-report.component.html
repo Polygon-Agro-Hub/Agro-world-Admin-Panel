@@ -26,7 +26,7 @@
       </i>
       <div>
         <div class="flex  ml-45">
-          <p-calendar id="fromDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="false"
+          <p-calendar id="fromDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="false" [(ngModel)]="createdDate" name="createdDate" (onSelect)="loadPayments()"
             [showButtonBar]="true" iconDisplay="input" [style]="{ width: '18rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -96,7 +96,7 @@
     <h2 class="text-xl text-textLight dark:text-textDark">
      {{this.empId}} - {{  this.firstName }} {{ this.lastName }}
     </h2>
-    <p class="text-lg text-textLight dark:text-textDark">On {{this.createdDate}}</p>
+    <p class="text-lg text-textLight dark:text-textDark">On {{convertToISO(this.createdDate) | date: 'yyyy-mm-dd'}}</p>
   </div>
 
         

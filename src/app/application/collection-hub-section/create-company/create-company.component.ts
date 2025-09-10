@@ -1340,6 +1340,15 @@ isValidEmail(email: string): boolean {
     return false;
   }
   
+  // NEW: Validate top-level domain - only allow .com and .lk
+  const tld = domainPart.split('.').pop()?.toLowerCase();
+  const allowedTlds = ['com', 'lk'];
+  
+  if (!tld || !allowedTlds.includes(tld)) {
+    this.emailValidationMessage = 'Only .com and .lk domains are allowed.';
+    return false;
+  }
+  
   return true;
 }
 

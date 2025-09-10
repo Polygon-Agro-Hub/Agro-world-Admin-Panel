@@ -24,6 +24,7 @@ interface TaskList {
   videoLinkTamil: string;
   status: string;
   cropCalendarId: any;
+  onCulscropID:number
 }
 
 @Component({

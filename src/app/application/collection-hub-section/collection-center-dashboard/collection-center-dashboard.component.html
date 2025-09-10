@@ -65,7 +65,8 @@
     <div class="grid grid-cols-2 gap-2 md:gap-4">
       <!-- Expense Card -->
       <div
-        class="flex flex-col gap-y-1 items-center justify-between p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer">
+        class="flex flex-col gap-y-1 items-center justify-between p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
+        (click)="navigateCollectionExpenses()">
         <div class="flex flex-row justify-end items-center self-end">
           <i *ngIf="expencePrecentage >= 0" class="fa-solid fa-arrow-trend-up text-[#0D9488] mx-1 text-sm"></i>
           <i *ngIf="expencePrecentage < 0" class="fa-solid fa-arrow-trend-down text-[#D70000] mx-1 text-sm"></i>

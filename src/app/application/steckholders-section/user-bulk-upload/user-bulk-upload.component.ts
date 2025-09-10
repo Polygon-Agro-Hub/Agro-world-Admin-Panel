@@ -31,7 +31,7 @@ interface ExistingUser {
   styleUrl: './user-bulk-upload.component.css',
 })
 export class UserBulkUploadComponent {
-  selectedFile: File | null = null;
+  selectedFile: any = null;
   errorMessage: string = '';
   successMessage: string = '';
   isLoading = false;
@@ -214,7 +214,9 @@ export class UserBulkUploadComponent {
         }
 
         const formData = new FormData();
-        formData.append('file', this.selectedFile!);
+        console.log(this.selectedFile);
+        
+        formData.append('file', this.selectedFile);
 
         this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
           next: (response: any) => {

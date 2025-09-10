@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 
 interface InvoiceData {
   invoiceNumber: string;
+  orderApp:string;
   deliveryMethod: string;
   invoiceDate: string;
   scheduledDate: string;
@@ -112,6 +113,7 @@ export class FinalinvoiceService {
 
       const invoiceData: InvoiceData = {
         invoiceNumber: finalInvoiceNo,
+        orderApp: invoiceDetails.orderApp || 'N/A',
         deliveryMethod: invoiceDetails.deliveryMethod || 'N/A',
         invoiceDate: invoiceDetails.invoiceDate || 'N/A',
         scheduledDate: invoiceDetails.scheduledDate || 'N/A',
@@ -526,9 +528,21 @@ export class FinalinvoiceService {
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
-      const addTitle = hasFamilyPacks
-        ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
-        : ` Custom Items(${invoice.additionalItems.length} Items)`;
+      // MODIFIED: Determine title based on orderApp
+      let addTitle;
+      if (invoice.orderApp === 'Marketplace') {
+        addTitle = hasFamilyPacks
+          ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
+          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
+      } else if (invoice.orderApp === 'Dash') {
+        addTitle = hasFamilyPacks
+          ? ` Custom Items(${invoice.additionalItems.length} Items)`
+          : ` Custom Items(${invoice.additionalItems.length} Items)`;
+      } else {
+        addTitle = hasFamilyPacks
+          ? ` Additional Items(${invoice.additionalItems.length} Items)`
+          : ` Additional Items(${invoice.additionalItems.length} Items)`;
+      }
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
@@ -668,7 +682,16 @@ export class FinalinvoiceService {
 
       const hasFamilyPacks =
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
-      const label = hasFamilyPacks ? ' Your Selected Items' : 'Custom Items';
+
+      // MODIFIED: Determine label based on orderApp
+      let label;
+      if (invoice.orderApp === 'Marketplace') {
+        label = hasFamilyPacks ? ' Your Selected Items' : ' Your Selected Items';
+      } else if (invoice.orderApp === 'Dash') {
+        label = hasFamilyPacks ? ' Custom Items' : ' Custom Items';
+      } else {
+        label = hasFamilyPacks ? ' Additional Items' : ' Additional Items';
+      }
 
       grandTotalBody.push([
         label,

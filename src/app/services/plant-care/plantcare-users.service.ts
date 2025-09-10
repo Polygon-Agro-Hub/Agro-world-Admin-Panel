@@ -12,6 +12,7 @@ export interface PlantCareUser {
   NICnumber: string;
   profileImage: string;
   createdAt: string;
+  
 }
 
 export interface FixedAsset {
@@ -29,6 +30,21 @@ export interface FixedAsset {
   warrantyStatus: string;
   category: string;
   createdAt: string;
+}
+
+export interface Farm {
+  id: number;
+  farmName: string;
+  farmDistrict: string;
+  userId: number;
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+  farmId: number | null;
+}
+
+export interface FarmResponse {
+  result: Farm[];
 }
 
 @Injectable({
@@ -107,6 +123,8 @@ export class PlantcareUsersService {
   // }
 
   uploadUserXlsxFile(formData: FormData): Observable<any> {
+    console.log(formData);
+    
     return this.http
       .post(`${this.apiUrl}auth/upload-user-xlsx`, formData, {
         responseType: "json",
@@ -165,12 +183,42 @@ export class PlantcareUsersService {
     });
 
     let url = `${this.apiUrl}auth/get-all-farmer-staff?id=${id}`
-    if(role){
-      url+= `&role=${role}`
+    if (role) {
+      url += `&role=${role}`
     }
 
     return this.http.get(url, {
       headers,
     });
   }
+
+  getFarmerFarms(userId: number): Observable<FarmResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<FarmResponse>(`${this.apiUrl}auth//get-all-farmer-farms?userId=${userId}`, { headers });
+  }
+  
+
+  
+  getFarmOwnerById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  const url = `${this.apiUrl}auth/get-farm-owner?id=${id}`;
+
+  return this.http.get(url, { headers });
 }
+
+updateFarmOwner(ownerId: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
+  });
+  return this.http.put(`${this.apiUrl}auth/update-farm-owner/${ownerId}`, data, { headers });
+}
+
+
+}
+

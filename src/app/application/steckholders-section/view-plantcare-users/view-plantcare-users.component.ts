@@ -15,6 +15,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { DropdownModule } from 'primeng/dropdown';
+import * as XLSX from 'xlsx';
+
 
 interface PlantCareUser {
   id: number;
@@ -288,37 +290,68 @@ export class ViewPlantcareUsersComponent implements OnInit {
     this.router.navigate(['/steckholders/action/farmers/upload-farmers']);
   }
 
+  // downloadTemplate(): void {
+  //   // Define the headers for the CSV
+  //   const headers = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
+
+  //   // Create CSV content with headers only
+  //   const csvContent = headers.map(header => `"${header}"`).join(',') + '\n';
+
+  //   // Create a Blob object with the CSV content
+  //   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  //   // Create a download link
+  //   const link = document.createElement('a');
+  //   const url = URL.createObjectURL(blob);
+
+  //   // Set the link attributes
+  //   link.setAttribute('href', url);
+  //   link.setAttribute('download', 'bulk_onboarding_template.csv');
+  //   link.style.visibility = 'hidden';
+
+  //   // Append link to the body, click it, and remove it
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+
+  //   // Revoke the object URL to free up memory
+  //   URL.revokeObjectURL(url);
+  // }
   downloadTemplate(): void {
-    // Define the headers for the CSV
-    const headers = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
+    // this.isDownloading = true;
 
-    // Create CSV content with headers only
-    const csvContent = headers.map(header => `"${header}"`).join(',') + '\n';
+    try {
+      const headers = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
 
-    // Create a Blob object with the CSV content
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      // Create worksheet and workbook in one go
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([headers]);
+      XLSX.utils.book_append_sheet(wb, ws, 'Template');
 
-    // Create a download link
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
+      // Download the file
+      XLSX.writeFile(wb, 'bulk_onboarding_template.xlsx');
 
-    // Set the link attributes
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'bulk_onboarding_template.csv');
-    link.style.visibility = 'hidden';
+      Swal.fire({
+        icon: 'success',
+        title: 'Downloaded',
+        text: 'Please check your downloads folder',
+      });
 
-    // Append link to the body, click it, and remove it
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      // this.isDownloading = false;
 
-    // Revoke the object URL to free up memory
-    URL.revokeObjectURL(url);
+    } catch (error: any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Download Failed',
+        text: error.message,
+      });
+      // this.isDownloading = false;
+    }
   }
 
-  viewFarmerStaff(id:number, name:string='', phone:string = ''){
-    this.router.navigate([`/steckholders/action/farmers/view-farmer-staff/${id}`],{
-      queryParams:{fname:name, phone:phone}
+  viewFarmerStaff(id: number, name: string = '', phone: string = '') {
+    this.router.navigate([`/steckholders/action/farmers/view-farmer-staff/${id}`], {
+      queryParams: { fname: name, phone: phone }
     })
   }
 }

@@ -78,13 +78,11 @@ ngOnInit(): void {
   this.route.queryParams.subscribe((params) => {
     this.cultivationId = params['cultivationId'] ? +params['cultivationId'] : null;
     this.userName = params['userName'] ? params['userName'] : '';
-    console.log('cultivationId', this.cultivationId);
   });
   this.cropId = this.route.snapshot.params['cropId'];
   this.indexId = this.route.snapshot.params['indexId'];
   this.userId = this.route.snapshot.params['userId'];
   this.onCulscropID = this.route.snapshot.params['onCulscropID'];
-  console.log('hiiiii', this.onCulscropID);
 
   // Watch for changes in requireVideoLink
   this.taskForm.get('requireVideoLink')?.valueChanges.subscribe((value) => {
@@ -231,7 +229,6 @@ blockZeroValue(event: Event) {
 
 
 onSubmit() {
-  console.log('onsubmit:', this.cropId, this.indexId, this.userId);
 
   // Array to store missing or invalid field messages
   const missingFields: string[] = [];
@@ -364,7 +361,6 @@ if (this.requireVideoLink === 'yes') {
     if (result.isConfirmed) {
       this.isLoading = true;
       if (this.userId === 'null') {
-        console.log('no user', this.userId);
         this.cropCalendarService
           .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
           .subscribe({
@@ -392,9 +388,8 @@ if (this.requireVideoLink === 'yes') {
             },
           });
       } else {
-        console.log('has user', this.userId);
         this.cropCalendarService
-          .createNewCropTaskU(this.cropId, this.indexId, this.userId, this.cropTaskObj, this.onCulscropID)
+          .createNewCropTaskU(this.cropId, this.indexId, this.userId, this.cropTaskObj, this.cultivationId)
           .subscribe({
             next: (res) => {
               this.isLoading = false;

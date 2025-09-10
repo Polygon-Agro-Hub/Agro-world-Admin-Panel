@@ -51,18 +51,43 @@ export class ViewFarmerStaffComponent implements OnInit {
     this.fetchData();
   }
 
-  fetchData() {
-    this.isLoading = true;
-    this.plantcareService.getAllFarmerStaff(this.farmerId, this.selectedRole).subscribe(
-      (res) => {
-        console.log(res);
-        this.staffArr = res.result
-        this.hasData =  this.staffArr?.length > 0 ? true : false;
-        this.isLoading = false
+fetchData() {
+  this.isLoading = true;
+  this.plantcareService.getAllFarmerStaff(this.farmerId, this.selectedRole).subscribe(
+    (res) => {
+      console.log(res);
+      // Map API response to Staff objects
+      this.staffArr = res.result.map((item: any) => {
+        const staff = new Staff();
+        staff.id = item.id;
+        staff.firstName = item.firstName;
+        staff.lastName = item.lastName;
+        staff.phoneCode = item.phoneCode;
+        staff.phoneNumber = item.phoneNumber;
+        staff.role = item.role;
+        staff.nic = item.nic;
+        staff.image = item.image;
+        staff.modifyBy = item.modifyBy;
+        staff.modifiedByUserName = item.modifiedByUserName;
+        return staff;
+      });
+      this.hasData = this.staffArr.length > 0;
+      this.isLoading = false;
+    },
+    (err) => {
+      console.error(err);
+      this.isLoading = false;
+    }
+  );
+}
 
-      }
-    )
-  }
+viewFarmerStaff(id: number) {
+  this.router.navigate(['/steckholders/action/farmers/view-farmer-owner', id]);
+}
+
+editFarmerStaff(id: number) {
+  this.router.navigate(['/steckholders/action/farmers/edit-user-staff', id]);
+}
 
 }
 
@@ -73,6 +98,9 @@ class Staff {
   phoneCode!: string;
   phoneNumber!: string;
   role!: string;
-  nic!: string;
-  image!: string;
+  nic!: string | null;
+  image!: string | null;
+  modifyBy!: number | null;
+  modifiedByUserName!: string | null;
 }
+

@@ -203,6 +203,8 @@ export class ViewCollectiveOfficerComponent {
   fetchManagerNames(centerId: number) {
   this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
     (response) => {
+      console.log('Manager names response:', response);
+      
       this.collectionCenterManagerNames = response.data || response;
     },
     (error) => { 
@@ -593,4 +595,5 @@ class ManagerNames {
   id!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
+  empId!: string;
 }

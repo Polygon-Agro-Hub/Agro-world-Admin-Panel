@@ -110,12 +110,12 @@ export class AddDestributionCenterComponent implements OnInit {
   private initializeForm() {
   this.distributionForm = this.fb.group(
     {
-      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      centerName: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
       company: ['', Validators.required],
-      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      contact1Code: ['+94', Validators.required],
-      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-      contact2Code: ['+94'],
+      contact01: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      code1: ['+94', Validators.required],
+      contact02: ['', [Validators.pattern(/^\d{9}$/)]],
+      code2: ['+94'],
       latitude: [
         '',
         [
@@ -582,7 +582,7 @@ updateRegCode() {
                     timer: 2000,
                     showConfirmButton: false,
                   });
-                  this.navigatePath('/distribution-hub/action');
+                  this.navigatePath('/distribution-hub/action/view-destribition-center');
                 } else {
                   this.submitError =
                     response.error || 'Failed to create distribution centre';
@@ -612,13 +612,13 @@ updateRegCode() {
                   if (error.error && error.error.conflictingRecord) {
                     const conflict = error.error.conflictingRecord;
                     switch (conflict.conflictType) {
-                      case 'name':
+                      case 'centerName':
                         errorMessage = 'A distribution center with this name already exists.';
                         break;
                       case 'regCode':
                         errorMessage = 'A distribution center with this registration code already exists.';
                         break;
-                      case 'contact':
+                      case 'contact01':
                         errorMessage = 'A distribution center with this contact number already exists.';
                         break;
                       default:

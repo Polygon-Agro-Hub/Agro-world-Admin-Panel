@@ -19,6 +19,8 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
   hasData = false;
   userId!: number;
   farmerName = '';
+  farmName="";
+  farmId!:number;
   
   // Pagination
   page = 1;
@@ -75,6 +77,12 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
     if (farm.farmDistrict) addressParts.push(farm.farmDistrict);
     
     return addressParts.length > 0 ? addressParts.join(', ') : 'No Address';
+  }
+  
+  viewFixedAsset(userId: number, firstName: string, lastName: string,farmName:string,farmId:number) {
+    this.router.navigate(['/plant-care/action/assets/fixed-asset-category'], {
+      queryParams: { userId, firstName, lastName ,farmName, farmId },
+    });
   }
 
   onPageChange(page: number): void {

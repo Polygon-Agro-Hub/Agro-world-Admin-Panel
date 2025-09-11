@@ -40,7 +40,7 @@ export interface Farm {
   firstName: string;
   lastName: string;
   createdAt: string;
-  farmId: number | null;
+  farmId: number;
 }
 
 export interface FarmResponse {

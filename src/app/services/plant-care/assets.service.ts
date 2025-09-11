@@ -16,12 +16,16 @@ export class AssetsService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  getAllBuildingFixedAsset(itemId: number, category: any): Observable<any> {
+  getAllBuildingFixedAsset(itemId: number, category: any ,farmId:number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
+    
+    console.log("itemId", itemId);
+    console.log("category", category);
+    console.log("farmId", farmId);
 
-    let url = `${this.apiUrl}auth/get-fixed-assets/${itemId}/${category}`;
+    let url = `${this.apiUrl}auth/get-fixed-assets/${itemId}/${category}/${farmId}`;
 
     return this.http.get<any>(url, { headers });
   }

@@ -229,13 +229,26 @@ isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
 
 
 // Method for English name validation (block numbers and special characters)
-allowOnlyLetters(event: KeyboardEvent, inputValue: string) {
+allowOnlyLetters(event: KeyboardEvent, inputValue: string, fieldName: string) {
   const char = event.key;
   const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
   if (allowedKeys.includes(char)) return;
 
-  // ❌ Block numbers (English + Tamil + Sinhala + Arabic + all Unicode digits)
+  // For English company name, allow alphanumeric and common special characters
+  if (fieldName === 'companyNameEnglish') {
+    // Allow letters, numbers, spaces, and common business name characters
+    if (!/^[\p{L}\p{Nd} .'&-]$/u.test(char)) {
+      event.preventDefault();
+      this.englishInputError = true;
+      setTimeout(() => {
+        this.englishInputError = false;
+      }, 2000);
+    }
+    return;
+  }
+
+  // ❌ Block numbers (English + Tamil + Sinhala + Arabic + all Unicode digits) for other fields
   if (/\p{Nd}/u.test(char)) {
     event.preventDefault();
     this.englishInputError = true;
@@ -1337,6 +1350,15 @@ isValidEmail(email: string): boolean {
   const domainPart = trimmedEmail.split('@')[1];
   if (!domainPart || domainPart.indexOf('.') === -1) {
     this.emailValidationMessage = 'Please enter a valid email domain.';
+    return false;
+  }
+  
+  // NEW: Validate top-level domain - only allow .com and .lk
+  const tld = domainPart.split('.').pop()?.toLowerCase();
+  const allowedTlds = ['com', 'lk'];
+  
+  if (!tld || !allowedTlds.includes(tld)) {
+    this.emailValidationMessage = 'Only .com and .lk domains are allowed.';
     return false;
   }
   

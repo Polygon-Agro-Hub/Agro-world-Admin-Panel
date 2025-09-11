@@ -29,29 +29,31 @@ interface FixedBuildingAsset {
 })
 export class LandFixedAssetComponent {
   isLoading = false;
-  itemId: any | null = null;
+  userId!: number;
   category: string | null = null;
   fixedAssetB: FixedBuildingAsset[] = [];
   fullName: string | null = null;
   hasData: boolean = true; 
+  farmId!: number;
 
   constructor(private assetsService: AssetsService, private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.itemId = params['id'] ? +params['id'] : null;
+      this.userId = +params['userId'];
+      this.farmId = +params['farmId'];
       this.category = params['category'] || null;
       this.fullName = params['fullName'] || null;
       
-      console.log('Received item ID:', this.itemId);
+      console.log('Received item ID:', this.userId);
       console.log('Received category:', this.category);
     });
-    this.assetsBuilding(this.itemId, this.category )
+    this.assetsBuilding(this.userId, this.category,this.farmId)
   }
 
-  assetsBuilding(itemId: number, category: any) {
+  assetsBuilding(userId: number, category: any ,farmId:number) {
     this.isLoading = true;
-    this.assetsService.getAllBuildingFixedAsset(itemId, category)
+    this.assetsService.getAllBuildingFixedAsset(userId, category ,farmId)
       .subscribe(
         (response) => {
           this.isLoading = false;

@@ -51,41 +51,42 @@
         >Select Centre</label
       >
       <select
-        name="center"
-        required
-        [(ngModel)]="selectedCenterId"
-        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-      >
-        <option value="" disabled>Select a centre</option>
-        <option *ngFor="let center of centerNames" [value]="center.id">
-          {{ center.centerName }}
-        </option>
-      </select>
+  name="center"
+  required
+  [(ngModel)]="selectedCenterId"
+  (ngModelChange)="onCenterChange()"
+  class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+>
+  <option value="" disabled>Select a centre</option>
+  <option *ngFor="let center of centerNames" [value]="center.id">
+    {{ center.centerName }}
+  </option>
+</select>
     </div>
 
     <!-- Conditionally show/hide the Select Manager section -->
     <div
-      *ngIf="selectedOfficer && !selectedOfficer.empId.startsWith('CCM')"
+   *ngIf="selectedOfficer && !selectedOfficer.empId.startsWith('CCM')"
       class="flex mt-4 align-middle justify-center items-center"
+>
+  <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
+    >Select Manager</label
+  >
+  <select
+    name="manager"
+    required
+    [(ngModel)]="selectedIrmId"
+    class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+  >
+    <option value="" disabled>Select a manager</option>
+    <option
+      *ngFor="let manager of collectionCenterManagerNames"
+      [value]="manager.id"
     >
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-        >Select Manager</label
-      >
-      <select
-        name="manager"
-        required
-        [(ngModel)]="selectedIrmId"
-        class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-      >
-        <option value="" disabled>Select a manager</option>
-        <option
-          *ngFor="let manager of collectionCenterManagerNames"
-          [value]="manager.id"
-        >
-          {{ manager.firstNameEnglish }} {{ manager.lastNameEnglish }}
-        </option>
-      </select>
-    </div>
+      {{ manager.firstNameEnglish }} {{ manager.lastNameEnglish }}
+    </option>
+  </select>
+</div>
 
     <div class="flex justify-center mt-4">
       <button

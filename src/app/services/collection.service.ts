@@ -126,12 +126,12 @@ export class CollectionService {
 
     let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
 
-    if (centerName.trim()) {
-      url += `&centerName=${encodeURIComponent(centerName.trim())}`; // ✅ Fixed typo and added trim
+    if (centerName) {
+      url += `&centerName=${centerName}`; // ✅ Fixed typo and added trim
     }
 
-    if (nic.trim()) {
-      url += `&nic=${encodeURIComponent(nic.trim())}`; // Changed from searchNIC to nic
+    if (nic) {
+      url += `&nic=${nic}`; // Changed from searchNIC to nic
     }
     console.log('API URL:', url);
     return this.http.get<any>(url, { headers });

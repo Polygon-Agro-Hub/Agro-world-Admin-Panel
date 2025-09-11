@@ -17,10 +17,12 @@ import { TokenService } from '../../../services/token/services/token.service';
 interface OngoingCultivationItem {
   cultivationId: number;
   id: number;
+  userId: number;
   firstName: string;
   lastName: string;
   NICnumber: string;
   CropCount: string;
+  FarmCount: string;
 }
 
 interface NewsItem {
@@ -29,6 +31,7 @@ interface NewsItem {
   CultivationMethod: string;
   NatureOfCultivation: string;
   CropDuration: string;
+  
 }
 
 @Component({
@@ -163,7 +166,7 @@ export class OngoingCultivationComponent {
     );
   }
 
-  viewTaskByUser(cultivationId: any, userId: any, userName: any) {
+  viewTaskByUsers(cultivationId: any, userId: any, userName: any) {
     if (cultivationId) {
       this.router.navigate(['/plant-care/action/view-crop-task-by-user'], {
         queryParams: { cultivationId, userId, userName },
@@ -171,9 +174,37 @@ export class OngoingCultivationComponent {
     }
   }
 
+
+viewTaskByUser(cultivationId: any, userId: any, userName: any) {
+  if (userId) {
+    this.router.navigate(['/plant-care/action/farmers-farm'], {
+      queryParams: { userId, userName }, // Pass userId and userName as query params
+    });
+  }
+}
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  viewCultivations(farmId: number, userId: number) {
+  // Navigate directly or keep SweetAlert
+  Swal.fire({
+    title: 'Cultivations',
+    text: `View cultivations for farm ID: ${farmId}`,
+    icon: 'info',
+    confirmButtonText: 'Proceed',
+    showCancelButton: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/plant-care/ongoing-cultivations'], {
+        queryParams: {
+          farmId,
+          userId,                // Use the userId passed from the button
+        },
+      });
+    }
+  });
+}
 
   onKeyDown(event: KeyboardEvent): void {
     // Block space key only at the beginning of input

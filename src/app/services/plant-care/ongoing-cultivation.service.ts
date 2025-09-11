@@ -30,15 +30,11 @@ export class OngoingCultivationService {
     return this.http.get<any>(url, { headers });
   }
 
-  getOngoingCultivationById(id: number): Observable<any> {
+getOngoingCultivationById(id: number): Observable<any> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
-
-    return this.http.get(
-      `${this.apiUrl}auth/get-ongoing-cultivation-by-id/${id}`,
-      { headers }
-    );
+    return this.http.get<any>(`${this.apiUrl}ongoing-cultivations/${id}`, { headers });
   }
 
   getUserTasks(
@@ -101,5 +97,20 @@ export class OngoingCultivationService {
       {},
       { headers }
     );
+  }
+
+   getFarmsByUser(userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+    return this.http.get<any>(`${this.apiUrl}auth/get-farms-by-user?userId=${userId}`, { headers });
+  }
+
+  // Delete a farm by ID
+  deleteFarm(farmId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete<any>(`${this.apiUrl}auth/delete-farm/${farmId}`, { headers });
   }
 }

@@ -49,7 +49,7 @@ interface OngoingCultivationItem {
 export class CollectionOfficerReportComponent implements OnInit {
   ongoingCultivation: OngoingCultivationItem[] = [];
   centers: Center[] = [];
-  selectedCenter: Center | null = null;
+  selectedCenter: string = '';
   isPopupVisible = false;
   page: number = 1;
   totalItems: number = 0;
@@ -62,7 +62,7 @@ export class CollectionOfficerReportComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchCenters();
@@ -73,16 +73,9 @@ export class CollectionOfficerReportComponent implements OnInit {
     this.isLoading = true;
     this.collectionOfficer.getCollectionCenter().subscribe({
       next: (response: any) => {
-        if (response.success && Array.isArray(response.data)) {
-          this.centers = response.data.map((item: { centerName: string }) => ({
-            id: item.centerName.trim(),
-            name: item.centerName.trim(),
-          }));
-          this.centers = [...new Map(this.centers.map(item => [item.id.toLowerCase(), item])).values()];
-          console.log('Fetched centers:', this.centers);
-        } else {
-          this.centers = [];
-        }
+
+        this.centers = response.data
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -95,14 +88,14 @@ export class CollectionOfficerReportComponent implements OnInit {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage): void {
     this.isLoading = true;
-    const centerName = this.selectedCenter?.name.trim() || '';
-    const trimmedSearchNIC = this.searchNIC.trim();
+    // const centerName = this.selectedCenter?.name.trim() || '';
+    // const trimmedSearchNIC = this.searchNIC.trim();
 
 
 
-    console.log('Fetching with centerName:', centerName, 'searchNIC:', trimmedSearchNIC);
+    // console.log('Fetching with centerName:', centerName, 'searchNIC:', trimmedSearchNIC);
     this.collectionOfficer
-      .fetchAllCollectionOfficerStatus(page, limit, trimmedSearchNIC, centerName)
+      .fetchAllCollectionOfficerStatus(page, limit, this.searchNIC, this.selectedCenter)
       .subscribe({
         next: (response) => {
           this.ongoingCultivation = response.items || [];
@@ -119,10 +112,8 @@ export class CollectionOfficerReportComponent implements OnInit {
       });
   }
 
-   applyFilters(): void {
+  applyFilters(): void {
     this.page = 1;
-    const centerName = this.selectedCenter?.name.trim() || '';
-    console.log('Applying filter with centerName:', centerName, 'searchNIC:', this.searchNIC);
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
@@ -133,7 +124,7 @@ export class CollectionOfficerReportComponent implements OnInit {
 
   clearSearch(): void {
     this.searchNIC = '';
-    this.selectedCenter = null;
+    this.selectedCenter = '';
     this.page = 1;
     this.fetchAllNews(this.page, this.itemsPerPage);
   }

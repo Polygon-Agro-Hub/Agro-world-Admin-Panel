@@ -155,7 +155,7 @@
 <br *ngIf="personalData.jobRole !== 'Distribution Officer'">
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
-            (in English)*</label>
+            (in English) *</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
@@ -181,7 +181,7 @@
         <!-- Updated First Name (Sinhala) input -->
         <div>
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
-            (in Sinhala)*</label>
+            (in Sinhala) *</label>
           <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             (blur)="onBlur('firstNameSinhala')" (input)="formatSinhalaName('firstNameSinhala')"
             (keypress)="preventNonSinhalaCharacters($event)"
@@ -207,7 +207,7 @@
         <!-- Updated First Name (Tamil) input -->
         <div>
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Tamil)*</label>
+            Tamil) *</label>
           <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
             (blur)="onBlur('firstNameTamil')" (input)="formatTamilName('firstNameTamil')"
             (keypress)="preventNonTamilCharacters($event)"

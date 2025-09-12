@@ -9,7 +9,7 @@
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-            <h2 class="text-lg font-normal text-gray-500 dark:text-textDark">{{this.firstName}} {{this.lastName}}</h2>
+            <h2 class="text-lg font-normal text-gray-500 dark:text-textDark">{{this.firstName}} {{this.lastName}} - {{this.farmName}}</h2>
         </div>
         
     </div>
@@ -27,7 +27,7 @@
                <tr>
                 <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Building and Infastructures</th>
                 <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-                    <button (click)="buildingCategory(this.userId)">
+                    <button (click)="buildingCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId">
                         <i class="fa-regular fa-file"></i>
                     </button>
                 </th>
@@ -36,7 +36,7 @@
                <tr>
                 <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Lands</th>
                 <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-                    <button (click)="landCategory(this.userId)">
+                    <button (click)="landCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId">
                         <i class="fa-regular fa-file"></i>
                     </button>
                 </th>
@@ -45,7 +45,7 @@
                <tr>
                 <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Machinery, Vehicles</th>
                 <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-                    <button (click)="machCategory(this.userId)">
+                    <button (click)="machCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId">
                         <i class="fa-regular fa-file"></i>
                     </button>
                 </th>
@@ -54,7 +54,7 @@
                <tr>
                 <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Tools & Equipments</th>
                 <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-                    <button (click)="toolsCategory(this.userId)">
+                    <button (click)="toolsCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId">
                         <i class="fa-regular fa-file"></i>
                     </button>
                 </th>

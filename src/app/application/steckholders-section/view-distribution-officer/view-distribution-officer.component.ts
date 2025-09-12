@@ -330,32 +330,47 @@ export class ViewDistributionOfficerComponent {
                   this.isLoading = false;
                   if (res.status) {
                     Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Distribution Officer was approved successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                    });
+  icon: 'success',
+  title: 'Success!',
+  text: 'The Distribution Officer was approved successfully.',
+  showConfirmButton: false,
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
                     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
                   } else {
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                    });
+  icon: 'error',
+  title: 'Error!',
+  text: 'Something went wrong. Please try again.',
+  showConfirmButton: false,
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
                   }
                 },
                 () => {
                   this.isLoading = false;
                   Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while approving. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
+  icon: 'error',
+  title: 'Error!',
+  text: 'An error occurred while approving. Please try again.',
+  showConfirmButton: false,
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
                 }
               );
             });
@@ -373,32 +388,47 @@ export class ViewDistributionOfficerComponent {
                   this.isLoading = false;
                   if (res.status) {
                     Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Distribution Officer was rejected successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                    });
+  icon: 'success',
+  title: 'Success!',
+  text: 'The Distribution Officer was rejected successfully.',
+  showConfirmButton: false,
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
                     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
                   } else {
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                    });
+  icon: 'error',
+  title: 'Error!',
+  text: 'Something went wrong. Please try again.',
+  showConfirmButton: false,
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
                   }
                 },
                 () => {
                   this.isLoading = false;
                   Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while rejecting. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
+  icon: 'error',
+  title: 'Error!',
+  text: 'An error occurred while rejecting. Please try again.',
+  showConfirmButton: false,
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
                 }
               );
             });

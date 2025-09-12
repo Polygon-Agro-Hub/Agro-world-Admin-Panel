@@ -105,7 +105,8 @@ export class ViewCollectiveOfficerComponent {
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
-    status: string = this.selectStatus
+    status: string = this.selectStatus,
+    centerId: string | null = this.selectedCenterId
   ) {
     this.isLoading = true;
     this.route.queryParams.subscribe((params) => {
@@ -124,7 +125,6 @@ export class ViewCollectiveOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-
         )
         .subscribe(
           (response) => {
@@ -189,20 +189,38 @@ export class ViewCollectiveOfficerComponent {
     );
   }
 
-  fetchManagerNames() {
-    this.collectionService.getCollectionCenterManagerNames().subscribe(
-      (response) => {
-        this.collectionCenterManagerNames = response;
-      },
-      (error) => { }
-    );
+  onCenterChange() {
+  if (this.selectedCenterId) {
+    const numericCenterId = parseInt(this.selectedCenterId);
+    if (!isNaN(numericCenterId)) {
+      this.fetchManagerNames(numericCenterId);
+    }
+  } else {
+    this.collectionCenterManagerNames = [];
   }
+}
+
+  fetchManagerNames(centerId: number) {
+  this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
+    (response) => {
+      console.log('Manager names response:', response);
+      
+      this.collectionCenterManagerNames = response.data || response;
+    },
+    (error) => { 
+      console.error('Error fetching managers:', error);
+      this.collectionCenterManagerNames = [];
+    }
+  );
+}
 
   ngOnInit() {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchCenterNames();
-    this.fetchManagerNames();
+    if (this.centerId !== null) {
+      this.fetchManagerNames(this.centerId);
+    }
     // this.route.queryParams.subscribe((params) => {
     //   this.centerId = params['id'] ? +params['id'] : null;
     // });
@@ -577,4 +595,5 @@ class ManagerNames {
   id!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
+  empId!: string;
 }

@@ -45,30 +45,35 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   getRoleHeading() {
-    switch (this.officerObj.jobRole) {
-      case 'Customer Officer':
-        this.empHeader = 'CUO';
-        break;
-      case 'Collection Centre Manager':
-        this.empHeader = 'CCM';
-        break;
-      case 'Collection Centre Head':
-        this.empHeader = 'CCH';
-        break;
-      case 'Collection Officer':
-        this.empHeader = 'COO';
-        break;
-      case 'Distribution Center Manager':
-        this.empHeader = 'DCM';
-        break;
-      case 'Distribution Officer':
-        this.empHeader = 'DIO';
-        break;
-      case 'Driver':
-        this.empHeader = 'DVR';
-        break;
-    }
+  // Normalize the jobRole to handle both "Center" and "Centre" spellings
+  const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
+  
+  switch (normalizedRole) {
+    case 'Customer Officer':
+      this.empHeader = 'CUO';
+      break;
+    case 'Collection Centre Manager':
+      this.empHeader = 'CCM';
+      break;
+    case 'Collection Centre Head':
+      this.empHeader = 'CCH';
+      break;
+    case 'Collection Officer':
+      this.empHeader = 'COO';
+      break;
+    case 'Distribution Centre Manager':
+      this.empHeader = 'DCM';
+      break;
+    case 'Distribution Officer':
+      this.empHeader = 'DIO';
+      break;
+    case 'Driver':
+      this.empHeader = 'DVR';
+      break;
+    default:
+      this.empHeader = '';
   }
+}
 
 fetchOfficerById(id: number) {
   this.isLoading = true;
@@ -78,16 +83,16 @@ fetchOfficerById(id: number) {
       console.log("this is data", res);
       
       this.isLoading = false;
-
       this.officerObj = res.officerData.collectionOfficer;
 
-      // Replace role name if it's "Collection Center Manager"
-      if (this.officerObj.jobRole === 'Collection Center Manager') {
-  this.officerObj.jobRole = 'Collection Centre Manager';
-}
+      // Normalize both "Collection Center Manager" and "Distribution Center Manager"
+      if (this.officerObj.jobRole) {
+        this.officerObj.jobRole = this.officerObj.jobRole
+          .replace('Collection Center Manager', 'Collection Centre Manager')
+          .replace('Distribution Center Manager', 'Distribution Centre Manager');
+      }
 
-
-      this.officerObj.claimStatus = this.officerObj.claimStatus; // already exists
+      this.officerObj.claimStatus = this.officerObj.claimStatus;
       this.getRoleHeading();
     });
 }
@@ -221,29 +226,32 @@ fetchOfficerById(id: number) {
     y += 7;
 
     let empType = '';
-    switch (this.officerObj.jobRole) {
-      case 'Customer Officer':
-        empType = 'Customer Officer';
-        break;
-      case 'Collection Centre Manager':
-        empType = 'Collection Centre Manager';
-        break;
-      case 'Collection Centre Head':
-        empType = 'Collection Centre Head';
-        break;
-      case 'Collection Officer':
-        empType = 'Collection Officer';
-        break;
-      case 'Distribution Center Manager':
-        empType = 'Distribution Center Manager';
-        break;
-      case 'Distribution Officer':
-        empType = 'Distribution Officer';
-        break;
-      case 'Driver':
-        empType = 'Driver';
-        break;
-    }
+    const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
+    switch (normalizedRole) {
+  case 'Customer Officer':
+    empType = 'Customer Officer';
+    break;
+  case 'Collection Centre Manager':
+    empType = 'Collection Centre Manager';
+    break;
+  case 'Collection Centre Head':
+    empType = 'Collection Centre Head';
+    break;
+  case 'Collection Officer':
+    empType = 'Collection Officer';
+    break;
+  case 'Distribution Centre Manager':
+    empType = 'Distribution Centre Manager';
+    break;
+  case 'Distribution Officer':
+    empType = 'Distribution Officer';
+    break;
+  case 'Driver':
+    empType = 'Driver';
+    break;
+  default:
+    empType = getValueOrNA(this.officerObj.jobRole);
+}
 
     let empId = this.officerObj.empId || '';
     let empCodeText = this.empHeader ? `${this.empHeader}${empId}` : empId;

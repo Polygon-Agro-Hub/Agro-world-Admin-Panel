@@ -30,6 +30,18 @@ export class AssetsService {
     return this.http.get<any>(url, { headers });
   }
 
+  getBuildingOwnershipDetails(buildingAssetId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    
+    console.log("buildingAssetId", buildingAssetId);
+
+    let url = `${this.apiUrl}auth/get-fixed-assets/building-ownership/${buildingAssetId}`;
+
+    return this.http.get<any>(url, { headers });
+  }
+
   getCurrentAssertById(userId: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-fixed-asset-category',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule],
+  imports: [ CommonModule],
   templateUrl: './fixed-asset-category.component.html',
   styleUrl: './fixed-asset-category.component.css',
 })

@@ -248,10 +248,10 @@ onSubmit() {
   }
 
   if (!this.personalData.nic) {
-    missingFields.push('NIC Number');
-  } else if (!this.isValidNIC(this.personalData.nic)) {
-    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
-  }
+  missingFields.push('NIC Number');
+} else if (!this.isValidNIC(this.personalData.nic)) {
+  missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+}
 
   if (!this.personalData.email) {
   missingFields.push('Email');
@@ -486,10 +486,10 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
 
     if (!this.personalData.nic) {
-      missingFields.push('NIC Number');
-    } else if (!this.isValidNIC(this.personalData.nic)) {
-      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
-    }
+  missingFields.push('NIC Number');
+} else if (!this.isValidNIC(this.personalData.nic)) {
+  missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+}
 
     if (!this.personalData.email) {
   missingFields.push('Email');

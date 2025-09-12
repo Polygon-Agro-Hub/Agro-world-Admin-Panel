@@ -14,7 +14,7 @@
             <label for="province"
                 class="block mb-2 text-sm font-medium text-textLight dark:text-textDark">Province</label>
             <select id="province" [(ngModel)]="selectProvince" name="selectProvince" (change)="onProvinceChange()"
-                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400">
+                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400 cursor-pointer">
                 <option value="" selected>Choose a province</option>
                 <option *ngFor="let province of provinces" [value]="province">{{ province }}</option>
             </select>
@@ -25,7 +25,7 @@
             <label for="district"
                 class="block mb-2 text-sm font-medium text-textLight dark:text-textDark">District</label>
             <select id="district" [(ngModel)]="selectDistrict" name="selectDistrict"
-                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400"
+                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400 cursor-pointer"
                 [disabled]="!selectProvince">
                 <option value="" selected>Choose a district</option>
                 <option *ngFor="let district of filteredDistricts" [value]="district.name">{{ district.name }}</option>
@@ -41,8 +41,8 @@
 
 <div class="h-[20px]"></div>
 
-<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
-    <div *ngIf="hasData && citiesArr.length > 0 && centersArr.length > 0" class="overflow-x-auto">
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg relative overflow-x-auto">
+    <div *ngIf="hasData && citiesArr.length > 0 && centersArr.length > 0" >
         <table class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>

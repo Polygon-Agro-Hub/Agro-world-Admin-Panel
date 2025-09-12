@@ -110,12 +110,12 @@ export class AddDestributionCenterComponent implements OnInit {
   private initializeForm() {
   this.distributionForm = this.fb.group(
     {
-      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      centerName: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
       company: ['', Validators.required],
-      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      contact1Code: ['+94', Validators.required],
-      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-      contact2Code: ['+94'],
+      contact01: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      code1: ['+94', Validators.required],
+      contact02: ['', [Validators.pattern(/^\d{9}$/)]],
+      code2: ['+94'],
       latitude: [
         '',
         [
@@ -543,7 +543,106 @@ updateRegCode() {
 
   onSubmit() {
   if (this.distributionForm.valid) {
-    // ... existing code for valid form submission ...
+     Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to create this distribution centre?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Create it!',
+        cancelButtonText: 'No, Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.isLoading = true;
+          this.submitError = null;
+          this.submitSuccess = null;
+
+          // Get form values including disabled fields
+          const formValue = this.distributionForm.getRawValue();
+
+          const formData: DistributionCentreRequest = {
+            ...formValue,
+            latitude: parseFloat(formValue.latitude).toString(),
+            longitude: parseFloat(formValue.longitude).toString(),
+          };
+
+          this.distributionService
+            .createDistributionCentre(formData)
+            .subscribe({
+              next: (response) => {
+                this.isLoading = false;
+
+                if (response.success) {
+                  this.submitSuccess =
+                    response.message ||
+                    'Distribution centre created successfully!';
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: this.submitSuccess,
+                    timer: 2000,
+                    showConfirmButton: false,
+                  });
+                  this.navigatePath('/distribution-hub/action/view-destribition-center');
+                } else {
+                  this.submitError =
+                    response.error || 'Failed to create distribution centre';
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: this.submitError,
+                  });
+                }
+              },
+              error: (error) => {
+                this.isLoading = false;
+                console.error('Error creating distribution centre:', error);
+
+                // Default error message
+                let errorMessage = 'An unexpected error occurred.';
+
+                if (error.error && error.error.error) {
+                  // Use the specific error message from the backend
+                  errorMessage = error.error.error;
+                } else if (error.status === 400) {
+                  errorMessage = 'Invalid data. Please check your inputs.';
+                } else if (error.status === 401) {
+                  errorMessage = 'Unauthorized. Please log in again.';
+                } else if (error.status === 409) {
+                  // Check if we have more specific conflict information
+                  if (error.error && error.error.conflictingRecord) {
+                    const conflict = error.error.conflictingRecord;
+                    switch (conflict.conflictType) {
+                      case 'centerName':
+                        errorMessage = 'A distribution center with this name already exists.';
+                        break;
+                      case 'regCode':
+                        errorMessage = 'A distribution center with this registration code already exists.';
+                        break;
+                      case 'contact01':
+                        errorMessage = 'A distribution center with this contact number already exists.';
+                        break;
+                      default:
+                        errorMessage = 'A distribution center with these details already exists.';
+                    }
+                  } else {
+                    errorMessage = 'A distribution center with these details already exists.';
+                  }
+                } else if (error.status === 500) {
+                  errorMessage = 'Server error. Please try again later.';
+                }
+
+                this.submitError = errorMessage;
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Submission Failed',
+                  text: this.submitError,
+                });
+              },
+            });
+        }
+      });
+
   } else {
     // Mark all fields as touched to trigger validation display
     Object.keys(this.distributionForm.controls).forEach((key) => {

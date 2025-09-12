@@ -13,29 +13,59 @@ export class OngoingCultivationService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
+  // fetchAllOngoingCultivations(
+  //   page: number,
+  //   limit: number,
+  //   searchNIC: string = ''
+  // ): Observable<any> {
+  //   console.log('searchNIC', searchNIC);
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //   });
+
+  //   let url = `${this.apiUrl}auth/get-all-ongoing-culivations?page=${page}&limit=${limit}`;
+  //   if (searchNIC) {
+  //     url += `&nic=${searchNIC}`;
+  //   }
+  //   return this.http.get<any>(url, { headers });
+  // }
+
   fetchAllOngoingCultivations(
-    page: number,
-    limit: number,
-    searchNIC: string = ''
-  ): Observable<any> {
-    console.log('searchNIC', searchNIC);
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
+  page: number,
+  limit: number,
+  searchNIC: string = '',
+  farmId?: number,
+  userId?: number
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
 
-    let url = `${this.apiUrl}auth/get-all-ongoing-culivations?page=${page}&limit=${limit}`;
-    if (searchNIC) {
-      url += `&nic=${searchNIC}`;
-    }
-    return this.http.get<any>(url, { headers });
+  let url = `${this.apiUrl}auth/get-all-ongoing-culivations?page=${page}&limit=${limit}`;
+
+  if (searchNIC) {
+    url += `&nic=${encodeURIComponent(searchNIC)}`;
+  }
+  if (farmId) {
+    url += `&farmId=${farmId}`;
+  }
+  if (userId) {
+    url += `&userId=${userId}`;
   }
 
-getOngoingCultivationById(id: number): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.tokenService.getToken()}`,
-    });
-    return this.http.get<any>(`${this.apiUrl}ongoing-cultivations/${id}`, { headers });
-  }
+  return this.http.get<any>(url, { headers });
+}
+
+getOngoingCultivationById(cultivationId: number, userId: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.tokenService.getToken()}`,
+  });
+
+  // Add userId as query parameter
+  const url = `${this.apiUrl}auth/get-ongoing-cultivation-by-id/${cultivationId}/${userId}`;
+  return this.http.get<any>(url, { headers });
+}
+
 
   getUserTasks(
     cropId: number,

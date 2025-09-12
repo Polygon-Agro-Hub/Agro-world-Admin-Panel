@@ -233,46 +233,66 @@ export class ViewDistributionOfficerComponent {
     if (!token) return;
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this Distribution Officer? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.distributionService.deleteDistributionOfficer(id).subscribe(
-          (data) => {
-            this.isLoading = false;
-            if (data.status) {
-              Swal.fire(
-                'Deleted!',
-                'Successfully deleted distribution officer',
-                'success'
-              );
-              this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-            } else {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the Distribution Officer.',
-                'error'
-              );
-            }
+  title: 'Are you sure?',
+  text: 'Do you really want to delete this Distribution Officer? This action cannot be undone.',
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Yes, delete it!',
+  cancelButtonText: 'Cancel',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+}).then((result) => {
+  if (result.isConfirmed) {
+    this.isLoading = true;
+    this.distributionService.deleteDistributionOfficer(id).subscribe(
+      (data) => {
+        this.isLoading = false;
+        if (data.status) {
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Successfully deleted distribution officer',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+          this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was an error deleting the Distribution Officer.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+        }
+      },
+      () => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Error!',
+          text: 'There was an error deleting the Collection Officer.',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
           },
-          () => {
-            this.isLoading = false;
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the Collection Officer.',
-              'error'
-            );
-          }
-        );
+        });
       }
-    });
+    );
+  }
+});
   }
 
   // editCollectionOfficer(id: number) {

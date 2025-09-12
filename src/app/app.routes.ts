@@ -182,6 +182,7 @@ import { EditUserStaffComponent } from './application/steckholders-section/edit-
 import { FarmerFarmsComponent } from './application/plant-care-app/farmer-farms/farmer-farms.component'
 import { FarmersFarmsFixedAssetsBuildingComponent } from './application/plant-care-app/farmers-farms-fixed-assets-building/farmers-farms-fixed-assets-building.component';
 import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
+import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
 export const routes: Routes = [
   {
     path: '',
@@ -348,6 +349,10 @@ export const routes: Routes = [
               {
                 path: 'assets/fixed-asset-category/building-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsBuildingComponent,
+              },
+                           {
+                path: 'assets/fixed-asset-category/land-fixed-asset/details',
+                component: FarmersFarmsFixedAssetsLandComponent,
               },
               {
                 path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',

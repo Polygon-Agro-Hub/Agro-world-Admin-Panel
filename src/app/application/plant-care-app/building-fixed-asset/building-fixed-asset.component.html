@@ -7,17 +7,26 @@
 
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <!-- Header section with farmer info and category -->
-    <div class="flex justify-between items-start mb-6">
-        <!-- Left side - Farmer info vertically stacked -->
-        <div class="flex flex-col">
-            <h2 class="text-md font-normal text-black dark:text-textDark mb-2">Farmer: {{this.fullName}}</h2>
-            <h2 class="text-md font-normal text-black dark:text-textDark">Farm Name: {{this.farmName}}</h2>
+     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-gray-600 dark:text-gray-300 font-medium">Farmer :</span>
+            <span class="text-textLight dark:text-textDark font-semibold">{{ fullName }}</span>
+          </div>
         </div>
-        
-        <!-- Right side - Category -->
-        <div class="flex items-center">
-            <h2 class="text-md font-normal text-black dark:text-textDark">Category: {{this.category}}</h2>
+        <div class="flex items-center space-x-2">
+          <span class="text-gray-600 dark:text-gray-300 font-medium">Category :</span>
+          <span class="text-textLight dark:text-textDark font-semibold">{{ category }}</span>
         </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-gray-600 dark:text-gray-300 font-medium">Farm :</span>
+          <span class="text-textLight dark:text-textDark font-semibold">{{ farmName }}</span>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="!hasData" class="text-center py-8">

@@ -7,69 +7,52 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1300px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1300px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-xl my-8 text-textLight dark:text-textDark">{{ farmerName }} - Farms</h1>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
-      <p class="text-[#494949] my-6 dark:text-white">--No Farms Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    <div *ngIf="!hasData" class="text-center py-8">
+      <p class="text-gray-500 dark:text-textDark text-lg">No data to display</p>
     </div>
 
-    <div *ngIf="hasData">
-      <table class="w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
+    <div *ngIf="hasData" class="overflow-x-auto">
+      <table class="w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
-              No
-            </th>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
-              Farm Name
-            </th>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
-              District
-            </th>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
-              Address
-            </th>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-              Current
-            </th>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-              Fixed
-            </th>
-            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-            
-            </th>
+           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">No ({{ totalItems }})</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Farm Name</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Address</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Current</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Fixed</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="
-        let farm of farms
-          | paginate
-            : {
-                itemsPerPage: itemsPerPage,
-                currentPage: page,
-                totalItems: totalItems
-              };
-          let i = index
-      ">
-            <td class="px-1 py-3 text-start text-textLight dark:text-textDark">
+            let farm of farms | paginate : {
+              itemsPerPage: itemsPerPage,
+              currentPage: page,
+              totalItems: totalItems
+            };
+            let i = index
+          ">
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-1 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ farm.farmName || 'No Farm Name' }}
             </td>
-            <td class="px-1 py-3 text-left text-textLight dark:text-textDark">
-              {{ farm.farmDistrict }}
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ farm.district }}
             </td>
-            <td class="px-1 py-3 text-left text-textLight dark:text-textDark w-16">
+            <td class="px-4 py-3 text-center">
               <div class="flex items-center justify-center">
                 <i class="fa-solid fa-location-dot text-red-500"></i>
               </div>
             </td>
-            <td class="px-1 py-3 text-center">
+            <td class="px-4 py-3 text-center">
               <svg
                 class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
                 viewBox="0 0 24 24"
@@ -85,38 +68,43 @@
                 />
               </svg>
             </td>
-            <td class="px-1 py-3 text-center">
-               <button
-                class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                (click)="viewFixedAsset(farm.userId, farm.firstName, farm.lastName ,farm.farmName ,farm.farmId)"
+            <td class="px-4 py-3 text-center">
+              <button
+                class="text-blue-500 hover:text-blue-700"
+                (click)="viewFixedAsset(userId, userFirstName, userLastName, farm.farmName, farm.id)"
               >
-              <svg
-                class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+                <svg
+                  class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </button>
             </td>
-            <td class="px-1 py-3 text-center">
-              <button class="w-5 h-5 text-red-500 hover:text-red-700">
+            <td class="px-4 py-3 text-center">
+              <button class="text-red-500 hover:text-red-700">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </td>
           </tr>
         </tbody>
       </table>
-      <div class="dark:bg-[#262f45]">
-        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+      <div class="dark:bg-[#262f45] mt-4">
+        <pagination-controls 
+          (pageChange)="onPageChange($event)" 
+          [responsive]="true" 
+          [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" 
+          [screenReaderPaginationLabel]="'Pagination'" 
+          [screenReaderPageLabel]="'page'"
           [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>

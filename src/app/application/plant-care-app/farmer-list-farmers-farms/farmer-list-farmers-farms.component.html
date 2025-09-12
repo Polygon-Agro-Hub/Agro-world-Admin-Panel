@@ -21,26 +21,26 @@
       <table class="w-full divide-y divide-gray-200 table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th class="px-2 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
               No
             </th>
-            <th class="px-2 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
               Farm Name
             </th>
-            <th class="px-2 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
               District
             </th>
-            <th class="px-2 py-3 font-normal text-gray-500 dark:text-textDark text-left">
+            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-left">
               Address
             </th>
-            <th class="px-2 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Current
             </th>
-            <th class="px-2 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Fixed
             </th>
             <th class="px-1 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-              Action
+            
             </th>
           </tr>
         </thead>
@@ -55,23 +55,23 @@
               };
           let i = index
       ">
-            <td class="px-2 py-3 text-start text-textLight dark:text-textDark">
+            <td class="px-1 py-3 text-start text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-1 py-3 text-left text-textLight dark:text-textDark">
               {{ farm.farmName || 'No Farm Name' }}
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-1 py-3 text-left text-textLight dark:text-textDark">
               {{ farm.farmDistrict }}
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              <div class="flex items-center ml-4">
+            <td class="px-1 py-3 text-left text-textLight dark:text-textDark w-16">
+              <div class="flex items-center justify-center">
                 <i class="fa-solid fa-location-dot text-red-500"></i>
               </div>
             </td>
-            <td class="px-2 py-3 text-center">
+            <td class="px-1 py-3 text-center">
               <svg
-                class="w-5 h-5 mx-auto text-gray-600 dark:text-gray-400"
+                class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,9 +85,13 @@
                 />
               </svg>
             </td>
-            <td class="px-2 py-3 text-center">
+            <td class="px-1 py-3 text-center">
+               <button
+                class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                (click)="viewFixedAsset(farm.userId, farm.firstName, farm.lastName ,farm.farmName ,farm.farmId)"
+              >
               <svg
-                class="w-5 h-5 mx-auto text-gray-600 dark:text-gray-400"
+                class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,6 +104,7 @@
                   stroke-linejoin="round"
                 />
               </svg>
+              </button>
             </td>
             <td class="px-1 py-3 text-center">
               <button class="w-5 h-5 text-red-500 hover:text-red-700">

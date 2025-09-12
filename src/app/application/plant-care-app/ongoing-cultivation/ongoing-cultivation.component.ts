@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   HttpClient,
   HttpClientModule,
-  HttpHeaders,
 } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +30,6 @@ interface NewsItem {
   CultivationMethod: string;
   NatureOfCultivation: string;
   CropDuration: string;
-  
 }
 
 @Component({
@@ -46,22 +44,14 @@ interface NewsItem {
   ],
   templateUrl: './ongoing-cultivation.component.html',
   styleUrl: './ongoing-cultivation.component.css',
-  template: `
-    <pagination-controls
-      (pageChange)="onPageChange($event)"
-      [totalItems]="totalItems"
-      [itemsPerPage]="10"
-    >
-    </pagination-controls>
-  `,
 })
 export class OngoingCultivationComponent {
   ongoingCultivation: OngoingCultivationItem[] = [];
-  isPopupVisible = false;
   newsItems: NewsItem[] = [];
+  isPopupVisible = false;
   page: number = 1;
-  totalItems: number = 0;
   itemsPerPage: number = 10;
+  totalItems: number = 0;
   searchNIC: string = '';
   hasData: boolean = true;
   isLoading = true;
@@ -82,20 +72,19 @@ export class OngoingCultivationComponent {
     this.isLoading = true;
     this.ongoingCultivationService
       .fetchAllOngoingCultivations(page, limit, this.searchNIC)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           console.log('response', response);
           this.ongoingCultivation = response.items;
           this.hasData = this.ongoingCultivation.length > 0;
           this.totalItems = response.total;
           this.isLoading = false;
         },
-        (error) => {
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
-        }
-      );
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+        },
+      });
   }
 
   onPageChange(event: number) {
@@ -113,57 +102,63 @@ export class OngoingCultivationComponent {
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-  openPopup(id: any) {
+  // ✅ Updated openPopup to accept full item
+  openPopup(item: OngoingCultivationItem) {
+    if (!item.userId) {
+      console.error('User ID is missing');
+      return;
+    }
+
     this.isPopupVisible = true;
-    this.ongoingCultivationService.getOngoingCultivationById(id).subscribe(
-      (data) => {
-        this.newsItems = data;
 
-        let tableHtml = `
-          <table border="1" style="width: 100%; text-align: center; border-collapse: collapse; font-family: Arial, sans-serif;">
-            <thead>
-              <tr style="border-bottom: 1px solid #ddd;">
-                <th style="padding: 12px; font-weight: normal; font-size: 16px;">Crop Name</th>
-                <th style="padding: 12px; font-weight: normal; font-size: 16px;">Variety</th>
-                <th style="padding: 12px; font-weight: normal; font-size: 16px;">Cultivation Method</th>
-                <th style="padding: 12px; font-weight: normal; font-size: 16px;">Nature Of Cultivation</th>
-                <th style="padding: 12px; font-weight: normal; font-size: 16px;">Crop Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
+    this.ongoingCultivationService
+      .getOngoingCultivationById(item.cultivationId, item.userId)
+      .subscribe({
+        next: (data) => {
+          this.newsItems = data;
 
-        for (const item of this.newsItems) {
-          tableHtml += `
-            <tr style="border-bottom: 1px solid #ddd;">
-              <td style="padding: 12px; font-size: 12px; font-weight: bolt;">${item.cropName}</td>
-              <td style="padding: 12px; font-size: 12px;">${item.variety}</td>
-              <td style="padding: 12px; font-size: 12px;">${item.CultivationMethod}</td>
-              <td style="padding: 12px; font-size: 12px;">${item.NatureOfCultivation}</td>
-              <td style="padding: 12px; font-size: 12px;">${item.CropDuration}</td>
-            </tr>
+          let tableHtml = `
+            <table border="1" style="width: 100%; text-align: center; border-collapse: collapse; font-family: Arial, sans-serif;">
+              <thead>
+                <tr>
+                  <th>Crop Name</th>
+                  <th>Variety</th>
+                  <th>Cultivation Method</th>
+                  <th>Nature Of Cultivation</th>
+                  <th>Crop Duration</th>
+                </tr>
+              </thead>
+              <tbody>
           `;
-        }
 
-        tableHtml += `
-            </tbody>
-          </table>
-        `;
+          for (const item of this.newsItems) {
+            tableHtml += `
+              <tr>
+                <td>${item.cropName}</td>
+                <td>${item.variety}</td>
+                <td>${item.CultivationMethod}</td>
+                <td>${item.NatureOfCultivation}</td>
+                <td>${item.CropDuration}</td>
+              </tr>
+            `;
+          }
 
-        Swal.fire({
-          title: 'Ongoing Cultivation',
-          html: tableHtml,
-          confirmButtonText: 'Close',
-          confirmButtonColor: '#4CAF50',
-          width: 'auto',
-          customClass: {
-            popup: 'custom-swal-popup',
-            confirmButton: 'custom-confirm-button',
-          },
-        });
-      },
-      (error) => {}
-    );
+          tableHtml += `</tbody></table>`;
+
+          Swal.fire({
+            title: 'Ongoing Cultivation',
+            html: tableHtml,
+            confirmButtonText: 'Close',
+            confirmButtonColor: '#4CAF50',
+            width: 'auto',
+            customClass: {
+              popup: 'custom-swal-popup',
+              confirmButton: 'custom-confirm-button',
+            },
+          });
+        },
+        error: (err) => console.error(err),
+      });
   }
 
   viewTaskByUsers(cultivationId: any, userId: any, userName: any) {
@@ -174,44 +169,36 @@ export class OngoingCultivationComponent {
     }
   }
 
-
-viewTaskByUser(cultivationId: any, userId: any, userName: any) {
-  if (userId) {
-    this.router.navigate(['/plant-care/action/farmers-farm'], {
-      queryParams: { userId, userName }, // Pass userId and userName as query params
-    });
+  viewTaskByUser(cultivationId: any, userId: any, userName: any) {
+    if (userId) {
+      this.router.navigate(['/plant-care/action/farmers-farm'], {
+        queryParams: { userId, userName },
+      });
+    }
   }
-}
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
 
   viewCultivations(farmId: number, userId: number) {
-  // Navigate directly or keep SweetAlert
-  Swal.fire({
-    title: 'Cultivations',
-    text: `View cultivations for farm ID: ${farmId}`,
-    icon: 'info',
-    confirmButtonText: 'Proceed',
-    showCancelButton: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/ongoing-cultivations'], {
-        queryParams: {
-          farmId,
-          userId,                // Use the userId passed from the button
-        },
-      });
-    }
-  });
-}
+    Swal.fire({
+      title: 'Cultivations',
+      text: `View cultivations for farm ID: ${farmId}`,
+      icon: 'info',
+      confirmButtonText: 'Proceed',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/ongoing-cultivations'], {
+          queryParams: { farmId, userId },
+        });
+      }
+    });
+  }
 
   onKeyDown(event: KeyboardEvent): void {
-    // Block space key only at the beginning of input
-    if (
-      (event.code === 'Space' || event.key === ' ') &&
-      this.searchNIC.length === 0
-    ) {
+    if ((event.code === 'Space' || event.key === ' ') && this.searchNIC.length === 0) {
       event.preventDefault();
     }
   }

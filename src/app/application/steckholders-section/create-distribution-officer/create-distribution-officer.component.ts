@@ -406,6 +406,22 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
     const missingFields: string[] = [];
 
+    this.touchedFields.empType = true;
+    this.touchedFields.companyId = true;
+    this.touchedFields.centerId = true;
+    this.touchedFields.jobRole = true;
+    this.touchedFields.firstNameEnglish = true;
+    this.touchedFields.lastNameEnglish = true;
+    this.touchedFields.firstNameSinhala = true;
+    this.touchedFields.lastNameSinhala = true;
+    this.touchedFields.firstNameTamil = true;
+    this.touchedFields.lastNameTamil = true;
+    this.touchedFields.phoneNumber01 = true;
+    this.touchedFields.nic = true;
+    this.touchedFields.email = true;
+    this.languagesTouched = true;
+    this.empTypeTouched = true;
+
     // Validate pageOne fields
     if (!this.personalData.empType) {
       missingFields.push('Staff Employee Type');

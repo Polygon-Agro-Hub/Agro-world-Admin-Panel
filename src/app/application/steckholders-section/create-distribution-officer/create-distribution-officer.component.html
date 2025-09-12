@@ -271,7 +271,7 @@
             <div class="mt-1">
               <span *ngIf="touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
                 class="text-red-600 text-sm block">
-                Please enter a valid mobile number (9 digits)
+                Mobile Number - 01 is required
               </span>
               <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
                 Mobile Number - 01 and Mobile Number - 02 cannot be the same
@@ -330,6 +330,10 @@
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
             (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)"
+                class="text-red-600 text-sm block">
+                NIC Number is required
+              </span>
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
             Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
           </span>

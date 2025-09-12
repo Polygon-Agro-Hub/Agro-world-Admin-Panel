@@ -168,7 +168,7 @@
         <!-- Updated Last Name (English) input -->
         <div>
           <label for="lastNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            English)</label>
+            English) *</label>
           <input id="lastNameEnglish" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
@@ -194,7 +194,7 @@
         <!-- Updated Last Name (Sinhala) input -->
         <div>
           <label for="lastNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            Sinhala)</label>
+            Sinhala) *</label>
           <input id="lastNameSinhala" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
             (blur)="onBlur('lastNameSinhala')" (input)="formatSinhalaName('lastNameSinhala')"
             (keypress)="preventNonSinhalaCharacters($event)"
@@ -220,7 +220,7 @@
         <!-- Updated Last Name (Tamil) input -->
         <div>
           <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            Tamil)</label>
+            Tamil) *</label>
           <input id="lastNameTamil" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
             (blur)="onBlur('lastNameTamil')" (input)="formatTamilName('lastNameTamil')"
             (keypress)="preventNonTamilCharacters($event)"

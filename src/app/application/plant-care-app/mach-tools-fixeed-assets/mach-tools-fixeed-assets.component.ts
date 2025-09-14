@@ -37,6 +37,7 @@ export class MachToolsFixeedAssetsComponent {
   fullName: string | null = null;
   hasData: boolean = true;  
   farmId!: number;
+  farmName: string | null = null;
 
   constructor(private assetsService: AssetsService, private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
   
@@ -47,6 +48,7 @@ export class MachToolsFixeedAssetsComponent {
       this.farmId = +params['farmId'];
       this.category = params['category'] || null;
       this.fullName = params['fullName'] || null;
+      this.farmName = params['farmName'] || null;
       
       console.log('Received item ID:', this.userId);
       console.log('Received category:', this.category);

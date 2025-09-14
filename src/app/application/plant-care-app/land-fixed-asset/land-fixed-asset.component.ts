@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 
 
 interface FixedBuildingAsset {
+buildingfixedassetId: number;
   fixedassetId: number;
   fixedassetcategory: string;
   extentha: any;
@@ -35,6 +36,8 @@ export class LandFixedAssetComponent {
   fullName: string | null = null;
   hasData: boolean = true; 
   farmId!: number;
+  farmName: string | null = null;
+  buildingfixedassetId!: number;
 
   constructor(private assetsService: AssetsService, private http: HttpClient, private router: Router, private route: ActivatedRoute) { }
 
@@ -44,6 +47,7 @@ export class LandFixedAssetComponent {
       this.farmId = +params['farmId'];
       this.category = params['category'] || null;
       this.fullName = params['fullName'] || null;
+      this.farmName = params['farmName'] || null;
       
       console.log('Received item ID:', this.userId);
       console.log('Received category:', this.category);
@@ -70,5 +74,16 @@ export class LandFixedAssetComponent {
           }
         }
       );
+  }
+  
+    viewFixedAssetOwnershipDetails(buildingfixedassetId: number) {
+    this.router.navigate(['/plant-care/action/assets/fixed-asset-category/land-fixed-asset/details'], {
+      queryParams: {
+        landfixedassetId: buildingfixedassetId,
+        fullName: this.fullName,
+        farmName: this.farmName,
+        category: this.category
+      },
+    });
   }
 }

@@ -142,13 +142,24 @@ onSubmit() {
   }
 
   if (missingFields.length > 0) {
-    Swal.fire(
-      'Warning',
-      `Please fill in the following required field(s): ${missingFields.join(', ')}`,
-      'warning'
-    );
-    return;
-  }
+  // Format missing fields as left-aligned bullet points
+  const bulletPoints = missingFields
+    .map(field => `<div style="text-align: left; margin: 5px 0;">• ${field}</div>`)
+    .join('');
+  
+  Swal.fire({
+    title: 'Warning',
+    html: `
+      <div style="text-align: left;">
+        <p>Please fill in the following required field(s):</p>
+        ${bulletPoints}
+      </div>
+    `,
+    icon: 'warning',
+    confirmButtonText: 'OK'
+  });
+  return;
+}
 
   // Save the coupon
   this.marketSrv.createCoupen(this.coupenObj).subscribe({

@@ -18,9 +18,11 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
   isLoading = false;
   hasData = false;
   userId!: number;
+  userFirstName = '';
+  userLastName = '';
   farmerName = '';
-  farmName="";
-  farmId!:number;
+  farmName = "";
+  farmId!: number;
   
   // Pagination
   page = 1;
@@ -46,19 +48,26 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
     this.isLoading = true;
     this.farmerFarmsService.getFarmerFarms(this.userId).subscribe({
       next: (response) => {
-        this.farms = response.result;
-        
-        // Extract farmer's full name from the first record
-        if (response.result && response.result.length > 0) {
-          const farmer = response.result[0];
-          this.farmerName = `${farmer.firstName || ''} ${farmer.lastName || ''}`.trim();
+        // Ensure response.result is an object containing user and farms
+        const result = response.result as { user?: any; farms?: Farm[] };
+        // Extract user information
+        if (result && result.user) {
+          const user = result.user;
+          this.userFirstName = user.firstName || '';
+          this.userLastName = user.lastName || '';
+          this.farmerName = `${this.userFirstName} ${this.userLastName}`.trim();
+          this.userId = user.id;
         }
         
-        // Filter farms that have valid farmId (not null)
-        const validFarms = this.farms.filter(farm => farm.farmId !== null);
+        // Extract farms array
+        if (result && result.farms) {
+          this.farms = result.farms;
+        } else {
+          this.farms = [];
+        }
         
-        this.totalItems = validFarms.length;
-        this.hasData = validFarms.length > 0;
+        this.totalItems = this.farms.length;
+        this.hasData = this.farms.length > 0;
         this.isLoading = false;
       },
       error: (error) => {
@@ -72,16 +81,16 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
   getAddress(farm: any): string {
     const addressParts = [];
     
-    if (farm.farmStreet) addressParts.push(farm.farmStreet);
-    if (farm.farmCity) addressParts.push(farm.farmCity);
-    if (farm.farmDistrict) addressParts.push(farm.farmDistrict);
+    if (farm.street) addressParts.push(farm.street);
+    if (farm.city) addressParts.push(farm.city);
+    if (farm.district) addressParts.push(farm.district);
     
     return addressParts.length > 0 ? addressParts.join(', ') : 'No Address';
   }
   
-  viewFixedAsset(userId: number, firstName: string, lastName: string,farmName:string,farmId:number) {
+  viewFixedAsset(userId: number, firstName: string, lastName: string, farmName: string, farmId: number) {
     this.router.navigate(['/plant-care/action/assets/fixed-asset-category'], {
-      queryParams: { userId, firstName, lastName ,farmName, farmId },
+      queryParams: { userId, firstName, lastName, farmName, farmId },
     });
   }
 

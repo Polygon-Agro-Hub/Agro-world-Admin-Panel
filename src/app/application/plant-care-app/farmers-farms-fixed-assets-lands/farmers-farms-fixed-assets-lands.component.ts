@@ -1,61 +1,68 @@
+// farmers-farms-fixed-assets-land.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute ,Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AssetsService } from '../../../services/plant-care/assets.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-
-interface BuildingDetails {
-  buildingAssetId?: number;
+interface LandDetails {
+  landAssetId?: number;
   ownership?: string;
   type?: string;
-  floorArea?: string;
+  extent?: string;
   generalCondition?: string;
   district?: string;
+  perennialCrop?: string;
+  landFenced?: string;
+  extentha?: number;
+  extentac?: number,
+  extentp?: number,
+  totalExtentInHectares?: number;
 }
 
 interface OwnershipDetails {
   id?: number;
-  buildingAssetId?: number;
-  landAssetId?: number | null;
-  // For Leased Building
+  buildingAssetId?: number | null;
+  landAssetId?: number;
+  // For Leased Land
   startDate?: string;
   durationYears?: number;
   durationMonths?: number;
   leastAmountAnnually?: string;
-  // For Own Building & Permit Building
+  // For Own Land & Permit Land
   issuedDate?: string;
   estimateValue?: string;
   permitFeeAnnually?: string;
   // For Shared / No Ownership
   paymentAnnually?: string;
 }
+
 interface ApiResponse {
-  buildingDetails: BuildingDetails;
+  landDetails: LandDetails;
   ownershipDetails: OwnershipDetails;
   ownershipType: string;
 }
 
 @Component({
-  selector: 'app-farmers-farms-fixed-assets-building',
+  selector: 'app-farmers-farms-fixed-assets-land',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule,FormsModule],
-  templateUrl: './farmers-farms-fixed-assets-building.component.html',
-  styleUrl: './farmers-farms-fixed-assets-building.component.css'
+  imports: [LoadingSpinnerComponent, CommonModule, FormsModule],
+  templateUrl: './farmers-farms-fixed-assets-lands.component.html',
+  styleUrl: './farmers-farms-fixed-assets-lands.component.css'
 })
-export class FarmersFarmsFixedAssetsBuildingComponent implements OnInit {
+export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
   isLoading = false;
-  buildingfixedassetId!: number;
+  landfixedassetId!: number;
   fullName: string | null = null;
   farmName: string | null = null;
   category: string | null = null;
-  
+
   // Separate properties matching API response structure
-  buildingDetails: BuildingDetails | null = null;
+  landDetails: LandDetails | null = null;
   ownershipDetails: OwnershipDetails | null = null;
   ownershipType: string | null = null;
-  
+
   hasData: boolean = false;
   errorMessage: string | null = null;
 
@@ -67,57 +74,57 @@ export class FarmersFarmsFixedAssetsBuildingComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.buildingfixedassetId = +params['buildingfixedassetId'];
+      this.landfixedassetId = +params['landfixedassetId'];
       this.fullName = params['fullName'] || null;
       this.farmName = params['farmName'] || null;
       this.category = params['category'] || null;
 
       console.log('Query Params:', {
-        buildingfixedassetId: this.buildingfixedassetId,
+        landfixedassetId: this.landfixedassetId,
         fullName: this.fullName,
         farmName: this.farmName,
         category: this.category
       });
 
-      if (this.buildingfixedassetId) {
-        this.getBuildingOwnershipDetails();
+      if (this.landfixedassetId) {
+        this.getLandOwnershipDetails();
       }
     });
   }
 
-  getBuildingOwnershipDetails() {
+  getLandOwnershipDetails() {
     this.isLoading = true;
     this.errorMessage = null;
-    
-    this.assetsService.getBuildingOwnershipDetails(this.buildingfixedassetId).subscribe(
+
+    this.assetsService.getLandOwnershipDetails(this.landfixedassetId).subscribe(
       (response: ApiResponse) => {
         this.isLoading = false;
-        
+
         // Assign each part of the response to separate properties
-        this.buildingDetails = response.buildingDetails || null;
+        this.landDetails = response.landDetails || null;
         this.ownershipDetails = response.ownershipDetails || null;
         this.ownershipType = response.ownershipType || null;
-        
-        this.hasData = !!(response.buildingDetails || response.ownershipDetails);
-        console.log('Building ownership details:', response);
+
+        this.hasData = !!(response.landDetails || response.ownershipDetails);
+        console.log('Land ownership details:', response);
       },
       (error) => {
         this.isLoading = false;
         this.hasData = false;
-        console.error('Error fetching building ownership details:', error);
-        
+        console.error('Error fetching land ownership details:', error);
+
         if (error.status === 404) {
-          this.errorMessage = 'Building not found.';
+          this.errorMessage = 'Land not found.';
         } else if (error.status === 400) {
-          this.errorMessage = 'Invalid building asset ID.';
+          this.errorMessage = 'Invalid land asset ID.';
         } else {
-          this.errorMessage = 'An error occurred while fetching building details.';
+          this.errorMessage = 'An error occurred while fetching land details.';
         }
       }
     );
   }
-  
-    navigatePath(path: string): void {
+
+  navigatePath(path: string): void {
     this.router.navigate([path]);
   }
 }

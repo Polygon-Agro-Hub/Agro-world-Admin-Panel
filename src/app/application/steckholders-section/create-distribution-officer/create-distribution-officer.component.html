@@ -111,7 +111,7 @@
             panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
             (onChange)="changeCenter($event)"> >
           </p-dropdown>
-          <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm">Collection Centre Name is a required
+          <span *ngIf="isFieldInvalid('centerId')" class="text-red-600 text-sm">Distribution Centre Name is a required
             field</span>
         </div>
 
@@ -122,16 +122,16 @@
           <div class="relative">
             <select (blur)="onBlur('jobRole')" id="jobRole" [(ngModel)]="personalData.jobRole"
               (change)="EpmloyeIdCreate()" name="jobRole" placeholder="select"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10">
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10 cursor-pointer">
               <option disabled class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 -- select --
               </option>
-              <option value="Distribution Centre Manager"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
+              <option value="Distribution Center Manager"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 cursor-pointer">
                 Distribution Centre Manager
               </option>
               <option value="Distribution Officer"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 cursor-pointer">
                 Distribution Officer
               </option>
             </select>
@@ -155,7 +155,7 @@
 <br *ngIf="personalData.jobRole !== 'Distribution Officer'">
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
-            (in English)*</label>
+            (in English) *</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
@@ -168,7 +168,7 @@
         <!-- Updated Last Name (English) input -->
         <div>
           <label for="lastNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            English)</label>
+            English) *</label>
           <input id="lastNameEnglish" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')"
             (keypress)="preventSpecialCharacters($event)"
@@ -181,10 +181,10 @@
         <!-- Updated First Name (Sinhala) input -->
         <div>
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
-            (in Sinhala)*</label>
+            (in Sinhala) *</label>
           <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             (blur)="onBlur('firstNameSinhala')" (input)="formatSinhalaName('firstNameSinhala')"
-            (keypress)="preventNonSinhalaCharacters($event)"
+            
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm">First Name (in Sinhala) is required</span>
           <span *ngIf="hasInvalidSinhalaCharacters('firstNameSinhala')" class="text-red-600 text-sm">First Name should
@@ -194,10 +194,9 @@
         <!-- Updated Last Name (Sinhala) input -->
         <div>
           <label for="lastNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            Sinhala)</label>
+            Sinhala) *</label>
           <input id="lastNameSinhala" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
             (blur)="onBlur('lastNameSinhala')" (input)="formatSinhalaName('lastNameSinhala')"
-            (keypress)="preventNonSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm">Last Name (in Sinhala) is required</span>
           <span *ngIf="hasInvalidSinhalaCharacters('lastNameSinhala')" class="text-red-600 text-sm">Last Name should
@@ -207,10 +206,9 @@
         <!-- Updated First Name (Tamil) input -->
         <div>
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Tamil)*</label>
+            Tamil) *</label>
           <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
             (blur)="onBlur('firstNameTamil')" (input)="formatTamilName('firstNameTamil')"
-            (keypress)="preventNonTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm">First Name (in Tamil) is required</span>
           <span *ngIf="hasInvalidTamilCharacters('firstNameTamil')" class="text-red-600 text-sm">First Name should only
@@ -220,10 +218,9 @@
         <!-- Updated Last Name (Tamil) input -->
         <div>
           <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            Tamil)</label>
+            Tamil) *</label>
           <input id="lastNameTamil" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
             (blur)="onBlur('lastNameTamil')" (input)="formatTamilName('lastNameTamil')"
-            (keypress)="preventNonTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm">Last Name (in Tamil) is required</span>
           <span *ngIf="hasInvalidTamilCharacters('lastNameTamil')" class="text-red-600 text-sm">Last Name should only
@@ -271,7 +268,7 @@
             <div class="mt-1">
               <span *ngIf="touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
                 class="text-red-600 text-sm block">
-                Please enter a valid mobile number (9 digits)
+                Mobile Number - 01 is required
               </span>
               <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
                 Mobile Number - 01 and Mobile Number - 02 cannot be the same
@@ -326,14 +323,21 @@
         </div>
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
-          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
-            (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack h-[16vh]" />
-          <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
-            Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
-          </span>
-        </div>
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
+  <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
+    (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  
+  <!-- Show required message only when field is empty -->
+  <span *ngIf="touchedFields.nic && !personalData.nic" class="text-red-600 text-sm block">
+    NIC Number is required
+  </span>
+  
+  <!-- Show format error only when field has value but is invalid -->
+  <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm block">
+    Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
+  </span>
+</div>
 
         <div>
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>

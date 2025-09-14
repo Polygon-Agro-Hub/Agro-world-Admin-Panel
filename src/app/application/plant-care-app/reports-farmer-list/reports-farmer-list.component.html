@@ -62,11 +62,6 @@
               class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Current
             </th>
-            <th *ngIf="permissionService.hasPermission('View users fixed assets by category') ||
-            tokenService.getUserDetails().role === '1'"
-              class="px-3 py-3 font-normal text-gray-500 dark:text-textDark text-center">
-              Fixed
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -101,13 +96,6 @@
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="
             viewCurrentAsset(item.id, item.firstName, item.lastName)
           ">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </button>
-            </td>
-            <td *ngIf="permissionService.hasPermission('View users fixed assets by category') ||
-            tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                (click)="viewFixedAsset(item.id, item.firstName, item.lastName)">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </button>
             </td>

@@ -176,13 +176,13 @@ export class CollectionService {
     return this.http.get<any>(url, { headers });
   }
 
-  getCollectionCenterManagerNames(): Observable<any> {
+  getCollectionCenterManagerNames(centerId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names`;
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names/${centerId}`;
     return this.http.get<any>(url, { headers });
   }
 

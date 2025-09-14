@@ -35,12 +35,19 @@ export interface FixedAsset {
 export interface Farm {
   id: number;
   farmName: string;
-  farmDistrict: string;
-  userId: number;
-  firstName: string;
-  lastName: string;
+  farmIndex: number;
+  extentha: number;
+  extentac: number;
+  extentp: number;
+  district: string;
+  plotNo: string;
+  street: string;
+  city: string;
+  staffCount: number;
+  appUserCount: number;
+  imageId: number;
+  isBlock: number;
   createdAt: string;
-  farmId: number;
 }
 
 export interface FarmResponse {

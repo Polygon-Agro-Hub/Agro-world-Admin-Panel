@@ -15,6 +15,7 @@ interface FixedBuildingAsset {
   generalCondition: string;
   district: string;
   createdAt: any;
+  buildingfixedassetId: number;
 }
 
 @Component({
@@ -64,5 +65,16 @@ export class BuildingFixedAssetComponent {
         this.isLoading = false;
       }
     );
+  }
+
+  viewFixedAssetOwnershipDetails(buildingfixedassetId: number) {
+    this.router.navigate(['/plant-care/action/assets/fixed-asset-category/building-fixed-asset/details'], {
+      queryParams: {
+        buildingfixedassetId: buildingfixedassetId,
+        fullName: this.fullName,
+        farmName: this.farmName,
+        category: this.category
+      },
+    });
   }
 }

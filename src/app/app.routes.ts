@@ -179,7 +179,10 @@ import { ViewFarmerStaffComponent } from './application/steckholders-section/vie
 import { ViewExpencesFarmerReportComponent } from './application/collection-hub-section/view-expences-farmer-report/view-expences-farmer-report.component';
 import { ViewFarmOwnerComponent } from './application/steckholders-section/view-farm-owner/view-farm-owner.component';
 import { EditUserStaffComponent } from './application/steckholders-section/edit-user-staff/edit-user-staff.component';
-import {FarmerFarmsComponent} from './application/plant-care-app/farmer-farms/farmer-farms.component'
+import { FarmerFarmsComponent } from './application/plant-care-app/farmer-farms/farmer-farms.component'
+import { FarmersFarmsFixedAssetsBuildingComponent } from './application/plant-care-app/farmers-farms-fixed-assets-building/farmers-farms-fixed-assets-building.component';
+import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
+import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
 export const routes: Routes = [
   {
     path: '',
@@ -277,10 +280,10 @@ export const routes: Routes = [
                   permission: 'View users that enroll with crop calendars',
                 },
               },
-               {
+              {
                 path: 'farmers-farm',
                 component: FarmerFarmsComponent,
-               
+
               },
               {
                 path: 'view-crop-task-by-user',
@@ -307,6 +310,10 @@ export const routes: Routes = [
                 path: 'report-farmer-list',
                 component: ReportsFarmerListComponent,
               },
+              {
+                path: 'Farmers-farms-list',
+                component: FarmerListFarmersFarmsComponent,
+              }, 
               {
                 path: 'report-farmer-current-assert/:userId/:name',
                 component: ReportCurrentAssertsComponent,
@@ -338,6 +345,14 @@ export const routes: Routes = [
               {
                 path: 'assets/fixed-asset-category/machinary&tools-fixed-asset',
                 component: MachToolsFixeedAssetsComponent,
+              },
+              {
+                path: 'assets/fixed-asset-category/building-fixed-asset/details',
+                component: FarmersFarmsFixedAssetsBuildingComponent,
+              },
+                           {
+                path: 'assets/fixed-asset-category/land-fixed-asset/details',
+                component: FarmersFarmsFixedAssetsLandComponent,
               },
               {
                 path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',

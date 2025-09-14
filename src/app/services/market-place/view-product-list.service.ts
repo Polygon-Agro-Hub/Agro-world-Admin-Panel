@@ -17,31 +17,36 @@ export class ViewProductListService {
   ) {}
 
   getProductList(
-    page: number,
-    limit: number,
-    search: string = "",
-    displayTypeValue: string = "",
-    categoryValue: string = ""
-  ): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-  
-    let url = `${this.apiUrl}market-place/get-market-items?page=${page}&limit=${limit}`;
-    
-    if (search) {
-      url += `&search=${encodeURIComponent(search)}`;
-    }
-  
-    if (displayTypeValue) {
-      url += `&displayTypeValue=${encodeURIComponent(displayTypeValue)}`;
-    }
+  page: number,
+  limit: number,
+  search: string = "",
+  displayTypeValue: string = "",
+  categoryValue: string = "",
+  discountFilter: string = "" // Add new parameter
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
 
-
-    if (categoryValue) {
-      url += `&categoryValue=${encodeURIComponent(categoryValue)}`;
-    }
-    
-    return this.http.get<any>(url, { headers });
+  let url = `${this.apiUrl}market-place/get-market-items?page=${page}&limit=${limit}`;
+  
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
   }
+
+  if (displayTypeValue) {
+    url += `&displayTypeValue=${encodeURIComponent(displayTypeValue)}`;
+  }
+
+  if (categoryValue) {
+    url += `&categoryValue=${encodeURIComponent(categoryValue)}`;
+  }
+  
+  // Add discount filter parameter
+  if (discountFilter) {
+    url += `&discountFilter=${encodeURIComponent(discountFilter)}`;
+  }
+  
+  return this.http.get<any>(url, { headers });
+}
 }

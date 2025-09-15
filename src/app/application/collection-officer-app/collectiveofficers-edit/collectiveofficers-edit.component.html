@@ -591,19 +591,21 @@
         Add Bank Details
       </h2>
       <div class="pb-6">
-        <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-          Name*</label>
-        <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          (keydown)="preventLeadingSpace($event, 'accHolderName')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #accHolderNameInput="ngModel" (input)="formatAccountHolderName()" required />
-        <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">
-          <div>Account Holder's name is required</div>
-        </div>
-        <span *ngIf="hasInvalidAccountHolderName()" class="text-red-600 text-sm">
-          Account Holder's name should only contain English letters
-        </span>
-      </div>
+  <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Account Holder's Name*
+  </label>
+  <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
+    (keydown)="preventLeadingSpace($event, 'accHolderName')"
+    (keypress)="preventInvalidAccountHolderCharacters($event)" 
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    #accHolderNameInput="ngModel" (input)="formatAccountHolderName()" required />
+  <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">
+    <div>Account Holder's name is required</div>
+  </div>
+  <span *ngIf="hasInvalidAccountHolderName()" class="text-red-600 text-sm">
+    Account Holder's name should only contain English letters
+  </span>
+</div>
       <!-- <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
           Number*</label>

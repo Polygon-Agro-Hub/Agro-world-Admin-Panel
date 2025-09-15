@@ -228,6 +228,23 @@ setupDropdownOptions() {
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
+
+  preventInvalidAccountHolderCharacters(event: KeyboardEvent): void {
+  const char = event.key;
+
+  // Allow control keys (backspace, delete, tab, etc.)
+  if (event.ctrlKey || event.altKey || event.metaKey ||
+      ['Backspace','Delete','Tab','Escape','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(char)) {
+    return;
+  }
+
+  // Allow only letters (both uppercase and lowercase) and spaces
+  const regex = /^[A-Za-z\s]$/;
+  if (!regex.test(char)) {
+    event.preventDefault();
+  }
+}
+
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
     if (charCode < 48 || charCode > 57) {
@@ -454,15 +471,22 @@ isFieldInvalid(fieldName: string): boolean {
 
   // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
-    let value = this.personalData.accHolderName;
-    if (value) {
-      // Remove leading spaces and special characters/numbers, keep only letters and spaces
-      value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
-      // Capitalize first letter and make rest lowercase
-      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      this.personalData.accHolderName = value;
-    }
+  let value = this.personalData.accHolderName;
+  if (value) {
+    // Remove leading spaces and any remaining special characters/numbers
+    value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
+    
+    // Replace multiple spaces with single space
+    value = value.replace(/\s{2,}/g, ' ');
+    
+    // Capitalize first letter of each word
+    value = value.replace(/\w\S*/g, (txt: string) => 
+      txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    );
+    
+    this.personalData.accHolderName = value;
   }
+}
 
 formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
   let value = this.personalData[fieldName];
@@ -605,11 +629,12 @@ preventInvalidEnglishCharacters(event: KeyboardEvent): void {
   }
 
   hasInvalidAccountHolderName(): boolean {
-    const value = this.personalData.accHolderName;
-    if (!value) return false;
-    // Check if contains numbers or special characters
-    return /[^a-zA-Z\s]/.test(value);
-  }
+  const value = this.personalData.accHolderName;
+  if (!value) return false;
+  
+  // Check if contains numbers or special characters (excluding spaces)
+  return /[^a-zA-Z\s]/.test(value);
+}
 
   arePhoneNumbersSame(): boolean {
     if (!this.personalData.contact1 || !this.personalData.contact2) {

@@ -183,6 +183,8 @@ import { FarmerFarmsComponent } from './application/plant-care-app/farmer-farms/
 import { FarmersFarmsFixedAssetsBuildingComponent } from './application/plant-care-app/farmers-farms-fixed-assets-building/farmers-farms-fixed-assets-building.component';
 import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
 import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
+import { FinanceDashboardComponent } from './application/finance/finance-dashboard/finance-dashboard.component';
+import path from 'path';
 export const routes: Routes = [
   {
     path: '',
@@ -416,6 +418,13 @@ export const routes: Routes = [
             ],
           },
         ],
+      },
+
+      {
+        path:'finance',
+        children:[
+          {path:'dashboard',component:FinanceDashboardComponent}
+        ]
       },
 
       {

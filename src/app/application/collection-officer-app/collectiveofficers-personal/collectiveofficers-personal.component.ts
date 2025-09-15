@@ -138,6 +138,7 @@ getFlagUrl(countryCode: string): string {
   languagesTouched: boolean = false;
   empTypeTouched: boolean = false;
   errorMessage: string = '';
+  jobRoleTouched: boolean = false;
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -149,6 +150,43 @@ getFlagUrl(countryCode: string): string {
   ) { }
 
   selectedLanguages: string[] = [];
+
+markAllFieldsAsTouched(): void {
+  // Mark all form fields as touched
+  const requiredFields: (keyof Personal)[] = [
+    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
+    'streetName', 'city', 'district', 'province', 'accHolderName',
+    'accNumber', 'confirmAccNumber'
+  ];
+
+  requiredFields.forEach(field => {
+    this.touchedFields[field] = true;
+  });
+
+  // Mark language and employee type as touched
+  this.languagesTouched = true;
+  this.empTypeTouched = true;
+}
+
+markPageOneFieldsAsTouched(): void {
+  const pageOneFields: (keyof Personal)[] = [
+    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+    'nic', 'email', 'companyId', 'centerId', 'jobRole'
+  ];
+
+  pageOneFields.forEach(field => {
+    this.touchedFields[field] = true;
+  });
+
+  this.languagesTouched = true;
+  this.empTypeTouched = true;
+  this.jobRoleTouched = true;
+}
+
+
 
   onCheckboxChange1(lang: string, event: any) {
     if (event.target.checked) {
@@ -191,8 +229,19 @@ back(): void {
   });
 }
 
+onJobRoleBlur(): void {
+  this.jobRoleTouched = true;
+}
+
+isJobRoleSelected(): boolean {
+  return !!this.personalData.jobRole && this.personalData.jobRole !== '';
+}
+
 
 onSubmit() {
+  // Mark all fields as touched to show validation messages
+  this.markAllFieldsAsTouched();
+
   const missingFields: string[] = [];
 
   // Check required fields for pageOne
@@ -265,10 +314,10 @@ onSubmit() {
   }
 
   if (!this.personalData.email) {
-  missingFields.push('Email');
-} else if (!this.isValidEmail(this.personalData.email)) {
-  missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-}
+    missingFields.push('Email');
+  } else if (!this.isValidEmail(this.personalData.email)) {
+    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+  }
 
   // Check required fields for pageTwo
   if (!this.personalData.houseNumber) {
@@ -313,7 +362,7 @@ onSubmit() {
     missingFields.push('Branch Name');
   }
 
-  // If errors, show list and stop
+  // If errors, show list and stop - validation messages will now be visible
   if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
     missingFields.forEach((field) => {
@@ -436,6 +485,9 @@ onCancel() {
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
+    // Mark page one fields as touched to show validation messages
+    this.markPageOneFieldsAsTouched();
+
     const missingFields: string[] = [];
 
     // Validate pageOne fields
@@ -508,12 +560,13 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
 
     if (!this.personalData.email) {
-  missingFields.push('Email');
-} else if (!this.isValidEmail(this.personalData.email)) {
-  missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-}
+      missingFields.push('Email');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
 
-    // If errors, show popup and stop navigation
+    // If errors exist, the validation messages will now be visible due to touched fields
+    // Show popup and stop navigation
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
@@ -539,6 +592,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   // Navigate to the selected page
   this.selectedPage = page;
 }
+
 
   ngOnInit(): void {
     this.loadBanks();

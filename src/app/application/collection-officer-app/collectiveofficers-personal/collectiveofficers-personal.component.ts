@@ -1452,7 +1452,7 @@ preventSpecialCharacters(event: KeyboardEvent): void {
 }
 
 class Personal {
-  jobRole: string = 'Collection Center Manager';
+  jobRole: string = '';
   empId!: string;
   centerId!: number | string;
   irmId!: number | string;

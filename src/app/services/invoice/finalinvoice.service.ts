@@ -310,7 +310,20 @@ export class FinalinvoiceService {
         ];
 
         aptAddress.forEach((line) => {
-          doc.text(line, 15, yPosition);
+          // Split the line to separate label and value
+          const colonIndex = line.indexOf(':');
+          const label = line.substring(0, colonIndex + 1);
+          const value = line.substring(colonIndex + 1);
+          
+          // Draw label in gray color
+          doc.setTextColor(146, 146, 146); // #929292 in RGB
+          doc.text(label, 15, yPosition);
+          
+          // Draw value in black color
+          const labelWidth = doc.getTextWidth(label);
+          doc.setTextColor(0, 0, 0);
+          doc.text(value, 15 + labelWidth, yPosition);
+          
           yPosition += 5;
         });
       } else {
@@ -326,7 +339,20 @@ export class FinalinvoiceService {
         ];
 
         houseAddress.forEach((line) => {
-          doc.text(line, 15, yPosition);
+          // Split the line to separate label and value
+          const colonIndex = line.indexOf(':');
+          const label = line.substring(0, colonIndex + 1);
+          const value = line.substring(colonIndex + 1);
+          
+          // Draw label in gray color
+          doc.setTextColor(146, 146, 146); // #929292 in RGB
+          doc.text(label, 15, yPosition);
+          
+          // Draw value in black color
+          const labelWidth = doc.getTextWidth(label);
+          doc.setTextColor(0, 0, 0);
+          doc.text(value, 15 + labelWidth, yPosition);
+          
           yPosition += 5;
         });
       }

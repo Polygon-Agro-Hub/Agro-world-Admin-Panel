@@ -58,7 +58,7 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="registerStatusFilter" [checkmark]="true" optionLabel="status" optionValue="value"
-            [showClear]="false" placeholder="Register Status" [(ngModel)]="regStatus" (onChange)="regStatusFil()" />
+            [showClear]="!!regStatus" placeholder="Register Status" [(ngModel)]="regStatus" (onChange)="regStatusFil()" />
         </div>
 
         <div *ngIf="
@@ -68,7 +68,7 @@
           ">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtFilter" [checkmark]="true" optionLabel="status" optionValue="value" [showClear]="false"
+            [options]="districtFilter" [checkmark]="true" optionLabel="status" optionValue="value" [showClear]="!!district"
             placeholder="District" [(ngModel)]="district" (onChange)="regStatusFil()" />
         </div>
 

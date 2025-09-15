@@ -703,7 +703,7 @@
     Branch Name*
   </label>
   <p-dropdown [(ngModel)]="personalData.branchName" [options]="branchOptions" optionLabel="label"
-    optionValue="value" [filter]="true" filterBy="label" [showClear]="true" [disabled]="!branchOptions.length"
+    optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!branchOptions.length"
     placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
     class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
   </p-dropdown>

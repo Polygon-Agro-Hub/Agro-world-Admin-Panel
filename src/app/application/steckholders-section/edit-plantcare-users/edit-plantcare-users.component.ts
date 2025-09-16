@@ -931,6 +931,41 @@ export class EditPlantcareUsersComponent implements OnInit {
     { languageName: 'Tamil' },
   ];
 
+  onNICInput(event: any): void {
+  let value = event.target.value;
+  
+  // Trim leading spaces
+  value = value.replace(/^\s+/, '');
+  
+  // Update the form control value
+  this.userForm.get('NICnumber')?.setValue(value, { emitEvent: false });
+  event.target.value = value;
+}
+
+onNICKeyPress(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+  const currentValue = (event.target as HTMLInputElement).value;
+  
+  // Allow only numbers, V/v, and control keys
+  if (
+    (charCode < 48 || charCode > 57) && // 0-9
+    charCode !== 86 && // V
+    charCode !== 118 && // v
+    charCode !== 8 && // backspace
+    charCode !== 9 && // tab
+    charCode !== 46 && // delete
+    charCode !== 37 && // left arrow
+    charCode !== 39 // right arrow
+  ) {
+    event.preventDefault();
+  }
+  
+  // If V/v is pressed, ensure it's at the end and only one V
+  if ((charCode === 86 || charCode === 118) && currentValue.includes('V')) {
+    event.preventDefault();
+  }
+}
+
   ngOnInit() {
     this.setupDropdownOptions();
     this.route.queryParams.subscribe((params) => {

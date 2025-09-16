@@ -317,7 +317,7 @@ export class AgroWorldCentersComponent {
   assignTarget(items: any, centerId: number, centerName: string) {
     let comId;
     items?.some((company: Company) =>
-      company.companyNameEnglish === 'agroworld (Pvt) Ltd'
+      company.companyNameEnglish === 'Polygon Holdings Private Limited'
         ? (comId = company.id)
         : 0
     );

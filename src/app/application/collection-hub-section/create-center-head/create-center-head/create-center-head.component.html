@@ -712,78 +712,83 @@
         </div> -->
 
         <div>
-          <label
-            for="phoNumTwo"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
-           Mobile Number - 02
-          </label>
-          <div class="mt-1 flex">
-            <p-dropdown
-  [options]="countries"
-  [(ngModel)]="personalData.phoneCode02"
-  [optionLabel]="'dialCode'"
-  [optionValue]="'dialCode'"
-  styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
-  [style]="{ width: '120px' }"
->
-  <!-- Dropdown items -->
-  <ng-template let-country pTemplate="item">
-    <div class="flex items-center gap-2">
-      <img
-        [src]="getFlagUrl(country.code)"
-        width="24"
-        height="18"
-        alt="{{ country.name }}"
-      />
-      <span>{{ country.dialCode }}</span>
-    </div>
-  </ng-template>
+  <label
+    for="phoNumTwo"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+  >
+    Mobile Number - 02
+  </label>
+  <div class="mt-1 flex">
+    <p-dropdown
+      [options]="countries"
+      [(ngModel)]="personalData.phoneCode02"
+      [optionLabel]="'dialCode'"
+      [optionValue]="'dialCode'"
+      styleClass="border border-gray-300 mr-2 rounded-md bg-white dark:bg-tileBlack text-gray-800 dark:text-white custom-dropdown"
+      [style]="{ width: '120px' }"
+    >
+      <!-- Dropdown items -->
+      <ng-template let-country pTemplate="item">
+        <div class="flex items-center gap-2">
+          <img
+            [src]="getFlagUrl(country.code)"
+            width="24"
+            height="18"
+            alt="{{ country.name }}"
+          />
+          <span>{{ country.dialCode }}</span>
+        </div>
+      </ng-template>
 
-  <!-- Selected item -->
-  <ng-template let-country pTemplate="selectedItem">
-    <div class="flex items-center gap-2" *ngIf="country">
-      <img
-        [src]="getFlagUrl(country.code)"
-        width="24"
-        height="18"
-        alt="{{ country.name }}"
+      <!-- Selected item -->
+      <ng-template let-country pTemplate="selectedItem">
+        <div class="flex items-center gap-2" *ngIf="country">
+          <img
+            [src]="getFlagUrl(country.code)"
+            width="24"
+            height="18"
+            alt="{{ country.name }}"
+          />
+          <span>{{ country.dialCode }}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="w-full flex flex-col">
+      <input
+        id="phoneNumber02"
+        name="phoneNumber02"
+        type="tel"
+        [(ngModel)]="personalData.phoneNumber02"
+        #contact02="ngModel"
+        pattern="^[0-9]{9}$" 
+        minlength="9" 
+        (keypress)="allowOnlyNumbers($event)" 
+        (ngModelChange)="validateSriLankanPhone($event, 'phone02')" 
+        maxlength="9"
+        class="block w-full p-2 border border-gray-300 h-12 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        placeholder="Enter your phone number"
+        (blur)="onBlur('phoneNumber02')"
       />
-      <span>{{ country.dialCode }}</span>
     </div>
-  </ng-template>
-</p-dropdown>
-            <div class="w-full flex flex-col">
-              <input
-                id="phoneNumber02"
-                name="phoneNumber02"
-                type="tel"
-                [(ngModel)]="personalData.phoneNumber02"
-                #contact02="ngModel"
-            required
-            pattern="^[0-9]{9}$" minlength="9" (keypress)="allowOnlyNumbers($event)" (ngModelChange)="validateSriLankanPhone($event, 'phone02')" maxlength="9"
-                class="block w-full p-2 border border-gray-300 h-12 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                placeholder="Enter your phone number"
-                (blur)="onBlur('phoneNumber02')"
-              />
-              
-            </div>
-          </div>
-          <div *ngIf="contact02.touched">
-            <div *ngIf="isDuplicatePhone()" class="text-red-500 text-sm mt-1">
-    Mobile Number - 01 and Mobile Number - 02 cannot be the same.
   </div>
-            
-            <div *ngIf="personalData.phoneNumber02 && contact02.invalid && !isPhoneInvalidMap['phone02']"
-                class="text-red-500 text-sm mt-1">
-                Mobile Number must be exactly 9 digits.
-            </div>
-  
-            <div *ngIf="isPhoneInvalidMap['phone02'] && personalData.phoneNumber02 " class="text-red-500 text-sm mt-1">
-              Please enter a valid Mobile Number  (format: +947XXXXXXXX)
-              </div>
-        </div>
-        </div>
+  <div *ngIf="contact02.touched || personalData.phoneNumber02">
+    <!-- Show duplicate error first if applicable -->
+    <div *ngIf="isDuplicatePhone()" class="text-red-500 text-sm mt-1">
+      Mobile Number - 01 and Mobile Number - 02 cannot be the same.
+    </div>
+    
+    <!-- Show format error only if not a duplicate -->
+    <div *ngIf="!isDuplicatePhone() && personalData.phoneNumber02 && contact02.invalid && !isPhoneInvalidMap['phone02']" 
+        class="text-red-500 text-sm mt-1">
+        Mobile Number must be exactly 9 digits.
+    </div>
+
+    <div *ngIf="!isDuplicatePhone() && isPhoneInvalidMap['phone02'] && personalData.phoneNumber02" 
+        class="text-red-500 text-sm mt-1">
+      Please enter a valid Mobile Number (format: +947XXXXXXXX)
+    </div>
+  </div>
+</div>
 
         <div>
           <label

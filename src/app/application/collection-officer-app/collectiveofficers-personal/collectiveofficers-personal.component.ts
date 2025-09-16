@@ -412,16 +412,16 @@ onSubmit() {
             if (error.error && error.error.error) {
               switch (error.error.error) {
                 case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
+                  errorMessage = 'NIC already exists.';
                   break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
+                case 'Email already exists.':
+                  errorMessage = 'Email already exists.';
                   break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
+                case 'Mobile Number 1 already exists.':
+                  errorMessage = 'Mobile Number 1 already exists.';
                   break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
+                case 'Mobile Number 2 already exists.':
+                  errorMessage = 'Mobile Number 2 already exists.';
                   break;
                 case 'Invalid file format or file upload error':
                   errorMessage = 'Invalid file format or error uploading the file.';

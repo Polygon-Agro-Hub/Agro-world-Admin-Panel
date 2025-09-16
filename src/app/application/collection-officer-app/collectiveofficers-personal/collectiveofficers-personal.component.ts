@@ -1039,10 +1039,12 @@ formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+  if (!phone) return false;
+  
+  // Must start with 7 and have exactly 9 digits total
+  const phoneRegex = /^7\d{8}$/;
+  return phoneRegex.test(phone);
+}
 
   // Check if phone numbers are duplicate
   areDuplicatePhoneNumbers(): boolean {
@@ -1393,26 +1395,50 @@ preventSpecialCharacters(event: KeyboardEvent): void {
     }
   }
   // Prevent non-numeric characters for phone numbers
-  preventNonNumeric(event: KeyboardEvent): void {
-    const char = String.fromCharCode(event.which);
-    // Allow only numbers (0-9)
-    if (!/[0-9]/.test(char)) {
-      event.preventDefault();
-    }
+  preventNonNumeric(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  const input = event.target as HTMLInputElement;
+  const char = String.fromCharCode(event.which);
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Allow only numbers (0-9)
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+    return;
   }
+  
+  // If this is the first character, it must be '7'
+  if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
+    event.preventDefault();
+    return;
+  }
+  
+  // If user tries to insert a character at position 0 that's not '7'
+  if (cursorPosition === 0 && char !== '7') {
+    event.preventDefault();
+  }
+}
 
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove non-numeric characters
-      value = value.replace(/[^0-9]/g, '');
-      // Limit to 9 digits
-      if (value.length > 9) {
-        value = value.substring(0, 9);
-      }
-      this.personalData[fieldName] = value;
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Ensure it starts with 7
+    if (value.length > 0 && value.charAt(0) !== '7') {
+      // If first digit is not 7, remove it
+      value = value.replace(/^[^7]*/, '');
     }
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
   }
+}
 
   changeCenter(event: any){
     console.log('Center changed:', this.personalData.centerId);

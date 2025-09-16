@@ -26,7 +26,8 @@ export class FixedAssetCategoryComponent {
   lastName: string = '';
   fullName: string = '';
   farmName: string = '';
-
+  
+  hasData: boolean = true; 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       // Extract userId (note: your URL has 'userId' not 'id')

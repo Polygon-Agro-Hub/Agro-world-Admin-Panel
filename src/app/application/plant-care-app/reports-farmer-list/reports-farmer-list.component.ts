@@ -82,6 +82,8 @@ export class ReportsFarmerListComponent {
   fixedAssetTotal: number = 0;
   totalFixed: any;
   searchNIC: string = '';
+  searchFullName: string = '';
+
   isLoading = false;
   hasData: boolean = true;
 
@@ -93,25 +95,27 @@ export class ReportsFarmerListComponent {
     public tokenService: TokenService
   ) { }
 
-  fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
-    this.isLoading = true;
-    this.plantcareService
-      .getAllPlantCareUsers(page, limit, this.searchNIC)
-      .subscribe(
-        (response) => {
-          this.isLoading = false;
-          this.plantCareUser = response.items;
-          this.totalItems = response.total;
-          this.hasData = response.items && response.items.length > 0;
-        },
-        (error) => {
-          this.isLoading = false;
-          this.hasData = false;
-          if (error.status === 401) {
-          }
+fetchAllPlantCareUsers(page: number = 1, limit: number = this.itemsPerPage) {
+  this.isLoading = true;
+  const searchQuery = this.searchFullName || this.searchNIC; // Add searchFullName input
+  this.plantcareService
+    .getAllPlantCareUsers(page, limit, searchQuery)
+    .subscribe(
+      (response) => {
+        this.isLoading = false;
+        this.plantCareUser = response.items;
+        this.totalItems = response.total;
+        this.hasData = response.items && response.items.length > 0;
+      },
+      (error) => {
+        this.isLoading = false;
+        this.hasData = false;
+        if (error.status === 401) {
         }
-      );
-  }
+      }
+    );
+}
+
 
   ngOnInit() {
     this.fetchAllPlantCareUsers(this.page, this.itemsPerPage);

@@ -832,16 +832,38 @@ updateProvince(event: DropdownChangeEvent): void {
     }
   }
 onLetterKeyPress(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
   const char = event.key;
-  // Allow all letters (\p{L}) and space, block numbers and special characters
+  
+  // Block space if it's at the start (cursor at position 0)
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
   const regex = /^[\p{L} ]$/u;
   if (!regex.test(char)) {
     event.preventDefault(); // block the key
   }
 }
 
-
-
+// Add this method to handle input events and remove leading spaces
+onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Remove leading spaces
+  if (value.startsWith(' ')) {
+    value = value.trimStart();
+    this.personalData[fieldName] = value;
+    
+    // Force update the model to reflect the change
+    setTimeout(() => {
+      input.value = value;
+    }, 0);
+  }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {

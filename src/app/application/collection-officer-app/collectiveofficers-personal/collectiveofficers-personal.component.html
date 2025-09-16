@@ -634,18 +634,29 @@
             id="nic"
             name="nic"
             [(ngModel)]="personalData.nic"
-            (keypress)="preventNICInvalidCharacters($event)"
+            (keypress)="validateNICInput($event)"
             (input)="formatNIC()"
             (blur)="onBlur('nic')"
             placeholder="123456789012 or 123456789V"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack h-[6vh]"
           />
           <span
-            *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)"
+            *ngIf="
+              touchedFields.nic &&
+              personalData.nic &&
+              !isValidNIC(personalData.nic)
+            "
             class="text-red-600 text-sm"
           >
             Please enter a valid NIC number (12 digits or 10 digits followed by
-            'V')
+            'V').
+          </span>
+
+          <span
+            *ngIf="touchedFields.nic && !personalData.nic"
+            class="text-red-600 text-sm"
+          >
+            NIC number is required.
           </span>
         </div>
 

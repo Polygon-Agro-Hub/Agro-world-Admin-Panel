@@ -1267,36 +1267,42 @@ preventNICInvalidCharacters(event: KeyboardEvent): void {
 }
 
 // Format NIC input
-formatNIC(): void {
-  let value = this.personalData.nic;
-  if (value) {
-    // Remove all spaces and invalid characters
-    value = value.replace(/[^0-9Vv]/g, '');
-    
-    // Convert 'v' to 'V' and ensure only one V at the end
-    if (value.includes('v') || value.includes('V')) {
-      // Remove all V's first
-      value = value.replace(/[Vv]/g, '');
-      // Add single V at the end if original had V/v
-      value = value + 'V';
-    }
-    
-    // Limit length based on format
-    if (value.includes('V')) {
-      // 9 digits + V format
-      if (value.length > 10) {
-        value = value.substring(0, 9) + 'V';
-      }
-    } else {
-      // 12 digits format
-      if (value.length > 12) {
-        value = value.substring(0, 12);
+formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
     }
-    
-    this.personalData.nic = value;
   }
-}
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
 
 // Add these new functions for account number handling
 preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {

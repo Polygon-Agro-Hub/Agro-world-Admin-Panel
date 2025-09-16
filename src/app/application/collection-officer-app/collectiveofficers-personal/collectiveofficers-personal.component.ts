@@ -98,8 +98,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
   { code: 'IN', dialCode: '+91', name: 'India' },
   { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
 ];
 
 getFlagUrl(countryCode: string): string {
@@ -414,16 +412,16 @@ onSubmit() {
             if (error.error && error.error.error) {
               switch (error.error.error) {
                 case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
+                  errorMessage = 'NIC already exists.';
                   break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
+                case 'Email already exists.':
+                  errorMessage = 'Email already exists.';
                   break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
+                case 'Mobile Number 1 already exists.':
+                  errorMessage = 'Mobile Number 1 already exists.';
                   break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
+                case 'Mobile Number 2 already exists.':
+                  errorMessage = 'Mobile Number 2 already exists.';
                   break;
                 case 'Invalid file format or file upload error':
                   errorMessage = 'Invalid file format or error uploading the file.';
@@ -834,16 +832,38 @@ updateProvince(event: DropdownChangeEvent): void {
     }
   }
 onLetterKeyPress(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
   const char = event.key;
-  // Allow all letters (\p{L}) and space, block numbers and special characters
+  
+  // Block space if it's at the start (cursor at position 0)
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
   const regex = /^[\p{L} ]$/u;
   if (!regex.test(char)) {
     event.preventDefault(); // block the key
   }
 }
 
-
-
+// Add this method to handle input events and remove leading spaces
+onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Remove leading spaces
+  if (value.startsWith(' ')) {
+    value = value.trimStart();
+    this.personalData[fieldName] = value;
+    
+    // Force update the model to reflect the change
+    setTimeout(() => {
+      input.value = value;
+    }, 0);
+  }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -1267,36 +1287,42 @@ preventNICInvalidCharacters(event: KeyboardEvent): void {
 }
 
 // Format NIC input
-formatNIC(): void {
-  let value = this.personalData.nic;
-  if (value) {
-    // Remove all spaces and invalid characters
-    value = value.replace(/[^0-9Vv]/g, '');
-    
-    // Convert 'v' to 'V' and ensure only one V at the end
-    if (value.includes('v') || value.includes('V')) {
-      // Remove all V's first
-      value = value.replace(/[Vv]/g, '');
-      // Add single V at the end if original had V/v
-      value = value + 'V';
-    }
-    
-    // Limit length based on format
-    if (value.includes('V')) {
-      // 9 digits + V format
-      if (value.length > 10) {
-        value = value.substring(0, 9) + 'V';
-      }
-    } else {
-      // 12 digits format
-      if (value.length > 12) {
-        value = value.substring(0, 12);
+formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
     }
-    
-    this.personalData.nic = value;
   }
-}
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
 
 // Add these new functions for account number handling
 preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {

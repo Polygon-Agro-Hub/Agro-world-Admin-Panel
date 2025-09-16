@@ -388,7 +388,28 @@
   </label>
 
   <div class="mt-1 flex">
-    <select
+    <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
+                optionValue="dialCode"
+                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                [style]="{ width: '120px' }"
+                [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
+                <!-- Dropdown items -->
+                <ng-template let-country pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+
+                <!-- Selected item -->
+                <ng-template let-country pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="country">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+    <!-- <select
       [(ngModel)]="personalData.phoneCode01"
       (change)="checkDuplicatePhoneNumbers()"
       class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5"
@@ -397,7 +418,7 @@
       <option value="+1">+1 (US)</option>
       <option value="+44">+44 (UK)</option>
       <option value="+91">+91 (India)</option>
-    </select>
+    </select> -->
 
     <input
       [(ngModel)]="personalData.phoneNumber01"
@@ -436,7 +457,30 @@
   </label>
 
   <div class="mt-1 flex">
-    <select
+
+    <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
+                optionValue="dialCode"
+                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+                [style]="{ width: '120px' }"
+                [ngClass]="{ 'border-red-500': touchedFields.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) }">
+                <!-- Dropdown items -->
+                <ng-template let-country pTemplate="item">
+                  <div class="flex items-center gap-2">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+
+                <!-- Selected item -->
+                <ng-template let-country pTemplate="selectedItem">
+                  <div class="flex items-center gap-2" *ngIf="country">
+                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                    <span>{{ country.dialCode }}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+    <!-- <select
       id="phoneNumber02Code"
       name="phoneNumber02Code"
       [(ngModel)]="personalData.phoneCode02"
@@ -447,7 +491,7 @@
       <option value="+1">+1 (US)</option>
       <option value="+44">+44 (UK)</option>
       <option value="+91">+91 (India)</option>
-    </select>
+    </select> -->
 
     <input
       id="phoneNumber02"

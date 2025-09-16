@@ -1276,13 +1276,13 @@ onSubmit() {
                   errorMessage = 'The NIC number is already registered.';
                   break;
                 case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
+                  errorMessage = 'Email already exists.';
                   break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
+                case 'Mobile Number 1 already exists.':
+                  errorMessage = 'Mobile Number 1 already exists.';
                   break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
+                case 'Mobile Number 2 already exists.':
+                  errorMessage = 'Mobile Number 2 already exists.';
                   break;
                 case 'Invalid file format or file upload error':
                   errorMessage = 'Invalid file format or error uploading the file.';

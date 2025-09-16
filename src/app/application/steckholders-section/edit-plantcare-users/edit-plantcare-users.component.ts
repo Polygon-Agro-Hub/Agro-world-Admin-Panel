@@ -1403,16 +1403,12 @@ onSubmitCreate() {
   if (this.userForm.get('firstName')?.invalid) {
     if (this.userForm.get('firstName')?.errors?.['required']) {
       missingFields.push('First Name');
-    } else if (this.userForm.get('firstName')?.errors?.['pattern']) {
-      missingFields.push('First Name - Must contain only letters');
     }
   }
 
   if (this.userForm.get('lastName')?.invalid) {
     if (this.userForm.get('lastName')?.errors?.['required']) {
       missingFields.push('Last Name');
-    } else if (this.userForm.get('lastName')?.errors?.['pattern']) {
-      missingFields.push('Last Name - Must contain only letters');
     }
   }
 
@@ -1583,16 +1579,12 @@ onSubmit() {
   if (this.userForm.get('firstName')?.invalid) {
     if (this.userForm.get('firstName')?.errors?.['required']) {
       missingFields.push('First Name');
-    } else if (this.userForm.get('firstName')?.errors?.['pattern']) {
-      missingFields.push('First Name - Must contain only letters');
     }
   }
 
   if (this.userForm.get('lastName')?.invalid) {
     if (this.userForm.get('lastName')?.errors?.['required']) {
       missingFields.push('Last Name');
-    } else if (this.userForm.get('lastName')?.errors?.['pattern']) {
-      missingFields.push('Last Name - Must contain only letters');
     }
   }
 

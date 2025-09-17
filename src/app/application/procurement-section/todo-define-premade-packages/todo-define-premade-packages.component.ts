@@ -103,8 +103,23 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     private router: Router
   ) { }
 
-  goBack() {
-    window.history.back();
+  goBack(): void{
+    Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the added data after going back!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Go Back',
+        cancelButtonText: 'No, Stay Here',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+        buttonsStyling: true,
+      }).then((result) => {
+        window.history.back();
+      });
+    
   }
 
   ngOnInit() {
@@ -368,65 +383,65 @@ isExcluded(product: MarketplaceItem): boolean {
     return allowedLimit.toFixed(2);
   }
 
-  async onComplete() {
-    console.log('orderdetailsArr', this.orderdetailsArr);
-    this.loading = true;
+  onComplete() {
+  console.log('orderdetailsArr', this.orderdetailsArr);
+  this.loading = true;
 
-    const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
-      return pkg.items.some((item, itemIndex) => {
-        console.log(`Package ${pkgIndex}, Item ${itemIndex}, productId:`, item.productId, 'Type:', typeof item.productId);
-
-        return (
-          item.productId === null ||
-          item.productId === undefined ||
-          item.productId === null ||
-          item.qty === 0 ||
-          Number.isNaN(item.productId)
-        );
-      });
+  const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+    return pkg.items.some((item, itemIndex) => {
+      return (
+        item.productId === null ||
+        item.productId === undefined ||
+        item.productId === null ||
+        item.qty === 0 ||
+        Number.isNaN(item.productId)
+      );
     });
+  });
 
-    const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
-      return pkg.items.some((item, itemIndex) => {
-        console.log(`Package ${pkgIndex}, Item ${itemIndex}, productId:`, item.productId, 'Type:', typeof item.productId);
-
-        return (
-          item.isExcluded === true
-        );
-      });
+  const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+    return pkg.items.some((item, itemIndex) => {
+      return item.isExcluded === true;
     });
+  });
 
-    console.log('hasInvalidProduct', hasInvalidProduct);
-
-
-    if (hasInvalidProduct) {
-      this.loading = false;
-      Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
-      return;
-    } else if (hasExcludeProduct) {
-      this.loading = false;
-      Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
-      return;
-    }
-
-    console.log('odarray', this.orderdetailsArr)
-
-    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
-
-      (res) => {
-
-        this.loading = false;
-        console.log('Updated successfully:', res);
-        Swal.fire('Success', 'Order has been successfully dispatched.', 'success');
-        this.goToCompleteTab()
-      },
-      (err) => {
-        this.loading = false;
-        console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Update Unsuccessful', 'error');
-      }
-    );
+  if (hasInvalidProduct) {
+    this.loading = false;
+    Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
+    return;
+  } else if (hasExcludeProduct) {
+    this.loading = false;
+    Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
+    return;
   }
+
+  this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
+    (res) => {
+      this.loading = false;
+      console.log('Updated successfully:', res);
+      
+      // Show success message and redirect to sent tab
+      Swal.fire({
+        title: 'Success!',
+        text: 'Order has been successfully sent to dispatch.',
+        icon: 'success',
+        confirmButtonColor: '#3980C0',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to define-packages component with sent tab
+          this.router.navigate(['/procurement/define-packages'], {
+            queryParams: { tab: 'sent' }
+          });
+        }
+      });
+    },
+    (err) => {
+      this.loading = false;
+      console.error('Update failed:', err);
+      Swal.fire('Error', 'Product Update Unsuccessful', 'error');
+    }
+  );
+}
 
 
   private getErrorMessage(error: any): string {
@@ -588,7 +603,11 @@ isExcluded(product: MarketplaceItem): boolean {
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#74788D',
       confirmButtonText: 'Yes, clear it!',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         this.clearForm();
@@ -597,26 +616,26 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   confirmComplete() {
-    // Only show confirmation if within limit
-    if (!this.isWithinLimit) {
-      return;
-    }
-    
-    Swal.fire({
-      title: 'Complete Order',
-      text: 'Are you sure you want to complete this order?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3980C0',
-      cancelButtonColor: '#74788D',
-      confirmButtonText: 'Yes, complete it!',
-      cancelButtonText: 'Cancel'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.onComplete();
-      }
-    });
+  // Only show confirmation if within limit
+  if (!this.isWithinLimit) {
+    return;
   }
+  
+  Swal.fire({
+    title: 'Send to Dispatch',
+    text: 'Are you sure you want to send this order to dispatch?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3980C0',
+    cancelButtonColor: '#74788D',
+    confirmButtonText: 'Yes, send to dispatch!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.onComplete(); // This should call onComplete, not completeOrder
+    }
+  });
+}
 
   clearForm() {
     // Implement your clear logic here

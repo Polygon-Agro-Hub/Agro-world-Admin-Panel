@@ -112,22 +112,22 @@ export class AddDestributionCenterComponent implements OnInit {
     {
       centerName: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
       company: ['', Validators.required],
-      contact01: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      code1: ['+94', Validators.required],
-      contact02: ['', [Validators.pattern(/^\d{9}$/)]],
-      code2: ['+94'],
+      contact01: ['', [Validators.required, this.mobileNumberValidator]], // Updated validator
+      contact1Code: ['+94', Validators.required], // Fixed property name
+      contact02: ['', [this.mobileNumberValidator]], // Updated validator - optional field
+      contact2Code: ['+94'], // Fixed property name
       latitude: [
         '',
         [
           Validators.required,
-          this.latitudeRangeValidator // New range validator
+          this.latitudeRangeValidator
         ],
       ],
       longitude: [
         '',
         [
           Validators.required,
-          this.longitudeRangeValidator // New range validator
+          this.longitudeRangeValidator
         ],
       ],
       email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
@@ -137,7 +137,7 @@ export class AddDestributionCenterComponent implements OnInit {
       city: ['', Validators.required],
       regCode: ['', Validators.required],
     },
-    { validator: this.contactNumbersMatchValidator }
+    { validators: [this.contactNumbersMatchValidator] } // Updated to use validators array
   );
 
   // Watch province changes to update districts
@@ -166,7 +166,7 @@ export class AddDestributionCenterComponent implements OnInit {
     });
 
   // Watch contact number changes to validate duplicates
-  this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
+  this.distributionForm.get('contact01')?.valueChanges.subscribe(() => {
     this.distributionForm.updateValueAndValidity();
   });
 
@@ -174,7 +174,7 @@ export class AddDestributionCenterComponent implements OnInit {
     this.distributionForm.updateValueAndValidity();
   });
 
-  this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
+  this.distributionForm.get('contact02')?.valueChanges.subscribe(() => {
     this.distributionForm.updateValueAndValidity();
   });
 
@@ -184,7 +184,7 @@ export class AddDestributionCenterComponent implements OnInit {
 
   // Optimize name validation with debounce
   this.distributionForm
-    .get('name')
+    .get('centerName')
     ?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -198,6 +198,26 @@ export class AddDestributionCenterComponent implements OnInit {
       })
     )
     .subscribe();
+}
+
+private mobileNumberValidator(control: AbstractControl): { [key: string]: any } | null {
+  if (!control.value) {
+    return null; // Let required validator handle empty values for required fields
+  }
+  
+  const value = control.value.toString().trim();
+  
+  // Check if it's exactly 9 digits
+  if (!/^\d{9}$/.test(value)) {
+    return { invalidMobileFormat: true };
+  }
+  
+  // Check if it starts with 7
+  if (!value.startsWith('7')) {
+    return { mustStartWith7: true };
+  }
+  
+  return null;
 }
 
   private englishLettersOnlyValidator(control: AbstractControl) {
@@ -232,44 +252,50 @@ export class AddDestributionCenterComponent implements OnInit {
     };
   }
 
-  private contactNumbersMatchValidator(formGroup: FormGroup) {
-    const contact1Control = formGroup.get('contact1');
-    const contact1CodeControl = formGroup.get('contact1Code');
-    const contact2Control = formGroup.get('contact2');
-    const contact2CodeControl = formGroup.get('contact2Code');
+  private contactNumbersMatchValidator(formGroup: AbstractControl): { [key: string]: any } | null {
+  const contact1Control = formGroup.get('contact01');
+  const contact1CodeControl = formGroup.get('contact1Code');
+  const contact2Control = formGroup.get('contact02');
+  const contact2CodeControl = formGroup.get('contact2Code');
 
-    if (
-      !contact1Control ||
-      !contact2Control ||
-      !contact1CodeControl ||
-      !contact2CodeControl
-    ) {
-      return null;
-    }
+  if (
+    !contact1Control ||
+    !contact2Control ||
+    !contact1CodeControl ||
+    !contact2CodeControl
+  ) {
+    return null;
+  }
 
-    const contact1 = contact1Control.value;
-    const contact2 = contact2Control.value;
-    const contact1Code = contact1CodeControl.value;
-    const contact2Code = contact2CodeControl.value;
+  const contact1 = contact1Control.value;
+  const contact2 = contact2Control.value;
+  const contact1Code = contact1CodeControl.value;
+  const contact2Code = contact2CodeControl.value;
 
-    if (
-      contact1 &&
-      contact2 &&
-      contact1 === contact2 &&
-      contact1Code === contact2Code
-    ) {
-      contact2Control.setErrors({ sameContactNumbers: true });
-      return { sameContactNumbers: true };
+  // Only validate if both numbers are provided
+  if (contact1 && contact2 && contact1.trim() !== '' && contact2.trim() !== '') {
+    // Check if both number and country code are the same
+    if (contact1 === contact2 && contact1Code === contact2Code) {
+      // Set error on contact2 field specifically
+      if (contact2Control.errors) {
+        contact2Control.errors['duplicateContactNumbers'] = true;
+      } else {
+        contact2Control.setErrors({ duplicateContactNumbers: true });
+      }
+      return { duplicateContactNumbers: true };
     } else {
-      if (contact2Control.errors?.['sameContactNumbers']) {
-        delete contact2Control.errors['sameContactNumbers'];
+      // Clear the duplicate error if numbers are different
+      if (contact2Control.errors?.['duplicateContactNumbers']) {
+        delete contact2Control.errors['duplicateContactNumbers'];
         if (Object.keys(contact2Control.errors).length === 0) {
           contact2Control.setErrors(null);
         }
       }
-      return null;
     }
   }
+  
+  return null;
+}
 
 
 
@@ -311,6 +337,15 @@ export class AddDestributionCenterComponent implements OnInit {
   if (field.errors['email'] || field.errors['customEmail']) {
     return field.errors['customEmail'] || 'Please enter a valid email';
   }
+  if (field.errors['invalidMobileFormat']) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+  }
+  if (field.errors['mustStartWith7']) {
+    return 'Mobile number must start with 7 (format: +947XXXXXXXX)';
+  }
+  if (field.errors['duplicateContactNumbers']) {
+    return 'Contact Number - 1 and Contact Number - 2 cannot be the same';
+  }
   if (field.errors['pattern']) {
     if (fieldName.includes('contact')) {
       return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
@@ -319,16 +354,12 @@ export class AddDestributionCenterComponent implements OnInit {
   if (field.errors['numericDecimal']) {
     return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
   }
-  // if (field.errors['englishLettersOnly']) {
-  //   return 'Centre Name should contain only English letters and spaces';
-  // }
   if (field.errors['sameContactNumbers']) {
-    return 'Contact Number 02 must be different from Contact Number 01';
+    return 'Contact Number - 1 and Contact Number - 2 cannot be the same';
   }
   if (field.errors['nameExists']) {
     return 'Distribution Centre Name already exists';
   }
-  // Add the new validation errors
   if (field.errors['latitudeRange']) {
     return 'Latitude must be between -90 and 90';
   }
@@ -340,69 +371,97 @@ export class AddDestributionCenterComponent implements OnInit {
 }
 
   onInputChange(event: any, fieldType: string) {
-    const target = event.target as HTMLInputElement;
-    let value = target.value;
-    let shouldUpdate = true;
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+  let shouldUpdate = true;
 
-    switch (fieldType) {
-      case 'text':
-        // For text fields, prevent leading spaces
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
+  switch (fieldType) {
+    case 'text':
+      // For text fields, prevent leading spaces
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      break;
+    case 'email':
+      // For email fields, trim leading spaces
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      break;
+    case 'centreName':
+      // For centre name, prevent leading spaces and ensure first letter is capital
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      // Capitalize first letter in real-time
+      if (value.length > 0) {
+        const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+        if (capitalizedValue !== value) {
+          target.value = capitalizedValue;
+          value = capitalizedValue;
         }
-        break;
-      case 'email':
-        // For email fields, trim leading spaces
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
+      }
+      break;
+    case 'phone':
+      // For phone numbers, allow only digits and enforce starting with 7
+      const originalValue = value;
+      value = value.replace(/[^0-9]/g, '');
+      
+      // Limit to 9 digits max
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+      
+      // If user tries to enter something other than 7 as first digit, reset to 7
+      if (value.length > 0 && !value.startsWith('7')) {
+        // If they're typing the first digit and it's not 7, replace with 7
+        if (value.length === 1) {
+          value = '7';
+        } else {
+          // If they're editing and first digit is not 7, keep only digits starting from position 1
+          // but ensure first digit is 7
+          value = '7' + value.substring(1);
         }
-        break;
-      case 'centreName':
-        // For centre name, prevent leading spaces and ensure first letter is capital
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
-        }
-        // Capitalize first letter in real-time
-        if (value.length > 0) {
-          const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
-          if (capitalizedValue !== value) {
-            target.value = capitalizedValue;
-            value = capitalizedValue;
-          }
-        }
-        break;
-      case 'phone':
-        // For phone numbers, allow only digits
-        const originalValue = value;
-        value = value.replace(/[^0-9]/g, '');
-        if (originalValue !== value) {
-          target.value = value;
-        }
-        break;
-      case 'coordinates':
-        // For latitude/longitude, allow numbers, dots, and minus signs
-        const coordOriginalValue = value;
-        value = value.replace(/[^0-9.-]/g, '');
-        if (coordOriginalValue !== value) {
-          target.value = value;
-        }
-        break;
-    }
+      }
+      
+      if (originalValue !== value) {
+        target.value = value;
+      }
+      break;
+    case 'coordinates':
+      // For latitude/longitude, allow numbers, dots, and minus signs
+      const coordOriginalValue = value;
+      value = value.replace(/[^0-9.-]/g, '');
+      if (coordOriginalValue !== value) {
+        target.value = value;
+      }
+      break;
+  }
 
-    // Mark field as touched to trigger validation display
-    const fieldName = target.getAttribute('formControlName');
-    if (fieldName) {
-      this.distributionForm.get(fieldName)?.markAsTouched();
-    }
-
-    // Update reg code in real-time when city changes
-    if (fieldName === 'city') {
-      setTimeout(() => this.updateRegCode(), 0);
+  // Mark field as touched to trigger validation display
+  const fieldName = target.getAttribute('formControlName');
+  if (fieldName) {
+    const formControl = this.distributionForm.get(fieldName);
+    if (formControl) {
+      formControl.markAsTouched();
+      // Trigger validation for contact number fields to check for duplicates
+      if (fieldName.includes('contact')) {
+        setTimeout(() => {
+          this.distributionForm.updateValueAndValidity();
+        }, 0);
+      }
     }
   }
+
+  // Update reg code in real-time when city changes
+  if (fieldName === 'city') {
+    setTimeout(() => this.updateRegCode(), 0);
+  }
+}
+
 
 
 

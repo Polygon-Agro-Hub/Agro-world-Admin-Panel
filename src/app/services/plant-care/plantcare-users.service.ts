@@ -207,6 +207,13 @@ export class PlantcareUsersService {
     return this.http.get<FarmResponse>(`${this.apiUrl}auth//get-all-farmer-farms?userId=${userId}`, { headers });
   }
   
+deleteFarm(farmId: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.delete<any>(`${this.apiUrl}auth/delete-farm?farmId=${farmId}`, { headers });
+}
 
   
   getFarmOwnerById(id: number): Observable<any> {

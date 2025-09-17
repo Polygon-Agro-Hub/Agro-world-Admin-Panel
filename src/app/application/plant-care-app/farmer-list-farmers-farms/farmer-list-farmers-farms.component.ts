@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PlantcareUsersService, Farm } from '../../../services/plant-care/plantcare-users.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-farmer-list-farmers-farms',
   standalone: true,
@@ -43,6 +43,34 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
       }
     });
   }
+
+deleteFarm(farmId: number) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.farmerFarmsService.deleteFarm(farmId).subscribe({
+        next: (res: any) => {
+          Swal.fire('Deleted!', res.message || 'Farm deleted successfully.', 'success');
+          this.farms = this.farms.filter((f) => f.id !== farmId); // filter out deleted farm
+          this.totalItems = this.farms.length;
+          this.hasData = this.farms.length > 0;
+        },
+        error: (err) => {
+          console.error(err);
+          Swal.fire('Error!', 'Failed to delete the farm.', 'error');
+        },
+      });
+    }
+  });
+}
+
 
   loadFarms(): void {
     this.isLoading = true;

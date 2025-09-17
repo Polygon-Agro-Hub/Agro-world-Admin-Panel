@@ -31,6 +31,8 @@ interface NewsItem {
   cropDuration: string;
   longitude: any;
   latitude: any;
+  userLastName: string;
+  userFirstName: string;
   totalTasks: number;
   completedTasks: number;
   extentac: number;
@@ -120,23 +122,33 @@ export class SlaveCropCalendarComponent implements OnInit {
     );
   }
 
-  fetchAllNews(cultivationId: number, userId: number) {
-    this.isLoading = true;
-    this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
-      (data) => {
-        console.log('Fetched data:', data);
-        this.newsItems = data || [];
-        this.hasData = this.newsItems.length > 0; // Update hasData
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isLoading = false;
-        this.hasData = false; // Show no-data on error
-        this.newsItems = [];
-        console.error('Error fetching data:', error);
+fetchAllNews(cultivationId: number, userId: number) {
+  this.isLoading = true;
+  this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
+    (data) => {
+      console.log('Fetched data:', data);
+      this.newsItems = data || [];
+      this.hasData = this.newsItems.length > 0; // Update hasData
+
+      // Set userName from first item (all items have same user)
+      if (this.newsItems.length > 0) {
+        const user = this.newsItems[0];
+        this.userName = `${user.userFirstName || ''} ${user.userLastName || ''}`.trim();
+      } else {
+        this.userName = 'Unknown User';
       }
-    );
-  }
+
+      this.isLoading = false;
+    },
+    (error) => {
+      this.isLoading = false;
+      this.hasData = false; // Show no-data on error
+      this.newsItems = [];
+      this.userName = 'Unknown User';
+      console.error('Error fetching data:', error);
+    }
+  );
+}
 
   viewTaskByUser(
     cropCalendarId: any,

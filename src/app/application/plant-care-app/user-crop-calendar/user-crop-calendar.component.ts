@@ -124,7 +124,7 @@ export class UserCropCalendarComponent {
   deleteCroptask(id: string, cropId: any, index: any): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
+      text: 'Do you really want to delete this  Crop Task? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

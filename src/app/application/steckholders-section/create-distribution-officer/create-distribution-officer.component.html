@@ -323,7 +323,7 @@
         </div>
 
         <div>
-  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
   <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
     (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -340,7 +340,7 @@
 </div>
 
         <div>
-  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
   <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
     (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" (blur)="onBlur('email')"
     placeholder="example@domain.com"

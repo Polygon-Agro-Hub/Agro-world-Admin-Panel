@@ -83,12 +83,6 @@ countries: PhoneCode[] = [
   { code: 'KH', dialCode: '+855', name: 'Cambodia' },
   { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
   { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'US', dialCode: '+1', name: 'United States' },
-  { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'AU', dialCode: '+61', name: 'Australia' },
-  { code: 'CA', dialCode: '+1', name: 'Canada' },
-  { code: 'DE', dialCode: '+49', name: 'Germany' },
-  { code: 'FR', dialCode: '+33', name: 'France' }
 ];
 
 

@@ -23,19 +23,17 @@ export class DefinePackagesComponent implements OnInit {
   activeTab: string = 'todo';
 
   constructor(private router: Router, private route: ActivatedRoute) { }
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const tab = params['tab'];
-      // if (tab === 'completed') {
-      //   this.activeTab = 'completed'
-      // } else
-      if (tab === 'sent') {
-        this.activeTab = 'sent'
-      } else {
-        this.activeTab = 'todo'
-      }
-    });
-  }
+  // In define-packages.component.ts - update the ngOnInit method
+ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    const tab = params['tab'];
+    if (tab === 'sent') {
+      this.activeTab = 'sent';
+    } else {
+      this.activeTab = 'todo';
+    }
+  });
+}
 
   back(): void {
     this.router.navigate(['/procurement']);

@@ -103,8 +103,23 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     private router: Router
   ) { }
 
-  goBack() {
-    window.history.back();
+  goBack(): void{
+    Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the added data after going back!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Go Back',
+        cancelButtonText: 'No, Stay Here',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+        buttonsStyling: true,
+      }).then((result) => {
+        window.history.back();
+      });
+    
   }
 
   ngOnInit() {
@@ -588,7 +603,11 @@ isExcluded(product: MarketplaceItem): boolean {
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#74788D',
       confirmButtonText: 'Yes, clear it!',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         this.clearForm();

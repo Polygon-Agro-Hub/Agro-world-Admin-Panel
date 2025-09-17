@@ -20,6 +20,12 @@ interface Branch {
   ID: number;
   name: string;
 }
+
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
 interface BranchesData {
   [key: string]: Branch[];
 }
@@ -50,6 +56,8 @@ throw new Error('Method not implemented.');
 resetPassword() {
 throw new Error('Method not implemented.');
 }
+
+
 
   public duplicatePhoneError = false;
   officerId: number | null = null;
@@ -104,6 +112,19 @@ throw new Error('Method not implemented.');
     { name: 'Trincomalee', province: 'Eastern' },
     { name: 'Vavuniya', province: 'Northern' },
   ];
+
+  getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
+
+  countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+];
 
   loaded = true;
 
@@ -478,12 +499,13 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
       });
   }
 
-isValidPhoneNumber(phone: string, code: string): boolean {
-  if (!phone || !code) return false;
-  const fullNumber = `${code}${phone}`;
-  const mobilePattern = /^\+947\d{8}$/; // Sri Lankan numbers
-  return mobilePattern.test(fullNumber);
-}
+isValidPhoneNumber(phone: string, code: string = this.personalData.phoneCode01): boolean {
+    if (!phone || !code) return false;
+
+    const fullNumber = `${code}${phone}`;
+    const mobilePattern = /^\+947\d{8}$/; // Sri Lanka +947XXXXXXXX
+    return mobilePattern.test(fullNumber); // true if valid
+  }
 
 
 checkDuplicatePhoneNumbers(): void {

@@ -26,6 +26,24 @@ export const navbarData = [
     label: 'Report',
   },
   {
+    RouterLink: 'finance',
+    icon: 'fa-solid fa-coins',
+    label: 'Finance',
+    expanded: false,
+    children: [
+      {
+        RouterLink: '/finance/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashboard',
+      },
+      {
+        RouterLink: '/finance/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
+  },
+  {
     RouterLink: 'plant-care',
     icon: 'fas fa-leaf',
     label: 'Plant Care',

@@ -121,8 +121,9 @@
 
           <input id="companyNameEnglish" name="companyNameEnglish" 
   [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required
-  (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '', 'companyNameEnglish')"
-  (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
+  (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')" 
+  (blur)="onBlur('companyNameEnglish')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Required message -->
@@ -676,9 +677,9 @@
           <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
             (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
+          <!-- <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
             Only English letters and spaces are allowed. Numbers and special characters are not permitted.
-          </div>
+          </div> -->
         </div>
 
 

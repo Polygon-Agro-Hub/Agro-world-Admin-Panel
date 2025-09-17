@@ -29,3 +29,7 @@ input[type="date"]::-moz-calendar-picker-indicator {
 .dark input[type="date"]::-moz-calendar-picker-indicator {
   filter: invert(1);
 }
+
+::ng-deep .ql-editor p:first-child::first-letter {
+  text-transform: uppercase;
+}

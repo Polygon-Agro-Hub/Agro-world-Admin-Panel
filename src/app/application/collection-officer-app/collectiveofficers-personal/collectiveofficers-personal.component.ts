@@ -98,8 +98,6 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
   { code: 'IN', dialCode: '+91', name: 'India' },
   { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
 ];
 
 getFlagUrl(countryCode: string): string {
@@ -138,6 +136,7 @@ getFlagUrl(countryCode: string): string {
   languagesTouched: boolean = false;
   empTypeTouched: boolean = false;
   errorMessage: string = '';
+  jobRoleTouched: boolean = false;
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -149,6 +148,43 @@ getFlagUrl(countryCode: string): string {
   ) { }
 
   selectedLanguages: string[] = [];
+
+markAllFieldsAsTouched(): void {
+  // Mark all form fields as touched
+  const requiredFields: (keyof Personal)[] = [
+    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
+    'streetName', 'city', 'district', 'province', 'accHolderName',
+    'accNumber', 'confirmAccNumber'
+  ];
+
+  requiredFields.forEach(field => {
+    this.touchedFields[field] = true;
+  });
+
+  // Mark language and employee type as touched
+  this.languagesTouched = true;
+  this.empTypeTouched = true;
+}
+
+markPageOneFieldsAsTouched(): void {
+  const pageOneFields: (keyof Personal)[] = [
+    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+    'nic', 'email', 'companyId', 'centerId', 'jobRole'
+  ];
+
+  pageOneFields.forEach(field => {
+    this.touchedFields[field] = true;
+  });
+
+  this.languagesTouched = true;
+  this.empTypeTouched = true;
+  this.jobRoleTouched = true;
+}
+
+
 
   onCheckboxChange1(lang: string, event: any) {
     if (event.target.checked) {
@@ -191,8 +227,19 @@ back(): void {
   });
 }
 
+onJobRoleBlur(): void {
+  this.jobRoleTouched = true;
+}
+
+isJobRoleSelected(): boolean {
+  return !!this.personalData.jobRole && this.personalData.jobRole !== '';
+}
+
 
 onSubmit() {
+  // Mark all fields as touched to show validation messages
+  this.markAllFieldsAsTouched();
+
   const missingFields: string[] = [];
 
   // Check required fields for pageOne
@@ -265,10 +312,10 @@ onSubmit() {
   }
 
   if (!this.personalData.email) {
-  missingFields.push('Email');
-} else if (!this.isValidEmail(this.personalData.email)) {
-  missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-}
+    missingFields.push('Email');
+  } else if (!this.isValidEmail(this.personalData.email)) {
+    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+  }
 
   // Check required fields for pageTwo
   if (!this.personalData.houseNumber) {
@@ -313,7 +360,7 @@ onSubmit() {
     missingFields.push('Branch Name');
   }
 
-  // If errors, show list and stop
+  // If errors, show list and stop - validation messages will now be visible
   if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
     missingFields.forEach((field) => {
@@ -365,16 +412,16 @@ onSubmit() {
             if (error.error && error.error.error) {
               switch (error.error.error) {
                 case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
+                  errorMessage = 'NIC already exists.';
                   break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
+                case 'Email already exists.':
+                  errorMessage = 'Email already exists.';
                   break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
+                case 'Mobile Number 1 already exists.':
+                  errorMessage = 'Mobile Number 1 already exists.';
                   break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
+                case 'Mobile Number 2 already exists.':
+                  errorMessage = 'Mobile Number 2 already exists.';
                   break;
                 case 'Invalid file format or file upload error':
                   errorMessage = 'Invalid file format or error uploading the file.';
@@ -436,6 +483,9 @@ onCancel() {
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
+    // Mark page one fields as touched to show validation messages
+    this.markPageOneFieldsAsTouched();
+
     const missingFields: string[] = [];
 
     // Validate pageOne fields
@@ -508,12 +558,13 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
 
     if (!this.personalData.email) {
-  missingFields.push('Email');
-} else if (!this.isValidEmail(this.personalData.email)) {
-  missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-}
+      missingFields.push('Email');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
 
-    // If errors, show popup and stop navigation
+    // If errors exist, the validation messages will now be visible due to touched fields
+    // Show popup and stop navigation
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
@@ -539,6 +590,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   // Navigate to the selected page
   this.selectedPage = page;
 }
+
 
   ngOnInit(): void {
     this.loadBanks();
@@ -780,16 +832,38 @@ updateProvince(event: DropdownChangeEvent): void {
     }
   }
 onLetterKeyPress(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
   const char = event.key;
-  // Allow all letters (\p{L}) and space, block numbers and special characters
+  
+  // Block space if it's at the start (cursor at position 0)
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
   const regex = /^[\p{L} ]$/u;
   if (!regex.test(char)) {
     event.preventDefault(); // block the key
   }
 }
 
-
-
+// Add this method to handle input events and remove leading spaces
+onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Remove leading spaces
+  if (value.startsWith(' ')) {
+    value = value.trimStart();
+    this.personalData[fieldName] = value;
+    
+    // Force update the model to reflect the change
+    setTimeout(() => {
+      input.value = value;
+    }, 0);
+  }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -985,10 +1059,12 @@ formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+  if (!phone) return false;
+  
+  // Must start with 7 and have exactly 9 digits total
+  const phoneRegex = /^7\d{8}$/;
+  return phoneRegex.test(phone);
+}
 
   // Check if phone numbers are duplicate
   areDuplicatePhoneNumbers(): boolean {
@@ -1211,36 +1287,42 @@ preventNICInvalidCharacters(event: KeyboardEvent): void {
 }
 
 // Format NIC input
-formatNIC(): void {
-  let value = this.personalData.nic;
-  if (value) {
-    // Remove all spaces and invalid characters
-    value = value.replace(/[^0-9Vv]/g, '');
-    
-    // Convert 'v' to 'V' and ensure only one V at the end
-    if (value.includes('v') || value.includes('V')) {
-      // Remove all V's first
-      value = value.replace(/[Vv]/g, '');
-      // Add single V at the end if original had V/v
-      value = value + 'V';
-    }
-    
-    // Limit length based on format
-    if (value.includes('V')) {
-      // 9 digits + V format
-      if (value.length > 10) {
-        value = value.substring(0, 9) + 'V';
-      }
-    } else {
-      // 12 digits format
-      if (value.length > 12) {
-        value = value.substring(0, 12);
+formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
     }
-    
-    this.personalData.nic = value;
   }
-}
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
 
 // Add these new functions for account number handling
 preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
@@ -1339,26 +1421,50 @@ preventSpecialCharacters(event: KeyboardEvent): void {
     }
   }
   // Prevent non-numeric characters for phone numbers
-  preventNonNumeric(event: KeyboardEvent): void {
-    const char = String.fromCharCode(event.which);
-    // Allow only numbers (0-9)
-    if (!/[0-9]/.test(char)) {
-      event.preventDefault();
-    }
+  preventNonNumeric(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  const input = event.target as HTMLInputElement;
+  const char = String.fromCharCode(event.which);
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Allow only numbers (0-9)
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+    return;
   }
+  
+  // If this is the first character, it must be '7'
+  if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
+    event.preventDefault();
+    return;
+  }
+  
+  // If user tries to insert a character at position 0 that's not '7'
+  if (cursorPosition === 0 && char !== '7') {
+    event.preventDefault();
+  }
+}
 
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove non-numeric characters
-      value = value.replace(/[^0-9]/g, '');
-      // Limit to 9 digits
-      if (value.length > 9) {
-        value = value.substring(0, 9);
-      }
-      this.personalData[fieldName] = value;
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Ensure it starts with 7
+    if (value.length > 0 && value.charAt(0) !== '7') {
+      // If first digit is not 7, remove it
+      value = value.replace(/^[^7]*/, '');
     }
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
   }
+}
 
   changeCenter(event: any){
     console.log('Center changed:', this.personalData.centerId);
@@ -1398,7 +1504,7 @@ preventSpecialCharacters(event: KeyboardEvent): void {
 }
 
 class Personal {
-  jobRole: string = 'Collection Center Manager';
+  jobRole: string = '';
   empId!: string;
   centerId!: number | string;
   irmId!: number | string;

@@ -48,6 +48,8 @@ export class UserTaskEditComponent {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   hasImageLink: boolean = false;
   formSubmitted: boolean = false;
+  hasVideoLink: boolean = false;
+
   
 
   constructor(
@@ -98,30 +100,42 @@ validateAndCapitalizeEnglish(event: any, field: 'taskEnglish' | 'taskTypeEnglish
   this.taskItems[field] = value;
 }
 
+onVideoLinkChange(hasVideo: boolean) {
+  this.hasVideoLink = hasVideo;
+  if (!hasVideo) {
+    // Clear video link fields when 'No' is selected
+    this.taskItems.videoLinkEnglish = '';
+    this.taskItems.videoLinkSinhala = '';
+    this.taskItems.videoLinkTamil = '';
+  }
+}
 
 
-  getTaskById(id: any) {
+getTaskById(id: any) {
   this.taskService.getUserCropTaskBycropId(id).subscribe(
     (data) => {
       this.taskItems = data;
-      this.taskItems.startingDate = this.formatDate(
-        this.taskItems.startingDate
-      );
+      this.taskItems.startingDate = this.formatDate(this.taskItems.startingDate);
+
+      // Images
       this.hasImageLink = !!this.taskItems.imageLink;
-      
+
+      // Videos
+      this.hasVideoLink =
+        !!this.taskItems.videoLinkEnglish ||
+        !!this.taskItems.videoLinkSinhala ||
+        !!this.taskItems.videoLinkTamil;
+
       // Set default value of 0 if reqImages is null/undefined
       if (this.taskItems.reqImages == null || this.taskItems.reqImages === undefined) {
         this.taskItems.reqImages = 0;
       }
     },
     (error) => {
-      if (error.status === 401) {
-        // Handle unauthorized error
-      }
+      console.error(error);
     }
   );
 }
-
   onImageLinkChange(hasImage: boolean) {
     this.hasImageLink = hasImage;
   }
@@ -193,6 +207,13 @@ updateTask() {
   if (this.hasImageLink && !this.taskItems.imageLink) {
     missingFields.push('Image Link is required when Require Images is set to Yes');
   }
+
+  if (this.hasVideoLink) {
+  if (!this.taskItems.videoLinkEnglish) missingFields.push('Video Link English is required');
+  if (!this.taskItems.videoLinkSinhala) missingFields.push('Video Link Sinhala is required');
+  if (!this.taskItems.videoLinkTamil) missingFields.push('Video Link Tamil is required');
+}
+
 
   // If there are validation errors, show popup and stop submission
   if (missingFields.length > 0) {

@@ -1,15 +1,15 @@
 <!-- Back Button -->
-<button class="mb-5 text-textLight dark:text-textDark" 
-        (click)="navigatePath('/plant-care/action/report-farmer-list')">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/report-farmer-list')">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 
 <!-- If there is data, show the table -->
-<div *ngIf="hasData; else noDataTemplate" class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+<div *ngIf="hasData; else noDataTemplate"
+  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-lg font-normal text-gray-500 dark:text-textDark">
+      <h2 class="text-[22px] font-semibold  dark:text-textDark">
         {{this.firstName}} {{this.lastName}} - {{this.farmName}}
       </h2>
     </div>

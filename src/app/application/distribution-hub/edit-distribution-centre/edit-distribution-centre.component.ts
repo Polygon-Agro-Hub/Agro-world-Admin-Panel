@@ -83,12 +83,6 @@ countries: PhoneCode[] = [
   { code: 'KH', dialCode: '+855', name: 'Cambodia' },
   { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
   { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'US', dialCode: '+1', name: 'United States' },
-  { code: 'GB', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'AU', dialCode: '+61', name: 'Australia' },
-  { code: 'CA', dialCode: '+1', name: 'Canada' },
-  { code: 'DE', dialCode: '+49', name: 'Germany' },
-  { code: 'FR', dialCode: '+33', name: 'France' }
 ];
 
 
@@ -332,41 +326,43 @@ getFlagUrl(countryCode: string): string {
   }
 
   // Update initializeForm with enhanced validations
-  initializeForm(): void {
-    this.distributionForm = this.fb.group({
-      name: ['', [Validators.required, this.lettersOnlyValidator]], 
-      company: ['', Validators.required],
-      contact1Code: ['+94', Validators.required],
-      contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-      contact2Code: ['+94'],
-      contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-      latitude: [
-        '',
-        [
-          Validators.required,
-          this.numericDecimalValidator,
-          this.latitudeRangeValidator
-        ],
+  // In your component class, update the initializeForm method:
+initializeForm(): void {
+  this.distributionForm = this.fb.group({
+    name: ['', Validators.required], // Removed lettersOnlyValidator - now allows numbers and special characters
+    company: ['', Validators.required],
+    contact1Code: ['+94', Validators.required],
+    contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+    contact2Code: ['+94'],
+    contact2: ['', [Validators.pattern(/^\d{9}$/)]],
+    latitude: [
+      '',
+      [
+        Validators.required,
+        this.numericDecimalValidator,
+        this.latitudeRangeValidator
       ],
-      longitude: [
-        '',
-        [
-          Validators.required,
-          this.numericDecimalValidator,
-          this.longitudeRangeValidator
-        ],
+    ],
+    longitude: [
+      '',
+      [
+        Validators.required,
+        this.numericDecimalValidator,
+        this.longitudeRangeValidator
       ],
-      email: ['', [
-  Validators.required, 
-  this.customEmailValidator.bind(this)
-]],
-      country: ['Sri Lanka', Validators.required],
-      province: ['', Validators.required],
-      district: ['', Validators.required],
-      city: ['', [Validators.required, this.englishLettersOnlyValidator]],
-      regCode: ['', Validators.required],
-    }, { validators: [this.contactNumbersMatchValidator] }); // Changed from validator to validators
-  }
+    ],
+    email: ['', [
+      Validators.required, 
+      this.customEmailValidator.bind(this)
+    ]],
+    country: ['Sri Lanka', Validators.required],
+    province: ['', Validators.required],
+    district: ['', Validators.required],
+    city: ['', [Validators.required, this.englishLettersOnlyValidator]],
+    regCode: ['', Validators.required],
+  }, { validators: [this.contactNumbersMatchValidator] });
+}
+
 private lettersOnlyValidator(control: AbstractControl) {
   if (!control.value) return null;
   // \p{L} matches any kind of letter in any language, \s allows spaces
@@ -959,8 +955,6 @@ onInputChange(event: any, fieldType: string) {
       } else {
         value = value.trimStart();
 
-        // ❌ Remove numbers
-        value = value.replace(/[0-9]/g, '');
 
         // ✅ Capitalize first letter for centre name
         if (target.getAttribute('formControlName') === 'name' && value.length > 0) {

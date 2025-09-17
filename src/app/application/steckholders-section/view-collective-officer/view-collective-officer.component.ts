@@ -504,7 +504,7 @@ export class ViewCollectiveOfficerComponent {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'User disclaimed successfully!',
+            text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
           }).then((result) => {
             if (result.isConfirmed) {

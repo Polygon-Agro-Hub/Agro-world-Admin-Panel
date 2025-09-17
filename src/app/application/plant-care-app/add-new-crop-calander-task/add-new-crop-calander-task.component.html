@@ -80,7 +80,6 @@
             id="taskTypeEnglish"
             name="taskTypeEnglish"
             [(ngModel)]="cropTaskObj.taskTypeEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           />
@@ -106,7 +105,6 @@
             id="taskCategoryEnglish"
             [(ngModel)]="cropTaskObj.taskCategoryEnglish"
             name="taskCategoryEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"

@@ -118,3 +118,18 @@
 ::ng-deep .p-dropdown-panel .p-dropdown-items {
   max-height: none !important;
 }
+
+/* Custom cursor for job role dropdown options */
+select#jobRole option {
+  cursor: pointer;
+}
+
+/* For better visual feedback on hover */
+select#jobRole option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Dark mode support */
+.dark select#jobRole option:hover {
+  background-color: #374151;
+}

@@ -1,15 +1,15 @@
 <!-- Back Button -->
-<button class="mb-5 text-textLight dark:text-textDark" 
-        (click)="navigatePath('/plant-care/action/report-farmer-list')">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/report-farmer-list')">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 
 <!-- If there is data, show the table -->
-<div *ngIf="hasData; else noDataTemplate" class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+<div *ngIf="hasData; else noDataTemplate"
+  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
-      <h2 class="text-lg font-normal text-gray-500 dark:text-textDark">
+      <h2 class="text-[22px] font-semibold  dark:text-textDark">
         {{this.firstName}} {{this.lastName}} - {{this.farmName}}
       </h2>
     </div>
@@ -27,9 +27,8 @@
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Building and Infastructures</th>
           <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-            <button (click)="buildingCategory(this.userId!, this.farmId!)" 
-                    [disabled]="!this.userId || !this.farmId">
-              <i class="fa-regular fa-file"></i>
+            <button (click)="buildingCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId" class="text-blue-500 hover:text-blue-700">
+              <i class="fa-solid fa-arrow-up-right-from-square " ></i>
             </button>
           </th>
         </tr>
@@ -37,19 +36,17 @@
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Lands</th>
           <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-            <button (click)="landCategory(this.userId!, this.farmId!)" 
-                    [disabled]="!this.userId || !this.farmId">
-              <i class="fa-regular fa-file"></i>
+            <button (click)="landCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId" class="text-blue-500 hover:text-blue-700">
+              <i class="fa-solid fa-arrow-up-right-from-square " ></i>
             </button>
           </th>
         </tr>
 
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Machinery, Vehicles</th>
-          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-            <button (click)="machCategory(this.userId!, this.farmId!)" 
-                    [disabled]="!this.userId || !this.farmId">
-              <i class="fa-regular fa-file"></i>
+          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left ">
+            <button (click)="machCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId" class="text-blue-500 hover:text-blue-700">
+             <i class="fa-solid fa-arrow-up-right-from-square " ></i>
             </button>
           </th>
         </tr>
@@ -57,9 +54,8 @@
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Tools & Equipments</th>
           <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
-            <button (click)="toolsCategory(this.userId!, this.farmId!)" 
-                    [disabled]="!this.userId || !this.farmId">
-              <i class="fa-regular fa-file"></i>
+            <button (click)="toolsCategory(this.userId!, this.farmId!)" [disabled]="!this.userId || !this.farmId" class="text-blue-500 hover:text-blue-700">
+              <i class="fa-solid fa-arrow-up-right-from-square " ></i>
             </button>
           </th>
         </tr>

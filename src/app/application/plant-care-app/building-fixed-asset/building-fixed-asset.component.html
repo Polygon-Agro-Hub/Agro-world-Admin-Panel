@@ -37,21 +37,22 @@
         <table class="w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Type</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Floor Area</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Ownership</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">General Condition</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">Type</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">Floor Area</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">Ownership</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">General Condition</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">District</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of fixedAssetB">
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.type }}</td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.floorArea }}</td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.ownership }}</td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.generalCondition }}</td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.district }}</td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">{{ item.type }}</td>
+                    <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">{{ item.floorArea }}</td>
+                    <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">{{ item.ownership }}</td>
+                    <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">{{ item.generalCondition }}</td>
+                    <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">{{ item.district }}</td>
+                    <td class="px-6 py-3 text-center">
                         <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200" 
                                 type="button" (click)="viewFixedAssetOwnershipDetails(item.buildingfixedassetId)">
                             <svg

@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-black dark:text-textDark" onclick="history.back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -11,20 +11,20 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-4">
         <div class="flex items-center space-x-2">
-          <span class="text-gray-600 dark:text-gray-300 font-medium">Farmer :</span>
-          <span class="text-textLight dark:text-textDark font-semibold">{{ fullName }}</span>
+          <span class="text-black dark:text-gray-300 font-medium">Farmer :</span>
+          <span class="text-black dark:text-textDark font-semibold">{{ fullName || 'NULL' }}</span>
         </div>
       </div>
       <div class="flex items-center space-x-2">
-        <span class="text-gray-600 dark:text-gray-300 font-medium">Category :</span>
-        <span class="text-textLight dark:text-textDark font-semibold">{{ category }}</span>
+        <span class="text-black dark:text-gray-300 font-medium">Category :</span>
+        <span class="text-black dark:text-textDark font-semibold">{{ category || 'NULL' }}</span>
       </div>
     </div>
 
     <div class="mt-4">
       <div class="flex items-center space-x-2">
-        <span class="text-gray-600 dark:text-gray-300 font-medium">Farm :</span>
-        <span class="text-textLight dark:text-textDark font-semibold">{{ farmName }}</span>
+        <span class="text-black dark:text-gray-300 font-medium">Farm :</span>
+        <span class="text-black dark:text-textDark font-semibold">{{ farmName || 'NULL' }}</span>
       </div>
     </div>
   </div>
@@ -49,29 +49,38 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of fixedAssetB">
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.asset }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.assetType }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.mentionOther }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.numberOfUnits }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.unitPrice | currency }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.totalPrice | currency }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.warranty }}</td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.asset || 'NULL' }}</td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.assetType || 'NULL' }}</td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.mentionOther || 'NULL' }}</td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.numberOfUnits || 'NULL' }}</td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+            {{ item.unitPrice ? 'Rs. ' + item.unitPrice : 'NULL' }}
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+            {{ item.totalPrice ? 'Rs. ' + item.totalPrice : 'NULL' }}
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center" style="text-transform: capitalize;">
+            {{ item.warranty || 'NULL' }}
+          </td>
           <td class="px-4 py-3 text-center">
+            <!-- Expired Status -->
             <div *ngIf="item.warrantystatus === 'Expired' || item.warrantystatus === 'expired'">
-              <span class="w-24 h-7 inline-block bg-red-100 text-red-500 font-medium rounded-md px-3 py-1 text-sm">
+              <span class="inline-block font-medium rounded-md px-3 py-1 text-sm text-red-700" 
+                    style="background-color: #FFB9B7;">
                 {{ item.warrantystatus }}
               </span>
             </div>
-            <div *ngIf="item.warrantystatus === 'Under Warranty' || item.warrantystatus === 'under warranty'">
-              <span class="w-40 h-7 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">
+            <!-- Under Warranty Status -->
+            <div *ngIf="item.warrantystatus === 'Under warranty' || item.warrantystatus === 'under warranty'">
+              <span class="inline-block font-medium rounded-md px-3 py-1 text-sm text-green-700 whitespace-nowrap" 
+                    style="background-color: #BBFFC6;">
                 {{ item.warrantystatus }}
               </span>
             </div>
-            <div
-              *ngIf="item.warrantystatus !== 'Under Warranty' && item.warrantystatus !== 'under warranty' && item.warrantystatus !== 'Expired' && item.warrantystatus !== 'expired'">
-              <span
-                class="w-24 h-7 inline-block bg-yellow-100 text-yellow-500 font-medium rounded-md px-3 py-1 text-sm">
-                {{ item.warrantystatus || 'No data' }}
+            <!-- No Data Status or NULL -->
+            <div *ngIf="item.warrantystatus !== 'Under warranty' && item.warrantystatus !== 'under warranty' && item.warrantystatus !== 'Expired' && item.warrantystatus !== 'expired'">
+              <span class="inline-block font-medium rounded-md px-3 py-1 text-sm text-gray-500 dark:text-textDark bg-transparent">
+                {{ item.warrantystatus || 'NULL' }}
               </span>
             </div>
           </td>

@@ -83,7 +83,7 @@ export class ReportsFarmerListComponent {
   totalFixed: any;
   searchNIC: string = '';
   searchFullName: string = '';
-
+searchQuery: string = '';
   isLoading = false;
   hasData: boolean = true;
 

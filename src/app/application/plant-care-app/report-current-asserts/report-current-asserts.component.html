@@ -23,9 +23,10 @@
                     <td class="px-4 py-3 text-start dark:text-textDark">
                         {{assert.category}}
                     </td>
-                    <td class="px-4 py-3 dark:text-textDark text-center">
-                        {{assert.totPrice}}
-                    </td>
+           <td class="px-4 py-3 dark:text-textDark text-center">
+  {{ assert.totPrice | number:'1.0-2' }}
+</td>
+
                    <td class="px-3 py-3 text-center">
   <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewList(this.userId, assert.category)">
     <i class="fa-solid fa-arrow-up-right-from-square"></i>

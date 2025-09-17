@@ -71,7 +71,7 @@
             <span class="text-gray-600 dark:text-gray-300 font-medium min-w-28">Est. Value</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-textLight dark:text-textDark font-semibold flex-1">
-              Rs. {{ ownershipDetails?.estimateValue }}
+              Rs. {{ ownershipDetails?.estimateValue | number:'1.0-2' }}
             </span>
           </div>
 
@@ -113,7 +113,7 @@
             <span class="text-gray-600 dark:text-gray-300 font-medium min-w-28">Lease Amount</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-textLight dark:text-textDark font-semibold flex-1">
-              Rs. {{ ownershipDetails?.leastAmountAnnually }} /year
+              Rs. {{ ownershipDetails?.leastAmountAnnually | number:'1.0-2'}} /year
             </span>
           </div>
 
@@ -133,7 +133,7 @@
             <span class="text-gray-600 dark:text-gray-300 font-medium min-w-28">Permit Fee</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-textLight dark:text-textDark font-semibold flex-1">
-              Rs. {{ ownershipDetails?.permitFeeAnnually }} /year
+              Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }} /year
             </span>
           </div>
 
@@ -143,7 +143,7 @@
             <span class="text-gray-600 dark:text-gray-300 font-medium min-w-28">Annual Payment</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-textLight dark:text-textDark font-semibold flex-1">
-              Rs. {{ ownershipDetails?.paymentAnnually }}
+              Rs. {{ ownershipDetails?.paymentAnnually | number:'1.0-2'}}
             </span>
           </div>
         </div>
@@ -164,7 +164,7 @@
             <span class="text-gray-600 dark:text-gray-300 font-medium min-w-28">Floor Area</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-textLight dark:text-textDark font-semibold flex-1">
-              <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea }} sq. ft.</span>
+              <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea | number:'1.0-2' }} sq. ft.</span>
               <span *ngIf="!buildingDetails?.floorArea">N/A</span>
             </span>
           </div>

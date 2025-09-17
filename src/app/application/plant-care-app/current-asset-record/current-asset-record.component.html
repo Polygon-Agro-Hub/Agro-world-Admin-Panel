@@ -43,23 +43,24 @@
             <th
               class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
             >
-              Number of units (+)
+           No.of Units
             </th>
-            <th
+            <!-- <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Number of units (-)
+            </th> -->
+                        <th
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+            >
+              Unit Price
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Unit
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-            Unit Price
-            </th>
+
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
@@ -79,36 +80,37 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of currentAssetRecord" class="border-b">
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">{{ this.batchNumber }}</td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">
+              {{ this.batchNumber }}
+            </td>
             <td class="py-3 text-green-700">
               <div class="overflow-x-auto">
-                <!-- Show the down arrow if numOfMinUnit is 0 or null or undefined -->
+                <!-- Show the up/down arrow based on numOfMinUnit -->
                 <i
                   *ngIf="item.numOfMinUnit === '0.00'"
                   class="fa-solid fa-arrow-trend-up"
                 ></i>
-
-                <!-- Show the up arrow if numOfMinUnit is greater than 0 -->
                 <i
-                  *ngIf="
-                    item.numOfMinUnit !== '0.00' && item.numOfMinUnit != null
-                  "
+                  *ngIf="item.numOfMinUnit !== '0.00' && item.numOfMinUnit != null"
                   class="fa-solid fa-arrow-trend-down text-red-500"
                 ></i>
               </div>
             </td>
-            <td class="py-3 text-green-700">{{ item.numOfPlusUnit }}</td>
-            <td class="px-4 py-3 text-center text-red-700">
-              {{ item.numOfMinUnit }}
+            <td class="py-3 text-green-700">
+              {{ item.numOfPlusUnit | number }}
+            </td>
+            <!-- <td class="px-4 py-3 text-center text-red-700">
+              {{ item.numOfMinUnit | number }}
+            </td> -->
+                <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ this.unitPrice | number:'1.2-2' }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ this.unit }}
             </td>
+        
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ this.unitPrice }}
-            </td>
-            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ item.totalPrice }}
+              {{ item.totalPrice | number:'1.2-2' }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.createdAt | date : "yyyy-MM-dd" }}

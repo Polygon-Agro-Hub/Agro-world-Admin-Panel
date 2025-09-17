@@ -29,9 +29,13 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="text-center py-8">
-        <p class="text-gray-500 dark:text-textDark text-lg">No data to display</p>
-    </div>
+     <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 ">
+        <p class="text-[#494949] dark:text-textDark  mb-4">
+          -- No Data Available --
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+
+      </div>
     
     <div *ngIf="hasData" class="overflow-x-auto">
         <table class="w-full divide-y divide-gray-200 table-auto">
@@ -47,7 +51,7 @@
             <tbody>
                 <tr *ngFor="let item of fixedAssetB">
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.type }}</td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.floorArea }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.floorArea | number:'1.0-2'}}</td>
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.ownership }}</td>
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.generalCondition }}</td>
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.district }}</td>
@@ -77,3 +81,5 @@
         </pagination-controls> -->
     </div>
 </div>
+
+

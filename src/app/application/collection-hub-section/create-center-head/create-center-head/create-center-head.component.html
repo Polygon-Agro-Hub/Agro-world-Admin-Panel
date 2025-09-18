@@ -649,14 +649,14 @@
             </div>
             <div *ngIf="personalData.phoneNumber01 && contact01.invalid && !isPhoneInvalidMap['phone01']" 
                 class="text-red-500 text-sm mt-1">
-                Mobile Number - 01 must be exactly 9 digits.
+                Please enter a valid Mobile Number (format: +947XXXXXXXX)
             </div>
                      <!-- <div *ngIf="isDuplicatePhone()" class="text-red-500 text-sm mt-1">
     Mobile Number - 01 and Mobile Number - 02 cannot be the same.
   </div> -->
   
             <div *ngIf="isPhoneInvalidMap['phone01'] && personalData.phoneNumber01 " class="text-red-500 text-sm mt-1">
-              Please enter a valid Mobile Number - 01 (format: +947XXXXXXXX)
+              Please enter a valid Mobile Number (format: +947XXXXXXXX)
               </div>
         </div>
         </div>

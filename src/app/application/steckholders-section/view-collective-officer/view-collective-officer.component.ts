@@ -190,29 +190,35 @@ export class ViewCollectiveOfficerComponent {
   }
 
   onCenterChange() {
-  if (this.selectedCenterId) {
-    const numericCenterId = parseInt(this.selectedCenterId);
-    if (!isNaN(numericCenterId)) {
-      this.fetchManagerNames(numericCenterId);
-    }
-  } else {
-    this.collectionCenterManagerNames = [];
-  }
-}
+    if (this.selectedCenterId) {
+      const numericCenterId = parseInt(this.selectedCenterId);
+      console.log(this.selectedCenterId);
 
-  fetchManagerNames(centerId: number) {
-  this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
-    (response) => {
-      console.log('Manager names response:', response);
-      
-      this.collectionCenterManagerNames = response.data || response;
-    },
-    (error) => { 
-      console.error('Error fetching managers:', error);
+
+      this.fetchManagerNames(numericCenterId);
+
+    } else {
       this.collectionCenterManagerNames = [];
     }
-  );
-}
+  }
+
+  fetchManagerNames(centerId: number) {
+    this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
+      (response) => {
+        console.log('Manager names response:', response);
+
+        this.collectionCenterManagerNames = response.data || response;
+        this.collectionCenterManagerNames = this.collectionCenterManagerNames.map(manager => ({
+          ...manager,
+          displayLabel: `${manager.empId} - ${manager.firstNameEnglish} ${manager.lastNameEnglish}`
+        }));
+      },
+      (error) => {
+        console.error('Error fetching managers:', error);
+        this.collectionCenterManagerNames = [];
+      }
+    );
+  }
 
   ngOnInit() {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
@@ -302,20 +308,20 @@ export class ViewCollectiveOfficerComponent {
   }
 
   openPopup(item: any) {
-  const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
-  const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
+    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
 
-  // Dynamic message based on status
-  let message = '';
-  if (item.status === 'Approved') {
-    message = 'Are you sure you want to reject this collection officer?';
-  } else if (item.status === 'Rejected') {
-    message = 'Are you sure you want to approve this collection officer?';
-  } else if (item.status === 'Not Approved') {
-    message = 'Are you sure you want to approve or reject this collection officer?';
-  }
+    // Dynamic message based on status
+    let message = '';
+    if (item.status === 'Approved') {
+      message = 'Are you sure you want to reject this collection officer?';
+    } else if (item.status === 'Rejected') {
+      message = 'Are you sure you want to approve this collection officer?';
+    } else if (item.status === 'Not Approved') {
+      message = 'Are you sure you want to approve or reject this collection officer?';
+    }
 
-  const tableHtml = `
+    const tableHtml = `
     <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
       <div>
@@ -445,7 +451,7 @@ export class ViewCollectiveOfficerComponent {
 
   onSearch() {
     this.searchNIC = this.searchNIC?.trim() || ''
-    console.log('searchNIC', "'",this.searchNIC,"'")
+    console.log('searchNIC', "'", this.searchNIC, "'")
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -465,17 +471,17 @@ export class ViewCollectiveOfficerComponent {
     ]);
   }
 
- editCloseModel() {
+  editCloseModel() {
     this.selectedOfficer = null;
     this.selectedCenterId = null;
-    this.selectedIrmId = null; 
+    this.selectedIrmId = null;
     this.iseditModalOpen = false;
   }
 
   editModalOpen(role: any) {
     this.selectedOfficer = role;
     this.selectedCenterId = null;
-    this.selectedIrmId = null; 
+    this.selectedIrmId = null;
     this.iseditModalOpen = true;
   }
 
@@ -524,7 +530,7 @@ export class ViewCollectiveOfficerComponent {
       );
   }
 
-   claimOfficer() {
+  claimOfficer() {
     if (!this.selectedCenterId) {
       Swal.fire({
         icon: 'error',
@@ -553,8 +559,8 @@ export class ViewCollectiveOfficerComponent {
           }).then((result) => {
             if (result.isConfirmed) {
               this.iseditModalOpen = false;
-              this.selectedCenterId = null; 
-              this.selectedIrmId = null; 
+              this.selectedCenterId = null;
+              this.selectedIrmId = null;
               this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
             }
           });

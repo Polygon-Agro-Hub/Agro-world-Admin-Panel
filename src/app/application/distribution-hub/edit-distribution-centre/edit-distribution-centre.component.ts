@@ -787,11 +787,11 @@ back(): void {
       }
 
       const updateData = {
-    centerName: this.distributionForm.value.name, // Map to centerName
-    code1: this.distributionForm.value.contact1Code, // Map to code1
-    contact01: this.distributionForm.value.contact1, // Map to contact01
-    code2: this.distributionForm.value.contact2Code || '', // Map to code2
-    contact02: this.distributionForm.value.contact2 || '', // Map to contact02
+    name: this.distributionForm.value.name, // Map to centerName
+    contact1Code: this.distributionForm.value.contact1Code, // Map to code1
+    contact1: this.distributionForm.value.contact1, // Map to contact01
+    contact2Code: this.distributionForm.value.contact2Code || '', // Map to code2
+    contact2: this.distributionForm.value.contact2 || '', // Map to contact02
     city: this.distributionForm.value.city,
     district: this.distributionForm.value.district,
     province: this.distributionForm.value.province,
@@ -800,7 +800,7 @@ back(): void {
     longitude: parseFloat(this.distributionForm.value.longitude).toString(),
     latitude: parseFloat(this.distributionForm.value.latitude).toString(),
     email: this.distributionForm.value.email,
-    companyId: companyId // Send companyId instead of company
+    company: companyId // Send companyId instead of company
   };
 
       const id = this.route.snapshot.params['id'];

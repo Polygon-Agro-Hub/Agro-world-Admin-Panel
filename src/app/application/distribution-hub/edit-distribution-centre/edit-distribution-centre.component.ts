@@ -900,7 +900,7 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
 
   if (field.errors['pattern']) {
     if (fieldName.includes('contact')) {
-      return 'Phone number must be exactly 9 digits';
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
     }
   }
 

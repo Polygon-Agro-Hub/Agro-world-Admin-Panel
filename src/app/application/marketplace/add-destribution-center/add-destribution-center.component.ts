@@ -317,6 +317,14 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
     }
   }
 
+  onKeyDown(event: KeyboardEvent, fieldType: string) {
+  // Prevent space bar for coordinate fields
+  if (fieldType === 'coordinates' && event.key === ' ') {
+    event.preventDefault();
+  }
+  
+  // You can add other key restrictions here if needed
+}
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);

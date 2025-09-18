@@ -847,8 +847,11 @@ back(): void {
                     case 'regCode':
                       errorMessage = 'A distribution center with this registration code already exists.';
                       break;
+                    case 'email':
+                        errorMessage = 'Email already exists.';
+                        break;
                     case 'contact':
-                      errorMessage = 'A distribution center with this contact number already exists.';
+                      errorMessage = 'Mobile Number already exists.';
                       break;
                     default:
                       errorMessage = error.error.error || 'A distribution center with these details already exists.';

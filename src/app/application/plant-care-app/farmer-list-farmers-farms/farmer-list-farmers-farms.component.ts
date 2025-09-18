@@ -53,24 +53,59 @@ deleteFarm(farmId: number) {
     confirmButtonColor: '#d33',
     cancelButtonColor: '#3085d6',
     confirmButtonText: 'Yes, delete it!',
+    // Dark mode styling
+    background: '#1f2937', // Dark background
+    color: '#f9fafb', // Light text
+    customClass: {
+      popup: 'dark-popup',
+      title: 'dark-title',
+      htmlContainer: 'dark-text',
+      confirmButton: 'dark-confirm-btn',
+      cancelButton: 'dark-cancel-btn'
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       this.farmerFarmsService.deleteFarm(farmId).subscribe({
         next: (res: any) => {
-          Swal.fire('Deleted!', res.message || 'Farm deleted successfully.', 'success');
+          Swal.fire({
+            title: 'Deleted!', 
+            text: res.message || 'Farm deleted successfully.', 
+            icon: 'success',
+            // Dark mode styling for success alert
+            background: '#1f2937',
+            color: '#f9fafb',
+            customClass: {
+              popup: 'dark-popup',
+              title: 'dark-title',
+              htmlContainer: 'dark-text',
+              confirmButton: 'dark-success-btn'
+            }
+          });
           this.farms = this.farms.filter((f) => f.id !== farmId); // filter out deleted farm
           this.totalItems = this.farms.length;
           this.hasData = this.farms.length > 0;
         },
         error: (err) => {
           console.error(err);
-          Swal.fire('Error!', 'Failed to delete the farm.', 'error');
+          Swal.fire({
+            title: 'Error!', 
+            text: 'Failed to delete the farm.', 
+            icon: 'error',
+            // Dark mode styling for error alert
+            background: '#1f2937',
+            color: '#f9fafb',
+            customClass: {
+              popup: 'dark-popup',
+              title: 'dark-title',
+              htmlContainer: 'dark-text',
+              confirmButton: 'dark-error-btn'
+            }
+          });
         },
       });
     }
   });
 }
-
 
   loadFarms(): void {
     this.isLoading = true;

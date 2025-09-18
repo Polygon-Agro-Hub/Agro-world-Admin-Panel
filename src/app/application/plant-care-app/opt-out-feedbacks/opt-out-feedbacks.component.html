@@ -12,6 +12,9 @@
     <!-- Total Deleted Accounts -->
     <div class="flex items-center justify-center w-full">
       <div class="flex flex-col items-start">
+        <div class="flex justify-between items-center mb-10 w-full">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Opt-Out Feedbacks</h2>
+        </div>
         <p class="text-gray-600 text-sm dark:text-textDark">Total Deleted accounts</p>
         <div class="flex items-center">
           <p class="text-4xl font-bold dark:text-textDark text-gray-800">{{ deleteCount }}</p>
@@ -65,11 +68,8 @@
     <div class="flex items-center justify-center w-full">
       <div class="flex flex-col w-full max-w-xl">
         <div>
-          <canvasjs-chart 
-  #chartContainer
-  [options]="chartOptions" 
-  [styles]="{ width: '100%', height: '180px' }">
-</canvasjs-chart>
+          <canvasjs-chart #chartContainer [options]="chartOptions" [styles]="{ width: '100%', height: '180px' }">
+          </canvasjs-chart>
         </div>
       </div>
     </div>
@@ -93,9 +93,6 @@
   <div *ngIf="permissionService.hasPermission('View Opt-Out feedbacks') ||
                   tokenService.getUserDetails().role === '1'"
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex justify-between items-center mb-8 w-full">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Opt-Out Feedbacks</h2>
-    </div>
     <div class="overflow-x-auto w-full">
       <table class="w-full table-auto">
         <thead>
@@ -152,6 +149,6 @@
           [nextLabel]="'Next'" screenReaderPaginationLabel="'Pagination'" screenReaderPageLabel="'page'"
           [screenReaderCurrentLabel]="'Youre on page'"></pagination-controls>
       </div>
+    </div>
   </div>
-</div>
 </div>

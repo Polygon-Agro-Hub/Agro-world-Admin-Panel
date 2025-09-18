@@ -998,6 +998,20 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
 blockNumbers(value: string): string {
   return value.replace(/[0-9]/g, ''); // remove all numbers
 }
+
+onEmailInput(event: any) {
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+  
+  // Block spaces at the beginning
+  if (value.startsWith(' ')) {
+    value = value.trimStart();
+    target.value = value;
+  }
+  
+  // Update the form control
+  this.distributionForm.get('email')?.setValue(value);
+}
   // Input handling methods
 onInputChange(event: any, fieldType: string) {
   const target = event.target as HTMLInputElement;

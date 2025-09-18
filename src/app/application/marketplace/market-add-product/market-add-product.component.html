@@ -392,10 +392,10 @@
     Please enter a value greater than 0.
   </div>
   <!-- Add this new validation message -->
-  <div *ngIf="productObj.category === 'WholeSale' && productObj.startValue && productObj.maxQuantity && productObj.startValue > productObj.maxQuantity" 
+  <!-- <div *ngIf="productObj.category === 'WholeSale' && productObj.startValue && productObj.maxQuantity && productObj.startValue > productObj.maxQuantity" 
        class="text-red-500 text-sm mt-1">
     Minimum quantity cannot be greater than maximum quantity.
-  </div>
+  </div> -->
 </div>
 
         <div class="my-3" *ngIf="productObj.category === 'WholeSale'">

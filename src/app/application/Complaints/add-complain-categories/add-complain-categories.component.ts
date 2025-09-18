@@ -46,7 +46,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       errors.push('Complaint Assignee Admin Category is required');
     }
     if (!c.appId || c.appId === 0) {
-      errors.push('Displaying Application is required');
+      errors.push('Select Displaying Application is required');
     }
     if (!c.categoryEnglish || c.categoryEnglish.trim() === '') {
       errors.push('Category name in English is required');

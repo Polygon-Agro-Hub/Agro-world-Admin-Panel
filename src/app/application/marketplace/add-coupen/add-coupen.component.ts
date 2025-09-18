@@ -156,7 +156,12 @@ onSubmit() {
       </div>
     `,
     icon: 'warning',
-    confirmButtonText: 'OK'
+    confirmButtonText: 'OK',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
   });
   return;
 }
@@ -170,6 +175,11 @@ onSubmit() {
           title: 'Coupon Created',
           text: 'The coupon was created successfully!',
           confirmButtonText: 'OK',
+          customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
         }).then(() => {
           this.coupenObj = new Coupen();
           this.router.navigate(['market/action/view-coupen']);

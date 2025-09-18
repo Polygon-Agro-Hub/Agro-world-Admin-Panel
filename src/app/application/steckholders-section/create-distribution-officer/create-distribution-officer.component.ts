@@ -327,11 +327,16 @@ onSubmit() {
   // If valid, confirm creation
   Swal.fire({
     title: 'Are you sure?',
-    text: 'Do you want to create the collection officer?',
+    text: 'Do you want to create the Distribution Officer?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes, create it!',
     cancelButtonText: 'No, cancel',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
     reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
@@ -1368,7 +1373,7 @@ formatEmail(): void {
 }
 
 class Personal {
-  jobRole: string = 'Distribution Centre Manager';
+  jobRole: string = '';
   empId!: string;
   centerId!: number | string;
   irmId!: number | string;

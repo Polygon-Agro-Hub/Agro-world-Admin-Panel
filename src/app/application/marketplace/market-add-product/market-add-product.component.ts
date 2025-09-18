@@ -47,6 +47,18 @@ export class MarketAddProductComponent implements OnInit {
   isNoDiscount: boolean = true;
   formSubmitted = false;
 
+  // In your component.ts
+  categoryOptions = [
+    { label: 'Retail', value: 'Retail' },
+    { label: 'WholeSale', value: 'WholeSale' }
+  ];
+
+  // In your component.ts
+  unitTypeOptions = [
+    { label: 'Kg', value: 'Kg' },
+    { label: 'g', value: 'g' }
+  ];
+
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
@@ -524,40 +536,40 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   validateChangeBy() {
-  if (this.productObj.changeby < 0) {
-    this.productObj.changeby = 0;
+    if (this.productObj.changeby < 0) {
+      this.productObj.changeby = 0;
+    }
+    this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
+
+    // Mark the field as touched to show validation messages
+    if (this.productForm && this.productForm.controls['changeby']) {
+      this.productForm.controls['changeby'].markAsTouched();
+    }
   }
-  this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
-  
-  // Mark the field as touched to show validation messages
-  if (this.productForm && this.productForm.controls['changeby']) {
-    this.productForm.controls['changeby'].markAsTouched();
-  }
-}
 
   validateMaxQuantity() {
-  if (this.productObj.maxQuantity < 0) {
-    this.productObj.maxQuantity = 0;
+    if (this.productObj.maxQuantity < 0) {
+      this.productObj.maxQuantity = 0;
+    }
+    this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(2));
+
+    // Mark the field as touched to show validation messages
+    if (this.productForm && this.productForm.controls['maxQuntity']) {
+      this.productForm.controls['maxQuntity'].markAsTouched();
+    }
   }
-  this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(2));
-  
-  // Mark the field as touched to show validation messages
-  if (this.productForm && this.productForm.controls['maxQuntity']) {
-    this.productForm.controls['maxQuntity'].markAsTouched();
-  }
-}
 
   validateMinQuantity() {
-  if (this.productObj.startValue < 0) {
-    this.productObj.startValue = 0;
+    if (this.productObj.startValue < 0) {
+      this.productObj.startValue = 0;
+    }
+    this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
+
+    // Mark the field as touched to show validation messages
+    if (this.productForm && this.productForm.controls['startValue']) {
+      this.productForm.controls['startValue'].markAsTouched();
+    }
   }
-  this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
-  
-  // Mark the field as touched to show validation messages
-  if (this.productForm && this.productForm.controls['startValue']) {
-    this.productForm.controls['startValue'].markAsTouched();
-  }
-}
 
   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
     const input = event.target as HTMLInputElement;
@@ -567,79 +579,79 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   validatePriceInput(event: Event, fieldName: string) {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
 
-  // Prevent negative numbers and invalid characters
-  if (value.includes('-') || value.toLowerCase().includes('e')) {
-    value = value.replace(/[-e]/g, '');
-    input.value = value;
+    // Prevent negative numbers and invalid characters
+    if (value.includes('-') || value.toLowerCase().includes('e')) {
+      value = value.replace(/[-e]/g, '');
+      input.value = value;
 
-    // Update the model and mark as touched
-    switch (fieldName) {
-      case 'normalPrice':
-        this.productObj.normalPrice = value ? parseFloat(value) : 0;
-        if (this.productForm && this.productForm.controls['normalPrice']) {
-          this.productForm.controls['normalPrice'].markAsTouched();
-        }
-        break;
-      case 'discountedPrice':
-        this.productObj.discountedPrice = value ? parseFloat(value) : 0;
-        if (this.productForm && this.productForm.controls['discountedPrice']) {
-          this.productForm.controls['discountedPrice'].markAsTouched();
-        }
-        break;
-      case 'startValue':
-        this.productObj.startValue = value ? parseFloat(value) : 0;
-        if (this.productForm && this.productForm.controls['startValue']) {
-          this.productForm.controls['startValue'].markAsTouched();
-        }
-        break;
-      case 'changeby':
-        this.productObj.changeby = value ? parseFloat(value) : 0;
-        if (this.productForm && this.productForm.controls['changeby']) {
-          this.productForm.controls['changeby'].markAsTouched();
-        }
-        break;
-      case 'maxQuantity':
-        this.productObj.maxQuantity = value ? parseFloat(value) : 0;
-        if (this.productForm && this.productForm.controls['maxQuntity']) {
-          this.productForm.controls['maxQuntity'].markAsTouched();
-        }
-        break;
+      // Update the model and mark as touched
+      switch (fieldName) {
+        case 'normalPrice':
+          this.productObj.normalPrice = value ? parseFloat(value) : 0;
+          if (this.productForm && this.productForm.controls['normalPrice']) {
+            this.productForm.controls['normalPrice'].markAsTouched();
+          }
+          break;
+        case 'discountedPrice':
+          this.productObj.discountedPrice = value ? parseFloat(value) : 0;
+          if (this.productForm && this.productForm.controls['discountedPrice']) {
+            this.productForm.controls['discountedPrice'].markAsTouched();
+          }
+          break;
+        case 'startValue':
+          this.productObj.startValue = value ? parseFloat(value) : 0;
+          if (this.productForm && this.productForm.controls['startValue']) {
+            this.productForm.controls['startValue'].markAsTouched();
+          }
+          break;
+        case 'changeby':
+          this.productObj.changeby = value ? parseFloat(value) : 0;
+          if (this.productForm && this.productForm.controls['changeby']) {
+            this.productForm.controls['changeby'].markAsTouched();
+          }
+          break;
+        case 'maxQuantity':
+          this.productObj.maxQuantity = value ? parseFloat(value) : 0;
+          if (this.productForm && this.productForm.controls['maxQuntity']) {
+            this.productForm.controls['maxQuntity'].markAsTouched();
+          }
+          break;
+      }
+
+      event.preventDefault();
+      return;
     }
 
-    event.preventDefault();
-    return;
-  }
+    // Rest of your existing validation for decimal places
+    if (value.includes('.') && value.split('.')[1].length > 2) {
+      const truncatedValue = parseFloat(value).toFixed(2);
+      input.value = truncatedValue;
 
-  // Rest of your existing validation for decimal places
-  if (value.includes('.') && value.split('.')[1].length > 2) {
-    const truncatedValue = parseFloat(value).toFixed(2);
-    input.value = truncatedValue;
-
-    switch (fieldName) {
-      case 'normalPrice':
-        this.productObj.normalPrice = parseFloat(truncatedValue);
-        break;
-      case 'discountedPrice':
-        this.productObj.discountedPrice = parseFloat(truncatedValue);
-        break;
-      case 'startValue':
-        this.productObj.startValue = parseFloat(truncatedValue);
-        break;
-      case 'changeby':
-        this.productObj.changeby = parseFloat(truncatedValue);
-        break;
-      case 'maxQuantity':
-        this.productObj.maxQuantity = parseFloat(truncatedValue);
-        break;
+      switch (fieldName) {
+        case 'normalPrice':
+          this.productObj.normalPrice = parseFloat(truncatedValue);
+          break;
+        case 'discountedPrice':
+          this.productObj.discountedPrice = parseFloat(truncatedValue);
+          break;
+        case 'startValue':
+          this.productObj.startValue = parseFloat(truncatedValue);
+          break;
+        case 'changeby':
+          this.productObj.changeby = parseFloat(truncatedValue);
+          break;
+        case 'maxQuantity':
+          this.productObj.maxQuantity = parseFloat(truncatedValue);
+          break;
+      }
     }
-  }
 
-  // Trigger the calculation if needed
-  this.calculeSalePrice();
-}
+    // Trigger the calculation if needed
+    this.calculeSalePrice();
+  }
 
   preventInvalidChars(event: KeyboardEvent) {
     // Block '-' and 'e' characters

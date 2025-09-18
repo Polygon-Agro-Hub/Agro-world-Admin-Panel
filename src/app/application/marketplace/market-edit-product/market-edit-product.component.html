@@ -8,17 +8,10 @@
       Edit Product
     </p>
     <div>
-      <button
-        class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2"
-        (click)="onCancel()"
-      >
+      <button class="bg-[#74788D] text-lg text-white px-3 py-1 rounded-lg mx-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2"
-        type="submit"
-        (click)="onSubmit()"
-      >
+      <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="submit" (click)="onSubmit()">
         Save
       </button>
     </div>
@@ -26,55 +19,30 @@
 
   <div class="flex flex-row justify-between">
     <!-- form component -->
-    <div
-      class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]"
-    >
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
-        <select
-          id="category"
-          name="category"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.category"
-        >
-          <option selected disabled value="">--Display type--</option>
-          <option value="Retail">Retail</option>
-          <option value="WholeSale">WholeSale</option>
-        </select>
+        <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required [options]="categoryOptions"
+          optionLabel="label" optionValue="value" placeholder="--Display type--" #categoryField="ngModel"
+          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+        </p-dropdown>
       </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
-        <input
-          type="text"
-          id="cropName"
-          name="cropName"
-          [(ngModel)]="productObj.cropName"
-          (blur)="trimDisplayName()"
-        (keydown)="preventLeadingSpace($event,productObj.cropName)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" (blur)="trimDisplayName()"
+          (keydown)="preventLeadingSpace($event,productObj.cropName)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
       <!-- Crop Selection -->
       <div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-  <p-dropdown 
-    id="selectId"
-    name="selectId"
-    [(ngModel)]="productObj.selectId"
-    (onChange)="onCropChange()"
-    [options]="cropsObj"
-    optionLabel="cropNameEnglish"
-    optionValue="cropId"
-    [filter]="true"
-    filterBy="cropNameEnglish"
-    placeholder="--- Select Crop ---"
-    [showClear]="false"
-    class="w-full mt-2"
-  >
-  </p-dropdown>
-</div>
+        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
+        <p-dropdown id="selectId" name="selectId" [(ngModel)]="productObj.selectId" (onChange)="onCropChange()"
+          [options]="cropsObj" optionLabel="cropNameEnglish" optionValue="cropId" [filter]="true"
+          filterBy="cropNameEnglish" placeholder="--- Select Crop ---" [showClear]="false" class="w-full mt-2">
+        </p-dropdown>
+      </div>
 
       <!-- <div>
         <select
@@ -93,61 +61,30 @@
       </div> -->
 
       <div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-  <p-dropdown 
-    id="variety"
-    name="variety"
-    [(ngModel)]="productObj.varietyId"
-    (onChange)="selectVerityImage()"
-    [options]="selectedVarieties"
-    optionLabel="varietyEnglish"
-    optionValue="id"
-    [filter]="true"
-    filterBy="varietyEnglish"
-    placeholder="--- Select Variety ---"
-    [showClear]="false"
-    class="w-full mt-2"
-    [disabled]="!isVerityVisible"
-  >
-  </p-dropdown>
-</div>
+        <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
+        <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" (onChange)="selectVerityImage()"
+          [options]="selectedVarieties" optionLabel="varietyEnglish" optionValue="id" [filter]="true"
+          filterBy="varietyEnglish" placeholder="--- Select Variety ---" [showClear]="false" class="w-full mt-2"
+          [disabled]="!isVerityVisible">
+        </p-dropdown>
+      </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price *</label>
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input
-              class="w-5 h-5"
-              type="radio"
-              id="withDiscount"
-              name="priceType"
-              [(ngModel)]="productObj.promo"
-              (change)="applyDiscount()"
-              [value]="true"
-            />
-            <label
-              for="withDiscount"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5" type="radio" id="withDiscount" name="priceType" [(ngModel)]="productObj.promo"
+              (change)="applyDiscount()" [value]="true" />
+            <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               With Discount
             </label>
           </div>
           <div class="flex items-center space-x-2">
             <!-- No Discount Radio Button -->
-            <input
-              class="w-5 h-5"
-              type="radio"
-              id="noDiscount"
-              name="priceType"
-              [(ngModel)]="productObj.promo"
-              (change)="compaireDiscount()"
-              [value]="false"
-            />
-            <label
-              for="noDiscount"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5" type="radio" id="noDiscount" name="priceType" [(ngModel)]="productObj.promo"
+              (change)="compaireDiscount()" [value]="false" />
+            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               No Discount
             </label>
           </div>
@@ -156,12 +93,8 @@
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
-        <select
-          id="displaytype"
-          name="displaytype"
-          [(ngModel)]="productObj.displaytype"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+        <select id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
+          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
           <option selected></option>
           <option value="D&AP">With Discount and Actual Price</option>
           <option value="AP&SP">With Actual Price and Sale Price</option>
@@ -171,87 +104,50 @@
         </select>
       </div>
 
-      <div
-        class="mb-6"
-        *ngIf="
+      <div class="mb-6" *ngIf="
           (productObj.displaytype === 'D&AP' ||
             productObj.displaytype === 'AP&SP&D') &&
           productObj.promo
-        "
-      >
+        ">
         <label class="text-[#534E4E]">Discount Percentage *</label>
-        <input
-    type="text"
-    id="discountedPrice"
-    name="discountedPrice"
-    [(ngModel)]="productObj.discountedPrice"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'discountedPrice')"
-    (change)="calculeSalePrice()"
-    pattern="^\d+(\.\d{1,2})?$"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-  />
+        <input type="text" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
+          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'discountedPrice')"
+          (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          placeholder="0.00" />
       </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">{{
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
-        }}</label>
-        <input
-    type="text"
-    id="normalPrice"
-    name="normalPrice"
-    [(ngModel)]="productObj.normalPrice"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'normalPrice')"
-    (change)="calculeSalePrice()"
-    pattern="^\d+(\.\d{1,2})?$"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-  />
-      </div>
-
-      <div
-        class="mb-6"
-        *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'"
-      >
-        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input
-    type="text"
-    id="salePrice"
-    name="salePrice"
-    [(ngModel)]="productObj.salePrice"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'salePrice')"
-    (change)="calculeSalePrice()"
-    pattern="^\d+(\.\d{1,2})?$"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-  />
-      </div>
-
-      <div
-        class="mb-6"
-        *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'"
-      >
-        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input
-          type="number"
-          min="0.00"
-          step="0.01"
-          id="salePrice"
-          name="salePrice"
-          [(ngModel)]="productObj.salePrice"
-          (change)="calculeSalePrice()"
+          }}</label>
+        <input type="text" id="normalPrice" name="normalPrice" [(ngModel)]="productObj.normalPrice"
+          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'normalPrice')"
+          (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          placeholder="0.00" />
       </div>
 
-<div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Tags *</label>
-  <div class="tag-wrapper dark:bg-tileBlack p-4 rounded-md">
-    <!-- <section class="w-full">
+      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'">
+        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
+        <input type="text" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
+          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'salePrice')"
+          (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          placeholder="0.00" />
+      </div>
+
+      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
+        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
+        <input type="number" min="0.00" step="0.01" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
+          (change)="calculeSalePrice()"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+
+      <div class="mb-6">
+        <label class="text-[#534E4E] dark:text-textDark">Tags *</label>
+        <div class="tag-wrapper dark:bg-tileBlack p-4 rounded-md">
+          <!-- <section class="w-full">
       <p-chips
         [(ngModel)]="templateKeywords"
         [addOnTab]="true"
@@ -265,63 +161,43 @@
       >
       </p-chips>
     </section> -->
-    <section>
-    <mat-form-field
-      class="w-full"
-      [class.dark-mode]="themeService.isDarkTheme()"
-      appearance="fill"
-    >
-      <mat-label class="dark:text-textDark">Tags</mat-label>
-      <mat-chip-grid
-        #templateChipGrid
-        aria-label="Enter template form keywords"
-        [(ngModel)]="templateKeywords"
-        class="dark:bg-tileBlack"
-      >
-        @for (keyword of templateKeywords(); track keyword) {
-        <mat-chip-row
-          (removed)="removeTemplateKeyword(keyword)"
-          class="chip-style dark:bg-tileHoverDark dark:text-textDark"
-        >
-          {{ keyword }}
-          <button
-            matChipRemove
-            aria-label="'remove template form' + keyword"
-          >
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-        }
-      </mat-chip-grid>
-      <input
-        placeholder="New keyword..."
-        [matChipInputFor]="templateChipGrid"
-        (matChipInputTokenEnd)="addTemplateKeyword($event)"
-        class="input-style dark:bg-tileBlack dark:text-textDark dark:placeholder-textDark"
-      />
-    </mat-form-field>
-  </section>
-  </div>
-</div>
-</div>
+          <section>
+            <mat-form-field class="w-full" [class.dark-mode]="themeService.isDarkTheme()" appearance="fill">
+              <mat-label class="dark:text-textDark">Tags</mat-label>
+              <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords"
+                class="dark:bg-tileBlack">
+                @for (keyword of templateKeywords(); track keyword) {
+                <mat-chip-row (removed)="removeTemplateKeyword(keyword)"
+                  class="chip-style dark:bg-tileHoverDark dark:text-textDark">
+                  {{ keyword }}
+                  <button matChipRemove aria-label="'remove template form' + keyword">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+                }
+              </mat-chip-grid>
+              <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+                (matChipInputTokenEnd)="addTemplateKeyword($event)"
+                class="input-style dark:bg-tileBlack dark:text-textDark dark:placeholder-textDark" />
+            </mat-form-field>
+          </section>
+        </div>
+      </div>
+    </div>
 
     <div class="flex flex-col px-6 py-3 mx-6 w-[40%]">
       <!-- cart items -->
       <div class="rounded-lg border-2 border-[#CFCFCF] px-12 py-6">
         <p class="text-lg text-black font-medium dark:text-textDark">Preview</p>
 
-        <div
-          *ngIf="this.productObj.promo"
-          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark"
-        >
-          <div
-            *ngIf="
+        <div *ngIf="this.productObj.promo"
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
+          <div *ngIf="
               productObj.displaytype === 'D&AP' ||
               productObj.displaytype === 'AP&SP&D'
             "
             class="flex flex-col justify-center items-center absolute top-0 left-0 bg-[#00957D] rounded-tl-lg pl-2 pt-3 pr-12 pb-10"
-            style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)"
-          >
+            style="clip-path: polygon(0 0, 100% 0, 0 100%, 0 90%)">
             <p *ngIf="productObj.discountedPrice === 0" class="text-white">
               #%
             </p>
@@ -332,67 +208,48 @@
           </div>
 
           <!-- <img *ngIf="productObj.variety > 0" [src]='selectedImage' alt="Green Capsicum" class="w-full h-32 object-cover px-4 py-2 mt-8"> -->
-          <img
-            *ngIf="productObj.varietyId > 0"
-            [src]="selectedImage"
-            class="w-full h-auto object-contain px-4 py-2 mt-8"
-          />
+          <img *ngIf="productObj.varietyId > 0" [src]="selectedImage"
+            class="w-full h-auto object-contain px-4 py-2 mt-8" />
 
           <p class="text-lg text-black dark:text-textDark my-2">
             {{ productObj.cropName }}
           </p>
 
           <div>
-            <p
-              *ngIf="
+            <p *ngIf="
                 productObj.displaytype === 'D&AP' && productObj.salePrice !== 0
-              "
-              class="text-[#00957D] my-1"
-            >
+              " class="text-[#00957D] my-1">
               Rs.{{ productObj.normalPrice | number : "1.2-2" }}
             </p>
 
-            <p
-              *ngIf="
+            <p *ngIf="
                 (productObj.displaytype === 'AP&SP' ||
                   productObj.displaytype === 'AP&SP&D') &&
                 productObj.salePrice !== 0
-              "
-              class="text-[#787878] my-1 line-through"
-            >
+              " class="text-[#787878] my-1 line-through">
               Rs.{{ productObj.normalPrice | number : "1.2-2" }}
             </p>
           </div>
-          <div
-            *ngIf="
+          <div *ngIf="
               productObj.displaytype === 'AP&SP' ||
               productObj.displaytype === 'AP&SP&D'
-            "
-            class="text-xl text-[#00957D] my-1"
-          >
+            " class="text-xl text-[#00957D] my-1">
             <p *ngIf="productObj.salePrice === 0">Rs.0.00</p>
             <p *ngIf="productObj.salePrice !== 0">
               Rs. {{ productObj.salePrice | number : "1.2-2" }}
             </p>
           </div>
-          <button
-            class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10"
-          >
+          <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
             <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
             <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
           </button>
         </div>
 
-        <div
-          *ngIf="!this.productObj.promo"
-          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark"
-        >
+        <div *ngIf="!this.productObj.promo"
+          class="flex flex-col justify-center items-center relative my-3 bg-[#FFFFFF] px-5 py-3 h-auto rounded-xl dark:bg-tileBlack dark:text-textDark">
           <!-- Image container with loading spinner -->
-          <img
-            *ngIf="productObj.varietyId > 0"
-            [src]="selectedImage"
-            class="w-full h-auto object-contain px-4 py-2 mt-8"
-          />
+          <img *ngIf="productObj.varietyId > 0" [src]="selectedImage"
+            class="w-full h-auto object-contain px-4 py-2 mt-8" />
 
           <p class="text-lg text-black dark:text-textDark my-2">
             {{ productObj.cropName }}
@@ -420,102 +277,59 @@
             Rs.{{ productObj.normalPrice | number : "1.2-2" }}
           </p>
 
-          <button
-            class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10"
-          >
+          <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">
             <i class="fa-solid fa-bag-shopping text-xl text-gray-300"></i>
             <p class="text-lg text-gray-300 mx-3">Add to Cart</p>
           </button>
         </div>
       </div>
 
-      <div
-        class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack"
-      >
+      <div class="bg-[#FFFFFF] rounded-lg shadow-lg px-12 py-3 mt-10 dark:bg-tileBlack">
         <p class="text-lg text-balck font-medium mb-5 dark:text-textDark">
           Quantity
         </p>
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark"
-            >Default Unit Type *</label
-          >
-          <select
-            id="unitType"
-            name="unitType"
-            [(ngModel)]="productObj.unitType"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
-            <option selected></option>
-            <option value="Kg">Kg</option>
-            <option value="g">g</option>
-          </select>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
+          <p-dropdown id="unitType" name="unitType" [(ngModel)]="productObj.unitType" required #unitTypeField="ngModel"
+            [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--"
+            [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+          </p-dropdown>
         </div>
 
         <div class="my-3">
-  <label class="text-lg text-[#534E4E] dark:text-textDark"
-    >Minimum Quantity *</label
-  >
-  <input
-    type="text"
-    id="startValue"
-    name="startValue"
-    [(ngModel)]="productObj.startValue"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'startValue')"
-    (input)="validateMinQuantity()"
-    pattern="^\d+(\.\d{1,2})?$"
-    required
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-  />
-  <div *ngIf="getMinQuantityError()" class="text-red-500 text-sm mt-1">
-    {{ getMinQuantityError() }}
-  </div>
-</div>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
+          <input type="text" id="startValue" name="startValue" [(ngModel)]="productObj.startValue"
+            (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'startValue')"
+            (input)="validateMinQuantity()" pattern="^\d+(\.\d{1,2})?$" required
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="0.00" />
+          <div *ngIf="getMinQuantityError()" class="text-red-500 text-sm mt-1">
+            {{ getMinQuantityError() }}
+          </div>
+        </div>
 
         <div *ngIf="productObj.category === 'WholeSale'" class="my-3">
-  <label class="text-lg text-[#534E4E] dark:text-textDark"
-    >Maximum Quantity *</label
-  >
-  <input
-    type="text"
-    id="maxQuantity"
-    name="maxQuantity"
-    [(ngModel)]="productObj.maxQuantity"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'maxQuantity')"
-    (input)="validateMaxQuantity()"
-    pattern="^\d+(\.\d{1,2})?$"
-    required
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-  />
-  <div *ngIf="getMaxQuantityError()" class="text-red-500 text-sm mt-1">
-    {{ getMaxQuantityError() }}
-  </div>
-</div>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
+          <input type="text" id="maxQuantity" name="maxQuantity" [(ngModel)]="productObj.maxQuantity"
+            (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'maxQuantity')"
+            (input)="validateMaxQuantity()" pattern="^\d+(\.\d{1,2})?$" required
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="0.00" />
+          <div *ngIf="getMaxQuantityError()" class="text-red-500 text-sm mt-1">
+            {{ getMaxQuantityError() }}
+          </div>
+        </div>
 
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">
             Increase/Decrease by *
           </label>
-          <input
-    type="text"
-    id="changeby"
-    name="changeby"
-    [(ngModel)]="productObj.changeby"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'changeby')"
-    (input)="validateChangeBy()"
-    pattern="^\d+(\.\d{1,2})?$"
-    required
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-  />
-          <div
-            *ngIf="productObj.changeby <= 0.0"
-            class="text-red-500 text-sm mt-1"
-          >
+          <input type="text" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
+            (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'changeby')"
+            (input)="validateChangeBy()" pattern="^\d+(\.\d{1,2})?$" required
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            placeholder="0.00" />
+          <div *ngIf="productObj.changeby <= 0.0" class="text-red-500 text-sm mt-1">
             Please enter a value greater than 0.
           </div>
         </div>

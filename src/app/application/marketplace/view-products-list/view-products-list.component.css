@@ -32,6 +32,23 @@
     color: #B1B1B1 !important;
 }
 
+/* Reduce left padding for dropdown items */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.25rem !important; /* Reduced from default 1rem */
+  padding-right: 0.25rem !important;
+}
+
+/* For dark mode specifically */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem!important;
+}
+
+/* If you want to reduce the space even more */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.25rem !important; /* Even more reduced */
+  padding-right: 0.25rem !important;
+}
 
 /* Dark mode styles for PrimeNG Calendar */
 .dark .custom-calendar .p-datepicker {

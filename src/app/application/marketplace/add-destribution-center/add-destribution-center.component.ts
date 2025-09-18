@@ -110,11 +110,11 @@ export class AddDestributionCenterComponent implements OnInit {
   private initializeForm() {
   this.distributionForm = this.fb.group(
     {
-      centerName: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
       company: ['', Validators.required],
-      contact01: ['', [Validators.required, this.mobileNumberValidator]], // Updated validator
+      contact1: ['', [Validators.required, this.mobileNumberValidator]], // Updated validator
       contact1Code: ['+94', Validators.required], // Fixed property name
-      contact02: ['', [this.mobileNumberValidator]], // Updated validator - optional field
+      contact2: ['', [this.mobileNumberValidator]], // Updated validator - optional field
       contact2Code: ['+94'], // Fixed property name
       latitude: [
         '',
@@ -166,7 +166,7 @@ export class AddDestributionCenterComponent implements OnInit {
     });
 
   // Watch contact number changes to validate duplicates
-  this.distributionForm.get('contact01')?.valueChanges.subscribe(() => {
+  this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
     this.distributionForm.updateValueAndValidity();
   });
 
@@ -174,7 +174,7 @@ export class AddDestributionCenterComponent implements OnInit {
     this.distributionForm.updateValueAndValidity();
   });
 
-  this.distributionForm.get('contact02')?.valueChanges.subscribe(() => {
+  this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
     this.distributionForm.updateValueAndValidity();
   });
 
@@ -184,7 +184,7 @@ export class AddDestributionCenterComponent implements OnInit {
 
   // Optimize name validation with debounce
   this.distributionForm
-    .get('centerName')
+    .get('name')
     ?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -253,9 +253,9 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
   }
 
   private contactNumbersMatchValidator(formGroup: AbstractControl): { [key: string]: any } | null {
-  const contact1Control = formGroup.get('contact01');
+  const contact1Control = formGroup.get('contact1');
   const contact1CodeControl = formGroup.get('contact1Code');
-  const contact2Control = formGroup.get('contact02');
+  const contact2Control = formGroup.get('contact2');
   const contact2CodeControl = formGroup.get('contact2Code');
 
   if (
@@ -679,13 +679,13 @@ updateRegCode() {
                   if (error.error && error.error.conflictingRecord) {
                     const conflict = error.error.conflictingRecord;
                     switch (conflict.conflictType) {
-                      case 'centerName':
+                      case 'name':
                         errorMessage = 'A distribution center with this name already exists.';
                         break;
                       case 'regCode':
                         errorMessage = 'A distribution center with this registration code already exists.';
                         break;
-                      case 'contact01':
+                      case 'contact1':
                         errorMessage = 'A distribution center with this contact number already exists.';
                         break;
                       default:

@@ -17,7 +17,7 @@
       <div class="flex-1 mb-4 md:mb-0">
         <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Distribution Centre Name
           *</label>
-        <input type="text" formControlName="centerName" (input)="onInputChange($event, 'centreName')"
+        <input type="text" formControlName="name" (input)="onInputChange($event, 'centreName')"
           (blur)="onCentreNameBlur()" [class]="
       ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' 
     " />
@@ -67,17 +67,17 @@
 
       <input 
         type="tel" 
-        formControlName="contact01" 
+        formControlName="contact1" 
         placeholder="7XXXXXXXX" 
         maxlength="9"
         (input)="onInputChange($event, 'phone')" 
         [class]="
           'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-          (isFieldInvalid('contact01') ? 'border-red-500' : 'border-gray-300')
+          (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
         " />
     </div>
-    <div *ngIf="isFieldInvalid('contact01')" class="text-red-500 text-sm mt-1">
-      {{ getFieldError("contact01") }}
+    <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
+      {{ getFieldError("contact1") }}
     </div>
   </div>
 
@@ -108,17 +108,17 @@
 
       <input 
         type="tel" 
-        formControlName="contact02" 
+        formControlName="contact2" 
         placeholder="7XXXXXXXX" 
         maxlength="9"
         (input)="onInputChange($event, 'phone')" 
         [class]="
           'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-          (isFieldInvalid('contact02') ? 'border-red-500' : 'border-gray-300')
+          (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
         " />
     </div>
-    <div *ngIf="isFieldInvalid('contact02')" class="text-red-500 text-sm mt-1">
-      {{ getFieldError("contact02") }}
+    <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
+      {{ getFieldError("contact2") }}
     </div>
   </div>
 </div>

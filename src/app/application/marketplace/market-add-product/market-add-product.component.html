@@ -14,8 +14,8 @@
         Cancel
       </button>
       <button class="bg-[#3980C0] text-lg text-white px-5 py-1 rounded-lg mx-2" type="button" (click)="onSubmit()">
-  Save
-</button>
+        Save
+      </button>
     </div>
   </div>
 
@@ -24,13 +24,10 @@
     <div class="bg-[#FFFFFF] dark:bg-tileBlack p-5 shadow-md rounded-md w-[60%]">
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Category *</label>
-        <select id="category" name="category"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [(ngModel)]="productObj.category" (change)="seeCategory()" #categoryField="ngModel" required>
-          <option selected disabled value="">--Display type--</option>
-          <option value="Retail">Retail</option>
-          <option value="WholeSale">WholeSale</option>
-        </select>
+        <p-dropdown id="category" name="category" [(ngModel)]="productObj.category" required [options]="categoryOptions"
+          optionLabel="label" optionValue="value" placeholder="--Display type--" #categoryField="ngModel"
+          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+        </p-dropdown>
         <div *ngIf="categoryField.invalid && categoryField.touched" class="text-red-500 text-sm mt-1">
           Category is required.
         </div>
@@ -39,7 +36,7 @@
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
         <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" (blur)="trimDisplayName()"
-        (keydown)="preventLeadingSpace($event,productObj.cropName)"
+          (keydown)="preventLeadingSpace($event,productObj.cropName)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #cropNameField="ngModel" required />
         <div *ngIf="cropNameField.invalid && cropNameField.touched" class="text-red-500 text-sm mt-1">
@@ -49,53 +46,31 @@
 
       <!-- Crop Selection -->
       <div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-  <p-dropdown 
-    id="selectId" 
-    name="selectId"
-    [(ngModel)]="productObj.selectId" 
-    [options]="cropsObj" 
-    optionLabel="cropNameEnglish"
-    optionValue="cropId"
-    [filter]="true"
-    filterBy="cropNameEnglish"
-    placeholder="Select Crop"
-    [showClear]="true"
-    (onChange)="onCropChange()"
-    #cropField="ngModel"
-    required
-    [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-    [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-  </p-dropdown>
-  <div *ngIf="cropField.invalid && cropField.touched" class="text-red-500 text-sm mt-1">
-    Crop selection is required.
-  </div>
-</div>
+        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
+        <p-dropdown id="selectId" name="selectId" [(ngModel)]="productObj.selectId" [options]="cropsObj"
+          optionLabel="cropNameEnglish" optionValue="cropId" [filter]="true" filterBy="cropNameEnglish"
+          placeholder="Select Crop" [showClear]="false" (onChange)="onCropChange()" #cropField="ngModel" required
+          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+        </p-dropdown>
+        <div *ngIf="cropField.invalid && cropField.touched" class="text-red-500 text-sm mt-1">
+          Crop selection is required.
+        </div>
+      </div>
 
       <div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-  <p-dropdown 
-    id="variety" 
-    name="variety"
-    [(ngModel)]="productObj.varietyId" 
-    [options]="selectedVarieties" 
-    optionLabel="varietyEnglish"
-    optionValue="id"
-    [filter]="true"
-    filterBy="varietyEnglish"
-    placeholder="Select Variety"
-    [showClear]="true"
-    (onChange)="selectVerityImage()"
-    #varietyField="ngModel"
-    required
-    [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-    [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-    [disabled]="!isVerityVisible">
-  </p-dropdown>
-  <div *ngIf="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
-    Variety selection is required.
-  </div>
-</div>
+        <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
+        <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" [options]="selectedVarieties"
+          optionLabel="varietyEnglish" optionValue="id" [filter]="true" filterBy="varietyEnglish"
+          placeholder="Select Variety" [showClear]="true" (onChange)="selectVerityImage()" #varietyField="ngModel"
+          required [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+          [disabled]="!isVerityVisible">
+        </p-dropdown>
+        <div *ngIf="varietyField.invalid && varietyField.touched" class="text-red-500 text-sm mt-1">
+          Variety selection is required.
+        </div>
+      </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price *</label>
@@ -142,13 +117,11 @@
     productObj.promo
   ">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" min="0" max="100" step="0.01" id="discountedPrice" name="discountedPrice" 
-  (change)="calculeSalePrice()" 
-  (input)="validatePriceInput($event, 'discountedPrice')"
-  (keydown)="preventInvalidChars($event)"
-  [(ngModel)]="productObj.discountedPrice"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #discountField="ngModel" required />
+        <input type="number" min="0" max="100" step="0.01" id="discountedPrice" name="discountedPrice"
+          (change)="calculeSalePrice()" (input)="validatePriceInput($event, 'discountedPrice')"
+          (keydown)="preventInvalidChars($event)" [(ngModel)]="productObj.discountedPrice"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #discountField="ngModel" required />
         <div *ngIf="discountField.invalid && discountField.touched" class="text-red-500 text-sm mt-1">
           Discount Percentage is required.
         </div>
@@ -176,13 +149,11 @@
         <label class="text-[#534E4E] dark:text-textDark">{{
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
           }}</label>
-        <input type="number" min="0" step="0.01" id="normalPrice" name="normalPrice" 
-  (change)="calculeSalePrice()" 
-  (input)="validatePriceInput($event, 'normalPrice')"
-  (keydown)="preventInvalidChars($event)"
-  [(ngModel)]="productObj.normalPrice"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #normalPriceField="ngModel" required />
+        <input type="number" min="0" step="0.01" id="normalPrice" name="normalPrice" (change)="calculeSalePrice()"
+          (input)="validatePriceInput($event, 'normalPrice')" (keydown)="preventInvalidChars($event)"
+          [(ngModel)]="productObj.normalPrice"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #normalPriceField="ngModel" required />
         <div *ngIf="normalPriceField.invalid && normalPriceField.touched" class="text-red-500 text-sm mt-1">
           Price Per kg is required.
         </div>
@@ -237,9 +208,9 @@
 
         <!-- Validation message -->
         <!-- Replace your current tags validation message with this -->
-<p class="text-red-600 text-sm mt-1" *ngIf="(tagsTouched || formSubmitted) && templateKeywords().length === 0">
-  At least one keyword is required.
-</p>
+        <p class="text-red-600 text-sm mt-1" *ngIf="(tagsTouched || formSubmitted) && templateKeywords().length === 0">
+          At least one keyword is required.
+        </p>
       </div>
     </div>
 
@@ -365,76 +336,70 @@
         </p>
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
-          <select id="unitType" name="unitType" [(ngModel)]="productObj.unitType"
-            class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-            #unitTypeField="ngModel" required>
-            <option selected disabled value="">--Select Unit Type--</option>
-            <option value="Kg">Kg</option>
-            <option value="g">g</option>
-          </select>
+          <p-dropdown id="unitType" name="unitType" [(ngModel)]="productObj.unitType" required #unitTypeField="ngModel"
+            [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--"
+            [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+          </p-dropdown>
           <div *ngIf="unitTypeField.invalid && unitTypeField.touched" class="text-red-500 text-sm mt-1">
             Default Unit Type is required.
           </div>
         </div>
 
         <div class="my-3">
-  <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
-  <input type="number" min="0.1" step="0.1" id="startValue" name="startValue"
-    [(ngModel)]="productObj.startValue"
-    (input)="validatePriceInput($event, 'startValue')"
-    (keydown)="preventInvalidChars($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    #startValueField="ngModel" required />
-  <!-- <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
+          <input type="number" min="0.1" step="0.1" id="startValue" name="startValue"
+            [(ngModel)]="productObj.startValue" (input)="validatePriceInput($event, 'startValue')"
+            (keydown)="preventInvalidChars($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            #startValueField="ngModel" required />
+          <!-- <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
     Minimum Value is required.
   </div> -->
-  <div *ngIf="productObj.startValue <= 0.0" class="text-red-500 text-sm mt-1">
-    Please enter a value greater than 0.
-  </div>
-  <!-- Add this new validation message -->
-  <div *ngIf="productObj.category === 'WholeSale' && productObj.startValue && productObj.maxQuantity && productObj.startValue > productObj.maxQuantity" 
-       class="text-red-500 text-sm mt-1">
-    Minimum quantity cannot be greater than maximum quantity.
-  </div>
-</div>
+          <div *ngIf="productObj.startValue <= 0.0" class="text-red-500 text-sm mt-1">
+            Please enter a value greater than 0.
+          </div>
+          <!-- Add this new validation message -->
+          <div
+            *ngIf="productObj.category === 'WholeSale' && productObj.startValue && productObj.maxQuantity && productObj.startValue > productObj.maxQuantity"
+            class="text-red-500 text-sm mt-1">
+            Minimum quantity cannot be greater than maximum quantity.
+          </div>
+        </div>
 
         <div class="my-3" *ngIf="productObj.category === 'WholeSale'">
-  <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
-  <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
-    [(ngModel)]="productObj.maxQuantity"
-    (input)="validatePriceInput($event, 'maxQuantity')"
-    (keydown)="preventInvalidChars($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    #maxQuantityField="ngModel" required />
-  <!-- <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
+          <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
+            [(ngModel)]="productObj.maxQuantity" (input)="validatePriceInput($event, 'maxQuantity')"
+            (keydown)="preventInvalidChars($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            #maxQuantityField="ngModel" required />
+          <!-- <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
     Maximum Quantity is required.
   </div> -->
-  <!-- Update this validation message -->
-  <div *ngIf="maxQuantityField.touched && productObj.maxQuantity <= 0" class="text-red-500 text-sm mt-1">
-    Please enter a value greater than 0.
-  </div>
-  <div *ngIf="productObj.startValue && productObj.maxQuantity && productObj.maxQuantity < productObj.startValue" 
-       class="text-red-500 text-sm mt-1">
-    Maximum quantity must be greater than or equal to minimum quantity.
-  </div>
-</div>
+          <!-- Update this validation message -->
+          <div *ngIf="maxQuantityField.touched && productObj.maxQuantity <= 0" class="text-red-500 text-sm mt-1">
+            Please enter a value greater than 0.
+          </div>
+          <div *ngIf="productObj.startValue && productObj.maxQuantity && productObj.maxQuantity < productObj.startValue"
+            class="text-red-500 text-sm mt-1">
+            Maximum quantity must be greater than or equal to minimum quantity.
+          </div>
+        </div>
 
         <div class="my-3">
-  <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>
-  <input type="number" min="0.1" step="0.1" id="changeby" name="changeby" 
-    [(ngModel)]="productObj.changeby"
-    (input)="validatePriceInput($event, 'changeby')"
-    (keydown)="preventInvalidChars($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    #changeByField="ngModel" required />
-  <!-- <div *ngIf="changeByField.invalid && changeByField.touched" class="text-red-500 text-sm mt-1">
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>
+          <input type="number" min="0.1" step="0.1" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
+            (input)="validatePriceInput($event, 'changeby')" (keydown)="preventInvalidChars($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            #changeByField="ngModel" required />
+          <!-- <div *ngIf="changeByField.invalid && changeByField.touched" class="text-red-500 text-sm mt-1">
     Increase/Decrease by is required.
   </div> -->
-  <!-- Update this validation message -->
-  <div *ngIf="changeByField.touched && productObj.changeby <= 0" class="text-red-500 text-sm mt-1">
-    Please enter a value greater than 0.
-  </div>
-</div>
+          <!-- Update this validation message -->
+          <div *ngIf="changeByField.touched && productObj.changeby <= 0" class="text-red-500 text-sm mt-1">
+            Please enter a value greater than 0.
+          </div>
+        </div>
       </div>
     </div>
   </div>

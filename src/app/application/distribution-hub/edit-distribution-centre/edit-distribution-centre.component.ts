@@ -332,9 +332,16 @@ initializeForm(): void {
     name: ['', Validators.required], // Removed lettersOnlyValidator - now allows numbers and special characters
     company: ['', Validators.required],
     contact1Code: ['+94', Validators.required],
-    contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+    contact1: ['', [
+      Validators.required, 
+      Validators.pattern(/^7\d{8}$/), // Must start with 7 and have 9 digits total
+      this.startsWithSevenValidator.bind(this)
+    ]],
     contact2Code: ['+94'],
-    contact2: ['', [Validators.pattern(/^\d{9}$/)]],
+    contact2: ['', [
+      Validators.pattern(/^7\d{8}$/), // Must start with 7 and have 9 digits total
+      this.startsWithSevenValidator.bind(this)
+    ]],
     latitude: [
       '',
       [
@@ -403,51 +410,86 @@ private lettersOnlyValidator(control: AbstractControl) {
   }
 
   private contactNumbersMatchValidator = (formGroup: AbstractControl): ValidationErrors | null => {
-    if (!(formGroup instanceof FormGroup)) {
-      return null;
+  if (!(formGroup instanceof FormGroup)) {
+    return null;
+  }
+
+  const contact1Control = formGroup.get('contact1');
+  const contact1CodeControl = formGroup.get('contact1Code');
+  const contact2Control = formGroup.get('contact2');
+  const contact2CodeControl = formGroup.get('contact2Code');
+
+  if (
+    !contact1Control ||
+    !contact2Control ||
+    !contact1CodeControl ||
+    !contact2CodeControl
+  ) {
+    return null;
+  }
+
+  const contact1 = contact1Control.value;
+  const contact2 = contact2Control.value;
+  const contact1Code = contact1CodeControl.value;
+  const contact2Code = contact2CodeControl.value;
+
+  // Only validate if both contact numbers are provided
+  if (
+    contact1 &&
+    contact2 &&
+    contact1 === contact2 &&
+    contact1Code === contact2Code
+  ) {
+    // Set error on both fields
+    contact1Control.setErrors({ ...contact1Control.errors, sameContactNumbers: true });
+    contact2Control.setErrors({ ...contact2Control.errors, sameContactNumbers: true });
+    return { sameContactNumbers: true };
+  } else {
+    // Clear the sameContactNumbers error if it exists
+    if (contact1Control.errors?.['sameContactNumbers']) {
+      const errors = { ...contact1Control.errors };
+      delete errors['sameContactNumbers'];
+      contact1Control.setErrors(Object.keys(errors).length > 0 ? errors : null);
     }
-
-    const contact1Control = formGroup.get('contact1');
-    const contact1CodeControl = formGroup.get('contact1Code');
-    const contact2Control = formGroup.get('contact2');
-    const contact2CodeControl = formGroup.get('contact2Code');
-
-    if (
-      !contact1Control ||
-      !contact2Control ||
-      !contact1CodeControl ||
-      !contact2CodeControl
-    ) {
-      return null;
+    if (contact2Control.errors?.['sameContactNumbers']) {
+      const errors = { ...contact2Control.errors };
+      delete errors['sameContactNumbers'];
+      contact2Control.setErrors(Object.keys(errors).length > 0 ? errors : null);
     }
+    return null;
+  }
+};
 
-    const contact1 = contact1Control.value;
-    const contact2 = contact2Control.value;
-    const contact1Code = contact1CodeControl.value;
-    const contact2Code = contact2CodeControl.value;
+private phoneFormatValidator = (formGroup: AbstractControl): ValidationErrors | null => {
+  if (!(formGroup instanceof FormGroup)) {
+    return null;
+  }
 
-    // Only validate if both contact numbers are provided
-    if (
-      contact1 &&
-      contact2 &&
-      contact1 === contact2 &&
-      contact1Code === contact2Code
-    ) {
-      // Set error on contact2 field specifically
-      const currentErrors = contact2Control.errors || {};
-      contact2Control.setErrors({ ...currentErrors, sameContactNumbers: true });
-      return { sameContactNumbers: true };
-    } else {
-      // Clear the sameContactNumbers error if it exists
-      if (contact2Control.errors?.['sameContactNumbers']) {
-        const errors = { ...contact2Control.errors };
-        delete errors['sameContactNumbers'];
-        contact2Control.setErrors(Object.keys(errors).length > 0 ? errors : null);
-      }
-      return null;
+  const contact1Control = formGroup.get('contact1');
+  const contact1CodeControl = formGroup.get('contact1Code');
+  const contact2Control = formGroup.get('contact2');
+  const contact2CodeControl = formGroup.get('contact2Code');
+
+  // Validate contact1 format
+  if (contact1Control && contact1Control.value && contact1CodeControl && contact1CodeControl.value === '+94') {
+    const phoneRegex = /^7\d{8}$/;
+    if (!phoneRegex.test(contact1Control.value)) {
+      contact1Control.setErrors({ ...contact1Control.errors, pattern: true });
+      return { invalidPhoneFormat: true };
     }
-  };
+  }
 
+  // Validate contact2 format
+  if (contact2Control && contact2Control.value && contact2CodeControl && contact2CodeControl.value === '+94') {
+    const phoneRegex = /^7\d{8}$/;
+    if (!phoneRegex.test(contact2Control.value)) {
+      contact2Control.setErrors({ ...contact2Control.errors, pattern: true });
+      return { invalidPhoneFormat: true };
+    }
+  }
+
+  return null;
+};
 
 
 
@@ -885,6 +927,18 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
     return `${this.getFieldLabel(fieldName)} is required`;
   }
 
+   if (fieldName.includes('contact')) {
+    if (field.errors['pattern']) {
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    }
+    if (field.errors['startsWithSeven']) {
+      return 'Mobile number must start with 7';
+    }
+    if (field.errors['sameContactNumbers']) {
+      return 'Contact numbers cannot be the same';
+    }
+  }
+
   // Add these new error handlers for coordinate ranges
   if (field.errors['latitudeRange']) {
     return 'Latitude must be between -90 and 90';
@@ -1055,6 +1109,47 @@ private longitudeRangeValidator(control: AbstractControl): ValidationErrors | nu
   }
   
   return null;
+}
+
+private startsWithSevenValidator(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  
+  const value = control.value.toString();
+  if (value.length > 0 && value.charAt(0) !== '7') {
+    return { startsWithSeven: true };
+  }
+  
+  return null;
+}
+
+onPhoneInputChange(event: any, fieldName: string) {
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+  
+  // Remove any non-digit characters
+  value = value.replace(/[^0-9]/g, '');
+  
+  // If field is empty or starts with 7, allow the input
+  if (value === '' || value.charAt(0) === '7') {
+    // Limit to 9 digits max
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    target.value = value;
+    
+    // Update the form control
+    this.distributionForm.get(fieldName)?.setValue(value);
+  } else {
+    // If doesn't start with 7, reset to empty or valid value
+    target.value = value.startsWith('7') ? value : '';
+    this.distributionForm.get(fieldName)?.setValue(value.startsWith('7') ? value : '');
+  }
+  
+  // Trigger validation for both contact fields when either changes
+  if (fieldName === 'contact1' || fieldName === 'contact2') {
+    this.distributionForm.get('contact1')?.updateValueAndValidity();
+    this.distributionForm.get('contact2')?.updateValueAndValidity();
+  }
 }
 
 }

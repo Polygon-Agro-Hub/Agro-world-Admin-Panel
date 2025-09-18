@@ -9,12 +9,12 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1300px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
-     <h1 class="text-[22px] font-bold my-8 text-textLight dark:text-black">
+     <h1 class="text-[22px] font-bold my-8 text-textLight dark:text-white">
   {{ farmerName }} - Farms
 </h1>
 
     </div>
-    <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
+    <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 ">
         <p class="text-[#494949] dark:text-textDark  mb-4">
       -- No Data Available --
     </p>
@@ -29,7 +29,6 @@
            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">No ({{ totalItems }})</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Farm Name</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
-            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Address</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Current</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Fixed</th>
                         <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Created Date</th>
@@ -53,11 +52,6 @@
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ farm.district }}
-            </td>
-            <td class="px-4 py-3 text-center">
-              <div class="flex items-center justify-center">
-                <i class="fa-solid fa-location-dot text-red-500"></i>
-              </div>
             </td>
             <td class="px-4 py-3 text-center">
               <svg

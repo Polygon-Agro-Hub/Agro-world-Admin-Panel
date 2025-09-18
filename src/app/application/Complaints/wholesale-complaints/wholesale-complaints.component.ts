@@ -21,6 +21,7 @@ interface Complaint {
   status: string;
   reply?: string;
   complain: string;
+  companyName?: string;
 }
 
 interface DropdownOption {
@@ -103,6 +104,7 @@ export class WholesaleComplaintsComponent implements OnInit {
             refNo: item.refNo,
             complainCategory: item.categoryEnglish,
             firstName: item.firstName,
+            companyName: item.companyName,
             lastName: item.lastName,
             contactNumber: item.ContactNumber,
             createdAt: this.formatDate(item.createdAt),

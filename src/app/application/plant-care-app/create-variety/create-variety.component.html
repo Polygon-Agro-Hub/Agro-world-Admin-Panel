@@ -16,18 +16,11 @@
       <!-- Crop Name -->
       <form [formGroup]="cropForm" (ngSubmit)="onSubmit()">
         <div>
-          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark mb-2">Crop Name *</label>
-<p-dropdown
-  [options]="groupList"
-  formControlName="groupId"
-  optionLabel="cropNameEnglish"
-  optionValue="id"
-  [filter]="true"
-  filterPlaceholder="Search crop..."
-  placeholder="Select a crop"
-  [showClear]="true"
-  class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-/>
+          <label for="groupId" class="block text-sm font-medium text-textLight dark:text-textDark mb-2">Crop Name
+            *</label>
+          <p-dropdown [options]="groupList" formControlName="groupId" optionLabel="cropNameEnglish" optionValue="id"
+            [filter]="true" filterPlaceholder="Search crop..." placeholder="Select a crop" [showClear]="true"
+            class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="
               cropForm.get('groupId')!.invalid &&
@@ -90,7 +83,6 @@
             Name By Sinhala *</label>
           <input type="text" id="varietyNameSinhala" formControlName="varietyNameSinhala"
             (input)="onVarietyNameInput($event, 'sinhala')"
-            
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
@@ -111,8 +103,7 @@
           <label for="descriptionSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark">Description (in Sinhala) *</label>
           <textarea id="descriptionSinhala" formControlName="descriptionSinhala"
-            (input)="onDescriptionInput($event, 'sinhala')"
-             (paste)="validateSinhalaPaste($event)"
+            (input)="onDescriptionInput($event, 'sinhala')" (paste)="validateSinhalaPaste($event)"
             name="descriptionSinhala" rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
@@ -134,7 +125,6 @@
             By Tamil *</label>
           <input type="text" id="varietyNameTamil" formControlName="varietyNameTamil"
             (input)="onVarietyNameInput($event, 'tamil')" (paste)="validateTamilPaste($event)"
-            
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required />
           <div *ngIf="
@@ -155,8 +145,8 @@
           <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description
             (in Tamil) *</label>
           <textarea id="descriptionTamil" formControlName="descriptionTamil"
-            (input)="onDescriptionInput($event, 'tamil')" 
-            (paste)="validateTamilPaste($event)" name="descriptionTamil" rows="3"
+            (input)="onDescriptionInput($event, 'tamil')" (paste)="validateTamilPaste($event)" name="descriptionTamil"
+            rows="3"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"></textarea>
           <div *ngIf="
       cropForm.get('descriptionTamil')!.invalid &&
@@ -183,10 +173,13 @@
           </span>
         </button>
 
-        <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
-          {{ selectedFileName }}
+        <div *ngIf="selectedFileName" class="mt-2 w-full block">
           <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
             <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain" />
+          </div>
+
+          <div class="mt-2 text-textLight dark:text-textDark">
+            {{ selectedFileName }}
           </div>
         </div>
 
@@ -255,9 +248,9 @@
         <label for="varietyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
           By English *</label>
         <input type="text" id="varietyNameEnglish" [(ngModel)]="newsItems[0].varietyNameEnglish"
-  (input)="onEditVarietyNameInput($event, 'english')"
-  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-  #verityEngNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
+          (input)="onEditVarietyNameInput($event, 'english')"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+          #verityEngNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
         <div *ngIf="verityEngNameInput.touched && !newsItems[0].varietyNameEnglish" class="text-red-500 text-sm mt-1">
           <div>English Variety name is required</div>
         </div>
@@ -275,10 +268,9 @@
         <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
           English) *</label>
         <textarea id="descriptionEnglish" name="descriptionEnglish" rows="3"
-  [(ngModel)]="newsItems[0].descriptionEnglish"
-  (input)="onEditDescriptionInput($event, 'english')"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #verityDisEngNameInput="ngModel" required></textarea>
+          [(ngModel)]="newsItems[0].descriptionEnglish" (input)="onEditDescriptionInput($event, 'english')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #verityDisEngNameInput="ngModel" required></textarea>
         <div *ngIf="
             verityDisEngNameInput.touched && !newsItems[0].descriptionEnglish
           " class="text-red-500 text-sm mt-1">
@@ -292,9 +284,9 @@
         <label for="varietyNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name
           By Sinhala *</label>
         <input type="text" id="varietyNameSinhala" [(ngModel)]="newsItems[0].varietyNameSinhala"
-  (input)="onEditVarietyNameInput($event, 'sinhala')"
-  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-  #verietySinNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
+          (input)="onEditVarietyNameInput($event, 'sinhala')"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+          #verietySinNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
         <div *ngIf="
             verietySinNameInput.touched && !newsItems[0].varietyNameSinhala
           " class="text-red-500 text-sm mt-1">
@@ -314,10 +306,9 @@
         <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Description
           (in Sinhala) *</label>
         <textarea id="descriptionSinhala" name="descriptionSinhala" rows="3"
-  [(ngModel)]="newsItems[0].descriptionSinhala"
-  (input)="onEditDescriptionInput($event, 'sinhala')"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #verietyDisSinNameInput="ngModel" required></textarea>
+          [(ngModel)]="newsItems[0].descriptionSinhala" (input)="onEditDescriptionInput($event, 'sinhala')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #verietyDisSinNameInput="ngModel" required></textarea>
         <div *ngIf="
             verietyDisSinNameInput.touched && !newsItems[0].descriptionSinhala
           " class="text-red-500 text-sm mt-1">
@@ -331,9 +322,9 @@
         <label for="varietyNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Variety Name By
           Tamil *</label>
         <input type="varietyNameTamil" id="varietyNameTamil" [(ngModel)]="newsItems[0].varietyNameTamil"
-  (input)="onEditVarietyNameInput($event, 'tamil')"
-  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-  #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
+          (input)="onEditVarietyNameInput($event, 'tamil')"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+          #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\s\S]*" required />
         <div *ngIf="cropTamilNameInput.touched && !newsItems[0].varietyNameTamil" class="text-red-500 text-sm mt-1">
           <div>Tamil Variety name is required</div>
         </div>
@@ -352,9 +343,9 @@
       <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Description (in
         Tamil) *</label>
       <textarea id="descriptionTamil" name="descriptionTamil" rows="3" [(ngModel)]="newsItems[0].descriptionTamil"
-  (input)="onEditDescriptionInput($event, 'tamil')"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  #VerietyDisTamilInput="ngModel" required></textarea>
+        (input)="onEditDescriptionInput($event, 'tamil')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        #VerietyDisTamilInput="ngModel" required></textarea>
       <div *ngIf="VerietyDisTamilInput.touched && !newsItems[0].descriptionTamil" class="text-red-500 text-sm mt-1">
         <div>Tamil Variety Discription is required</div>
       </div>
@@ -374,10 +365,13 @@
       </span>
     </button>
 
-    <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
-      {{ selectedFileName }}
+    <div *ngIf="selectedFileName" class="mt-2 w-full block">
       <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
         <img [src]="selectedImage" alt="Crop Image" class="max-w-full w-auto object-contain" />
+      </div>
+
+      <div class="mt-2 text-textLight dark:text-textDark">
+        {{ selectedFileName }}
       </div>
     </div>
 

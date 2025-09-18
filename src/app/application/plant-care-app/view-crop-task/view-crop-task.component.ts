@@ -92,7 +92,7 @@ export class ViewCropTaskComponent implements OnInit {
             if (data) {
               Swal.fire(
                 'Deleted!',
-                'The crop calendar item has been deleted.',
+                'The crop task item has been deleted.',
                 'success'
               );
               this.fetchAllCropTask();

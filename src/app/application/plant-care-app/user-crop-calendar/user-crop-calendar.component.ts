@@ -121,42 +121,52 @@ export class UserCropCalendarComponent {
     );
   }
 
-  deleteCroptask(id: string, cropId: any, index: any): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this  Crop Task? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.ongoingCultivationService
-          .deleteUserCropTask(id, cropId, index, this.userId)
-          .subscribe(
-            (data: any) => {
-              if (data) {
-                Swal.fire(
-                  'Deleted!',
-                  'The crop calendar item has been deleted.',
-                  'success'
-                );
-                this.getchUserTaskList(this.cropCalendarId, this.userId);
-              }
-            },
-            (error) => {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the crop calendar.',
-                'error'
-              );
+ deleteCroptask(id: string, cropId: any, index: any): void {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this Crop Task? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#ef4444', // red-500
+    cancelButtonColor: '#3b82f6', // blue-500
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    background: '#1e293b', // dark background
+    color: '#e2e8f0', // light text
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.ongoingCultivationService
+        .deleteUserCropTask(id, cropId, index, this.userId)
+        .subscribe(
+          (data: any) => {
+            if (data) {
+              this.getchUserTaskList(this.cropCalendarId, this.userId);
+
+              // ✅ Success popup with auto close
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The crop task has been deleted successfully.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false,
+                background: '#1e293b',
+                color: '#e2e8f0',
+              });
             }
-          );
-      }
-    });
-  }
+          },
+          (error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the crop calendar.',
+              icon: 'error',
+              background: '#1e293b',
+              color: '#e2e8f0',
+            });
+          }
+        );
+    }
+  });
+}
 
   updateStatus(id: number) {
     this.ongoingCultivationService.updateUserTaskStatus(id).subscribe(

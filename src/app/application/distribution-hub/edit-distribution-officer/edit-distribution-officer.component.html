@@ -329,6 +329,7 @@
     pattern="^[A-Z][a-zA-Z ]*$"
     (input)="capitalizeWhileTyping('firstNameEnglish')"
     (keypress)="blockInvalidNameInput($event, personalData.firstNameEnglish)"
+      (input)="trimLeadingSpace($event)"
     (blur)="onBlur('firstNameEnglish')"
     class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
@@ -363,6 +364,7 @@
     pattern="^[A-Z][a-zA-Z ]*$"
     (input)="capitalizeWhileTyping('lastNameEnglish')"
     (keypress)="blockInvalidNameInput($event, personalData.lastNameEnglish)"
+         (input)="trimLeadingSpace($event)"
     (blur)="onBlur('lastNameEnglish')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
@@ -538,6 +540,7 @@
     (blur)="onBlur('nic')"
     (input)="capitalizeV(); enforceNicLength($event)"
     (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
+         (input)="trimLeadingSpace($event)"
     maxlength="12"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
@@ -551,12 +554,13 @@
 </div>
 
 
-        <div>
+      <div>
   <label
     for="email"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-    >Email*</label
   >
+    Email*
+  </label>
   <input
     type="email"
     id="email"
@@ -564,8 +568,11 @@
     [(ngModel)]="personalData.email"
     (blur)="onBlur('email')"
     (keydown)="blockLeadingSpace($event, 'email')"
+    (input)="trimLeadingSpace($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
+
+
 
   <!-- Show specific error message from service -->
   <span 
@@ -622,6 +629,7 @@
             name="houseNumber"
             [(ngModel)]="personalData.houseNumber"
              (input)="capitalizeWhileTyping('houseNumber')"
+                  (input)="trimLeadingSpace($event)"
              (keydown)="blockLeadingSpace($event, 'houseNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -644,6 +652,7 @@
             name="streetName"
             [(ngModel)]="personalData.streetName"
             (keydown)="blockLeadingSpace($event, 'streetName')"
+                 (input)="trimLeadingSpace($event)"
               (input)="capitalizeWhileTyping('streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -666,6 +675,7 @@
             name="city"
             [(ngModel)]="personalData.city"
             (keydown)="blockLeadingSpace($event, 'city')"
+                 (input)="trimLeadingSpace($event)"
             (input)="capitalizeWhileTyping('city')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -757,6 +767,7 @@
     pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$"
     (input)="capitalizeWhileTyping('accHolderName')"
     (keypress)="blockInvalidNameInput($event, personalData.accHolderName)"
+     (input)="trimLeadingSpace($event)"
     (blur)="onBlur('accHolderName')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
@@ -782,7 +793,7 @@
             class="text-[#2E2E2E]">*</span></label>
         <input id="accNumber" name="accNumber"    type="number" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #accNumberInput="ngModel" required pattern="^[0-9]+$"   (keydown)="blockLeadingSpace($event, 'accNumber')"   (blur)="onBlur('accNumber')"
+          #accNumberInput="ngModel" required pattern="^[0-9]+$"  (keypress)="allowOnlyNumbers($event)" (keydown)="blockLeadingSpace($event, 'accNumber')"   (blur)="onBlur('accNumber')"
         (ngModelChange)="validateAccNumber()" />
         <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
           <div>Account Number is required</div>
@@ -831,6 +842,7 @@
         <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"   type="number"
           [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
          (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
+         (keypress)="allowOnlyNumbers($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">

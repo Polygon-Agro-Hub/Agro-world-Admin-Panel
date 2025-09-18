@@ -46,6 +46,7 @@
               readonly
               [value]="companyName"
                (keydown)="blockLeadingSpace($event, 'nic')"
+                 (input)="trimLeadingSpace($event)"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
             />
           </div>
@@ -152,6 +153,7 @@
     pattern="^[A-Z][a-zA-Z ]*$"
     (input)="capitalizeWhileTyping('firstNameEnglish')"
     (keypress)="blockInvalidNameInput($event, 'firstNameEnglish')"
+       (input)="trimLeadingSpace($event)"
     class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
   <span *ngIf=" (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)" class="text-red-600 text-sm">
@@ -177,6 +179,7 @@
     #lastNameEnglishRef="ngModel"
     pattern="^[A-Z][a-zA-Z ]*$"
     (input)="capitalizeWhileTyping('lastNameEnglish')"
+       (input)="trimLeadingSpace($event)"
     (keypress)="blockInvalidNameInput($event, 'lastNameEnglish')"
     class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
@@ -300,6 +303,7 @@
     [(ngModel)]="personalData.nic"
     (blur)="onBlur('nic')"
     (input)="capitalizeV(); enforceNicLength($event)"
+       (input)="trimLeadingSpace($event)"
     (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   />
@@ -316,6 +320,7 @@
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
   <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"   
          (keydown)="blockLeadingSpace($event, 'nic')" (blur)="onBlur('email')"
+            (input)="trimLeadingSpace($event)"
          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
   
   <!-- Show detailed error messages from service -->
@@ -355,7 +360,7 @@
             [(ngModel)]="personalData.houseNumber"
              (keydown)="blockLeadingSpace($event, 'houseNumber')"
              (input)="capitalizeWhileTyping('houseNumber')"
-             
+                (input)="trimLeadingSpace($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('houseNumber')" class="text-red-600 text-sm">House Number is required.</span>
         </div>
@@ -364,6 +369,7 @@
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
           <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"  (keydown)="blockLeadingSpace($event, 'streetName')
           "  (input)="capitalizeWhileTyping('streetName')"
+             (input)="trimLeadingSpace($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is required.</span>
         </div>
@@ -377,6 +383,7 @@
   [(ngModel)]="personalData.city"
   (keydown)="blockLeadingSpace($event, 'city')"
   (input)="capitalizeWhileTyping('city')"
+     (input)="trimLeadingSpace($event)"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
 />
 
@@ -461,6 +468,7 @@
       (input)="capitalizeWhileTyping('accHolderName')"
       (keypress)="blockInvalidNameInput($event, personalData.accHolderName)"
       (blur)="onBlur('accHolderName')"
+         (input)="trimLeadingSpace($event)"
       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     />
     <span

@@ -741,22 +741,93 @@ back(): void {
     return;
   }
 
-  // Check if form is invalid and show validation errors
-  if (this.distributionForm.invalid) {
-    // Mark all fields as touched to show validation errors
-    this.markFormGroupTouched(this.distributionForm);
-    
-    // Collect all validation errors
-    const errorMessages = this.getAllValidationErrors();
-    
+  // Mark all fields as touched to show validation messages
+  this.markFormGroupTouched(this.distributionForm);
+  
+  // Collect all validation errors
+  const missingFields: string[] = [];
+
+  // Check required fields
+  if (this.distributionForm.get('name')?.invalid) {
+    missingFields.push('Distribution Centre Name');
+  }
+
+  if (this.distributionForm.get('contact1Code')?.invalid) {
+    missingFields.push('Contact 1 Code');
+  }
+
+  if (this.distributionForm.get('contact1')?.invalid) {
+    missingFields.push('Contact 1 Number');
+  } else if (this.distributionForm.get('contact1')?.valid) {
+    const contact1 = this.distributionForm.get('contact1')?.value;
+    if (contact1 && !this.isValidPhoneNumber(contact1)) {
+      missingFields.push('Contact 1 Number - Must be a valid phone number');
+    }
+  }
+
+  if (this.distributionForm.get('contact2')?.value && !this.isValidPhoneNumber(this.distributionForm.get('contact2')?.value)) {
+    missingFields.push('Contact 2 Number - Must be a valid phone number');
+  }
+
+  if (this.distributionForm.get('city')?.invalid) {
+    missingFields.push('City');
+  }
+
+  if (this.distributionForm.get('district')?.invalid) {
+    missingFields.push('District');
+  }
+
+  if (this.distributionForm.get('province')?.invalid) {
+    missingFields.push('Province');
+  }
+
+  if (this.distributionForm.get('country')?.invalid) {
+    missingFields.push('Country');
+  }
+
+  if (this.distributionForm.get('regCode')?.invalid) {
+    missingFields.push('Registration Code');
+  }
+
+  if (this.distributionForm.get('longitude')?.invalid) {
+    missingFields.push('Longitude');
+  }
+
+  if (this.distributionForm.get('latitude')?.invalid) {
+    missingFields.push('Latitude');
+  }
+
+  if (this.distributionForm.get('email')?.invalid) {
+    missingFields.push('Email');
+  } else if (this.distributionForm.get('email')?.valid) {
+    const email = this.distributionForm.get('email')?.value;
+    if (email && !this.isValidEmail(email)) {
+      missingFields.push('Email - Must be a valid email address');
+    }
+  }
+
+  if (this.distributionForm.get('company')?.invalid) {
+    missingFields.push('Company');
+  }
+
+  // If errors, show list and stop - validation messages will now be visible
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
     Swal.fire({
       icon: 'error',
-      title: 'Form Validation Failed',
-      html: this.formatErrorMessagesForAlert(errorMessages),
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
       confirmButtonText: 'OK',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      }
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
     });
     return;
   }
@@ -768,6 +839,7 @@ back(): void {
     showCancelButton: true,
     confirmButtonText: 'Yes, Update it!',
     cancelButtonText: 'No, Cancel',
+    reverseButtons: true,
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
     }
@@ -787,21 +859,21 @@ back(): void {
       }
 
       const updateData = {
-    name: this.distributionForm.value.name, // Map to centerName
-    contact1Code: this.distributionForm.value.contact1Code, // Map to code1
-    contact1: this.distributionForm.value.contact1, // Map to contact01
-    contact2Code: this.distributionForm.value.contact2Code || '', // Map to code2
-    contact2: this.distributionForm.value.contact2 || '', // Map to contact02
-    city: this.distributionForm.value.city,
-    district: this.distributionForm.value.district,
-    province: this.distributionForm.value.province,
-    country: this.distributionForm.value.country,
-    regCode: this.distributionForm.value.regCode,
-    longitude: parseFloat(this.distributionForm.value.longitude).toString(),
-    latitude: parseFloat(this.distributionForm.value.latitude).toString(),
-    email: this.distributionForm.value.email,
-    company: companyId // Send companyId instead of company
-  };
+        name: this.distributionForm.value.name,
+        contact1Code: this.distributionForm.value.contact1Code,
+        contact1: this.distributionForm.value.contact1,
+        contact2Code: this.distributionForm.value.contact2Code || '',
+        contact2: this.distributionForm.value.contact2 || '',
+        city: this.distributionForm.value.city,
+        district: this.distributionForm.value.district,
+        province: this.distributionForm.value.province,
+        country: this.distributionForm.value.country,
+        regCode: this.distributionForm.value.regCode,
+        longitude: parseFloat(this.distributionForm.value.longitude).toString(),
+        latitude: parseFloat(this.distributionForm.value.latitude).toString(),
+        email: this.distributionForm.value.email,
+        company: companyId
+      };
 
       const id = this.route.snapshot.params['id'];
 
@@ -871,6 +943,17 @@ back(): void {
         });
     }
   });
+}
+
+// Helper methods needed for the validation
+isValidPhoneNumber(phone: string): boolean {
+  const phoneRegex = /^[0-9]{9,15}$/;
+  return phoneRegex.test(phone);
+}
+
+isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
 // Add these helper methods to collect and format validation errors

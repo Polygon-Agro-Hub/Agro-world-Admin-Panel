@@ -77,18 +77,16 @@
       " />
     </div>
     <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
+      <!-- Show only one error at a time with priority -->
       <span *ngIf="distributionForm.get('contact1')?.errors?.['required']">
         Contact Number 01 is required
       </span>
-      <span *ngIf="distributionForm.get('contact1')?.errors?.['pattern']">
+      <span *ngIf="!distributionForm.get('contact1')?.errors?.['required'] && distributionForm.get('contact1')?.errors?.['pattern']">
         Please enter a valid mobile number (format: +947XXXXXXXX)
       </span>
-      <span *ngIf="distributionForm.get('contact1')?.errors?.['startsWithSeven']">
+      <span *ngIf="!distributionForm.get('contact1')?.errors?.['required'] && !distributionForm.get('contact1')?.errors?.['pattern'] && distributionForm.get('contact1')?.errors?.['startsWithSeven']">
         Mobile number must start with 7
       </span>
-      <!-- <span *ngIf="distributionForm.get('contact1')?.errors?.['sameContactNumbers']">
-        Contact Number 01 and Contact Number 02 cannot be the same
-      </span> -->
     </div>
   </div>
   <div class="flex-1">
@@ -123,13 +121,14 @@
       " />
     </div>
     <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
+      <!-- Show only one error at a time with priority -->
       <span *ngIf="distributionForm.get('contact2')?.errors?.['pattern']">
         Please enter a valid mobile number (format: +947XXXXXXXX)
       </span>
-      <span *ngIf="distributionForm.get('contact2')?.errors?.['startsWithSeven']">
+      <span *ngIf="!distributionForm.get('contact2')?.errors?.['pattern'] && distributionForm.get('contact2')?.errors?.['startsWithSeven']">
         Mobile number must start with 7
       </span>
-      <span *ngIf="distributionForm.get('contact2')?.errors?.['sameContactNumbers']">
+      <span *ngIf="!distributionForm.get('contact2')?.errors?.['pattern'] && !distributionForm.get('contact2')?.errors?.['startsWithSeven'] && distributionForm.get('contact2')?.errors?.['sameContactNumbers']">
         Contact Number 01 and Contact Number 02 cannot be the same
       </span>
     </div>

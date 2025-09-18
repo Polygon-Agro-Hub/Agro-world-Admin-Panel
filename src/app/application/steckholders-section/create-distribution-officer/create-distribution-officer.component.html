@@ -116,30 +116,30 @@
         </div>
 
         <div>
-          <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Job Role*
-          </label>
-          <div class="relative">
-            <select (blur)="onBlur('jobRole')" id="jobRole" [(ngModel)]="personalData.jobRole"
-              (change)="EpmloyeIdCreate()" name="jobRole" placeholder="select"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10 cursor-pointer">
-              <option disabled class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-                -- select --
-              </option>
-              <option value="Distribution Center Manager"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 cursor-pointer">
-                Distribution Centre Manager
-              </option>
-              <option value="Distribution Officer"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 cursor-pointer">
-                Distribution Officer
-              </option>
-            </select>
-            <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
-          </div>
-          <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">Job Role is a required field</span>
-        </div>
+  <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Job Role*
+  </label>
+  <div class="relative">
+    <select (blur)="onBlur('jobRole')" id="jobRole" [(ngModel)]="personalData.jobRole"
+      (change)="EpmloyeIdCreate()" name="jobRole" placeholder="select"
+      class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10 cursor-pointer">
+      <option disabled class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
+        -- select --
+      </option>
+      <option value="Distribution Center Manager"
+        class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 cursor-pointer">
+        Distribution Centre Manager
+      </option>
+      <option value="Distribution Officer"
+        class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 cursor-pointer">
+        Distribution Officer
+      </option>
+    </select>
+    <i
+      class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
+  </div>
+  <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">Job Role is a required field</span>
+</div>
 
         <div *ngIf="personalData.jobRole === 'Distribution Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -323,7 +323,7 @@
         </div>
 
         <div>
-  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
   <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
     (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -340,7 +340,7 @@
 </div>
 
         <div>
-  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
   <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
     (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" (blur)="onBlur('email')"
     placeholder="example@domain.com"

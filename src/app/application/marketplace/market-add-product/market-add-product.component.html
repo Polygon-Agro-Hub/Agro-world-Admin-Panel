@@ -184,7 +184,7 @@
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
   #normalPriceField="ngModel" required />
         <div *ngIf="normalPriceField.invalid && normalPriceField.touched" class="text-red-500 text-sm mt-1">
-          Actual Price Per kg is required.
+          Price Per kg is required.
         </div>
         <div *ngIf="productObj.normalPrice < 0" class="text-red-500 text-sm mt-1">
           Price cannot be negative.
@@ -385,12 +385,12 @@
     (keydown)="preventInvalidChars($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #startValueField="ngModel" required />
-  <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
+  <!-- <div *ngIf="startValueField.invalid && startValueField.touched" class="text-red-500 text-sm mt-1">
     Minimum Value is required.
-  </div>
-  <!-- <div *ngIf="productObj.startValue <= 0.0" class="text-red-500 text-sm mt-1">
-    Please enter a value greater than 0.
   </div> -->
+  <div *ngIf="productObj.startValue <= 0.0" class="text-red-500 text-sm mt-1">
+    Please enter a value greater than 0.
+  </div>
   <!-- Add this new validation message -->
   <div *ngIf="productObj.category === 'WholeSale' && productObj.startValue && productObj.maxQuantity && productObj.startValue > productObj.maxQuantity" 
        class="text-red-500 text-sm mt-1">
@@ -406,9 +406,9 @@
     (keydown)="preventInvalidChars($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #maxQuantityField="ngModel" required />
-  <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
+  <!-- <div *ngIf="maxQuantityField.invalid && maxQuantityField.touched" class="text-red-500 text-sm mt-1">
     Maximum Quantity is required.
-  </div>
+  </div> -->
   <!-- Update this validation message -->
   <div *ngIf="maxQuantityField.touched && productObj.maxQuantity <= 0" class="text-red-500 text-sm mt-1">
     Please enter a value greater than 0.
@@ -427,9 +427,9 @@
     (keydown)="preventInvalidChars($event)"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     #changeByField="ngModel" required />
-  <div *ngIf="changeByField.invalid && changeByField.touched" class="text-red-500 text-sm mt-1">
+  <!-- <div *ngIf="changeByField.invalid && changeByField.touched" class="text-red-500 text-sm mt-1">
     Increase/Decrease by is required.
-  </div>
+  </div> -->
   <!-- Update this validation message -->
   <div *ngIf="changeByField.touched && productObj.changeby <= 0" class="text-red-500 text-sm mt-1">
     Please enter a value greater than 0.

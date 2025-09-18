@@ -105,7 +105,7 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
         this.ownershipDetails = response.ownershipDetails || null;
         this.ownershipType = response.ownershipType || null;
 
-        this.hasData = !!(response.landDetails || response.ownershipDetails);
+        this.hasData = !!(response.landDetails && response.ownershipDetails);
         console.log('Land ownership details:', response);
       },
       (error) => {
@@ -123,6 +123,8 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
       }
     );
   }
+  
+  
 
   navigatePath(path: string): void {
     this.router.navigate([path]);

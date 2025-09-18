@@ -323,94 +323,126 @@
 
         <!-- Fixed Mobile Number - 01 input -->
         <div>
-          <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Mobile Number - 01*
-          </label>
-          <div class="mt-1">
-            <div class="flex">
-              <p-dropdown [(ngModel)]="personalData.contact1Code" [options]="countries" optionLabel="dialCode"
-                optionValue="dialCode"
-                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                [style]="{ width: '140px' }">
-                <!-- Dropdown items -->
-                <ng-template let-country pTemplate="item">
-                  <div class="flex items-center gap-2">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-
-                <!-- Selected item -->
-                <ng-template let-country pTemplate="selectedItem">
-                  <div class="flex items-center gap-2" *ngIf="country">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
-              <input id="phoneNumber01" name="contact1" type="tel" [(ngModel)]="personalData.contact1"
-                (keydown)="preventLeadingSpace($event, 'contact1')" (input)="onInputChange($event, 'phone')"
-                maxlength="9"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                placeholder="Enter your phone number" (blur)="onBlur('contact1')" />
-            </div>
-            <!-- Error messages outside the flex container -->
-            <div class="mt-1">
-              <span *ngIf="touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1)"
-                class="text-red-600 text-sm block">
-                Please enter a valid mobile number (9 digits)
-              </span>
-              <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
-                Contact Number 1 and Contact Number 2 cannot be the same
-              </span>
-            </div>
+  <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Mobile Number - 01*
+  </label>
+  <div class="mt-1">
+    <div class="flex">
+      <p-dropdown [(ngModel)]="personalData.contact1Code" [options]="countries" optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+        [style]="{ width: '120px' }"
+        [ngClass]="{
+          'border-red-500': 
+            touchedFields.contact1 && 
+            !isValidPhoneNumber(personalData.contact1)
+        }">
+        <!-- Dropdown items -->
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
           </div>
-        </div>
+        </ng-template>
+
+        <!-- Selected item -->
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <input 
+        type="tel" 
+        id="phoneNumber01" 
+        name="contact1" 
+        [(ngModel)]="personalData.contact1"
+        placeholder="7XXXXXXX" 
+        maxlength="9"
+        (input)="formatPhoneNumber('contact1')"
+        (keypress)="preventNonNumeric($event, 'contact1')"
+        (blur)="onBlur('contact1')"
+        [class]="
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+          (touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1)
+            ? 'border-red-500'
+            : 'border-gray-300')
+        " />
+    </div>
+    <!-- Error messages outside the flex container -->
+    <div class="mt-1">
+      <span *ngIf="touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1)" class="text-red-600 text-sm block">
+        Please enter a valid mobile number (format: +947XXXXXXXX)
+      </span>
+      <!-- <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
+        Contact Number 1 and Contact Number 2 cannot be the same
+      </span> -->
+    </div>
+  </div>
+</div>
         <!-- Fixed Mobile Number - 02 input -->
         <div>
-          <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Mobile Number - 02
-          </label>
-          <div class="mt-1">
-            <div class="flex">
-              <p-dropdown [(ngModel)]="personalData.contact2Code" [options]="countries" optionLabel="dialCode"
-                optionValue="dialCode"
-                styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
-                [style]="{ width: '140px' }">
-                <!-- Dropdown items -->
-                <ng-template let-country pTemplate="item">
-                  <div class="flex items-center gap-2">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-
-                <!-- Selected item -->
-                <ng-template let-country pTemplate="selectedItem">
-                  <div class="flex items-center gap-2" *ngIf="country">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
-              <input id="phoneNumber02" name="contact2" type="tel" [(ngModel)]="personalData.contact2"
-                (keydown)="preventLeadingSpace($event, 'contact2')" (input)="onInputChange($event, 'phone')"
-                maxlength="9"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                placeholder="Enter your phone number" (blur)="onBlur('contact2')" />
-            </div>
-            <!-- Error messages outside the flex container -->
-            <div class="mt-1">
-              <span *ngIf="personalData.contact2 && !isValidPhoneNumber(personalData.contact2)"
-                class="text-red-600 text-sm block">
-                Please enter a valid mobile number (9 digits)
-              </span>
-              <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
-                Contact Number 1 and Contact Number 2 cannot be the same
-              </span>
-            </div>
+  <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Mobile Number - 02
+  </label>
+  <div class="mt-1">
+    <div class="flex">
+      <p-dropdown [(ngModel)]="personalData.contact2Code" [options]="countries" optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+        [style]="{ width: '120px' }"
+        [ngClass]="{
+          'border-red-500': 
+            personalData.contact2 && 
+            !isValidPhoneNumber(personalData.contact2)
+        }">
+        <!-- Dropdown items -->
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
           </div>
-        </div>
+        </ng-template>
+
+        <!-- Selected item -->
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <input 
+        type="tel" 
+        id="phoneNumber02" 
+        name="contact2" 
+        [(ngModel)]="personalData.contact2"
+        placeholder="7XXXXXXX" 
+        maxlength="9"
+        (input)="formatPhoneNumber('contact2')"
+        (keypress)="preventNonNumeric($event, 'contact2')"
+        (blur)="onBlur('contact2')"
+        [class]="
+          'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+          (personalData.contact2 && !isValidPhoneNumber(personalData.contact2)
+            ? 'border-red-500'
+            : 'border-gray-300')
+        " />
+    </div>
+    <!-- Error messages outside the flex container -->
+    <div class="mt-1">
+      <span *ngIf="personalData.contact2 && !isValidPhoneNumber(personalData.contact2)" class="text-red-600 text-sm block">
+        Please enter a valid mobile number (format: +947XXXXXXXX)
+      </span>
+      <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
+        Contact Number 1 and Contact Number 2 cannot be the same
+      </span>
+    </div>
+  </div>
+</div>
 
 
         <div>

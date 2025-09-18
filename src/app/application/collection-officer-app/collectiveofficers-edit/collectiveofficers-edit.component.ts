@@ -151,6 +151,51 @@ setupDropdownOptions() {
     private collectionOfficerService: CollectionOfficerService
   ) { }
 
+preventNonNumeric(event: KeyboardEvent, fieldName: 'contact1' | 'contact2'): void {
+  const input = event.target as HTMLInputElement;
+  const char = String.fromCharCode(event.which);
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Allow only numbers (0-9)
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+    return;
+  }
+  
+  // If this is the first character, it must be '7'
+  if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
+    event.preventDefault();
+    return;
+  }
+  
+  // If user tries to insert a character at position 0 that's not '7'
+  if (cursorPosition === 0 && char !== '7') {
+    event.preventDefault();
+  }
+}
+
+formatPhoneNumber(fieldName: 'contact1' | 'contact2'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Ensure it starts with 7
+    if (value.length > 0 && value.charAt(0) !== '7') {
+      // If first digit is not 7, remove it
+      value = value.replace(/^[^7]*/, '');
+    }
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
+  }
+}
+
   ngOnInit() {
   this.loadBanks();
   this.loadBranches();
@@ -443,10 +488,12 @@ isFieldInvalid(fieldName: string): boolean {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+  if (!phone) return false;
+  
+  // Must start with 7 and have exactly 9 digits total
+  const phoneRegex = /^7\d{8}$/;
+  return phoneRegex.test(phone);
+}
 
 
 
@@ -637,13 +684,13 @@ preventInvalidEnglishCharacters(event: KeyboardEvent): void {
 }
 
   arePhoneNumbersSame(): boolean {
-    if (!this.personalData.contact1 || !this.personalData.contact2) {
-      return false;
-    }
-    const fullPhone1 = this.personalData.contact1Code + this.personalData.contact1;
-    const fullPhone2 = this.personalData.contact2Code + this.personalData.contact2;
-    return fullPhone1 === fullPhone2;
+  if (!this.personalData.contact1 || !this.personalData.contact2) {
+    return false;
   }
+  
+  // Compare just the numbers (not the country codes)
+  return this.personalData.contact1 === this.personalData.contact2;
+}
 
   isAtLeastOneLanguageSelected(): boolean {
     return this.selectedLanguages && this.selectedLanguages.length > 0;
@@ -935,14 +982,15 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       missingFields.push('Last Name (in Tamil)');
     }
 
+    // Phone validation - updated to match create component
     if (!this.personalData.contact1) {
       missingFields.push('Mobile Number - 01');
     } else if (!this.isValidPhoneNumber(this.personalData.contact1)) {
-      missingFields.push('Mobile Number - 01 - Must be 9 digits');
+      missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
     }
 
     if (this.personalData.contact2 && !this.isValidPhoneNumber(this.personalData.contact2)) {
-      missingFields.push('Mobile Number - 02 - Must be 9 digits');
+      missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
     }
 
     if (this.personalData.contact1 && this.personalData.contact2 && this.personalData.contact1 === this.personalData.contact2) {
@@ -1078,12 +1126,6 @@ onSubmit() {
 
   const missingFields: string[] = [];
 
-  if (!this.personalData.email) {
-    missingFields.push('Email');
-  } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-  }
-
   // Check required fields for pageOne
   if (!this.personalData.empType) {
     missingFields.push('Staff Employee Type');
@@ -1133,14 +1175,15 @@ onSubmit() {
     missingFields.push('Last Name (in Tamil)');
   }
 
+  // Phone validation - updated to match create component
   if (!this.personalData.contact1) {
     missingFields.push('Mobile Number - 01');
   } else if (!this.isValidPhoneNumber(this.personalData.contact1)) {
-    missingFields.push('Mobile Number - 01 - Must be 9 digits');
+    missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
   }
 
   if (this.personalData.contact2 && !this.isValidPhoneNumber(this.personalData.contact2)) {
-    missingFields.push('Mobile Number - 02 - Must be 9 digits');
+    missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
   }
 
   if (this.personalData.contact1 && this.personalData.contact2 && this.personalData.contact1 === this.personalData.contact2) {
@@ -1156,7 +1199,7 @@ onSubmit() {
   if (!this.personalData.email) {
     missingFields.push('Email');
   } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
   }
 
   // Check required fields for pageTwo

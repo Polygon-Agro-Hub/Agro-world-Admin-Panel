@@ -104,6 +104,14 @@ getFlagUrl(countryCode: string): string {
   return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
 }
 
+dropdownOpen = false;
+
+  jobRoles = [
+    'Collection Centre Manager',
+    'Collection Officer',
+    'Customer Officer'
+  ];
+
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -183,6 +191,30 @@ markPageOneFieldsAsTouched(): void {
   this.empTypeTouched = true;
   this.jobRoleTouched = true;
 }
+
+toggleDropdown() {
+  this.dropdownOpen = !this.dropdownOpen;
+}
+
+closeDropdown() {
+  this.dropdownOpen = false;
+}
+
+selectjobRole(role: string) {
+
+  if (role === "Collection Centre Manager") {
+    this.personalData.jobRole = "Collection Center Manager";
+    this.toggleDropdown()
+    console.log('dropdownOpen', this.dropdownOpen)
+  } else {
+    this.personalData.jobRole = role;
+    this.toggleDropdown()
+    console.log('dropdownOpen', this.dropdownOpen)
+  }
+
+  this.EpmloyeIdCreate(); // call your method
+}
+
 
 
 
@@ -408,32 +440,48 @@ onSubmit() {
           (error: any) => {
             this.isLoading = false;
             let errorMessage = 'An unexpected error occurred';
-
-            if (error.error && error.error.error) {
-              switch (error.error.error) {
-                case 'NIC already exists':
-                  errorMessage = 'NIC already exists.';
-                  break;
-                case 'Email already exists.':
-                  errorMessage = 'Email already exists.';
-                  break;
-                case 'Mobile Number 1 already exists.':
-                  errorMessage = 'Mobile Number 1 already exists.';
-                  break;
-                case 'Mobile Number 2 already exists.':
-                  errorMessage = 'Mobile Number 2 already exists.';
-                  break;
-                case 'Invalid file format or file upload error':
-                  errorMessage = 'Invalid file format or error uploading the file.';
-                  break;
-                default:
-                  errorMessage = error.error.error || 'An unexpected error occurred';
-              }
+            let messages: string[] = [];
+          
+            if (error.error && Array.isArray(error.error.errors)) {
+              // Map backend error keys to user-friendly messages
+              messages = error.error.errors.map((err: string) => {
+                switch (err) {
+                  case 'NIC':
+                    return 'The NIC number is already registered.';
+                  case 'Email':
+                    return 'Email already exists.';
+                  case 'PhoneNumber01':
+                    return 'Mobile Number 1 already exists.';
+                  case 'PhoneNumber02':
+                    return 'Mobile Number 2 already exists.';
+                  default:
+                    return 'Validation error: ' + err;
+                }
+              });
             }
-
-            this.errorMessage = errorMessage;
-            Swal.fire('Error', this.errorMessage, 'error');
+          
+            if (messages.length > 0) {
+              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+              messages.forEach(m => {
+                errorMessage += `<li>${m}</li>`;
+              });
+              errorMessage += '</ul></div>';
+          
+              Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Information',
+                html: errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+              return;
+            }
           }
+          
         );
     } else {
       Swal.fire('Cancelled', 'Your action has been cancelled', 'info');

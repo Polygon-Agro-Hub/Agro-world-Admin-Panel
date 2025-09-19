@@ -59,7 +59,7 @@
             for="enpType"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Staff Employee Type
+            Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -104,7 +104,7 @@
             for="languages"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Preferred Languages
+            Preferred Languages *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -211,7 +211,43 @@
           >
         </div>
 
-        <div>
+        <div class="w-full">
+          <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Job Role *
+          </label>
+        
+          <div class="relative mt-1" tabindex="0" (blur)="closeDropdown()">
+            <!-- Selected option -->
+            <div
+              class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              (click)="toggleDropdown()"
+            >
+              {{ personalData.jobRole || '-- Select a Job Role --' }}
+              <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
+            </div>
+        
+            <!-- Dropdown options -->
+            <div
+              *ngIf="dropdownOpen"
+              class="absolute mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg z-10"
+            >
+              <div
+                *ngFor="let role of jobRoles"
+                (click)="selectjobRole(role)"
+                class="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+              >
+                {{ role }}
+              </div>
+            </div>
+          </div>
+        
+          <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">
+            Job Role is a required field
+          </span>
+        </div>
+        
+
+        <!-- <div>
           <label
             for="jobRole"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
@@ -220,35 +256,35 @@
           </label>
           <div class="relative">
             <select
-              (blur)="onBlur('jobRole')"
+              
               id="jobRole"
               [(ngModel)]="personalData.jobRole"
               (change)="EpmloyeIdCreate()"
               name="jobRole"
               placeholder="select"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+              class="form-control cursor-pointer mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
             >
               <option
                 disabled
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+                class="p-2 text-gray-700  dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
               >
                 -- select --
               </option>
               <option
                 value="Collection Center Manager"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+                class="p-2 text-gray-700 cursor-pointer dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
               >
                 Collection Centre Manager
               </option>
               <option
                 value="Collection Officer"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+                class="p-2 text-gray-700 cursor-pointer dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
               >
                 Collection Officer
               </option>
               <option
                 value="Customer Officer"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+                class="p-2 text-gray-700 cursor-pointer dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
               >
                 Customer Officer
               </option>
@@ -260,7 +296,7 @@
           <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm"
             >Job Role is a required field</span
           >
-        </div>
+        </div> -->
 
         <!-- <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
@@ -335,7 +371,7 @@
           <label
             for="lastNameEnglish"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in English)</label
+            >Last Name (in English) *</label
           >
           <input
             id="lastNameEnglish"
@@ -384,7 +420,7 @@
           <label
             for="lastNameSinhala"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in Sinhala)</label
+            >Last Name (in Sinhala) *</label
           >
           <input
             id="lastNameSinhala"
@@ -432,7 +468,7 @@
           <label
             for="lastNameTamil"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in Tamil)</label
+            >Last Name (in Tamil) *</label
           >
           <input
             id="lastNameTamil"
@@ -457,7 +493,7 @@
             for="phoneNumber01"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Mobile Number - 01*
+            Mobile Number - 01 *
           </label>
           <div class="mt-1">
             <div class="flex">
@@ -507,6 +543,7 @@
   name="phoneNumber01"
   [(ngModel)]="personalData.phoneNumber01"
   placeholder="7XXXXXXX"
+  #phone01Input="ngModel"
   maxlength="9"
   (input)="formatPhoneNumber('phoneNumber01')"
   (keypress)="preventNonNumeric($event, 'phoneNumber01')"
@@ -525,7 +562,7 @@
               <span
                 *ngIf="
                   touchedFields.phoneNumber01 &&
-                  !isValidPhoneNumber(personalData.phoneNumber01)
+                  !isValidPhoneNumber(personalData.phoneNumber01) && personalData.phoneNumber01
                 "
                 class="text-red-600 text-sm block"
               >
@@ -536,6 +573,10 @@
                 class="text-red-600 text-sm block"
               >
                 Mobile Number - 01 and Mobile Number - 02 cannot be the same
+              </span>
+
+              <span *ngIf="!personalData.phoneNumber01 && phone01Input.touched" class="text-red-500 text-sm mt-1">
+                Mobile Number - 01 is Required.
               </span>
             </div>
           </div>
@@ -620,6 +661,7 @@
               >
                Please enter a valid mobile number (format: +947XXXXXXXX)
               </span>
+              
             </div>
           </div>
         </div>

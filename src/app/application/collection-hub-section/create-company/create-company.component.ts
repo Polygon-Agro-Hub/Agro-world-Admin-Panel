@@ -1617,6 +1617,17 @@ export class CreateCompanyComponent implements OnInit {
     return '';
   }
 
+  onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+  
+    // Trim leading spaces only
+    const trimmedValue = inputElement.value.replace(/^\s+/, '');
+  
+    // Update the model and input value
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
 }
 
 // Updated Company class to match the JSON response structure

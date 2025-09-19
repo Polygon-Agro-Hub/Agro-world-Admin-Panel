@@ -455,7 +455,6 @@ onBlur(fieldName: keyof Personal): void {
   // 6. ADD FIELD VALIDATION METHODS
 isFieldInvalid(fieldName: string): boolean {
   const value = this.personalData[fieldName as keyof Personal];
-  // Show error only if the field is empty
   return !value || value.trim() === '';
 }
 

@@ -54,12 +54,13 @@
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.assetType || 'NULL' }}</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.mentionOther || 'NULL' }}</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.numberOfUnits || 'NULL' }}</td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-            {{ item.unitPrice ? 'Rs. ' + item.unitPrice : 'NULL' }}
-          </td>
-          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-            {{ item.totalPrice ? 'Rs. ' + item.totalPrice : 'NULL' }}
-          </td>
+      <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+  {{ item.unitPrice ? 'Rs. ' + (item.unitPrice | number:'1.0-0') : 'NULL' }}
+</td>
+      
+<td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+  {{ item.totalPrice ? 'Rs. ' + (item.totalPrice | number:'1.0-0') : 'NULL' }}
+</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center" style="text-transform: capitalize;">
             {{ item.warranty || 'NULL' }}
           </td>

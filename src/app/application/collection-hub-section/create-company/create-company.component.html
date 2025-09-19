@@ -127,12 +127,8 @@
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Required message -->
-          <div
-            *ngIf="companyNameEnglish.invalid && (companyNameEnglish.dirty || companyNameEnglish.touched) && !englishInputError"
-            class="text-red-600 text-sm mt-1">
-            <div *ngIf="companyNameEnglish.errors?.['required']">
-              Company Name (in English) is required.
-            </div>
+          <div *ngIf="isFieldInvalid('companyNameEnglish')" class="text-red-500 text-sm mt-1">
+            Company Name (in English) is required.
           </div>
 
           <!-- Language-specific message -->
@@ -150,13 +146,10 @@
   [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
-          <div
-            *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
-            class="text-red-600 text-sm mt-1">
-            <div *ngIf="companyNameSinhala.errors?.['required']">
-              Company Name (in Sinhala) is required.
-            </div>
+          <div *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-500 text-sm mt-1">
+            Company Name (in Sinhala) is required.
           </div>
+          
           <!-- Language-specific message -->
           <!-- <div *ngIf="sinhalaInputError" class="text-red-600 text-sm mt-1">
             Only Sinhala letters are allowed in this field.
@@ -171,11 +164,9 @@
   (blur)="onBlur('companyNameTamil')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
-          <span
-            *ngIf="companyNameTamil.invalid && (companyNameTamil.dirty || companyNameTamil.touched) && !tamilInputError"
-            class="text-red-600 text-sm mt-1">
+          <div *ngIf="isFieldInvalid('companyNameTamil')" class="text-red-500 text-sm mt-1">
             Company Name (in Tamil) is required.
-          </span>
+          </div>
           <!-- Language-specific message -->
           <!-- <div *ngIf="tamilInputError" class="text-red-600 text-sm mt-1">
             Only Tamil letters are allowed.

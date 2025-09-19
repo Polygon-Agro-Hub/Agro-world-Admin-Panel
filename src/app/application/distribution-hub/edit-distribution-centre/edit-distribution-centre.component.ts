@@ -891,7 +891,7 @@ back(): void {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 }
               }).then(() => {
-                this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+                this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
               });
             } else {
               this.showErrorAlert(response.error || 'Update failed');

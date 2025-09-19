@@ -110,11 +110,11 @@ export class AddDestributionCenterComponent implements OnInit {
   private initializeForm() {
   this.distributionForm = this.fb.group(
     {
-      centerName: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
       company: ['', Validators.required],
-      contact01: ['', [Validators.required, this.mobileNumberValidator]], // Updated validator
+      contact1: ['', [Validators.required, this.mobileNumberValidator]], // Updated validator
       contact1Code: ['+94', Validators.required], // Fixed property name
-      contact02: ['', [this.mobileNumberValidator]], // Updated validator - optional field
+      contact2: ['', [this.mobileNumberValidator]], // Updated validator - optional field
       contact2Code: ['+94'], // Fixed property name
       latitude: [
         '',
@@ -166,7 +166,7 @@ export class AddDestributionCenterComponent implements OnInit {
     });
 
   // Watch contact number changes to validate duplicates
-  this.distributionForm.get('contact01')?.valueChanges.subscribe(() => {
+  this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
     this.distributionForm.updateValueAndValidity();
   });
 
@@ -174,7 +174,7 @@ export class AddDestributionCenterComponent implements OnInit {
     this.distributionForm.updateValueAndValidity();
   });
 
-  this.distributionForm.get('contact02')?.valueChanges.subscribe(() => {
+  this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
     this.distributionForm.updateValueAndValidity();
   });
 
@@ -184,7 +184,7 @@ export class AddDestributionCenterComponent implements OnInit {
 
   // Optimize name validation with debounce
   this.distributionForm
-    .get('centerName')
+    .get('name')
     ?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -253,9 +253,9 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
   }
 
   private contactNumbersMatchValidator(formGroup: AbstractControl): { [key: string]: any } | null {
-  const contact1Control = formGroup.get('contact01');
+  const contact1Control = formGroup.get('contact1');
   const contact1CodeControl = formGroup.get('contact1Code');
-  const contact2Control = formGroup.get('contact02');
+  const contact2Control = formGroup.get('contact2');
   const contact2CodeControl = formGroup.get('contact2Code');
 
   if (
@@ -317,6 +317,14 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
     }
   }
 
+  onKeyDown(event: KeyboardEvent, fieldType: string) {
+  // Prevent space bar for coordinate fields
+  if (fieldType === 'coordinates' && event.key === ' ') {
+    event.preventDefault();
+  }
+  
+  // You can add other key restrictions here if needed
+}
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);
@@ -601,127 +609,193 @@ updateRegCode() {
   }
 
   onSubmit() {
-  if (this.distributionForm.valid) {
-     Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to create this distribution centre?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Create it!',
-        cancelButtonText: 'No, Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.isLoading = true;
-          this.submitError = null;
-          this.submitSuccess = null;
+  // Mark all fields as touched to show validation messages
+  Object.keys(this.distributionForm.controls).forEach((key) => {
+    this.distributionForm.get(key)?.markAsTouched();
+  });
 
-          // Get form values including disabled fields
-          const formValue = this.distributionForm.getRawValue();
+  // Collect all validation errors
+  const missingFields: string[] = [];
+  const formControls = this.distributionForm.controls;
 
-          const formData: DistributionCentreRequest = {
-            ...formValue,
-            latitude: parseFloat(formValue.latitude).toString(),
-            longitude: parseFloat(formValue.longitude).toString(),
-          };
+  // Check each form control for validation errors
+  Object.keys(formControls).forEach((key) => {
+    const control = formControls[key];
+    
+    if (control.errors && control.touched) {
+      // Customize error messages based on field name and error type
+      if (key === 'name' && control.errors['required']) {
+        missingFields.push('Distribution Centre Name');
+      } else if (key === 'regCode' && control.errors['required']) {
+        missingFields.push('Registration Code');
+      } else if (key === 'email' && control.errors['required']) {
+        missingFields.push('Email Address');
+      } else if (key === 'email' && control.errors['email']) {
+        missingFields.push('Email Address - Must be a valid email format');
+      } else if (key === 'contact1' && control.errors['required']) {
+        missingFields.push('Primary Contact Number');
+      } else if (key === 'contact1' && control.errors['pattern']) {
+        missingFields.push('Primary Contact Number - Must be a valid phone number format');
+      } else if (key === 'contact2' && control.errors['pattern']) {
+        missingFields.push('Secondary Contact Number - Must be a valid phone number format');
+      } else if (key === 'latitude' && control.errors['required']) {
+        missingFields.push('Latitude');
+      } else if (key === 'latitude' && control.errors['pattern']) {
+        missingFields.push('Latitude - Must be a valid coordinate');
+      } else if (key === 'longitude' && control.errors['required']) {
+        missingFields.push('Longitude');
+      } else if (key === 'longitude' && control.errors['pattern']) {
+        missingFields.push('Longitude - Must be a valid coordinate');
+      } else if (key === 'address' && control.errors['required']) {
+        missingFields.push('Address');
+      } else if (key === 'city' && control.errors['required']) {
+        missingFields.push('City');
+      } else if (key === 'district' && control.errors['required']) {
+        missingFields.push('District');
+      } else if (key === 'province' && control.errors['required']) {
+        missingFields.push('Province');
+      } else if (control.errors['required']) {
+        // Generic required field message for other fields
+        const fieldName = this.formatFieldName(key);
+        missingFields.push(fieldName);
+      }
+    }
+  });
 
-          this.distributionService
-            .createDistributionCentre(formData)
-            .subscribe({
-              next: (response) => {
-                this.isLoading = false;
-
-                if (response.success) {
-                  this.submitSuccess =
-                    response.message ||
-                    'Distribution centre created successfully!';
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: this.submitSuccess,
-                    timer: 2000,
-                    showConfirmButton: false,
-                  });
-                  this.navigatePath('/distribution-hub/action/view-destribition-center');
-                } else {
-                  this.submitError =
-                    response.error || 'Failed to create distribution centre';
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: this.submitError,
-                  });
-                }
-              },
-              error: (error) => {
-                this.isLoading = false;
-                console.error('Error creating distribution centre:', error);
-
-                // Default error message
-                let errorMessage = 'An unexpected error occurred.';
-
-                if (error.error && error.error.error) {
-                  // Use the specific error message from the backend
-                  errorMessage = error.error.error;
-                } else if (error.status === 400) {
-                  errorMessage = 'Invalid data. Please check your inputs.';
-                } else if (error.status === 401) {
-                  errorMessage = 'Unauthorized. Please log in again.';
-                } else if (error.status === 409) {
-                  // Check if we have more specific conflict information
-                  if (error.error && error.error.conflictingRecord) {
-                    const conflict = error.error.conflictingRecord;
-                    switch (conflict.conflictType) {
-                      case 'centerName':
-                        errorMessage = 'A distribution center with this name already exists.';
-                        break;
-                      case 'regCode':
-                        errorMessage = 'A distribution center with this registration code already exists.';
-                        break;
-                      case 'contact01':
-                        errorMessage = 'A distribution center with this contact number already exists.';
-                        break;
-                      default:
-                        errorMessage = 'A distribution center with these details already exists.';
-                    }
-                  } else {
-                    errorMessage = 'A distribution center with these details already exists.';
-                  }
-                } else if (error.status === 500) {
-                  errorMessage = 'Server error. Please try again later.';
-                }
-
-                this.submitError = errorMessage;
-
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Submission Failed',
-                  text: this.submitError,
-                });
-              },
-            });
-        }
-      });
-
-  } else {
-    // Mark all fields as touched to trigger validation display
-    Object.keys(this.distributionForm.controls).forEach((key) => {
-      this.distributionForm.get(key)?.markAsTouched();
+  // If there are validation errors, show them and stop the submission
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
     });
-    
-    // Collect all validation errors
-    const errorMessages = this.getAllValidationErrors();
-    
+    errorMessage += '</ul></div>';
+
     Swal.fire({
-      icon: 'warning',
-      title: 'Form Validation Errors',
-      html: this.formatErrorMessagesForAlert(errorMessages),
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
       confirmButtonText: 'OK',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
       },
     });
+    return;
   }
+
+  // If form is valid, proceed with confirmation
+  if (this.distributionForm.valid) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to create this distribution centre?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Create it!',
+      cancelButtonText: 'No, Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.submitError = null;
+        this.submitSuccess = null;
+
+        // Get form values including disabled fields
+        const formValue = this.distributionForm.getRawValue();
+
+        const formData: DistributionCentreRequest = {
+          ...formValue,
+          latitude: parseFloat(formValue.latitude).toString(),
+          longitude: parseFloat(formValue.longitude).toString(),
+        };
+
+        this.distributionService
+          .createDistributionCentre(formData)
+          .subscribe({
+            next: (response) => {
+              this.isLoading = false;
+
+              if (response.success) {
+                this.submitSuccess =
+                  response.message ||
+                  'Distribution centre created successfully!';
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: this.submitSuccess,
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+                this.navigatePath('/distribution-hub/action/view-destribition-center');
+              } else {
+                this.submitError =
+                  response.error || 'Failed to create distribution centre';
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: this.submitError,
+                });
+              }
+            },
+            error: (error) => {
+              this.isLoading = false;
+              console.error('Error creating distribution centre:', error);
+
+              // Default error message
+              let errorMessage = 'An unexpected error occurred.';
+
+              if (error.error && error.error.error) {
+                // Use the specific error message from the backend
+                errorMessage = error.error.error;
+              } else if (error.status === 400) {
+                errorMessage = 'Invalid data. Please check your inputs.';
+              } else if (error.status === 401) {
+                errorMessage = 'Unauthorized. Please log in again.';
+              } else if (error.status === 409) {
+                // Check if we have more specific conflict information
+                if (error.error && error.error.conflictingRecord) {
+                  const conflict = error.error.conflictingRecord;
+                  switch (conflict.conflictType) {
+                    case 'name':
+                      errorMessage = 'A distribution center with this name already exists.';
+                      break;
+                    case 'regCode':
+                      errorMessage = 'A distribution center with this registration code already exists.';
+                      break;
+                    case 'email':
+                      errorMessage = 'Email already exists.';
+                      break;
+                    case 'contact1':
+                      errorMessage = 'Mobile Number already exists.';
+                      break;
+                    default:
+                      errorMessage = 'A distribution center with these details already exists.';
+                  }
+                } else {
+                  errorMessage = 'A distribution center with these details already exists.';
+                }
+              } else if (error.status === 500) {
+                errorMessage = 'Server error. Please try again later.';
+              }
+
+              this.submitError = errorMessage;
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: this.submitError,
+              });
+            },
+          });
+      }
+    });
+  }
+}
+
+// Helper function to format field names for display
+formatFieldName(key: string): string {
+  // Convert camelCase to Title Case with spaces
+  const result = key.replace(/([A-Z])/g, ' $1');
+  return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
 private formatErrorMessagesForAlert(errors: {field: string, message: string}[]): string {

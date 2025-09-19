@@ -186,6 +186,8 @@ fetchAllNews(cultivationId: number, userId: number) {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
+        background: '#1e293b', // dark background (slate-800)
+    color: '#e2e8f0', // light text (slate-200)
     });
 
     if (result.isConfirmed) {

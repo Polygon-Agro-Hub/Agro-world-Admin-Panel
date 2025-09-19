@@ -164,24 +164,25 @@ getFlagUrl(countryCode: string): string {
     }
   }
 
-  back(): void {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
-      customClass: {
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/distribution-hub/action/view-destribition-center']);
-      }
-    });
-  }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      history.back(); // ✅ go to previous page in history
+    }
+  });
+}
+
 
   navigatePath(path: string) {
     this.router.navigate([path]);
@@ -437,9 +438,9 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
       title: 'font-semibold',
     },
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
-      }
+    if (result.isConfirmed) {
+      history.back(); // ✅ go to previous page in history
+    }
     });
   }
 
@@ -861,6 +862,15 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
     }
   }
 
+
+  trimLeadingSpace(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.value.startsWith(' ')) {
+    const cursorPos = input.selectionStart || 0;
+    input.value = input.value.trimStart();
+    input.setSelectionRange(cursorPos - 1, cursorPos - 1); // keep cursor in place
+  }
+}
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
     if (charCode < 48 || charCode > 57) {

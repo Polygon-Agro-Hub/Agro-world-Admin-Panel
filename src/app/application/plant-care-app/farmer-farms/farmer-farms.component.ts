@@ -383,30 +383,51 @@ viewTaskByUsers(cultivationId: number | null, userId: number | null) {
 
 
 
-  deleteFarm(farmId: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.ongoingCultivationService.deleteFarm(farmId).subscribe({
-          next: (res: any) => {
-            Swal.fire('Deleted!', res.message, 'success');
-            this.farms = this.farms.filter((f) => f.farmId !== farmId);
-          },
-          error: (err) => {
-            console.error(err);
-            Swal.fire('Error!', 'Failed to delete the farm.', 'error');
-          },
-        });
-      }
-    });
-  }
+deleteFarm(farmId: number) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!',
+    background: '#1e293b', // dark background (slate-800)
+    color: '#e2e8f0', // light text (slate-200)
+    customClass: {
+      popup: 'dark-popup',
+      title: 'dark-title',
+      htmlContainer: 'dark-text',
+      confirmButton: 'dark-confirm',
+      cancelButton: 'dark-cancel'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.ongoingCultivationService.deleteFarm(farmId).subscribe({
+        next: (res: any) => {
+          Swal.fire({
+            title: 'Deleted!',
+            text: res.message,
+            icon: 'success',
+            background: '#1e293b',
+            color: '#e2e8f0'
+          });
+          this.farms = this.farms.filter((f) => f.farmId !== farmId);
+        },
+        error: (err) => {
+          console.error(err);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to delete the farm.',
+            icon: 'error',
+            background: '#1e293b',
+            color: '#e2e8f0'
+          });
+        },
+      });
+    }
+  });
+}
 
   goBack() {
     this.location.back();

@@ -158,6 +158,13 @@ bankTouched: any;
       }
     });
   }
+
+    allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
 back(): void {
   Swal.fire({
     icon: 'warning',
@@ -180,23 +187,23 @@ back(): void {
   
 
 
+// Block space if it's the first character while typing
 blockLeadingSpace(event: KeyboardEvent, field: string) {
-  const value = this.personalData[field] || '';
+  const input = event.target as HTMLInputElement;
+  const key = event.key;
 
-  if (value.length === 0) {
-    // Normal and numpad keys
-    const key = event.key;
-    const code = event.code;
+  if (key === ' ' && input.value.length === 0) {
+    event.preventDefault();
+  }
+}
 
-    if (
-      key === ' ' || // Space
-      key === '+' || // Plus from main keyboard
-      key === '-' || // Minus from main keyboard
-      code === 'NumpadAdd' || // Plus from numpad
-      code === 'NumpadSubtract' // Minus from numpad
-    ) {
-      event.preventDefault();
-    }
+// Trim any leading spaces if they somehow appear (e.g., paste)
+trimLeadingSpace(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.value.startsWith(' ')) {
+    const cursorPos = input.selectionStart || 0;
+    input.value = input.value.trimStart();
+    input.setSelectionRange(cursorPos - 1, cursorPos - 1); // keep cursor in place
   }
 }
 
@@ -321,22 +328,30 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
 
 
 
-blockInvalidNameInput(event: KeyboardEvent, currentValue: string): void {
+
+  blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
+  const allowedPattern = /^[a-zA-Z ]$/; // Only letters and space
   const key = event.key;
 
-  // Allow only letters and space
-  const allowed = /^[a-zA-Z ]$/;
-
-  // Block if not allowed
-  if (!allowed.test(key)) {
+  // Block invalid characters
+  if (!allowedPattern.test(key)) {
     event.preventDefault();
   }
 
   // Block space if first character
-  if (key === ' ' && currentValue.length === 0) {
+  if (currentValue.length === 0 && key === ' ') {
     event.preventDefault();
   }
 }
+
+// Extra: trim any leading space if somehow added
+// trimLeadingSpace(event: Event) {
+//   const input = event.target as HTMLInputElement;
+//   if (input.value.startsWith(' ')) {
+//     input.value = input.value.trimStart();
+//   }
+// }
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

@@ -7,7 +7,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1500px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
@@ -25,7 +25,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
-            [options]="centers" [(ngModel)]="selectedCenter" optionLabel="centerName" optionValue="centerName" [showClear]="true" placeholder=" Center"
+            [options]="centers" [(ngModel)]="selectedCenter" optionLabel="centerName" optionValue="centerName" [showClear]="true" placeholder=" Centre"
             (onChange)="applyFilters()" name="selectedCenter"/>
 
         </div>
@@ -74,7 +74,7 @@
               <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
                 NIC
               </th>
-              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
                 District
               </th>
               <th *ngIf="
@@ -131,7 +131,7 @@
               <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                 {{ item.nic }}
               </td>
-              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">
                 {{ item.district }}
               </td>
               <!-- Monthly Report -->

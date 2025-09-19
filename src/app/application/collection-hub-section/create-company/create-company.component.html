@@ -148,7 +148,6 @@
           </label>
           <input id="companyNameSinhala" name="companyNameSinhala" 
   [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
-  (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '', 'companyNameSinhala')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
           <div
@@ -169,7 +168,6 @@
           </label>
           <input id="companyNameTamil" name="companyNameTamil" 
   [(ngModel)]="companyData.companyNameTamil" #companyNameTamil="ngModel" required
-  (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '', 'companyNameTamil')"
   (blur)="onBlur('companyNameTamil')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
@@ -567,7 +565,6 @@
           </label>
           <input id="companyNameEnglish" name="companyNameEnglish" 
   [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required
-  (keydown)="allowOnlyLetters($event, companyData.companyNameEnglish || '', 'companyNameEnglish')"
   (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
@@ -588,7 +585,6 @@
           </label>
           <input id="companyNameSinhala" name="companyNameSinhala" 
   [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
-  (keydown)="allowOnlyLetters($event, companyData.companyNameSinhala || '', 'companyNameSinhala')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
@@ -608,7 +604,6 @@
           </label>
           <input id="companyNameTamil" name="companyNameTamil" 
   [(ngModel)]="companyData.companyNameTamil" #companyNameTamil="ngModel" required
-  (keydown)="allowOnlyLetters($event, companyData.companyNameTamil || '', 'companyNameTamil')"
   (blur)="onBlur('companyNameTamil')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div

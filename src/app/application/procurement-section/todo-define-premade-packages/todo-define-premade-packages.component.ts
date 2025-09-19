@@ -103,24 +103,27 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     private router: Router
   ) { }
 
-  goBack(): void{
-    Swal.fire({
-        icon: 'warning',
-        title: 'Are you sure?',
-        text: 'You may lose the added data after going back!',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Go Back',
-        cancelButtonText: 'No, Stay Here',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-        buttonsStyling: true,
-      }).then((result) => {
-        window.history.back();
-      });
-    
-  }
+  goBack(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Only go back if user confirms
+      window.history.back();
+    }
+    // If user clicks "No" or dismisses, the modal will automatically close
+  });
+}
 
   ngOnInit() {
     this.recalculatePackageTotal();

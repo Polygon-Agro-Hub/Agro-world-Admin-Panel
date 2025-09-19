@@ -20,13 +20,13 @@
       <thead>
         <tr>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">Category</th>
-          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">View</th>
+          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">View</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Building and Infastructures</th>
-          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-center">
             <button (click)="buildingCategory(this.userId!, this.farmId!)" 
                     [disabled]="!this.userId || !this.farmId">
    <i class="fa-solid fa-arrow-up-right-from-square text-blue-500"></i>
@@ -38,7 +38,7 @@
 
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Lands</th>
-          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-center">
             <button (click)="landCategory(this.userId!, this.farmId!)" 
                     [disabled]="!this.userId || !this.farmId">
              <i class="fa-solid fa-arrow-up-right-from-square text-blue-500"></i>
@@ -50,7 +50,7 @@
 
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Machinery, Vehicles</th>
-          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-center">
             <button (click)="machCategory(this.userId!, this.farmId!)" 
                     [disabled]="!this.userId || !this.farmId">
                  <i class="fa-solid fa-arrow-up-right-from-square text-blue-500"></i>
@@ -62,7 +62,7 @@
 
         <tr>
           <th class="px-4 py-3 font-medium text-black dark:text-textDark text-left">Tools & Equipments</th>
-          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-gray-700 dark:text-textDark text-center">
             <button (click)="toolsCategory(this.userId!, this.farmId!)" 
                     [disabled]="!this.userId || !this.farmId">
             <i class="fa-solid fa-arrow-up-right-from-square text-blue-500"></i>

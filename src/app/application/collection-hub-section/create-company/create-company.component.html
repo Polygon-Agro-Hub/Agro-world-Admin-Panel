@@ -226,7 +226,7 @@
           <div *ngIf="accHolderName.invalid && (accHolderName.dirty || accHolderName.touched)"
             class="text-red-600 text-sm">
             <div *ngIf="accHolderName.errors?.['required']">
-              Account Holder Name is required.
+              Account Holder's Name is required.
             </div>
           </div>
 
@@ -365,8 +365,8 @@
         </ng-template>
       </p-dropdown>
 
-      <input id="phoneNumber01" name="oicConNum1" type="tel" inputmode="numeric" pattern="^[0-9]{9}$"
-        maxlength="9" required placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1"
+      <input id="phoneNumber01" name="oicConNum1" type="tel" inputmode="numeric" pattern="[0-9]*"
+        maxlength="9" (keydown)="handleInputWithSpaceTrimming($event, 'oicConNum1')" required placeholder="7XXXXXXXX" [(ngModel)]="companyData.oicConNum1"
         #oicConNum1Ref="ngModel" (blur)="validateContactNumbers()"
         class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
@@ -674,12 +674,16 @@
         <div class="pb-6">
           <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
             Holder's Name *</label>
-          <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
+          <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName" #accountHolderInput="ngModel"
             (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
             Only English letters and spaces are allowed. Numbers and special characters are not permitted.
           </div> -->
+
+          <div *ngIf="!companyData.accHolderName && accountHolderInput.touched" class="text-red-500 text-sm mt-1">
+            Account Holder's Name is required.
+          </div>
         </div>
 
 
@@ -899,6 +903,7 @@
           (in English)</label>
         <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
           (blur)="onBlur('companyNameEnglish')"
+          (input)="onTrimInput($event, companyData, 'companyNameEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div class="flex items-center mt-1">
           <span *ngIf="isCheckingCompanyName" class="text-blue-600 text-sm">
@@ -917,6 +922,7 @@
           (in Sinhala)</label>
         <input id="companyNameSinhala" name="companyNameSinhala" [(ngModel)]="companyData.companyNameSinhala"
           [disabled]="true"
+          (input)="onTrimInput($event, companyData, 'companyNameSinhala')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
@@ -925,6 +931,7 @@
           (in Tamil)</label>
         <input id="companyNameTamil" name="companyNameTamil" [(ngModel)]="companyData.companyNameTamil"
           [disabled]="true"
+          (input)="onTrimInput($event, companyData, 'companyNameTamil')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 

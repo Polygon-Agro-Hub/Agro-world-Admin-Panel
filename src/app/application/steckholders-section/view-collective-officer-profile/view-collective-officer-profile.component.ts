@@ -570,7 +570,7 @@ fetchOfficerById(id: number) {
     );
 
     // Save PDF
-    const fileName = `${getValueOrNA(this.officerObj.firstNameEnglish)} ${getValueOrNA(this.officerObj.lastNameEnglish)}.pdf`;
+    const fileName = `${getValueOrNA(empCodeText)} - ${getValueOrNA(this.officerObj.firstNameEnglish)} ${getValueOrNA(this.officerObj.lastNameEnglish)}.pdf`;
     doc.save(fileName);
     this.isGeneratingPDF = false;
   }

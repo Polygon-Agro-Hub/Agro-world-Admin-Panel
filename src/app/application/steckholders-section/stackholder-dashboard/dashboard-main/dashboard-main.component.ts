@@ -113,7 +113,9 @@ export class DashboardMainComponent implements OnInit {
         // Generate filename with today's date only
         const today = new Date();
         const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-        const fileName = `${formattedDate}.pdf`;
+        // const fileName = `${formattedDate}.pdf`;
+
+        const fileName = `Stakeholder Dashboard Report on ${currentDate}.pdf`;
 
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');

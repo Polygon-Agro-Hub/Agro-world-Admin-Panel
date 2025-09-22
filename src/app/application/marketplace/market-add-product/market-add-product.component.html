@@ -77,17 +77,17 @@
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input class="w-5 h-5" type="radio" id="withDiscount" name="priceType" [(ngModel)]="productObj.promo"
+            <input class="w-5 h-5 cursor-pointer" type="radio" id="withDiscount" name="priceType" [(ngModel)]="productObj.promo"
               [value]="true" (change)="applyDiscount()" />
-            <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
               With Discount
             </label>
           </div>
           <div class="flex items-center space-x-2">
             <!-- No Discount Radio Button -->
-            <input class="w-5 h-5" type="radio" id="noDiscount" name="priceType" [(ngModel)]="productObj.promo"
+            <input class="w-5 h-5 cursor-pointer" type="radio" id="noDiscount" name="priceType" [(ngModel)]="productObj.promo"
               [value]="false" (change)="compaireDiscount()" />
-            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
               No Discount
             </label>
           </div>
@@ -96,7 +96,7 @@
 
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
-        <select id="displaytype" name="displaytype" (change)="changeType()" [(ngModel)]="productObj.displaytype"
+        <!-- <select id="displaytype" name="displaytype" (change)="changeType()" [(ngModel)]="productObj.displaytype"
           class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           #displayTypeField="ngModel" required>
           <option selected disabled value="">--Select Display Type--</option>
@@ -105,7 +105,12 @@
           <option value="AP&SP&D">
             With Actual Price,Sale Price and Discount
           </option>
-        </select>
+        </select> -->
+        <p-dropdown id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype" (onChange)="changeType()"
+          [options]="displayTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Display Type--" #displayTypeField="ngModel" required
+          [showClear]="false" [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
+        </p-dropdown>
         <div *ngIf="displayTypeField.invalid && displayTypeField.touched" class="text-red-500 text-sm mt-1">
           Display Type is required.
         </div>

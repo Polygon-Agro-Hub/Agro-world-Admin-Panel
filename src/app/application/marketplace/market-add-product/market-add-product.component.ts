@@ -59,6 +59,12 @@ export class MarketAddProductComponent implements OnInit {
     { label: 'g', value: 'g' }
   ];
 
+  displayTypeOptions = [
+    { label: 'With Discount and Actual Price', value: 'D&AP' },
+    { label: 'With Actual Price and Sale Price', value: 'AP&SP' },
+    { label: 'With Actual Price,Sale Price and Discount', value: 'AP&SP&D' }
+  ];
+
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,

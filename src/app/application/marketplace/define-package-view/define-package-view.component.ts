@@ -218,30 +218,32 @@ onCancel() {
     }
   }
 
-  onQuantityChanged(productType: ProductTypes, event: Event) {
+onQuantityChanged(productType: ProductTypes, event: Event) {
   const inputElement = event.target as HTMLInputElement;
   let value = inputElement.value;
-  
+
   // Remove any extra decimal points
   if ((value.match(/\./g) || []).length > 1) {
     value = value.substring(0, value.lastIndexOf('.'));
     inputElement.value = value;
   }
-  
-  // Enforce max 2 decimal places
+
+  // Enforce max 3 decimal places
   if (value.includes('.')) {
     const parts = value.split('.');
-    if (parts[1].length > 2) {
-      value = parts[0] + '.' + parts[1].substring(0, 2);
+    if (parts[1].length > 3) {
+      value = parts[0] + '.' + parts[1].substring(0, 3);
       inputElement.value = value;
     }
   }
 
   const quantity = parseFloat(value);
-  
+
   if (isNaN(quantity)) {
     productType.quantity = undefined;
     productType.calculatedPrice = undefined;
+    inputElement.value = '';
+    return;
   } else {
     if (quantity <= 0) {
       productType.quantity = undefined;
@@ -421,7 +423,7 @@ if (result.isConfirmed) {
   validateQuantityInput(event: KeyboardEvent) {
   const input = event.target as HTMLInputElement;
   const key = event.key;
-  
+
   // Allow: backspace, delete, tab, escape, enter, arrows (up/down/left/right)
   if (
     ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key) ||
@@ -441,13 +443,13 @@ if (result.isConfirmed) {
   const currentValue = input.value;
   const selectionStart = input.selectionStart || 0;
   const selectionEnd = input.selectionEnd || 0;
-  const proposedValue = 
-    currentValue.substring(0, selectionStart) + 
-    key + 
+  const proposedValue =
+    currentValue.substring(0, selectionStart) +
+    key +
     currentValue.substring(selectionEnd);
 
   // Check if the proposed value matches our pattern
-  const pattern = /^\d*\.?\d{0,2}$/;
+  const pattern = /^\d*\.?\d{0,3}$/;
   if (!pattern.test(proposedValue)) {
     event.preventDefault();
   }
@@ -457,6 +459,4 @@ if (result.isConfirmed) {
     event.preventDefault();
   }
 }
-
-
 }

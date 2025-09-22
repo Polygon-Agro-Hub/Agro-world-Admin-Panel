@@ -234,12 +234,15 @@
           </label>
           <input id="lastName" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             (keydown)="preventLeadingSpace($event, 'lastNameEnglish')"
-            (keypress)="preventInvalidEnglishCharacters($event)"
+           
+             (keypress)="onLetterKeyPress($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')" />
-          <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">
-            Last Name is a required field
-          </span>
+            #lastNameEnglishInput="ngModel" />
+        
+
+          <div *ngIf="lastNameEnglishInput.touched && !personalData.lastNameEnglish" class="text-red-500 text-sm mt-1">
+  First Name is a required field
+</div>
           <!-- <span *ngIf="personalData.lastNameEnglish && hasInvalidNameCharacters('lastNameEnglish')"
             class="text-red-600 text-sm">
             Last Name should only contain English letters

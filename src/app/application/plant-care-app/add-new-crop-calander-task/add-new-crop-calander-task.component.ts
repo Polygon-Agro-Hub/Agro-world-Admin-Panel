@@ -38,7 +38,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
   userId!: string;
   indexId!: string;
   onCulscropID!: string;
-  startingDate!: string;
+  days!: string;
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
   taskForm: FormGroup;
   cropTaskObj: Croptask = new Croptask();
@@ -53,7 +53,7 @@ requireVideoLink  : string = 'no';
   ) {
     this.taskForm = this.fb.group({
   cropId: ['', [Validators.required]],
-  startingDate: ['', [Validators.required]],
+  days: ['', [Validators.required]],
   taskTypeEnglish: ['', [Validators.required]],
   taskTypeSinhala: ['', [Validators.required]],
   taskTypeTamil: ['', [Validators.required]],
@@ -229,7 +229,9 @@ blockZeroValue(event: Event) {
 
 
 onSubmit() {
-
+// Log the entire form value and the task object
+  console.log('Form Value:', this.taskForm.value);
+  console.log('Task Object:', this.cropTaskObj);
   // Array to store missing or invalid field messages
   const missingFields: string[] = [];
 
@@ -453,7 +455,7 @@ onCancel() {
   
 class Croptask {
   'cropId': string;
-  'startingDate': string;
+  'days': string;
   'taskTypeEnglish': string;
   'taskTypeSinhala': string;
   'taskTypeTamil': string;

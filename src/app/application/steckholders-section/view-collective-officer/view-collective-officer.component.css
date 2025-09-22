@@ -138,9 +138,17 @@
 
 /* Reduce dropdown item padding */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 15px !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 15px !important;
 }
+
+/* ::ng-deep .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important;
+  }
+
+::ng-deep .dark .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important; 
+} */

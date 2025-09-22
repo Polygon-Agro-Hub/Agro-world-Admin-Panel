@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild  } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel  } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -49,6 +49,8 @@ interface JobRole {
   styleUrls: ['./view-collective-officer.component.css'],
 })
 export class ViewCollectiveOfficerComponent {
+  @ViewChild('selectedCenterIdInput') selectedCenterIdInput!: NgModel;
+  @ViewChild('selectedIrmIdInput') selectedIrmIdInput!: NgModel;
   collectionOfficers: CollectionOfficers[] = [];
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
@@ -491,6 +493,7 @@ export class ViewCollectiveOfficerComponent {
 
   handleClaimButtonClick(item: CollectionOfficers) {
     this.selectedOfficer = item;
+    console.log('this.selectedOfficer', this.selectedOfficer)
     this.selectOfficerId = item.id;
 
     if (item.claimStatus === 0) {
@@ -531,14 +534,26 @@ export class ViewCollectiveOfficerComponent {
   }
 
   claimOfficer() {
-    if (!this.selectedCenterId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please select a center.',
-        confirmButtonText: 'OK',
-      });
-      return;
+    const centerControl = (this as any).selectedCenterIdInput;
+    const managerControl = (this as any).selectedIrmIdInput;
+  
+    if (centerControl) {
+      centerControl.control.markAsTouched();
+    }
+    if (managerControl) {
+      managerControl.control.markAsTouched();
+    }
+  
+    if (this.selectedOfficer?.jobRole === 'Collection Officer') {
+      // Require both center and manager
+      if (!this.selectedCenterId || !this.selectedIrmId) {
+        return;
+      }
+    } else {
+      // For other roles, require only center
+      if (!this.selectedCenterId) {
+        return;
+      }
     }
 
     // Prepare payload - include manager ID if selected

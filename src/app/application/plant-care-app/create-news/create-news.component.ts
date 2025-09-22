@@ -161,35 +161,35 @@ createNews() {
 
   // Validation for required fields
   if (!this.createNewsObj.titleEnglish || this.createNewsObj.titleEnglish.trim() === '') {
-    missingFields.push('Title (English)');
+    missingFields.push('Title (English) is Required');
   }
 
   if (!this.createNewsObj.descriptionEnglish || this.createNewsObj.descriptionEnglish.trim() === '') {
-    missingFields.push('Description (English)');
+    missingFields.push('Description (English) is Required');
   }
 
   if (!this.createNewsObj.titleSinhala || this.createNewsObj.titleSinhala.trim() === '') {
-    missingFields.push('Title (Sinhala)');
+    missingFields.push('Title (Sinhala) is Required');
   }
 
   if (!this.createNewsObj.descriptionSinhala || this.createNewsObj.descriptionSinhala.trim() === '') {
-    missingFields.push('Description (Sinhala)');
+    missingFields.push('Description (Sinhala) is Required');
   }
 
   if (!this.createNewsObj.titleTamil || this.createNewsObj.titleTamil.trim() === '') {
-    missingFields.push('Title (Tamil)');
+    missingFields.push('Title (Tamil) is Required');
   }
 
   if (!this.createNewsObj.descriptionTamil || this.createNewsObj.descriptionTamil.trim() === '') {
-    missingFields.push('Description (Tamil)');
+    missingFields.push('Description (Tamil) is Required');
   }
 
   if (!this.createNewsObj.publishDate || this.createNewsObj.publishDate.trim() === '') {
-    missingFields.push('Publish Date');
+    missingFields.push('Publish Date is Required');
   }
 
   if (!this.createNewsObj.expireDate || this.createNewsObj.expireDate.trim() === '') {
-    missingFields.push('Expire Date');
+    missingFields.push('Expire Date is Required');
   }
 
   if (!this.isPublishAfterExpireValid) {
@@ -465,35 +465,35 @@ updateNews() {
 
   // Validation for required fields
   if (!this.newsItems[0].titleEnglish || this.newsItems[0].titleEnglish.trim() === '') {
-    missingFields.push('Title (English)');
+    missingFields.push('Title (English) is Required');
   }
 
   if (!this.newsItems[0].descriptionEnglish || this.newsItems[0].descriptionEnglish.trim() === '') {
-    missingFields.push('Description (English)');
+    missingFields.push('Description (English) is Required');
   }
 
   if (!this.newsItems[0].titleSinhala || this.newsItems[0].titleSinhala.trim() === '') {
-    missingFields.push('Title (Sinhala)');
+    missingFields.push('Title (Sinhala) is Required');
   }
 
   if (!this.newsItems[0].descriptionSinhala || this.newsItems[0].descriptionSinhala.trim() === '') {
-    missingFields.push('Description (Sinhala)');
+    missingFields.push('Description (Sinhala) is Required');
   }
 
   if (!this.newsItems[0].titleTamil || this.newsItems[0].titleTamil.trim() === '') {
-    missingFields.push('Title (Tamil)');
+    missingFields.push('Title (Tamil) is Required');
   }
 
   if (!this.newsItems[0].descriptionTamil || this.newsItems[0].descriptionTamil.trim() === '') {
-    missingFields.push('Description (Tamil)');
+    missingFields.push('Description (Tamil) is Required');
   }
 
   if (!this.newsItems[0].publishDate || this.newsItems[0].publishDate.trim() === '') {
-    missingFields.push('Publish Date');
+    missingFields.push('Publish Date is Required');
   }
 
   if (!this.newsItems[0].expireDate || this.newsItems[0].expireDate.trim() === '') {
-    missingFields.push('Expire Date');
+    missingFields.push('Expire Date is Required');
   }
 
   if (!this.isPublishAfterExpireValid) {

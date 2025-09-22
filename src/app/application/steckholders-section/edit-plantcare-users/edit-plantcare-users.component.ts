@@ -1402,19 +1402,19 @@ onSubmitCreate() {
   // Validate form fields
   if (this.userForm.get('firstName')?.invalid) {
     if (this.userForm.get('firstName')?.errors?.['required']) {
-      missingFields.push('First Name');
+      missingFields.push('First Name is Required');
     }
   }
 
   if (this.userForm.get('lastName')?.invalid) {
     if (this.userForm.get('lastName')?.errors?.['required']) {
-      missingFields.push('Last Name');
+      missingFields.push('Last Name is Required');
     }
   }
 
   if (this.userForm.get('phoneNumber')?.invalid) {
     if (this.userForm.get('phoneNumber')?.errors?.['required']) {
-      missingFields.push('Mobile Number');
+      missingFields.push('Mobile Number is Required');
     } else if (this.userForm.get('phoneNumber')?.errors?.['pattern']) {
       missingFields.push('Mobile Number - Must be in format +947XXXXXXXX');
     }
@@ -1422,42 +1422,42 @@ onSubmitCreate() {
 
   if (this.userForm.get('NICnumber')?.invalid) {
     if (this.userForm.get('NICnumber')?.errors?.['required']) {
-      missingFields.push('NIC Number');
+      missingFields.push('NIC Number is Required');
     } else if (this.userForm.get('NICnumber')?.errors?.['pattern']) {
       missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
     }
   }
 
   if (this.userForm.get('district')?.invalid) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   if (this.userForm.get('membership')?.invalid) {
-    missingFields.push('Membership');
+    missingFields.push('Membership is Required');
   }
 
   if (this.userForm.get('language')?.invalid) {
-    missingFields.push('Language');
+    missingFields.push('Language is Required');
   }
 
   if (this.userForm.get('accHolderName')?.invalid) {
-    missingFields.push('Account Holder Name');
+    missingFields.push('Account Holder Name is Required');
   }
 
   if (this.userForm.get('accNumber')?.invalid) {
     if (this.userForm.get('accNumber')?.errors?.['required']) {
-      missingFields.push('Account Number');
+      missingFields.push('Account Number is Required');
     } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
       missingFields.push('Account Number - Must contain only numbers');
     }
   }
 
   if (this.userForm.get('bankName')?.invalid) {
-    missingFields.push('Bank Name');
+    missingFields.push('Bank Name is Required');
   }
 
   if (this.userForm.get('branchName')?.invalid) {
-    missingFields.push('Branch Name');
+    missingFields.push('Branch Name is Required');
   }
 
   // Validate image if selected
@@ -1578,19 +1578,19 @@ onSubmit() {
   // Validate form fields
   if (this.userForm.get('firstName')?.invalid) {
     if (this.userForm.get('firstName')?.errors?.['required']) {
-      missingFields.push('First Name');
+      missingFields.push('First Name is Required');
     }
   }
 
   if (this.userForm.get('lastName')?.invalid) {
     if (this.userForm.get('lastName')?.errors?.['required']) {
-      missingFields.push('Last Name');
+      missingFields.push('Last Name is Required');
     }
   }
 
   if (this.userForm.get('phoneNumber')?.invalid) {
     if (this.userForm.get('phoneNumber')?.errors?.['required']) {
-      missingFields.push('Mobile Number');
+      missingFields.push('Mobile Number is Required');
     } else if (this.userForm.get('phoneNumber')?.errors?.['pattern']) {
       missingFields.push('Mobile Number - Must be in format +947XXXXXXXX');
     }
@@ -1598,42 +1598,42 @@ onSubmit() {
 
   if (this.userForm.get('NICnumber')?.invalid) {
     if (this.userForm.get('NICnumber')?.errors?.['required']) {
-      missingFields.push('NIC Number');
+      missingFields.push('NIC Number is Required');
     } else if (this.userForm.get('NICnumber')?.errors?.['pattern']) {
       missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
     }
   }
 
   if (this.userForm.get('district')?.invalid) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   if (this.userForm.get('membership')?.invalid) {
-    missingFields.push('Membership');
+    missingFields.push('Membership is Required');
   }
 
   if (this.userForm.get('language')?.invalid) {
-    missingFields.push('Language');
+    missingFields.push('Language is Required');
   }
 
   if (this.userForm.get('accHolderName')?.invalid) {
-    missingFields.push('Account Holder Name');
+    missingFields.push('Account Holder Name is Required');
   }
 
   if (this.userForm.get('accNumber')?.invalid) {
     if (this.userForm.get('accNumber')?.errors?.['required']) {
-      missingFields.push('Account Number');
+      missingFields.push('Account Number is Required');
     } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
       missingFields.push('Account Number - Must contain only numbers');
     }
   }
 
   if (this.userForm.get('bankName')?.invalid) {
-    missingFields.push('Bank Name');
+    missingFields.push('Bank Name is Required');
   }
 
   if (this.userForm.get('branchName')?.invalid) {
-    missingFields.push('Branch Name');
+    missingFields.push('Branch Name is Required');
   }
 
   // Validate image if selected

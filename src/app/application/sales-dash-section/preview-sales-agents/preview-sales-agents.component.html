@@ -217,13 +217,13 @@
     </p-dropdown>
 
     <input
-      id="phoneNumber2"
-      name="phoneNumber2"
-      type="text"
-      [(ngModel)]="personalData.phoneNumber2"
-      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      readonly
-    />
+  id="phoneNumber2"
+  name="phoneNumber2"
+  type="text"
+  [value]="personalData.phoneNumber2 || '-'"
+  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  readonly
+/>
   </div>
 </div>
 

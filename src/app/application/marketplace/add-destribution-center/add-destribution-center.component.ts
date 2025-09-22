@@ -413,6 +413,22 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
         }
       }
       break;
+
+      case 'city':
+      // For city field, prevent leading spaces and ensure first letter is capital
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      // Capitalize first letter in real-time
+      if (value.length > 0) {
+        const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+        if (capitalizedValue !== value) {
+          target.value = capitalizedValue;
+          value = capitalizedValue;
+        }
+      }
+      break;
     case 'phone':
       // For phone numbers, allow only digits and enforce starting with 7
       const originalValue = value;

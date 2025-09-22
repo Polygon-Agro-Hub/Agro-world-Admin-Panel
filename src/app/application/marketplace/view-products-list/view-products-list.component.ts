@@ -147,6 +147,14 @@ searchProduct() {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+        icon: '!border-gray-200 dark:!border-gray-500',
+        confirmButton: 'hover:!bg-[#3085d6] dark:hover:!bg[#3085d6]',
+        cancelButton: '',
+        actions: 'gap-2'
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
@@ -156,21 +164,30 @@ searchProduct() {
           .subscribe(
             (data: any) => {
               if (data) {
-                Swal.fire(
-                  'Deleted!',
-                  'The product has been deleted.',
-                  'success'
-                );
+                Swal.fire({
+                  title: 'Deleted',
+                  text: 'The product has been deleted.',
+                  icon: 'success',
+                  customClass: {
+                    popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                    title: 'dark:text-white',
+                  }
+                });
                 this.fetchAllProducts();
               }
             },
             (error) => {
               console.error('Error deleting product:', error);
-              Swal.fire(
-                'Error',
-                'There was a problem deleting the product.',
-                'error'
-              );
+              
+              Swal.fire({
+                title: 'Error',
+                text: 'There was a problem deleting the product.',
+                icon: 'error',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
+              });
             }
           );
       } else if (result.dismiss === Swal.DismissReason.cancel) {

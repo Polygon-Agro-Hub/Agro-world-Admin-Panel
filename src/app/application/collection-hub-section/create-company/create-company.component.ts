@@ -461,10 +461,11 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
-    const englishOnlyFields = ['companyNameEnglish', 'accHolderName', 'foName'];
+    const englishOnlyFields = ['accHolderName', 'foName'];
     const emailFields = ['email'];
     const sinhalaFields = [''];
     const tamilFields = [''];
+    const businessNameFields = ['companyNameEnglish'];
 
     if (numericFields.includes(fieldName)) {
       if (!/^[0-9]$/.test(key)) {
@@ -483,6 +484,18 @@ export class CreateCompanyComponent implements OnInit {
         return;
       }
     }
+
+    if (businessNameFields.includes(fieldName)) {
+  // Allow letters, numbers, spaces, and common business characters
+  if (!/^[\p{L}\p{Nd} .'&\-()\/,#]$/u.test(key)) {
+    event.preventDefault();
+    this.englishInputError = true;
+    setTimeout(() => {
+      this.englishInputError = false;
+    }, 2000);
+    return;
+  }
+}
 
     // Allow all characters in email fields (validation happens on blur/submit)
     if (emailFields.includes(fieldName)) {
@@ -1615,6 +1628,17 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     return '';
+  }
+
+  onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+  
+    // Trim leading spaces only
+    const trimmedValue = inputElement.value.replace(/^\s+/, '');
+  
+    // Update the model and input value
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
   }
 
 }

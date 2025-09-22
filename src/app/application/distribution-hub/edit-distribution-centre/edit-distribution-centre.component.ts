@@ -891,7 +891,7 @@ back(): void {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 }
               }).then(() => {
-                this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+                this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
               });
             } else {
               this.showErrorAlert(response.error || 'Update failed');
@@ -1109,9 +1109,9 @@ onInputChange(event: any, fieldType: string) {
       } else {
         value = value.trimStart();
 
-
-        // ✅ Capitalize first letter for centre name
-        if (target.getAttribute('formControlName') === 'name' && value.length > 0) {
+        // ✅ Capitalize first letter for centre name and city
+        const fieldName = target.getAttribute('formControlName');
+        if ((fieldName === 'name' || fieldName === 'city') && value.length > 0) {
           value = value.charAt(0).toUpperCase() + value.slice(1);
         }
       }

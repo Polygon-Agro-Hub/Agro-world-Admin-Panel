@@ -62,7 +62,7 @@
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-        <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" (onChange)="selectVerityImage()"
+        <p-dropdown id="variety" name="varietyId" [(ngModel)]="productObj.varietyId" (onChange)="selectVerityImage()"
           [options]="selectedVarieties" optionLabel="varietyEnglish" optionValue="id" [filter]="true"
           filterBy="varietyEnglish" placeholder="--- Select Variety ---" [showClear]="false" class="w-full mt-2"
           [disabled]="!isVerityVisible">
@@ -110,7 +110,7 @@
           productObj.promo
         ">
         <label class="text-[#534E4E]">Discount Percentage *</label>
-        <input type="text" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
+        <input type="number" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
           (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'discountedPrice')"
           (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -121,7 +121,7 @@
         <label class="text-[#534E4E] dark:text-textDark">{{
           isNoDiscount === true ? "Price Per kg *" : "Actual Price Per kg *"
           }}</label>
-        <input type="text" id="normalPrice" name="normalPrice" [(ngModel)]="productObj.normalPrice"
+        <input type="number" id="normalPrice" name="normalPrice" [(ngModel)]="productObj.normalPrice"
           (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'normalPrice')"
           (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

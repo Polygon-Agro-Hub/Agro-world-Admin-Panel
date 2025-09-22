@@ -468,7 +468,7 @@
         <div>
   <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
   <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-    (keydown)="preventLeadingSpace($event, 'email')"
+  (input)="onTrimInput($event, personalData, 'email')"
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     (blur)="onBlur('email')" />
   <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">

@@ -609,22 +609,22 @@ onSubmit() {
   }
 
   // First Name
-  // if (!this.personalData.firstName) {
-  //   missingFields.push('First Name');
-  // } else if (!englishNamePattern.test(this.personalData.firstName)) {
-  //   missingFields.push('First Name - Must start with a capital letter and contain only English letters');
-  // }
+  if (!this.personalData.firstName) {
+    missingFields.push('First Name is Required');
+  } else if (!englishNamePattern.test(this.personalData.firstName)) {
+    missingFields.push('First Name - Must start with a capital letter and contain only English letters');
+  }
 
-  // // Last Name
-  // if (!this.personalData.lastName) {
-  //   missingFields.push('Last Name');
-  // } else if (!englishNamePattern.test(this.personalData.lastName)) {
-  //   missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
-  // }
+  // Last Name
+  if (!this.personalData.lastName) {
+    missingFields.push('Last Name is Required');
+  } else if (!englishNamePattern.test(this.personalData.lastName)) {
+    missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
+  }
 
   // Phone Number 1
   if (!this.personalData.phoneNumber1) {
-    missingFields.push('Mobile Number - 1');
+    missingFields.push('Mobile Number - 1 is Required');
   } else if (!phonePattern.test(this.personalData.phoneNumber1)) {
     missingFields.push('Mobile Number - 1 - Must be 9 digits starting with 7 (format: 7XXXXXXXX)');
   }
@@ -641,52 +641,52 @@ onSubmit() {
 
   // Email
   if (!this.personalData.email) {
-    missingFields.push('Email');
+    missingFields.push('Email is Required');
   } else if (!this.isValidEmail(this.personalData.email)) {
     missingFields.push('Email - Invalid format (e.g., example@domain.com)');
   }
 
   // NIC
   if (!this.personalData.nic) {
-    missingFields.push('NIC Number');
+    missingFields.push('NIC Number is Required');
   } else if (!nicPattern.test(this.personalData.nic)) {
     missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
   }
 
   // Address fields
   if (!this.personalData.houseNumber) {
-    missingFields.push('House/Plot Number');
+    missingFields.push('House/Plot Number is Required');
   }
 
   if (!this.personalData.streetName) {
-    missingFields.push('Street Name');
+    missingFields.push('Street Name is Required');
   }
 
   if (!this.personalData.city) {
-    missingFields.push('City');
+    missingFields.push('City is Required');
   }
 
   if (!this.personalData.district) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   // Account Holder Name
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name');
+    missingFields.push('Account Holder Name is Required');
   } else if (!this.isValidName(this.personalData.accHolderName)) {
     missingFields.push('Account Holder Name - Only letters, spaces, hyphens, and apostrophes allowed');
   }
 
   // Account Number
   if (!this.personalData.accNumber) {
-    missingFields.push('Account Number');
+    missingFields.push('Account Number is Required');
   } else if (!accountPattern.test(this.personalData.accNumber)) {
     missingFields.push('Account Number - Only numbers allowed');
   }
 
   // Confirm Account Number
   if (!this.confirmAccNumber) {
-    missingFields.push('Confirm Account Number');
+    missingFields.push('Confirm Account Number is Required');
   } else if (!accountPattern.test(this.confirmAccNumber)) {
     missingFields.push('Confirm Account Number - Only numbers allowed');
   } else if (this.personalData.accNumber !== this.confirmAccNumber) {
@@ -695,11 +695,11 @@ onSubmit() {
 
   // Bank details
   if (!this.personalData.bankName) {
-    missingFields.push('Bank Name');
+    missingFields.push('Bank Name is Required');
   }
 
   if (!this.personalData.branchName) {
-    missingFields.push('Branch Name');
+    missingFields.push('Branch Name is Required');
   }
 
   // If any errors, show them in SweetAlert and stop

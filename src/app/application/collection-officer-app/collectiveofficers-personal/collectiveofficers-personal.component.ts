@@ -180,7 +180,7 @@ markPageOneFieldsAsTouched(): void {
   const pageOneFields: (keyof Personal)[] = [
     'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
     'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
-    'nic', 'email', 'companyId', 'centerId', 'jobRole'
+    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'irmId'
   ];
 
   pageOneFields.forEach(field => {
@@ -276,55 +276,59 @@ onSubmit() {
 
   // Check required fields for pageOne
   if (!this.personalData.empType) {
-    missingFields.push('Staff Employee Type');
+    missingFields.push('Staff Employee Type is Required');
   }
 
   if (!this.isAtLeastOneLanguageSelected()) {
-    missingFields.push('Preferred Languages');
+    missingFields.push('Preferred Languages is Required');
   }
 
   if (!this.personalData.companyId) {
-    missingFields.push('Company Name');
+    missingFields.push('Company Name is Required');
   }
 
   if (!this.personalData.centerId) {
-    missingFields.push('Collection Centre Name');
+    missingFields.push('Collection Centre Name is Required');
   }
 
   if (!this.personalData.jobRole) {
-    missingFields.push('Job Role');
+    missingFields.push('Job Role is Required');
   }
 
   if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
-    missingFields.push('Manager Name');
+    missingFields.push('Manager Name is Required');
   }
 
   if (!this.personalData.firstNameEnglish) {
-    missingFields.push('First Name (in English)');
+    missingFields.push('First Name (in English) is Required');
   }
 
   if (!this.personalData.lastNameEnglish) {
-    missingFields.push('Last Name (in English)');
+    missingFields.push('Last Name (in English) is Required');
   }
 
   if (!this.personalData.firstNameSinhala) {
-    missingFields.push('First Name (in Sinhala)');
+    missingFields.push('First Name (in Sinhala) is Required');
   }
 
   if (!this.personalData.lastNameSinhala) {
-    missingFields.push('Last Name (in Sinhala)');
+    missingFields.push('Last Name (in Sinhala) is Required');
   }
 
   if (!this.personalData.firstNameTamil) {
-    missingFields.push('First Name (in Tamil)');
+    missingFields.push('First Name (in Tamil) is Required');
   }
 
   if (!this.personalData.lastNameTamil) {
-    missingFields.push('Last Name (in Tamil)');
+    missingFields.push('Last Name (in Tamil) is Required');
+  }
+
+  if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
+    missingFields.push('Collection Centre Manager is Required');
   }
 
   if (!this.personalData.phoneNumber01) {
-    missingFields.push('Mobile Number - 01');
+    missingFields.push('Mobile Number - 01 is Required');
   } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
     missingFields.push('Mobile Number - 01 - Must be 9 digits');
   }
@@ -338,58 +342,58 @@ onSubmit() {
   }
 
   if (!this.personalData.nic) {
-    missingFields.push('NIC Number');
+    missingFields.push('NIC Number is Required');
   } else if (!this.isValidNIC(this.personalData.nic)) {
     missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
   }
 
   if (!this.personalData.email) {
-    missingFields.push('Email');
+    missingFields.push('Email is Required');
   } else if (!this.isValidEmail(this.personalData.email)) {
     missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
   }
 
   // Check required fields for pageTwo
   if (!this.personalData.houseNumber) {
-    missingFields.push('House Number');
+    missingFields.push('House Number is Required');
   }
 
   if (!this.personalData.streetName) {
-    missingFields.push('Street Name');
+    missingFields.push('Street Name is Required');
   }
 
   if (!this.personalData.city) {
-    missingFields.push('City');
+    missingFields.push('City is Required');
   }
 
   if (!this.personalData.district) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   if (!this.personalData.province) {
-    missingFields.push('Province');
+    missingFields.push('Province is Required');
   }
 
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name');
+    missingFields.push('Account Holder Name is Required');
   }
 
   if (!this.personalData.accNumber) {
-    missingFields.push('Account Number');
+    missingFields.push('Account Number is Required');
   }
 
   if (!this.personalData.confirmAccNumber) {
-    missingFields.push('Confirm Account Number');
+    missingFields.push('Confirm Account Number is Required');
   } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
     missingFields.push('Confirm Account Number - Must match Account Number');
   }
 
   if (!this.selectedBankId) {
-    missingFields.push('Bank Name');
+    missingFields.push('Bank Name is Required');
   }
 
   if (!this.selectedBranchId) {
-    missingFields.push('Branch Name');
+    missingFields.push('Branch Name is Required');
   }
 
   // If errors, show list and stop - validation messages will now be visible
@@ -538,57 +542,61 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
 
     // Validate pageOne fields
     if (!this.personalData.empType) {
-      missingFields.push('Staff Employee Type');
+      missingFields.push('Staff Employee Type is Required');
     }
 
     if (!this.isAtLeastOneLanguageSelected()) {
-      missingFields.push('Preferred Languages');
+      missingFields.push('Preferred Language is Required');
     }
 
     if (!this.personalData.companyId) {
-      missingFields.push('Company Name');
+      missingFields.push('Company Name is Required');
+    }
+
+    if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
+      missingFields.push('Collection Centre Manager is Required');
     }
 
     if (!this.personalData.centerId) {
-      missingFields.push('Collection Centre Name');
+      missingFields.push('Collection Centre Name is Required');
     }
 
     if (!this.personalData.jobRole) {
-      missingFields.push('Job Role');
+      missingFields.push('Job Role is Required');
     }
 
     if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
-      missingFields.push('Manager Name');
+      missingFields.push('Manager Name is Required');
     }
 
     if (!this.personalData.firstNameEnglish) {
-      missingFields.push('First Name (in English)');
+      missingFields.push('First Name (in English) is Required');
     }
 
     if (!this.personalData.lastNameEnglish) {
-      missingFields.push('Last Name (in English)');
+      missingFields.push('Last Name (in English) is Required');
     }
 
     if (!this.personalData.firstNameSinhala) {
-      missingFields.push('First Name (in Sinhala)');
+      missingFields.push('First Name (in Sinhala) is Required');
     }
 
     if (!this.personalData.lastNameSinhala) {
-      missingFields.push('Last Name (in Sinhala)');
+      missingFields.push('Last Name (in Sinhala) is Required');
     }
 
     if (!this.personalData.firstNameTamil) {
-      missingFields.push('First Name (in Tamil)');
+      missingFields.push('First Name (in Tamil) is Required');
     }
 
     if (!this.personalData.lastNameTamil) {
-      missingFields.push('Last Name (in Tamil)');
+      missingFields.push('Last Name (in Tamil) is Required');
     }
 
     if (!this.personalData.phoneNumber01) {
-      missingFields.push('Mobile Number - 01');
+      missingFields.push('Mobile Number - 01 is Required');
     } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-      missingFields.push('Mobile Number - 01 - Must be 9 digits');
+      missingFields.push('Mobile Number - 01 - Must be 9 digits ');
     }
 
     if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
@@ -600,13 +608,13 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
 
     if (!this.personalData.nic) {
-      missingFields.push('NIC Number');
+      missingFields.push('NIC Number is Required');
     } else if (!this.isValidNIC(this.personalData.nic)) {
       missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
     }
 
     if (!this.personalData.email) {
-      missingFields.push('Email');
+      missingFields.push('Email is Required');
     } else if (!this.isValidEmail(this.personalData.email)) {
       missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
     }
@@ -1014,6 +1022,20 @@ formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
     this.personalData[fieldName] = value;
   }
 }
+
+onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  let trimmedValue = inputElement.value.trimStart();
+
+  // ✅ Capitalize the first letter (if not empty)
+  if (trimmedValue.length > 0) {
+    trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+  }
+
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
+}
+
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];

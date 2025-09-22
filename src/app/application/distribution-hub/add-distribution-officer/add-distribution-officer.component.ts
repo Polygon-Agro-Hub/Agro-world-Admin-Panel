@@ -55,7 +55,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   isLoading = false;
   selectedFile: File | null = null;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   personalData: Personal = new Personal();
 
   distributionCenterData: DistributionCenter[] = [];
@@ -474,6 +474,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
     if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
       errors.push('Mobile Number - 1 is required and must be valid');
     }
+    
     
     // NIC validation
     if (!this.personalData.nic || !this.isValidNIC(this.personalData.nic)) {

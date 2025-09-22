@@ -749,56 +749,56 @@ back(): void {
 
   // Check required fields
   if (this.distributionForm.get('name')?.invalid) {
-    missingFields.push('Distribution Centre Name');
+    missingFields.push('Distribution Centre Name is Required');
   }
 
   if (this.distributionForm.get('contact1Code')?.invalid) {
-    missingFields.push('Contact 1 Code');
+    missingFields.push('Contact Number -1 Code is Required');
   }
 
   if (this.distributionForm.get('contact1')?.invalid) {
-    missingFields.push('Contact 1 Number');
+    missingFields.push('Contact Number -1 is Required');
   } else if (this.distributionForm.get('contact1')?.valid) {
     const contact1 = this.distributionForm.get('contact1')?.value;
     if (contact1 && !this.isValidPhoneNumber(contact1)) {
-      missingFields.push('Contact 1 Number - Must be a valid phone number');
+      missingFields.push('Contact Number -1 - Must be a valid phone number');
     }
   }
 
   if (this.distributionForm.get('contact2')?.value && !this.isValidPhoneNumber(this.distributionForm.get('contact2')?.value)) {
-    missingFields.push('Contact 2 Number - Must be a valid phone number');
+    missingFields.push('Contact Number -2 - Must be a valid phone number');
   }
 
   if (this.distributionForm.get('city')?.invalid) {
-    missingFields.push('City');
+    missingFields.push('City is Required');
   }
 
   if (this.distributionForm.get('district')?.invalid) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   if (this.distributionForm.get('province')?.invalid) {
-    missingFields.push('Province');
+    missingFields.push('Province is Required');
   }
 
   if (this.distributionForm.get('country')?.invalid) {
-    missingFields.push('Country');
+    missingFields.push('Country is Required');
   }
 
   if (this.distributionForm.get('regCode')?.invalid) {
-    missingFields.push('Registration Code');
+    missingFields.push('Registration Code is Required');
   }
 
   if (this.distributionForm.get('longitude')?.invalid) {
-    missingFields.push('Longitude');
+    missingFields.push('Longitude is Required');
   }
 
   if (this.distributionForm.get('latitude')?.invalid) {
-    missingFields.push('Latitude');
+    missingFields.push('Latitude is Required');
   }
 
   if (this.distributionForm.get('email')?.invalid) {
-    missingFields.push('Email');
+    missingFields.push('Email is Required');
   } else if (this.distributionForm.get('email')?.valid) {
     const email = this.distributionForm.get('email')?.value;
     if (email && !this.isValidEmail(email)) {
@@ -807,7 +807,7 @@ back(): void {
   }
 
   if (this.distributionForm.get('company')?.invalid) {
-    missingFields.push('Company');
+    missingFields.push('Company is Required');
   }
 
   // If errors, show list and stop - validation messages will now be visible

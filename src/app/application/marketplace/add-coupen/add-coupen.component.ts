@@ -148,14 +148,14 @@ onSubmit() {
     .join('');
   
   Swal.fire({
-    title: 'Warning',
+    title: 'Validation Error',
     html: `
       <div style="text-align: left;">
         <p>Please fill in the following required field(s):</p>
         ${bulletPoints}
       </div>
     `,
-    icon: 'warning',
+    icon: 'error',
     confirmButtonText: 'OK',
     customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

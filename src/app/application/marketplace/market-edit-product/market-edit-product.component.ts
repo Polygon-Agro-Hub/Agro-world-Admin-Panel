@@ -56,6 +56,13 @@ export class MarketEditProductComponent implements OnInit {
     { label: 'g', value: 'g' }
   ];
 
+  displayTypeOptions = [
+    { label: 'With Discount and Actual Price', value: 'D&AP' },
+    { label: 'With Actual Price and Sale Price', value: 'AP&SP' },
+    { label: 'With Actual Price,Sale Price and Discount', value: 'AP&SP&D' }
+  ];
+
+
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
@@ -123,6 +130,10 @@ export class MarketEditProductComponent implements OnInit {
       } else {
         this.productObj.promo = false;
       }
+      console.log("--------------verityes------------------");
+      console.log(this.selectedVarieties);
+
+
     });
   }
 
@@ -140,6 +151,8 @@ export class MarketEditProductComponent implements OnInit {
   }
 
   onCropChange() {
+    console.log("oncropCange", this.productObj.selectId);
+
     const sample = this.cropsObj.filter(
       (crop) => crop.cropId === +this.productObj.selectId
     );
@@ -228,6 +241,7 @@ export class MarketEditProductComponent implements OnInit {
     if (!this.productObj.varietyId) emptyFields.push('Variety');
     if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
     if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+    if (this.templateKeywords().length === 0) emptyFields.push('Tags');
     if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
     if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
 
@@ -236,9 +250,21 @@ export class MarketEditProductComponent implements OnInit {
     }
 
     if (this.productObj.promo) {
-      if (!this.productObj.discountedPrice) emptyFields.push('Discount Percentage');
-      if (!this.productObj.salePrice) emptyFields.push('Sale Price');
-      if (!this.productObj.displaytype) emptyFields.push('Display Type');
+      if (!this.productObj.displaytype) {
+        emptyFields.push('Display Type');
+      } else {
+        console.log("discount precentage->", this.productObj.discountedPrice);
+
+        if (this.productObj.displaytype === 'D&AP') {
+          if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
+        } else if (this.productObj.displaytype === 'AP&SP') {
+          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
+        } else if (this.productObj.displaytype === 'AP&SP&D') {
+          if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
+          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
+        }
+      }
+
     }
 
     if (emptyFields.length > 0) {

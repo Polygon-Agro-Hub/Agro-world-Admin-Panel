@@ -760,6 +760,11 @@ onSubmit() {
     showCancelButton: true,
     confirmButtonText: 'Yes, Save it!',
     cancelButtonText: 'No, cancel',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
     reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {

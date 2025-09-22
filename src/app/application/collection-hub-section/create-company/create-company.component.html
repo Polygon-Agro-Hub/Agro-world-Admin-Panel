@@ -374,7 +374,7 @@
       
       <!-- Length validation (third priority) - only show if no other errors -->
       <div *ngIf="!oicConNum1Ref.errors?.['required'] && !isInvalidMobileNumber('oicConNum1') && contactNumberError1 && oicConNum1Ref.valid" class="text-red-500 text-sm">
-        Contact number must be exactly 9 digits.
+        Please enter a valid contact number (format: +947XXXXXXXX)
       </div>
     </div>
   </div>
@@ -423,7 +423,7 @@
       
       <!-- Length validation (second priority) - only show if format is valid -->
       <div *ngIf="companyData.oicConNum2 && !isInvalidMobileNumber('oicConNum2') && contactNumberError2" class="text-red-500 text-sm">
-        Contact number must be exactly 9 digits.
+        Please enter a valid contact number (format: +947XXXXXXXX)
       </div>
       
       <!-- Duplicate validation (lowest priority) - only show if no other errors -->
@@ -443,15 +443,7 @@
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
         </button>
-        <button type="button" (click)="saveCompanyData()" [disabled]="
-            !companyData.confirmAccNumber ||
-            !companyData.accNumber ||
-            !companyData.accHolderName ||
-            !companyData.bankName ||
-            !companyData.branchName ||
-            !companyData.foName ||
-            companyData.accNumber != companyData.confirmAccNumber
-          " class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+        <button type="button" (click)="saveCompanyData()" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
           Submit
         </button>
       </div>
@@ -858,14 +850,7 @@
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
         </button>
-        <button type="button" (click)="updateCompanyData()" [disabled]="
-            !companyData.confirmAccNumber ||
-            !companyData.accNumber ||
-            !companyData.accHolderName ||
-            !companyData.bankName ||
-            !companyData.branchName ||
-            companyData.accNumber != companyData.confirmAccNumber
-          " class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+        <button type="button" (click)="updateCompanyData()" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
           Save
         </button>
       </div>

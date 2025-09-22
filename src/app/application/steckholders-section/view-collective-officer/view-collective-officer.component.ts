@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild  } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel  } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -49,6 +49,8 @@ interface JobRole {
   styleUrls: ['./view-collective-officer.component.css'],
 })
 export class ViewCollectiveOfficerComponent {
+  @ViewChild('selectedCenterIdInput') selectedCenterIdInput!: NgModel;
+  @ViewChild('selectedIrmIdInput') selectedIrmIdInput!: NgModel;
   collectionOfficers: CollectionOfficers[] = [];
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
@@ -254,52 +256,75 @@ export class ViewCollectiveOfficerComponent {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
-  deleteCollectionOfficer(id: number) {
-    const token = this.tokenService.getToken();
-    if (!token) return;
+ deleteCollectionOfficer(id: number) {
+  const token = this.tokenService.getToken();
+  if (!token) return;
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.collectionService.deleteOfficer(id).subscribe(
-          (data) => {
-            this.isLoading = false;
-            if (data.status) {
-              Swal.fire(
-                'Deleted!',
-                'The Collection Officer has been deleted.',
-                'success'
-              );
-              this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-            } else {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the Collection Officer.',
-                'error'
-              );
-            }
-          },
-          () => {
-            this.isLoading = false;
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the Collection Officer.',
-              'error'
-            );
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+      confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+      cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
+    },
+    buttonsStyling: false, // let Tailwind handle button styling
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.collectionService.deleteOfficer(id).subscribe(
+        (data) => {
+          this.isLoading = false;
+          if (data.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The Collection Officer has been deleted.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              },
+              buttonsStyling: false
+            });
+            this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'There was an error deleting the Collection Officer.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              },
+              buttonsStyling: false
+            });
           }
-        );
-      }
-    });
-  }
+        },
+        () => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'There was an error deleting the Collection Officer.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
+            buttonsStyling: false
+          });
+        }
+      );
+    }
+  });
+}
 
   editCollectionOfficer(id: number) {
     this.navigatePath(
@@ -491,6 +516,7 @@ export class ViewCollectiveOfficerComponent {
 
   handleClaimButtonClick(item: CollectionOfficers) {
     this.selectedOfficer = item;
+    console.log('this.selectedOfficer', this.selectedOfficer)
     this.selectOfficerId = item.id;
 
     if (item.claimStatus === 0) {
@@ -531,14 +557,26 @@ export class ViewCollectiveOfficerComponent {
   }
 
   claimOfficer() {
-    if (!this.selectedCenterId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please select a center.',
-        confirmButtonText: 'OK',
-      });
-      return;
+    const centerControl = (this as any).selectedCenterIdInput;
+    const managerControl = (this as any).selectedIrmIdInput;
+  
+    if (centerControl) {
+      centerControl.control.markAsTouched();
+    }
+    if (managerControl) {
+      managerControl.control.markAsTouched();
+    }
+  
+    if (this.selectedOfficer?.jobRole === 'Collection Officer') {
+      // Require both center and manager
+      if (!this.selectedCenterId || !this.selectedIrmId) {
+        return;
+      }
+    } else {
+      // For other roles, require only center
+      if (!this.selectedCenterId) {
+        return;
+      }
     }
 
     // Prepare payload - include manager ID if selected

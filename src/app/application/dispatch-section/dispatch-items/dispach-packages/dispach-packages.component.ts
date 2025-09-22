@@ -8,11 +8,11 @@ import Swal from 'sweetalert2';
 import { CountDownComponent } from '../../../../components/count-down/count-down.component';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
-
+import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-dispach-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, CountDownComponent, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, CountDownComponent, LoadingSpinnerComponent,   DropdownModule,],
   templateUrl: './dispach-packages.component.html',
   styleUrl: './dispach-packages.component.css'
 })
@@ -168,6 +168,12 @@ export class DispachPackagesComponent implements OnInit {
     this.isPopupOpen = false;
   }
 
+// In your component class
+isExcludedOption(product: MarketPlaceItems): boolean {
+  return product.isExcluded; // true = disabled, false = enabled
+}
+
+
   replaceProduct() {
     this.dispatchService.replaceDispatchPackageItemsData(this.selectProduct, this.newProductObj).subscribe(
       (res) => {
@@ -197,13 +203,30 @@ export class DispachPackagesComponent implements OnInit {
     }
   }
 
-  onProductChange(): void {
-    if (this.newProductObj) {
-      // Reset quantity and recalculate price
-      this.newProductObj.qty = this.newProductObj.startValue;
-      this.cangeReplacePrice();
-    }
+onProductChange() {
+  if (this.newProductObj?.isExcluded) {
+    // If the selected product is excluded, ignore it
+    Swal.fire({
+      icon: 'warning',
+      title: 'Cannot select this product',
+      text: 'This product is excluded.',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    this.newProductObj = null; // Reset selection
+    return;
   }
+
+  if (this.newProductObj) {
+    // Normal behavior for allowed products
+    this.newProductObj.qty = this.newProductObj.startValue;
+    this.cangeReplacePrice();
+  }
+}
+
 
   updateQuantity(newQty: number): void {
     if (this.newProductObj) {
@@ -232,7 +255,7 @@ interface MarketPlaceItems {
   unitType: number
   startValue: number
   changeby: number
-  isExcluded: Boolean
+  isExcluded: boolean
 
   price: number;
   qty: number;

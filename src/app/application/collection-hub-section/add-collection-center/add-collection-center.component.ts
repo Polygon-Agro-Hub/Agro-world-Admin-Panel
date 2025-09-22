@@ -308,7 +308,7 @@ isFieldInvalid(field: string): boolean {
 
   // Validation for form fields
   if (!this.collectionCenterForm.get('centerName')?.value || this.collectionCenterForm.get('centerName')?.value.trim() === '') {
-    missingFields.push('Collection Centre Name');
+    missingFields.push('Collection Centre Name is Required');
   }
 
   if (!this.selectedCompaniesIds || this.selectedCompaniesIds.length === 0) {
@@ -316,7 +316,7 @@ isFieldInvalid(field: string): boolean {
   }
 
   if (!this.collectionCenterForm.get('contact01')?.value) {
-    missingFields.push('Contact Number - 1');
+    missingFields.push('Contact Number - 1 is Required');
   } else if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact01')?.value) || this.isPhoneInvalidMap['phone01']) {
     missingFields.push('Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
   }
@@ -330,40 +330,40 @@ isFieldInvalid(field: string): boolean {
     }
   }
 
-  if (!this.collectionCenterForm.get('contact01Code')?.value) {
-    missingFields.push('Contact Number - 1 Code');
-  }
+  // if (!this.collectionCenterForm.get('contact01Code')?.value) {
+  //   missingFields.push('Contact Number - 1 Code');
+  // }
 
-  if (this.collectionCenterForm.get('contact02')?.value && !this.collectionCenterForm.get('contact02Code')?.value) {
-    missingFields.push('Contact Number - 2 Code');
-  }
+  // if (this.collectionCenterForm.get('contact02')?.value && !this.collectionCenterForm.get('contact02Code')?.value) {
+  //   missingFields.push('Contact Number - 2 Code');
+  // }
 
   if (!this.collectionCenterForm.get('buildingNumber')?.value || this.collectionCenterForm.get('buildingNumber')?.value.trim() === '') {
-    missingFields.push('Building Number');
+    missingFields.push('Building Number  is Required');
   }
 
   if (!this.collectionCenterForm.get('street')?.value || this.collectionCenterForm.get('street')?.value.trim() === '') {
-    missingFields.push('Street Name');
+    missingFields.push('Street Name is Required');
   }
 
   if (!this.collectionCenterForm.get('city')?.value || this.collectionCenterForm.get('city')?.value.trim() === '') {
-    missingFields.push('City');
+    missingFields.push('City is Required');
   }
 
   if (!this.collectionCenterForm.get('province')?.value) {
-    missingFields.push('Province');
+    missingFields.push('Province is Required');
   }
 
   if (!this.collectionCenterForm.get('district')?.value) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   if (!this.collectionCenterForm.get('country')?.value) {
-    missingFields.push('Country');
+    missingFields.push('Country is Required');
   }
 
   if (!this.collectionCenterForm.get('regCode')?.value) {
-    missingFields.push('Collection Centre Reg Code');
+    missingFields.push('Collection Centre Reg Code is Required');
   }
 
   // Display validation errors if any
@@ -708,9 +708,9 @@ class CollectionCenter {
   regCode!: string;
   centerName!: string;
   contact01!: string;
-  contact01Code!: string;
+  contact01Code: string = '+94';
   contact02!: string;
-  contact02Code!: string;
+  contact02Code: string = '+94';
   buildingNumber!: string;
   street!: string;
   district!: string;

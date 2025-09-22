@@ -140,42 +140,57 @@ export class ViewSalesAgentsComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  deleteSalesAgent(id: any) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this sales agent? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.salesAgentsService.deleteSalesAgent(id).subscribe(
-          (data: any) => {
-            if (data) {
-              Swal.fire(
-                'Deleted!',
-                'The sales agent has been deleted.',
-                'success'
-              );
-              this.isLoading = true;
-              this.fetchAllSalesAgents();
-            }
-          },
-          (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the Sales Agent.',
-              'error'
-            );
+ deleteSalesAgent(id: any) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this sales agent? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    confirmButtonColor: '#2563eb', // Blue confirm
+    cancelButtonColor: '#dc2626',  // Red cancel
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.salesAgentsService.deleteSalesAgent(id).subscribe(
+        (data: any) => {
+          if (data) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The sales agent has been deleted.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+            this.isLoading = true;
+            this.fetchAllSalesAgents();
           }
-        );
-      }
-    });
-  }
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'There was an error deleting the Sales Agent.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+        }
+      );
+    }
+  });
+}
+
 openPopup(item: any) {
   const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
   const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';

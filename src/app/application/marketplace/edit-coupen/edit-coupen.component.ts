@@ -188,7 +188,7 @@ export class EditCoupenComponent {
     const errorList = validationErrors.map(error => `<li>${error}</li>`).join('');
     
     Swal.fire({
-      icon: 'warning',
+      icon: 'error',
       title: 'Validation Errors',
       html: `
         <div class="text-left">

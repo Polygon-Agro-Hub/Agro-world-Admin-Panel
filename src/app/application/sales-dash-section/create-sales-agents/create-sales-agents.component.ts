@@ -605,17 +605,17 @@ onSubmit() {
   const accountPattern = /^[a-zA-Z0-9]+$/;
 
   // Field Validations
-  if (!this.personalData.empType) missingFields.push('Staff Employee Type');
+  if (!this.personalData.empType) missingFields.push('Staff Employee Type is Required');
 
-  // if (!this.personalData.firstName) missingFields.push('First Name');
-  // else if (!englishNamePattern.test(this.personalData.firstName))
-  //   missingFields.push('First Name - Must start with a capital letter and contain only English letters');
+  if (!this.personalData.firstName) missingFields.push('First Name is Required');
+  else if (!englishNamePattern.test(this.personalData.firstName))
+    missingFields.push('First Name - Must start with a capital letter and contain only English letters');
 
-  // if (!this.personalData.lastName) missingFields.push('Last Name');
-  // else if (!englishNamePattern.test(this.personalData.lastName))
-  //   missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
+  if (!this.personalData.lastName) missingFields.push('Last Name is Required');
+  else if (!englishNamePattern.test(this.personalData.lastName))
+    missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
 
-  if (!this.personalData.phoneNumber1) missingFields.push('Contact Number 1');
+  if (!this.personalData.phoneNumber1) missingFields.push('Contact Number 1 is Required');
   else if (!phonePattern.test(this.personalData.phoneNumber1))
     missingFields.push('Contact Number 1 - Must be 9 digits starting with 7');
 
@@ -626,36 +626,36 @@ onSubmit() {
       missingFields.push('Contact Number 2 - Cannot be the same as Contact Number 1');
   }
 
-  if (!this.personalData.email) missingFields.push('Email');
+  if (!this.personalData.email) missingFields.push('Email is Required');
   else if (!this.isValidEmail(this.personalData.email))
     missingFields.push('Email - Invalid format (e.g., example@domain.com)');
 
-  if (!this.personalData.nic) missingFields.push('NIC');
+  if (!this.personalData.nic) missingFields.push('NIC is Required');
   else if (!nicPattern.test(this.personalData.nic))
     missingFields.push('NIC - Must be 12 digits or 9 digits followed by V');
 
-  if (!this.personalData.houseNumber) missingFields.push('House Number');
-  if (!this.personalData.streetName) missingFields.push('Street Name');
-  if (!this.personalData.city) missingFields.push('City');
-  if (!this.personalData.district) missingFields.push('District');
-  if (!this.personalData.province) missingFields.push('Province');
+  if (!this.personalData.houseNumber) missingFields.push('House Number is Required');
+  if (!this.personalData.streetName) missingFields.push('Street Name is Required');
+  if (!this.personalData.city) missingFields.push('City is Required');
+  if (!this.personalData.district) missingFields.push('District is Required');
+  if (!this.personalData.province) missingFields.push('Province is Required');
 
-  if (!this.personalData.accHolderName) missingFields.push('Account Holder Name');
+  if (!this.personalData.accHolderName) missingFields.push('Account Holder Name is Required');
   else if (!this.isValidName(this.personalData.accHolderName))
     missingFields.push('Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed');
 
-  if (!this.personalData.accNumber) missingFields.push('Account Number');
+  if (!this.personalData.accNumber) missingFields.push('Account Number is Required');
   else if (!accountPattern.test(this.personalData.accNumber))
     missingFields.push('Account Number - Only alphanumeric characters allowed');
 
-  if (!this.personalData.confirmAccNumber) missingFields.push('Confirm Account Number');
+  if (!this.personalData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
   else if (this.personalData.accNumber !== this.personalData.confirmAccNumber)
     missingFields.push('Confirm Account Number - Must match Account Number');
   else if (!accountPattern.test(this.personalData.confirmAccNumber))
     missingFields.push('Confirm Account Number - Only alphanumeric characters allowed');
 
-  if (!this.personalData.bankName) missingFields.push('Bank Name');
-  if (!this.personalData.branchName) missingFields.push('Branch Name');
+  if (!this.personalData.bankName) missingFields.push('Bank Name is Required');
+  if (!this.personalData.branchName) missingFields.push('Branch Name is Required');
 
  
 
@@ -689,6 +689,11 @@ onSubmit() {
     confirmButtonText: 'Yes, create it!',
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;

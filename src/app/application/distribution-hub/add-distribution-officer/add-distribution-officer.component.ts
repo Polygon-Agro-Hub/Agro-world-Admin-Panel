@@ -55,7 +55,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   isLoading = false;
   selectedFile: File | null = null;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   personalData: Personal = new Personal();
 
   distributionCenterData: DistributionCenter[] = [];
@@ -206,21 +206,15 @@ back(): void {
     this.personalData[field] = value;
   }
 
-blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNameEnglish'): void {
-  const allowed = /^[A-Za-z ]$/;
-  const input = this.personalData[field] || '';
+blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
+  const key = event.key;
 
-  // Block if key is invalid
-  if (!allowed.test(event.key)) {
-    event.preventDefault();
-    return;
-  }
-
-  // Block first character as space
-  if (input.length === 0 && event.key === ' ') {
+  // Allow only letters from any language (Unicode letters)
+  if (!/^\p{L}$/u.test(key)) {
     event.preventDefault();
   }
 }
+
 
   getAllDistributionCetnter(id: number) {
     this.loaded = false;
@@ -480,6 +474,7 @@ blockInvalidNameInput(event: KeyboardEvent, field: 'firstNameEnglish' | 'lastNam
     if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
       errors.push('Mobile Number - 1 is required and must be valid');
     }
+    
     
     // NIC validation
     if (!this.personalData.nic || !this.isValidNIC(this.personalData.nic)) {

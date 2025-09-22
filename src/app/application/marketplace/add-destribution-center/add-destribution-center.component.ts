@@ -641,39 +641,41 @@ updateRegCode() {
     if (control.errors && control.touched) {
       // Customize error messages based on field name and error type
       if (key === 'name' && control.errors['required']) {
-        missingFields.push('Distribution Centre Name');
+        missingFields.push('Distribution Centre Name is Required');
       } else if (key === 'regCode' && control.errors['required']) {
-        missingFields.push('Registration Code');
+        missingFields.push('Registration Code is Required');
       } else if (key === 'email' && control.errors['required']) {
-        missingFields.push('Email Address');
+        missingFields.push('Email Address is Required');
       } else if (key === 'email' && control.errors['email']) {
         missingFields.push('Email Address - Must be a valid email format');
       } else if (key === 'contact1' && control.errors['required']) {
-        missingFields.push('Primary Contact Number');
+        missingFields.push('Contact Number -1 Number is Required');
       } else if (key === 'contact1' && control.errors['pattern']) {
-        missingFields.push('Primary Contact Number - Must be a valid phone number format');
+        missingFields.push('Contact Number -1 - Must be a valid phone number format');
       } else if (key === 'contact2' && control.errors['pattern']) {
-        missingFields.push('Secondary Contact Number - Must be a valid phone number format');
+        missingFields.push('Contact Number -2 Number - Must be a valid phone number format');
       } else if (key === 'latitude' && control.errors['required']) {
-        missingFields.push('Latitude');
+        missingFields.push('Latitude is Required');
       } else if (key === 'latitude' && control.errors['pattern']) {
         missingFields.push('Latitude - Must be a valid coordinate');
       } else if (key === 'longitude' && control.errors['required']) {
-        missingFields.push('Longitude');
+        missingFields.push('Longitude is Required');
       } else if (key === 'longitude' && control.errors['pattern']) {
         missingFields.push('Longitude - Must be a valid coordinate');
       } else if (key === 'address' && control.errors['required']) {
-        missingFields.push('Address');
+        missingFields.push('Address is Required');
       } else if (key === 'city' && control.errors['required']) {
-        missingFields.push('City');
+        missingFields.push('City is Required');
       } else if (key === 'district' && control.errors['required']) {
-        missingFields.push('District');
+        missingFields.push('District is Required');
       } else if (key === 'province' && control.errors['required']) {
-        missingFields.push('Province');
+        missingFields.push('Province is Required');
       } else if (control.errors['required']) {
         // Generic required field message for other fields
         const fieldName = this.formatFieldName(key);
         missingFields.push(fieldName);
+
+        console.log('missingFields', missingFields);
       }
     }
   });

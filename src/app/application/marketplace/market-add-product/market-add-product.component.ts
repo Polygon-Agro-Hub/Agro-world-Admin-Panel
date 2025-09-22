@@ -59,6 +59,12 @@ export class MarketAddProductComponent implements OnInit {
     { label: 'g', value: 'g' }
   ];
 
+  displayTypeOptions = [
+    { label: 'With Discount and Actual Price', value: 'D&AP' },
+    { label: 'With Actual Price and Sale Price', value: 'AP&SP' },
+    { label: 'With Actual Price,Sale Price and Discount', value: 'AP&SP&D' }
+  ];
+
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
@@ -244,22 +250,37 @@ export class MarketAddProductComponent implements OnInit {
 
     // Check for empty required fields
     const emptyFields = [];
+    console.log(this.productObj);
+
 
     if (!this.productObj.category) emptyFields.push('Category');
     if (!this.productObj.cropName) emptyFields.push('Display Name');
     if (!this.productObj.selectId) emptyFields.push('Crop');
     if (!this.productObj.varietyId) emptyFields.push('Variety');
-    if (!this.productObj.normalPrice && this.productObj.normalPrice !== 0) emptyFields.push('Price Per kg');
+    if (!this.productObj.normalPrice && this.productObj.normalPrice === 0) emptyFields.push('Price Per kg');
     if (!this.productObj.unitType) emptyFields.push('Unit Type');
-    if (!this.productObj.startValue && this.productObj.startValue !== 0) emptyFields.push('Starting Value');
-    if (!this.productObj.changeby && this.productObj.changeby !== 0) emptyFields.push('Increase/Decrease by');
+    if (!this.productObj.startValue && this.productObj.startValue === 0) emptyFields.push('Starting Value');
+    if (!this.productObj.changeby && this.productObj.changeby === 0) emptyFields.push('Increase/Decrease by');
+    if (this.templateKeywords().length === 0) emptyFields.push('Tags');
 
-    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity && this.productObj.maxQuantity !== 0)) {
+    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity && this.productObj.maxQuantity === 0)) {
       emptyFields.push('Maximum Quantity');
     }
 
-    if (this.productObj.promo && !this.productObj.displaytype) {
-      emptyFields.push('Display Type');
+    if (this.productObj.promo) {
+      if (!this.productObj.displaytype) {
+        emptyFields.push('Display Type');
+      } else {
+        if (this.productObj.displaytype === 'D&AP') {
+          if (this.productObj.discountedPrice === 0) emptyFields.push('Discount Percentage');
+        } else if (this.productObj.displaytype === 'AP&SP') {
+          if (this.productObj.salePrice === 0) emptyFields.push('Sale Price');
+        } else if (this.productObj.displaytype === 'AP&SP&D') {
+          if (this.productObj.discountedPrice === 0) emptyFields.push('Discount Percentage');
+          if (this.productObj.salePrice === 0) emptyFields.push('Sale Price');
+        }
+      }
+
     }
 
     if (emptyFields.length > 0) {

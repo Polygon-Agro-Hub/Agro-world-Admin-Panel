@@ -286,7 +286,7 @@ onSubmit() {
 
   // Validation for required fields
   if (!this.centerFetchData.centerName || this.centerFetchData.centerName.trim() === '') {
-    missingFields.push('Collection Centre Name');
+    missingFields.push('Collection Centre Name is Required');
   } else if (/[^A-Za-z ]/.test(this.centerFetchData.centerName)) {
     missingFields.push('Collection Centre Name - Must contain only English letters and spaces');
   }
@@ -296,7 +296,7 @@ onSubmit() {
   }
 
   if (!this.centerFetchData.contact01) {
-    missingFields.push('Contact Number - 1');
+    missingFields.push('Contact Number - 1 is Required');
   } else if (!/^[0-9]{9}$/.test(this.centerFetchData.contact01.toString()) || this.isPhoneInvalidMap['phone01']) {
     missingFields.push('Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
   }
@@ -310,40 +310,40 @@ onSubmit() {
     }
   }
 
-  if (!this.centerFetchData.code1) {
-    missingFields.push('Contact Number - 1 Code');
-  }
+  // if (!this.centerFetchData.code1) {
+  //   missingFields.push('Contact Number - 1 Code');
+  // }
 
-  if (this.centerFetchData.contact02 && !this.centerFetchData.code2) {
-    missingFields.push('Contact Number - 2 Code');
-  }
+  // if (this.centerFetchData.contact02 && !this.centerFetchData.code2) {
+  //   missingFields.push('Contact Number - 2 Code');
+  // }
 
   if (!this.centerFetchData.buildingNumber || this.centerFetchData.buildingNumber.trim() === '') {
-    missingFields.push('Building Number');
+    missingFields.push('Building Number is Required');
   }
 
   if (!this.centerFetchData.street || this.centerFetchData.street.trim() === '') {
-    missingFields.push('Street Name');
+    missingFields.push('Street Name is Required');
   }
 
   if (!this.centerFetchData.city || this.centerFetchData.city.trim() === '') {
-    missingFields.push('City');
+    missingFields.push('City is Required');
   }
 
   if (!this.centerFetchData.province) {
-    missingFields.push('Province');
+    missingFields.push('Province is Required');
   }
 
   if (!this.centerFetchData.district) {
-    missingFields.push('District');
+    missingFields.push('District is Required');
   }
 
   if (!this.centerFetchData.country) {
-    missingFields.push('Country');
+    missingFields.push('Country is Required');
   }
 
   if (!this.centerFetchData.regCode) {
-    missingFields.push('Collection Centre Reg Code');
+    missingFields.push('Collection Centre Reg Code is Required');
   }
 
   // Display validation errors if any

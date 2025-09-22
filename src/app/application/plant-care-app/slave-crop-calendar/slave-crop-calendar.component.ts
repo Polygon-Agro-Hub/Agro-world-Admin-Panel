@@ -31,6 +31,7 @@ interface NewsItem {
   cropDuration: string;
   longitude: any;
   latitude: any;
+  modifyBy: string;
   userLastName: string;
   userFirstName: string;
   totalTasks: number;

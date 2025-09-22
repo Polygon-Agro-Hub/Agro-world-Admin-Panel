@@ -426,7 +426,7 @@ isExcluded(product: MarketplaceItem): boolean {
       // Show success message and redirect to sent tab
       Swal.fire({
         title: 'Success!',
-        text: 'Order has been successfully sent to dispatch.',
+        text: 'Order has been successfully dispatched',
         icon: 'success',
         confirmButtonColor: '#3980C0',
       }).then((result) => {

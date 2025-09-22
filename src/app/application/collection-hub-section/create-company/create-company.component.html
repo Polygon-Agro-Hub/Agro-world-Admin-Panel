@@ -423,7 +423,7 @@
       
       <!-- Length validation (second priority) - only show if format is valid -->
       <div *ngIf="companyData.oicConNum2 && !isInvalidMobileNumber('oicConNum2') && contactNumberError2" class="text-red-500 text-sm">
-        Contact number must be exactly 9 digits.
+        Please enter a valid contact number (format: +947XXXXXXXX)
       </div>
       
       <!-- Duplicate validation (lowest priority) - only show if no other errors -->

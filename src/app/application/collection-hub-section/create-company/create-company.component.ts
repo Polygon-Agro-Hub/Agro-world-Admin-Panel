@@ -818,173 +818,192 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   saveCompanyData() {
-    // Validate contact numbers first
-    if (this.companyNameError) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Company Name Exists',
-        text: 'Please choose a different company name',
-      });
-      return;
-    }
-    // Validate contact numbers format and collect errors
-    const contactNumberErrors: string[] = [];
-
-    if (this.isInvalidMobileNumber('oicConNum1')) {
-      contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
-    }
-
-    if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
-      contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
-    }
-
-    if (contactNumberErrors.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Contact Numbers',
-        html: contactNumberErrors.map((msg) => `<p>${msg}</p>`).join(''),
-      });
-      return;
-    }
-    if (
-      this.companyData.oicConNum1 &&
-      this.companyData.oicConNum2 &&
-      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-      this.companyData.oicConCode1 === this.companyData.oicConCode2
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Duplicate Numbers',
-        text: 'Contact Number - 1 and Contact Number - 2 cannot be the same',
-      });
-      return;
-    }
-
-    // Validate account numbers match
-    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Account Numbers Mismatch',
-        text: 'Account number and confirm account number do not match',
-      });
-      return;
-    }
-
-    // Check required fields
-    const missingFields: string[] = [];
-
-    if (!this.companyData.regNumber) missingFields.push('Registration Number');
-    if (!this.companyData.companyNameEnglish)
-      missingFields.push('Company Name (English)');
-    if (!this.companyData.companyNameSinhala)
-      missingFields.push('Company Name (Sinhala)');
-    if (!this.companyData.companyNameTamil)
-      missingFields.push('Company Name (Tamil)');
-    if (!this.companyData.email) missingFields.push('Email');
-    if (!this.companyData.accHolderName)
-      missingFields.push('Account Holder Name');
-    if (!this.companyData.accNumber) missingFields.push('Account Number');
-    if (!this.companyData.confirmAccNumber)
-      missingFields.push('Confirm Account Number');
-    if (!this.companyData.bankName) missingFields.push('Bank Name');
-    if (!this.companyData.branchName) missingFields.push('Branch Name');
-    if (!this.companyData.foName) missingFields.push('Finance Officer Name');
-    if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1');
-    if (!this.companyData.logo) missingFields.push('Company Logo');
-    if (!this.companyData.favicon) missingFields.push('Company Favicon');
-
-    if (missingFields.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing Required Fields',
-        html: `Please fill in the following fields:<br><ul>${missingFields
-          .map((field) => `<li>${field}</li>`)
-          .join('')}</ul>`,
-      });
-      return;
-    }
-
-    // Validate email format
-    if (!this.isValidEmail(this.companyData.email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Email',
-        text: 'Please enter a valid email address',
-      });
-      return;
-    }
-
-    this.isLoading = true;
-    const formData = new FormData();
-
-    // Append all non-file fields
-    Object.entries(this.companyData).forEach(([key, value]) => {
-      if (
-        key !== 'logoFile' &&
-        key !== 'faviconFile' &&
-        value !== null &&
-        value !== undefined
-      ) {
-        formData.append(key, String(value));
-      }
+  // Validate company name uniqueness
+  if (this.companyNameError) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Company Name Exists',
+      text: 'Please choose a different company name',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
     });
-
-    // Append logo file if exists
-    if (this.companyData.logoFile) {
-      formData.append('logo', this.companyData.logoFile);
-    }
-
-    // Append favicon file if exists
-    if (this.companyData.faviconFile) {
-      formData.append('favicon', this.companyData.faviconFile);
-    }
-
-    this.collectionCenterSrv
-      .createCompany(this.companyData, this.companyType)
-      .subscribe(
-        (response) => {
-          this.isLoading = false;
-          if (response.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Company created successfully',
-              timer: 2000,
-              showConfirmButton: false,
-            }).then(() => {
-              // this.location.back();
-              if (this.companyType === 'distribution') {
-                this.router.navigate([
-                  '/distribution-hub/action/view-companies',
-                ]);
-              } else {
-                this.router.navigate(['/collection-hub/manage-company']);
-              }
-            });
-          } else {
-            Swal.fire('Error!', response.message, 'error');
-          }
-        },
-        (error) => {
-          this.isLoading = false;
-          console.error('Error saving data:', error);
-          let errorMessage = 'Failed to create company. Please try again.';
-
-          if (error.error && error.error.message) {
-            errorMessage = error.error.message;
-          } else if (error.status === 0) {
-            errorMessage =
-              'Unable to connect to server. Please check your connection.';
-          }
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: errorMessage,
-          });
-        }
-      );
+    return;
   }
+
+  // Validate contact numbers format
+  const contactNumberErrors: string[] = [];
+  if (this.isInvalidMobileNumber('oicConNum1')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
+  }
+  if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
+  }
+
+  if (contactNumberErrors.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Contact Numbers',
+      html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Duplicate contact numbers
+  if (
+    this.companyData.oicConNum1 &&
+    this.companyData.oicConNum2 &&
+    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate Numbers',
+      text: 'Contact Number - 1 and Contact Number - 2 cannot be the same',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // Account number mismatch
+  if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Account Numbers Mismatch',
+      text: 'Account number and confirm account number do not match',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // Check required fields
+  const missingFields: string[] = [];
+  if (!this.companyData.regNumber) missingFields.push('Registration Number');
+  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English)');
+  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
+  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
+  if (!this.companyData.email) missingFields.push('Email');
+  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name');
+  if (!this.companyData.accNumber) missingFields.push('Account Number');
+  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number');
+  if (!this.companyData.bankName) missingFields.push('Bank Name');
+  if (!this.companyData.branchName) missingFields.push('Branch Name');
+  if (!this.companyData.foName) missingFields.push('Finance Officer Name');
+  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1');
+  if (!this.companyData.logo) missingFields.push('Company Logo (must be an image <1MB)');
+  if (!this.companyData.favicon) missingFields.push('Company Favicon (must be an image <1MB)');
+
+  if (missingFields.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing Required Information',
+      html: `<div class="text-left"><p class="mb-2">Please fill in the following fields:</p><ul class="list-disc pl-5">${missingFields.map(f => `<li>${f}</li>`).join('')}</ul></div>`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Validate email format
+  if (!this.isValidEmail(this.companyData.email)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Email',
+      text: 'Please enter a valid email address (e.g., example@domain.com)',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // All validations passed, submit form
+  this.isLoading = true;
+  const formData = new FormData();
+  Object.entries(this.companyData).forEach(([key, value]) => {
+    if (key !== 'logoFile' && key !== 'faviconFile' && value != null) {
+      formData.append(key, String(value));
+    }
+  });
+  if (this.companyData.logoFile) formData.append('logo', this.companyData.logoFile);
+  if (this.companyData.faviconFile) formData.append('favicon', this.companyData.faviconFile);
+
+  this.collectionCenterSrv.createCompany(this.companyData, this.companyType).subscribe(
+    (response) => {
+      this.isLoading = false;
+      if (response.status) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Company created successfully',
+          timer: 2000,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        }).then(() => {
+          if (this.companyType === 'distribution') {
+            this.router.navigate(['/distribution-hub/action/view-companies']);
+          } else {
+            this.router.navigate(['/collection-hub/manage-company']);
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.message,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+    },
+    (error) => {
+      this.isLoading = false;
+      let errorMessage = 'Failed to create company. Please try again.';
+      if (error.error?.message) errorMessage = error.error.message;
+      else if (error.status === 0) errorMessage = 'Unable to connect to server. Please check your connection.';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  );
+}
+
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
       // Mark all fields as touched to show validation messages
@@ -1119,105 +1138,198 @@ export class CreateCompanyComponent implements OnInit {
   }
 
 
-  updateCompanyData() {
-    // Validate email format
-    if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Email',
-        text: this.emailValidationMessage || 'Please enter a valid email address',
-      });
-      return;
-    }
-
-    // Validate contact numbers format and collect errors
-    const contactNumberErrors: string[] = [];
-
-    if (this.isInvalidMobileNumber('oicConNum1')) {
-      contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
-    }
-
-    if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
-      contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
-    }
-    // Check for duplicate contact numbers
-    if (
-      this.companyData.oicConNum1 &&
-      this.companyData.oicConNum2 &&
-      this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-      this.companyData.oicConCode1 === this.companyData.oicConCode2
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Duplicate Contact Numbers',
-        text: 'Contact Number 2 cannot be the same as Contact Number 1',
-      });
-      return;
-    }
-    if (contactNumberErrors.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Contact Numbers',
-        html: contactNumberErrors.map((msg) => `<p>${msg}</p>`).join(''),
-      });
-      return;
-    }
-    if (this.itemId) {
-      this.isLoading = true;
-
-      const formData = new FormData();
-
-      Object.entries(this.companyData).forEach(([key, value]) => {
-        if (
-          key !== 'logoFile' &&
-          key !== 'faviconFile' &&
-          value !== null &&
-          value !== undefined
-        ) {
-          formData.append(key, String(value));
-        }
-      });
-
-      if (this.companyData.logoFile) {
-        formData.append('logo', this.companyData.logoFile);
-      }
-
-      if (this.companyData.faviconFile) {
-        formData.append('favicon', this.companyData.faviconFile);
-      }
-
-      this.collectionCenterSrv
-        .updateCompany(this.companyData, this.itemId)
-        .subscribe(
-          (response) => {
-            if (response.status) {
-              this.isLoading = false;
-              Swal.fire('Success', 'Company Updated Successfully', 'success');
-            } else {
-              this.isLoading = false;
-              Swal.fire('Error', response.message , 'error');
-              return;
-            }
-
-            if (this.companyType === 'distribution') {
-              this.router.navigate(['/distribution-hub/action/view-companies']);
-            } else {
-              this.router.navigate(['/collection-hub/manage-company']);
-            }
-          },
-          (error) => {
-            this.isLoading = false;
-            Swal.fire(
-              'Error',
-              'Failed to update company. Please try again.',
-              'error'
-            );
-          }
-        );
-    } else {
-      Swal.fire('Error', 'No company ID found for update', 'error');
-    }
+ updateCompanyData() {
+  // Check if company ID exists
+  if (!this.itemId) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No company ID found for update',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
   }
+
+  // Validate required fields
+  const missingFields: string[] = [];
+  if (!this.companyData.regNumber) missingFields.push('Registration Number');
+  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English)');
+  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
+  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
+  if (!this.companyData.email) missingFields.push('Email');
+  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name');
+  if (!this.companyData.accNumber) missingFields.push('Account Number');
+  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number');
+  if (!this.companyData.bankName) missingFields.push('Bank Name');
+  if (!this.companyData.branchName) missingFields.push('Branch Name');
+  if (!this.companyData.foName) missingFields.push('Finance Officer Name');
+  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1');
+  if (!this.companyData.logo) missingFields.push('Company Logo');
+  if (!this.companyData.favicon) missingFields.push('Company Favicon');
+
+  if (missingFields.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing Required Information',
+      html: `<div class="text-left"><ul class="list-disc pl-5">${missingFields
+        .map(f => `<li>${f}</li>`)
+        .join('')}</ul></div>`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Validate email
+  if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Email',
+      text: this.emailValidationMessage || 'Please enter a valid email address (e.g., example@domain.com)',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // Validate contact numbers
+  const contactNumberErrors: string[] = [];
+  if (this.isInvalidMobileNumber('oicConNum1')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
+  }
+  if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
+    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
+  }
+
+  // Check duplicate contact numbers
+  if (
+    this.companyData.oicConNum1 &&
+    this.companyData.oicConNum2 &&
+    this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
+    this.companyData.oicConCode1 === this.companyData.oicConCode2
+  ) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate Contact Numbers',
+      text: 'Contact Number 2 cannot be the same as Contact Number 1',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  if (contactNumberErrors.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Contact Numbers',
+      html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors
+        .map(msg => `<li>${msg}</li>`)
+        .join('')}</ul></div>`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Validate account number match
+  if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Account Numbers Mismatch',
+      text: 'Account number and confirm account number do not match',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  // Prepare FormData
+  this.isLoading = true;
+  const formData = new FormData();
+  Object.entries(this.companyData).forEach(([key, value]) => {
+    if (key !== 'logoFile' && key !== 'faviconFile' && value != null) {
+      formData.append(key, String(value));
+    }
+  });
+  if (this.companyData.logoFile) formData.append('logo', this.companyData.logoFile);
+  if (this.companyData.faviconFile) formData.append('favicon', this.companyData.faviconFile);
+
+  // Send update request
+  this.collectionCenterSrv.updateCompany(this.companyData, this.itemId!).subscribe(
+    (response) => {
+      this.isLoading = false;
+      if (response.status) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Company Updated Successfully',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        }).then(() => {
+          if (this.companyType === 'distribution') {
+            this.router.navigate(['/distribution-hub/action/view-companies']);
+          } else {
+            this.router.navigate(['/collection-hub/manage-company']);
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.message || 'Failed to update company',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+    },
+    (error) => {
+      this.isLoading = false;
+      let errorMessage = 'Failed to update company. Please try again.';
+      if (error.error?.message) errorMessage = error.error.message;
+      else if (error.status === 0) errorMessage = 'Unable to connect to server. Please check your connection.';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  );
+}
+
+
 
 
   onBlur(fieldName: keyof Company): void {

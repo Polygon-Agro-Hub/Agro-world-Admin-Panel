@@ -209,35 +209,57 @@ export class ManageCompanyComponent {
     });
   }
 
-  deleteCompany(id: number) {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      return;
-    }
-
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this company? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.companyService.deleteCompany(id).subscribe(
-          () => {
-            Swal.fire('Deleted!', 'The company has been deleted.', 'success');
-            this.fetchAllCompanys();
-          },
-          () => {
-            Swal.fire('Error!', 'There was an error deleting the company.', 'error');
-          }
-        );
-      }
-    });
+ deleteCompany(id: number) {
+  const token = this.tokenService.getToken();
+  if (!token) {
+    return;
   }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this company? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    confirmButtonColor: '#2563eb', // Blue confirm
+    cancelButtonColor: '#dc2626',  // Red cancel
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.companyService.deleteCompany(id).subscribe(
+        () => {
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'The company has been deleted.',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+          this.fetchAllCompanys();
+        },
+        () => {
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was an error deleting the company.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+        }
+      );
+    }
+  });
+}
 
   
   back(): void {

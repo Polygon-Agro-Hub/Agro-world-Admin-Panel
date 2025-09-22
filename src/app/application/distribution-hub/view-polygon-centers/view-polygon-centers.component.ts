@@ -311,34 +311,66 @@ export class ViewPolygonCentersComponent implements OnInit {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
 
-  deleteCenter(id: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this center!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.DestributionSrv.deleteDistributedCenter(id).subscribe(
-          (res) => {
-            if (res.success) {
-              Swal.fire('Deleted!', 'The center has been deleted.', 'success');
-              this.fetchAllCollectionCenter();
-            } else {
-              Swal.fire('Error!', 'Failed to delete the center.', 'error');
-            }
-          },
-          (error) => {
-            console.error('Error deleting center:', error);
-            Swal.fire('Error!', 'Failed to delete the center.', 'error');
+ deleteCenter(id: number) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will not be able to recover this center!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    confirmButtonColor: '#2563eb', // Blue confirm
+    cancelButtonColor: '#dc2626',  // Red cancel
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.DestributionSrv.deleteDistributedCenter(id).subscribe(
+        (res) => {
+          if (res.success) {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The center has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+            this.fetchAllCollectionCenter();
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Failed to delete the center.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
           }
-        );
-      }
-    });
-  }
+        },
+        (error) => {
+          console.error('Error deleting center:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to delete the center.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+        }
+      );
+    }
+  });
+}
 
   viewCenter(id: number) {
     this.router.navigate([

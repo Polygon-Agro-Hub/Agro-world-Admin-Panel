@@ -148,14 +148,26 @@
             <div class="w-1/3">
                 <label class="block text-sm font-medium text-gray-500 dark:text-gray-300 mb-2">PRODUCT NAME</label>
                 <!-- Change your dropdown to use [ngValue] properly -->
-                <select
-                    class="w-full border rounded-lg py-2 px-3 text-gray-700 dark:text-white dark:bg-gray-700 italic-placeholder"
-                    [(ngModel)]="newProductObj" name="newProductObj" (change)="onProductChange()">
-                    <option [ngValue]="null" disabled selected>--Product Name--</option>
-                    <option *ngFor="let product of productArr" [ngValue]="product" [disabled]="product.isExcluded">
-                        {{ product.displayName }}
-                    </option>
-                </select>
+ <p-dropdown
+  [options]="productArr"
+  [(ngModel)]="newProductObj"
+  optionLabel="displayName"
+  placeholder="--Product Name--"
+  [filter]="true"
+  [scrollHeight]="'200px'"
+  (onChange)="onProductChange()"
+  [showClear]="true"
+  optionDisabled="isExcluded"  
+>
+  <ng-template let-product pTemplate="item">
+    <span [class.text-gray-400]="product.isExcluded">
+      {{ product.displayName }}
+    </span>
+  </ng-template>
+</p-dropdown>
+
+
+
             </div>
             <!-- (change)="onProductChange()" -->
 

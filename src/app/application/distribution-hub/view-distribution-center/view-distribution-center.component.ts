@@ -333,41 +333,57 @@ export class ViewDistributionCenterComponent implements OnInit {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
 
-  deleteDistributionCenter(id: number): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.DestributionSrv.deleteDistributionCenter(id).subscribe({
-          next: () => {
-            Swal.fire(
-              'Deleted!',
-              'Distribution center has been deleted.',
-              'success'
-            );
-            // Refresh the list after deletion
-            this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-          },
-          error: (error) => {
-            this.isLoading = false;
-            console.error('Error deleting distribution center:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to delete distribution center',
-            });
-          },
-        });
-      }
-    });
-  }
+deleteDistributionCenter(id: number): void {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    confirmButtonColor: '#2563eb', // Blue confirm
+    cancelButtonColor: '#dc2626',  // Red cancel
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.DestributionSrv.deleteDistributionCenter(id).subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Distribution center has been deleted.',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+          // Refresh the list after deletion
+          this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error deleting distribution center:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to delete distribution center',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+        },
+      });
+    }
+  });
+}
+
 
   preventLeadingSpace(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;

@@ -141,6 +141,7 @@
                   </span>
                 </div>
               </td>
+               
 
               <td class="px-4 py-3 dark:text-textDark text-center">
                 <a *ngIf="item.longitude" href="https://www.google.com/maps?q={{ item.latitude }},{{
@@ -174,10 +175,11 @@
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
-              </td>
-                  <td class="px-4 py-3 dark:text-textDark text-left">
-              
-              </td>
+            
+             <td class="px-4 py-3 dark:text-textDark text-center">
+  {{ item.modifyBy || 'null' }}
+</td>
+
               <td>
                 <button *ngIf="
                     permissionService.hasPermission('Delete crop group') ||

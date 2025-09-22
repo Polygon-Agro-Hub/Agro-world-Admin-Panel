@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import { DropdownModule } from 'primeng/dropdown';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-edit-complain-categories',
   standalone: true,
@@ -25,7 +25,8 @@ export class EditComplainCagegoriesComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private complaintSrv: ComplaintsService
+    private complaintSrv: ComplaintsService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -185,9 +186,10 @@ export class EditComplainCagegoriesComponent implements OnInit {
         cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
       }
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/complaints']);
-      }
+    // Inside your Swal confirmation
+if (result.isConfirmed) {
+  this.location.back();
+}
     });
   }
 
@@ -206,9 +208,9 @@ export class EditComplainCagegoriesComponent implements OnInit {
         cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
       }
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/complaints']);
-      }
+   if (result.isConfirmed) {
+  this.location.back();
+}
     });
   }
 

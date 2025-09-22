@@ -329,17 +329,11 @@ enforcePhoneLength(event: any, field: 'phoneNumber01' | 'phoneNumber02') {
 
 
 
-  blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
-  const allowedPattern = /^[a-zA-Z ]$/; // Only letters and space
+blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   const key = event.key;
 
-  // Block invalid characters
-  if (!allowedPattern.test(key)) {
-    event.preventDefault();
-  }
-
-  // Block space if first character
-  if (currentValue.length === 0 && key === ' ') {
+  // Allow only letters from any language (Unicode letters)
+  if (!/^\p{L}$/u.test(key)) {
     event.preventDefault();
   }
 }

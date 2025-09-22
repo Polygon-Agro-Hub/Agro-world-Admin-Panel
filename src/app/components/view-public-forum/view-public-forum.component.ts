@@ -220,36 +220,37 @@ export class ViewPublicForumComponent implements OnInit {
     cancelButtonColor: '#d33',
     confirmButtonText: 'Yes, delete it!',
     cancelButtonText: 'Cancel',
-  }).then((result) => {
+}).then((result) => {
     if (result.isConfirmed) {
-      this.publicForumSrv.deleteReply(id).subscribe(
-        (res: any) => {
-          if (res) {
-            Swal.fire('Deleted!', 'The Reply has been deleted.', 'success')
-              .then(() => {
-                // Refresh the page after the success alert is closed
-                location.reload();
-              });
-          }
-        },
-        (error) => {
-          Swal.fire(
-            'Error!',
-            'There was an error deleting the crop calendar.',
-            'error'
-          );
-          this.isPopupVisible = false;
-          this.fetchPostAllReply(this.postId);
-          this.loadPosts();
-          this.getCount();
-          this.isLoading = false;
-        }
-      );
+        this.publicForumSrv.deleteReply(id).subscribe(
+            (res: any) => {
+                if (res) {
+                    Swal.fire('Deleted!', 'The Reply has been deleted.', 'success')
+                        .then(() => {
+                            // Refresh the page after the success alert is closed
+                            location.reload();
+                        });
+                }
+            },
+            (error) => {
+                Swal.fire(
+                    'Error!',
+                    'There was an error deleting the crop calendar.',
+                    'error'
+                );
+                this.isPopupVisible = false;
+                this.fetchPostAllReply(this.postId);
+                this.loadPosts();
+                this.getCount();
+                this.isLoading = false;
+            }
+        );
     } else if (result.dismiss === Swal.DismissReason.cancel) {
-      // Handle cancel button click - reload the page
-      location.reload();
+        // Simply do nothing - the popup will close automatically
+        // No need for location.reload() here
+        this.isLoading = false; // Ensure loading state is reset
     }
-  });
+});
 }
 
   getCount() {

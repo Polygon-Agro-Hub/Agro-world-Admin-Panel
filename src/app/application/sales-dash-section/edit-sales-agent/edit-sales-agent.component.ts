@@ -249,40 +249,12 @@ validateEmailInput(event: KeyboardEvent): void {
     return;
   }
 
-  // Get current value and cursor position
+  // Get current value
   const target = event.target as HTMLInputElement;
   const currentValue = target.value || '';
-  const cursorPosition = target.selectionStart || 0;
 
-  // Block space completely for email (leading, trailing, or anywhere)
+  // Block space completely for email
   if (event.key === ' ') {
-    event.preventDefault();
-    return;
-  }
-
-  // Block leading dot
-  if (event.key === '.' && (currentValue.length === 0 || cursorPosition === 0)) {
-    event.preventDefault();
-    return;
-  }
-
-  // Block consecutive dots
-  if (event.key === '.' && currentValue.charAt(cursorPosition - 1) === '.') {
-    event.preventDefault();
-    return;
-  }
-
-  // Block dot immediately after @ or before @
-  const atIndex = currentValue.indexOf('@');
-  if (event.key === '.' && atIndex !== -1) {
-    if (cursorPosition === atIndex + 1) { // Trying to add dot right after @
-      event.preventDefault();
-      return;
-    }
-  }
-
-  // Block dot before @ symbol
-  if (event.key === '@' && currentValue.charAt(cursorPosition - 1) === '.') {
     event.preventDefault();
     return;
   }
@@ -760,6 +732,11 @@ onSubmit() {
     showCancelButton: true,
     confirmButtonText: 'Yes, Save it!',
     cancelButtonText: 'No, cancel',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
     reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {

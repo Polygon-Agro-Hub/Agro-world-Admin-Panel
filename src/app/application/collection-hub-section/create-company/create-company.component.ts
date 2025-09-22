@@ -1710,7 +1710,7 @@ export class CreateCompanyComponent implements OnInit {
 
     // Priority 3: Length validation
     if (this.contactNumberError1) {
-      return 'Contact number must be exactly 9 digits.';
+      return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
     }
 
     return '';
@@ -1731,7 +1731,7 @@ export class CreateCompanyComponent implements OnInit {
 
     // Priority 2: Length validation
     if (this.contactNumberError2) {
-      return 'Contact number must be exactly 9 digits.';
+      return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
     }
 
     // Priority 3: Duplicate validation

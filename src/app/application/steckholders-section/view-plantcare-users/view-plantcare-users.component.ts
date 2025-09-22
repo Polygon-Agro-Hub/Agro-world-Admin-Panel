@@ -208,6 +208,10 @@ export class ViewPlantcareUsersComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
@@ -217,11 +221,15 @@ export class ViewPlantcareUsersComponent implements OnInit {
           .subscribe(
             (data: any) => {
               if (data) {
-                Swal.fire(
-                  'Deleted!',
-                  'The plant care user has been deleted.',
-                  'success'
-                );
+                Swal.fire({
+  title: 'Deleted!',
+  text: 'The plant care user has been deleted.',
+  icon: 'success',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold',
+  }
+});
                 this.fetchAllPlantCareUsers();
               }
             },
@@ -233,8 +241,6 @@ export class ViewPlantcareUsersComponent implements OnInit {
               );
             }
           );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Cancelled', 'Your plant care user is safe', 'info');
       }
     });
   }

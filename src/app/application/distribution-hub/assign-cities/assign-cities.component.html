@@ -13,23 +13,45 @@
         <div class="w-2/5">
             <label for="province"
                 class="block mb-2 text-sm font-medium text-textLight dark:text-textDark">Province</label>
-            <select id="province" [(ngModel)]="selectProvince" name="selectProvince" (change)="onProvinceChange()"
-                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400 cursor-pointer">
-                <option value="" selected>Choose a province</option>
-                <option *ngFor="let province of provinces" [value]="province">{{ province }}</option>
-            </select>
+            <p-dropdown 
+            styleClass="border border-2 rounded-xl h-12 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full"
+                id="province" 
+                [options]="provinces" 
+                [(ngModel)]="selectProvince" 
+                optionLabel="name" 
+                (onChange)="onProvinceChange()"
+                placeholder="Choose a province"
+                [filter]="false"
+                class="w-full">
+                <ng-template pTemplate="selectedItem">
+                    <div *ngIf="selectProvince" class="flex align-items-center">
+                        <div>{{ selectProvince.name }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
         </div>
 
         <!-- District Selector -->
         <div class="w-2/5">
             <label for="district"
                 class="block mb-2 text-sm font-medium text-textLight dark:text-textDark">District</label>
-            <select id="district" [(ngModel)]="selectDistrict" name="selectDistrict"
-                class="bg-gray-50 border border-gray-300 text-textLight dark:text-textDark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-tileBlack dark:border-gray-600 dark:placeholder-gray-400 cursor-pointer"
-                [disabled]="!selectProvince">
-                <option value="" selected>Choose a district</option>
-                <option *ngFor="let district of filteredDistricts" [value]="district.name">{{ district.name }}</option>
-            </select>
+            <p-dropdown 
+            styleClass="border border-2 rounded-xl h-12 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full"
+                id="district" 
+                [options]="filteredDistricts" 
+                [(ngModel)]="selectDistrict" 
+                optionLabel="name" 
+                placeholder="Choose a district"
+                [disabled]="!selectProvince || filteredDistricts.length === 0"
+                [filter]="false"
+                class="w-full">
+                <ng-template pTemplate="selectedItem">
+                    <div *ngIf="selectDistrict" class="flex align-items-center">
+                        <div>{{ selectDistrict.name }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+
         </div>
 
         <div class="w-1/5 self-end">

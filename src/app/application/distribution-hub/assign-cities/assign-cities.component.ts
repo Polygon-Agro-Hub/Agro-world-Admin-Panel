@@ -6,17 +6,25 @@ import { Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
 
+// PrimeNG imports
+import { DropdownModule } from 'primeng/dropdown';
+
 @Component({
   selector: 'app-assign-cities',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    LoadingSpinnerComponent,
+    DropdownModule
+  ],
   templateUrl: './assign-cities.component.html',
   styleUrl: './assign-cities.component.css'
 })
 export class AssignCitiesComponent implements OnInit {
-  selectDistrict: string = '';
-  selectProvince: string = '';
-  provinces: string[] = [];
+  selectDistrict: any = null;
+  selectProvince: any = null;
+  provinces: any[] = [];
   filteredDistricts: any[] = [];
   citiesArr: Cities[] = [];
   centersArr: Centers[] = [];
@@ -62,52 +70,62 @@ export class AssignCitiesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.provinces = [...new Set(this.districts.map(district => district.province))];
-    this.provinces.sort();
+    // Convert provinces to objects for PrimeNG dropdown
+    const provinceNames = [...new Set(this.districts.map(district => district.province))];
+    provinceNames.sort();
+    
+    this.provinces = provinceNames.map(province => ({ 
+      name: province, 
+      value: province 
+    }));
   }
 
   fetchData() {
-  this.isLoading = true;
-  this.hasData = false;
-  
-  this.distributionHubSrv.getAssignForCityes(this.selectProvince, this.selectDistrict).subscribe(
-    (res) => {
-      console.log(res);
-      this.citiesArr = res.cities;
-      
-      // Filter out duplicate centers by id
-      this.centersArr = this.removeDuplicateCenters(res.centers);
-      
-      this.isLoading = false;
-      this.hasData = true;
-      
-      this.initializeAssignments();
-    },
-    (error) => {
-      console.error('Error fetching data:', error);
-      this.isLoading = false;
-      this.hasData = false;
-    }
-  );
-}
+    this.isLoading = true;
+    this.hasData = false;
+    
+    // Extract string values for the service call
+    const provinceName = this.selectProvince?.value || '';
+    const districtName = this.selectDistrict?.name || '';
+    
+    this.distributionHubSrv.getAssignForCityes(provinceName, districtName).subscribe(
+      (res) => {
+        console.log(res);
+        this.citiesArr = res.cities;
+        
+        // Filter out duplicate centers by id
+        this.centersArr = this.removeDuplicateCenters(res.centers);
+        
+        this.isLoading = false;
+        this.hasData = true;
+        
+        this.initializeAssignments();
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+        this.isLoading = false;
+        this.hasData = false;
+      }
+    );
+  }
 
-removeDuplicateCenters(centers: Centers[]): Centers[] {
-  const uniqueCenters = new Map<number, Centers>();
-  
-  centers.forEach(center => {
-    if (!uniqueCenters.has(center.id)) {
-      uniqueCenters.set(center.id, center);
-    }
-  });
-  
-  return Array.from(uniqueCenters.values());
-}
+  removeDuplicateCenters(centers: Centers[]): Centers[] {
+    const uniqueCenters = new Map<number, Centers>();
+    
+    centers.forEach(center => {
+      if (!uniqueCenters.has(center.id)) {
+        uniqueCenters.set(center.id, center);
+      }
+    });
+    
+    return Array.from(uniqueCenters.values());
+  }
 
   onProvinceChange(): void {
-    this.selectDistrict = '';
+    this.selectDistrict = null;
     if (this.selectProvince) {
       this.filteredDistricts = this.districts.filter(
-        district => district.province === this.selectProvince
+        district => district.province === this.selectProvince.value
       );
       this.filteredDistricts.sort((a, b) => a.name.localeCompare(b.name));
     } else {
@@ -116,6 +134,7 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
   }
 
   onDistrictChange(): void {
+    // You can add any district change logic here if needed
   }
 
   initializeAssignments(): void {
@@ -169,32 +188,32 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
     console.log('Saving assignment:', assignmentToSave);
     
     this.distributionHubSrv.AssigCityToDistributedCenter(assignmentToSave).subscribe(
-  (res) => {
-    this.isLoading = false;
-    Swal.fire({
-      title: 'Success',
-      text: 'City assigned to centre successfully!',
-      icon: 'success',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
+      (res) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Success',
+          text: 'City assigned to centre successfully!',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
       },
-    });
-  },
-  (error) => {
-    this.isLoading = false;
-    Swal.fire({
-      title: 'Error',
-      text: 'Failed to assign city to centre',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    });
-    this.assignments.set(cityId, -1);
-  }
-);
+      (error) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to assign city to centre',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        this.assignments.set(cityId, -1);
+      }
+    );
   }
 
   removeAssignment(cityId: number, centerId: number): void {
@@ -205,32 +224,32 @@ removeDuplicateCenters(centers: Centers[]): Centers[] {
     console.log('Removing assignment:', assignmentToRemove);
     
     this.distributionHubSrv.removeAssigCityToDistributedCenter(assignmentToRemove).subscribe(
-  (res) => {
-    this.isLoading = false;
-    Swal.fire({
-      title: 'Success',
-      text: 'City removed from centre successfully!',
-      icon: 'success',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
+      (res) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Success',
+          text: 'City removed from centre successfully!',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
       },
-    });
-  },
-  (error) => {
-    this.isLoading = false;
-    Swal.fire({
-      title: 'Error',
-      text: 'Failed to remove city from centre',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    });
-    this.assignments.set(cityId, centerId);
-  }
-);
+      (error) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to remove city from centre',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        this.assignments.set(cityId, centerId);
+      }
+    );
   }
 }
 

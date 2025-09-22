@@ -739,13 +739,13 @@ export class FinalinvoiceService {
     ]);
 
     // Add service fee between Discount and Coupon Discount
-    if (
-      invoice.additionalItems &&
-      invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
-    ) {
-      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
-    }
+    if (invoice.orderApp !== 'Marketplace' && 
+    invoice.additionalItems && 
+    invoice.additionalItems.length > 0 && 
+    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+  grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+}
+
 
     // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);
@@ -777,11 +777,12 @@ export class FinalinvoiceService {
       parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee =
-      invoice.additionalItems &&
-      invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
-        ? 180
-        : 0;
+  invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
+  invoice.additionalItems &&
+  invoice.additionalItems.length > 0 &&
+  (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+    ? 180
+    : 0;
 
     const finalGrandTotal =
       familyPackTotal +

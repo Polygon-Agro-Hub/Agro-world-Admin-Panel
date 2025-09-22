@@ -710,14 +710,14 @@ export class FinalinvoiceService {
         invoice.familyPackItems && invoice.familyPackItems.length > 0;
 
       // MODIFIED: Determine label based on orderApp
-      let label;
-      if (invoice.orderApp === 'Marketplace') {
-        label = hasFamilyPacks ? ' Your Selected Items' : ' Your Selected Items';
-      } else if (invoice.orderApp === 'Dash') {
-        label = hasFamilyPacks ? ' Custom Items' : ' Custom Items';
-      } else {
-        label = hasFamilyPacks ? ' Additional Items' : ' Additional Items';
-      }
+      let label: string;
+if (invoice.orderApp === 'Marketplace') {
+    label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+} else if (invoice.orderApp === 'Dash') {
+    label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+} else {
+    label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+}
 
       grandTotalBody.push([
         label,

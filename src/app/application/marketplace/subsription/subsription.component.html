@@ -118,89 +118,57 @@
             </button>
           </div>
 
-          <!-- Table -->
-          <ng-container *ngIf="!isLoading; else loading">
-            <div class="h-[calc(100vh-200px)] overflow-y-auto">
-              <table
-                *ngIf="hasData; else noData"
-                class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              >
-                <thead>
-                  <tr>
-                    <th
-                      class="p-3 text-textLight dark:text-textDark font-normal text-left"
-                    >
-                      Customer Name
-                    </th>
-                    <th
-                      class="p-3 text-textLight dark:text-textDark font-normal text-left"
-                    >
-                      Email
-                    </th>
-                    <th
-                      class="p-3 text-textLight dark:text-textDark font-normal text-left"
-                    >
-                      Time
-                    </th>
-                    <th class="p-3"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let user of filteredSubscriptions
-                        | paginate
-                          : { itemsPerPage: itemsPerPage, currentPage: page }
-                    "
-                    class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                  >
-                    <td class="p-3 text-textLight dark:text-textDark">
-                      {{ user.customerName }}
-                    </td>
-                    <td class="p-3 text-textLight dark:text-textDark">
-                      {{ user.email }}
-                    </td>
-                    <td class="p-3 text-textLight dark:text-textDark">
-                      {{ user.time }}
-                    </td>
-                    <td class="p-3">
-                      <img
-                        class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
-                        src="./assets/icons/dlt.png"
-                        alt="Delete user"
-                        aria-label="Delete user"
-                        (click)="deleteUser(user.id)"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <ng-template #noData>
-                 <div class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
-    <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+<ng-container *ngIf="!isLoading; else loading">
+  <div
+    class="overflow-y-auto max-h-[80vh] flex-1"
+  >
+    <table
+      *ngIf="hasData; else noData"
+      class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+    >
+      <thead>
+        <tr>
+          <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Customer Name</th>
+          <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Email</th>
+          <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Time</th>
+          <th class="p-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let user of filteredSubscriptions"
+          class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+        >
+          <td class="p-3 text-textLight dark:text-textDark">{{ user.customerName }}</td>
+          <td class="p-3 text-textLight dark:text-textDark">{{ user.email }}</td>
+          <td class="p-3 text-textLight dark:text-textDark">{{ user.time }}</td>
+          <td class="p-3">
+            <img
+              class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
+              src="./assets/icons/dlt.png"
+              alt="Delete user"
+              aria-label="Delete user"
+              (click)="deleteUser(user.id)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noData>
+      <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
+    </ng-template>
   </div>
-              </ng-template>
-            </div>
-          </ng-container>
+</ng-container>
 
-          <ng-template #loading>
-            <app-loading-spinner></app-loading-spinner>
-          </ng-template>
+<ng-template #loading>
+  <app-loading-spinner></app-loading-spinner>
+</ng-template>
 
-          <!-- Pagination -->
-          <div
-            *ngIf="totalItems > itemsPerPage"
-            class="p-4 flex justify-center"
-          >
-            <pagination-controls
-              (pageChange)="onPageChange($event)"
-              [maxSize]="5"
-              [directionLinks]="true"
-              [autoHide]="true"
-              class="text-gray-600 dark:text-gray-300 [&>pagination-controls]:text-gray-600 dark:[&>pagination-controls]:text-gray-300 [&>pagination-controls>a]:text-gray-600 dark:[&>pagination-controls>a]:text-gray-300 hover:[&>pagination-controls>a]:text-blue-400"
-            ></pagination-controls>
-          </div>
+
         </div>
         <!-- Filter -->
       </div>

@@ -65,6 +65,7 @@ export class SlaveCropCalendarComponent implements OnInit {
   userId: any | null = null;
   isLoading = true;
   userName: string = '';
+  ongCultivationId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -76,12 +77,13 @@ export class SlaveCropCalendarComponent implements OnInit {
     private location: Location,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.cultivationId = params['cultivationId'] ? +params['cultivationId'] : null;
       this.userId = params['userId'] ? +params['userId'] : null;
+      this.ongCultivationId = params['ongCultivationId'] === 'null' ? null : params['ongCultivationId'];
 
       console.log('This is the cultivation Id : ', this.cultivationId);
       console.log('This is the user Id : ', this.userId);
@@ -123,33 +125,33 @@ export class SlaveCropCalendarComponent implements OnInit {
     );
   }
 
-fetchAllNews(cultivationId: number, userId: number) {
-  this.isLoading = true;
-  this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
-    (data) => {
-      console.log('Fetched data:', data);
-      this.newsItems = data || [];
-      this.hasData = this.newsItems.length > 0; // Update hasData
+  fetchAllNews(cultivationId: number, userId: number) {
+    this.isLoading = true;
+    this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
+      (data) => {
+        console.log('Fetched data:', data);
+        this.newsItems = data || [];
+        this.hasData = this.newsItems.length > 0; // Update hasData
 
-      // Set userName from first item (all items have same user)
-      if (this.newsItems.length > 0) {
-        const user = this.newsItems[0];
-        this.userName = `${user.userFirstName || ''} ${user.userLastName || ''}`.trim();
-      } else {
+        // Set userName from first item (all items have same user)
+        if (this.newsItems.length > 0) {
+          const user = this.newsItems[0];
+          this.userName = `${user.userFirstName || ''} ${user.userLastName || ''}`.trim();
+        } else {
+          this.userName = 'Unknown User';
+        }
+
+        this.isLoading = false;
+      },
+      (error) => {
+        this.isLoading = false;
+        this.hasData = false; // Show no-data on error
+        this.newsItems = [];
         this.userName = 'Unknown User';
+        console.error('Error fetching data:', error);
       }
-
-      this.isLoading = false;
-    },
-    (error) => {
-      this.isLoading = false;
-      this.hasData = false; // Show no-data on error
-      this.newsItems = [];
-      this.userName = 'Unknown User';
-      console.error('Error fetching data:', error);
-    }
-  );
-}
+    );
+  }
 
   viewTaskByUser(
     cropCalendarId: any,
@@ -158,6 +160,7 @@ fetchAllNews(cultivationId: number, userId: number) {
     cultivationId: any,
     cropName: any
   ) {
+    let ongCultivationId = this.ongCultivationId;
     if (cropCalendarId) {
       this.router.navigate(
         ['/plant-care/action/view-crop-task-by-user/user-task-list'],
@@ -168,6 +171,7 @@ fetchAllNews(cultivationId: number, userId: number) {
             onCulscropID,
             cultivationId,
             cropName,
+            ongCultivationId
           },
         }
       );
@@ -187,8 +191,8 @@ fetchAllNews(cultivationId: number, userId: number) {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
-        background: '#1e293b', // dark background (slate-800)
-    color: '#e2e8f0', // light text (slate-200)
+      background: '#1e293b', // dark background (slate-800)
+      color: '#e2e8f0', // light text (slate-200)
     });
 
     if (result.isConfirmed) {
@@ -221,27 +225,24 @@ fetchAllNews(cultivationId: number, userId: number) {
     if (days >= 365) {
       const years = Math.floor(days / 365);
       const remainingDays = days % 365;
-      return `${years} year${years > 1 ? 's' : ''}${
-        remainingDays > 0
-          ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
-          : ''
-      }`;
+      return `${years} year${years > 1 ? 's' : ''}${remainingDays > 0
+        ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
+        : ''
+        }`;
     } else if (days >= 30) {
       const months = Math.floor(days / 30);
       const remainingDays = days % 30;
-      return `${months} month${months > 1 ? 's' : ''}${
-        remainingDays > 0
-          ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
-          : ''
-      }`;
+      return `${months} month${months > 1 ? 's' : ''}${remainingDays > 0
+        ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
+        : ''
+        }`;
     } else if (days >= 7) {
       const weeks = Math.floor(days / 7);
       const remainingDays = days % 7;
-      return `${weeks} week${weeks > 1 ? 's' : ''}${
-        remainingDays > 0
-          ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
-          : ''
-      }`;
+      return `${weeks} week${weeks > 1 ? 's' : ''}${remainingDays > 0
+        ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
+        : ''
+        }`;
     } else {
       return `${days} day${days !== 1 ? 's' : ''}`;
     }

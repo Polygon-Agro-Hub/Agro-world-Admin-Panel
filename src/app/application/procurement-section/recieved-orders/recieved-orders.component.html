@@ -246,7 +246,7 @@
     <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
     <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
   </div>
-      <div class="dark:bg-[#262f45] mt-4">
+      <div *ngIf="purchaseReport.length > 0" class="dark:bg-[#262f45] mt-4">
         <pagination-controls 
           (pageChange)="onPageChange($event)" 
           [responsive]="true" 

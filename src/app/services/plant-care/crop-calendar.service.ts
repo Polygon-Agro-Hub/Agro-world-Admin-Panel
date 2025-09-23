@@ -358,14 +358,15 @@ export class CropCalendarService {
     indexId: string,
     userId: string,
     formData: any,
-    onCulscropID: any
+    onCulscropID: any,
+    ongCultivationId: number | null
   ) {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.post(
-      `${this.apiUrl}auth/add-new-task-user/${cropId}/${indexId}/${userId}/${onCulscropID}`,
+      `${this.apiUrl}auth/add-new-task-user/${cropId}/${indexId}/${userId}/${onCulscropID}?ongCultivationId=${ongCultivationId}`,
       formData,
       { headers }
     );

@@ -15,6 +15,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 
 interface OngoingCultivationItem {
   cultivationId: number;
+  ongCultivationId: number;
   id: number;
   userId: number;
   firstName: string;
@@ -62,7 +63,7 @@ export class OngoingCultivationComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllNews(this.page, this.itemsPerPage);
@@ -161,7 +162,7 @@ export class OngoingCultivationComponent {
       });
   }
 
-  viewTaskByUsers(cultivationId: any, userId: any, userName: any) {
+  viewTaskByUsers(cultivationId: any, userId: any, userName: any, ongCultivationId:number) {
     if (cultivationId) {
       this.router.navigate(['/plant-care/action/view-crop-task-by-user'], {
         queryParams: { cultivationId, userId, userName },
@@ -169,10 +170,10 @@ export class OngoingCultivationComponent {
     }
   }
 
-  viewTaskByUser(cultivationId: any, userId: any, userName: any) {
+  viewTaskByUser(cultivationId: any, userId: any, userName: any, ongCultivationId: number) {
     if (userId) {
       this.router.navigate(['/plant-care/action/farmers-farm'], {
-        queryParams: { userId, userName },
+        queryParams: { userId, userName, ongCultivationId },
       });
     }
   }

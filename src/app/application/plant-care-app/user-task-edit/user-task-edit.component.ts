@@ -87,8 +87,7 @@ export class UserTaskEditComponent {
  this.taskForm.get('reqImages')?.setValue(value);
 }
 validateAndCapitalizeEnglish(event: any, field: 'taskEnglish' | 'taskTypeEnglish'| 'taskCategoryEnglish' | 'taskDescriptionEnglish') {
-  // Step 1: Remove non-English characters
-  let value = event.target.value.replace(/[^A-Za-z\s]/g, '');
+  let value = event.target.value;
 
   // Step 2: Capitalize first letter
   if (value.length > 0) {

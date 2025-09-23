@@ -819,6 +819,46 @@ onEnglishTitleBlur(event: FocusEvent): void {
     }
     this.isTamilAndNumberOnly(trimmedValue);
   }
+
+
+  // Add this property to your component
+private quillEditor: any;
+
+// Editor created event handler
+onEditorCreated(editor: any): void {
+  this.quillEditor = editor;
+  
+  // Prevent space at the beginning
+  editor.root.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.key === ' ') {
+      const selection = editor.getSelection();
+      if (selection && selection.index === 0) {
+        event.preventDefault();
+      }
+    }
+  });
+}
+
+// Content change handler
+onEnglishDescriptionChange(): void {
+  if (this.quillEditor) {
+    const content = this.quillEditor.root.innerHTML;
+    if (content === '<p><br></p>' || content === '<p></p>') {
+      return; // Allow empty content
+    }
+    
+    // Check if content starts with space
+    const textContent = this.quillEditor.getText();
+    if (textContent.startsWith(' ')) {
+      // Remove leading spaces
+      const newContent = textContent.replace(/^\s+/, '');
+      this.quillEditor.setText(newContent);
+      
+      // Set cursor to beginning
+      this.quillEditor.setSelection(0, 0);
+    }
+  }
+}
 }
 
 export class CreateNews {

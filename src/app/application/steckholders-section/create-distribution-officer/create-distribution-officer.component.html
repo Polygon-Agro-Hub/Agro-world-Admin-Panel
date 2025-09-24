@@ -90,7 +90,7 @@
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name*
+            Company Name *
           </label>
           <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
@@ -103,7 +103,7 @@
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Distribution Centre Name*
+            Distribution Centre Name *
           </label>
           <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" [disabled]="!loaded"
@@ -117,7 +117,7 @@
 
         <div>
   <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Job Role*
+    Job Role *
   </label>
   <div class="relative">
     <select (blur)="onBlur('jobRole')" id="jobRole" [(ngModel)]="personalData.jobRole"

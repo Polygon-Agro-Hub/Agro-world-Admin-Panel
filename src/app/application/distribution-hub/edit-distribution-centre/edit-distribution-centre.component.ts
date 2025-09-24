@@ -788,7 +788,7 @@ back(): void {
   const contact2Control = this.distributionForm.get('contact2');
   const contact2Code = this.distributionForm.get('contact2Code');
 
-  if (!contact2Code?.value) {
+  if (!contact2Code?.value && contact2Control?.value) {
     missingFields.push('Contact Number -2 Code is Required');
   }
 

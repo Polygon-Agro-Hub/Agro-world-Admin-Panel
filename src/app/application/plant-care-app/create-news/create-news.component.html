@@ -51,7 +51,7 @@
           <quill-editor [(ngModel)]="createNewsObj.descriptionEnglish" [styles]="{ height: '300px' }"
             [modules]="quillConfig" placeholder="Enter text here..."
             class="text-textLight dark:text-textDark w-full text-lg" #descriptionEnglishField="ngModel"
-            [required]="true" ></quill-editor>
+            [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
       </div>
     </div>
@@ -76,7 +76,7 @@
         <div class="custom-editor">
           <quill-editor [(ngModel)]="createNewsObj.descriptionSinhala" [styles]="{ height: '300px', fontSize: '16px' }"
             [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel" [required]="true"></quill-editor>
+            #descriptionEnglishField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
         <div class="custom-editor">
           <quill-editor [(ngModel)]="createNewsObj.descriptionTamil" [styles]="{ height: '300px', fontSize: '16px' }"
             [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel" [required]="true"></quill-editor>
+            #descriptionEnglishField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
       </div>
     </div>
@@ -195,7 +195,7 @@
         <div class="custom-editor">
           <quill-editor [(ngModel)]="newsItems[0].descriptionEnglish" [styles]="{ height: '300px' }"
             [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel" [required]="true"></quill-editor>
+            #descriptionEnglishField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
         <p *ngIf="
             descriptionEnglishField.invalid && descriptionEnglishField.touched
@@ -231,7 +231,7 @@
         <div class="custom-editor">
           <quill-editor [(ngModel)]="newsItems[0].descriptionSinhala" [styles]="{ height: '300px' }"
             [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
-            #descriptionSinhalaField="ngModel" [required]="true"></quill-editor>
+            #descriptionSinhalaField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
         <p *ngIf="
             descriptionSinhalaField.invalid && descriptionSinhalaField.touched
@@ -268,7 +268,7 @@
         <div class="custom-editor">
           <quill-editor [(ngModel)]="newsItems[0].descriptionTamil" [styles]="{ height: '300px' }"
             [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
-            #descriptionTamilField="ngModel" [required]="true"></quill-editor>
+            #descriptionTamilField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
         <p *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched" class="text-red-500 text-sm mt-1">
           Tamil Description is required.

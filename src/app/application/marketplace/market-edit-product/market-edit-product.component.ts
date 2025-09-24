@@ -91,12 +91,27 @@ export class MarketEditProductComponent implements OnInit {
   }
 
 
+  // ngOnInit(): void {
+  //   this.productId = this.route.snapshot.params['id'];
+  //   this.getAllCropVerity();
+  //   this.calculeSalePrice();
+  //   this.getProduct();
+  // }
+
   ngOnInit(): void {
-    this.productId = this.route.snapshot.params['id'];
-    this.getAllCropVerity();
-    this.calculeSalePrice();
-    this.getProduct();
-  }
+  this.productId = this.route.snapshot.params['id'];
+  this.marketSrv.getCropVerity().subscribe(
+    (res) => {
+      this.cropsObj = res;
+      console.log('Crops fetched successfully:', res);
+      // Fetch product after crops are loaded
+      this.getProduct();
+    },
+    (error) => {
+      console.error('Error: Crop variety fetching issue', error);
+    }
+  );
+}
 
   trimDisplayName() {
     if (this.productObj.cropName) {
@@ -111,33 +126,52 @@ export class MarketEditProductComponent implements OnInit {
     }
   }
 
-  getProduct() {
-    this.marketSrv.getProductById(this.productId).subscribe((res) => {
-      console.log('product:', res);
-      this.storedDisplayType = res.displaytype;
-      this.productObj = res;
-      console.log('this is product', this.productObj);
-      this.storedDisplayType;
-      this.productObj.selectId = res.cropGroupId;
-      this.selectedImage = res.image;
-      this.onCropChange();
-      // this.productObj.varietyId = res.cropId;
-      console.log('this is variety ID', this.productObj.varietyId);
-      this.templateKeywords.update(() => res.tags || []);
-      this.calculeSalePrice();
-      if (res.promo) {
-        this.productObj.promo = true;
-      } else {
-        this.productObj.promo = false;
-      }
-      console.log("--------------verityes------------------");
-      console.log(this.selectedVarieties);
+  // getProduct() {
+  //   this.marketSrv.getProductById(this.productId).subscribe((res) => {
+  //     console.log('product:', res);
+  //     this.storedDisplayType = res.displaytype;
+  //     this.productObj = res;
+  //     console.log('this is product', this.productObj);
+  //     this.storedDisplayType;
+  //     this.productObj.selectId = res.cropGroupId;
+  //     this.selectedImage = res.image;
+  //     this.onCropChange();
+  //     // this.productObj.varietyId = res.cropId;
+  //     console.log('this is variety ID', this.productObj.varietyId);
+  //     this.templateKeywords.update(() => res.tags || []);
+  //     this.calculeSalePrice();
+  //     if (res.promo) {
+  //       this.productObj.promo = true;
+  //     } else {
+  //       this.productObj.promo = false;
+  //     }
+  //     console.log("--------------verityes------------------");
+  //     console.log(this.selectedVarieties);
 
 
-    });
-  }
+  //   });
+  // }
 
-
+getProduct() {
+  this.marketSrv.getProductById(this.productId).subscribe((res) => {
+    console.log('product:', res);
+    this.storedDisplayType = res.displaytype;
+    this.productObj = res;
+    this.productObj.selectId = res.cropGroupId;
+    this.selectedImage = res.image;
+    this.templateKeywords.update(() => res.tags || []);
+    this.productObj.promo = !!res.promo; // Convert to boolean
+    // Call onCropChange to populate selectedVarieties
+    this.onCropChange();
+    // Ensure varietyId is set correctly
+    this.productObj.varietyId = res.varietyId;
+    this.selectVerityImage(); // Update the selected image
+    this.calculeSalePrice();
+    console.log('this is product', this.productObj);
+    console.log('this is variety ID', this.productObj.varietyId);
+    console.log('selected varieties', this.selectedVarieties);
+  });
+}
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
@@ -150,31 +184,73 @@ export class MarketEditProductComponent implements OnInit {
     );
   }
 
+  // onCropChange() {
+  //   console.log("oncropCange", this.productObj.selectId);
+
+  //   const sample = this.cropsObj.filter(
+  //     (crop) => crop.cropId === +this.productObj.selectId
+  //   );
+
+  //   console.log('Filtered crops:', sample);
+
+  //   if (sample.length > 0) {
+  //     this.selectedVarieties = sample[0].variety;
+  //     console.log('Selected crop varieties:', this.selectedVarieties);
+  //     this.isVerityVisible = true;
+  //   } else {
+  //     console.log('No crop found with selectId:', this.productObj.selectId);
+  //   }
+  // }
+
   onCropChange() {
-    console.log("oncropCange", this.productObj.selectId);
+  console.log('onCropChange selectId:', this.productObj.selectId);
+  const sample = this.cropsObj.filter(
+    (crop) => crop.cropId === +this.productObj.selectId
+  );
+  console.log('Filtered crops:', sample);
+  if (sample.length > 0) {
+    this.selectedVarieties = sample[0].variety;
+    this.isVerityVisible = true;
+    console.log('Selected crop varieties:', this.selectedVarieties);
+  } else {
+    this.selectedVarieties = [];
+    this.isVerityVisible = false;
+    console.log('No crop found with selectId:', this.productObj.selectId);
+  }
+  // Update the selected image after changing varieties
+  this.selectVerityImage();
+}
 
-    const sample = this.cropsObj.filter(
-      (crop) => crop.cropId === +this.productObj.selectId
-    );
+// selectVerityImage() {
+//   if (!this.productObj.varietyId) {
+//     this.selectedImage = null;
+//     return;
+//   }
 
-    console.log('Filtered crops:', sample);
+//   // Find the selected variety object
+//   const selectedVariety = this.selectedVarieties.find(
+//     (v) => v.id === Number(this.productObj.varietyId)
+//   );
 
-    if (sample.length > 0) {
-      this.selectedVarieties = sample[0].variety;
-      console.log('Selected crop varieties:', this.selectedVarieties);
-      this.isVerityVisible = true;
-    } else {
-      console.log('No crop found with selectId:', this.productObj.selectId);
-    }
+//   // Map image if found
+//   this.selectedImage = selectedVariety ? selectedVariety.image : null;
+//   console.log("Selected Image:", this.selectedImage);
+// }
+
+
+selectVerityImage() {
+  if (!this.productObj.varietyId) {
+    this.selectedImage = null;
+    console.log('No varietyId selected');
+    return;
   }
 
-  selectVerityImage() {
-    const sample = this.selectedVarieties.filter(
-      (verity) => verity.id === +this.productObj.varietyId
-    );
-    console.log(sample[0].image);
-    this.selectedImage = sample[0].image;
-  }
+  const selectedVariety = this.selectedVarieties.find(
+    (v) => v.id === Number(this.productObj.varietyId)
+  );
+  this.selectedImage = selectedVariety ? selectedVariety.image : null;
+  console.log('Selected Image:', this.selectedImage);
+}
 
   // calculeSalePrice() {
   //   this.productObj.discount =
@@ -520,24 +596,29 @@ export class MarketEditProductComponent implements OnInit {
     return true;
   }
 
-  getMinQuantityError(): string {
-    if (this.productObj.startValue <= 0) {
+getMinQuantityError(): string {
+    const startValue = parseFloat(this.productObj.startValue.toString());
+    const maxQuantity = parseFloat(this.productObj.maxQuantity?.toString() || '0');
+    if (isNaN(startValue) || startValue <= 0) {
       return 'Please enter a value greater than 0.';
     }
-    if (this.productObj.category === 'WholeSale' &&
-      this.productObj.maxQuantity > 0 &&
-      this.productObj.startValue > this.productObj.maxQuantity) {
+    if (
+      this.productObj.category === 'WholeSale' &&
+      maxQuantity > 0 &&
+      startValue > maxQuantity
+    ) {
       return 'Minimum quantity cannot be greater than maximum quantity.';
     }
     return '';
   }
 
   getMaxQuantityError(): string {
-    if (this.productObj.maxQuantity <= 0) {
+    const maxQuantity = parseFloat(this.productObj.maxQuantity?.toString() || '0');
+    const startValue = parseFloat(this.productObj.startValue.toString());
+    if (isNaN(maxQuantity) || maxQuantity <= 0) {
       return 'Please enter a value greater than 0.';
     }
-    if (this.productObj.startValue > 0 &&
-      this.productObj.maxQuantity < this.productObj.startValue) {
+    if (startValue > 0 && maxQuantity < startValue) {
       return 'Maximum quantity must be greater than or equal to minimum quantity.';
     }
     return '';
@@ -564,13 +645,11 @@ class MarketPrice {
   changeby!: number;
   tags: string = '';
   category!: string;
-  // displayType!: string;
-  variety!: string;
-
   selectId!: number;
   displaytype!: string;
   salePrice: number = 0;
   discount: number = 0.0;
+  variety?: string; // Make variety optional
 }
 
 class Variety {

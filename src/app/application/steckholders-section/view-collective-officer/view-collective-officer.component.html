@@ -6,7 +6,7 @@
 </button>
 <button *ngIf="
     (permissionService.hasPermission('Onboard individual collection CO / CCM / DO') ||
-    tokenService.getUserDetails().role === '1') && this.centerId == null
+    tokenService.getUserDetails().role === '1')
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="navigatePath('/steckholders/action/collective-officer/personal')">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -140,8 +140,7 @@
 
       <div class="flex items-center mr-5" *ngIf="
     (permissionService.hasPermission('Filter CO / CCM / DO') ||
-      tokenService.getUserDetails().role === '1') &&
-    this.centerId == null
+      tokenService.getUserDetails().role === '1') 
   ">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

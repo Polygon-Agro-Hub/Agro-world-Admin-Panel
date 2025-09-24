@@ -93,13 +93,15 @@
       <!-- Officers Card -->
       <div
         class="flex flex-col gap-y-1 items-center justify-center p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer">
-        <div class="bg-[#CCFBF1] p-2 rounded-full">
+        <div class="text-center mt-10">
+          <div class="bg-[#CCFBF1] p-2 rounded-full">
           <i class="fa-solid fa-users text-xl"></i>
         </div>
-        <p class="text-[#627189] dark:text-white text-center">Officers</p>
-        <p class="font-bold text-black text-lg dark:text-white">
+        <p class="text-[#627189] dark:text-white mt-3 text-center">Officers</p>
+        <p class="font-bold text-black text-lg mt-3 dark:text-white">
           {{centerNameObj.officerCount === 0 ? '0' : centerNameObj.officerCount < 10 ? "0" + centerNameObj.officerCount : centerNameObj.officerCount }}
         </p>
+        </div>
         <div class="flex flex-row items-center justify-end self-end mt-5" (click)="viewCenterOfficers()">
           <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-1 text-sm"></i>
         </div>
@@ -157,10 +159,10 @@
             {{ item.grade }}
           </td>
           <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
-            {{ item.totQty }}
+            {{ item.totQty | number:'1.2-2' }}
           </td>
           <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
-            {{ item.totPrice }}
+            {{ item.totPrice | number:'1.2-2' }}
           </td>
           <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
             <div class="flex flex-col items-center justify-center">

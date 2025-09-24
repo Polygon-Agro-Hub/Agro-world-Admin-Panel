@@ -26,6 +26,7 @@ export class AssignCenterTargetComponent {
   isFormValid: boolean = false;
   hasData: boolean = false;
   isLoading = false;
+  officerName!: string;
 
   isDateSelected: boolean = true;
 
@@ -84,6 +85,8 @@ checkDateSelection() {
       this.isLoading = false;
   
       this.assignCropsArr = res.result.data;
+      this.officerName = res.officerName;
+      console.log('officerName', this.officerName)
       this.countCrops = res.result.data.length;
       this.isNew = res.result.isNew;
       this.companyCenterId = res.companyCenterId;

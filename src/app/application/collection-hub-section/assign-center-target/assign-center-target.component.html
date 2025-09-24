@@ -109,7 +109,7 @@
     </div>
   </div>
 
-  <p class="text-xl text-[#898989] dark:text-[#898989]">
+  <p *ngIf="officerName !== null" class="text-xl text-[#898989] dark:text-[#898989]">
       Centre Target Last Modified By : <span class="text-xl font-bold dark:text-white text-[#030308]"> {{officerName}}</span>
     </p>
 

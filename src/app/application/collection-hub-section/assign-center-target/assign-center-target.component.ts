@@ -147,6 +147,7 @@ checkDateSelection() {
             htmlContainer: 'text-left',
           },
         });
+        this.isLoading = false;
         return;
       }
       
@@ -163,6 +164,7 @@ checkDateSelection() {
           htmlContainer: 'text-left',
         },
       });
+      this.isLoading = false;
       return;
     } else {
       if (item.targetC < item.preValueC) {
@@ -177,6 +179,7 @@ checkDateSelection() {
             htmlContainer: 'text-left',
           },
         });
+        this.isLoading = false;
         return;
       }
     }

@@ -753,21 +753,41 @@ back(): void {
   }
 
   if (this.distributionForm.get('contact1Code')?.invalid) {
-    missingFields.push('Contact Number -1 Code is Required');
+    missingFields.push('Contact Number Code is Required');
   }
 
-  if (this.distributionForm.get('contact1')?.invalid) {
-    missingFields.push('Contact Number -1 is Required');
-  } else if (this.distributionForm.get('contact1')?.valid) {
-    const contact1 = this.distributionForm.get('contact1')?.value;
-    if (contact1 && !this.isValidPhoneNumber(contact1)) {
-      missingFields.push('Contact Number -1 - Must be a valid phone number');
+  if (this.distributionForm.get('company')?.value) {
+    missingFields.push('Company is Required');
+  }
+
+  const contact1Control = this.distributionForm.get('contact1');
+
+  if (contact1Control?.touched || contact1Control?.dirty) {
+    if (contact1Control.errors?.['required']) {
+      missingFields.push('Contact Number -1 is Required');
+    } else if (contact1Control.errors?.['pattern']) {
+      missingFields.push('Contact Number -1 - Must be a valid phone number (format: +947XXXXXXXX)');
     }
   }
 
-  if (this.distributionForm.get('contact2')?.value && !this.isValidPhoneNumber(this.distributionForm.get('contact2')?.value)) {
+  const contact2Control = this.distributionForm.get('contact2');
+  const contact2Code = this.distributionForm.get('contact2Code');
+
+  if (!contact2Code?.value) {
+    missingFields.push('Contact Number -2 Code is Required');
+  }
+
+if (contact2Control?.value) {
+  // Check if phone number is valid
+  if (!this.isValidPhoneNumber(contact2Control.value)) {
     missingFields.push('Contact Number -2 - Must be a valid phone number');
   }
+
+  if (contact2Control?.value === contact1Control?.value) {
+    missingFields.push('Contact Number 01 and Contact Number 02 cannot be the same');
+  }
+
+}
 
   if (this.distributionForm.get('city')?.invalid) {
     missingFields.push('City is Required');
@@ -789,22 +809,31 @@ back(): void {
     missingFields.push('Registration Code is Required');
   }
 
-  if (this.distributionForm.get('longitude')?.invalid) {
+  if (this.distributionForm.get('latitude')?.value && this.getFieldError("latitude") === 'Latitude must be between -90 and 90') {
+    missingFields.push('Latitude - Must be be between -90 and 90');
+  }
+
+  if (this.distributionForm.get('longitude')?.value && this.getFieldError("longitude") === 'Longitude must be between -180 and 180') {
+    missingFields.push('Longitude - must be between -180 and 180');
+  }
+
+  if (!this.distributionForm.get('longitude')?.value) {
     missingFields.push('Longitude is Required');
   }
 
-  if (this.distributionForm.get('latitude')?.invalid) {
+  if (!this.distributionForm.get('latitude')?.value) {
     missingFields.push('Latitude is Required');
   }
 
-  if (this.distributionForm.get('email')?.invalid) {
+  const emailControl = this.distributionForm.get('email');
+
+if (emailControl?.errors) {
+  if (emailControl.errors['required']) {
     missingFields.push('Email is Required');
-  } else if (this.distributionForm.get('email')?.valid) {
-    const email = this.distributionForm.get('email')?.value;
-    if (email && !this.isValidEmail(email)) {
-      missingFields.push('Email - Must be a valid email address');
-    }
+  } else if (emailControl.errors['pattern'] || (emailControl.value && !this.isValidEmail(emailControl.value))) {
+    missingFields.push('Email - Must be a valid email address');
   }
+}
 
   if (this.distributionForm.get('company')?.invalid) {
     missingFields.push('Company is Required');
@@ -1094,6 +1123,64 @@ onEmailInput(event: any) {
   
   // Update the form control
   this.distributionForm.get('email')?.setValue(value);
+}
+
+onInputChangeCor(event: Event, field: string): void {
+  const target = event.target as HTMLInputElement;
+  const raw = target.value;
+
+  if (field === 'coordinates') {
+    // 1) remove invalid chars (allow digits, dot and minus)
+    let sanitized = raw.replace(/[^0-9.-]/g, '');
+
+    // 2) preserve a leading minus if the user typed it
+    const hadLeadingMinus = /^-/.test(raw);
+    sanitized = sanitized.replace(/-/g, ''); // remove all minus signs
+    if (hadLeadingMinus) {
+      sanitized = '-' + sanitized;
+    }
+
+    // 3) keep only the first dot
+    const parts = sanitized.split('.');
+    if (parts.length > 1) {
+      sanitized = parts.shift() + '.' + parts.join('');
+    }
+
+    // 4) update only if changed (and also notify Angular/ngModel)
+    if (sanitized !== raw) {
+      target.value = sanitized;
+      target.dispatchEvent(new Event('input')); // ensures [(ngModel)] updates
+    }
+  }
+}
+
+/**
+ * Run final validation on blur: if there are no digits at all, clear the field.
+ */
+onInputBlurCor(event: Event, field: string): void {
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+
+  if (field === 'coordinates') {
+    // If there are no digits anywhere, reset to empty
+    if (!/\d/.test(value)) {
+      value = '';
+    } else {
+      // Optional cleanup: remove trailing dot
+      if (value.endsWith('.')) {
+        value = value.slice(0, -1);
+      }
+      // If final value ends up as just "-" (no digits), clear it
+      if (value === '-') {
+        value = '';
+      }
+    }
+
+    if (target.value !== value) {
+      target.value = value;
+      target.dispatchEvent(new Event('input'));
+    }
+  }
 }
   // Input handling methods
 onInputChange(event: any, fieldType: string) {

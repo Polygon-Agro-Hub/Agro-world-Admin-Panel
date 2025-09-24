@@ -48,7 +48,7 @@
   ></p-calendar>
 
   <!-- Validation message -->
-  <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p>
+  <!-- <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p> -->
 </div>
 
 
@@ -107,14 +107,19 @@
     </div>
   </div>
 
-  <div *ngIf="!hasData" class="flex flex-col justify-start items-center pt-32 h-screen">
-    <p class="text-[#494949] dark:text-textDark mb-4">
+  <div *ngIf="!hasData " class="flex flex-col justify-start items-center pt-32 h-screen">
+    <p *ngIf="isDateSelected" class="text-[#494949] dark:text-textDark mb-4">
       -- No Data Available --
+    </p>
+    <p *ngIf="!isDateSelected" class="text-[#494949] dark:text-textDark mb-4">
+      -- Please select the date to display target --
     </p>
     <div class="items-center">
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
     </div>
   </div>
+
+  
 
   <div
     *ngIf="hasData"

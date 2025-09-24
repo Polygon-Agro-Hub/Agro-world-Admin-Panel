@@ -5,6 +5,8 @@
     <p class="text-xl font-bold dark:text-white text-[#030308]">
       {{ centerDetails.regCode }} {{ centerDetails.centerName }}
     </p>
+
+    
     <div class="flex flex-row items-center gap-5">
       <i class="fa-solid fa-list text-2xl dark:text-white ml-8"></i>
 
@@ -106,6 +108,10 @@
       </div>
     </div>
   </div>
+
+  <p class="text-xl text-[#898989] dark:text-[#898989]">
+      Centre Target Last Modified By : <span class="text-xl font-bold dark:text-white text-[#030308]"> {{officerName}}</span>
+    </p>
 
   <div *ngIf="!hasData " class="flex flex-col justify-start items-center pt-32 h-screen">
     <p *ngIf="isDateSelected" class="text-[#494949] dark:text-textDark mb-4">

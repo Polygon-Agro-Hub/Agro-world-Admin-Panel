@@ -55,7 +55,7 @@ export class AddDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   isLoading = false;
   selectedFile: File | null = null;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   personalData: Personal = new Personal();
 
   distributionCenterData: DistributionCenter[] = [];

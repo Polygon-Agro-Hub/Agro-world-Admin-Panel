@@ -384,12 +384,27 @@ private lettersOnlyValidator(control: AbstractControl) {
     return englishLettersOnly.test(control.value) ? null : { englishLettersOnly: true };
   }
 
-  private numericDecimalValidator(control: AbstractControl) {
-    if (!control.value) return null;
-    const numericDecimal = /^-?\d+(\.\d+)?$/;
-    return numericDecimal.test(control.value) ? null : { numericDecimal: true };
-  }
+  onCoordinateInput(event: any, fieldName: string) {
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+  
+  // Remove any characters that aren't numbers, decimal points, or minus signs
+  value = value.replace(/[^0-9.-]/g, '');
+  
+  // Update both the display and form control
+  target.value = value;
+  this.distributionForm.get(fieldName)?.setValue(value);
+}
 
+  private numericDecimalValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  // Remove spaces before validation
+  const valueWithoutSpaces = control.value.toString().replace(/\s/g, '');
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  return numericDecimal.test(valueWithoutSpaces) ? null : { numericDecimal: true };
+}
   private nameExistsValidator(): any {
     return (control: AbstractControl) => {
       if (!control.value || control.value.length < 3 || control.value === this.originalCenterName) {
@@ -1222,13 +1237,25 @@ onInputChange(event: any, fieldType: string) {
 
     case 'coordinates':
       const coordOriginalValue = value;
-      value = value.replace(/[^0-9.-]/g, '');
+      // Allow numbers, decimal point, minus sign, AND spaces (we'll handle spaces separately)
+      value = value.replace(/[^0-9.\-\s]/g, '');
+      
+      // Remove spaces from the value for validation, but keep them in display temporarily
+      const valueWithoutSpaces = value.replace(/\s/g, '');
+      
       if (coordOriginalValue !== value) {
         target.value = value;
       }
-      if (value === '' && coordOriginalValue.length > 0 && !/[0-9.-]/.test(coordOriginalValue)) {
+      
+      // Update form control with value without spaces for proper validation
+      this.distributionForm.get(target.getAttribute('formControlName')!)?.setValue(valueWithoutSpaces);
+      
+      if (valueWithoutSpaces === '' && coordOriginalValue.length > 0 && !/[0-9.-]/.test(coordOriginalValue)) {
         shouldUpdate = false;
       }
+      
+      // Don't update the target value here as we're handling it above
+      shouldUpdate = false;
       break;
   }
 

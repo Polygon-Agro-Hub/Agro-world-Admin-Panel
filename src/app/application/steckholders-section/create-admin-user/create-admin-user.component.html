@@ -48,12 +48,17 @@
           <!-- Role Input -->
           <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">Department <span
               class="text-[#2E2E2E]">*</span></label>
-          <select id="role" name="role" formControlName="role"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-            <option *ngFor="let role of rolesList" [value]="role.id">
-              {{ role.role }}
-            </option>
-          </select>
+          <p-dropdown 
+            id="role"
+            formControlName="role"
+            [options]="rolesList" 
+            optionLabel="role"
+            optionValue="id"
+            placeholder="Select Department"
+            [showClear]="false"
+            [filter]="false"
+            class="w-full mt-1">
+          </p-dropdown>
           <div *ngIf="
               userForm.get('role')?.invalid &&
               (userForm.get('role')?.dirty || userForm.get('role')?.touched)
@@ -66,12 +71,17 @@
           <!-- Role Input -->
           <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position <span
               class="text-[#2E2E2E]">*</span></label>
-          <select id="position" name="position" formControlName="position"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-            <option *ngFor="let position of positionList" [value]="position.id">
-              {{ position.positions }}
-            </option>
-          </select>
+          <p-dropdown 
+            id="position"
+            formControlName="position"
+            [options]="positionList" 
+            optionLabel="positions"
+            optionValue="id"
+            placeholder="Select Position"
+            [showClear]="false"
+            [filter]="false"
+            class="w-full mt-1">
+          </p-dropdown>
           <div *ngIf="
               userForm.get('position')?.invalid &&
               (userForm.get('position')?.dirty ||
@@ -163,24 +173,34 @@
           <label for="role" class="block text-sm font-medium text-textLight dark:text-textDark">
             Role <span class="text-[#2E2E2E]">*</span>
           </label>
-          <select id="role" name="role" formControlName="role"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-            <option *ngFor="let role of rolesList" [value]="role.id">
-              {{ role.role }}
-            </option>
-          </select>
+          <p-dropdown 
+            id="role"
+            formControlName="role"
+            [options]="rolesList" 
+            optionLabel="role"
+            optionValue="id"
+            placeholder="Select Department"
+            [showClear]="false"
+            [filter]="false"
+            class="w-full mt-1">
+          </p-dropdown>
         </div>
 
         <div>
           <!-- Role Input -->
           <label for="position" class="block text-sm font-medium text-textLight dark:text-textDark">Position <span
               class="text-[#2E2E2E]">*</span></label>
-          <select id="position" name="position" formControlName="position"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-            <option *ngFor="let position of positionList" [value]="position.id">
-              {{ position.positions }}
-            </option>
-          </select>
+          <p-dropdown 
+            id="position"
+            formControlName="position"
+            [options]="positionList" 
+            optionLabel="positions"
+            optionValue="id"
+            placeholder="Select Position"
+            [showClear]="false"
+            [filter]="false"
+            class="w-full mt-1">
+          </p-dropdown>
           <div *ngIf="
               userForm.get('position')?.invalid &&
               (userForm.get('position')?.dirty ||

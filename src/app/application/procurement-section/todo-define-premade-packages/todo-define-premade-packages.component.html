@@ -103,9 +103,7 @@
           class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl"
         >
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            Package : {{ package.displayName }} (Rs.{{
-              package.productPrice | number : "1.2-2"
-            }})
+            Package : {{ package.displayName }} (Rs.{{ package.productPrice | number : "1.2-2"}}) <span class="text-[#3980C0] text-lg mx-3">(x{{package.packageQty}})</span>
           </span>
           <button
             (click)="OpenAddNewItemPopUp(package.packageId)"

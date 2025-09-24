@@ -665,6 +665,7 @@ class OrderDetails {
   definePackageId!: number;
   definePkgPrice: number = 0.00;
   items!: OrderItem[];
+  packageQty:number = 1;
 
 }
 

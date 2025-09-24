@@ -191,21 +191,72 @@ back(): void {
 blockLeadingSpace(event: KeyboardEvent, field: string) {
   const input = event.target as HTMLInputElement;
   const key = event.key;
+  const value = input.value;
 
-  if (key === ' ' && input.value.length === 0) {
+  // For email field specifically, also block spaces anywhere in the input
+  if (field === 'email' && key === ' ') {
+    event.preventDefault();
+    return;
+  }
+
+  // Block space if it's the first character for all fields
+  if (key === ' ' && value.length === 0) {
     event.preventDefault();
   }
 }
 
+trimTrailingSpace(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const cursorPos = input.selectionStart || 0;
+  
+  if (input.value.endsWith(' ')) {
+    input.value = input.value.trimEnd();
+    // Keep cursor in position after trimming
+    input.setSelectionRange(cursorPos, cursorPos);
+    // Update the model
+    this.personalData.email = input.value;
+  }
+}
+
+sanitizePastedEmail(event: ClipboardEvent) {
+  event.preventDefault();
+  const pastedText = event.clipboardData?.getData('text') || '';
+  
+  // Remove all spaces from pasted content
+  const sanitizedText = pastedText.replace(/\s/g, '');
+  
+  // Insert the sanitized text
+  const input = event.target as HTMLInputElement;
+  const start = input.selectionStart || 0;
+  const end = input.selectionEnd || 0;
+  
+  const newValue = input.value.substring(0, start) + sanitizedText + input.value.substring(end);
+  input.value = newValue;
+  
+  // Update the model
+  this.personalData.email = newValue;
+  
+  // Set cursor position after the pasted content
+  const newCursorPos = start + sanitizedText.length;
+  input.setSelectionRange(newCursorPos, newCursorPos);
+}
+
+
 // Trim any leading spaces if they somehow appear (e.g., paste)
 trimLeadingSpace(event: Event) {
   const input = event.target as HTMLInputElement;
+  const cursorPos = input.selectionStart || 0;
+  
   if (input.value.startsWith(' ')) {
-    const cursorPos = input.selectionStart || 0;
     input.value = input.value.trimStart();
-    input.setSelectionRange(cursorPos - 1, cursorPos - 1); // keep cursor in place
+    // Adjust cursor position after trimming
+    const newCursorPos = Math.max(0, cursorPos - (input.value.length - input.value.trimStart().length));
+    input.setSelectionRange(newCursorPos, newCursorPos);
+    // Update the model
+    this.personalData.email = input.value;
   }
 }
+
 
 blockLeadingChars(event: KeyboardEvent, field: string) {
   const value = this.personalData[field] || '';
